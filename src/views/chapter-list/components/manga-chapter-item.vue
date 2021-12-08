@@ -1,17 +1,23 @@
 <template>
-    <div class="item-main" @click="go_chapter">
-        <el-image :class="{'anim':finish}" :src="test" :fit="fit" :style="style" :alt="info" el-fade-in @load="anim">
-            <template name="el-fade-in-linear" #placeholder>
-                <el-image :src="placeholder" fit="fill" :style="style"/>
-            </template>
-        </el-image>
-        <p class="manga-name">{{info}}</p>
+    <div class="manga-chapter-item">
+        <div class="item-main" @click="go_browse">
+            <el-image :class="{'anim':finish}" :src="test" :fit="fit" :style="style" :alt="info" el-fade-in
+                      @load="anim">
+                <template name="el-fade-in-linear" #placeholder>
+                    <el-image :src="placeholder" fit="fill" :style="style"/>
+                </template>
+            </el-image>
+            <p class="manga-name">{{title}}</p>
+        </div>
     </div>
 </template>
 
-<script>
-    export default {
-        name: "manga-list-item",
+<script lang='ts'>
+    import {defineComponent} from 'vue'
+
+    export default defineComponent({
+        name: 'manga-chapter-item',
+        // 数据
         data() {
             return {
                 name: '',
@@ -29,27 +35,33 @@
                 },
             }
         },
-        props: {
-            info: {type: String}
-        },
+
+        // 传值
+        props: ['title'],
+
+        // 组件
+        components: {},
+
+        // 方法
         methods: {
             anim() {
                 this.finish = true;
             },
-            go_chapter() {
+            go_browse() {
                 this.$router.push({
-                    path: '/chapter-list',
-                    query: {manga: this.info},
-                });
+                    path: '/browse-view',
+                    query: Object.assign(this.$route.query, {chapter: this.title})
+                })
             }
         },
-        created() {
 
-        }
-    }
+        // 生命周期
+        created() {
+        },
+    })
 </script>
 
-<style scoped type="text/less" lang="less">
+<style scoped lang='less' type='text/less'>
     .item-main {
         cursor: pointer;
     }

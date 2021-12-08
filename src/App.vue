@@ -55,10 +55,11 @@
 
 <style lang="less">
     .main{
+        background-color: #d9d9d9;
+        min-height: 100vh;
     }
 
     .view{
         padding: 100px;
-        background-color: #d9d9d9;
     }
 </style>

@@ -1,0 +1,42 @@
+.browse-view {
+    user-select: none;
+
+    /**
+    van-sidebar点击无响应解决
+     */
+
+    /deep/ .van-sidebar {
+        overflow-y: visible;
+    }
+
+    img {
+        display: block;
+        margin: 0 auto;
+        max-width: 100vw;
+    }
+
+    .nopost-show-menu {
+        position: fixed;
+        top: 52px;
+        left: 38px;
+        width: 40px;
+        height: 40px;
+        border-radius: 100%;
+        opacity: .6;
+    }
+
+    .btns {
+        margin: 20px auto;
+        display: flex;
+        justify-content: space-around;
+
+    }
+
+    .before {
+        background-color: #ffc53d;
+    }
+
+    .next {
+        background-color: #bae637;
+    }
+}

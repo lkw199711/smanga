@@ -1,11 +1,13 @@
+import { defineComponent } from 'vue'
 import mangaListItem from '../components/manga-list-item.vue'
+import {ajax} from "@/serve";
 
-export default {
+export default defineComponent({
     name: 'index',
     // 数据
     data() {
         return {
-
+            list: [],
         }
     },
 
@@ -20,5 +22,9 @@ export default {
 
     // 生命周期
     created() {
+        ajax('php/manga.php').then(res => {
+            console.log(res);
+            this.list = res.data
+        })
     },
-}
+})

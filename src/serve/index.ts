@@ -70,7 +70,6 @@ export default function get_key_word(time: number) {
     // 密钥文本使用数组拆分
     const keyArr = ['s', 'u', 'n', 'l', 'i', 'g', 'h', 't'];
     const tailArr = ['-', 'm', 'a', 'n', 'g', 'a'];
-    console.log(keyArr.join('') + tailArr.join(''))
 
     // 合并密钥文本与时间戳,使用md5加密
     const keyWord = Md5.hashStr(time + keyArr.join('') + tailArr.join(''));
