@@ -1,6 +1,6 @@
 <template>
     <div class="chapter-list">
-        <manga-chapter-item class="chapter-list-item" v-for="(i,k) in list" :key="k" :title="i">{{i}}</manga-chapter-item>
+        <manga-chapter-item class="chapter-list-item" v-for="(i,k) in list" :key="k" :chapterInfo="i"/>
         <!--填补最后一行的占位元素-->
         <div class="width-200-posted chapter-list-item seat" v-for="(i) in Array(8)" :key="i"/>
     </div>

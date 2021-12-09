@@ -1,8 +1,8 @@
 <template>
     <div class="browse-view" @touchmove="reading_state_update(true)" @click="reading_state_update(false)">
         <!--目录列表-->
-        <van-popup v-model="popup.menu" position="left">
-            <van-sidebar v-model="index" :style="{width:'46vw'}" @change="change_chater">
+        <van-popup v-model:show="popup.menu" position="left">
+            <van-sidebar v-model="index" :style="{width:'46vw'}" @change="change_chapter">
                 <van-sidebar-item v-for="(k,i) in menu" :title="k" :key="i"/>
             </van-sidebar>
         </van-popup>

@@ -3,10 +3,6 @@ import {get_img, ajax} from "../../../serve";
 import {window_go_top} from "@/utils";
 import {ElMessage as msg} from "element-plus";
 
-interface Popup {
-    [propName: string]: boolean;
-}
-
 export default defineComponent({
     name: 'browse-views',
 
@@ -39,7 +35,7 @@ export default defineComponent({
 
             // 弹出层
             popup: {
-                menu: false as boolean,
+                menu: false,
             } as Popup
         }
     },
@@ -120,8 +116,6 @@ export default defineComponent({
 
                     // 获取数据
                     const data = r.data;
-
-                    console.log(data);
 
                     // 排除非图片数据
                     const arr = data.map((i:string) => {
@@ -252,6 +246,8 @@ export default defineComponent({
 
         ajax.post("php/manga.php", {manga}).then(r => {
             const data = r.data;
+
+            console.log(data);
 
             data.sort((a: string, b: string) => {
                 const valueA: any = a.match(/\d+(?=\b)/);

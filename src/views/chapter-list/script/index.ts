@@ -26,17 +26,17 @@ export default defineComponent({
         const manga = this.manga = this.$route.query.manga;
 
 
-        ajax.post("php/manga.php", {manga}).then(r => {
+        ajax.post("php/get-chapter-list.php", {chapterPath:manga}).then(r => {
             const data = r.data;
 
-            data.sort((a: string, b: string) => {
-                const valueA: any = a.match(/\d+(?=\b)/);
-                const valueB: any = b.match(/\d+(?=\b)/);
+            data.sort((a: any, b: any) => {
+                const valueA: any = a.name.match(/\d+(?=\b)/);
+                const valueB: any = b.name.match(/\d+(?=\b)/);
 
                 return valueA - valueB;
             })
 
-            this.list.push(...data);
+            this.list.push(data[0]);
         });
     },
 })

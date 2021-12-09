@@ -1,7 +1,7 @@
 <template>
     <div class="manga-chapter-item">
         <div class="item-main" @click="go_browse">
-            <el-image :class="{'anim':finish}" :src="test" :fit="fit" :style="style" :alt="info" el-fade-in
+            <el-image :class="{'anim':finish}" :src="poster" :fit="fit" :style="style" :alt="title" el-fade-in
                       @load="anim">
                 <template name="el-fade-in-linear" #placeholder>
                     <el-image :src="placeholder" fit="fill" :style="style"/>
@@ -14,13 +14,16 @@
 
 <script lang='ts'>
     import {defineComponent} from 'vue'
+    import {get_img} from "@/serve";
 
     export default defineComponent({
         name: 'manga-chapter-item',
         // 数据
         data() {
             return {
-                name: '',
+                title: '',
+                poster: '',
+                posterUrl: '',
                 placeholder: require('@/assets/s-blue.png'),
                 src: '',
                 test: 'http://m.tt2.ink:9000/test.jpg',
@@ -37,7 +40,7 @@
         },
 
         // 传值
-        props: ['title'],
+        props: ['chapterInfo'],
 
         // 组件
         components: {},
@@ -57,6 +60,16 @@
 
         // 生命周期
         created() {
+            this.title = this.chapterInfo.name;
+            this.posterUrl = this.chapterInfo.poster;
+
+            // console.log(this.posterUrl);
+            get_img({params: {file: this.posterUrl}}).then(res=>{
+                // 获取图片数据,转变为blob链接
+                const blob = URL.createObjectURL(res.data);
+
+                this.poster = blob;
+            })
         },
     })
 </script>

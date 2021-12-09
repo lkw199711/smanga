@@ -3,8 +3,9 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 
+import './interface'
+
 import ElementPlus from 'element-plus'
-import { ElMessage } from 'element-plus'
 import Vant from 'vant'
 import 'reset-css'
 import 'element-plus/theme-chalk/index.css'
