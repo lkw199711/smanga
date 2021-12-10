@@ -30,7 +30,7 @@ const ajax = Axios.create({
             // 返回json
             return Qs.stringify(data);
         },
-    ]
+    ],
 });
 
 /**
@@ -38,7 +38,7 @@ const ajax = Axios.create({
  * @type {Axios}
  */
 const get_img = Axios.create({
-    baseURL: url + "php/get-img-file.php",
+    baseURL: url + "php/get-file-flow.php",
     timeout: 5 * 1000,
     method: "post",
     responseType: "blob", // 设置接收格式为blob格式
@@ -57,7 +57,7 @@ const get_img = Axios.create({
             // 返回json
             return Qs.stringify(data);
         },
-    ]
+    ],
 });
 
 /**

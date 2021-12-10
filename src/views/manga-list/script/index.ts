@@ -1,9 +1,12 @@
-import { defineComponent } from 'vue'
+import {defineComponent} from 'vue'
 import mangaListItem from '../components/manga-list-item.vue'
 import {ajax} from "@/serve";
+import {get_poster} from "@/api";
+import store from "@/store";
+import {onBeforeUnmount} from 'vue';
 
 export default defineComponent({
-    name: 'index',
+    name: 'manga-list',
     // 数据
     data() {
         return {
@@ -22,9 +25,18 @@ export default defineComponent({
 
     // 生命周期
     created() {
-        ajax('php/manga.php').then(res => {
-            console.log(res);
-            this.list = res.data
+        ajax.post('php/get-chapter-list.php', {chapterPath: ''}).then(res => {
+            this.list = res.data;
+
+            // 为漫画请求海报图片
+            get_poster(this.list, 'mangaAwait');
         })
     },
+    setup() {
+        onBeforeUnmount(() => {
+            console.log('beforeUnmount');
+            store.commit('switch_await', {running: 'mangaAwait', bool: false});
+        })
+    },
+
 })

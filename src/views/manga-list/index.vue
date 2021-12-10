@@ -1,6 +1,6 @@
 <template>
     <div class="manga-list-main">
-        <manga-list-item class="item" v-for="(i,k) in list" :key="k" :info="i" />
+        <manga-list-item class="item" v-for="(i,k) in list" :key="k" :mangaInfo="i" />
         <!--填补最后一行的占位元素-->
         <div class="width-200-posted item seat" v-for="(i) in Array(8)" :key="i"/>
     </div>

@@ -2,6 +2,8 @@ import {defineComponent} from 'vue'
 import {get_img, ajax} from "../../../serve";
 import {window_go_top} from "@/utils";
 import {ElMessage as msg} from "element-plus";
+import {array_sort} from "@/api";
+import store from '../../../store';
 
 export default defineComponent({
     name: 'browse-views',
@@ -68,7 +70,7 @@ export default defineComponent({
 
             // 使用axios请求上传接口
             get_img({
-                params: {file: `${manga}/${chapter}/${list[page]}`}
+                params: {file: list[page]}
             }).then(res => {
                 // 获取图片数据,转变为blob链接
                 const blob = URL.createObjectURL(res.data);
@@ -111,24 +113,19 @@ export default defineComponent({
             const manga = this.manga;
             const chapter = this.chapter;
 
-            ajax.post("php/manga.php", {manga: manga + "/" + chapter})
+            ajax.post("php/get-image-list.php", {manga: manga + "/" + chapter})
                 .then(r => {
 
                     // 获取数据
                     const data = r.data;
 
-                    // 排除非图片数据
-                    const arr = data.map((i:string) => {
-                        if (i.match(/\d+/)) return i;
-                    })
-
                     // 为图片排序
-                    this.imgPathList = arr.sort((a:any, b:any) => {
-                        // 获取开头的数字,进行排序
-                        const valueA = a.match(/\d+/)[0];
-                        const valueB = b.match(/\d+/)[0];
-                        return valueA - valueB;
-                    });
+                    array_sort(data);
+
+                    console.log(data);
+
+                    // 加入数据渲染页面
+                    this.imgPathList = data;
 
                     // 开始加载图片
                     this.load_img();
@@ -246,15 +243,6 @@ export default defineComponent({
 
         ajax.post("php/manga.php", {manga}).then(r => {
             const data = r.data;
-
-            console.log(data);
-
-            data.sort((a: string, b: string) => {
-                const valueA: any = a.match(/\d+(?=\b)/);
-                const valueB: any = b.match(/\d+(?=\b)/);
-
-                return valueA - valueB;
-            })
 
             const menu = this.menu = data;
         }).then(()=>{

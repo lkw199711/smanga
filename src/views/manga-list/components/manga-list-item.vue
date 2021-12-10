@@ -1,11 +1,14 @@
 <template>
     <div class="item-main" @click="go_chapter">
-        <el-image :class="{'anim':finish}" :src="test" :fit="fit" :style="style" :alt="info" el-fade-in @load="anim">
-            <template name="el-fade-in-linear" #placeholder>
-                <el-image :src="placeholder" fit="fill" :style="style"/>
-            </template>
-        </el-image>
-        <p class="manga-name">{{info}}</p>
+
+        <!--封面图片-->
+        <el-image v-if="finish" class="anim" :src="poster" :fit="fit" :style="style" :alt="title"/>
+
+        <!--占位图标-->
+        <el-image v-else :src="placeholder" fit="fill" :style="style"/>
+
+        <!--漫画名称-->
+        <p class="manga-name">{{title}}</p>
     </div>
 </template>
 
@@ -14,13 +17,9 @@
         name: "manga-list-item",
         data() {
             return {
-                name: '',
                 placeholder: require('@/assets/s-blue.png'),
-                src: '',
                 test: 'http://m.tt2.ink:9000/test.jpg',
-                fit: 'contain',
-                alt: '封面',
-                finish: false,
+                fit: 'cover',
                 style: {
                     width: '200px',
                     height: '260px',
@@ -29,17 +28,27 @@
                 },
             }
         },
-        props: {
-            info: {type: String}
-        },
-        methods: {
-            anim() {
-                this.finish = true;
+        props: ['mangaInfo'],
+
+        // 引用
+        computed: {
+            poster() {
+                return this.mangaInfo.blob;
             },
+            finish() {
+                return this.mangaInfo.finish;
+            },
+            title(){
+                return this.mangaInfo.name;
+            },
+
+        },
+
+        methods: {
             go_chapter() {
                 this.$router.push({
                     path: '/chapter-list',
-                    query: {manga: this.info},
+                    query: {manga: this.title},
                 });
             }
         },

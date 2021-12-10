@@ -1,9 +1,11 @@
 import {defineComponent} from 'vue'
-import {ajax} from "@/serve";
+import {ajax, get_img} from "@/serve";
 import mangaChapterItem from '../components/manga-chapter-item.vue';
+import {array_sort_name, get_poster} from "@/api";
+import store from "@/store";
 
 export default defineComponent({
-    name: 'index',
+    name: 'chapter-list',
     // 数据
     data() {
         return {
@@ -25,18 +27,17 @@ export default defineComponent({
     created() {
         const manga = this.manga = this.$route.query.manga;
 
+        ajax.post("php/get-chapter-list.php", {chapterPath: manga}).then(res => {
+            const data = res.data;
 
-        ajax.post("php/get-chapter-list.php", {chapterPath:manga}).then(r => {
-            const data = r.data;
+            // 赋值到this 生成组件
+            this.list = data;
 
-            data.sort((a: any, b: any) => {
-                const valueA: any = a.name.match(/\d+(?=\b)/);
-                const valueB: any = b.name.match(/\d+(?=\b)/);
-
-                return valueA - valueB;
-            })
-
-            this.list.push(data[0]);
+            // 为章节请求海报图片
+            get_poster(this.list, 'chapterAwait');
         });
+    },
+    beforeUnmount() {
+        store.commit('switch_await', {running: 'chapterAwait', bool: false});
     },
 })
