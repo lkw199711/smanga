@@ -27,6 +27,8 @@ export default defineComponent({
     created() {
         const manga = this.manga = this.$route.query.manga;
 
+        store.commit('switch_await', {running: 'chapterAwait', bool: true});
+
         ajax.post("php/get-chapter-list.php", {chapterPath: manga}).then(res => {
             const data = res.data;
 

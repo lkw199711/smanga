@@ -122,8 +122,6 @@ export default defineComponent({
                     // 为图片排序
                     array_sort(data);
 
-                    console.log(data);
-
                     // 加入数据渲染页面
                     this.imgPathList = data;
 
@@ -241,8 +239,10 @@ export default defineComponent({
         const manga:any = this.manga = this.get_manga_value('manga');
         const chapter:any = this.chapter = this.$route.query.chapter;
 
-        ajax.post("php/manga.php", {manga}).then(r => {
-            const data = r.data;
+        ajax.post("php/get-chapter-list.php", {chapterPath: manga}).then(r => {
+            const data = r.data.map((i:any)=>{
+                return i.name;
+            });
 
             const menu = this.menu = data;
         }).then(()=>{

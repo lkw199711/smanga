@@ -3,7 +3,6 @@ import mangaListItem from '../components/manga-list-item.vue'
 import {ajax} from "@/serve";
 import {get_poster} from "@/api";
 import store from "@/store";
-import {onBeforeUnmount} from 'vue';
 
 export default defineComponent({
     name: 'manga-list',
@@ -25,6 +24,8 @@ export default defineComponent({
 
     // 生命周期
     created() {
+        store.commit('switch_await', {running: 'mangaAwait', bool: true});
+
         ajax.post('php/get-chapter-list.php', {chapterPath: ''}).then(res => {
             this.list = res.data;
 
@@ -32,11 +33,8 @@ export default defineComponent({
             get_poster(this.list, 'mangaAwait');
         })
     },
-    setup() {
-        onBeforeUnmount(() => {
-            console.log('beforeUnmount');
-            store.commit('switch_await', {running: 'mangaAwait', bool: false});
-        })
+    beforeUnmount() {
+        store.commit('switch_await', {running: 'mangaAwait', bool: false});
     },
 
 })
