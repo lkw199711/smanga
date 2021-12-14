@@ -1,7 +1,7 @@
 import {defineComponent} from 'vue'
-import {ajax, get_img} from "@/serve";
+import {ajax} from "@/serve";
 import mangaChapterItem from '../components/manga-chapter-item.vue';
-import {array_sort_name, get_poster} from "@/api";
+import {get_poster} from "@/api";
 import store from "@/store";
 
 export default defineComponent({
