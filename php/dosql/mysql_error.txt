@@ -1,0 +1,403 @@
+[27-Jun-2019 14:46:06 Asia/Shanghai] PHP Notice:  Undefined index: start in I:\0web\sunlight\php\dosql\mysql.php on line 253
+[27-Jun-2019 14:46:07 Asia/Shanghai] PHP Notice:  Undefined index: start in I:\0web\sunlight\php\dosql\mysql.php on line 253
+[27-Jun-2019 14:46:07 Asia/Shanghai] PHP Warning:  mysql_num_rows() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 138
+[27-Jun-2019 14:46:07 Asia/Shanghai] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 143
+[27-Jun-2019 14:48:02 Asia/Shanghai] PHP Notice:  Undefined index: start in I:\0web\sunlight\php\dosql\mysql.php on line 253
+[27-Jun-2019 14:48:03 Asia/Shanghai] PHP Notice:  Undefined index: start in I:\0web\sunlight\php\dosql\mysql.php on line 253
+[27-Jun-2019 14:48:03 Asia/Shanghai] PHP Warning:  mysql_num_rows() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 138
+[27-Jun-2019 14:48:03 Asia/Shanghai] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 143
+[27-Jun-2019 14:50:04 Asia/Shanghai] PHP Notice:  Undefined index: table in I:\0web\sunlight\php\dosql\mysql.php on line 80
+[27-Jun-2019 14:54:01 Asia/Shanghai] PHP Warning:  mysql_num_rows() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 138
+[27-Jun-2019 14:54:01 Asia/Shanghai] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 143
+[27-Jun-2019 14:54:01 Asia/Shanghai] PHP Warning:  mysql_num_rows() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 138
+[27-Jun-2019 14:54:01 Asia/Shanghai] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 143
+[27-Jun-2019 14:54:01 Asia/Shanghai] PHP Warning:  mysql_num_rows() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 138
+[27-Jun-2019 14:54:01 Asia/Shanghai] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 143
+[27-Jun-2019 14:54:01 Asia/Shanghai] PHP Warning:  mysql_num_rows() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 138
+[27-Jun-2019 14:54:01 Asia/Shanghai] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 143
+[27-Jun-2019 14:54:01 Asia/Shanghai] PHP Warning:  mysql_num_rows() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 138
+[27-Jun-2019 14:54:01 Asia/Shanghai] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 143
+[27-Jun-2019 14:54:01 Asia/Shanghai] PHP Warning:  mysql_num_rows() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 138
+[27-Jun-2019 14:54:01 Asia/Shanghai] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 143
+[27-Jun-2019 14:54:02 Asia/Shanghai] PHP Warning:  mysql_num_rows() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 138
+[27-Jun-2019 14:54:02 Asia/Shanghai] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 143
+[27-Jun-2019 14:54:02 Asia/Shanghai] PHP Warning:  mysql_num_rows() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 138
+[27-Jun-2019 14:54:02 Asia/Shanghai] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 143
+[27-Jun-2019 14:54:02 Asia/Shanghai] PHP Warning:  mysql_num_rows() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 138
+[27-Jun-2019 14:54:02 Asia/Shanghai] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 143
+[27-Jun-2019 14:54:02 Asia/Shanghai] PHP Warning:  mysql_num_rows() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 138
+[27-Jun-2019 14:54:02 Asia/Shanghai] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 143
+[27-Jun-2019 14:57:59 Asia/Shanghai] PHP Warning:  mysql_num_rows() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 138
+[27-Jun-2019 14:57:59 Asia/Shanghai] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 143
+[27-Jun-2019 14:58:00 Asia/Shanghai] PHP Warning:  mysql_num_rows() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 138
+[27-Jun-2019 14:58:00 Asia/Shanghai] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 143
+[27-Jun-2019 14:58:00 Asia/Shanghai] PHP Warning:  mysql_num_rows() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 138
+[27-Jun-2019 14:58:00 Asia/Shanghai] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 143
+[27-Jun-2019 14:58:00 Asia/Shanghai] PHP Warning:  mysql_num_rows() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 138
+[27-Jun-2019 14:58:00 Asia/Shanghai] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 143
+[27-Jun-2019 14:58:00 Asia/Shanghai] PHP Warning:  mysql_num_rows() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 138
+[27-Jun-2019 14:58:00 Asia/Shanghai] PHP Warning:  mysql_num_rows() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 138
+[27-Jun-2019 14:58:00 Asia/Shanghai] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 143
+[27-Jun-2019 14:58:00 Asia/Shanghai] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 143
+[27-Jun-2019 14:58:01 Asia/Shanghai] PHP Warning:  mysql_num_rows() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 138
+[27-Jun-2019 14:58:01 Asia/Shanghai] PHP Warning:  mysql_num_rows() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 138
+[27-Jun-2019 14:58:01 Asia/Shanghai] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 143
+[27-Jun-2019 14:58:01 Asia/Shanghai] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 143
+[27-Jun-2019 14:58:01 Asia/Shanghai] PHP Warning:  mysql_num_rows() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 138
+[27-Jun-2019 14:58:01 Asia/Shanghai] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 143
+[27-Jun-2019 14:58:01 Asia/Shanghai] PHP Warning:  mysql_num_rows() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 138
+[27-Jun-2019 14:58:01 Asia/Shanghai] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 143
+[27-Jun-2019 14:59:52 Asia/Shanghai] PHP Warning:  mysql_num_rows() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 138
+[27-Jun-2019 14:59:52 Asia/Shanghai] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 143
+[27-Jun-2019 15:00:31 Asia/Shanghai] PHP Warning:  mysql_num_rows() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 138
+[27-Jun-2019 15:00:31 Asia/Shanghai] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 143
+[27-Jun-2019 15:00:46 Asia/Shanghai] PHP Warning:  mysql_num_rows() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 138
+[27-Jun-2019 15:00:46 Asia/Shanghai] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 143
+[27-Jun-2019 15:01:42 Asia/Shanghai] PHP Notice:  Array to string conversion in I:\0web\sunlight\php\dosql\mysql.php on line 288
+[27-Jun-2019 15:01:44 Asia/Shanghai] PHP Warning:  mysql_num_rows() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 138
+[27-Jun-2019 15:01:44 Asia/Shanghai] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 143
+[27-Jun-2019 15:02:13 Asia/Shanghai] PHP Notice:  Array to string conversion in I:\0web\sunlight\php\dosql\mysql.php on line 288
+[27-Jun-2019 15:02:15 Asia/Shanghai] PHP Warning:  mysql_num_rows() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 138
+[27-Jun-2019 15:02:15 Asia/Shanghai] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 143
+[27-Jun-2019 15:05:33 Asia/Shanghai] PHP Warning:  mysql_num_rows() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 138
+[27-Jun-2019 15:05:33 Asia/Shanghai] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 143
+[27-Jun-2019 15:08:15 Asia/Shanghai] PHP Notice:  Array to string conversion in I:\0web\sunlight\php\dosql\mysql.php on line 288
+[27-Jun-2019 15:09:55 Asia/Shanghai] PHP Notice:  Array to string conversion in I:\0web\sunlight\php\dosql\mysql.php on line 288
+[27-Jun-2019 18:43:43 Asia/Shanghai] PHP Notice:  Array to string conversion in I:\0web\sunlight\php\dosql\mysql.php on line 288
+[27-Jun-2019 21:40:05 Asia/Shanghai] PHP Notice:  Array to string conversion in I:\0web\sunlight\php\dosql\mysql.php on line 288
+[27-Jun-2019 23:50:31 Asia/Shanghai] PHP Notice:  Array to string conversion in I:\0web\sunlight\php\dosql\mysql.php on line 288
+[28-Jun-2019 00:01:26 Asia/Shanghai] PHP Notice:  Array to string conversion in I:\0web\sunlight\php\dosql\mysql.php on line 288
+[28-Jun-2019 00:15:52 Asia/Shanghai] PHP Notice:  Array to string conversion in I:\0web\sunlight\php\dosql\mysql.php on line 288
+[28-Jun-2019 17:14:25 Asia/Shanghai] PHP Notice:  Array to string conversion in I:\0web\sunlight\php\dosql\mysql.php on line 288
+[28-Jun-2019 17:14:36 Asia/Shanghai] PHP Notice:  Array to string conversion in I:\0web\sunlight\php\dosql\mysql.php on line 288
+[29-Jun-2019 13:54:15 Asia/Shanghai] PHP Warning:  mysql_num_rows() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 138
+[29-Jun-2019 13:54:15 Asia/Shanghai] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 143
+[29-Jun-2019 14:01:17 Asia/Shanghai] PHP Warning:  mysql_num_rows() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 138
+[29-Jun-2019 14:01:17 Asia/Shanghai] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 143
+[29-Jun-2019 14:01:17 Asia/Shanghai] PHP Warning:  mysql_num_rows() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 138
+[29-Jun-2019 14:01:17 Asia/Shanghai] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 143
+[29-Jun-2019 14:07:11 Asia/Shanghai] PHP Warning:  mysql_num_rows() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 138
+[29-Jun-2019 14:07:11 Asia/Shanghai] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 143
+[29-Jun-2019 14:07:11 Asia/Shanghai] PHP Warning:  mysql_num_rows() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 138
+[29-Jun-2019 14:07:11 Asia/Shanghai] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 143
+[29-Jun-2019 14:48:30 Asia/Shanghai] PHP Warning:  mysql_num_rows() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 138
+[29-Jun-2019 14:48:30 Asia/Shanghai] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 143
+[29-Jun-2019 16:04:25 Asia/Shanghai] PHP Warning:  mysql_num_rows() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 138
+[29-Jun-2019 16:04:25 Asia/Shanghai] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 143
+[29-Jun-2019 16:04:25 Asia/Shanghai] PHP Warning:  mysql_num_rows() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 138
+[29-Jun-2019 16:04:25 Asia/Shanghai] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 143
+[29-Jun-2019 16:07:22 Asia/Shanghai] PHP Warning:  mysql_num_rows() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 138
+[29-Jun-2019 16:07:22 Asia/Shanghai] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 143
+[29-Jun-2019 16:07:22 Asia/Shanghai] PHP Warning:  mysql_num_rows() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 138
+[29-Jun-2019 16:07:22 Asia/Shanghai] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 143
+[30-Jun-2019 16:03:38 Asia/Shanghai] PHP Notice:  Array to string conversion in I:\0web\sunlight\php\dosql\mysql.php on line 288
+[11-Jul-2019 14:35:25 Asia/Shanghai] PHP Notice:  Array to string conversion in I:\0web\sunlight\php\dosql\mysql.php on line 288
+[12-Jul-2019 15:16:49 Asia/Shanghai] PHP Notice:  Array to string conversion in I:\0web\sunlight\php\dosql\mysql.php on line 288
+[17-Jul-2019 01:59:33 Asia/Shanghai] PHP Warning:  mysql_num_rows() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 227
+[17-Jul-2019 02:03:03 Asia/Shanghai] PHP Warning:  mysql_num_rows() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 227
+[17-Jul-2019 02:03:38 Asia/Shanghai] PHP Warning:  mysql_num_rows() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 227
+[17-Jul-2019 02:05:26 Asia/Shanghai] PHP Warning:  mysql_num_rows() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 227
+[17-Jul-2019 10:52:03 Asia/Shanghai] PHP Warning:  implode(): Invalid arguments passed in I:\0web\sunlight\php\dosql\mysql.php on line 267
+[17-Jul-2019 10:55:05 Asia/Shanghai] PHP Warning:  implode(): Invalid arguments passed in I:\0web\sunlight\php\dosql\mysql.php on line 267
+[17-Jul-2019 11:00:36 Asia/Shanghai] PHP Warning:  implode(): Invalid arguments passed in I:\0web\sunlight\php\dosql\mysql.php on line 267
+[17-Jul-2019 11:01:38 Asia/Shanghai] PHP Warning:  implode(): Invalid arguments passed in I:\0web\sunlight\php\dosql\mysql.php on line 268
+[17-Jul-2019 11:02:13 Asia/Shanghai] PHP Warning:  implode(): Invalid arguments passed in I:\0web\sunlight\php\dosql\mysql.php on line 268
+[18-Jul-2019 01:33:08 Asia/Shanghai] PHP Notice:  Array to string conversion in I:\0web\sunlight\php\dosql\mysql.php on line 290
+[18-Jul-2019 12:37:35 Asia/Shanghai] PHP Notice:  Array to string conversion in I:\0web\sunlight\php\dosql\mysql.php on line 290
+[18-Jul-2019 13:20:24 Asia/Shanghai] PHP Notice:  Array to string conversion in I:\0web\sunlight\php\dosql\mysql.php on line 290
+[18-Jul-2019 13:56:14 Asia/Shanghai] PHP Notice:  Array to string conversion in I:\0web\sunlight\php\dosql\mysql.php on line 290
+[18-Jul-2019 16:32:54 Asia/Shanghai] PHP Warning:  mysql_num_rows() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 140
+[18-Jul-2019 16:32:54 Asia/Shanghai] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 145
+[18-Jul-2019 16:32:55 Asia/Shanghai] PHP Warning:  mysql_num_rows() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 140
+[18-Jul-2019 16:32:55 Asia/Shanghai] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 145
+[18-Jul-2019 16:32:56 Asia/Shanghai] PHP Warning:  mysql_num_rows() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 140
+[18-Jul-2019 16:32:56 Asia/Shanghai] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 145
+[18-Jul-2019 16:32:56 Asia/Shanghai] PHP Warning:  mysql_num_rows() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 140
+[18-Jul-2019 16:32:56 Asia/Shanghai] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 145
+[18-Jul-2019 16:32:56 Asia/Shanghai] PHP Warning:  mysql_num_rows() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 140
+[18-Jul-2019 16:32:56 Asia/Shanghai] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 145
+[18-Jul-2019 16:32:57 Asia/Shanghai] PHP Warning:  mysql_num_rows() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 140
+[18-Jul-2019 16:32:57 Asia/Shanghai] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 145
+[18-Jul-2019 16:33:57 Asia/Shanghai] PHP Warning:  mysql_num_rows() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 140
+[18-Jul-2019 16:33:57 Asia/Shanghai] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 145
+[18-Jul-2019 16:33:58 Asia/Shanghai] PHP Warning:  mysql_num_rows() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 140
+[18-Jul-2019 16:33:58 Asia/Shanghai] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 145
+[18-Jul-2019 16:33:58 Asia/Shanghai] PHP Warning:  mysql_num_rows() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 140
+[18-Jul-2019 16:33:58 Asia/Shanghai] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 145
+[18-Jul-2019 16:33:58 Asia/Shanghai] PHP Warning:  mysql_num_rows() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 140
+[18-Jul-2019 16:33:58 Asia/Shanghai] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 145
+[18-Jul-2019 16:33:59 Asia/Shanghai] PHP Warning:  mysql_num_rows() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 140
+[18-Jul-2019 16:33:59 Asia/Shanghai] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 145
+[18-Jul-2019 16:33:59 Asia/Shanghai] PHP Warning:  mysql_num_rows() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 140
+[18-Jul-2019 16:33:59 Asia/Shanghai] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 145
+[18-Jul-2019 16:38:21 Asia/Shanghai] PHP Warning:  mysql_num_rows() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 141
+[18-Jul-2019 16:38:21 Asia/Shanghai] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 146
+[18-Jul-2019 16:38:22 Asia/Shanghai] PHP Warning:  mysql_num_rows() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 141
+[18-Jul-2019 16:38:22 Asia/Shanghai] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 146
+[18-Jul-2019 16:38:22 Asia/Shanghai] PHP Warning:  mysql_num_rows() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 141
+[18-Jul-2019 16:38:22 Asia/Shanghai] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 146
+[18-Jul-2019 16:38:22 Asia/Shanghai] PHP Warning:  mysql_num_rows() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 141
+[18-Jul-2019 16:38:22 Asia/Shanghai] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 146
+[18-Jul-2019 16:38:23 Asia/Shanghai] PHP Warning:  mysql_num_rows() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 141
+[18-Jul-2019 16:38:23 Asia/Shanghai] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 146
+[18-Jul-2019 16:38:23 Asia/Shanghai] PHP Warning:  mysql_num_rows() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 141
+[18-Jul-2019 16:38:23 Asia/Shanghai] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 146
+[18-Jul-2019 16:38:58 Asia/Shanghai] PHP Warning:  mysql_num_rows() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 141
+[18-Jul-2019 16:38:58 Asia/Shanghai] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 146
+[18-Jul-2019 16:38:59 Asia/Shanghai] PHP Warning:  mysql_num_rows() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 141
+[18-Jul-2019 16:38:59 Asia/Shanghai] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 146
+[18-Jul-2019 16:38:59 Asia/Shanghai] PHP Warning:  mysql_num_rows() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 141
+[18-Jul-2019 16:38:59 Asia/Shanghai] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 146
+[18-Jul-2019 16:38:59 Asia/Shanghai] PHP Warning:  mysql_num_rows() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 141
+[18-Jul-2019 16:38:59 Asia/Shanghai] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 146
+[18-Jul-2019 16:39:00 Asia/Shanghai] PHP Warning:  mysql_num_rows() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 141
+[18-Jul-2019 16:39:00 Asia/Shanghai] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 146
+[18-Jul-2019 16:39:00 Asia/Shanghai] PHP Warning:  mysql_num_rows() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 141
+[18-Jul-2019 16:39:00 Asia/Shanghai] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 146
+[18-Jul-2019 16:41:02 Asia/Shanghai] PHP Warning:  mysql_num_rows() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 141
+[18-Jul-2019 16:41:02 Asia/Shanghai] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 146
+[18-Jul-2019 16:41:03 Asia/Shanghai] PHP Warning:  mysql_num_rows() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 141
+[18-Jul-2019 16:41:03 Asia/Shanghai] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 146
+[18-Jul-2019 16:41:03 Asia/Shanghai] PHP Warning:  mysql_num_rows() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 141
+[18-Jul-2019 16:41:03 Asia/Shanghai] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 146
+[18-Jul-2019 16:41:03 Asia/Shanghai] PHP Warning:  mysql_num_rows() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 141
+[18-Jul-2019 16:41:03 Asia/Shanghai] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 146
+[18-Jul-2019 16:41:04 Asia/Shanghai] PHP Warning:  mysql_num_rows() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 141
+[18-Jul-2019 16:41:04 Asia/Shanghai] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 146
+[18-Jul-2019 16:41:04 Asia/Shanghai] PHP Warning:  mysql_num_rows() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 141
+[18-Jul-2019 16:41:04 Asia/Shanghai] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 146
+[18-Jul-2019 17:23:27 Asia/Shanghai] PHP Warning:  mysql_num_rows() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 143
+[18-Jul-2019 17:23:27 Asia/Shanghai] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 148
+[18-Jul-2019 17:23:28 Asia/Shanghai] PHP Warning:  mysql_num_rows() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 143
+[18-Jul-2019 17:23:28 Asia/Shanghai] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 148
+[18-Jul-2019 17:23:28 Asia/Shanghai] PHP Warning:  mysql_num_rows() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 143
+[18-Jul-2019 17:23:28 Asia/Shanghai] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 148
+[18-Jul-2019 17:23:28 Asia/Shanghai] PHP Warning:  mysql_num_rows() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 143
+[18-Jul-2019 17:23:28 Asia/Shanghai] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 148
+[18-Jul-2019 17:23:29 Asia/Shanghai] PHP Warning:  mysql_num_rows() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 143
+[18-Jul-2019 17:23:29 Asia/Shanghai] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 148
+[18-Jul-2019 17:23:29 Asia/Shanghai] PHP Warning:  mysql_num_rows() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 143
+[18-Jul-2019 17:23:29 Asia/Shanghai] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 148
+[18-Jul-2019 17:27:34 Asia/Shanghai] PHP Warning:  mysql_num_rows() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 145
+[18-Jul-2019 17:27:34 Asia/Shanghai] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 150
+[18-Jul-2019 17:27:35 Asia/Shanghai] PHP Warning:  mysql_num_rows() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 145
+[18-Jul-2019 17:27:35 Asia/Shanghai] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 150
+[18-Jul-2019 17:27:35 Asia/Shanghai] PHP Warning:  mysql_num_rows() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 145
+[18-Jul-2019 17:27:35 Asia/Shanghai] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 150
+[18-Jul-2019 17:27:35 Asia/Shanghai] PHP Warning:  mysql_num_rows() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 145
+[18-Jul-2019 17:27:35 Asia/Shanghai] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 150
+[18-Jul-2019 17:27:36 Asia/Shanghai] PHP Warning:  mysql_num_rows() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 145
+[18-Jul-2019 17:27:36 Asia/Shanghai] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 150
+[18-Jul-2019 17:27:36 Asia/Shanghai] PHP Warning:  mysql_num_rows() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 145
+[18-Jul-2019 17:27:36 Asia/Shanghai] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 150
+[18-Jul-2019 17:28:10 Asia/Shanghai] PHP Warning:  mysql_num_rows() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 145
+[18-Jul-2019 17:28:10 Asia/Shanghai] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 150
+[18-Jul-2019 17:28:11 Asia/Shanghai] PHP Warning:  mysql_num_rows() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 145
+[18-Jul-2019 17:28:11 Asia/Shanghai] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 150
+[18-Jul-2019 17:28:11 Asia/Shanghai] PHP Warning:  mysql_num_rows() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 145
+[18-Jul-2019 17:28:11 Asia/Shanghai] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 150
+[18-Jul-2019 17:28:11 Asia/Shanghai] PHP Warning:  mysql_num_rows() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 145
+[18-Jul-2019 17:28:11 Asia/Shanghai] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 150
+[18-Jul-2019 17:28:12 Asia/Shanghai] PHP Warning:  mysql_num_rows() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 145
+[18-Jul-2019 17:28:12 Asia/Shanghai] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 150
+[18-Jul-2019 17:28:12 Asia/Shanghai] PHP Warning:  mysql_num_rows() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 145
+[18-Jul-2019 17:28:12 Asia/Shanghai] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 150
+[18-Jul-2019 17:30:16 Asia/Shanghai] PHP Warning:  mysql_num_rows() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 145
+[18-Jul-2019 17:30:16 Asia/Shanghai] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 150
+[18-Jul-2019 17:32:11 Asia/Shanghai] PHP Warning:  mysql_num_rows() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 145
+[18-Jul-2019 17:32:11 Asia/Shanghai] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 150
+[18-Jul-2019 17:32:12 Asia/Shanghai] PHP Warning:  mysql_num_rows() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 145
+[18-Jul-2019 17:32:12 Asia/Shanghai] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 150
+[18-Jul-2019 17:32:12 Asia/Shanghai] PHP Warning:  mysql_num_rows() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 145
+[18-Jul-2019 17:32:12 Asia/Shanghai] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 150
+[18-Jul-2019 17:32:12 Asia/Shanghai] PHP Warning:  mysql_num_rows() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 145
+[18-Jul-2019 17:32:12 Asia/Shanghai] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 150
+[18-Jul-2019 17:32:13 Asia/Shanghai] PHP Warning:  mysql_num_rows() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 145
+[18-Jul-2019 17:32:13 Asia/Shanghai] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 150
+[18-Jul-2019 17:32:13 Asia/Shanghai] PHP Warning:  mysql_num_rows() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 145
+[18-Jul-2019 17:32:13 Asia/Shanghai] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 150
+[18-Jul-2019 17:49:24 Asia/Shanghai] PHP Warning:  mysql_num_rows() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 143
+[18-Jul-2019 17:49:24 Asia/Shanghai] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 148
+[18-Jul-2019 17:51:34 Asia/Shanghai] PHP Warning:  mysql_num_rows() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 143
+[18-Jul-2019 17:51:34 Asia/Shanghai] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 148
+[18-Jul-2019 17:55:26 Asia/Shanghai] PHP Warning:  mysql_num_rows() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 232
+[18-Jul-2019 17:55:38 Asia/Shanghai] PHP Warning:  mysql_num_rows() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 232
+[18-Jul-2019 17:55:51 Asia/Shanghai] PHP Warning:  mysql_num_rows() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 232
+[18-Jul-2019 17:55:56 Asia/Shanghai] PHP Warning:  mysql_num_rows() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 232
+[18-Jul-2019 18:49:35 Asia/Shanghai] PHP Warning:  mysql_num_rows() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 234
+[18-Jul-2019 18:50:43 Asia/Shanghai] PHP Warning:  mysql_num_rows() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 234
+[18-Jul-2019 18:54:21 Asia/Shanghai] PHP Warning:  mysql_num_rows() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 234
+[18-Jul-2019 18:54:39 Asia/Shanghai] PHP Warning:  mysql_num_rows() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 234
+[18-Jul-2019 18:55:44 Asia/Shanghai] PHP Warning:  mysql_num_rows() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 234
+[18-Jul-2019 20:37:00 Asia/Shanghai] PHP Notice:  Undefined index: like in I:\0web\sunlight\php\dosql\mysql.php on line 78
+[18-Jul-2019 20:37:01 Asia/Shanghai] PHP Notice:  Undefined index: like in I:\0web\sunlight\php\dosql\mysql.php on line 78
+[18-Jul-2019 20:37:02 Asia/Shanghai] PHP Warning:  mysql_num_rows() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 235
+[18-Jul-2019 20:37:10 Asia/Shanghai] PHP Notice:  Undefined index: like in I:\0web\sunlight\php\dosql\mysql.php on line 78
+[18-Jul-2019 20:37:11 Asia/Shanghai] PHP Notice:  Undefined index: like in I:\0web\sunlight\php\dosql\mysql.php on line 78
+[18-Jul-2019 20:37:21 Asia/Shanghai] PHP Notice:  Undefined index: like in I:\0web\sunlight\php\dosql\mysql.php on line 78
+[18-Jul-2019 20:37:22 Asia/Shanghai] PHP Notice:  Undefined index: like in I:\0web\sunlight\php\dosql\mysql.php on line 78
+[18-Jul-2019 20:42:23 Asia/Shanghai] PHP Notice:  Undefined index: field in I:\0web\sunlight\php\dosql\mysql.php on line 86
+[18-Jul-2019 20:42:23 Asia/Shanghai] PHP Notice:  Undefined index: value in I:\0web\sunlight\php\dosql\mysql.php on line 87
+[18-Jul-2019 20:42:23 Asia/Shanghai] PHP Notice:  Undefined index: like in I:\0web\sunlight\php\dosql\mysql.php on line 88
+[18-Jul-2019 20:42:24 Asia/Shanghai] PHP Notice:  Undefined index: field in I:\0web\sunlight\php\dosql\mysql.php on line 86
+[18-Jul-2019 20:42:24 Asia/Shanghai] PHP Notice:  Undefined index: value in I:\0web\sunlight\php\dosql\mysql.php on line 87
+[18-Jul-2019 20:42:24 Asia/Shanghai] PHP Notice:  Undefined index: like in I:\0web\sunlight\php\dosql\mysql.php on line 88
+[18-Jul-2019 20:47:25 Asia/Shanghai] PHP Notice:  Undefined index: field in I:\0web\sunlight\php\dosql\mysql.php on line 86
+[18-Jul-2019 20:47:25 Asia/Shanghai] PHP Notice:  Undefined index: field in I:\0web\sunlight\php\dosql\mysql.php on line 86
+[18-Jul-2019 20:47:25 Asia/Shanghai] PHP Notice:  Undefined index: value in I:\0web\sunlight\php\dosql\mysql.php on line 87
+[18-Jul-2019 20:47:25 Asia/Shanghai] PHP Notice:  Undefined index: value in I:\0web\sunlight\php\dosql\mysql.php on line 87
+[18-Jul-2019 20:47:25 Asia/Shanghai] PHP Notice:  Undefined index: like in I:\0web\sunlight\php\dosql\mysql.php on line 88
+[18-Jul-2019 20:47:25 Asia/Shanghai] PHP Notice:  Undefined index: like in I:\0web\sunlight\php\dosql\mysql.php on line 88
+[18-Jul-2019 20:47:26 Asia/Shanghai] PHP Notice:  Undefined index: field in I:\0web\sunlight\php\dosql\mysql.php on line 86
+[18-Jul-2019 20:47:26 Asia/Shanghai] PHP Notice:  Undefined index: value in I:\0web\sunlight\php\dosql\mysql.php on line 87
+[18-Jul-2019 20:47:34 Asia/Shanghai] PHP Notice:  Undefined index: field in I:\0web\sunlight\php\dosql\mysql.php on line 86
+[18-Jul-2019 20:47:34 Asia/Shanghai] PHP Notice:  Undefined index: value in I:\0web\sunlight\php\dosql\mysql.php on line 87
+[18-Jul-2019 20:47:34 Asia/Shanghai] PHP Notice:  Undefined index: like in I:\0web\sunlight\php\dosql\mysql.php on line 88
+[18-Jul-2019 20:47:34 Asia/Shanghai] PHP Notice:  Undefined index: field in I:\0web\sunlight\php\dosql\mysql.php on line 86
+[18-Jul-2019 20:47:34 Asia/Shanghai] PHP Notice:  Undefined index: value in I:\0web\sunlight\php\dosql\mysql.php on line 87
+[18-Jul-2019 20:47:34 Asia/Shanghai] PHP Notice:  Undefined index: like in I:\0web\sunlight\php\dosql\mysql.php on line 88
+[18-Jul-2019 20:47:35 Asia/Shanghai] PHP Notice:  Undefined index: field in I:\0web\sunlight\php\dosql\mysql.php on line 86
+[18-Jul-2019 20:47:35 Asia/Shanghai] PHP Notice:  Undefined index: value in I:\0web\sunlight\php\dosql\mysql.php on line 87
+[18-Jul-2019 20:49:26 Asia/Shanghai] PHP Notice:  Undefined index: field in I:\0web\sunlight\php\dosql\mysql.php on line 86
+[18-Jul-2019 20:49:26 Asia/Shanghai] PHP Notice:  Undefined index: value in I:\0web\sunlight\php\dosql\mysql.php on line 87
+[18-Jul-2019 20:49:26 Asia/Shanghai] PHP Warning:  json_decode() expects parameter 1 to be string, array given in I:\0web\sunlight\php\dosql\mysql.php on line 88
+[18-Jul-2019 20:49:26 Asia/Shanghai] PHP Notice:  Undefined index: field in I:\0web\sunlight\php\dosql\mysql.php on line 86
+[18-Jul-2019 20:49:26 Asia/Shanghai] PHP Notice:  Undefined index: value in I:\0web\sunlight\php\dosql\mysql.php on line 87
+[18-Jul-2019 20:49:26 Asia/Shanghai] PHP Warning:  json_decode() expects parameter 1 to be string, array given in I:\0web\sunlight\php\dosql\mysql.php on line 88
+[18-Jul-2019 20:49:27 Asia/Shanghai] PHP Notice:  Undefined index: field in I:\0web\sunlight\php\dosql\mysql.php on line 86
+[18-Jul-2019 20:49:27 Asia/Shanghai] PHP Notice:  Undefined index: value in I:\0web\sunlight\php\dosql\mysql.php on line 87
+[20-Jul-2019 18:14:18 Asia/Shanghai] PHP Notice:  Array to string conversion in I:\0web\sunlight\php\dosql\mysql.php on line 294
+[22-Jul-2019 15:09:25 Asia/Shanghai] PHP Warning:  mysql_num_rows() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 143
+[22-Jul-2019 15:09:25 Asia/Shanghai] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 148
+[22-Jul-2019 16:21:15 Asia/Shanghai] PHP Warning:  mysql_num_rows() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 144
+[22-Jul-2019 16:21:15 Asia/Shanghai] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 149
+[22-Jul-2019 16:21:34 Asia/Shanghai] PHP Warning:  mysql_num_rows() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 144
+[22-Jul-2019 16:21:34 Asia/Shanghai] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 149
+[22-Jul-2019 16:33:15 Asia/Shanghai] PHP Warning:  mysql_num_rows() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 144
+[22-Jul-2019 16:33:15 Asia/Shanghai] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 149
+[22-Jul-2019 16:35:47 Asia/Shanghai] PHP Warning:  mysql_num_rows() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 144
+[22-Jul-2019 16:35:47 Asia/Shanghai] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 149
+[23-Jul-2019 10:31:26 Asia/Shanghai] PHP Warning:  mysql_num_rows() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 144
+[23-Jul-2019 10:31:26 Asia/Shanghai] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 149
+[23-Jul-2019 10:32:43 Asia/Shanghai] PHP Warning:  mysql_num_rows() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 144
+[23-Jul-2019 10:32:43 Asia/Shanghai] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 149
+[23-Jul-2019 16:19:17 Asia/Shanghai] PHP Warning:  mysql_num_rows() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 144
+[23-Jul-2019 16:19:17 Asia/Shanghai] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 149
+[23-Jul-2019 16:24:21 Asia/Shanghai] PHP Warning:  mysql_num_rows() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 144
+[23-Jul-2019 16:24:21 Asia/Shanghai] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 149
+[23-Jul-2019 19:05:24 Asia/Shanghai] PHP Warning:  mysql_num_rows() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 144
+[23-Jul-2019 19:05:24 Asia/Shanghai] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 149
+[03-Aug-2019 13:36:06 Asia/Shanghai] PHP Warning:  mysql_num_rows() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 144
+[03-Aug-2019 13:36:06 Asia/Shanghai] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 149
+[04-Aug-2019 16:10:55 Asia/Shanghai] PHP Warning:  Invalid argument supplied for foreach() in I:\0web\sunlight\php\dosql\mysql.php on line 293
+[04-Aug-2019 16:11:29 Asia/Shanghai] PHP Warning:  Invalid argument supplied for foreach() in I:\0web\sunlight\php\dosql\mysql.php on line 293
+[04-Aug-2019 16:15:53 Asia/Shanghai] PHP Warning:  Invalid argument supplied for foreach() in I:\0web\sunlight\php\dosql\mysql.php on line 293
+[04-Aug-2019 16:16:36 Asia/Shanghai] PHP Warning:  Invalid argument supplied for foreach() in I:\0web\sunlight\php\dosql\mysql.php on line 293
+[04-Aug-2019 16:17:37 Asia/Shanghai] PHP Warning:  Invalid argument supplied for foreach() in I:\0web\sunlight\php\dosql\mysql.php on line 293
+[05-Aug-2019 19:05:53 Asia/Shanghai] PHP Warning:  mysql_num_rows() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 144
+[05-Aug-2019 19:05:53 Asia/Shanghai] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 149
+[06-Aug-2019 22:52:58 Asia/Shanghai] PHP Warning:  mysql_num_rows() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 144
+[06-Aug-2019 22:52:58 Asia/Shanghai] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 149
+[07-Aug-2019 01:31:35 Asia/Shanghai] PHP Notice:  Array to string conversion in I:\0web\sunlight\php\dosql\mysql.php on line 204
+[07-Aug-2019 01:31:42 Asia/Shanghai] PHP Notice:  Array to string conversion in I:\0web\sunlight\php\dosql\mysql.php on line 204
+[07-Aug-2019 01:37:07 Asia/Shanghai] PHP Notice:  Array to string conversion in I:\0web\sunlight\php\dosql\mysql.php on line 204
+[07-Aug-2019 01:41:10 Asia/Shanghai] PHP Notice:  Array to string conversion in I:\0web\sunlight\php\dosql\mysql.php on line 204
+[07-Aug-2019 01:41:20 Asia/Shanghai] PHP Notice:  Array to string conversion in I:\0web\sunlight\php\dosql\mysql.php on line 204
+[07-Aug-2019 01:42:32 Asia/Shanghai] PHP Notice:  Array to string conversion in I:\0web\sunlight\php\dosql\mysql.php on line 204
+[07-Aug-2019 01:43:52 Asia/Shanghai] PHP Notice:  Array to string conversion in I:\0web\sunlight\php\dosql\mysql.php on line 204
+[07-Aug-2019 02:15:11 Asia/Shanghai] PHP Warning:  mysql_num_rows() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 212
+[07-Aug-2019 02:15:11 Asia/Shanghai] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 216
+[07-Aug-2019 02:37:51 Asia/Shanghai] PHP Warning:  mysql_num_rows() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 238
+[08-Aug-2019 10:18:23 Asia/Shanghai] PHP Warning:  mysql_num_rows() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 238
+[09-Aug-2019 23:36:01 Asia/Shanghai] PHP Warning:  mysql_num_rows() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 144
+[09-Aug-2019 23:36:01 Asia/Shanghai] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 149
+[10-Aug-2019 01:04:42 Asia/Shanghai] PHP Warning:  mysql_num_rows() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 144
+[10-Aug-2019 01:04:42 Asia/Shanghai] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 149
+[10-Aug-2019 14:33:32 Asia/Shanghai] PHP Warning:  mysql_num_rows() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 144
+[10-Aug-2019 14:33:32 Asia/Shanghai] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 149
+[10-Aug-2019 14:34:47 Asia/Shanghai] PHP Warning:  mysql_num_rows() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 144
+[10-Aug-2019 14:34:47 Asia/Shanghai] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 149
+[10-Aug-2019 14:35:15 Asia/Shanghai] PHP Warning:  mysql_num_rows() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 144
+[10-Aug-2019 14:35:15 Asia/Shanghai] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 149
+[10-Aug-2019 14:46:40 Asia/Shanghai] PHP Warning:  mysql_num_rows() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 144
+[10-Aug-2019 14:46:40 Asia/Shanghai] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 149
+[12-Aug-2019 09:51:21 Asia/Shanghai] PHP Warning:  mysql_num_rows() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 144
+[12-Aug-2019 09:51:21 Asia/Shanghai] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 149
+[12-Aug-2019 09:51:47 Asia/Shanghai] PHP Warning:  mysql_num_rows() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 144
+[12-Aug-2019 09:51:47 Asia/Shanghai] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 149
+[12-Aug-2019 09:52:01 Asia/Shanghai] PHP Warning:  mysql_num_rows() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 144
+[12-Aug-2019 09:52:01 Asia/Shanghai] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 149
+[13-Aug-2019 00:26:16 Asia/Shanghai] PHP Warning:  mysql_num_rows() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 144
+[13-Aug-2019 00:26:16 Asia/Shanghai] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 149
+[13-Aug-2019 00:36:03 Asia/Shanghai] PHP Warning:  mysql_num_rows() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 144
+[13-Aug-2019 00:36:03 Asia/Shanghai] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 149
+[14-Aug-2019 16:08:42 Asia/Shanghai] PHP Warning:  mysql_num_rows() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 144
+[14-Aug-2019 16:08:42 Asia/Shanghai] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 149
+[14-Aug-2019 17:03:03 Asia/Shanghai] PHP Warning:  mysql_num_rows() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 144
+[14-Aug-2019 17:03:03 Asia/Shanghai] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 149
+[14-Aug-2019 17:30:36 Asia/Shanghai] PHP Warning:  mysql_num_rows() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 144
+[14-Aug-2019 17:30:36 Asia/Shanghai] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 149
+[14-Aug-2019 17:32:28 Asia/Shanghai] PHP Warning:  mysql_num_rows() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 144
+[14-Aug-2019 17:32:28 Asia/Shanghai] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 149
+[14-Aug-2019 17:33:45 Asia/Shanghai] PHP Warning:  mysql_num_rows() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 144
+[14-Aug-2019 17:33:45 Asia/Shanghai] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 149
+[14-Aug-2019 17:35:10 Asia/Shanghai] PHP Warning:  mysql_num_rows() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 144
+[14-Aug-2019 17:35:10 Asia/Shanghai] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 149
+[14-Aug-2019 17:35:38 Asia/Shanghai] PHP Warning:  mysql_num_rows() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 144
+[14-Aug-2019 17:35:38 Asia/Shanghai] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 149
+[14-Aug-2019 17:36:56 Asia/Shanghai] PHP Warning:  mysql_num_rows() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 144
+[14-Aug-2019 17:36:56 Asia/Shanghai] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 149
+[14-Aug-2019 17:37:01 Asia/Shanghai] PHP Warning:  mysql_num_rows() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 144
+[14-Aug-2019 17:37:01 Asia/Shanghai] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 149
+[14-Aug-2019 17:38:00 Asia/Shanghai] PHP Warning:  mysql_num_rows() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 144
+[14-Aug-2019 17:38:00 Asia/Shanghai] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 149
+[14-Aug-2019 17:40:52 Asia/Shanghai] PHP Warning:  mysql_num_rows() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 144
+[14-Aug-2019 17:40:52 Asia/Shanghai] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 149
+[14-Aug-2019 17:43:45 Asia/Shanghai] PHP Warning:  mysql_num_rows() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 144
+[14-Aug-2019 17:43:45 Asia/Shanghai] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 149
+[14-Aug-2019 17:44:48 Asia/Shanghai] PHP Warning:  mysql_num_rows() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 144
+[14-Aug-2019 17:44:48 Asia/Shanghai] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 149
+[14-Aug-2019 17:46:36 Asia/Shanghai] PHP Warning:  mysql_num_rows() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 144
+[14-Aug-2019 17:46:36 Asia/Shanghai] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 149
+[14-Aug-2019 17:47:14 Asia/Shanghai] PHP Warning:  mysql_num_rows() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 144
+[14-Aug-2019 17:47:14 Asia/Shanghai] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 149
+[14-Aug-2019 18:08:40 Asia/Shanghai] PHP Warning:  mysql_num_rows() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 144
+[14-Aug-2019 18:08:40 Asia/Shanghai] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 149
+[14-Aug-2019 18:13:39 Asia/Shanghai] PHP Warning:  mysql_num_rows() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 144
+[14-Aug-2019 18:13:39 Asia/Shanghai] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 149
+[14-Aug-2019 18:14:16 Asia/Shanghai] PHP Warning:  mysql_num_rows() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 144
+[14-Aug-2019 18:14:16 Asia/Shanghai] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 149
+[14-Aug-2019 18:24:15 Asia/Shanghai] PHP Warning:  mysql_num_rows() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 144
+[14-Aug-2019 18:24:15 Asia/Shanghai] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 149
+[14-Aug-2019 18:26:12 Asia/Shanghai] PHP Warning:  mysql_num_rows() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 144
+[14-Aug-2019 18:26:12 Asia/Shanghai] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 149
+[14-Aug-2019 18:26:19 Asia/Shanghai] PHP Warning:  mysql_num_rows() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 144
+[14-Aug-2019 18:26:19 Asia/Shanghai] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 149
+[14-Aug-2019 18:26:58 Asia/Shanghai] PHP Warning:  mysql_num_rows() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 144
+[14-Aug-2019 18:26:58 Asia/Shanghai] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 149
+[14-Aug-2019 18:27:04 Asia/Shanghai] PHP Warning:  mysql_num_rows() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 144
+[14-Aug-2019 18:27:04 Asia/Shanghai] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 149
+[14-Aug-2019 18:37:30 Asia/Shanghai] PHP Warning:  mysql_num_rows() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 144
+[14-Aug-2019 18:37:30 Asia/Shanghai] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 149
+[14-Aug-2019 18:47:12 Asia/Shanghai] PHP Warning:  mysql_num_rows() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 144
+[14-Aug-2019 18:47:12 Asia/Shanghai] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 149
+[14-Aug-2019 20:41:50 Asia/Shanghai] PHP Warning:  mysql_num_rows() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 144
+[14-Aug-2019 20:41:50 Asia/Shanghai] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 149
+[19-Aug-2019 18:58:56 Asia/Shanghai] PHP Warning:  mysql_num_rows() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 144
+[19-Aug-2019 18:58:56 Asia/Shanghai] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 149
+[25-Aug-2019 12:06:48 Asia/Shanghai] PHP Warning:  mysql_num_rows() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 144
+[25-Aug-2019 12:06:48 Asia/Shanghai] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 149
+[26-Aug-2019 01:55:29 Asia/Shanghai] PHP Warning:  mysql_num_rows() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 144
+[26-Aug-2019 01:55:29 Asia/Shanghai] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 149
+[26-Aug-2019 01:56:33 Asia/Shanghai] PHP Warning:  mysql_num_rows() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 144
+[26-Aug-2019 01:56:33 Asia/Shanghai] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 149
+[01-Sep-2019 20:30:02 Asia/Shanghai] PHP Warning:  mysql_num_rows() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 144
+[01-Sep-2019 20:30:03 Asia/Shanghai] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 149
+[01-Sep-2019 20:30:10 Asia/Shanghai] PHP Warning:  mysql_num_rows() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 144
+[01-Sep-2019 20:30:10 Asia/Shanghai] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 149
+[14-Sep-2019 16:56:00 Asia/Shanghai] PHP Warning:  mysql_num_rows() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 144
+[14-Sep-2019 16:56:00 Asia/Shanghai] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 149
+[15-Sep-2019 17:44:01 Asia/Shanghai] PHP Warning:  mysql_num_rows() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 144
+[15-Sep-2019 17:44:01 Asia/Shanghai] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 149
+[04-Oct-2019 22:59:42 Asia/Shanghai] PHP Warning:  mysql_num_rows() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 144
+[04-Oct-2019 22:59:42 Asia/Shanghai] PHP Warning:  mysql_fetch_array() expects parameter 1 to be resource, boolean given in I:\0web\sunlight\php\dosql\mysql.php on line 149
