@@ -31,6 +31,11 @@ const routes: Array<RouteRecordRaw> = [
         name: 'browse-view',
         component: () => import('../views/browse-view/index.vue')
     },
+    {
+        path: '/setting-path',
+        name: 'setting-path',
+        component: () => import('../views/setting-path/index.vue')
+    },
 ]
 
 const router = createRouter({
