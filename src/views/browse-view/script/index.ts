@@ -59,6 +59,8 @@ export default defineComponent({
             const list = this.imgPathList;
             const initPage = this.initPage - 1;
 
+            if (this.loading) return;
+
             // 开启加载状态
             this.loading = true;
 
@@ -119,16 +121,13 @@ export default defineComponent({
                     // 获取数据
                     const data = r.data;
 
-                    // 为图片排序
-                    array_sort(data);
-
                     // 加入数据渲染页面
                     this.imgPathList = data;
-
+                })
+                .then(r => {
                     // 开始加载图片
                     this.load_img();
-
-                });
+                })
         },
         /**
          * 上一页
@@ -236,17 +235,17 @@ export default defineComponent({
 
     // 生命周期
     created() {
-        const manga:any = this.manga = this.get_manga_value('manga');
-        const chapter:any = this.chapter = decodeURI(this.$route.query.chapter as any);
+        const manga: any = this.manga = this.get_manga_value('manga');
+        const chapter: any = this.chapter = decodeURI(this.$route.query.chapter as any);
 
         ajax.post("php/get-chapter-list.php", {chapterPath: manga}).then(r => {
-            const data = r.data.map((i:any)=>{
+            const data = r.data.map((i: any) => {
                 return i.name;
             });
 
             const menu = this.menu = data;
-        }).then(()=>{
-            const index:any = this.index = this.menu.indexOf(chapter);
+        }).then(() => {
+            const index: any = this.index = this.menu.indexOf(chapter);
             localStorage.setItem('index', index)
 
             // 加载页面

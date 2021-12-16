@@ -15,7 +15,7 @@
             <van-list
                     v-model="loading"
                     :finished="finished"
-                    :immediate-check="true"
+                    :immediate-check="false"
                     @load="load_img"
             >
                 <img v-for="(k, i) in imgFileList" :src="k" :key="i" alt="接收图片"/>
