@@ -1,0 +1,16 @@
+{
+  "id": "2116381",
+  "name": "sunlight",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "3727371",
+      "name": "目录",
+      "font_class": "mulu",
+      "unicode": "e603",
+      "unicode_decimal": 58883
+    }
+  ]
+}
