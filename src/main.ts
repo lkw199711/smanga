@@ -11,5 +11,6 @@ import 'reset-css'
 import 'element-plus/theme-chalk/index.css'
 import 'vant/lib/index.css'
 import './style/public.less'
+import './assets/icon/iconfont.css'
 
 createApp(App).use(store).use(router).use(ElementPlus).use(Vant).mount('#app')
