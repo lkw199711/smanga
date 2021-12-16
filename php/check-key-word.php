@@ -6,6 +6,8 @@
 	header('content-type:text/html;charset=UTF-8');
 
 	$DIR = '/data/manga/';
+	#配置文件路径
+    $configRoute = '/config/config';
 
 	if(!$_POST){
 		$_POST=$_GET;

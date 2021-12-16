@@ -4,6 +4,7 @@ export default createStore({
     state: {
         chapterAwait: true,
         mangaAwait: true,
+        previewAwait: true,
     } as any,
     mutations: {
         switch_await(state, {bool = true, running = 'chapterAwait',}) {

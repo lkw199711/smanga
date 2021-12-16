@@ -64,11 +64,11 @@ function send_post($post_data, $url) {
  * @param  [string] $str  [description]
  * @return [type]       [description]
  */
-function write_txt($file,$str){
+function write_txt($file,$str,$type="w"){
 	#打开文件
-	$myfile = fopen($file, "w") or die("Unable to open file!");
+	$myfile = fopen($file, $type) or die("Unable to open file!");
 	#写入文本
-	fwrite($myfile, $str.'\r\n');
+	fwrite($myfile, $str."\r\n");
 	#关闭文件
 	fclose($myfile);
 
@@ -115,5 +115,19 @@ function my_scandir($dir)
     }
 }
 
+
+function get_file_line($file_path){
+    if(!file_exists($file_path)) return [];
+
+	$fp = fopen($file_path,"r");
+	$str = fread($fp,filesize($file_path));//指定读取大小，这里把整个文件内容读取出来
+
+	$arr = explode("\r\n",$str);
+
+	fclose($fp);
+
+	return $arr?$arr:[];
+
+}
 
 ?>

@@ -18,7 +18,6 @@
         data() {
             return {
                 placeholder: require('@/assets/s-blue.png'),
-                test: 'http://m.tt2.ink:9000/test.jpg',
                 fit: 'cover',
                 style: {
                     width: '200px',
@@ -41,6 +40,9 @@
             title(){
                 return this.mangaInfo.name;
             },
+            path(){
+                return this.mangaInfo.path;
+            },
 
         },
 
@@ -48,7 +50,7 @@
             go_chapter() {
                 this.$router.push({
                     path: '/chapter-list',
-                    query: {manga: this.title},
+                    query: {manga: this.path},
                 });
             }
         },

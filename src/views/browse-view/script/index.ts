@@ -113,7 +113,7 @@ export default defineComponent({
             const manga = this.manga;
             const chapter = this.chapter;
 
-            ajax.post("php/get-image-list.php", {manga: manga + "/" + chapter})
+            ajax.post("php/get-image-list.php", {imagePath: manga + "/" + chapter})
                 .then(r => {
 
                     // 获取数据
@@ -237,7 +237,7 @@ export default defineComponent({
     // 生命周期
     created() {
         const manga:any = this.manga = this.get_manga_value('manga');
-        const chapter:any = this.chapter = this.$route.query.chapter;
+        const chapter:any = this.chapter = decodeURI(this.$route.query.chapter as any);
 
         ajax.post("php/get-chapter-list.php", {chapterPath: manga}).then(r => {
             const data = r.data.map((i:any)=>{

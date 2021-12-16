@@ -4,15 +4,14 @@
 require_once 'check-key-word.php';
 require_once './public/lkw.php';
 
-$chapterPath = $_POST['chapterPath'];
+#读取文件,获取旧文件路径 返回数组
+$pathList = array_filter(get_file_line($configRoute));
+$request = [];
 
-if (!$chapterPath) {
-	$chapterPath='';
+#遍历所有路径 返回所有漫画
+foreach ($pathList as $key => $value) {
+	$request = array_merge($request,get_file_list($value));
 }
-
-// echo $DIR.$chapterPath;
-
-$request = get_file_list($chapterPath);
 
 #返回信息
 echo json_encode($request);
@@ -20,9 +19,6 @@ echo json_encode($request);
 function get_file_list($path){
 	$list = array();
 	$dir = dir($path);
-
-	// echo "Handle: " . $dir->handle . "<br>";
-	// echo "Path: " . $dir->path . "<br>";
 
 	while (($file = $dir->read()) !== false){
 		if(!is_dir($path."/".$file)) continue;
@@ -62,18 +58,12 @@ function file_exist_name($fileName,$fileList){
 		if($value['name']===$finalName){
 			$SAMEFILENAME++;
 			return file_exist_name($fileName);
-		}	
+		}
 	}
 
 	$SAMEFILENAME=0;
 	return $finalName;
 }
-// iconv("gbk","UTF-8",$file)
-// 
-// echo file_exist_name('1.txt');
-// echo json_encode($prefix = $SAMEFILENAME===0 ? '' : '('.$SAMEFILENAME.')');
-//debug();
-
 
 function get_first_image($dir)
 {

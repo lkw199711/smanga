@@ -1,6 +1,6 @@
 <template>
-    <div class="manga-chapter-item">
-        <div class="item-main" @click="go_browse">
+    <div class="preview-list-item">
+        <div class="item-main">
             <!--封面图片-->
             <el-image v-if="finish" class="anim" :src="poster" :fit="fit" :style="style" :alt="title"/>
 
@@ -17,7 +17,7 @@
     import {defineComponent} from 'vue'
 
     export default defineComponent({
-        name: 'manga-chapter-item',
+        name: 'preview-list-item',
         // 数据
         data() {
             return {
@@ -43,11 +43,8 @@
             finish() {
                 return this.chapterInfo.finish;
             },
-            title(){
+            title() {
                 return this.chapterInfo.name;
-            },
-            path(){
-                return this.chapterInfo.path;
             },
 
         },
@@ -56,14 +53,7 @@
         components: {},
 
         // 方法
-        methods: {
-            go_browse() {
-                this.$router.push({
-                    path: '/browse-view',
-                    query: Object.assign(this.$route.query, {chapter: encodeURI(this.title)})
-                })
-            }
-        },
+        methods: {},
 
         // 生命周期
         created() {
@@ -74,7 +64,6 @@
 <style scoped lang='less' type='text/less'>
     .item-main {
         display: flex;
-        cursor: pointer;
     }
 
     .chapter-name {

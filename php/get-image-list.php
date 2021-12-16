@@ -5,13 +5,13 @@ require_once 'check-key-word.php';
 require_once './public/lkw.php';
 
 
-$manga = $_POST['manga'];
+$imagePath = $_POST['imagePath'];
 
-if (!$manga) {
-	$manga='';
+if (!$imagePath) {
+	$imagePath='';
 }
 
-$request = get_file_list($DIR.$manga);
+$request = get_file_list($imagePath);
 
 #返回信息
 echo json_encode($request);

@@ -26,7 +26,7 @@ export default defineComponent({
     created() {
         store.commit('switch_await', {running: 'mangaAwait', bool: true});
 
-        ajax.post('php/get-chapter-list.php', {chapterPath: ''}).then(res => {
+        ajax.post('php/get-all-manga.php').then(res => {
             this.list = res.data;
 
             // 为漫画请求海报图片

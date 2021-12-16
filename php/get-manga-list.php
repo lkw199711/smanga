@@ -4,15 +4,13 @@
 require_once 'check-key-word.php';
 require_once './public/lkw.php';
 
-$chapterPath = $_POST['chapterPath'];
+$mangaPath = $_POST['mangaPath'];
 
-if (!$chapterPath) {
-	$chapterPath='';
+if (!$mangaPath) {
+	$mangaPath='';
 }
 
-// echo $DIR.$chapterPath;
-
-$request = get_file_list($chapterPath);
+$request = get_file_list($mangaPath);
 
 #返回信息
 echo json_encode($request);
@@ -21,17 +19,13 @@ function get_file_list($path){
 	$list = array();
 	$dir = dir($path);
 
-	// echo "Handle: " . $dir->handle . "<br>";
-	// echo "Path: " . $dir->path . "<br>";
-
 	while (($file = $dir->read()) !== false){
 		if(!is_dir($path."/".$file)) continue;
 		if($file=='.'||$file=='..') continue;
 
   		array_push($list,array(
   			'name'=>$file,
-  			'poster'=>get_first_image($path."/".$file),
-  			'path'=>$path."/".$file
+  			'poster'=>get_first_image($path."/".$file)
   		));
 	}
 
@@ -68,11 +62,6 @@ function file_exist_name($fileName,$fileList){
 	$SAMEFILENAME=0;
 	return $finalName;
 }
-// iconv("gbk","UTF-8",$file)
-// 
-// echo file_exist_name('1.txt');
-// echo json_encode($prefix = $SAMEFILENAME===0 ? '' : '('.$SAMEFILENAME.')');
-//debug();
 
 
 function get_first_image($dir)
