@@ -8,6 +8,11 @@ $newPath = $_POST['newPath'];
 #配置文件路径
 $route = '/config/config';
 
+#如果文件不存在 则创建
+if(!file_exists($route)){
+    write_txt($route,'');
+}
+
 #读取文件,获取旧文件路径 返回数组
 $pathList = array_filter(get_file_line($route));
 
