@@ -36,15 +36,15 @@ docker run --name smanga -itd -p 19700:80 -v /your-route/config:/config smanga:l
 
 ### 简单配置后即可使用.
 
-![smanga1](D:\6github-me\smanga\img\smanga1.png)
+![smanga1](http://m.tt2.ink:8000/img/smanga1.png)
 
 ### 添加成功
 
-![smanga2](D:\6github-me\smanga\img\smanga2.png)
+![smanga2](http://m.tt2.ink:8000/img/smanga2.png)
 
 ### 首页列表即可正常显示
 
-### ![smanga3](D:\6github-me\smanga\img\smanga3.png)
+### ![smanga3](http://m.tt2.ink:8000/img/smanga3.png)
 
 ## 初衷
 
