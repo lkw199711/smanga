@@ -15,7 +15,7 @@
 ### docker（推荐）镜像仅38M
 
 ```dockerfile
-docker run --name smanga -itd -p 19700:80 -v /your-route/config:/config smanga:latest
+docker run --name smanga -itd -p 19700:80 -v /your-route/config:/config lkw199711/smanga:latest
 ```
 
 --name 为docker容器命名
