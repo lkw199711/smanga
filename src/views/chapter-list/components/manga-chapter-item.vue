@@ -2,10 +2,10 @@
     <div class="manga-chapter-item">
         <div class="item-main" @click="go_browse">
             <!--封面图片-->
-            <el-image v-if="finish" class="anim" :src="poster" :fit="fit" :style="style" :alt="title"/>
+            <el-image v-if="finish" class="anim chapter-cover-img" :src="poster" :fit="fit" :alt="title"/>
 
             <!--占位图标-->
-            <el-image v-else :src="placeholder" fit="fill" :style="style"/>
+            <el-image v-else :src="placeholder" class="chapter-cover-img" fit="fill" :style="style"/>
 
             <!--章节名称-->
             <p class="chapter-name single-line-text-overflow">{{title}}</p>
@@ -23,12 +23,6 @@
             return {
                 placeholder: require('@/assets/s-blue.png'),
                 fit: 'cover',
-                style: {
-                    width: '60px',
-                    height: '80px',
-                    backgroundColor: '#f0f0f0',
-                    borderRadius: '8px'
-                },
             }
         },
 
@@ -82,6 +76,13 @@
         width: 600px;
         text-align: left;
         line-height: 4;
+    }
+
+    .chapter-cover-img{
+        width: @chapterCoverWidth;
+        height: 160px;
+        background-color: #f0f0f0;
+        border-radius: 8px;
     }
 
     .anim {

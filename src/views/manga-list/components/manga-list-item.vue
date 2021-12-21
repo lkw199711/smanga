@@ -2,10 +2,10 @@
     <div class="item-main" @click="go_chapter">
 
         <!--封面图片-->
-        <el-image v-if="finish" class="anim" :src="poster" :fit="fit" :style="style" :alt="title"/>
+        <el-image v-if="finish" class="anim cover-img" :src="poster" :fit="fit"  :alt="title"/>
 
         <!--占位图标-->
-        <el-image v-else :src="placeholder" fit="fill" :style="style"/>
+        <el-image v-else class="cover-img" :src="placeholder" fit="fill" :style="style"/>
 
         <!--漫画名称-->
         <p class="manga-name">{{title}}</p>
@@ -19,12 +19,6 @@
             return {
                 placeholder: require('@/assets/s-blue.png'),
                 fit: 'cover',
-                style: {
-                    width: '200px',
-                    height: '260px',
-                    backgroundColor: '#f0f0f0',
-                    borderRadius: '8px'
-                },
             }
         },
         props: ['mangaInfo'],
@@ -61,35 +55,64 @@
 </script>
 
 <style scoped type="text/less" lang="less">
-    .item-main {
-        cursor: pointer;
-    }
+.item-main {
+    cursor: pointer;
+    overflow: hidden;
+}
 
-    .manga-name {
-        text-align: center;
-        line-height: 4;
-    }
+.manga-name {
+    text-align: center;
+    line-height: 4;
+}
 
-    .anim {
-        opacity: 0;
-        animation: mymove 1s ease-in forwards;
-    }
+.cover-img{
+    background-color: #f0f0f0;
+    border-radius: 8px;
+}
 
-    @keyframes mymove {
-        10% {
-            opacity: 0.1;
-        }
-        50% {
-            opacity: 0.5;
-        }
-        60% {
-            opacity: 0.6;
-        }
-        90% {
-            opacity: 0.9;
-        }
-        100% {
-            opacity: 1;
-        }
+
+
+.anim {
+    opacity: 0;
+    animation: mymove 1s ease-in forwards;
+}
+
+@keyframes mymove {
+    10% {
+        opacity: 0.1;
     }
+    50% {
+        opacity: 0.5;
+    }
+    60% {
+        opacity: 0.6;
+    }
+    90% {
+        opacity: 0.9;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+
+@media only screen and (min-width: 1081px) {
+    .item-main{
+        width: @mangaCoverWidth;
+    }
+    .cover-img{
+        width: @mangaCoverWidth;
+        height: @mangaCoverHeight;
+    }
+}
+
+@media only screen and (max-width: 1080px) {
+    .item-main{
+        width: @PhoneMangaCoverHeight;
+    }
+    .cover-img{
+        width: @PhoneMangaCoverWidth;
+        height: @PhoneMangaCoverHeight;
+    }
+}
 </style>
