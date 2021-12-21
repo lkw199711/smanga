@@ -66,21 +66,19 @@
 </script>
 
 <style scoped lang='less' type='text/less'>
-    .item-main {
+    .manga-chapter-item {
+        overflow: hidden;
         display: flex;
         cursor: pointer;
     }
 
     .chapter-name {
         margin-left: 20px;
-        width: 600px;
         text-align: left;
         line-height: 4;
     }
 
     .chapter-cover-img{
-        width: @chapterCoverWidth;
-        height: 160px;
         background-color: #f0f0f0;
         border-radius: 8px;
     }
@@ -105,6 +103,26 @@
         }
         100% {
             opacity: 1;
+        }
+    }
+
+    @media only screen and (min-width: 1081px) {
+        .manga-chapter-item{
+            width: @mangaCoverWidth;
+        }
+        .chapter-cover-img{
+            width: @chapterCoverWidth;
+            height: @mangaCoverHeight;
+        }
+    }
+
+    @media only screen and (max-width: 1080px) {
+        .manga-chapter-item{
+            width: @PhoneMangaCoverHeight;
+        }
+        .chapter-cover-img{
+            width: @PhoneChapterCoverWidth;
+            height: @PhoneMangaCoverHeight;
         }
     }
 </style>
