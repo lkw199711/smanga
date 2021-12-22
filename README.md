@@ -112,3 +112,10 @@ docker run --name smanga -itd -p 19700:80 -v /your-route/config:/config lkw19971
 
 **tg: https://t.me/+FFgQ7AMIdrg2M2Y1**
 
+
+
+## 版本更新记录
+
+### 1.0	基础版
+
+#### 	1.1 列表页面手机端样式支持修正
