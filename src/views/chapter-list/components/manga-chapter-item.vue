@@ -1,15 +1,13 @@
 <template>
-    <div class="manga-chapter-item">
-        <div class="item-main" @click="go_browse">
-            <!--封面图片-->
-            <el-image v-if="finish" class="anim chapter-cover-img" :src="poster" :fit="fit" :alt="title"/>
+    <div class="manga-chapter-item" @click="go_browse">
+        <!--封面图片-->
+        <el-image v-if="finish" class="anim chapter-cover-img" :src="poster" :fit="fit" :alt="title"/>
 
-            <!--占位图标-->
-            <el-image v-else :src="placeholder" class="chapter-cover-img" fit="fill" :style="style"/>
+        <!--占位图标-->
+        <el-image v-else :src="placeholder" class="chapter-cover-img" fit="fill" :style="style"/>
 
-            <!--章节名称-->
-            <p class="chapter-name single-line-text-overflow">{{title}}</p>
-        </div>
+        <!--章节名称-->
+        <p class="chapter-name single-line-text-overflow">{{title}}</p>
     </div>
 </template>
 
@@ -73,6 +71,7 @@
     }
 
     .chapter-name {
+        width: 240px;
         margin-left: 20px;
         text-align: left;
         line-height: 4;
@@ -108,21 +107,21 @@
 
     @media only screen and (min-width: 1081px) {
         .manga-chapter-item{
-            width: @mangaCoverWidth;
+            width: @chapterWidth;
         }
         .chapter-cover-img{
             width: @chapterCoverWidth;
-            height: @mangaCoverHeight;
+            height: @chapterCoverHeight;
         }
     }
 
     @media only screen and (max-width: 1080px) {
         .manga-chapter-item{
-            width: @PhoneMangaCoverHeight;
+            width: @PhoneChapterWidth;
         }
         .chapter-cover-img{
             width: @PhoneChapterCoverWidth;
-            height: @PhoneMangaCoverHeight;
+            height: @PhoneChapterCoverHeight;
         }
     }
 </style>

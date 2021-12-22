@@ -5,10 +5,10 @@
         <el-image v-if="finish" class="anim cover-img" :src="poster" :fit="fit"  :alt="title"/>
 
         <!--占位图标-->
-        <el-image v-else class="cover-img" :src="placeholder" fit="fill" :style="style"/>
+        <el-image v-else class="cover-img" :src="placeholder" fit="fill"/>
 
         <!--漫画名称-->
-        <p class="manga-name">{{title}}</p>
+        <p class="manga-name single-line-text-overflow">{{title}}</p>
     </div>
 </template>
 
@@ -104,15 +104,21 @@
         width: @mangaCoverWidth;
         height: @mangaCoverHeight;
     }
+    .manga-name {
+        line-height: 4;
+    }
 }
 
 @media only screen and (max-width: 1080px) {
     .item-main{
-        width: @PhoneMangaCoverHeight;
+        width: @PhoneMangaCoverWidth;
     }
     .cover-img{
         width: @PhoneMangaCoverWidth;
         height: @PhoneMangaCoverHeight;
+    }
+    .manga-name {
+        line-height: 3;
     }
 }
 </style>

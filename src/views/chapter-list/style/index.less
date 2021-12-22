@@ -2,12 +2,23 @@
     display: flex;
     flex-wrap: wrap;
     justify-content: space-around;
+}
 
-    &-item{
-        margin: 10px 40px;
+@media only screen and (min-width: 1081px) {
+    .chapter-list-item{
+        margin: 32px 40px;
+    }
+    .chapter-seat{
+        width: @chapterWidth;
     }
 }
 
-.chapter-seat-posted{
-    width: @chapterCoverWidth;
+@media only screen and (max-width: 1080px) {
+    .chapter-list-item{
+        margin: 12px 40px;
+    }
+    .chapter-seat{
+        width: @PhoneChapterWidth;
+    }
 }
+
