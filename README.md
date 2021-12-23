@@ -119,3 +119,5 @@ docker run --name smanga -itd -p 19700:80 -v /your-route/config:/config lkw19971
 ### 1.0	基础版
 
 #### 	1.1 列表页面手机端样式支持修正
+
+#### 1.2 分页功能添加
