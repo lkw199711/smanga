@@ -9,8 +9,12 @@ export default defineComponent({
     // 数据
     data() {
         return {
+            currentPage: 1,
+            pageSize: 14,
+            showPage: 5,
             manga: '' as any,
-            list: [] as any[],
+            list: [],
+            cList: [],
         }
     },
 
@@ -21,7 +25,14 @@ export default defineComponent({
     components: {mangaChapterItem},
 
     // 方法
-    methods: {},
+    methods: {
+        page_change(index: number) {
+            const list = this.list;
+            const pageSize = this.pageSize;
+
+            this.cList = list.slice((index - 1) * pageSize, index * pageSize);
+        },
+    },
 
     // 生命周期
     created() {
@@ -37,6 +48,9 @@ export default defineComponent({
 
             // 为章节请求海报图片
             get_poster(this.list, 'chapterAwait');
+
+            // 裁切数组 第一页
+            this.cList = this.list.slice(0,this.pageSize);
         });
     },
     beforeUnmount() {

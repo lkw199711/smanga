@@ -68,6 +68,7 @@ module.exports = {
                         minPixelValue: 4,
                         // re单位的小数位数上限
                         unitPrecision: 10,
+                        exclude: /node_modules|folder_name/i
                     })
                 ]
             }
