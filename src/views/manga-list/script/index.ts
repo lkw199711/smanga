@@ -1,4 +1,4 @@
-import {defineComponent,ref} from 'vue'
+import {defineComponent, ref} from 'vue'
 import mangaListItem from '../components/manga-list-item.vue'
 import {ajax} from "@/serve";
 import {get_poster} from "@/api";
@@ -12,7 +12,8 @@ export default defineComponent({
             currentPage: 1,
             pageSize: 10,
             list: [],
-            cList: []
+            cList: [],
+            keyWord: '',
         }
     },
 
@@ -24,11 +25,35 @@ export default defineComponent({
 
     // 方法
     methods: {
+        /**
+         * 跳页
+         * @param index
+         */
         page_change(index: number) {
             const list = this.list;
             const pageSize = this.pageSize;
 
             this.cList = list.slice((index - 1) * pageSize, index * pageSize);
+        },
+        /**
+         * 搜索
+         * @param key
+         */
+        search(key:string) {
+            this.cList = this.list.filter((i:any)=>{
+                return new RegExp(key).test(i.name);
+            });
+        },
+        /**
+         * 搜索取消
+         */
+        cancel() {
+            const list = this.list;
+            const pageSize = this.pageSize;
+            const currentPage = this.currentPage;
+
+            this.keyWord = '';
+            this.cList = list.slice((currentPage-1)*pageSize, currentPage*pageSize);
         },
     },
 
@@ -43,7 +68,7 @@ export default defineComponent({
             get_poster(this.list, 'mangaAwait');
 
             // 裁切数组 第一页
-            this.cList = this.list.slice(0,this.pageSize);
+            this.cList = this.list.slice(0, this.pageSize);
         })
     },
     beforeUnmount() {

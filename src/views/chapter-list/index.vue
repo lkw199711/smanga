@@ -1,5 +1,16 @@
 <template>
     <div class="chapter-list">
+        <!--vant-sousuok-->
+        <form action="/">
+            <van-search
+                    v-model="keyWord"
+                    show-action
+                    placeholder="请输入搜索关键词"
+                    @search="search"
+                    @cancel="cancel"
+            />
+        </form>
+
         <div class="chapter-list-box">
             <manga-chapter-item class="chapter-list-item" v-for="(i,k) in cList" :key="k" :chapterInfo="i"/>
             <!--填补最后一行的占位元素-->

@@ -15,6 +15,7 @@ export default defineComponent({
             manga: '' as any,
             list: [],
             cList: [],
+            keyWord: '',
         }
     },
 
@@ -26,11 +27,35 @@ export default defineComponent({
 
     // 方法
     methods: {
+        /**
+         * 跳页
+         * @param index
+         */
         page_change(index: number) {
             const list = this.list;
             const pageSize = this.pageSize;
 
             this.cList = list.slice((index - 1) * pageSize, index * pageSize);
+        },
+        /**
+         * 搜索
+         * @param key
+         */
+        search(key:string) {
+            this.cList = this.list.filter((i:any)=>{
+                return new RegExp(key).test(i.name);
+            });
+        },
+        /**
+         * 搜索取消
+         */
+        cancel() {
+            const list = this.list;
+            const pageSize = this.pageSize;
+            const currentPage = this.currentPage;
+
+            this.keyWord = '';
+            this.cList = list.slice((currentPage-1)*pageSize, currentPage*pageSize);
         },
     },
 
