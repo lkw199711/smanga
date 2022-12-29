@@ -1,4 +1,5 @@
 <?
+require_once './public/common.php';
 
 pdf2png('./01-10.PDF','./cache/');
 

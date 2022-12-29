@@ -130,4 +130,34 @@ function get_file_line($file_path){
 
 }
 
+/**
+ * 数组去重 根据字段
+ * @param  [type] $arr [description]
+ * @param  [type] $key [description]
+ * @return [type]      [description]
+ */
+function assoc_unique($arr, $key) {
+
+    $tmp_arr = array();
+
+    foreach ($arr as $k => $v) {
+
+        if (in_array($v[$key], $tmp_arr)) {
+
+            unset($arr[$k]);
+
+        } else {
+
+            $tmp_arr[] = $v[$key];
+
+        }
+
+    }
+
+    sort($arr); 
+
+    return $arr;
+
+}
+
 ?>

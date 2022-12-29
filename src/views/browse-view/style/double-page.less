@@ -1,0 +1,31 @@
+.double-page {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    user-select: none;
+
+    &-img-box {
+        flex: 1;
+        display: flex;
+        overflow-y: hidden;
+        position: relative;
+    }
+
+    &-img {
+        display: block;
+        margin: 0 auto;
+        max-width: 100%;
+        max-height: 100%;
+    }
+
+    .footer {
+        display: flex;
+        justify-content: space-around;
+        max-width: 100%;
+
+        .btn {
+            width: 20%;
+        }
+    }
+
+}

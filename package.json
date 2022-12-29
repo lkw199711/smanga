@@ -1,13 +1,14 @@
 {
   "name": "smanga",
-  "version": "0.1.0",
+  "version": "3.0.0",
   "private": true,
   "scripts": {
     "serve": "set NODE_OPTIONS=--openssl-legacy-provider & vue-cli-service serve",
-    "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint"
+    "build": "set NODE_OPTIONS=--openssl-legacy-provider & vue-cli-service build",
+    "lint": "set NODE_OPTIONS=--openssl-legacy-provider & vue-cli-service lint"
   },
   "dependencies": {
+    "@element-plus/icons-vue": "^2.0.10",
     "autoprefixer": "^10.0.1",
     "axios": "^0.24.0",
     "core-js": "^3.6.5",
@@ -21,6 +22,7 @@
     "ts-md5": "^1.2.10",
     "vant": "^3.3.7",
     "vue": "^3.0.0",
+    "vue-cookies": "^1.8.2",
     "vue-router": "^4.0.0-0",
     "vuex": "^4.0.0-0"
   },

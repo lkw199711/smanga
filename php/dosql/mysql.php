@@ -51,15 +51,15 @@ if(!$_POST) $_POST=$_GET;
 
 #设置默认值
 $ip = @getValue($_POST['ip'],'localhost');
-$username = @getValue($_POST['username'],'manga');
-$password = @getValue($_POST['password'],'123qwe');
-$database = @getValue($_POST['database'],'manga');
+$username = @getValue($_POST['username'],'smanga');
+$password = @getValue($_POST['password'],'smanga');
+$database = @getValue($_POST['database'],'smanga');
 $type = @getValue($_POST['type'],'select');
 $name = @getValue($_POST['name'],'*');
 $cond = @getValue($_POST['cond'],array());
 
 #声明关键字数组
-$keyword = array('now()');
+$keyword = array('now()','max(createTime) as nearTime');
 
 #链接mysql
 $link = @mysql_connect($ip,$username,$password)or die("数据库链接错误");
@@ -135,11 +135,12 @@ function select($name,$table,$cond){
 	#初始化所需变量
 	$value = array();
 	#附加条件
+	$group = group($cond);
 	$order = order($cond);
 	$limit = limit($cond);
 	$where = where($cond);	
 
-	$sqlComm = "select $name from $table $where $order $limit;";
+	$sqlComm = "select $name from $table $where $group $order $limit;";
 	$sql = mysql_query($sqlComm);
 	$num = mysql_num_rows($sql);
 
@@ -237,6 +238,18 @@ function getNum($name,$table,$cond){
 	$sql = mysql_query($sqlComm);
 	$num = mysql_num_rows($sql);
 	return $num;
+}
+
+// 分组
+function group($cond){
+	$group = '';
+
+	if(isset($cond['group'])){
+		$group = 'group by '.$cond['group'];
+	}
+
+	return $group;
+
 }
 
 

@@ -1,8 +1,9 @@
 import {defineComponent} from 'vue'
-import {ajax} from "@/serve";
 import mangaChapterItem from '../components/manga-chapter-item.vue';
 import {get_poster} from "@/api";
+import {get_chapter} from "@/serve/chapter"
 import store from "@/store";
+import {global_get, global_set, global_set_json} from "@/utils";
 
 export default defineComponent({
     name: 'chapter-list',
@@ -12,7 +13,6 @@ export default defineComponent({
             currentPage: 1,
             pageSize: 14,
             showPage: 5,
-            manga: '' as any,
             list: [],
             cList: [],
             keyWord: '',
@@ -25,6 +25,13 @@ export default defineComponent({
     // 组件
     components: {mangaChapterItem},
 
+    // 计算
+    computed: {
+        mangaId():number {
+            return Number(this.$route.query.mangaId || global_get('mangaId'));
+        }
+    },
+
     // 方法
     methods: {
         /**
@@ -36,13 +43,16 @@ export default defineComponent({
             const pageSize = this.pageSize;
 
             this.cList = list.slice((index - 1) * pageSize, index * pageSize);
+
+            // 为章节请求海报图片
+            get_poster(this.cList, 'chapterAwait');
         },
         /**
          * 搜索
          * @param key
          */
-        search(key:string) {
-            this.cList = this.list.filter((i:any)=>{
+        search(key: string) {
+            this.cList = this.list.filter((i: any) => {
                 return new RegExp(key).test(i.name);
             });
         },
@@ -55,28 +65,33 @@ export default defineComponent({
             const currentPage = this.currentPage;
 
             this.keyWord = '';
-            this.cList = list.slice((currentPage-1)*pageSize, currentPage*pageSize);
+            this.cList = list.slice((currentPage - 1) * pageSize, currentPage * pageSize);
+        },
+        /**
+         * 获取漫画章节
+         */
+        async load_chapter() {
+            const res = await get_chapter(this.mangaId);
+
+            this.list = res.data;
+
+            // 缓存章节
+            global_set_json('chapterList', this.list);
         },
     },
 
     // 生命周期
-    created() {
-        const manga = this.manga = this.$route.query.manga;
-
+    async created() {
         store.commit('switch_await', {running: 'chapterAwait', bool: true});
 
-        ajax.post("php/get-chapter-list.php", {chapterPath: manga}).then(res => {
-            const data = res.data;
+        await this.load_chapter();
 
-            // 赋值到this 生成组件
-            this.list = data;
+        // 裁切数组 第一页
+        this.cList = this.list.slice(0, this.pageSize);
 
-            // 为章节请求海报图片
-            get_poster(this.list, 'chapterAwait');
+        // 为章节请求海报图片
+        get_poster(this.cList, 'chapterAwait');
 
-            // 裁切数组 第一页
-            this.cList = this.list.slice(0,this.pageSize);
-        });
     },
     beforeUnmount() {
         store.commit('switch_await', {running: 'chapterAwait', bool: false});

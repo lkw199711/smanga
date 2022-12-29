@@ -1,9 +1,10 @@
 import {defineComponent} from 'vue'
-import {get_img, ajax} from "../../../serve";
-import {window_go_top} from "@/utils";
+import {ajax, get_img} from "@/serve";
+import {global_get, global_get_array, global_set, window_go_top} from "@/utils";
 import {ElMessage as msg} from "element-plus";
-import {array_sort} from "@/api";
-import store from '../../../store';
+import {config} from '@/store';
+import {add_history} from "@/serve/history";
+import chapterListMenu from "@/views/browse-view/components/chapter-list-menu.vue";
 
 export default defineComponent({
     name: 'browse-views',
@@ -15,10 +16,6 @@ export default defineComponent({
             manga: '',
             // 章节名
             chapter: '' as any,
-            // 章节列表
-            menu: [] as string[],
-            // 章节的坐标索引
-            index: 0,
 
             // 图片文件列表
             imgFileList: [] as string[],
@@ -35,6 +32,7 @@ export default defineComponent({
             // 是否加载完全部图片
             finished: false,
 
+
             // 弹出层
             popup: {
                 menu: false,
@@ -46,7 +44,41 @@ export default defineComponent({
     props: [],
 
     // 组件
-    components: {},
+    components: {chapterListMenu},
+
+    computed: {
+        path() {
+            return this.$route.query.path;
+        },
+        name() {
+            return this.$route.query.name;
+        },
+        // 章节列表
+        chapterList() {
+            return global_get_array('chapterList');
+        },
+        chapterInfo(){
+            return this.chapterList[this.index];
+        },
+        // 章节的坐标索引
+        index() {
+            const chapterList = this.chapterList;
+
+            for (let i = 0; i < chapterList.length; i++) {
+                if (this.name === chapterList[i].chapterName) {
+                    //缓存章节坐标
+                    global_set('chapterIndex', i);
+                    return i;
+                }
+            }
+
+            return -1;
+        },
+        // 导航及按钮展示开关
+        browseTop() {
+            return config.browseTop;
+        },
+    },
 
     // 方法
     methods: {
@@ -54,8 +86,6 @@ export default defineComponent({
          * 加载图片
          */
         load_img() {
-            const manga = this.manga;
-            const chapter = this.chapter;
             const list = this.imgPathList;
             const initPage = this.initPage - 1;
 
@@ -72,7 +102,7 @@ export default defineComponent({
 
             // 使用axios请求上传接口
             get_img({
-                params: {file: list[page]}
+                data: {file: list[page]}
             }).then(res => {
                 // 获取图片数据,转变为blob链接
                 const blob = URL.createObjectURL(res.data);
@@ -108,21 +138,26 @@ export default defineComponent({
             this.imgFileList = [];
             this.page = -1;
 
+            add_history({
+                userId: this.$cookies.get('userId'),
+                mediaId: global_get('mediaId'),
+                mangaId: global_get('mangaId'),
+                mangaName: global_get('mangaName'),
+                chapterId: global_get('chapterId'),
+                chapterName: global_get('chapterName'),
+                chapterPath: global_get('chapterPath'),
+                chapterCover: global_get('chapterCover'),
+            });
+
             // 重置滚动条
             window_go_top();
 
-            // 获取漫画名与章节
-            const manga = this.manga;
-            const chapter = this.chapter;
-
-            ajax.post("php/get-image-list.php", {imagePath: manga + "/" + chapter})
+            ajax.post("php/get-image-list.php", {imagePath: this.path})
                 .then(r => {
 
                     // 获取数据
-                    const data = r.data;
-
                     // 加入数据渲染页面
-                    this.imgPathList = data;
+                    this.imgPathList = r.data;
                 })
                 .then(r => {
                     // 开始加载图片
@@ -132,15 +167,24 @@ export default defineComponent({
         /**
          * 上一页
          * */
-        before() {
+        async before() {
 
             if (this.index == 0) {
                 msg('已经到了第一章');
                 return false;
             }
 
-            // 更新缓存
-            this.updata_cache(--this.index);
+            if (!this.index) return;
+
+            await this.$router.push({
+                path: this.$route.path,
+                query: {
+                    name: this.chapterList[this.index - 1].chapterName,
+                    path: this.chapterList[this.index - 1].chapterPath,
+                }
+            })
+
+            this.update_chapter_info();
 
             /**
              * 刷新页面
@@ -153,14 +197,21 @@ export default defineComponent({
         /**
          * 下一页
          * */
-        next() {
-            if (this.index == this.menu.length - 1) {
+        async next() {
+            if (this.index == this.chapterList.length - 1) {
                 msg('已经到了最后一章');
                 return false;
             }
 
-            // 更新缓存
-            this.updata_cache(++this.index);
+            await this.$router.push({
+                path: this.$route.path,
+                query: {
+                    name: this.chapterList[this.index + 1].chapterName,
+                    path: this.chapterList[this.index + 1].chapterPath,
+                }
+            })
+
+            this.update_chapter_info();
 
             // 刷新页面
             this.reload_page();
@@ -170,9 +221,17 @@ export default defineComponent({
          * 选择章节
          * @param index
          */
-        change_chapter(index: any) {
-            // 更新缓存数据
-            this.updata_cache(index)
+        async change_chapter(index: any) {
+
+            await this.$router.push({
+                path: this.$route.path,
+                query: {
+                    name: this.chapterList[index].chapterName,
+                    path: this.chapterList[index].chapterPath,
+                }
+            })
+
+            this.update_chapter_info();
 
             // 重载页面
             this.reload_page();
@@ -180,42 +239,12 @@ export default defineComponent({
             this.open_popup('menu', false);
         },
 
-        /**
-         * 获取名称与章节
-         * 通过缓存的方式记录现在的章节与漫画名称
-         * 有传参则使用传参值，没有则调取缓存
-         * @param name
-         */
-        get_manga_value(name: string) {
-            let value: any = this.$route.query[name];
-
-            //读取写入缓存
-            if (value) {
-                localStorage.setItem(name, value)
-            } else {
-                value = localStorage.getItem(name);
-                if (name === 'menu') {
-                    value = value.split(',')
-                }
-            }
-
-            return value;
-        },
-
-        /**
-         * 更新 漫画名 章节 章节坐标
-         */
-        updata_cache(index: any) {
-            // 章节列表
-            const menu = this.menu;
-            this.index = index;
-
-            // 设置章节索引
-            localStorage.setItem('index', index);
-
-            // 设置章节名称
-            const chapter = this.chapter = menu[index];
-            localStorage.setItem('chapter', chapter);
+        update_chapter_info(){
+            const chapterInfo = this.chapterInfo;
+            global_set('chapterId',chapterInfo.chapterId);
+            global_set('chapterName',chapterInfo.chapterName);
+            global_set('chapterPath',chapterInfo.chapterPath);
+            global_set('chapterCover',chapterInfo.chapterCover);
         },
 
         /**
@@ -228,32 +257,14 @@ export default defineComponent({
         },
 
         // 阅读状态控制
-        reading_state_update(bool = true) {
-            // this.$store.commit('reading_state_update', bool);
-        },
+        switch_menu() {
+            config.browseTop = !config.browseTop;
+        }
     },
 
     // 生命周期
     created() {
-        const manga: any = this.manga = this.get_manga_value('manga');
-        const chapter: any = this.chapter = decodeURI(this.$route.query.chapter as any);
-
-        ajax.post("php/get-chapter-list.php", {chapterPath: manga}).then(r => {
-            const data = r.data.map((i: any) => {
-                return i.name;
-            });
-
-            const menu = this.menu = data;
-        }).then(() => {
-            const index: any = this.index = this.menu.indexOf(chapter);
-            localStorage.setItem('index', index)
-
-            // 加载页面
-            this.reload_page();
-
-            // 关闭菜单
-            this.reading_state_update(true);
-        })
-
+        // 加载页面
+        this.reload_page();
     },
 })

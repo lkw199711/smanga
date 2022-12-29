@@ -8,7 +8,7 @@ import store from '../store';
 export async function get_poster(arr: any[], running: string) {
     for (let i = 0; arr.length > i; i++) {
         // 请求加载海报图片文件 使用await 顺序请求
-        const b = await get_img({params: {file: arr[i].poster}});
+        const b = await get_img({data: {file: arr[i].mangaCover || arr[i].chapterCover}});
         // 生成blob链接
         arr[i].blob = URL.createObjectURL(b.data);
         // 加载完成标识

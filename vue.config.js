@@ -1,9 +1,10 @@
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const pxtorem = require('postcss-pxtorem');
 // 网络路径
-const network = 'http://smanga.tt2.ink';
+const network = 'http://192.168.2.8';
+const network1 = 'http://127.0.0.1:81';
 // 本地路径
-const localhost = 'http://localhost/';
+const localhost = 'http://127.0.0.1';
 
 const target = process.env.NODE_ENV === 'production' ? localhost : network;
 

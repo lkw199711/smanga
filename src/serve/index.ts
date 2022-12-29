@@ -1,6 +1,7 @@
 import Axios from "axios";
 import Qs from "qs";
 import {Md5} from 'ts-md5/dist/md5';
+import {ElMessage} from "element-plus";
 
 // 接口路径的设置
 const url = process.env.NODE_ENV === 'development' ? '/cms' + "/" : '/';
@@ -31,6 +32,37 @@ const ajax = Axios.create({
             return Qs.stringify(data);
         },
     ],
+    transformResponse: [
+        function (data) {
+            data = data || {};
+
+            if (typeof data === 'string') data = JSON.parse(data);
+
+            if (data.message) {
+                let type = 'info';
+                switch (data.code) {
+                    case 0:
+                        type = 'success';
+                        break;
+                    case 1:
+                        type = 'error';
+                        break;
+                    default:
+                        type = 'success';
+                        break;
+                }
+
+                ElMessage({
+                    message: data.message,
+                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                    // @ts-ignore
+                    type: type
+                });
+            }
+
+            return data;
+        },
+    ]
 });
 
 /**
@@ -60,6 +92,41 @@ const get_img = Axios.create({
     ],
 });
 
+
+/**
+ * 文件 图片请求
+ * @type {Axios}
+ */
+const get_img_src = Axios.create({
+    baseURL: url + "php/get-file-flow.php",
+    timeout: 5 * 1000,
+    method: "post",
+    responseType: "blob", // 设置接收格式为blob格式
+    params: {},
+    headers: {
+        "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8"
+    },
+    transformRequest: [
+        data => {
+            // 获取时间戳
+            const timestamp = new Date().getTime();
+            // 初始化传参
+            data = data || {};
+            // 加入时间戳与密钥
+            data = Object.assign(data, {timestamp, keyword: get_key_word(timestamp)});
+            // 返回json
+            return Qs.stringify(data);
+        },
+    ],
+    transformResponse: [
+        function (data) {
+            data = data || {};
+
+            return URL.createObjectURL(data)
+        },
+    ]
+});
+
 /**
  * 生成密钥
  * 时间戳 + 密文,经过md5加密后形成
@@ -78,4 +145,4 @@ export default function get_key_word(time: number) {
     return keyWord;
 }
 
-export {ajax, get_img};
+export {ajax, get_img, get_img_src};

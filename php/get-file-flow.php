@@ -1,5 +1,5 @@
 <?
-	require_once 'check-key-word.php';
+	require_once './public/common.php';
 	
 	$file = $_POST['file'];
 

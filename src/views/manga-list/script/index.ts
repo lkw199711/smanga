@@ -2,7 +2,9 @@ import {defineComponent, ref} from 'vue'
 import mangaListItem from '../components/manga-list-item.vue'
 import {ajax} from "@/serve";
 import {get_poster} from "@/api";
+import {get_manga} from "@/serve/manga"
 import store from "@/store";
+import {global_get} from "@/utils";
 
 export default defineComponent({
     name: 'manga-list',
@@ -23,6 +25,13 @@ export default defineComponent({
     // 组件
     components: {mangaListItem},
 
+    // 计算
+    computed: {
+        mediaId() {
+            return this.$route.query.mediaId || global_get('mediaId');
+        }
+    },
+
     // 方法
     methods: {
         /**
@@ -34,13 +43,16 @@ export default defineComponent({
             const pageSize = this.pageSize;
 
             this.cList = list.slice((index - 1) * pageSize, index * pageSize);
+
+            // 为漫画请求海报图片
+            get_poster(this.cList, 'mangaAwait');
         },
         /**
          * 搜索
          * @param key
          */
-        search(key:string) {
-            this.cList = this.list.filter((i:any)=>{
+        search(key: string) {
+            this.cList = this.list.filter((i: any) => {
                 return new RegExp(key).test(i.name);
             });
         },
@@ -53,24 +65,33 @@ export default defineComponent({
             const currentPage = this.currentPage;
 
             this.keyWord = '';
-            this.cList = list.slice((currentPage-1)*pageSize, currentPage*pageSize);
+            this.cList = list.slice((currentPage - 1) * pageSize, currentPage * pageSize);
+        },
+
+        /**
+         * 获取漫画列表
+         */
+        async load_manga() {
+
+            const res = await get_manga(this.mediaId);
+
+            this.list = res.data;
         },
     },
 
     // 生命周期
-    created() {
+    async created() {
         store.commit('switch_await', {running: 'mangaAwait', bool: true});
 
-        ajax.post('php/get-all-manga.php').then(res => {
-            this.list = res.data;
+        await this.load_manga();
 
-            // 为漫画请求海报图片
-            get_poster(this.list, 'mangaAwait');
+        // 裁切数组 第一页
+        this.cList = this.list.slice(0, this.pageSize);
 
-            // 裁切数组 第一页
-            this.cList = this.list.slice(0, this.pageSize);
-        })
+        // 为漫画请求海报图片
+        get_poster(this.cList, 'mangaAwait');
     },
+
     beforeUnmount() {
         store.commit('switch_await', {running: 'mangaAwait', bool: false});
     },

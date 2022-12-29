@@ -1,9 +1,6 @@
 <?php
-
-#验证密钥
-require_once 'check-key-word.php';
+require_once './public/common.php';
 require_once './public/lkw.php';
-
 
 $imagePath = $_POST['imagePath'];
 
