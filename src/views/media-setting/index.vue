@@ -76,14 +76,15 @@
                     </el-form-item>
                 </el-form>
 
-
-                <div slot="footer" class="dialog-footer">
+              <template v-slot:footer>
+                <div class="dialog-footer">
                     <!--按钮盒子-->
                     <div class="btn-box">
                         <el-button type="primary" @click="do_add_media">确定</el-button>
                         <el-button type="warning" @click="addMediaDialog=false">取消</el-button>
                     </div>
                 </div>
+              </template>
             </el-dialog>
             <!--编辑媒体库弹框-->
             <el-dialog title="编辑媒体库" v-model="editMediaDialog" :before-close="dialog_close">
@@ -114,14 +115,15 @@
                     </el-form-item>
                 </el-form>
 
-
-                <div slot="footer" class="dialog-footer">
+              <template v-slot:footer>
+                <div class="dialog-footer">
                     <!--按钮盒子-->
                     <div class="btn-box">
                         <el-button type="primary" @click="update_media">确定</el-button>
                         <el-button type="warning" @click="editMediaDialog=false">取消</el-button>
                     </div>
                 </div>
+              </template>
             </el-dialog>
             <!--编辑媒体库路径弹框-->
             <el-dialog title="编辑路径" v-model="addPathDialog" :before-close="()=>{addPathDialog=false}">
@@ -139,7 +141,7 @@
                     </el-form-item>
 
                     <el-form-item label="路径:">
-                        <div v-for="(i,k) in pathArr" :key="i" class="path-item">
+                        <div v-for="i in pathArr" :key="i" class="path-item">
                             {{i.path}}
                             <div class="path-btn-box">
                                 <el-button class="path-item-btn" size="mini" type="success" @click="scan_path(i)">重新扫描
@@ -151,14 +153,15 @@
                     </el-form-item>
                 </el-form>
 
-
-                <div slot="footer" class="dialog-footer">
+              <template v-slot:footer>
+                <div class="dialog-footer">
                     <!--按钮盒子-->
                     <div class="btn-box">
                         <el-button type="primary" @click="addPathDialog=false">确定</el-button>
                         <el-button type="warning" @click="addPathDialog=false">取消</el-button>
                     </div>
                 </div>
+              </template>
             </el-dialog>
 
         </div>
@@ -167,7 +170,7 @@
 
 <script lang='js' src="./script/index.ts"></script>
 
-<style scoped lang='less' type='text/less'>
+<style scoped lang='less'>
 
     .media-box {
         width: 1800px;

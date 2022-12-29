@@ -66,14 +66,16 @@
                     </el-form-item>
                 </el-form>
 
-
-                <div slot="footer" class="dialog-footer">
+                <template v-slot:footer>
+                  <div class="dialog-footer">
                     <!--按钮盒子-->
                     <div class="btn-box">
-                        <el-button type="primary" @click="update_manga">确定</el-button>
-                        <el-button type="warning" @click="editMangaDialog=false">取消</el-button>
+                      <el-button type="primary" @click="update_manga">确定</el-button>
+                      <el-button type="warning" @click="editMangaDialog=false">取消</el-button>
                     </div>
-                </div>
+                  </div>
+                </template>
+
             </el-dialog>
 
             <el-dialog title="编辑路径" v-model="addPathDialog" :before-close="()=>{addPathDialog=false}">
@@ -91,7 +93,7 @@
                     </el-form-item>
 
                     <el-form-item label="路径:">
-                        <div v-for="(i,k) in pathArr" :key="i" class="path-item">
+                        <div v-for="i in pathArr" :key="i" class="path-item">
                             {{i.path}}
                             <div class="path-btn-box">
                                 <el-button class="path-item-btn" size="mini" type="success" @click="scan_path(i)">重新扫描</el-button>
@@ -101,14 +103,15 @@
                     </el-form-item>
                 </el-form>
 
-
-                <div slot="footer" class="dialog-footer">
+              <template v-slot:footer>
+                <div class="dialog-footer">
                     <!--按钮盒子-->
                     <div class="btn-box">
                         <el-button type="primary" @click="addPathDialog=false">确定</el-button>
                         <el-button type="warning" @click="addPathDialog=false">取消</el-button>
                     </div>
                 </div>
+              </template>
             </el-dialog>
 
         </div>
@@ -117,4 +120,4 @@
 
 <script src='./script/index.ts' lang='ts'></script>
 
-<style src='./style/index.less' scoped type='text/less' lang='less'></style>
+<style src='./style/index.less' scoped lang='less'></style>

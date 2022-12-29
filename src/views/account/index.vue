@@ -54,14 +54,15 @@
         </el-form-item>
       </el-form>
 
-
-      <div slot="footer" class="dialog-footer">
-        <!--按钮盒子-->
-        <div class="btn-box">
-          <el-button type="primary" @click="do_register">确定</el-button>
-          <el-button type="warning" @click="add_dialog_close">取消</el-button>
+      <template v-slot:footer>
+        <div class="dialog-footer">
+          <!--按钮盒子-->
+          <div class="btn-box">
+            <el-button type="primary" @click="do_register">确定</el-button>
+            <el-button type="warning" @click="add_dialog_close">取消</el-button>
+          </div>
         </div>
-      </div>
+      </template>
     </el-dialog>
 
     <el-dialog title="修改账户" v-model="dialogFormVisible" :before-close="dialog_close">
@@ -75,14 +76,15 @@
         </el-form-item>
       </el-form>
 
-
-      <div slot="footer" class="dialog-footer">
-        <!--按钮盒子-->
-        <div class="btn-box">
-          <el-button type="primary" @click="do_update">修改</el-button>
-          <el-button type="warning" @click="close_switch('dialogFormVisible')">取消</el-button>
+      <template v-slot:footer>
+        <div class="dialog-footer">
+          <!--按钮盒子-->
+          <div class="btn-box">
+            <el-button type="primary" @click="do_update">修改</el-button>
+            <el-button type="warning" @click="close_switch('dialogFormVisible')">取消</el-button>
+          </div>
         </div>
-      </div>
+      </template>
     </el-dialog>
   </div>
 </template>
