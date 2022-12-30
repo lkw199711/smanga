@@ -34,11 +34,13 @@
                         <el-button
                                 size="mini"
                                 type="primary"
+                                :icon="Refresh"
                                 @click="scan_path(scope.$index, scope.row)">扫描
                         </el-button>
                         <el-button
                                 size="mini"
                                 type="danger"
+                                :icon="Delete"
                                 @click="delete_path(scope.$index, scope.row)">删除
                         </el-button>
                     </template>
@@ -51,4 +53,4 @@
 
 <script src='./script/index.ts' lang='ts'></script>
 
-<style src='./style/index.less' scoped type='text/less' lang='less'></style>
+<style src='./style/index.less' scoped lang='less'></style>

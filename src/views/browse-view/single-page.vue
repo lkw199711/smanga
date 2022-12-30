@@ -15,7 +15,7 @@
 
       <div class="demo-pagination-block">
         <el-pagination
-            v-model:current-page="currentPage"
+            v-model:current-page="page"
             v-model:page-size="pageSize"
             :default-current-page="1"
             :page-sizes="[1, 2, 3, 4]"
@@ -23,9 +23,8 @@
             :small="small"
             :disabled="disabled"
             :background="background"
-            layout="sizes, prev, pager, next, jumper"
+            layout="prev, pager, next, jumper"
             :total="total"
-            @size-change="handleSizeChange"
             @current-change="handleCurrentChange"
         />
       </div>

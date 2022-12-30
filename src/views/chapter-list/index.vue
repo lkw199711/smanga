@@ -1,6 +1,5 @@
 <template>
     <div class="chapter-list">
-        <!--vant-sousuok-->
         <form action="/">
             <van-search
                     v-model="keyWord"
@@ -24,4 +23,4 @@
 
 <script src='./script/index.ts' lang="ts"></script>
 
-<style src='./style/index.less' scoped type='text/less' lang='less'></style>
+<style src='./style/index.less' scoped lang='less'></style>

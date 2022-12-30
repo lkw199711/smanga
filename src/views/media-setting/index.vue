@@ -32,16 +32,19 @@
                         <el-button
                                 size="mini"
                                 type="success"
+                                :icon="Edit"
                                 @click="edit_media(scope.$index, scope.row)">编辑
                         </el-button>
                         <el-button
                                 size="mini"
                                 type="primary"
-                                @click="path_dialog_open(scope.$index, scope.row)">编辑路径
+                                :icon="FolderOpened"
+                                @click="path_dialog_open(scope.$index, scope.row)">路径
                         </el-button>
                         <el-button
                                 size="mini"
                                 type="danger"
+                                :icon="Delete"
                                 @click="do_delete_media(scope.$index, scope.row)">删除
                         </el-button>
                     </template>
@@ -114,7 +117,6 @@
                         </el-select>
                     </el-form-item>
                 </el-form>
-
               <template v-slot:footer>
                 <div class="dialog-footer">
                     <!--按钮盒子-->

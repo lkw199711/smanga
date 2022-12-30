@@ -1,18 +1,16 @@
-import {Delete, Edit, Search, Share, Upload, Plus} from '@element-plus/icons'
+import {Delete, Edit, Refresh} from '@element-plus/icons'
 import {defineComponent} from 'vue'
-import {ElMessage, ElMessageBox} from 'element-plus'
-import {get_manga, update_manga, delete_manga} from "@/serve/manga";
-import {delete_path, get_path} from "@/serve/path";
-import {rescan_path} from "@/serve/media";
+import {ElMessageBox} from 'element-plus'
+import {delete_path, get_path} from "@/api/path";
+import {rescan_path} from "@/api/media";
 
 export default defineComponent({
-    name: 'index',
+    name: 'path-setting',
     setup() {
         return {
             Edit,
-            Share,
-            Search,
-            Plus
+            Refresh,
+            Delete
         }
     },
     // 数据
@@ -46,13 +44,13 @@ export default defineComponent({
         /**
          * 删除漫画
          * */
-        async delete_path(index: any, row: any) {
+        async delete_path(index: number, row: any) {
             ElMessageBox.confirm(
                 '确认删除此路径? 与之关联的漫画和章节都会被清除!', '确认删除', {
-                confirmButtonText: '确定',
-                cancelButtonText: '取消',
-                type: 'warning'
-            }).then(async () => {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(async () => {
                 const res = await delete_path(row.pathId);
 
                 if (res.data.code === 0) {
@@ -66,7 +64,7 @@ export default defineComponent({
          * @param index
          * @param row
          */
-        async scan_path(index: any, row: any){
+        async scan_path(index: number, row: any) {
             ElMessageBox.confirm(
                 `确认删除此路径? 将清除与之相关的漫画与章节并重新扫描添加!`,
                 '确认重新扫描', {

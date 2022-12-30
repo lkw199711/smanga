@@ -1,4 +1,4 @@
-import {Delete, Edit, Search, Share, Upload, Plus} from '@element-plus/icons'
+import {Delete, Edit, Upload, Plus, FolderOpened} from '@element-plus/icons'
 import {defineComponent} from 'vue'
 import {
     add_media,
@@ -9,7 +9,7 @@ import {
     delete_path,
     rescan_path,
     update_media
-} from "@/serve/media";
+} from "@/api/media";
 import {ElMessage, ElMessageBox} from 'element-plus'
 
 export default defineComponent({
@@ -17,9 +17,10 @@ export default defineComponent({
     setup() {
         return {
             Edit,
-            Share,
-            Search,
-            Plus
+            Delete,
+            Plus,
+            Upload,
+            FolderOpened
         }
     },
     // 数据

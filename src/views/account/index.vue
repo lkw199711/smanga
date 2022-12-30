@@ -31,11 +31,14 @@
           <template v-slot="scope">
             <el-button
                 size="mini"
+                type="primary"
+                :icon="Edit"
                 @click="handleEdit(scope.$index, scope.row)">编辑
             </el-button>
             <el-button
                 size="mini"
                 type="danger"
+                :icon="Delete"
                 @click="handleDelete(scope.$index, scope.row)">删除
             </el-button>
           </template>
@@ -81,7 +84,7 @@
           <!--按钮盒子-->
           <div class="btn-box">
             <el-button type="primary" @click="do_update">修改</el-button>
-            <el-button type="warning" @click="close_switch('dialogFormVisible')">取消</el-button>
+            <el-button type="warning" @click="dialogFormVisible=false">取消</el-button>
           </div>
         </div>
       </template>

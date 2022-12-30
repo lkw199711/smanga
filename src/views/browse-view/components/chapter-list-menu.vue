@@ -1,7 +1,7 @@
 <template>
   <div class="chapter-list-menu">
     <!--目录列表-->
-    <van-popup class="chapter" v-model:show="popup" position="left">
+    <van-popup class="chapter" v-model="popup" position="left">
       <van-sidebar v-model="chapterIndex" class="chapter-list" @change="change_chapter">
         <van-sidebar-item v-for="(k) in chapterList" :title="k.chapterName" :key="k.chapterId"/>
         <div class="seat"></div>
@@ -87,6 +87,7 @@ export default defineComponent({
 
   // 生命周期
   created() {
+
   },
 })
 </script>
@@ -112,7 +113,6 @@ export default defineComponent({
 }
 
 .chapter-list {
-  //position: relative;
   min-width: 600px;
   min-height: 100vh;
 
@@ -134,16 +134,5 @@ export default defineComponent({
     margin: 0;
     width: 50%;
   }
-}
-</style>
-
-<style>
-.fade-enter-active, .fade-leave-active {
-  transition: opacity .25s
-}
-
-.fade-enter, .fade-leave-to /* .fade-leave-active in <2.1.8 */
-{
-  opacity: 0
 }
 </style>

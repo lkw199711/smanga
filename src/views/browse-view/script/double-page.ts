@@ -1,11 +1,12 @@
 import {defineComponent} from 'vue'
-import {get_img, ajax, get_img_src} from "@/serve";
-import {global_get, global_get_array, global_set, window_go_top} from "@/utils";
+import {get_image_blob} from "@/api";
+import {global_get, global_get_array, global_set} from "@/utils";
 import {ElMessage as msg} from "element-plus";
-import store, {config, globalData} from '@/store';
-import {add_history} from "@/serve/history";
+import {config} from '@/store';
+import {add_history} from "@/api/history";
 import operationCover from "@/components/operation-cover.vue";
 import chapterListMenu from "../components/chapter-list-menu.vue";
+import {get_chapter_images} from "@/api/browse";
 
 export default defineComponent({
     name: 'double-page',
@@ -13,39 +14,22 @@ export default defineComponent({
     // 数据
     data() {
         return {
-            // 漫画名
-            manga: '',
-            // 章节名
-            chapter: '' as any,
-
-            currentPage: 1,
+            // 当前页码
+            page: 1,
             pageSize: 1,
+            // 分页器设置
             small: false,
             disabled: false,
             background: true,
+            //图片路径 blob
             imgSrc1: '',
             imgSrc2: '',
 
-            // 图片文件列表
-            imgFileList: [] as string[],
             // 图片路径列表
             imgPathList: [] as string[],
-            // 当前图片页码
-            page: -1,
-            // 初始加载页码数量
-            initPage: 3,
+
             // 是否正在加载图片
             loading: false,
-            // 是否正在重载页面
-            refreshing: false,
-            // 是否加载完全部图片
-            finished: false,
-
-
-            // 弹出层
-            popup: {
-                menu: false,
-            } as Popup
         }
     },
 
@@ -53,11 +37,11 @@ export default defineComponent({
     props: [],
 
     // 组件
-    components: {operationCover,chapterListMenu},
+    components: {operationCover, chapterListMenu},
 
     computed: {
         path() {
-            return this.$route.query.path;
+            return this.$route.query.path as string;
         },
         name() {
             return this.$route.query.name;
@@ -97,39 +81,45 @@ export default defineComponent({
 
     // 方法
     methods: {
-        handleSizeChange(page: number) {
+        handleSizeChange(pages: number) {
+            console.log(pages);
         },
+        /**
+         * 页码变更
+         * @param page
+         */
         async handleCurrentChange(page: number) {
             const index = (page - 1) * 2;
 
             // 加载第一张图片
-            const res1: any = await get_img_src({
-                data: {file: this.imgPathList[index]}
-            })
+            const res1: any = await get_image_blob(this.imgPathList[index]);
             this.imgSrc1 = res1.data;
 
             // 加载第二张图片
             if (index + 1 < this.imgPathList.length) {
-                const res2: any = await get_img_src({
-                    data: {file: this.imgPathList[index + 1]}
-                })
+                const res2: any = await get_image_blob(this.imgPathList[index + 1]);
                 this.imgSrc2 = res2.data;
             }
 
-            this.currentPage = page;
+            this.page = page;
         },
-
+        /**
+         * 上一页
+         */
         beforePage() {
-            this.handleCurrentChange(--this.currentPage);
+            this.handleCurrentChange(--this.page);
         },
+        /**
+         * 下一页
+         */
         nextPage() {
-            this.handleCurrentChange(++this.currentPage);
+            this.handleCurrentChange(++this.page);
         },
 
         /**
          * 重载页面
          */
-        reload_page(page = 1) {
+        async reload_page(page = 1) {
             add_history({
                 userId: this.$cookies.get('userId'),
                 mediaId: global_get('mediaId'),
@@ -141,22 +131,12 @@ export default defineComponent({
                 chapterCover: global_get('chapterCover'),
             });
 
-            // 重置滚动条
-            window_go_top();
+            // 加载图片列表
+            const res = await get_chapter_images(this.path);
+            this.imgPathList = res.data;
 
-            ajax.post("php/get-image-list.php", {imagePath: this.path})
-                .then(r => {
-
-                    // 获取数据
-                    const data = r.data;
-
-                    // 加入数据渲染页面
-                    this.imgPathList = data;
-                })
-                .then(r => {
-                    // 开始加载图片
-                    this.handleCurrentChange(page);
-                })
+            // 开始加载图片
+            this.handleCurrentChange(page);
         },
         /**
          * 上一页
@@ -229,8 +209,6 @@ export default defineComponent({
 
             // 重载页面
             this.reload_page();
-
-            this.open_popup('menu', false);
         },
 
         update_chapter_info() {
@@ -241,14 +219,6 @@ export default defineComponent({
             global_set('chapterCover', chapterInfo.chapterCover);
         },
 
-        /**
-         * 弹出层开关操作
-         * @param name
-         * @param bool
-         */
-        open_popup(name: string, bool: any = true) {
-            this.popup[name] = bool;
-        },
 
         // 阅读状态控制
         switch_menu() {

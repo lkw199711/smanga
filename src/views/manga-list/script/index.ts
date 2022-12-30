@@ -1,8 +1,7 @@
-import {defineComponent, ref} from 'vue'
+import {defineComponent} from 'vue'
 import mangaListItem from '../components/manga-list-item.vue'
-import {ajax} from "@/serve";
 import {get_poster} from "@/api";
-import {get_manga} from "@/serve/manga"
+import {get_manga} from "@/api/manga"
 import store from "@/store";
 import {global_get} from "@/utils";
 

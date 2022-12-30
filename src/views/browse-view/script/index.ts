@@ -1,10 +1,11 @@
 import {defineComponent} from 'vue'
-import {ajax, get_img} from "@/serve";
+import {get_image_blob} from "@/api";
 import {global_get, global_get_array, global_set, window_go_top} from "@/utils";
 import {ElMessage as msg} from "element-plus";
 import {config} from '@/store';
-import {add_history} from "@/serve/history";
-import chapterListMenu from "@/views/browse-view/components/chapter-list-menu.vue";
+import {add_history} from "@/api/history";
+import chapterListMenu from "../components/chapter-list-menu.vue";
+import {get_chapter_images} from "@/api/browse";
 
 export default defineComponent({
     name: 'browse-views',
@@ -12,11 +13,6 @@ export default defineComponent({
     // 数据
     data() {
         return {
-            // 漫画名
-            manga: '',
-            // 章节名
-            chapter: '' as any,
-
             // 图片文件列表
             imgFileList: [] as string[],
             // 图片路径列表
@@ -31,12 +27,6 @@ export default defineComponent({
             refreshing: false,
             // 是否加载完全部图片
             finished: false,
-
-
-            // 弹出层
-            popup: {
-                menu: false,
-            } as Popup
         }
     },
 
@@ -47,8 +37,8 @@ export default defineComponent({
     components: {chapterListMenu},
 
     computed: {
-        path() {
-            return this.$route.query.path;
+        path(): string {
+            return this.$route.query.path as string;
         },
         name() {
             return this.$route.query.name;
@@ -57,7 +47,7 @@ export default defineComponent({
         chapterList() {
             return global_get_array('chapterList');
         },
-        chapterInfo(){
+        chapterInfo() {
             return this.chapterList[this.index];
         },
         // 章节的坐标索引
@@ -85,7 +75,7 @@ export default defineComponent({
         /**
          * 加载图片
          */
-        load_img() {
+        async load_img() {
             const list = this.imgPathList;
             const initPage = this.initPage - 1;
 
@@ -100,25 +90,15 @@ export default defineComponent({
             // 页码递增
             const page = ++this.page;
 
-            // 使用axios请求上传接口
-            get_img({
-                data: {file: list[page]}
-            }).then(res => {
-                // 获取图片数据,转变为blob链接
-                const blob = URL.createObjectURL(res.data);
-                // 加入数组
-                this.imgFileList.push(blob);
-                // 加载结束,更新状态
-                this.loading = false;
-                this.refreshing = false;
-                // 是否加载完全部
-                this.finished = this.page === this.imgPathList.length - 1;
-                // 是否完成页面初始化加载,未完成则再次加载图片
-                page < initPage && this.load_img();
-            }).catch(error => {
-                --this.page;
-                this.load_img();
-            });
+            const res = await get_image_blob(list[page]);
+            this.imgFileList.push(res.data);
+            // 加载结束,更新状态
+            this.loading = false;
+            this.refreshing = false;
+            // 是否加载完全部
+            this.finished = this.page === this.imgPathList.length - 1;
+            // 是否完成页面初始化加载,未完成则再次加载图片
+            page < initPage && await this.load_img();
         },
 
         refresh_page() {
@@ -133,7 +113,7 @@ export default defineComponent({
         /**
          * 重载页面
          */
-        reload_page() {
+        async reload_page() {
             // 重置图片数据
             this.imgFileList = [];
             this.page = -1;
@@ -152,17 +132,11 @@ export default defineComponent({
             // 重置滚动条
             window_go_top();
 
-            ajax.post("php/get-image-list.php", {imagePath: this.path})
-                .then(r => {
+            const res = await get_chapter_images(this.path);
 
-                    // 获取数据
-                    // 加入数据渲染页面
-                    this.imgPathList = r.data;
-                })
-                .then(r => {
-                    // 开始加载图片
-                    this.load_img();
-                })
+            this.imgPathList = res.data;
+
+            this.load_img();
         },
         /**
          * 上一页
@@ -235,25 +209,14 @@ export default defineComponent({
 
             // 重载页面
             this.reload_page();
-
-            this.open_popup('menu', false);
         },
 
-        update_chapter_info(){
+        update_chapter_info() {
             const chapterInfo = this.chapterInfo;
-            global_set('chapterId',chapterInfo.chapterId);
-            global_set('chapterName',chapterInfo.chapterName);
-            global_set('chapterPath',chapterInfo.chapterPath);
-            global_set('chapterCover',chapterInfo.chapterCover);
-        },
-
-        /**
-         * 弹出层开关操作
-         * @param name
-         * @param bool
-         */
-        open_popup(name: string, bool: any = true) {
-            this.popup[name] = bool;
+            global_set('chapterId', chapterInfo.chapterId);
+            global_set('chapterName', chapterInfo.chapterName);
+            global_set('chapterPath', chapterInfo.chapterPath);
+            global_set('chapterCover', chapterInfo.chapterCover);
         },
 
         // 阅读状态控制
@@ -264,6 +227,8 @@ export default defineComponent({
 
     // 生命周期
     created() {
+        // 设置浏览模式
+        config.browseType = 'flow';
         // 加载页面
         this.reload_page();
     },

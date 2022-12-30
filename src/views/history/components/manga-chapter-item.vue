@@ -14,7 +14,7 @@
 <script lang='ts'>
 import {defineComponent} from 'vue'
 import {global_get, global_set, global_set_json} from "@/utils";
-import {get_chapter} from "@/serve/chapter";
+import {get_chapter} from "@/api/chapter";
 
 export default defineComponent({
   name: 'manga-chapter-item',
@@ -83,7 +83,7 @@ export default defineComponent({
 })
 </script>
 
-<style scoped lang='less' type='text/less'>
+<style scoped lang='less'>
 .manga-chapter-item {
   overflow: hidden;
   display: flex;

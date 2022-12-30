@@ -1,39 +1,33 @@
-import {Delete, Edit, Search, Share, Upload, Plus} from '@element-plus/icons'
+import {Delete, Edit} from '@element-plus/icons'
 import {defineComponent} from 'vue'
-import {ElMessage, ElMessageBox} from 'element-plus'
-import {get_manga, update_manga, delete_manga} from "@/serve/manga";
+import {ElMessageBox} from 'element-plus'
+import {get_manga, update_manga, delete_manga} from "@/api/manga";
 
 export default defineComponent({
     name: 'index',
     setup() {
         return {
             Edit,
-            Share,
-            Search,
-            Plus
+            Delete,
         }
     },
     // 数据
     data() {
         return {
             tableData: [],
-            addMediaDialog: false,
-            addPathDialog: false,
             editMangaDialog: false,
             form: {
                 mangaId: '',
                 mangaName: '',
                 mangaPath: '',
                 mangaCover: '',
-            } as any,
+            },
             formInit: {
                 mangaId: '',
                 mangaName: '',
                 mangaPath: '',
                 mangaCover: '',
             },
-            pathCache: '',
-            pathArr: [] as any[],
         }
     },
 
@@ -77,7 +71,7 @@ export default defineComponent({
          * @param index
          * @param row
          */
-        edit_manga(index: any, row: any) {
+        edit_manga(index: number, row: any) {
             this.dialog_open();
             Object.assign(this.form, row);
             console.log(this.form);
@@ -97,7 +91,7 @@ export default defineComponent({
         /**
          * 删除漫画
          * */
-        async delete_manga(index: any, row: any) {
+        async delete_manga(index: number, row: any) {
             ElMessageBox.confirm('确认删除此漫画?', '确认删除', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',

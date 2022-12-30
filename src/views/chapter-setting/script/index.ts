@@ -1,16 +1,19 @@
 import {defineComponent} from 'vue'
-import {ElMessage, ElMessageBox} from 'element-plus'
-import {get_chapter, delete_chapter, update_chapter} from "@/serve/chapter";
+import {ElMessageBox} from 'element-plus'
+import {Delete, Edit} from '@element-plus/icons'
+import {get_chapter, delete_chapter, update_chapter} from "@/api/chapter";
 
 export default defineComponent({
     name: 'index',
     setup() {
-
+        return {
+            Edit,
+            Delete,
+        }
     },
     // 数据
     data() {
         return {
-            addPathDialog: false,
             tableData: [],
             editChapterDialog: false,
             form: {
@@ -18,15 +21,13 @@ export default defineComponent({
                 chapterName: '',
                 chapterPath: '',
                 chapterCover: '',
-            } as any,
+            },
             formInit: {
                 chapterId: '',
                 chapterName: '',
                 chapterPath: '',
                 chapterCover: '',
             },
-            pathCache: '',
-            pathArr: [] as any[],
         }
     },
 
@@ -70,7 +71,7 @@ export default defineComponent({
          * @param index
          * @param row
          */
-        edit_chapter(index: any, row: any) {
+        edit_chapter(index: number, row: any) {
             this.dialog_open();
             Object.assign(this.form, row);
             console.log(this.form);
@@ -90,7 +91,7 @@ export default defineComponent({
         /**
          * 删除漫画
          * */
-        async delete_chapter(index: any, row: any) {
+        async delete_chapter(index: number, row: any) {
             ElMessageBox.confirm('确认删除此章节?', '确认删除', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',

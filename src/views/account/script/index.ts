@@ -1,13 +1,13 @@
 import {defineComponent} from 'vue'
-import {delete_account, get_account, register, update_account} from "@/serve/account";
-import {Plus} from '@element-plus/icons'
+import {delete_account, get_account, register, update_account} from "@/api/account";
+import {Plus,Edit,Delete} from '@element-plus/icons'
 import {ElMessage, ElMessageBox} from 'element-plus'
 
 export default defineComponent({
     name: 'account-index',
     setup() {
         return {
-            Plus
+            Plus,Edit,Delete
         }
     },
     // 数据
@@ -40,29 +40,11 @@ export default defineComponent({
     // 方法
     methods: {
         /**
-         * 关闭开关
-         * @param name
-         */
-        close_switch(name: string) {
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-            // @ts-ignore
-            this[name] = false;
-        },
-        /**
-         * 开启开关
-         * @param name
-         */
-        open_switch(name: string) {
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-            // @ts-ignore
-            this[name] = true;
-        },
-        /**
          * 编辑用户
          * @param index
          * @param val
          */
-        handleEdit(index: any, val: any) {
+        handleEdit(index: number, val: any) {
             this.dialogFormVisible = true;
             Object.assign(this.form, val);
             this.form.passWord = '';
@@ -73,7 +55,7 @@ export default defineComponent({
          * @param val
          * @returns {Promise<void>}
          */
-        async handleDelete(index: any, val: any) {
+        async handleDelete(index: number, val: any) {
 
             ElMessageBox.confirm('确认删除此用户?', '确认删除', {
                 confirmButtonText: '确定',

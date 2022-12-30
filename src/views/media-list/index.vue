@@ -10,7 +10,7 @@
 
 <script lang='ts'>
 import {defineComponent} from 'vue'
-import {get_media} from "@/serve/media";
+import {get_media} from "@/api/media";
 import {global_set} from "@/utils";
 
 export default defineComponent({

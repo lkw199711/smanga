@@ -1,10 +1,9 @@
 import {defineComponent} from 'vue'
 import mangaChapterItem from '../components/manga-chapter-item.vue';
 import {get_poster} from "@/api";
-import {get_chapter} from "@/serve/chapter"
 import store from "@/store";
 import {global_get} from "@/utils";
-import {get_history} from "@/serve/history";
+import {get_history} from "@/api/history";
 
 export default defineComponent({
     name: 'history',

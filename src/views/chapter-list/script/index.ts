@@ -1,9 +1,9 @@
 import {defineComponent} from 'vue'
 import mangaChapterItem from '../components/manga-chapter-item.vue';
 import {get_poster} from "@/api";
-import {get_chapter} from "@/serve/chapter"
+import {get_chapter} from "@/api/chapter"
 import store from "@/store";
-import {global_get, global_set, global_set_json} from "@/utils";
+import {global_get, global_set_json} from "@/utils";
 
 export default defineComponent({
     name: 'chapter-list',

@@ -25,7 +25,7 @@
 
 <script lang='ts'>
 import {defineComponent} from 'vue'
-import {login} from "@/serve/account";
+import {login} from "@/api/account";
 
 export default defineComponent({
   name: 'index',
@@ -76,7 +76,7 @@ export default defineComponent({
 })
 </script>
 
-<style scoped lang='less' type='text/less'>
+<style scoped lang='less'>
 .seat {
   height: 1px;
 }
