@@ -1,6 +1,6 @@
 import {defineComponent} from 'vue'
 import {get_image_blob} from "@/api";
-import {global_get, global_get_array, global_set, window_go_top} from "@/utils";
+import {global_get_array, global_set, window_go_top} from "@/utils";
 import {ElMessage as msg} from "element-plus";
 import {config} from '@/store';
 import {add_history} from "@/api/history";
@@ -113,30 +113,41 @@ export default defineComponent({
         /**
          * 重载页面
          */
-        async reload_page() {
+        async reload_page(addHistory = true) {
             // 重置图片数据
             this.imgFileList = [];
             this.page = -1;
 
-            add_history({
-                userId: this.$cookies.get('userId'),
-                mediaId: global_get('mediaId'),
-                mangaId: global_get('mangaId'),
-                mangaName: global_get('mangaName'),
-                chapterId: global_get('chapterId'),
-                chapterName: global_get('chapterName'),
-                chapterPath: global_get('chapterPath'),
-                chapterCover: global_get('chapterCover'),
-            });
+            if (addHistory) {
+                add_history();
+            }
 
             // 重置滚动条
             window_go_top();
 
-            const res = await get_chapter_images(this.path);
+            const res = await get_chapter_images();
 
-            this.imgPathList = res.data;
-
-            this.load_img();
+            switch (res.data.status) {
+                case 'uncompressed':
+                    setTimeout(() => {
+                        this.reload_page(false)
+                    }, 2000);
+                    break;
+                case 'compressing':
+                    this.imgPathList = res.data.list;
+                    this.load_img();
+                    setTimeout(() => {
+                        this.reload_page(false)
+                    }, 2000);
+                    break;
+                case 'compressed':
+                    this.imgPathList = res.data.list;
+                    this.load_img();
+                    break;
+                default:
+                    this.imgPathList = res.data.list;
+                    this.load_img();
+            }
         },
         /**
          * 上一页
@@ -152,10 +163,10 @@ export default defineComponent({
 
             await this.$router.push({
                 path: this.$route.path,
-                query: {
+                query: Object.assign({}, this.$route.query, {
                     name: this.chapterList[this.index - 1].chapterName,
                     path: this.chapterList[this.index - 1].chapterPath,
-                }
+                })
             })
 
             this.update_chapter_info();
@@ -179,10 +190,10 @@ export default defineComponent({
 
             await this.$router.push({
                 path: this.$route.path,
-                query: {
+                query: Object.assign({}, this.$route.query, {
                     name: this.chapterList[this.index + 1].chapterName,
                     path: this.chapterList[this.index + 1].chapterPath,
-                }
+                })
             })
 
             this.update_chapter_info();
@@ -199,10 +210,10 @@ export default defineComponent({
 
             await this.$router.push({
                 path: this.$route.path,
-                query: {
+                query: Object.assign({}, this.$route.query, {
                     name: this.chapterList[index].chapterName,
                     path: this.chapterList[index].chapterPath,
-                }
+                })
             })
 
             this.update_chapter_info();
@@ -229,7 +240,9 @@ export default defineComponent({
     created() {
         // 设置浏览模式
         config.browseType = 'flow';
+
         // 加载页面
-        this.reload_page();
+        const notAddHistory = this.$route.params.notAddHistory || false;
+        this.reload_page(!notAddHistory);
     },
 })

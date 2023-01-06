@@ -74,7 +74,6 @@ export default defineComponent({
         edit_chapter(index: number, row: any) {
             this.dialog_open();
             Object.assign(this.form, row);
-            console.log(this.form);
         },
 
         /**
@@ -102,7 +101,7 @@ export default defineComponent({
                 if (res.data.code === 0) {
                     this.load_table();
                 }
-            })
+            }).catch(() => {})
         },
     },
 

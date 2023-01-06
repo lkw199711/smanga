@@ -35,13 +35,15 @@ export default defineComponent({
                 mediaType: '0',
                 fileType: '0',
                 mediaPath: '',
-                directoryFormat: '0'
+                defaultBrowse: '',
+                directoryFormat: '0',
             } as any,
             formInit: {
                 mediaName: '',
                 mediaType: '0',
                 fileType: '0',
                 mediaPath: '',
+                defaultBrowse: 'flow',
                 directoryFormat: '0'
             },
             pathCache: '',
@@ -177,7 +179,7 @@ export default defineComponent({
                 if (res.data.code === 0) {
                     this.load_table();
                 }
-            })
+            }).catch(() => {})
 
         },
         /**
@@ -191,13 +193,13 @@ export default defineComponent({
                     cancelButtonText: '取消',
                     type: 'warning'
                 }).then(async () => {
-                // console.log(pathInfo);
+
                 const res = await delete_path(pathInfo.pathId);
 
                 if (res.data.code === 0) {
                     this.load_path(pathInfo.mediaId);
                 }
-            })
+            }).catch(() => {})
         },
         /**
          * 重新扫面路径
@@ -217,7 +219,7 @@ export default defineComponent({
                 if (res.data.code === 0) {
                     this.load_path(pathInfo.mediaId);
                 }
-            })
+            }).catch(() => {})
         },
         /**
          * 添加路径信息到缓存

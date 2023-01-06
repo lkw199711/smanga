@@ -1,11 +1,16 @@
 export interface GlobalData {
+    bookmarkList: any[],
     chapterList: any[],
     chapterIndex: number,
     chapterId: number,
     chapterName: string,
     chapterPath: string,
+    chapterType: string,
     chapterCover: string,
     mediaId: number,
     mangaId: number,
     mangaName: string,
+    mangaCover: string,
+    page: number,
+    pageImage: string,
 }

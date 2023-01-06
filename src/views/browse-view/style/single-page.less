@@ -6,13 +6,15 @@
 
     &-img-box {
         flex: 1;
+        display: flex;
+        justify-content: center;
         overflow-y: hidden;
         position: relative;
     }
 
     &-img {
         display: block;
-        margin: 0 auto;
+        object-fit: contain;
         max-width: 100%;
         max-height: 100%;
     }
@@ -23,7 +25,7 @@
         max-width: 100%;
 
         .btn {
-            width: 20%;
+            width: 10rem;
         }
     }
 }

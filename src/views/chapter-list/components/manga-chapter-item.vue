@@ -42,6 +42,9 @@ export default defineComponent({
     path() {
       return this.chapterInfo.chapterPath;
     },
+    browseType() {
+      return this.$route.query.browseType;
+    },
 
   },
 
@@ -52,20 +55,21 @@ export default defineComponent({
   methods: {
     go_browse() {
       const chapterId = this.chapterInfo.chapterId;
+      const chapterType = this.chapterInfo.chapterType;
       const chapterCover = this.chapterInfo.chapterCover;
 
       // 缓存章节信息
       global_set('chapterId', chapterId);
       global_set('chapterName', this.title);
       global_set('chapterPath', this.path);
-      global_set('chapterPath', this.path);
+      global_set('chapterType', chapterType);
       global_set('chapterCover', chapterCover);
 
       this.$router.push({
-        path: '/browse-view/index',
+        name: this.browseType + '-page',
         query: {
           name: this.title,
-          path: this.path
+          path: this.path,
         }
       })
     }
@@ -77,7 +81,7 @@ export default defineComponent({
 })
 </script>
 
-<style scoped lang='less' type='text/less'>
+<style scoped lang='less'>
 .manga-chapter-item {
   overflow: hidden;
   display: flex;

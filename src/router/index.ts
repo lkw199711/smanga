@@ -61,13 +61,26 @@ const routes: Array<RouteRecordRaw> = [
     {
         path: '/history',
         redirect: '/history/index',
-        meta: {sidebar: true, title: '历史记录', icon: 'Tickets'},
+        meta: {sidebar: true, title: '历史记录', icon: 'Clock'},
         component: Layout,
         children: [
             {
                 path: 'index',
                 name: 'history',
                 component: () => import('../views/history/index.vue')
+            }
+        ],
+    },
+    {
+        path: '/bookmark',
+        redirect: '/bookmark/index',
+        meta: {sidebar: true, title: '书签', icon: 'Collection'},
+        component: Layout,
+        children: [
+            {
+                path: 'index',
+                name: 'bookmark',
+                component: () => import('../views/bookmark/index.vue')
             }
         ],
     },
@@ -138,17 +151,44 @@ const routes: Array<RouteRecordRaw> = [
             }
         ]
     },
+    {
+        path: '/bookmark-setting',
+        redirect: '/bookmark-setting/index',
+        meta: {sidebar: true, title: '书签设置', icon: 'Collection'},
+        component: Layout,
+        children: [
+            {
+                path: 'index',
+                name: 'bookmark-setting',
+                component: () => import('../views/bookmark-setting/index.vue')
+            }
+        ]
+    },
+    {
+        path: '/compress-setting',
+        redirect: '/compress-setting/index',
+        meta: {sidebar: true, title: '转换设置', icon: 'Refresh'},
+        component: Layout,
+        children: [
+            {
+                path: 'index',
+                name: 'compress-setting',
+                component: () => import('../views/compress-setting/index.vue')
+            }
+        ]
+    },
 
     // 浏览界面
     {
         path: '/browse-view',
+        name: 'browse-view',
         redirect: '/browse-view/index',
         component: browse,
         meta: {sidebar: false},
         children: [
             {
                 path: 'index',
-                name: 'browse-view',
+                name: 'flow-page',
                 component: () => import('../views/browse-view/index.vue'),
             },
             {
@@ -164,6 +204,26 @@ const routes: Array<RouteRecordRaw> = [
         ]
     },
 
+    // 测试界面
+    {
+        path: '/test',
+        name: 'test',
+        meta: {sidebar: false},
+        component: () => import('../views/test/index.vue')
+    },
+
+    // 404
+    {
+        path: '/404',
+        name: '404',
+        meta: {sidebar: false},
+        component: () => import('../views/404/index.vue')
+    },
+    {
+        path: '/:pathMatch(.*)',
+        redirect: '/404',
+        meta: {sidebar: false},
+    }
 ]
 
 const router = createRouter({

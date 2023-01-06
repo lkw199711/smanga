@@ -1,0 +1,21 @@
+@font-face {
+  font-family: "colour"; /* Project id 3852929 */
+  /* Color fonts */
+  src: 
+       url('iconfont.woff2?t=1672947127585') format('woff2'),
+       url('iconfont.woff?t=1672947127585') format('woff'),
+       url('iconfont.ttf?t=1672947127585') format('truetype');
+}
+
+.colour {
+  font-family: "colour" !important;
+  font-size: 16px;
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.colour-mulu:before {
+  content: "\e603";
+}
+

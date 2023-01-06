@@ -60,19 +60,18 @@ export default defineComponent({
 <style scoped lang='less'>
 .media-box {
   display: flex;
-  /*justify-content: space-between;*/
   flex-wrap: wrap;
-  width: 1800px;
-  margin: 200px auto;
+  width: 100rem;
+  margin: 20rem auto;
 
   .media-item {
-    margin: 0 20px 30px;
-    width: 300px;
-    height: 200px;
-    line-height: 200px;
+    margin: 0 2rem 3rem;
+    width: 20rem;
+    line-height: 14rem;
+    font-size: 2rem;
     text-align: center;
     background-color: rgba(92, 219, 211, .4);
-    border-radius: 20px;
+    border-radius: 2rem;
     box-shadow: #9a6e3a 1px 2px 4px;
     cursor: pointer;
   }

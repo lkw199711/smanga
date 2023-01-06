@@ -19,6 +19,7 @@ import {defineComponent} from 'vue'
 import topNav from './components/top-nav.vue'
 import sidebar from './components/sidebar.vue'
 import {ElMessage} from "element-plus";
+import {Cookies} from "@/utils";
 
 export default defineComponent({
   name: 'layout-index',
@@ -39,8 +40,8 @@ export default defineComponent({
   // 方法
   methods: {
     check_login() {
-      const id = this.$cookies.isKey('userId');
-      const name = this.$cookies.isKey('userName');
+      const id = Cookies.get('userId');
+      const name = Cookies.get('userName');
       if (!name || !id) {
         this.$router.push('/login');
         ElMessage.warning('会话信息过期,请重新登录!');

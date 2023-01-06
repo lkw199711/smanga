@@ -26,6 +26,7 @@
 <script lang='ts'>
 import {defineComponent} from 'vue'
 import {login} from "@/api/account";
+import {Cookies} from "@/utils";
 
 export default defineComponent({
   name: 'index',
@@ -55,8 +56,8 @@ export default defineComponent({
       if (res.data.code === 0) {
         // 缓存用户信息
         const userInfo = res.data.userInfo;
-        this.$cookies.set('userName', userInfo.username);
-        this.$cookies.set('userId', userInfo.userId);
+        Cookies.set('userName', userInfo.username);
+        Cookies.set('userId', userInfo.userId);
 
         await this.$router.push('media-list');
       }
@@ -86,16 +87,15 @@ export default defineComponent({
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  margin: -200px auto;
-  width: 1000px;
-  height: 780px;
-  /*line-height: 800px;*/
+  margin: -20rem auto;
+  width: 44rem;
+  height: 32rem;
   background-color: #ffffff;
   box-shadow: #cccccc 2px 2px 8px;
 
   .logo {
-    font-size: 100px;
-    line-height: 300px;
+    font-size: 6rem;
+    line-height: 12rem;
     text-align: center;
     color: #5cdbd3;
   }
@@ -115,8 +115,5 @@ export default defineComponent({
   .login-btn {
     width: 100%;
   }
-
-  /*width: 400px;*/
-  /*flex-direction: row-reverse;*/
 }
 </style>

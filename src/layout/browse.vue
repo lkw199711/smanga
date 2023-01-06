@@ -22,6 +22,7 @@ import {defineComponent} from 'vue'
 import {config} from "@/store";
 import browseTop from "@/layout/components/browse-top.vue";
 import {ElMessage} from "element-plus";
+import {Cookies} from "@/utils";
 
 export default defineComponent({
   name: 'browse',
@@ -56,8 +57,8 @@ export default defineComponent({
   // 方法
   methods: {
     check_login() {
-      const id = this.$cookies.isKey('userId');
-      const name = this.$cookies.isKey('userName');
+      const id = Cookies.get('userId');
+      const name = Cookies.get('userName');
       if (!name || !id) {
         this.$router.push('/login');
         ElMessage.warning('会话信息过期,请重新登录!');

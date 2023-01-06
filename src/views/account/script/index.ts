@@ -67,7 +67,7 @@ export default defineComponent({
                 if (res.data.code === 0) {
                     this.load_table();
                 }
-            })
+            }).catch(() => {})
         },
         /**
          * 加载表格

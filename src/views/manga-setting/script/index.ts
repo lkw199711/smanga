@@ -21,12 +21,14 @@ export default defineComponent({
                 mangaName: '',
                 mangaPath: '',
                 mangaCover: '',
+                browseType: '',
             },
             formInit: {
                 mangaId: '',
                 mangaName: '',
                 mangaPath: '',
                 mangaCover: '',
+                browseType: 'flow',
             },
         }
     },
@@ -74,7 +76,6 @@ export default defineComponent({
         edit_manga(index: number, row: any) {
             this.dialog_open();
             Object.assign(this.form, row);
-            console.log(this.form);
         },
 
         /**
@@ -102,6 +103,7 @@ export default defineComponent({
                 if (res.data.code === 0) {
                     this.load_table();
                 }
+            }).catch(() => {
             })
         },
     },

@@ -1,9 +1,9 @@
 {
-  "id": "2116381",
-  "name": "sunlight",
+  "id": "3852924",
+  "name": "smanga",
   "font_family": "iconfont",
   "css_prefix_text": "icon-",
-  "description": "",
+  "description": "漫画流媒体库",
   "glyphs": [
     {
       "icon_id": "3727371",
@@ -11,6 +11,13 @@
       "font_class": "mulu",
       "unicode": "e603",
       "unicode_decimal": 58883
+    },
+    {
+      "icon_id": "6807165",
+      "name": "Bookmark-3",
+      "font_class": "Bookmark-",
+      "unicode": "ebd6",
+      "unicode_decimal": 60374
     }
   ]
 }

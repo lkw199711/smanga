@@ -8,37 +8,27 @@
 </template>
 
 <script lang="ts">
-import {defineComponent, ref} from 'vue'
-import {globalData} from "@/store";
+import {defineComponent} from 'vue'
+import {Cookies, global_set_json} from "@/utils";
+import {get_bookmark} from "@/api/bookmark";
 
 export default defineComponent({
-  watch: {
-    // globalData:{
-    //   handler(newVal: number, oldVal: number) {
-    //     console.log(newVal)
-    //   },
-    //   deep: true,
-    //   immediate: true,
-    // },
-    // 'globalData.chapterIndex': {
-    //   handler(newVal: number, oldVal: number) {
-    //     console.log(newVal)
-    //   },
-    //   deep: false,
-    //   immediate: true,
-    // },
-  },
+  watch: {},
   methods: {
     check_login() {
-      const id = this.$cookies.isKey('userId');
-      const name = this.$cookies.isKey('userName');
+      const id = Cookies.get('userId');
+      const name = Cookies.get('userName');
       if (!name || !id) {
         this.$router.push('/login');
       }
     }
   },
-  created() {
+  async created() {
+    // 检查登录状态
     this.check_login();
+    // 获取书签列表
+    const res = await get_bookmark();
+    global_set_json('bookmarkList',res.data.list);
   },
   mounted() {
     this.check_login();

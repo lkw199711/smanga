@@ -45,14 +45,17 @@ export default {
   methods: {
     go_chapter() {
       const mangaId = this.mangaInfo.mangaId;
+      const mangaCover = this.mangaInfo.mangaCover;
+      const browseType = this.mangaInfo.browseType;
 
       // 缓存漫画信息
       global_set('mangaId', mangaId);
       global_set('mangaName', this.title);
+      global_set('mangaCover', mangaCover);
 
       this.$router.push({
         path: '/chapter-list',
-        query: {mangaId},
+        query: {mangaId, browseType},
       });
     }
   },
@@ -62,7 +65,7 @@ export default {
 }
 </script>
 
-<style scoped type="text/less" lang="less">
+<style scoped lang="less">
 .item-main {
   cursor: pointer;
   overflow: hidden;

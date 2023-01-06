@@ -96,8 +96,8 @@
 
 <style scoped lang='less'>
 .account-box {
-  width: 80%;
-  margin: 200px auto;
+  width: 120rem;
+  margin: 10rem auto;
 }
 
 .btn-box {
@@ -106,6 +106,6 @@
 }
 
 .add-btn-box {
-  margin-bottom: 50px;
+  margin-bottom: 1.4rem;
 }
 </style>

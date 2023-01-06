@@ -68,3 +68,42 @@ export function global_get_array(key: keyof typeof globalData) {
     // 都没有值 返回默认值
     return [];
 }
+
+/*
+    * cookie的封装方法
+    * getCookie
+    * setCookie
+    * removeCookie
+    *
+     */
+
+export const Cookies = {
+    /**
+     * 设置cookie
+     * @param key
+     * @param value
+     * @param time 过期时间，单位为天
+     */
+    set: function (key: string, value: string, time = 365) {
+        const cookiesTime = new Date(Date.now() + time * 365 * 24 * 60 * 60 * 1000).toUTCString();
+        document.cookie = key + '=' + value + ';expires=' + cookiesTime;
+        return value;
+    },
+    /**
+     * 获取cookie
+     * @param key
+     */
+    get: function (key: string) {
+        const arr = document.cookie.match(new RegExp("\\b" + key + "=([^;]+)(;|$)"));
+        return arr ? arr[1] : '';
+    },
+    /**
+     * 移除cookie
+     * @param key
+     */
+    remove: function (key: string) {
+        Cookies.set(key, '', -1);
+        return key;
+    },
+}
+

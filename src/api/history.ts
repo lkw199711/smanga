@@ -1,18 +1,26 @@
 import {ajax} from "./index";
+import {global_get} from "@/utils";
 
-export function add_history(data: any) {
+export function add_history() {
     return ajax({
         url: 'php/history/add.php',
-        data,
+        data:{
+            mediaId: global_get('mediaId'),
+            mangaId: global_get('mangaId'),
+            mangaName: global_get('mangaName'),
+            mangaCover: global_get('mangaCover'),
+            chapterId: global_get('chapterId'),
+            chapterName: global_get('chapterName'),
+            chapterPath: global_get('chapterPath'),
+            chapterType: global_get('chapterType'),
+            chapterCover: global_get('chapterCover'),
+        },
     })
 }
 
-export function get_history(userId: number) {
+export function get_history() {
     return ajax({
         url: 'php/history/get.php',
-        data: {
-            userId
-        }
     })
 }
 

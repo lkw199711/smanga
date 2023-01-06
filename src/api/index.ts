@@ -3,6 +3,7 @@ import Qs from "qs";
 import store from '../store';
 import {Md5} from 'ts-md5/dist/md5';
 import {ElMessage} from "element-plus";
+import {Cookies} from "@/utils";
 
 // 接口路径的设置
 const url = process.env.NODE_ENV === 'development' ? '/cms' + "/" : '/';
@@ -23,12 +24,14 @@ const ajax = Axios.create({
     },
     transformRequest: [
         data => {
+            // 用户标识
+            const userId = Cookies.get('userId');
             // 获取时间戳
             const timestamp = new Date().getTime();
             // 初始化传参
             data = data || {};
             // 加入时间戳与密钥
-            data = Object.assign(data, {timestamp, keyword: get_key_word(timestamp)});
+            data = Object.assign(data, {userId, timestamp, keyword: get_key_word(timestamp)});
             // 返回json
             return Qs.stringify(data);
         },
@@ -47,6 +50,9 @@ const ajax = Axios.create({
                         break;
                     case 1:
                         type = 'error';
+                        break;
+                    case 2:
+                        type = 'warning';
                         break;
                     default:
                         type = 'info';
@@ -81,12 +87,14 @@ const img = Axios.create({
     },
     transformRequest: [
         data => {
+            // 用户标识
+            const userId = Cookies.get('userId');
             // 获取时间戳
             const timestamp = new Date().getTime();
             // 初始化传参
             data = data || {};
             // 加入时间戳与密钥
-            data = Object.assign(data, {timestamp, keyword: get_key_word(timestamp)});
+            data = Object.assign(data, {userId, timestamp, keyword: get_key_word(timestamp)});
             // 返回json
             return Qs.stringify(data);
         },
@@ -130,11 +138,12 @@ function get_key_word(time: number) {
  * 获取海报
  * @param arr
  * @param running
+ * @param posterKey
  */
-async function get_poster(arr: any[], running: string) {
+async function get_poster(arr: any[], running: string, posterKey = 'poster') {
     for (let i = 0; arr.length > i; i++) {
         // 请求加载海报图片文件 使用await 顺序请求
-        const b = await get_image_blob(arr[i].mangaCover || arr[i].chapterCover);
+        const b = await get_image_blob(arr[i][posterKey] || arr[i].mangaCover || arr[i].chapterCover);
         // 生成blob链接
         arr[i].blob = b.data;
         // 加载完成标识
@@ -173,7 +182,7 @@ function array_sort_name(arr: any[]) {
     })
 }
 
-export {ajax,get_poster,get_image_blob,array_sort,array_sort_name};
+export {ajax, get_poster, get_image_blob, array_sort, array_sort_name};
 
 
 

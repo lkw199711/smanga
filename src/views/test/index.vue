@@ -1,0 +1,43 @@
+<template>
+  <div class="index">
+    <h1>test</h1>
+    <el-button>测试</el-button>
+  </div>
+</template>
+
+<script lang='ts'>
+import {defineComponent} from 'vue'
+import * as _ from 'lodash'
+
+export default defineComponent({
+  name: 'index',
+  // 数据
+  data() {
+    return {
+      abc: 'php ./chapter/compress.php "/mnt/hhd-2t/00manga/00zip/[アズ][魔术学姐][Vol.01-Vol.08][完结][bili]/Vol.01.cbz" "/www/wwwroot/smanga.mn2.cc/php/public" "14" "109" "2655" "zip"',
+      abc1: 'php ./chapter/compress.php "/mnt/hhd-2t/00manga/00zip/[アズ][魔术学姐][Vol.01-Vol.08][完结][bili]/Vol.04.cbz" "/www/wwwroot/smanga.mn2.cc/php/public" "14" "109" "2658" "zip" "" ""',
+    }
+  },
+
+  // 传值
+  props: [],
+
+  // 引用
+  computed: {},
+
+  // 组件
+  components: {},
+
+  // 方法
+  methods: {},
+
+  // 生命周期
+  created() {
+    console.log(_.merge);
+  },
+})
+</script>
+
+<style scoped lang='less'>
+
+</style>

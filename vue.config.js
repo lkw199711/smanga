@@ -2,7 +2,6 @@
 const pxtorem = require('postcss-pxtorem');
 // 网络路径
 const network = 'http://192.168.2.8';
-const network1 = 'http://127.0.0.1:81';
 // 本地路径
 const localhost = 'http://127.0.0.1';
 
@@ -57,7 +56,7 @@ module.exports = {
                             browsers: ['Android >= 4.0', 'iOS >= 8'],
                         },
                         // 根元素,1rem的大小
-                        rootValue: 37.5,
+                        rootValue: 10,
                         // 哪些需要进行px转rem
                         propList: ['*'],
                         // 排除哪些开头的如 .weui-button 等等

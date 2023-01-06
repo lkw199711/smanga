@@ -1,7 +1,7 @@
 <template>
   <div class="chapter-list-menu">
     <!--目录列表-->
-    <van-popup class="chapter" v-model="popup" position="left">
+    <van-popup class="chapter" v-model:show="popup" position="left">
       <van-sidebar v-model="chapterIndex" class="chapter-list" @change="change_chapter">
         <van-sidebar-item v-for="(k) in chapterList" :title="k.chapterName" :key="k.chapterId"/>
         <div class="seat"></div>
@@ -15,23 +15,33 @@
     </div>
 
     <!--目录按钮-->
-    <van-button v-show="browseTop" class="show-menu-posted" type="danger" @click.stop="open_popup('menu')">
-      <i class="iconfont icon-mulu"/>
-    </van-button>
+    <div v-show="browseTop" class="show-menu-btn" @click.stop="button_click">
+      <i class="colour colour-mulu"/>
+    </div>
   </div>
 </template>
 
 <script lang='ts'>
-import {defineComponent} from 'vue';
+import {defineComponent,ref} from 'vue';
 import {config} from "@/store";
 import {global_get_array, global_set} from "@/utils";
 
 export default defineComponent({
   name: 'chapter-list-menu',
+  setup() {
+    const show = ref(false);
+    const showPopup = () => {
+      show.value = true;
+    };
+    return {
+      show,
+      showPopup,
+    };
+  },
   // 数据
   data() {
     return {
-      popup: false
+      popup: false,
     }
   },
 
@@ -42,6 +52,9 @@ export default defineComponent({
   computed: {
     browseTop() {
       return config.browseTop;
+    },
+    chapterSelect(){
+      return config.chapterSelect;
     },
     chapterName() {
       return this.$route.query.name;
@@ -80,14 +93,13 @@ export default defineComponent({
     next() {
       this.$emit('next');
     },
-    open_popup() {
+    button_click() {
       this.popup = true;
     }
   },
 
   // 生命周期
   created() {
-
   },
 })
 </script>
@@ -101,23 +113,31 @@ export default defineComponent({
   overflow-y: visible;
 }
 
-.show-menu-posted {
+.show-menu-btn {
   position: fixed;
-  top: 102px;
-  left: 38px;
-  width: 40px;
-  height: 40px;
+  top: 10rem;
+  left: 4rem;
+  width: 5rem;
+  height: 5rem;
+  line-height: 5rem;
+  text-align: center;
+  background-color: @button-back;
   border-radius: 100%;
-  opacity: .6;
+  opacity: .7;
   z-index: 1;
+
+  i{
+    color: #fff;
+    font-size: 2.6rem;
+  }
 }
 
 .chapter-list {
-  min-width: 600px;
+  min-width: 60rem;
   min-height: 100vh;
 
   .seat {
-    height: 100px;
+    height: 10rem;
   }
 }
 

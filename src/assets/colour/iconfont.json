@@ -1,0 +1,16 @@
+{
+  "id": "3852929",
+  "name": "smanga-colour",
+  "font_family": "colour",
+  "css_prefix_text": "colour-",
+  "description": "漫画流媒体管理-彩色图标",
+  "glyphs": [
+    {
+      "icon_id": "3727371",
+      "name": "目录",
+      "font_class": "mulu",
+      "unicode": "e603",
+      "unicode_decimal": 58883
+    }
+  ]
+}

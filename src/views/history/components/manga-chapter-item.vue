@@ -13,7 +13,7 @@
 
 <script lang='ts'>
 import {defineComponent} from 'vue'
-import {global_get, global_set, global_set_json} from "@/utils";
+import {global_set, global_set_json} from "@/utils";
 import {get_chapter} from "@/api/chapter";
 
 export default defineComponent({
@@ -43,6 +43,9 @@ export default defineComponent({
     path() {
       return this.chapterInfo.chapterPath;
     },
+    browseType() {
+      return this.chapterInfo.browseType;
+    },
 
   },
 
@@ -53,25 +56,33 @@ export default defineComponent({
   methods: {
     async go_browse() {
       const chapterId = this.chapterInfo.chapterId;
+      const chapterType = this.chapterInfo.chapterType;
       const chapterCover = this.chapterInfo.chapterCover;
-      const mangaId = Number(global_get('mangaId'));
+      const mangaId = this.chapterInfo.mangaId;
+      const mangaCover = this.chapterInfo.mangaCover;
 
       const chapterListRes = await get_chapter(mangaId);
       const chapterList = chapterListRes.data;
 
       // 缓存章节信息
+      global_set('mangaId', mangaId);
+      global_set('mangaCover', mangaCover);
       global_set('chapterId', chapterId);
       global_set('chapterName', this.title);
       global_set('chapterPath', this.path);
-      global_set('chapterPath', this.path);
+      global_set('chapterType', chapterType);
       global_set('chapterCover', chapterCover);
       global_set_json('chapterList', chapterList);
 
-      this.$router.push({
-        path: '/browse-view/index',
+      // 不存储历史记录
+      await this.$router.push({
+        name: this.browseType + '-page',
         query: {
           name: this.title,
-          path: this.path
+          path: this.path,
+        },
+        params: {
+          notAddHistory: 1,
         }
       })
     }

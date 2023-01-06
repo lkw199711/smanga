@@ -45,7 +45,7 @@ export default defineComponent({
             this.cList = list.slice((index - 1) * pageSize, index * pageSize);
 
             // 为章节请求海报图片
-            get_poster(this.cList, 'chapterAwait');
+            get_poster(this.cList, 'chapterAwait','chapterCover');
         },
         /**
          * 搜索
@@ -71,10 +71,8 @@ export default defineComponent({
          * 获取漫画章节
          */
         async load_chapter() {
-            const userId = this.$cookies.get('userId');
-            const res = await get_history(userId);
-
-            this.list = res.data;
+            const res = await get_history();
+            this.list = res.data.list;
         },
     },
 
@@ -88,7 +86,7 @@ export default defineComponent({
         this.cList = this.list.slice(0, this.pageSize);
 
         // 为章节请求海报图片
-        get_poster(this.cList, 'chapterAwait');
+        get_poster(this.cList, 'chapterAwait','chapterCover');
 
     },
 

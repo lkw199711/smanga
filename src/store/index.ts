@@ -18,20 +18,31 @@ export default createStore({
 })
 
 export const globalData: GlobalData = reactive({
+    bookmarkList: [],
     chapterList: [],
     chapterIndex: 0,
     chapterId: 0,
     chapterName: '',
     chapterPath: '',
+    chapterType: '',
     chapterCover: '',
     mediaId: 0,
     mangaId: 0,
     mangaName: '',
+    mangaCover: '',
+    page: 0,
+    pageImage: '',
 });
 
 export const config = reactive({
     sidebarCollapse: false,
-    browseTop: false,
+    browseTop: true,
     browseFooter: true,
+    chapterSelect: false,
     browseType: 'flow',
+    bookmarkShow: false,
+});
+
+export const cache = reactive({
+    bookmarkId: 0,
 });

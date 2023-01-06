@@ -59,6 +59,15 @@
                         <el-input v-model="form.mangaName" placeholder="请输入媒体库名称"></el-input>
                     </el-form-item>
 
+                    <el-form-item label="浏览方式:">
+                      <el-select v-model="form.browseType" placeholder="请选择浏览方式">
+                        <el-option label="瀑布" value="flow"/>
+                        <el-option label="单页" value="single" />
+                        <el-option label="双页" value="double" />
+                      </el-select>
+                    </el-form-item>
+
+
                     <el-form-item label="漫画路径:">
                         <el-input v-model="form.mangaPath" placeholder="请输入媒体库名称"></el-input>
                     </el-form-item>

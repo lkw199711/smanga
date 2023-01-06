@@ -2,10 +2,10 @@
   <div class="operation-cover">
     <div class="top" @click="switch_menu"></div>
     <div class="middle">
-      <div class="left" @click.stop="before"></div>
-      <div class="right" @click.stop="next"></div>
+      <div class="left" @click="before"></div>
+      <div class="right" @click="next"></div>
     </div>
-    <div class="bottom" @click.stop="switch_footer"></div>
+    <div class="bottom" @click="switch_footer"></div>
   </div>
 </template>
 
