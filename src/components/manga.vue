@@ -1,5 +1,5 @@
 <template>
-  <div class="item-main" @click="go_chapter">
+  <div class="manga" @click="go_chapter">
 
     <!--封面图片-->
     <el-image v-if="finish" class="anim cover-img" :src="poster" :fit="fit" :alt="title"/>
@@ -66,21 +66,16 @@ export default {
 </script>
 
 <style scoped lang="less">
-.item-main {
+.manga {
   cursor: pointer;
   overflow: hidden;
 }
 
-.manga-name {
-  text-align: center;
-  line-height: 4;
-}
-
 .cover-img {
+  width: 100%;
   background-color: #f0f0f0;
   border-radius: 8px;
 }
-
 
 .anim {
   opacity: 0;
@@ -106,33 +101,33 @@ export default {
 }
 
 
-@media only screen and (min-width: 1081px) {
-  .item-main {
-    width: @mangaCoverWidth;
-  }
-
+@media only screen and (min-width: 1200px) {
   .cover-img {
-    width: @mangaCoverWidth;
-    height: @mangaCoverHeight;
+    height: 26rem;
   }
-
-  .manga-name {
-    line-height: 4;
+  .manga-name{
+    margin-top: .6rem;
+    font-size: 1.6rem;
   }
 }
 
-@media only screen and (max-width: 1080px) {
-  .item-main {
-    width: @PhoneMangaCoverWidth;
-  }
-
+@media only screen and (max-width: 1199px) and (min-width: 768px) {
   .cover-img {
-    width: @PhoneMangaCoverWidth;
-    height: @PhoneMangaCoverHeight;
+    height: 20rem;
   }
+  .manga-name{
+    margin-top: .4rem;
+    font-size: 1.6rem;
+  }
+}
 
-  .manga-name {
-    line-height: 3;
+@media only screen and (max-width: 767px) {
+  .cover-img {
+    height: 14rem;
+  }
+  .manga-name{
+    margin-top: .2rem;
+    font-size: 1.5rem;
   }
 }
 </style>

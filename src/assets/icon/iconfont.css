@@ -1,11 +1,11 @@
 @font-face {
   font-family: "iconfont"; /* Project id 3852924 */
-  src: url('iconfont.eot?t=1672945832963'); /* IE9 */
-  src: url('iconfont.eot?t=1672945832963#iefix') format('embedded-opentype'), /* IE6-IE8 */
-       url('iconfont.woff2?t=1672945832963') format('woff2'),
-       url('iconfont.woff?t=1672945832963') format('woff'),
-       url('iconfont.ttf?t=1672945832963') format('truetype'),
-       url('iconfont.svg?t=1672945832963#iconfont') format('svg');
+  src: url('iconfont.eot?t=1673094891416'); /* IE9 */
+  src: url('iconfont.eot?t=1673094891416#iefix') format('embedded-opentype'), /* IE6-IE8 */
+       url('iconfont.woff2?t=1673094891416') format('woff2'),
+       url('iconfont.woff?t=1673094891416') format('woff'),
+       url('iconfont.ttf?t=1673094891416') format('truetype'),
+       url('iconfont.svg?t=1673094891416#iconfont') format('svg');
 }
 
 .iconfont {
@@ -20,7 +20,7 @@
   content: "\e603";
 }
 
-.icon-Bookmark-:before {
+.icon-bookmark:before {
   content: "\ebd6";
 }
 

@@ -1,9 +1,9 @@
 import {defineComponent} from 'vue'
-import mangaListItem from '../components/manga-list-item.vue'
 import {get_poster} from "@/api";
 import {get_manga} from "@/api/manga"
 import store from "@/store";
 import {global_get} from "@/utils";
+import manga from "@/components/manga.vue";
 
 export default defineComponent({
     name: 'manga-list',
@@ -22,7 +22,7 @@ export default defineComponent({
     props: [],
 
     // 组件
-    components: {mangaListItem},
+    components: {manga},
 
     // 计算
     computed: {

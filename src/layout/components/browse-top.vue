@@ -1,7 +1,7 @@
 <template>
   <el-menu
       :default-active="activeIndex"
-      class="el-menu-demo"
+      class="browse-top"
       mode="horizontal"
       background-color="#545c64"
       text-color="#fff"
@@ -10,15 +10,15 @@
       popper-effect="light"
   >
     <!--<logo/>-->
-    <el-menu-item class="padding" index="/">
+    <el-menu-item class="padding logo-box" index="/">
       <logo/>
     </el-menu-item>
     <el-menu-item index="/media-list/index">媒体库列表</el-menu-item>
     <el-menu-item index="/manga-list/index">漫画列表</el-menu-item>
     <el-menu-item index="/chapter-list/index">章节列表</el-menu-item>
     <el-menu-item index="/browse-view/index">条漫模式</el-menu-item>
-    <el-menu-item index="/browse-view/single-page">单页模式</el-menu-item>
-    <el-menu-item index="/browse-view/double-page">双页模式</el-menu-item>
+    <el-menu-item index="/browse-view/single">单页模式</el-menu-item>
+    <el-menu-item index="/browse-view/double">双页模式</el-menu-item>
     <el-menu-item index="addBookmark">{{ bookmarkTitle }}</el-menu-item>
   </el-menu>
 </template>
@@ -90,7 +90,7 @@ export default defineComponent({
 </script>
 
 <style scoped lang='less'>
-.el-menu-demo {
+.browse-top {
   width: 100%;
 }
 
@@ -98,19 +98,15 @@ export default defineComponent({
   padding: 0 20px 0 0;
 }
 
-.browse-top.posted {
-  display: flex;
-  width: 100%;
-  height: 60px;
-  color: @menuText;
-  background-color: @menuBack;
-  box-shadow: 0 1px 4px #b1b3b8;
-
-  .browse-top-item {
-    margin: 0 10px;
-    line-height: 60px;
-    color: @menuText;
-    cursor: pointer;
+@media only screen and (max-width: 999px) {
+  .browse-top {
+    .logo-box {
+      display: none;
+    }
   }
+}
+
+@media only screen and (min-width: 1000px) {
+
 }
 </style>

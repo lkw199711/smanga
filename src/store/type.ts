@@ -6,6 +6,7 @@ export interface GlobalData {
     chapterName: string,
     chapterPath: string,
     chapterType: string,
+    browseType: string,
     chapterCover: string,
     mediaId: number,
     mangaId: number,

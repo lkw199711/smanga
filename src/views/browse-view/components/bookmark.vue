@@ -1,6 +1,6 @@
 <template>
   <div class="bookmark" v-if="show">
-    <i class="iconfont icon-Bookmark-"/>
+    <i class="iconfont icon-bookmark"/>
   </div>
 </template>
 

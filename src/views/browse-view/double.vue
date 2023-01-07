@@ -1,12 +1,13 @@
 <template>
-  <div class="single-page">
+  <div class="double-page">
     <!--目录列表-->
     <chapterList-menu @before="before" @next="next" @changeChapter="change_chapter"/>
 
     <!--图片容器-->
-    <div class="single-page-img-box">
-      <bookmark :page="page" :chapterId="chapterInfo.chapterId"/>
-      <img class="single-page-img" :src="imgSrc" alt="接收图片" @click.stop="switch_menu"/>
+    <div class="double-page-img-box">
+      <bookmark :page="bookmarkPage" :chapterId="chapterInfo.chapterId"/>
+      <img class="double-page-img" :src="imgSrc1" alt="接收图片1"/>
+      <img class="double-page-img" :src="imgSrc2" alt="接收图片1" v-if="imgSrc2"/>
       <operation-cover @before="beforePage" @next="nextPage" @switch-menu="switch_menu" @switch-footer="switch_footer"></operation-cover>
     </div>
 
@@ -20,12 +21,13 @@
             v-model:page-size="pageSize"
             :default-current-page="1"
             :page-sizes="[1, 2, 3, 4]"
-            :pager-count="7"
+            :pager-count="pageCount"
             :small="small"
             :disabled="disabled"
             :background="background"
             layout="prev, pager, next, jumper"
             :total="total"
+            @size-change="handleSizeChange"
             @current-change="handleCurrentChange"
         />
       </div>
@@ -35,6 +37,6 @@
   </div>
 </template>
 
-<script src='./script/single-page.ts' lang='ts'></script>
+<script src='./script/double-page.ts' lang='ts'></script>
 
-<style src='./style/single-page.less' scoped lang='less'></style>
+<style src='./style/double-page.less' scoped lang='less'></style>

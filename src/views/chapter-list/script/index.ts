@@ -1,9 +1,9 @@
 import {defineComponent} from 'vue'
-import mangaChapterItem from '../components/manga-chapter-item.vue';
 import {get_poster} from "@/api";
 import {get_chapter} from "@/api/chapter"
 import store from "@/store";
-import {global_get, global_set_json} from "@/utils";
+import {global_get, global_set, global_set_json} from "@/utils";
+import chapter from "@/components/chapter.vue";
 
 export default defineComponent({
     name: 'chapter-list',
@@ -23,17 +23,42 @@ export default defineComponent({
     props: [],
 
     // 组件
-    components: {mangaChapterItem},
+    components: {chapter},
 
     // 计算
     computed: {
-        mangaId():number {
+        mangaId(): number {
             return Number(this.$route.query.mangaId || global_get('mangaId'));
-        }
+        },
+        browseType(): string {
+            return String(this.$route.query.browseType || 'flow');
+        },
     },
 
     // 方法
     methods: {
+        go_browse(item: any) {
+            const chapterId = item.chapterId;
+            const chapterName = item.chapterName;
+            const chapterPath = item.chapterPath;
+            const chapterType = item.chapterType;
+            const chapterCover = item.chapterCover;
+
+            // 缓存章节信息
+            global_set('chapterId', chapterId);
+            global_set('chapterName', chapterName);
+            global_set('chapterPath', chapterPath);
+            global_set('chapterType', chapterType);
+            global_set('chapterCover', chapterCover);
+
+            this.$router.push({
+                name: this.browseType,
+                query: {
+                    name: chapterName,
+                    path: chapterPath,
+                }
+            })
+        },
         /**
          * 跳页
          * @param index
@@ -82,6 +107,10 @@ export default defineComponent({
 
     // 生命周期
     async created() {
+        // 缓存浏览方式
+        const browseType = this.$route.query.browseType;
+        if (browseType) global_set('browseType', browseType);
+
         store.commit('switch_await', {running: 'chapterAwait', bool: true});
 
         await this.load_chapter();

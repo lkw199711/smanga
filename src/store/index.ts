@@ -26,6 +26,7 @@ export const globalData: GlobalData = reactive({
     chapterPath: '',
     chapterType: '',
     chapterCover: '',
+    browseType: 'flow',
     mediaId: 0,
     mangaId: 0,
     mangaName: '',
@@ -41,6 +42,7 @@ export const config = reactive({
     chapterSelect: false,
     browseType: 'flow',
     bookmarkShow: false,
+    screenType: 'large',
 });
 
 export const cache = reactive({

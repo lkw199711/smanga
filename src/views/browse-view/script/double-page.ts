@@ -1,6 +1,6 @@
 import {defineComponent} from 'vue'
 import {get_image_blob} from "@/api";
-import {global_get_array, global_set} from "@/utils";
+import {global_get, global_get_array, global_set} from "@/utils";
 import {ElMessage, ElMessage as msg} from "element-plus";
 import {config} from '@/store';
 import {add_history} from "@/api/history";
@@ -10,7 +10,7 @@ import bookmark from "../components/bookmark.vue";
 import {get_chapter_images} from "@/api/browse";
 
 export default defineComponent({
-    name: 'double-page',
+    name: 'double',
 
     // 数据
     data() {
@@ -78,6 +78,19 @@ export default defineComponent({
         },
         total() {
             return Math.ceil(this.imgPathList.length / 2);
+        },
+        pageCount() {
+            const screenType = config.screenType;
+            switch (screenType) {
+                case 'large':
+                    return 21;
+                case 'middle':
+                    return 7;
+                case 'small':
+                    return 3;
+                default:
+                    return 21;
+            }
         },
         browseFooter() {
             return config.browseFooter
@@ -262,7 +275,7 @@ export default defineComponent({
     created() {
         // 设置浏览模式
         config.browseType = 'double';
-        const page = this.$route.params.page || 1;
+        const page = this.$route.params.page || global_get('page') || 1;
         const notAddHistory = this.$route.params.notAddHistory || false;
         const target = Math.floor((Number(page) + 1) / 2);
 

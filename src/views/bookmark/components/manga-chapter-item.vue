@@ -6,6 +6,7 @@
     <!--占位图标-->
     <el-image v-else :src="placeholder" class="chapter-cover-img" fit="fill"/>
 
+    <!--书签图标-->
     <i class="iconfont icon-Bookmark-"/>
 
     <!--章节名称-->
@@ -77,7 +78,7 @@ export default defineComponent({
 
       // 不存储历史记录
       await this.$router.push({
-        name: browseType + '-page',
+        name: browseType,
         query: {
           name: this.title,
           path: this.path,
@@ -86,7 +87,7 @@ export default defineComponent({
           page
         }
       })
-    }
+    },
   },
 
   // 生命周期

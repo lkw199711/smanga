@@ -76,7 +76,7 @@ export default defineComponent({
 
       // 不存储历史记录
       await this.$router.push({
-        name: this.browseType + '-page',
+        name: this.browseType,
         query: {
           name: this.title,
           path: this.path,

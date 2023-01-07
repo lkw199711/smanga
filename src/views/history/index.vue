@@ -1,6 +1,5 @@
 <template>
     <div class="history-list">
-        <!--vant-sousuok-->
         <form action="/">
             <van-search
                     v-model="keyWord"
@@ -12,9 +11,7 @@
         </form>
 
         <div class="chapter-list-box">
-            <manga-chapter-item class="chapter-list-item" v-for="(i,k) in cList" :key="k" :chapterInfo="i"/>
-            <!--填补最后一行的占位元素-->
-            <div class="chapter-list-item chapter-seat" v-for="(i) in Array(8)" :key="i"/>
+            <chapter v-for="(i,k) in cList" :key="k" :chapterInfo="i" @click="go_browse(i)"/>
         </div>
 
         <!--分页组件-->
@@ -24,4 +21,4 @@
 
 <script src='./script/index.ts' lang="ts"></script>
 
-<style src='./style/index.less' scoped lang='less'></style>
+<style src='@/style/chapter-list.less' scoped lang='less'></style>

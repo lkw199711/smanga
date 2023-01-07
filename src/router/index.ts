@@ -167,7 +167,7 @@ const routes: Array<RouteRecordRaw> = [
     {
         path: '/compress-setting',
         redirect: '/compress-setting/index',
-        meta: {sidebar: true, title: '转换设置', icon: 'Refresh'},
+        meta: {sidebar: true, title: '转换设置', icon: 'Switch'},
         component: Layout,
         children: [
             {
@@ -188,18 +188,18 @@ const routes: Array<RouteRecordRaw> = [
         children: [
             {
                 path: 'index',
-                name: 'flow-page',
-                component: () => import('../views/browse-view/index.vue'),
+                name: 'flow',
+                component: () => import('../views/browse-view/flow.vue'),
             },
             {
-                path: 'single-page',
-                name: 'single-page',
-                component: () => import('../views/browse-view/single-page.vue'),
+                path: 'single',
+                name: 'single',
+                component: () => import('../views/browse-view/single.vue'),
             },
             {
-                path: 'double-page',
-                name: 'double-page',
-                component: () => import('../views/browse-view/double-page.vue'),
+                path: 'double',
+                name: 'double',
+                component: () => import('../views/browse-view/double.vue'),
             }
         ]
     },

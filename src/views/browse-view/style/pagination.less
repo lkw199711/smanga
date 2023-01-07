@@ -1,0 +1,30 @@
+@media only screen and (min-width: 1200px) {
+    .single-page .footer {
+        .btn {
+            padding: 0;
+            width: 8rem;
+        }
+    }
+
+    :deep(.el-pagination__jump) {
+        margin-left: .4rem;
+    }
+}
+
+@media only screen and (max-width: 1199px) and (min-width: 768px) {
+    :deep(.el-pagination__jump) {
+        margin-left: .8rem;
+    }
+}
+
+@media only screen and (max-width: 767px) {
+    .footer {
+        .btn {
+            display: none;
+        }
+    }
+
+    :deep(.el-pagination__jump) {
+        margin-left: .4rem;
+    }
+}

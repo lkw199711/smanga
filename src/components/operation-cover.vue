@@ -57,10 +57,10 @@ export default defineComponent({
   flex-direction: column;
   left: 0;
   top: 0;
-  width: 100%;
-  height: 100%;
+  right: 0;
+  bottom: 0;
   .top{
-    height: 40%;
+    height: 30%;
   }
   .middle{
     display: flex;
@@ -75,7 +75,7 @@ export default defineComponent({
     }
   }
   .bottom{
-    height: 40%;
+    height: 30%;
   }
 }
 </style>

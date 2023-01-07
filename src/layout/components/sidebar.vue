@@ -1,31 +1,63 @@
 <template>
-  <el-menu
-      router
-      active-text-color="#ffd04b"
-      background-color="#545c64"
-      text-color="#fff"
-      default-active="/"
-      class="el-menu-vertical-demo"
-      :collapse="config.sidebarCollapse"
-      :collapse-transition="true"
-  >
-    <!--<logo/>-->
-    <el-menu-item index="/" class="no-padding">
-      <div :class="['logo','posted',{'collapse':!config.sidebarCollapse}]">
-        <img v-if="config.sidebarCollapse" src="@/assets/logo2.png" alt="logo">
-        <logo v-else/>
-      </div>
-    </el-menu-item>
-
-    <template v-for="(item,key) in routes" :key="key">
-      <el-menu-item v-if="item.meta.sidebar" :index="item.path">
-        <el-icon v-if="item.meta.icon">
-          <component :is="item.meta.icon"></component>
-        </el-icon>
-        <template #title>{{ item.meta.title }}</template>
+  <div class="sidebar-pc">
+    <el-menu
+        router
+        active-text-color="#ffd04b"
+        background-color="#545c64"
+        text-color="#fff"
+        default-active="/"
+        :class="['sidebar','sidebar-pc',{close:config.sidebarCollapse}]"
+        :collapse="config.sidebarCollapse"
+        :collapse-transition="true"
+    >
+      <!--<logo/>-->
+      <el-menu-item index="/" class="no-padding">
+        <div :class="['logo','posted',{'collapse':!config.sidebarCollapse}]">
+          <img v-if="config.sidebarCollapse" src="@/assets/logo2.png" alt="logo">
+          <logo v-else/>
+        </div>
       </el-menu-item>
-    </template>
-  </el-menu>
+
+      <template v-for="(item,key) in routes" :key="key">
+        <el-menu-item v-if="item.meta.sidebar" :index="item.path">
+          <el-icon v-if="item.meta.icon">
+            <component :is="item.meta.icon"></component>
+          </el-icon>
+          <template #title>{{ item.meta.title }}</template>
+        </el-menu-item>
+      </template>
+    </el-menu>
+  </div>
+
+  <div class="sidebar-phone">
+    <van-popup v-model:show="config.sidebarCollapse" position="left" class="sidebar-popup">
+      <el-menu
+          router
+          active-text-color="#ffd04b"
+          background-color="#545c64"
+          text-color="#fff"
+          default-active="/"
+          class="sidebar"
+      >
+        <!--<logo/>-->
+        <el-menu-item index="/" class="no-padding">
+          <div :class="['logo','posted']">
+            <logo/>
+          </div>
+        </el-menu-item>
+
+        <template v-for="(item,key) in routes" :key="key">
+          <el-menu-item v-if="item.meta.sidebar" :index="item.path">
+            <el-icon v-if="item.meta.icon">
+              <component :is="item.meta.icon"></component>
+            </el-icon>
+            <template #title>{{ item.meta.title }}</template>
+          </el-menu-item>
+        </template>
+      </el-menu>
+    </van-popup>
+  </div>
+
 </template>
 
 <script lang="ts" setup>
@@ -35,6 +67,8 @@ import {config} from '@/store';
 import Logo from "@/layout/components/logo.vue";
 
 const router = useRouter();
+
+const show = ref(true);
 
 const go_home = () => {
   router.push('/');
@@ -50,18 +84,35 @@ onMounted(() => {
 </script>
 
 <style scoped lang="less">
-.el-menu-vertical-demo:not(.el-menu--collapse) {
-  width: 200px;
-  height: 100vh;
+
+//响应式手机
+@media only screen and (max-width: 999px) {
+  .sidebar-pc {
+    display: none;
+  }
+}
+
+@media only screen and (min-width: 1000px) {
+  .sidebar-phone {
+    display: none;
+  }
+}
+
+.sidebar-popup {
+  width: 80vw;
 }
 
 .el-menu {
   border: 0;
 }
 
-.el-menu-vertical-demo {
+.sidebar {
   height: 100vh;
+  overflow: hidden;
+}
 
+.sidebar:not(.el-menu--collapse) {
+  width: 20rem;
 }
 
 .posted {

@@ -1,24 +1,33 @@
-.manga-list-main {
-    .manga-list-box{
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: space-around;
-        padding: 4rem;
-    }
-
-    .item{
-        margin: 0 4rem;
+.manga-list {
+    &-box {
+        display: grid;
+        justify-content: space-between;
     }
 }
 
-@media only screen and (min-width: 1081px) {
-    .seat{
-        width: @mangaCoverWidth;
+@media only screen and (min-width: 1200px) {
+    .manga-list-box {
+        margin: 6rem auto;
+        padding: 0 6rem;
+        grid-template-columns: repeat(auto-fill, 20rem);
+        grid-gap: 3rem 4rem;
     }
 }
 
-@media only screen and (max-width: 1080px) {
-    .seat{
-        width: @PhoneMangaCoverWidth;
+@media only screen and (max-width: 1199px) and (min-width: 768px) {
+    .manga-list-box {
+        margin: 4rem auto;
+        padding: 0 4rem;
+        grid-template-columns: repeat(auto-fill, 14rem);
+        grid-gap: 2rem 2rem;
+    }
+}
+
+@media only screen and (max-width: 767px) {
+    .manga-list-box {
+        margin: 2rem auto;
+        padding: 0 2rem;
+        grid-template-columns: repeat(auto-fill, 10rem);
+        grid-gap: 1.6rem 1rem;
     }
 }
