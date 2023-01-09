@@ -911,6 +911,11 @@
     "@babel/helper-validator-identifier" "^7.15.7"
     "to-fast-properties" "^2.0.0"
 
+"@element-plus/icons-vue@^0.2.2":
+  "integrity" "sha512-S8kDbfVaWkQvbUYQE1ui448tzaHfUvyESCep9J6uPRlViyQPXjdIfwLBhV6AmQSOfFS8rL+xehJGhvzPXLrSBg=="
+  "resolved" "https://registry.npmjs.org/@element-plus/icons-vue/-/icons-vue-0.2.7.tgz"
+  "version" "0.2.7"
+
 "@element-plus/icons-vue@^2.0.10":
   "integrity" "sha512-ygEZ1mwPjcPo/OulhzLE7mtDrQBWI8vZzEWSNB2W/RNCRjoQGwbaK4N8lV4rid7Ts4qvySU3njMN7YCiSlSaTQ=="
   "resolved" "https://registry.npmjs.org/@element-plus/icons-vue/-/icons-vue-2.0.10.tgz"
@@ -3818,11 +3823,11 @@
   "version" "1.0.1"
 
 "element-plus@^1.2.0-beta.5":
-  "integrity" "sha512-8KNGsNZ6RjVJ7kmxq/WLeTBMhVxSjfaGdW2QdcdXz4km1MgxbyBfdiNGVQG4XH/n+hbtLFldCPw0mVT4vkncuA=="
-  "resolved" "https://registry.npmjs.org/element-plus/-/element-plus-1.2.0-beta.5.tgz"
-  "version" "1.2.0-beta.5"
+  "integrity" "sha512-8EdSIR/5/FHcSB8w1diAh+gJMHgxIvxuZoayY99k6taAR1QyEFHuPTgFccZLopJ1+iP4UEsZFz49l57qS08Utw=="
+  "resolved" "https://registry.npmjs.org/element-plus/-/element-plus-1.2.0-beta.6.tgz"
+  "version" "1.2.0-beta.6"
   dependencies:
-    "@element-plus/icons" "^0.0.11"
+    "@element-plus/icons-vue" "^0.2.2"
     "@popperjs/core" "^2.10.2"
     "@vueuse/core" "^7.0.0"
     "async-validator" "^4.0.7"

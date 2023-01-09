@@ -8,6 +8,7 @@
     "lint": "set NODE_OPTIONS=--openssl-legacy-provider & vue-cli-service lint"
   },
   "dependencies": {
+    "@element-plus/icons": "^0.0.11",
     "@element-plus/icons-vue": "^2.0.10",
     "autoprefixer": "^10.0.1",
     "axios": "^0.24.0",

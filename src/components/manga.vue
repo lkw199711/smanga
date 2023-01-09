@@ -54,8 +54,9 @@ export default {
       global_set('mangaCover', mangaCover);
 
       this.$router.push({
-        path: '/chapter-list',
-        query: {mangaId, browseType},
+        name: 'chapter-list',
+        query: {mangaId},
+        params: {browseType},
       });
     }
   },
@@ -105,7 +106,8 @@ export default {
   .cover-img {
     height: 26rem;
   }
-  .manga-name{
+
+  .manga-name {
     margin-top: .6rem;
     font-size: 1.6rem;
   }
@@ -115,7 +117,8 @@ export default {
   .cover-img {
     height: 20rem;
   }
-  .manga-name{
+
+  .manga-name {
     margin-top: .4rem;
     font-size: 1.6rem;
   }
@@ -125,7 +128,8 @@ export default {
   .cover-img {
     height: 14rem;
   }
-  .manga-name{
+
+  .manga-name {
     margin-top: .2rem;
     font-size: 1.5rem;
   }

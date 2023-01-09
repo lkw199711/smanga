@@ -5,6 +5,7 @@
         <el-button class="add-btn" type="primary" :icon="Plus" @click="dialog_open">新增媒体库</el-button>
       </div>
 
+      <!--表格-->
       <el-table :data="tableData" stripe border>
         <el-table-column type="index" label="序号" width="50">
         </el-table-column>
@@ -50,6 +51,10 @@
           </template>
         </el-table-column>
       </el-table>
+
+      <!--分页-->
+      <table-pager ref="pager" @pageChange="load_table" :count="count"/>
+
       <!--新增媒体库弹框-->
       <el-dialog title="新增媒体库" v-model="addMediaDialog" :before-close="dialog_close">
         <el-form :model="form" label-width="100px">
@@ -189,12 +194,6 @@
 <script lang='js' src="./script/index.ts"></script>
 
 <style scoped lang='less'>
-
-.media-box {
-  width: 120rem;
-  margin: 10rem auto;
-}
-
 .btn-box {
   margin-bottom: 1.4rem;
 }
@@ -215,5 +214,26 @@
     height: 2rem;
   }
 
+}
+
+@media only screen and (min-width: 1200px) {
+  .media-box {
+    width: 100rem;
+    margin: 3rem auto;
+  }
+}
+
+@media only screen and (max-width: 1199px) and (min-width: 768px) {
+  .media-box {
+    width: 74rem;
+    margin: 2rem auto;
+  }
+}
+
+@media only screen and (max-width: 767px) {
+  .media-box {
+    width: 72rem;
+    margin: 1rem auto;
+  }
 }
 </style>

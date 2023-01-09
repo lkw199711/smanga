@@ -5,7 +5,7 @@
 
     <!--图片容器-->
     <div class="single-page-img-box">
-      <bookmark :page="page" :chapterId="chapterInfo.chapterId"/>
+      <bookmark :chapterId="chapterInfo.chapterId"/>
       <img class="single-page-img" :src="imgSrc" alt="接收图片" @click.stop="switch_menu"/>
       <operation-cover @before="beforePage" @next="nextPage" @switch-menu="switch_menu"
                        @switch-footer="switch_footer"></operation-cover>
@@ -15,19 +15,7 @@
     <div class="footer" v-show="browseFooter">
       <el-button class="btn" type="warning" plain @click="before">上一章</el-button>
 
-      <el-pagination
-          v-model:current-page="page"
-          v-model:page-size="pageSize"
-          :default-current-page="1"
-          :page-sizes="[1, 2, 3, 4]"
-          :pager-count="pageCount"
-          :small="small"
-          :disabled="disabled"
-          :background="background"
-          layout="prev, pager, next, jumper"
-          :total="total"
-          @current-change="handleCurrentChange"
-      />
+      <browse-pager ref="pager" @pageChange="page_change" @reloadPage="reload_page" :count="count"/>
 
       <el-button class="btn" type="success" plain @click="next">下一章</el-button>
     </div>

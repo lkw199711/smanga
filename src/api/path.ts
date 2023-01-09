@@ -3,11 +3,13 @@ import {ajax} from "./index";
 /**
  * 获取路径记录
  * @param mediaId
+ * @param recordStart
+ * @param pageSize
  */
-export function get_path(mediaId: any) {
+export function get_path(mediaId: number, recordStart: number, pageSize: number) {
     return ajax({
         url: 'php/path/get.php',
-        data: {mediaId}
+        data: {mediaId, recordStart, pageSize}
     })
 }
 
@@ -17,10 +19,10 @@ export function get_path(mediaId: any) {
  * @param path
  * @param pathId
  */
-export function rescan_path(mediaId: any,path: any, pathId:any) {
+export function rescan_path(mediaId: any, path: any, pathId: any) {
     return ajax({
         url: 'php/path/rescan.php',
-        data: {mediaId,path,pathId}
+        data: {mediaId, path, pathId}
     })
 }
 

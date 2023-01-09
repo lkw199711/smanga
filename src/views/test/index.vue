@@ -1,13 +1,13 @@
 <template>
   <div class="index">
     <h1>test</h1>
-    <el-button>测试</el-button>
+    <el-button @click="do_test">测试</el-button>
   </div>
 </template>
 
 <script lang='ts'>
 import {defineComponent} from 'vue'
-import * as _ from 'lodash'
+import {ajax} from "@/api";
 
 export default defineComponent({
   name: 'index',
@@ -29,11 +29,18 @@ export default defineComponent({
   components: {},
 
   // 方法
-  methods: {},
+  methods: {
+    do_test(){
+      ajax.post('php/test/select.php', {mangaId: 112})
+          .then(res=>{
+            console.log(res);
+          })
+    },
+  },
 
   // 生命周期
   created() {
-    console.log(_.merge);
+
   },
 })
 </script>

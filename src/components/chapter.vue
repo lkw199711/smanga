@@ -16,7 +16,6 @@
 
 <script lang='ts'>
 import {defineComponent} from 'vue'
-import {global_set} from "@/utils";
 
 export default defineComponent({
   name: 'manga-chapter-item',
@@ -29,7 +28,7 @@ export default defineComponent({
   },
 
   // 传值
-  props: ['chapterInfo','bookmark'],
+  props: ['chapterInfo', 'bookmark'],
 
   // 引用
   computed: {
@@ -52,7 +51,7 @@ export default defineComponent({
 
   // 生命周期
   created() {
-    console.log(this.bookmark);
+
   },
 })
 </script>
@@ -63,7 +62,7 @@ export default defineComponent({
   overflow: hidden;
   cursor: pointer;
 
-  &-cover-img{
+  &-cover-img {
     width: 100%;
     background-color: #f0f0f0;
     border-radius: 8px;
@@ -106,10 +105,12 @@ export default defineComponent({
   .chapter-cover-img {
     height: 24rem;
   }
+
   .chapter-name {
     margin-top: .6rem;
   }
-  .icon-bookmark{
+
+  .icon-bookmark {
     font-size: 4rem;
   }
 }
@@ -118,10 +119,12 @@ export default defineComponent({
   .chapter-cover-img {
     height: 18rem;
   }
+
   .chapter-name {
     margin-top: .4rem;
   }
-  .icon-bookmark{
+
+  .icon-bookmark {
     font-size: 3rem;
   }
 }
@@ -130,10 +133,12 @@ export default defineComponent({
   .chapter-cover-img {
     height: 12rem;
   }
+
   .chapter-name {
     margin-top: .2rem;
   }
-  .icon-bookmark{
+
+  .icon-bookmark {
     font-size: 2.4rem;
   }
 }

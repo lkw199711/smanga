@@ -1,8 +1,14 @@
 import {ajax} from "./index";
 
-export function get_compress() {
+/**
+ * 获取转换记录
+ * @param recordStart
+ * @param pageSize
+ */
+export function get_compress(recordStart: number, pageSize: number) {
     return ajax({
-        url: 'php/compress/get.php'
+        url: 'php/compress/get.php',
+        data: {recordStart, pageSize}
     })
 }
 

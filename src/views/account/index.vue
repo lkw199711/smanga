@@ -1,9 +1,10 @@
 <template>
-  <div class="account-index">
-    <div class="account-box">
+  <div class="account">
+    <div class="account-table-box">
       <div class="add-btn-box">
         <el-button class="add-btn" type="primary" :icon="Plus" @click="add_dialog_open">新增账户</el-button>
       </div>
+      <!--表格-->
       <el-table
           :data="tableData" stripe border>
         <el-table-column type="index" label="序号" width="50">
@@ -44,6 +45,8 @@
           </template>
         </el-table-column>
       </el-table>
+      <!--分页-->
+      <table-pager ref="pager" @pageChange="load_table" :count="count"/>
     </div>
 
     <el-dialog title="新增账户" v-model="addDialog" :before-close="add_dialog_close">
@@ -95,11 +98,6 @@
 <script lang='ts' src="./script/index.ts"></script>
 
 <style scoped lang='less'>
-.account-box {
-  width: 120rem;
-  margin: 10rem auto;
-}
-
 .btn-box {
   display: flex;
   justify-content: flex-end;
@@ -108,4 +106,26 @@
 .add-btn-box {
   margin-bottom: 1.4rem;
 }
+
+@media only screen and (min-width: 1200px) {
+  .account-table-box {
+    width: 100rem;
+    margin: 3rem auto;
+  }
+}
+
+@media only screen and (max-width: 1199px) and (min-width: 768px) {
+  .account-table-box {
+    width: 70rem;
+    margin: 2rem auto;
+  }
+}
+
+@media only screen and (max-width: 767px) {
+  .account-table-box {
+    width: 70rem;
+    margin: 1rem auto;
+  }
+}
+
 </style>

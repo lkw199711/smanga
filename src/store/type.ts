@@ -13,5 +13,6 @@ export interface GlobalData {
     mangaName: string,
     mangaCover: string,
     page: number,
+    doublePage: number,
     pageImage: string,
 }

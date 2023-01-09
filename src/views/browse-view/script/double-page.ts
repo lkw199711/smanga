@@ -1,13 +1,14 @@
 import {defineComponent} from 'vue'
 import {get_image_blob} from "@/api";
 import {global_get, global_get_array, global_set} from "@/utils";
-import {ElMessage, ElMessage as msg} from "element-plus";
+import {ElMessage as msg} from "element-plus";
 import {config} from '@/store';
 import {add_history} from "@/api/history";
 import operationCover from "@/components/operation-cover.vue";
 import chapterListMenu from "../components/chapter-list-menu.vue";
 import bookmark from "../components/bookmark.vue";
 import {get_chapter_images} from "@/api/browse";
+import browsePager from "@/components/browse-pager.vue";
 
 export default defineComponent({
     name: 'double',
@@ -15,9 +16,6 @@ export default defineComponent({
     // 数据
     data() {
         return {
-            // 当前页码
-            page: 1,
-            pageSize: 1,
             // 分页器设置
             small: false,
             disabled: false,
@@ -38,15 +36,11 @@ export default defineComponent({
     props: [],
 
     // 组件
-    components: {operationCover, chapterListMenu, bookmark},
+    components: {operationCover, chapterListMenu, bookmark, browsePager},
 
     computed: {
         path() {
             return this.$route.query.path as string;
-        },
-        bookmarkPage() {
-            const page = this.page;
-            return page * 2 - 1;
         },
         name() {
             return this.$route.query.name;
@@ -56,7 +50,7 @@ export default defineComponent({
             return global_get_array('chapterList');
         },
         chapterInfo() {
-            return this.chapterList[this.index];
+            return this.chapterList[this.index] || {};
         },
         // 章节的坐标索引
         index() {
@@ -76,21 +70,8 @@ export default defineComponent({
         browseTop() {
             return config.browseTop;
         },
-        total() {
-            return Math.ceil(this.imgPathList.length / 2);
-        },
-        pageCount() {
-            const screenType = config.screenType;
-            switch (screenType) {
-                case 'large':
-                    return 21;
-                case 'middle':
-                    return 7;
-                case 'small':
-                    return 3;
-                default:
-                    return 21;
-            }
+        count() {
+            return this.imgPathList.length;
         },
         browseFooter() {
             return config.browseFooter
@@ -99,15 +80,13 @@ export default defineComponent({
 
     // 方法
     methods: {
-        handleSizeChange(pages: number) {
-            console.log(pages);
-        },
         /**
          * 页码变更
          * @param page
          */
-        async handleCurrentChange(page: number) {
+        async page_change(page: number) {
             const index = (page - 1) * 2;
+            const pageImage = this.imgPathList[index];
 
             // 加载第一张图片
             const res1: any = await get_image_blob(this.imgPathList[index]);
@@ -121,32 +100,22 @@ export default defineComponent({
                 this.imgSrc2 = '';
             }
 
-            this.page = page;
-
             // 缓存书签信息
-            const pageImage = this.imgPathList[this.bookmarkPage - 1];
-            global_set('page', this.bookmarkPage);
+            global_set('page', page);
+            global_set('doublePage', page * 2 - 1);
             global_set('pageImage', pageImage);
         },
         /**
          * 上一页
          */
         beforePage() {
-            if (this.page > 1) {
-                this.handleCurrentChange(--this.page);
-            } else {
-                ElMessage.warning('已近位于首页');
-            }
+            (this.$refs as any).pager.before();
         },
         /**
          * 下一页
          */
         nextPage() {
-            if (this.page < this.total) {
-                this.handleCurrentChange(++this.page);
-            } else {
-                ElMessage.warning('已近位于尾页');
-            }
+            (this.$refs as any).pager.next();
         },
 
         /**
@@ -161,23 +130,23 @@ export default defineComponent({
             switch (res.data.status) {
                 case 'uncompressed':
                     setTimeout(() => {
-                        this.reload_page(this.page, false)
+                        (this.$refs as any).pager.reload();
                     }, 2000);
                     break;
                 case 'compressing':
                     this.imgPathList = res.data.list;
-                    this.handleCurrentChange(page);
+                    (this.$refs as any).pager.page_change(page);
                     setTimeout(() => {
-                        this.reload_page(this.page, false)
+                        (this.$refs as any).pager.reload();
                     }, 2000);
                     break;
                 case 'compressed':
                     this.imgPathList = res.data.list;
-                    this.handleCurrentChange(page);
+                    (this.$refs as any).pager.page_change(page);
                     break;
                 default:
                     this.imgPathList = res.data.list;
-                    this.handleCurrentChange(page);
+                    (this.$refs as any).pager.page_change(page);
             }
         },
         /**
@@ -277,7 +246,7 @@ export default defineComponent({
         config.browseType = 'double';
         const page = this.$route.params.page || global_get('page') || 1;
         const notAddHistory = this.$route.params.notAddHistory || false;
-        const target = Math.floor((Number(page) + 1) / 2);
+        const target = Number(page);
 
         this.reload_page(target, !notAddHistory);
 

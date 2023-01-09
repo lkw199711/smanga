@@ -46,7 +46,7 @@ export default defineComponent({
             const browseType = item.browseType;
 
             const chapterListRes = await get_chapter(mangaId);
-            const chapterList = chapterListRes.data;
+            const chapterList = chapterListRes.data.list;
 
             // 缓存章节信息
             global_set('mangaId', mangaId);
@@ -68,6 +68,7 @@ export default defineComponent({
                 },
                 params: {
                     notAddHistory: 1,
+                    page: 1,
                 }
             })
         },

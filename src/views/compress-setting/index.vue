@@ -1,5 +1,6 @@
 <template>
   <div class="compress-setting">
+    <!--表格-->
     <el-table
         :data="tableData" stripe border>
       <el-table-column type="index" label="序号" width="50">
@@ -52,14 +53,17 @@
         </template>
       </el-table-column>
     </el-table>
+    <!--分页-->
+    <table-pager ref="pager" @pageChange="load_table" :count="count"/>
   </div>
 </template>
 
 <script lang='ts'>
 import {defineComponent} from 'vue'
 import {ElMessageBox} from "element-plus";
-import {Delete, Edit, Plus} from '@element-plus/icons'
+import {Delete, Edit, Plus} from '@element-plus/icons-vue'
 import {delete_compress, get_compress} from "@/api/compress";
+import tablePager from "@/components/table-pager.vue";
 
 export default defineComponent({
   name: 'compress-setting',
@@ -71,6 +75,7 @@ export default defineComponent({
   // 数据
   data() {
     return {
+      count: 0,
       addDialog: false,
       dialogFormVisible: false,
       tableData: [],
@@ -81,11 +86,11 @@ export default defineComponent({
   // 传值
   props: [],
 
-  // 引用
+  // 计算
   computed: {},
 
   // 组件
-  components: {},
+  components: {tablePager},
 
   // 方法
   methods: {
@@ -105,18 +110,27 @@ export default defineComponent({
         const res = await delete_compress(val.compressId);
 
         if (res.data.code === 0) {
-          this.load_table();
+          this.reload_table();
         }
-      }).catch(() => {})
+      }).catch(() => {
+      })
     },
 
     /**
      * 加载表格
      * @returns {Promise<void>}
      */
-    async load_table() {
-      const res = await get_compress();
+    async load_table(page = 1, pageSize = 10) {
+      const start = (page - 1) * pageSize;
+      const res = await get_compress(start, pageSize);
+      this.count = Number(res.data.count);
       this.tableData = res.data.list;
+    },
+    /**
+     * 重载数据 页码不变
+     */
+    reload_table() {
+      (this.$refs as any).pager.reload_page();
     },
   },
 
@@ -128,8 +142,25 @@ export default defineComponent({
 </script>
 
 <style scoped lang='less'>
-.compress-setting {
-  width: 120rem;
-  margin: 10rem auto;
+@media only screen and (min-width: 1200px) {
+  .compress-setting {
+    width: 116rem;
+    margin: 3rem auto;
+  }
 }
+
+@media only screen and (max-width: 1199px) and (min-width: 768px) {
+  .compress-setting {
+    width: 114rem;
+    margin: 2rem auto;
+  }
+}
+
+@media only screen and (max-width: 767px) {
+  .compress-setting {
+    width: 114rem;
+    margin: 1rem auto;
+  }
+}
+
 </style>

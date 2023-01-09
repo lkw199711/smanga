@@ -31,7 +31,7 @@ export default defineComponent({
             return Number(this.$route.query.mangaId || global_get('mangaId'));
         },
         browseType(): string {
-            return String(this.$route.query.browseType || 'flow');
+            return String(this.$route.params.browseType || global_get('browseType'));
         },
     },
 
@@ -56,7 +56,8 @@ export default defineComponent({
                 query: {
                     name: chapterName,
                     path: chapterPath,
-                }
+                },
+                params: {page: 1},
             })
         },
         /**
@@ -96,9 +97,9 @@ export default defineComponent({
          * 获取漫画章节
          */
         async load_chapter() {
-            const res = await get_chapter(this.mangaId);
+            const res = await get_chapter(this.mangaId, 0, 1000);
 
-            this.list = res.data;
+            this.list = res.data.list;
 
             // 缓存章节
             global_set_json('chapterList', this.list);
@@ -108,7 +109,7 @@ export default defineComponent({
     // 生命周期
     async created() {
         // 缓存浏览方式
-        const browseType = this.$route.query.browseType;
+        const browseType = this.$route.params.browseType;
         if (browseType) global_set('browseType', browseType);
 
         store.commit('switch_await', {running: 'chapterAwait', bool: true});

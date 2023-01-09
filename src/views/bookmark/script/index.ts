@@ -34,7 +34,7 @@ export default defineComponent({
         /**
          * 去往浏览界面
          */
-        async go_browse(item:any) {
+        async go_browse(item: any) {
             const chapterId = item.chapterId;
             const chapterName = item.chapterName;
             const chapterPath = item.chapterPath;
@@ -42,11 +42,15 @@ export default defineComponent({
             const chapterCover = item.chapterCover;
             const mangaId = item.mangaId;
             const mangaCover = item.mangaCover;
-            const page = item.page;
             const browseType = item.browseType;
+            let page = Number(item.page);
+
+            if (browseType === 'double') {
+                page = Math.ceil((page + 1) / 2);
+            }
 
             const chapterListRes = await get_chapter(mangaId);
-            const chapterList = chapterListRes.data;
+            const chapterList = chapterListRes.data.list;
 
             // 缓存章节信息
             global_set('mangaId', mangaId);

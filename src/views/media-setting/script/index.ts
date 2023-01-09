@@ -1,4 +1,4 @@
-import {Delete, Edit, Upload, Plus, FolderOpened} from '@element-plus/icons'
+import {Delete, Edit, Upload, Plus, FolderOpened} from '@element-plus/icons-vue'
 import {defineComponent} from 'vue'
 import {
     add_media,
@@ -11,6 +11,7 @@ import {
     update_media
 } from "@/api/media";
 import {ElMessage, ElMessageBox} from 'element-plus'
+import tablePager from "@/components/table-pager.vue";
 
 export default defineComponent({
     name: 'media-setting-index',
@@ -26,6 +27,7 @@ export default defineComponent({
     // 数据
     data() {
         return {
+            count: 0,
             tableData: [],
             addMediaDialog: false,
             addPathDialog: false,
@@ -54,11 +56,11 @@ export default defineComponent({
     // 传值
     props: [],
 
-    // 引用
+    // 计算
     computed: {},
 
     // 组件
-    components: {},
+    components: {tablePager},
 
     // 方法
     methods: {
@@ -106,9 +108,17 @@ export default defineComponent({
         /**
          * 加载表格数据
          */
-        async load_table() {
-            const res = await get_media();
-            this.tableData = res.data;
+        async load_table(page = 1, pageSize = 10) {
+            const start = (page - 1) * pageSize;
+            const res = await get_media(start, pageSize);
+            this.count = Number(res.data.count);
+            this.tableData = res.data.list;
+        },
+        /**
+         * 重载数据 页码不变
+         */
+        reload_table() {
+            (this.$refs as any).pager.reload_page();
         },
         /**
          * 新增媒体库
@@ -128,7 +138,7 @@ export default defineComponent({
             const res = await add_media(this.form);
             if (res.data.code === 0) {
                 this.dialog_close();
-                this.load_table();
+                this.reload_table();
             }
         },
 
@@ -161,7 +171,7 @@ export default defineComponent({
 
             if (res.data.code === 0) {
                 this.editMediaDialog = false;
-                this.load_table();
+                this.reload_table();
             }
         },
 
@@ -177,9 +187,10 @@ export default defineComponent({
                 const res = await delete_media(row.mediaId);
 
                 if (res.data.code === 0) {
-                    this.load_table();
+                    this.reload_table();
                 }
-            }).catch(() => {})
+            }).catch(() => {
+            })
 
         },
         /**
@@ -199,7 +210,8 @@ export default defineComponent({
                 if (res.data.code === 0) {
                     this.load_path(pathInfo.mediaId);
                 }
-            }).catch(() => {})
+            }).catch(() => {
+            })
         },
         /**
          * 重新扫面路径
@@ -219,7 +231,8 @@ export default defineComponent({
                 if (res.data.code === 0) {
                     this.load_path(pathInfo.mediaId);
                 }
-            }).catch(() => {})
+            }).catch(() => {
+            })
         },
         /**
          * 添加路径信息到缓存

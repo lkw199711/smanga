@@ -27,7 +27,7 @@ export default defineComponent({
     // 计算
     computed: {
         mediaId() {
-            return this.$route.query.mediaId || global_get('mediaId');
+            return Number(this.$route.query.mediaId || global_get('mediaId'));
         }
     },
 
@@ -72,9 +72,9 @@ export default defineComponent({
          */
         async load_manga() {
 
-            const res = await get_manga(this.mediaId);
+            const res = await get_manga(this.mediaId, 0, 1000);
 
-            this.list = res.data;
+            this.list = res.data.list;
         },
     },
 

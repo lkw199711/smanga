@@ -1,11 +1,28 @@
-.chapter-setting-box {
-    width: 120rem;
-    margin: 10rem auto;
-}
-
 .dialog-footer {
     .btn-box {
         display: flex;
         justify-content: flex-end;
     }
 }
+
+@media only screen and (min-width: 1200px) {
+    .chapter-setting-box {
+        width: 100rem;
+        margin: 3rem auto;
+    }
+}
+
+@media only screen and (max-width: 1199px) and (min-width: 768px) {
+    .chapter-setting-box {
+        width: 90rem;
+        margin: 2rem auto;
+    }
+}
+
+@media only screen and (max-width: 767px) {
+    .chapter-setting-box {
+        width: 90rem;
+        margin: 1rem auto;
+    }
+}
+

@@ -3,11 +3,13 @@ import {ajax} from "./index";
 /**
  * 获取章节记录
  * @param mangaId
+ * @param recordStart
+ * @param pageSize
  */
-export function get_chapter(mangaId: number) {
+export function get_chapter(mangaId: number, recordStart: number | undefined = undefined, pageSize: number | undefined = undefined) {
     return ajax({
         url: 'php/chapter/get.php',
-        data: {mangaId}
+        data: {mangaId, recordStart, pageSize}
     })
 }
 

@@ -32,6 +32,7 @@ export const globalData: GlobalData = reactive({
     mangaName: '',
     mangaCover: '',
     page: 0,
+    doublePage: 0,
     pageImage: '',
 });
 

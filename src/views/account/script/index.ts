@@ -1,26 +1,31 @@
 import {defineComponent} from 'vue'
 import {delete_account, get_account, register, update_account} from "@/api/account";
-import {Plus,Edit,Delete} from '@element-plus/icons'
+import {Plus, Edit, Delete} from '@element-plus/icons-vue'
 import {ElMessage, ElMessageBox} from 'element-plus'
+import tablePager from "@/components/table-pager.vue";
 
 export default defineComponent({
     name: 'account-index',
     setup() {
         return {
-            Plus,Edit,Delete
+            Plus, Edit, Delete
         }
     },
     // 数据
     data() {
         return {
+            // 分页数据
+            count: 0,
             addDialog: false,
             dialogFormVisible: false,
             tableData: [],
             form: {
+                userId: 0,
                 userName: '',
                 passWord: '',
             },
             formInit: {
+                userId: 0,
                 userName: '',
                 passWord: '',
             },
@@ -35,7 +40,7 @@ export default defineComponent({
     computed: {},
 
     // 组件
-    components: {},
+    components: {tablePager},
 
     // 方法
     methods: {
@@ -56,7 +61,6 @@ export default defineComponent({
          * @returns {Promise<void>}
          */
         async handleDelete(index: number, val: any) {
-
             ElMessageBox.confirm('确认删除此用户?', '确认删除', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
@@ -65,27 +69,33 @@ export default defineComponent({
                 const res = await delete_account(val.userId);
 
                 if (res.data.code === 0) {
-                    this.load_table();
+                    // 进入子组件调用刷新
+                    (this.$refs as any).pager.reload_page();
                 }
-            }).catch(() => {})
+            }).catch(() => {
+            })
         },
         /**
          * 加载表格
          * @returns {Promise<void>}
          */
-        async load_table() {
-            const res = await get_account();
-            this.tableData = res.data;
+        async load_table(page = 1, pageSize = 10) {
+            const start = (page - 1) * pageSize;
+            const res = await get_account(start, pageSize);
+            this.count = Number(res.data.count);
+            this.tableData = res.data.list;
         },
         /**
          * 更改用户请求
          * @returns {Promise<void>}
          */
         async do_update() {
-            const res = await update_account(this.form);
+            const targetUserId = this.form.userId;
+            const res = await update_account(Object.assign(this.form,{targetUserId}));
 
             if (res.data.code === 0) {
-                this.load_table();
+                // 进入子组件调用刷新
+                (this.$refs as any).pager.reload_page();
                 this.dialogFormVisible = false;
             }
         },

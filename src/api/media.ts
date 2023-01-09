@@ -3,9 +3,10 @@ import {ajax} from "./index";
 /**
  * 获取媒体记录
  */
-export function get_media() {
+export function get_media(recordStart: number, pageSize: number) {
     return ajax({
         url: 'php/media/get.php',
+        data: {recordStart, pageSize}
     })
 }
 
@@ -48,10 +49,10 @@ export function get_path(mediaId: any) {
  * @param path
  * @param pathId
  */
-export function rescan_path(mediaId: any,path: any, pathId:any) {
+export function rescan_path(mediaId: any, path: any, pathId: any) {
     return ajax({
         url: 'php/path/rescan.php',
-        data: {mediaId,path,pathId}
+        data: {mediaId, path, pathId}
     })
 }
 

@@ -3,11 +3,13 @@ import {ajax} from "./index";
 /**
  * 获取漫画记录
  * @param mediaId
+ * @param recordStart
+ * @param pageSize
  */
-export function get_manga(mediaId: any) {
+export function get_manga(mediaId: number, recordStart: number, pageSize: number) {
     return ajax({
         url: 'php/manga/get.php',
-        data: {mediaId}
+        data: {mediaId, recordStart, pageSize}
     })
 }
 
@@ -25,6 +27,6 @@ export function update_manga(data: any) {
 export function delete_manga(mangaId: any) {
     return ajax({
         url: 'php/manga/delete.php',
-        data:{mangaId}
+        data: {mangaId}
     })
 }

@@ -34,8 +34,8 @@ export default defineComponent({
   // 方法
   methods: {
     async load_media() {
-      const res = await get_media();
-      this.mediaList = res.data;
+      const res = await get_media(0, 1000);
+      this.mediaList = res.data.list;
     },
     go_manga_list(mediaId: number) {
       // 设置媒体库id

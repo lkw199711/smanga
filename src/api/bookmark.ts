@@ -2,7 +2,7 @@ import {ajax} from "./index";
 import {global_get} from "@/utils";
 import {config} from "@/store";
 
-export function add_bookmark() {
+export function add_bookmark(page:number) {
     return ajax({
         url: 'php/bookmark/add.php',
         data: {
@@ -15,7 +15,7 @@ export function add_bookmark() {
             chapterPath: global_get('chapterPath'),
             chapterType: global_get('chapterType'),
             chapterCover: global_get('chapterCover'),
-            page: global_get('page'),
+            page,
             pageImage: global_get('pageImage'),
             browseType: config.browseType,
         },

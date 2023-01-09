@@ -1,7 +1,8 @@
 import {defineComponent} from 'vue'
 import {ElMessageBox} from 'element-plus'
-import {Delete, Edit} from '@element-plus/icons'
+import {Delete, Edit} from '@element-plus/icons-vue'
 import {get_chapter, delete_chapter, update_chapter} from "@/api/chapter";
+import tablePager from "@/components/table-pager.vue";
 
 export default defineComponent({
     name: 'index',
@@ -14,6 +15,7 @@ export default defineComponent({
     // 数据
     data() {
         return {
+            count: 0,
             tableData: [],
             editChapterDialog: false,
             form: {
@@ -38,7 +40,7 @@ export default defineComponent({
     computed: {},
 
     // 组件
-    components: {},
+    components: {tablePager},
 
     // 方法
     methods: {
@@ -61,11 +63,18 @@ export default defineComponent({
         /**
          * 加载表格数据
          */
-        async load_table() {
-            const res = await get_chapter(0);
-            this.tableData = res.data;
+        async load_table(page = 1, pageSize=10) {
+            const start = (page - 1) * pageSize;
+            const res = await get_chapter(0, start, pageSize);
+            this.count = Number(res.data.count);
+            this.tableData = res.data.list;
         },
-
+        /**
+         * 重载数据 页码不变
+         */
+        reload_table(){
+            (this.$refs as any).pager.reload_page();
+        },
         /**
          * 编辑漫画
          * @param index
@@ -83,7 +92,7 @@ export default defineComponent({
             const res = await update_chapter(this.form);
             if (res.data.code === 0) {
                 this.editChapterDialog = false;
-                this.load_table();
+                this.reload_table();
             }
         },
 
@@ -99,9 +108,10 @@ export default defineComponent({
                 const res = await delete_chapter(row.chapterId);
 
                 if (res.data.code === 0) {
-                    this.load_table();
+                    this.reload_table();
                 }
-            }).catch(() => {})
+            }).catch(() => {
+            })
         },
     },
 

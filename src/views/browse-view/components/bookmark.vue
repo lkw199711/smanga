@@ -6,7 +6,7 @@
 
 <script lang='ts'>
 import {defineComponent} from 'vue'
-import {global_get_array} from "@/utils";
+import {global_get_array, global_get} from "@/utils";
 import {config, cache} from "@/store";
 
 export default defineComponent({
@@ -17,12 +17,17 @@ export default defineComponent({
   },
 
   // 传值
-  props: ['page', 'chapterId'],
+  props: ['chapterId'],
 
   // 计算
   computed: {
     show() {
-      const page = this.page;
+      // 区分单双页
+      let page = Number(global_get('page'));
+      if (this.$route.name === 'double') {
+        page = page * 2 - 1;
+      }
+
       const bookmarkList = global_get_array('bookmarkList');
       const chapterId = this.chapterId;
       // 通过章节与页码判断书签展示

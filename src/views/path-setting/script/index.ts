@@ -1,8 +1,9 @@
-import {Delete, Edit, Refresh} from '@element-plus/icons'
+import {Delete, Edit, Refresh} from '@element-plus/icons-vue'
 import {defineComponent} from 'vue'
 import {ElMessageBox} from 'element-plus'
 import {delete_path, get_path} from "@/api/path";
 import {rescan_path} from "@/api/media";
+import tablePager from "@/components/table-pager.vue";
 
 export default defineComponent({
     name: 'path-setting',
@@ -16,6 +17,7 @@ export default defineComponent({
     // 数据
     data() {
         return {
+            count: 0,
             tableData: [],
             pathArr: [] as any[],
         }
@@ -24,11 +26,11 @@ export default defineComponent({
     // 传值
     props: [],
 
-    // 引用
+    // 计算
     computed: {},
 
     // 组件
-    components: {},
+    components: {tablePager},
 
     // 方法
     methods: {
@@ -36,11 +38,18 @@ export default defineComponent({
         /**
          * 加载表格数据
          */
-        async load_table() {
-            const res = await get_path(0);
-            this.tableData = res.data;
+        async load_table(page = 1, pageSize = 10) {
+            const start = (page - 1) * pageSize;
+            const res = await get_path(0, start, pageSize);
+            this.count = Number(res.data.count);
+            this.tableData = res.data.list;
         },
-
+        /**
+         * 重载数据 页码不变
+         */
+        reload_table() {
+            (this.$refs as any).pager.reload_page();
+        },
         /**
          * 删除漫画
          * */
@@ -54,9 +63,10 @@ export default defineComponent({
                 const res = await delete_path(row.pathId);
 
                 if (res.data.code === 0) {
-                    this.load_table();
+                    this.reload_table();
                 }
-            }).catch(() => {})
+            }).catch(() => {
+            })
         },
 
         /**
@@ -76,9 +86,10 @@ export default defineComponent({
                 const res = await rescan_path(row.mediaId, row.path, row.pathId);
 
                 if (res.data.code === 0) {
-                    this.load_table();
+                    this.reload_table();
                 }
-            }).catch(() => {})
+            }).catch(() => {
+            })
         },
     },
 

@@ -6,7 +6,7 @@ const routes: Array<RouteRecordRaw> = [
     // 系统界面
     {
         path: '/',
-        name: 'Home',
+        name: 'home',
         redirect: '/media-list/index',
         meta: {sidebar: false},
         component: Layout,

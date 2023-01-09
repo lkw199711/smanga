@@ -1,5 +1,6 @@
 <template>
   <div class="bookmark-setting">
+    <!--表格-->
     <el-table
         :data="tableData" stripe border>
       <el-table-column type="index" label="序号" width="50">
@@ -46,15 +47,18 @@
         </template>
       </el-table-column>
     </el-table>
+    <!--分页-->
+    <table-pager ref="pager" @pageChange="load_table" :count="count"/>
   </div>
 </template>
 
 <script lang='ts'>
 import {defineComponent} from 'vue'
 import {ElMessageBox} from "element-plus";
-import {Plus, Edit, Delete} from '@element-plus/icons'
+import {Plus, Edit, Delete} from '@element-plus/icons-vue'
 import {get_bookmark, delete_bookmark} from "@/api/bookmark";
 import {global_set_json} from "@/utils";
+import tablePager from "@/components/table-pager.vue";
 
 export default defineComponent({
   name: 'bookmark-setting',
@@ -66,6 +70,7 @@ export default defineComponent({
   // 数据
   data() {
     return {
+      count: 0,
       addDialog: false,
       dialogFormVisible: false,
       tableData: [],
@@ -76,11 +81,11 @@ export default defineComponent({
   // 传值
   props: [],
 
-  // 引用
+  // 计算
   computed: {},
 
   // 组件
-  components: {},
+  components: {tablePager},
 
   // 方法
   methods: {
@@ -100,9 +105,10 @@ export default defineComponent({
         const res = await delete_bookmark(val.bookmarkId);
 
         if (res.data.code === 0) {
-          this.load_table();
+          this.reload_table();
         }
-      }).catch(() => {})
+      }).catch(() => {
+      })
     },
 
     /**
@@ -113,7 +119,14 @@ export default defineComponent({
       const res = await get_bookmark();
       const list = res.data.list;
       this.tableData = list;
+      this.count = Number(res.data.count);
       global_set_json('bookmarkList', list);
+    },
+    /**
+     * 重载数据 页码不变
+     */
+    reload_table() {
+      (this.$refs as any).pager.reload_page();
     },
   },
 
@@ -125,8 +138,25 @@ export default defineComponent({
 </script>
 
 <style scoped lang='less'>
-.bookmark-setting {
-  width: 120rem;
-  margin: 10rem auto;
+@media only screen and (min-width: 1200px) {
+  .bookmark-setting {
+    width: 100rem;
+    margin: 3rem auto;
+  }
 }
+
+@media only screen and (max-width: 1199px) and (min-width: 768px) {
+  .bookmark-setting {
+    width: 93rem;
+    margin: 2rem auto;
+  }
+}
+
+@media only screen and (max-width: 767px) {
+  .bookmark-setting {
+    width: 92rem;
+    margin: 1rem auto;
+  }
+}
+
 </style>
