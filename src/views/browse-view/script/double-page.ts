@@ -123,12 +123,12 @@ export default defineComponent({
          */
         async reload_page(page = 1, addHistory = true) {
             if (addHistory) add_history();
-
             // 加载图片列表
             const res = await get_chapter_images();
 
             switch (res.data.status) {
                 case 'uncompressed':
+                    (this.$refs as any).pager.page_change(page);
                     setTimeout(() => {
                         (this.$refs as any).pager.reload();
                     }, 2000);
@@ -162,11 +162,12 @@ export default defineComponent({
             if (!this.index) return;
 
             await this.$router.push({
-                path: this.$route.path,
+                name: this.$route.name as string,
                 query: {
                     name: this.chapterList[this.index - 1].chapterName,
                     path: this.chapterList[this.index - 1].chapterPath,
-                }
+                },
+                params: {page: 1},
             })
 
             this.update_chapter_info();
@@ -189,11 +190,12 @@ export default defineComponent({
             }
 
             await this.$router.push({
-                path: this.$route.path,
+                name: this.$route.name as string,
                 query: {
                     name: this.chapterList[this.index + 1].chapterName,
                     path: this.chapterList[this.index + 1].chapterPath,
-                }
+                },
+                params: {page: 1},
             })
 
             this.update_chapter_info();
@@ -209,11 +211,12 @@ export default defineComponent({
         async change_chapter(index: any) {
 
             await this.$router.push({
-                path: this.$route.path,
+                name: this.$route.name as string,
                 query: {
                     name: this.chapterList[index].chapterName,
                     path: this.chapterList[index].chapterPath,
-                }
+                },
+                params: {page: 1},
             })
 
             this.update_chapter_info();

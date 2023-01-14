@@ -39,7 +39,7 @@ export default defineComponent({
   // 计算
   computed: {
     computedCount() {
-      return this.count;
+      return Number(this.count);
     },
     pageCount() {
       const screenType = config.screenType;

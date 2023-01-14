@@ -2,7 +2,7 @@ import {ajax} from "./index";
 import {global_get} from "@/utils";
 import {config} from "@/store";
 
-export function add_bookmark(page:number) {
+export function add_bookmark(page: number) {
     return ajax({
         url: 'php/bookmark/add.php',
         data: {
@@ -22,9 +22,10 @@ export function add_bookmark(page:number) {
     })
 }
 
-export function get_bookmark() {
+export function get_bookmark(recordStart: number | undefined = undefined, pageSize: number | undefined = undefined) {
     return ajax({
-        url: 'php/bookmark/get.php'
+        url: 'php/bookmark/get.php',
+        data: {recordStart, pageSize}
     })
 }
 

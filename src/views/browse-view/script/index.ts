@@ -162,11 +162,12 @@ export default defineComponent({
             if (!this.index) return;
 
             await this.$router.push({
-                path: this.$route.path,
+                name: this.$route.name as string,
                 query: Object.assign({}, this.$route.query, {
                     name: this.chapterList[this.index - 1].chapterName,
                     path: this.chapterList[this.index - 1].chapterPath,
-                })
+                }),
+                params: {page: 1},
             })
 
             this.update_chapter_info();
@@ -189,11 +190,12 @@ export default defineComponent({
             }
 
             await this.$router.push({
-                path: this.$route.path,
+                name: this.$route.name as string,
                 query: Object.assign({}, this.$route.query, {
                     name: this.chapterList[this.index + 1].chapterName,
                     path: this.chapterList[this.index + 1].chapterPath,
-                })
+                }),
+                params: {page: 1},
             })
 
             this.update_chapter_info();
@@ -209,7 +211,7 @@ export default defineComponent({
         async change_chapter(index: any) {
 
             await this.$router.push({
-                path: this.$route.path,
+                name: this.$route.name as string,
                 query: Object.assign({}, this.$route.query, {
                     name: this.chapterList[index].chapterName,
                     path: this.chapterList[index].chapterPath,

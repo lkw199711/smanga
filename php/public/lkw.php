@@ -11,7 +11,7 @@ function print_error($name){
 	ini_set('display_errors', '1');
 
 	#将出错信息输出到一个文本文件
-	ini_set('error_log','I:/0web/sunlight/php/log/'.$name.'_error.txt');
+	ini_set('error_log','/app/php/logs/'.$name.'_error.txt');
 
 	return true;
 }
@@ -42,7 +42,7 @@ function get_sql_value($sqlComm){
  * @return string
  */
 function send_post($post_data, $url) {
- 
+
     $postdata = http_build_query($post_data);
     $options = array(
         'http' => array(
@@ -54,7 +54,7 @@ function send_post($post_data, $url) {
     );
     $context = stream_context_create($options);
     $result = file_get_contents($url, false, $context);
- 
+
     return $result;
 }
 
@@ -154,7 +154,7 @@ function assoc_unique($arr, $key) {
 
     }
 
-    sort($arr); 
+    sort($arr);
 
     return $arr;
 

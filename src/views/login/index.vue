@@ -2,7 +2,9 @@
   <div class="login-index">
     <div class="seat"></div>
     <div class="login-box">
-      <div class="logo">smanga</div>
+      <div class="logo">
+        <img src="../../assets/smanga-logo.png" alt="logo">
+      </div>
       <el-form class="login-form" ref="form" :model="form" label-width="80px">
         <el-form-item label="用户名:">
           <el-input v-model="form.userName" placeholder="请输入用户名"></el-input>
@@ -43,7 +45,7 @@ export default defineComponent({
   // 传值
   props: [],
 
-  // 引用
+  // 计算
   computed: {},
 
   // 组件
@@ -87,17 +89,11 @@ export default defineComponent({
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  margin: -20rem auto;
-  width: 44rem;
-  height: 32rem;
   background-color: #ffffff;
   box-shadow: #cccccc 2px 2px 8px;
 
   .logo {
-    font-size: 6rem;
-    line-height: 12rem;
     text-align: center;
-    color: #5cdbd3;
   }
 
   .login-form {
@@ -114,6 +110,38 @@ export default defineComponent({
 
   .login-btn {
     width: 100%;
+  }
+}
+
+@media only screen and (min-width: 1200px) {
+  .login-box {
+    margin: -20rem auto;
+    width: 44rem;
+    height: 32rem;
+
+    .logo {
+      margin: 1rem;
+    }
+  }
+}
+
+@media only screen and (max-width: 1199px) and (min-width: 768px) {
+  .login-box {
+    margin: -16rem auto;
+    width: 40rem;
+    height: 30rem;
+
+    .logo {
+      margin: 1rem;
+    }
+  }
+}
+
+@media only screen and (max-width: 767px) {
+  .login-box {
+    width: 34rem;
+    height: 26rem;
+    margin: -12rem auto;
   }
 }
 </style>

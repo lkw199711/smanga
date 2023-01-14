@@ -10,11 +10,10 @@
         :collapse="config.sidebarCollapse"
         :collapse-transition="true"
     >
-      <!--<logo/>-->
       <el-menu-item index="/" class="no-padding">
         <div :class="['logo','posted',{'collapse':!config.sidebarCollapse}]">
-          <img v-if="config.sidebarCollapse" src="@/assets/logo2.png" alt="logo">
-          <logo v-else/>
+          <img v-show="config.sidebarCollapse" src="@/assets/logo2.png" alt="logo">
+          <logo v-show="!config.sidebarCollapse"/>
         </div>
       </el-menu-item>
 

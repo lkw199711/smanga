@@ -16,9 +16,12 @@
     <el-menu-item index="media-list">媒体库列表</el-menu-item>
     <el-menu-item index="manga-list">漫画列表</el-menu-item>
     <el-menu-item index="chapter-list">章节列表</el-menu-item>
-    <el-menu-item index="flow">条漫模式</el-menu-item>
-    <el-menu-item index="single">单页模式</el-menu-item>
-    <el-menu-item index="double">双页模式</el-menu-item>
+    <el-sub-menu index="browse">
+      <template #title>{{ browseType }}</template>
+      <el-menu-item index="flow">条漫模式</el-menu-item>
+      <el-menu-item index="single">单页模式</el-menu-item>
+      <el-menu-item index="double">双页模式</el-menu-item>
+    </el-sub-menu>
     <el-menu-item index="addBookmark">{{ bookmarkTitle }}</el-menu-item>
   </el-menu>
 </template>
@@ -46,7 +49,19 @@ export default defineComponent({
   computed: {
     bookmarkTitle() {
       return config.bookmarkShow ? '移除书签' : '添加书签';
-    }
+    },
+    browseType() {
+      switch (config.browseType) {
+        case 'flow':
+          return '条漫模式';
+        case 'single':
+          return '单页模式';
+        case 'double':
+          return '双页模式';
+        default:
+          return '阅读模式';
+      }
+    },
   },
 
   // 组件
@@ -110,15 +125,42 @@ export default defineComponent({
   padding: 0 20px 0 0;
 }
 
-@media only screen and (max-width: 999px) {
+@media only screen and (min-width: 1200px) {
+
+}
+
+@media only screen and (max-width: 1199px) and (min-width: 768px) {
+  .browse-top {
+    .logo-box {
+      width: 20rem;
+      padding: 0;
+    }
+  }
+
+  :deep(.el-menu-item) {
+    padding: 0 1rem;
+  }
+
+  :deep(.el-sub-menu__title) {
+    padding: 0 1rem;
+  }
+}
+
+@media only screen and (max-width: 767px) {
+  // 隐藏顶栏logo以节省空间
   .browse-top {
     .logo-box {
       display: none;
     }
   }
-}
 
-@media only screen and (min-width: 1000px) {
+  // 顶栏间距缩小
+  :deep(.el-menu-item) {
+    padding: 0 .4rem;
+  }
 
+  :deep(.el-sub-menu__title) {
+    padding: 0 .4rem;
+  }
 }
 </style>

@@ -7,7 +7,7 @@
 
 <script lang='ts'>
 import {defineComponent} from 'vue'
-import {ajax} from "@/api";
+import {testAxios} from "@/api/test";
 
 export default defineComponent({
   name: 'index',
@@ -31,10 +31,9 @@ export default defineComponent({
   // 方法
   methods: {
     do_test(){
-      ajax.post('php/test/select.php', {mangaId: 112})
-          .then(res=>{
-            console.log(res);
-          })
+      testAxios.post('http://192.168.2.8:91/php/test/mkdir.php').then(res=>{
+        console.log(res);
+      })
     },
   },
 

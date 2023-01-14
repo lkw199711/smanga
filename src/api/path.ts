@@ -27,6 +27,19 @@ export function rescan_path(mediaId: any, path: any, pathId: any) {
 }
 
 /**
+ * 扫描路径
+ * @param mediaId
+ * @param path
+ * @param pathId
+ */
+export function scan_path(mediaId: any, path: any, pathId: any){
+    return ajax({
+        url: 'php/path/scan.php',
+        data: {mediaId, path, pathId}
+    })
+}
+
+/**
  * 删除路径
  * @param pathId
  */

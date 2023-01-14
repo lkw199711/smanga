@@ -30,12 +30,15 @@ window.addEventListener('resize', set_screen_type);
  */
 function set_screen_type() {
   const screen = window.screen.width;
+  // ElMessage(String(screen));
   if (screen < 768) {
     config.screenType = 'small';
   } else if (screen < 1200) {
     config.screenType = 'middle';
-  } else {
+  } else if (screen < 2000) {
     config.screenType = 'large';
+  } else {
+    config.screenType = '2k';
   }
 }
 

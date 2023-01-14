@@ -4,7 +4,7 @@ import {global_get} from "@/utils";
 export function add_history() {
     return ajax({
         url: 'php/history/add.php',
-        data:{
+        data: {
             mediaId: global_get('mediaId'),
             mangaId: global_get('mangaId'),
             mangaName: global_get('mangaName'),
@@ -18,9 +18,10 @@ export function add_history() {
     })
 }
 
-export function get_history() {
+export function get_history(recordStart: number | undefined = undefined, pageSize: number | undefined = undefined) {
     return ajax({
         url: 'php/history/get.php',
+        data: {recordStart, pageSize}
     })
 }
 

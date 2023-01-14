@@ -1,5 +1,5 @@
 <template>
-  <div class="browse-pager">
+  <div class="media-pager">
     <!--分页-->
     <el-pagination
         class="pagination"
@@ -22,33 +22,35 @@
 <script lang='ts'>
 import {defineComponent} from 'vue'
 import {config} from "@/store";
-import {ElMessage} from "element-plus";
 
 export default defineComponent({
-  name: 'browse-pager',
+  name: 'media-pager',
   // 数据
   data() {
     return {
-      page: 1, pageSize: 1, disabled: false, background: true, pageSizeArray: [1, 2, 3, 4],
+      page: 1, pageSize: 16, disabled: false, background: true,
+      pageSizeArray: [12, 24, 36, 48, 60],
 
     }
   },
 
   // 传值
-  props: ['count', 'setPageSize'],
+  props: ['count'],
 
   // 计算
   computed: {
     computedCount() {
-      return this.count;
+      return Number(this.count);
     },
     pageCount() {
       const screenType = config.screenType;
       switch (screenType) {
+        case '2k':
+          return 46;
         case 'large':
-          return 21;
+          return 17;
         case 'middle':
-          return 9;
+          return 11;
         case 'small':
           return 7;
         default:
@@ -75,16 +77,17 @@ export default defineComponent({
       const screenType = config.screenType;
       switch (screenType) {
         case 'large':
-          return 'total,  prev, pager, next, jumper';
+          return 'total, sizes, prev, pager, next, jumper';
         case 'middle':
-          return ' prev, pager, next, jumper';
+          return 'sizes, prev, pager, next, jumper';
         case 'small':
           return 'prev, pager, next, jumper';
         default:
-          return 'total,  prev, pager, next, jumper';
+          return 'total, sizes, prev, pager, next, jumper';
       }
     },
   },
+  watch: {},
 
   // 组件
   components: {},
@@ -99,60 +102,47 @@ export default defineComponent({
       this.pageSize = size;
       this.page_change();
     },
-    set_page(page: number) {
-      this.page = page;
-    },
     /**
      * 页码变更
      * @param page
      */
     page_change(page = 1) {
-      this.page = page;
       this.$emit('pageChange', page, this.pageSize);
     },
     /**
      * 重载数据 不改变页码
      */
-    reload() {
-      this.$emit('reloadPage', this.page, false);
+    reload_page() {
+      this.$emit('pageChange', this.page, this.pageSize);
     },
-
-    /**
-     * 上一页
-     */
-    before() {
-      if (this.page > 1) {
-        this.page_change(--this.page);
-      } else {
-        ElMessage.warning('已近位于首页');
+    calc_size() {
+      // return 1;
+      const screenType = config.screenType;
+      switch (screenType) {
+        case 'large':
+          return 20;
+        case 'middle':
+          return 16;
+        case 'small':
+          return 12;
+        default:
+          return 12;
       }
-    },
-
-    /**
-     * 下一页
-     */
-    next() {
-      if (this.page < this.count / this.pageSize) {
-        this.page_change(++this.page);
-      } else {
-        ElMessage.warning('已近位于尾页');
-      }
-    },
+    }
   },
 
   // 生命周期
   created() {
-    // 设置页容量
-    if (this.setPageSize) {
-      this.pageSize = this.setPageSize;
-    }
+    this.pageSize = this.calc_size();
   },
 })
 </script>
 
 <style scoped lang='less'>
-.browse-pager {
+.media-pager {
   margin-top: 1.4rem;
+  width: 100%;
+  overflow-x: scroll;
 }
 
 @media only screen and (min-width: 1200px) {

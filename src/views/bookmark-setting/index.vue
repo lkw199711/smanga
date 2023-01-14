@@ -55,9 +55,8 @@
 <script lang='ts'>
 import {defineComponent} from 'vue'
 import {ElMessageBox} from "element-plus";
-import {Plus, Edit, Delete} from '@element-plus/icons-vue'
-import {get_bookmark, delete_bookmark} from "@/api/bookmark";
-import {global_set_json} from "@/utils";
+import {Delete, Edit, Plus} from '@element-plus/icons-vue'
+import {delete_bookmark, get_bookmark} from "@/api/bookmark";
 import tablePager from "@/components/table-pager.vue";
 
 export default defineComponent({
@@ -115,12 +114,11 @@ export default defineComponent({
      * 加载表格
      * @returns {Promise<void>}
      */
-    async load_table() {
-      const res = await get_bookmark();
-      const list = res.data.list;
-      this.tableData = list;
+    async load_table(page = 1, pageSize = 10) {
+      const start = (page - 1) * pageSize;
+      const res = await get_bookmark(start, pageSize);
+      this.tableData = res.data.list;
       this.count = Number(res.data.count);
-      global_set_json('bookmarkList', list);
     },
     /**
      * 重载数据 页码不变

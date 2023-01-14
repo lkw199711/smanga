@@ -64,8 +64,8 @@
 
           <el-form-item label="媒体类型:">
             <el-select v-model="form.mediaType" placeholder="please select your zone">
-              <el-option label="漫画" value="0"/>
-              <!--<el-option label="名称 -> 图片" value="1" />-->
+              <el-option label="漫画(漫画 -> 章节 -> 图片)" value="0"/>
+              <el-option label="单本(漫画 -> 图片)" value="1" />
             </el-select>
           </el-form-item>
 
@@ -86,8 +86,10 @@
 
           <el-form-item label="文件夹结构:">
             <el-select v-model="form.directoryFormat" placeholder="please select your zone">
-              <el-option label="名称 -> 章节 -> 图片" value="0"/>
-              <el-option label="名称 -> 图片" value="1"/>
+              <el-option label="漫画 -> 章节 -> 图片" value="0"/>
+              <el-option label="目录 -> 漫画 -> 章节 -> 图片" value="1"/>
+              <el-option label="漫画 -> 图片" value="2"/>
+              <el-option label="目录 -> 漫画 -> 图片" value="3"/>
             </el-select>
           </el-form-item>
         </el-form>
@@ -167,7 +169,9 @@
             <div v-for="i in pathArr" :key="i" class="path-item">
               {{ i.path }}
               <div class="path-btn-box">
-                <el-button class="path-item-btn" size="mini" type="success" @click="scan_path(i)">重新扫描
+                <el-button class="path-item-btn" size="mini" type="success" @click="scan_path(i)">增量扫描
+                </el-button>
+                <el-button class="path-item-btn" size="mini" type="warning" @click="rescan_path(i)">重新扫描
                 </el-button>
                 <el-button class="path-item-btn" size="mini" type="danger" @click="delete_path(i)">删除
                 </el-button>

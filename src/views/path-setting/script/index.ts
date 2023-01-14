@@ -1,7 +1,7 @@
-import {Delete, Edit, Refresh} from '@element-plus/icons-vue'
+import {Delete, Edit, Refresh,RefreshRight} from '@element-plus/icons-vue'
 import {defineComponent} from 'vue'
 import {ElMessageBox} from 'element-plus'
-import {delete_path, get_path} from "@/api/path";
+import {delete_path, get_path, scan_path} from "@/api/path";
 import {rescan_path} from "@/api/media";
 import tablePager from "@/components/table-pager.vue";
 
@@ -11,7 +11,8 @@ export default defineComponent({
         return {
             Edit,
             Refresh,
-            Delete
+            Delete,
+            RefreshRight
         }
     },
     // 数据
@@ -74,7 +75,7 @@ export default defineComponent({
          * @param index
          * @param row
          */
-        async scan_path(index: number, row: any) {
+        async rescan_path(index: number, row: any) {
             ElMessageBox.confirm(
                 `确认删除此路径? 将清除与之相关的漫画与章节并重新扫描添加!`,
                 '确认重新扫描', {
@@ -90,6 +91,14 @@ export default defineComponent({
                 }
             }).catch(() => {
             })
+        },
+
+        async scan_path(index: number, row: any) {
+            const res = await scan_path(row.mediaId, row.path, row.pathId);
+
+            if (res.data.code === 0) {
+                this.reload_table();
+            }
         },
     },
 

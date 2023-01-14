@@ -1,8 +1,14 @@
 <template>
   <div class="top-nav posted">
     <div class="menu_collapse" @click="handleSelect('switch_sidebar')">
-      <expand v-show="config.sidebarCollapse" class="icon-operation"/>
-      <fold v-show="!config.sidebarCollapse" class="icon-operation"/>
+      <!--大屏幕-->
+      <template v-if="screenType">
+        <expand v-show="config.sidebarCollapse" class="icon-operation"/>
+        <fold v-show="!config.sidebarCollapse" class="icon-operation"/>
+      </template>
+      <!--小屏幕-->
+      <expand v-else class="icon-operation"/>
+
     </div>
   </div>
 </template>
@@ -41,11 +47,24 @@ export default defineComponent({
   // 传值
   props: [],
 
-  // 引用
+  // 计算
   computed: {
     config() {
       return config
-    }
+    },
+    screenType() {
+      const screenType = config.screenType;
+      switch (screenType) {
+        case 'large':
+          return true;
+        case 'middle':
+          return false;
+        case 'small':
+          return false;
+        default:
+          return true;
+      }
+    },
   },
 
   // 组件
@@ -65,9 +84,9 @@ export default defineComponent({
   //background-color: #ffffff;
   height: 60px;
   //overflow: hidden;
-  box-shadow: 0 1px 4px   #b1b3b8;
+  box-shadow: 0 1px 4px #b1b3b8;
 
-  .menu_collapse{
+  .menu_collapse {
     width: 60px;
   }
 

@@ -1,7 +1,6 @@
 <template>
   <div :class="['logo','posted']">
-    <img src="@/assets/logo2.png" alt="logo">
-    <span>smanga</span>
+    <img src="@/assets/smanga-logo.png" alt="logo">
   </div>
 </template>
 
@@ -36,20 +35,22 @@ export default defineComponent({
 <style scoped lang='less'>
 .logo.posted {
   display: flex;
-  font-size: 30px;
-  height: 60px;
-  line-height: 60px;
+  width: 100%;
+  font-size: 3rem;
+  height: 6rem;
+  line-height: 6rem;
   color: #5cdbd3;
   cursor: pointer;
 
   span {
-    line-height: 60px;
+    line-height: 6rem;
     text-wrap: inherit;
   }
 
   img {
-    width: 64px;
-    height: 60px;
+    max-width: 100%;
+    //width: 64px;
+    //height: 60px;
   }
 }
 </style>

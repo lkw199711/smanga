@@ -1,23 +1,12 @@
 <template>
-    <div class="manga-list">
-        <!--vant-sousuok-->
-        <form action="/">
-            <van-search
-                    v-model="keyWord"
-                    show-action
-                    placeholder="请输入搜索关键词"
-                    @search="search"
-                    @cancel="cancel"
-            />
-        </form>
-
-        <div class="manga-list-box">
-            <manga v-for="(i,k) in cList" :key="k" :mangaInfo="i"/>
-        </div>
-
-        <!--分页组件-->
-        <van-pagination v-show="!keyWord" v-model="currentPage" :total-items="list.length" :items-per-page="pageSize" @change="page_change" />
+  <div class="manga-list">
+    <div class="manga-list-box">
+      <manga v-for="(i,k) in list" :key="k" :mangaInfo="i"/>
     </div>
+
+    <!--分页组件-->
+    <media-pager ref="pager" :count="count" @page-change="page_change" />
+  </div>
 </template>
 
 <script src='./script/index.ts'></script>

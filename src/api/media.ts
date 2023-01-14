@@ -35,11 +35,13 @@ export function add_media(data: any) {
 /**
  * 获取路径记录
  * @param mediaId
+ * @param recordStart
+ * @param pageSize
  */
-export function get_path(mediaId: any) {
+export function get_path(mediaId: any, recordStart: number | undefined = undefined, pageSize: number | undefined = undefined) {
     return ajax({
         url: 'php/path/get.php',
-        data: {mediaId}
+        data: {mediaId,recordStart,pageSize}
     })
 }
 

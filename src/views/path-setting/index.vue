@@ -34,9 +34,15 @@
           <template v-slot="scope">
             <el-button
                 size="mini"
-                type="primary"
+                type="success"
+                :icon="RefreshRight"
+                @click="scan_path(scope.$index, scope.row)">增量扫描
+            </el-button>
+            <el-button
+                size="mini"
+                type="warning"
                 :icon="Refresh"
-                @click="scan_path(scope.$index, scope.row)">扫描
+                @click="rescan_path(scope.$index, scope.row)">重新扫描
             </el-button>
             <el-button
                 size="mini"

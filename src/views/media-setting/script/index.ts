@@ -12,6 +12,7 @@ import {
 } from "@/api/media";
 import {ElMessage, ElMessageBox} from 'element-plus'
 import tablePager from "@/components/table-pager.vue";
+import {scan_path} from "@/api/path";
 
 export default defineComponent({
     name: 'media-setting-index',
@@ -100,7 +101,7 @@ export default defineComponent({
             const res = await get_path(mediaId);
 
             if (res.data) {
-                this.pathArr = res.data;
+                this.pathArr = res.data.list;
             } else {
                 this.pathArr = [];
             }
@@ -217,7 +218,7 @@ export default defineComponent({
          * 重新扫面路径
          * @param pathInfo
          */
-        async scan_path(pathInfo: any) {
+        async rescan_path(pathInfo: any) {
             ElMessageBox.confirm(
                 `确认删除此路径? 将清除与之相关的漫画与章节并重新扫描添加!`,
                 '确认重新扫描', {
@@ -233,6 +234,13 @@ export default defineComponent({
                 }
             }).catch(() => {
             })
+        },
+        async scan_path(pathInfo: any) {
+            const res = await scan_path(pathInfo.mediaId, pathInfo.path, pathInfo.pathId);
+
+            if (res.data.code === 0) {
+                this.load_path(pathInfo.mediaId);
+            }
         },
         /**
          * 添加路径信息到缓存
