@@ -48,6 +48,7 @@ export default defineComponent({
   }
 
   img {
+    min-width: 20rem;
     max-width: 100%;
     //width: 64px;
     //height: 60px;

@@ -1,6 +1,7 @@
 import {createRouter, createWebHashHistory, RouteRecordRaw} from 'vue-router';
 import Layout from '@/layout/index.vue';
 import browse from "@/layout/browse.vue";
+import layout from "@/layout/index.vue";
 
 const routes: Array<RouteRecordRaw> = [
     // 系统界面
@@ -22,7 +23,7 @@ const routes: Array<RouteRecordRaw> = [
     {
         path: '/media-list',
         redirect: '/media-list/index',
-        meta: {sidebar: false},
+        meta: {sidebar: true, title: '媒体库', icon: 'Reading'},
         component: Layout,
         children: [
             {
@@ -89,7 +90,7 @@ const routes: Array<RouteRecordRaw> = [
     {
         path: '/account',
         redirect: '/account/index',
-        meta: {sidebar: true, title: '账户设置', icon: 'Stamp'},
+        meta: {sidebar: true, title: '账户管理', icon: 'Stamp'},
         component: Layout,
         children: [
             {
@@ -102,7 +103,7 @@ const routes: Array<RouteRecordRaw> = [
     {
         path: '/media-setting',
         redirect: '/media-setting/index',
-        meta: {sidebar: true, title: '媒体库设置', icon: 'Reading'},
+        meta: {sidebar: true, title: '媒体库管理', icon: 'Reading'},
         component: Layout,
         children: [
             {
@@ -115,7 +116,7 @@ const routes: Array<RouteRecordRaw> = [
     {
         path: '/manga-setting',
         redirect: '/manga-setting/index',
-        meta: {sidebar: true, title: '漫画设置', icon: 'Notebook'},
+        meta: {sidebar: true, title: '漫画管理', icon: 'Notebook'},
         component: Layout,
         children: [
             {
@@ -128,7 +129,7 @@ const routes: Array<RouteRecordRaw> = [
     {
         path: '/path-setting',
         redirect: '/path-setting/index',
-        meta: {sidebar: true, title: '路径设置', icon: 'FolderOpened'},
+        meta: {sidebar: true, title: '路径管理', icon: 'FolderOpened'},
         component: Layout,
         children: [
             {
@@ -141,7 +142,7 @@ const routes: Array<RouteRecordRaw> = [
     {
         path: '/chapter-setting',
         redirect: '/chapter-setting/index',
-        meta: {sidebar: true, title: '章节设置', icon: 'Tickets'},
+        meta: {sidebar: true, title: '章节管理', icon: 'Tickets'},
         component: Layout,
         children: [
             {
@@ -154,7 +155,7 @@ const routes: Array<RouteRecordRaw> = [
     {
         path: '/bookmark-setting',
         redirect: '/bookmark-setting/index',
-        meta: {sidebar: true, title: '书签设置', icon: 'Collection'},
+        meta: {sidebar: true, title: '书签管理', icon: 'Collection'},
         component: Layout,
         children: [
             {
@@ -167,7 +168,7 @@ const routes: Array<RouteRecordRaw> = [
     {
         path: '/compress-setting',
         redirect: '/compress-setting/index',
-        meta: {sidebar: true, title: '转换设置', icon: 'Switch'},
+        meta: {sidebar: true, title: '转换管理', icon: 'Switch'},
         component: Layout,
         children: [
             {
@@ -202,6 +203,21 @@ const routes: Array<RouteRecordRaw> = [
                 component: () => import('../views/browse-view/double.vue'),
             }
         ]
+    },
+
+    // wiki
+    {
+        path: '/wiki',
+        redirect: '/wiki/index',
+        component: layout,
+        meta: {sidebar: true, title: '使用说明', icon: 'DataAnalysis'},
+        children: [
+            {
+                name: 'wiki',
+                path: 'index',
+                component: () => import('../views/wiki/index.vue')
+            }
+        ],
     },
 
     // 测试界面

@@ -7,8 +7,8 @@
         <fold v-show="!config.sidebarCollapse" class="icon-operation"/>
       </template>
       <!--小屏幕-->
-      <expand v-else class="icon-operation"/>
-
+      <Operation v-else class="icon-operation"></Operation>
+      <!--<expand v-else class="icon-operation"/>-->
     </div>
   </div>
 </template>
@@ -91,6 +91,7 @@ export default defineComponent({
   }
 
   .icon-operation {
+    display: block;
     padding: 20px;
     width: 20px;
     color: #909399;
