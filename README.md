@@ -10,6 +10,10 @@
 
 ## 简介
 
+github: https://github.com/lkw199711/smanga
+
+docker: https://hub.docker.com/r/lkw199711/smanga
+
 ### 在浏览漫画时,你是否有这样那样的烦恼
 
 - 图片 压缩包 pdf等格式繁杂, 解压的文件到处都是, 经常找不到想看的漫画且占用空间大
