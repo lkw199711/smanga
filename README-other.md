@@ -28,7 +28,7 @@
 5. 对各尺寸设备的兼容, 现在您在手机、平板、pc等各种设备上使用smanga都可以获得良好的体验.
 6. 新增多种阅读模式, 条漫(瀑布流) , 翻页 以及双页, 选择适合的浏览模式可提升阅读体验. 
 
-![](./src/assets/readme/smanga-media-list.PNG)
+![](https://pic.imgdb.cn/item/63c52dbfbe43e0d30ef9cfae.png)
 
 ## 安装
 
@@ -109,7 +109,7 @@ smanga3版本以上, 新增了数据库以及压缩文件支持, 为此引入了
 
 ### 阅读界面的使用
 
-![](./src/assets/readme/smanga-operation.PNG)
+![](https://pic.imgdb.cn/item/63c52ab5be43e0d30ef4a20c.png)
 
 为最大程度的使用屏幕, 我采用了这种所有的除图片元素外都可隐藏的交互界面.
 
