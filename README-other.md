@@ -10,6 +10,10 @@
 
 ## 简介
 
+github: https://github.com/lkw199711/smanga
+
+docker: https://hub.docker.com/r/lkw199711/smanga
+
 ### 在浏览漫画时,你是否有这样那样的烦恼
 
 - 图片 压缩包 pdf等格式繁杂, 解压的文件到处都是, 经常找不到想看的漫画且占用空间大
@@ -76,6 +80,10 @@ lkw199711/smanga;
 smanga3版本以上, 新增了数据库以及压缩文件支持, 为此引入了许多库支持, 无法直接使用web项目安装, 请使用docker安装.
 
 ## 使用
+
+### 默认用户名
+
+默认用户名密码 smanga smanga
 
 ### 新增媒体库
 
