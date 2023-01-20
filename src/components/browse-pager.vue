@@ -178,10 +178,6 @@ export default defineComponent({
 </script>
 
 <style scoped lang='less'>
-.browse-pager {
-  margin-top: 1.4rem;
-}
-
 @media only screen and (min-width: 1200px) {
   :deep(.el-pagination__jump) {
     margin-left: .12rem;

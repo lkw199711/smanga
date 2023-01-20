@@ -15,7 +15,7 @@
       >
         <el-menu-item v-if="idDouble" index="remove-first">{{ removeFirstTitle }}</el-menu-item>
         <el-menu-item index="bookmark">{{ bookmarkTitle }}</el-menu-item>
-        <el-menu-item v-if="idDouble" index="direction">切换阅读方向 ({{ directionTitle }})</el-menu-item>
+        <el-menu-item v-if="idDouble" index="direction">{{$t('option.direction')}} ({{ directionTitle }})</el-menu-item>
       </el-menu>
     </el-drawer>
   </div>
@@ -27,6 +27,9 @@ import {useRoute} from "vue-router";
 import {cache, config} from "@/store";
 import {add_bookmark, delete_bookmark, get_bookmark} from "@/api/bookmark";
 import {global_get, global_set_json} from "@/utils";
+import i18n from '@/i18n';
+
+const {t} = i18n.global;
 
 const route = useRoute();
 
@@ -36,15 +39,16 @@ const props = defineProps(['rightSidebar', 'direction', 'removeFirst']);
 const emit = defineEmits(['contextMenu', 'direction', 'removeFirst'])
 
 const removeFirstTitle = computed(() => {
-  return props.removeFirst ? '恢复首页' : '移除首页';
+  console.log(props.removeFirst);
+  return props.removeFirst ? t('option.recoveryFirst') : t('option.removeFirst');
 });
 
 const bookmarkTitle = computed(() => {
-  return config.bookmarkShow ? '移除书签' : '添加书签';
+  return config.bookmarkShow ? t('bookmarkManage.remove') : t('bookmarkManage.add');
 });
 
 const directionTitle = computed(() => {
-  return props.direction ? '右 -> 左' : '左 -> 右';
+  return props.direction ? t('option.rtl') : t('option.ltr');
 });
 
 const idDouble = computed(() => {

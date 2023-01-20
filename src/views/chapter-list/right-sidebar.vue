@@ -24,13 +24,13 @@
           <el-icon>
             <TopRight/>
           </el-icon>
-          移除
+          {{ $t('option.remove') }}
         </el-menu-item>
         <el-menu-item index="delete">
           <el-icon>
             <Delete/>
           </el-icon>
-          删除
+          {{ $t('option.delete') }}
         </el-menu-item>
       </el-menu>
     </el-drawer>
@@ -43,6 +43,9 @@ import {useRoute} from "vue-router";
 import {config} from "@/store";
 import {delete_chapter} from "@/api/chapter";
 import {ElMessageBox} from "element-plus";
+import i18n from '@/i18n';
+
+const {t} = i18n.global;
 
 const route = useRoute();
 
@@ -77,14 +80,14 @@ function close_sidebar() {
 function menu_select(key: string) {
   switch (key) {
     case 'remove':
-      ElMessageBox.confirm('确认移除该漫画?', {type: 'warning'}).then(async () => {
+      ElMessageBox.confirm(t('chapterManage.confirm.text1'), {type: 'warning'}).then(async () => {
         await delete_chapter(chapterId.value);
         emit('reload');
       });
 
       break;
     case 'delete':
-      ElMessageBox.confirm('确认移除该漫画并删除源文件?', {type: 'warning'}).then(async () => {
+      ElMessageBox.confirm(t('chapterManage.confirm.text2'), {type: 'warning'}).then(async () => {
         await delete_chapter(chapterId.value, true);
         emit('reload');
       });

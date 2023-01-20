@@ -45,6 +45,7 @@ export const config = reactive({
     bookmarkShow: false,
     screenType: 'large',
     rightSidebar: false,
+    language: 'zhCn',
 });
 
 export const cache = reactive({

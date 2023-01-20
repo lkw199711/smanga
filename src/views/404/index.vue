@@ -1,6 +1,6 @@
 <template>
   <div class="not-found-index">
-    <h3>404，您请求的文件不存在!</h3>
+    <h3>{{ $t('404') }}</h3>
   </div>
 </template>
 

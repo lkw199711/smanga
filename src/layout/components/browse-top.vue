@@ -13,14 +13,14 @@
     <el-menu-item class="padding logo-box" index="home">
       <logo/>
     </el-menu-item>
-    <el-menu-item index="media-list">媒体库列表</el-menu-item>
-    <el-menu-item index="manga-list">漫画列表</el-menu-item>
-    <el-menu-item index="chapter-list">章节列表</el-menu-item>
+    <el-menu-item index="media-list">{{$t('sidebar.mediaList')}}</el-menu-item>
+    <el-menu-item index="manga-list">{{$t('sidebar.mangaList')}}</el-menu-item>
+    <el-menu-item index="chapter-list">{{$t('sidebar.chapterList')}}</el-menu-item>
     <el-sub-menu index="browse">
       <template #title>{{ browseType }}</template>
-      <el-menu-item index="flow">条漫模式</el-menu-item>
-      <el-menu-item index="single">单页模式</el-menu-item>
-      <el-menu-item index="double">双页模式</el-menu-item>
+      <el-menu-item index="flow">{{$t('browse.flow')}}</el-menu-item>
+      <el-menu-item index="single">{{$t('browse.single')}}</el-menu-item>
+      <el-menu-item index="double">{{$t('browse.double')}}</el-menu-item>
     </el-sub-menu>
     <el-menu-item index="addBookmark">{{ bookmarkTitle }}</el-menu-item>
   </el-menu>
@@ -32,7 +32,9 @@ import logo from "@/layout/components/logo.vue";
 import {global_get, global_set_json} from "@/utils";
 import {add_bookmark, delete_bookmark, get_bookmark} from "@/api/bookmark";
 import {cache, config} from "@/store";
+import i18n from '@/i18n';
 
+const {t} = i18n.global;
 export default defineComponent({
   name: 'browse-top',
   // 数据
@@ -48,16 +50,16 @@ export default defineComponent({
   // 计算
   computed: {
     bookmarkTitle() {
-      return config.bookmarkShow ? '移除书签' : '添加书签';
+      return config.bookmarkShow ? t('bookmarkManage.remove') : t('bookmarkManage.add');
     },
     browseType() {
       switch (config.browseType) {
         case 'flow':
-          return '条漫模式';
+          return t('browse.flow');
         case 'single':
-          return '单页模式';
+          return t('browse.single');
         case 'double':
-          return '双页模式';
+          return t('browse.double');
         default:
           return '阅读模式';
       }

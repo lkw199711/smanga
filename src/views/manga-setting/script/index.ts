@@ -1,9 +1,10 @@
 import {Delete, Edit} from '@element-plus/icons-vue'
 import {defineComponent} from 'vue'
-import {ElMessageBox} from 'element-plus'
+import {ElMessage, ElMessageBox} from 'element-plus'
 import {get_manga, update_manga, delete_manga} from "@/api/manga";
 import tablePager from "@/components/table-pager.vue";
-
+import i18n from '@/i18n';
+const {t} = i18n.global;
 export default defineComponent({
     name: 'index',
     setup() {
@@ -74,7 +75,7 @@ export default defineComponent({
         /**
          * 重载数据 页码不变
          */
-        reload_table(){
+        reload_table() {
             (this.$refs as any).pager.reload_page();
         },
         /**
@@ -90,8 +91,19 @@ export default defineComponent({
         /**
          * 执行修改请求
          */
-        async update_manga() {
+        async update_manga() {// 表单校验-检查漫画名
+            if (!this.form.mangaName) {
+                ElMessage.warning(t('mangaManage.warning.name'));
+                return false;
+            }
+            // 表单校验-检查漫路径
+            if (!this.form.mangaPath) {
+                ElMessage.warning(t('mangaManage.warning.path'));
+                return false;
+            }
+
             const res = await update_manga(this.form);
+
             if (res.data.code === 0) {
                 this.editMangaDialog = false;
                 this.reload_table();
@@ -102,11 +114,11 @@ export default defineComponent({
          * 删除漫画
          * */
         async delete_manga(index: number, row: any) {
-            ElMessageBox.confirm('确认删除此漫画?', '确认删除', {
-                confirmButtonText: '确定',
-                cancelButtonText: '取消',
-                type: 'warning'
-            }).then(async () => {
+            ElMessageBox.confirm(
+                t('mangaManage.confirm.text'),
+                t('mangaManage.confirm.title'), {
+                    type: 'warning'
+                }).then(async () => {
                 const res = await delete_manga(row.mangaId);
 
                 if (res.data.code === 0) {

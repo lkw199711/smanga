@@ -10,80 +10,64 @@
       <Operation v-else class="icon-operation"></Operation>
       <!--<expand v-else class="icon-operation"/>-->
     </div>
+
+    <el-select v-model="config.language" class="language" size="middle" @change="language_change">
+      <el-option
+          v-for="item in languages"
+          :key="item.value"
+          :label="item.label"
+          :value="item.value"
+      />
+    </el-select>
   </div>
 </template>
 
-<script lang='ts'>
-import {defineComponent, ref} from 'vue'
+<script lang='ts' setup>
 import {config} from "@/store";
+import languages from "@/store/language";
+import {computed, ref} from 'vue'
+import {useI18n} from "vue-i18n";
 
-export default defineComponent({
-  setup() {
-    const activeIndex = ref('1')
-    const activeIndex2 = ref('1')
-    const handleSelect = (key: string) => {
+const value = ref(config.language);
+const {locale} = useI18n();
 
-      switch (key) {
-        case 'switch_sidebar':
-          config.sidebarCollapse = !config.sidebarCollapse;
-          break;
-        default:
-          break;
-      }
-    }
-    return {
-      activeIndex,
-      activeIndex2,
-      handleSelect,
-    }
-  },
-
-  name: 'top-nav',
-  // 数据
-  data() {
-    return {}
-  },
-
-  // 传值
-  props: [],
-
-  // 计算
-  computed: {
-    config() {
-      return config
-    },
-    screenType() {
-      const screenType = config.screenType;
-      switch (screenType) {
-        case 'large':
-          return true;
-        case 'middle':
-          return false;
-        case 'small':
-          return false;
-        default:
-          return true;
-      }
-    },
-  },
-
-  // 组件
-  components: {},
-
-  // 方法
-  methods: {},
-
-  // 生命周期
-  created() {
-  },
+const screenType = computed(() => {
+  const screenType = config.screenType;
+  switch (screenType) {
+    case 'large':
+      return true;
+    case 'middle':
+      return false;
+    case 'small':
+      return false;
+    default:
+      return true;
+  }
 })
+
+function handleSelect(key: string) {
+
+  switch (key) {
+    case 'switch_sidebar':
+      config.sidebarCollapse = !config.sidebarCollapse;
+      break;
+    default:
+      break;
+  }
+}
+
+function language_change(val: string) {
+  locale.value = val;
+  localStorage.setItem('language', val);
+}
 </script>
 
 <style scoped lang='less'>
 .top-nav.posted {
   //background-color: #ffffff;
+  display: flex;
+  justify-content: space-between;
   height: 60px;
-  //overflow: hidden;
   box-shadow: 0 1px 4px #b1b3b8;
 
   .menu_collapse {
@@ -97,5 +81,13 @@ export default defineComponent({
     color: #909399;
     //color:  #f4f4f5;
   }
+}
+
+.language {
+  display: flex;
+  margin-right: 2rem;
+  width: 10rem;
+  flex-direction: column;
+  justify-content: center;
 }
 </style>

@@ -3,6 +3,8 @@ import {delete_account, get_account, register, update_account} from "@/api/accou
 import {Plus, Edit, Delete} from '@element-plus/icons-vue'
 import {ElMessage, ElMessageBox} from 'element-plus'
 import tablePager from "@/components/table-pager.vue";
+import i18n from '@/i18n';
+const { t } = i18n.global;
 
 export default defineComponent({
     name: 'account-index',
@@ -61,9 +63,9 @@ export default defineComponent({
          * @returns {Promise<void>}
          */
         async handleDelete(index: number, val: any) {
-            ElMessageBox.confirm('确认删除此用户?', '确认删除', {
-                confirmButtonText: '确定',
-                cancelButtonText: '取消',
+            ElMessageBox.confirm(
+                t('account.confirmBoxTitle'),
+                t('account.confirmBoxText'), {
                 type: 'warning'
             }).then(async () => {
                 const res = await delete_account(val.userId);
@@ -91,7 +93,7 @@ export default defineComponent({
          */
         async do_update() {
             const targetUserId = this.form.userId;
-            const res = await update_account(Object.assign(this.form,{targetUserId}));
+            const res = await update_account(Object.assign(this.form, {targetUserId}));
 
             if (res.data.code === 0) {
                 // 进入子组件调用刷新
@@ -122,7 +124,7 @@ export default defineComponent({
 
             if (!/^[a-zA-Z]\w{2,19}$/.test(data.userName)) {
                 ElMessage({
-                    message: '用户名长3-20位,以字母开头',
+                    message: t('account.formWarning'),
                     type: 'warning'
                 });
                 return;

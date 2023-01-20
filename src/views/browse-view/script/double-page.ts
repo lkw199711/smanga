@@ -245,12 +245,14 @@ export default defineComponent({
             this.directionDesc = !this.directionDesc;
         },
         remove_poster() {
-            if (this.removeFirst){
+
+            if (this.removeFirst) {
                 this.imgPathList.unshift(this.firstImage);
-            }else {
+            } else {
                 this.firstImage = this.imgPathList.shift() || '';
             }
 
+            this.removeFirst = !this.removeFirst;
             (this.$refs as any).pager.reload_static();
         },
         // 阅读状态控制

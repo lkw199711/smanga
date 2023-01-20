@@ -20,8 +20,8 @@
 
       <!--翻页按钮-->
       <div class="btn-box" v-show="popup">
-        <el-button class="btn" type="warning" plain @click.stop="before">上一章</el-button>
-        <el-button class="btn" type="success" plain @click.stop="next">下一章</el-button>
+        <el-button class="btn" type="warning" plain @click.stop="before">{{ $t('option.before') }}</el-button>
+        <el-button class="btn" type="success" plain @click.stop="next">{{ $t('option.next') }}</el-button>
       </div>
     </el-drawer>
 

@@ -2,45 +2,45 @@
   <div class="account">
     <div class="account-table-box">
       <div class="add-btn-box">
-        <el-button class="add-btn" type="primary" :icon="Plus" @click="add_dialog_open">新增账户</el-button>
+        <el-button class="add-btn" type="primary" :icon="Plus" @click="add_dialog_open">{{ $t('account.add') }}
+        </el-button>
       </div>
       <!--表格-->
-      <el-table
-          :data="tableData" stripe border>
-        <el-table-column type="index" label="序号" width="50">
+      <el-table :data="tableData" stripe border>
+        <el-table-column type="index" :label="$t('account.serial')" width="54">
         </el-table-column>
 
         <el-table-column
             prop="userId"
-            label="用户id"
+            :label="$t('account.id')"
             width="70">
         </el-table-column>
 
         <el-table-column
             prop="userName"
-            label="用户名"
+            :label="$t('account.name')"
             width="140">
         </el-table-column>
 
         <el-table-column
             prop="registerTime"
-            label="注册日期"
+            :label="$t('account.registerTime')"
             width="180">
         </el-table-column>
 
-        <el-table-column label="操作">
+        <el-table-column :label="$t('account.option')">
           <template v-slot="scope">
             <el-button
                 size="small"
                 type="primary"
                 :icon="Edit"
-                @click="handleEdit(scope.$index, scope.row)">编辑
+                @click="handleEdit(scope.$index, scope.row)">{{ $t('option.modify') }}
             </el-button>
             <el-button
                 size="small"
                 type="danger"
                 :icon="Delete"
-                @click="handleDelete(scope.$index, scope.row)">删除
+                @click="handleDelete(scope.$index, scope.row)">{{ $t('option.delete') }}
             </el-button>
           </template>
         </el-table-column>
@@ -49,14 +49,14 @@
       <table-pager ref="pager" @pageChange="load_table" :count="count"/>
     </div>
 
-    <el-dialog title="新增账户" v-model="addDialog" :before-close="add_dialog_close">
-      <el-form :model="form" label-width="80px">
-        <el-form-item label="用户名:">
-          <el-input v-model="form.userName" placeholder="请输入用户名"></el-input>
+    <el-dialog :title="$t('account.add')" v-model="addDialog" :before-close="add_dialog_close">
+      <el-form :model="form" label-width="100px">
+        <el-form-item :label="$t('account.nameLabel')">
+          <el-input v-model="form.userName" :placeholder="$t('account.namePlace')"></el-input>
         </el-form-item>
 
-        <el-form-item label="密码:">
-          <el-input v-model="form.passWord" placeholder="请输入密码"></el-input>
+        <el-form-item :label="$t('account.passLabel')">
+          <el-input v-model="form.passWord" :placeholder="$t('account.passPlace')"></el-input>
         </el-form-item>
       </el-form>
 
@@ -64,21 +64,21 @@
         <div class="dialog-footer">
           <!--按钮盒子-->
           <div class="btn-box">
-            <el-button type="primary" @click="do_register">确定</el-button>
-            <el-button type="warning" @click="add_dialog_close">取消</el-button>
+            <el-button type="primary" @click="do_register">{{ $t('option.confirm') }}</el-button>
+            <el-button type="warning" @click="add_dialog_close">{{ $t('option.cancel') }}</el-button>
           </div>
         </div>
       </template>
     </el-dialog>
 
-    <el-dialog title="修改账户" v-model="dialogFormVisible" :before-close="dialog_close">
-      <el-form :model="form" label-width="80px">
-        <el-form-item label="用户名:">
-          <el-input v-model="form.userName" placeholder="请输入用户名"></el-input>
+    <el-dialog :title="$t('account.modify')" v-model="dialogFormVisible" :before-close="dialog_close">
+      <el-form :model="form" label-width="100px">
+        <el-form-item :label="$t('account.nameLabel')">
+          <el-input v-model="form.userName" :placeholder="$t('account.namePlace')"></el-input>
         </el-form-item>
 
-        <el-form-item label="密码:">
-          <el-input v-model="form.passWord" placeholder="请输入新密码(留空则不修改)"></el-input>
+        <el-form-item :label="$t('account.passLabel')">
+          <el-input v-model="form.passWord" :placeholder="$t('account.passModifyPlace')"></el-input>
         </el-form-item>
       </el-form>
 
@@ -86,8 +86,8 @@
         <div class="dialog-footer">
           <!--按钮盒子-->
           <div class="btn-box">
-            <el-button type="primary" @click="do_update">修改</el-button>
-            <el-button type="warning" @click="dialogFormVisible=false">取消</el-button>
+            <el-button type="primary" @click="do_update">{{ $t('option.confirm') }}</el-button>
+            <el-button type="warning" @click="dialogFormVisible=false">{{ $t('option.cancel') }}</el-button>
           </div>
         </div>
       </template>

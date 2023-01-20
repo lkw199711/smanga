@@ -1,8 +1,9 @@
-import { createApp } from 'vue'
+import {createApp} from 'vue'
 import App from './App.vue'
 import router from './router'
 import store from './store'
 import './interface'
+import i18n from "@/i18n";
 
 import ElementPlus from 'element-plus'
 import 'reset-css'
@@ -12,12 +13,9 @@ import './assets/icon/iconfont.css'
 import './assets/colour/iconfont.css'
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 
-// @ts-ignore
-import zhCn from 'element-plus/dist/locale/zh-cn.mjs'
-
 const app = createApp(App);
 
-app.use(store).use(router).use(ElementPlus,{locale:zhCn}).mount('#app');
+app.use(store).use(router).use(i18n).use(ElementPlus).mount('#app');
 
 for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
     app.component(key, component)

@@ -22,7 +22,7 @@
           <el-icon v-if="item.meta.icon">
             <component :is="item.meta.icon"></component>
           </el-icon>
-          <template #title>{{ item.meta.title }}</template>
+          <template #title>{{ $t(`sidebar.${item.meta.title}`) }}</template>
         </el-menu-item>
       </template>
     </el-menu>
@@ -55,7 +55,7 @@
             <el-icon v-if="item.meta.icon">
               <component :is="item.meta.icon"></component>
             </el-icon>
-            <template #title>{{ item.meta.title }}</template>
+            <template #title>{{ $t(`sidebar.${item.meta.title}`) }}</template>
           </el-menu-item>
         </template>
       </el-menu>
@@ -69,6 +69,9 @@ import {ref, onMounted, computed} from 'vue'
 import {useRouter} from "vue-router";
 import {config} from '@/store';
 import Logo from "@/layout/components/logo.vue";
+import {useI18n} from "vue-i18n";
+
+const {t} = useI18n();
 
 const router = useRouter();
 

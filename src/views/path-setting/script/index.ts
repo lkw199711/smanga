@@ -1,9 +1,12 @@
-import {Delete, Edit, Refresh,RefreshRight} from '@element-plus/icons-vue'
+import {Delete, Edit, Refresh, RefreshRight} from '@element-plus/icons-vue'
 import {defineComponent} from 'vue'
 import {ElMessageBox} from 'element-plus'
 import {delete_path, get_path, scan_path} from "@/api/path";
 import {rescan_path} from "@/api/media";
 import tablePager from "@/components/table-pager.vue";
+import i18n from '@/i18n';
+
+const {t} = i18n.global;
 
 export default defineComponent({
     name: 'path-setting',
@@ -56,7 +59,8 @@ export default defineComponent({
          * */
         async delete_path(index: number, row: any) {
             ElMessageBox.confirm(
-                '确认删除此路径? 与之关联的漫画和章节都会被清除!', '确认删除', {
+                t('path.confirm.text1'),
+                t('path.confirm.title'), {
                     type: 'warning'
                 }).then(async () => {
                 const res = await delete_path(row.pathId);
@@ -75,8 +79,8 @@ export default defineComponent({
          */
         async rescan_path(index: number, row: any) {
             ElMessageBox.confirm(
-                `确认删除此路径? 将清除与之相关的漫画与章节并重新扫描添加!`,
-                '确认重新扫描', {
+                t('path.confirm.text2'),
+                t('path.confirm.title2'), {
                     type: 'warning'
                 }).then(async () => {
 
@@ -89,6 +93,11 @@ export default defineComponent({
             })
         },
 
+        /**
+         * 增量扫描路径
+         * @param index
+         * @param row
+         */
         async scan_path(index: number, row: any) {
             const res = await scan_path(row.mediaId, row.path, row.pathId);
 

@@ -24,7 +24,7 @@
           <el-icon>
             <Delete/>
           </el-icon>
-          删除
+          {{$t('option.delete')}}
         </el-menu-item>
       </el-menu>
     </el-drawer>
@@ -37,6 +37,8 @@ import {useRoute} from "vue-router";
 import {config} from "@/store";
 import {delete_bookmark} from "@/api/bookmark";
 import {ElMessageBox} from "element-plus";
+import i18n from '@/i18n';
+const {t} = i18n.global;
 
 const route = useRoute();
 
@@ -75,7 +77,7 @@ function close_sidebar() {
 function menu_select(key: string) {
   switch (key) {
     case 'delete':
-      ElMessageBox.confirm('确认删除次书签?', {type: 'warning'}).then(async () => {
+      ElMessageBox.confirm(t('bookmarkManage.confirm.text'), {type: 'warning'}).then(async () => {
         await delete_bookmark(bookmarkId.value);
         emit('reload');
       });

@@ -13,6 +13,8 @@ import {
 import {ElMessage, ElMessageBox} from 'element-plus'
 import tablePager from "@/components/table-pager.vue";
 import {scan_path} from "@/api/path";
+import i18n from '@/i18n';
+const {t} = i18n.global;
 
 export default defineComponent({
     name: 'media-setting-index',
@@ -129,7 +131,7 @@ export default defineComponent({
             // 表单验证
             if (!this.form.mediaName) {
                 ElMessage({
-                    message: '媒体库名称不能为空!',
+                    message: t('path.warning.name'),
                     type: 'warning'
                 })
 
@@ -161,7 +163,7 @@ export default defineComponent({
             // 表单验证
             if (!this.form.mediaName) {
                 ElMessage({
-                    message: '媒体库名称不能为空!',
+                    message: t('path.warning.name'),
                     type: 'warning'
                 })
 
@@ -180,11 +182,11 @@ export default defineComponent({
          * 删除媒体库
          * */
         async do_delete_media(index: any, row: any) {
-            ElMessageBox.confirm('确认删除此媒体库?', '确认删除', {
-                confirmButtonText: '确定',
-                cancelButtonText: '取消',
-                type: 'warning'
-            }).then(async () => {
+            ElMessageBox.confirm(
+                t('path.confirm.text'),
+                t('path.confirm.title'), {
+                    type: 'warning'
+                }).then(async () => {
                 const res = await delete_media(row.mediaId);
 
                 if (res.data.code === 0) {
@@ -199,8 +201,8 @@ export default defineComponent({
          * */
         async delete_path(pathInfo: any) {
             ElMessageBox.confirm(
-                `确认删除此路径? 与之关联的漫画和章节都会被清除!`,
-                '确认删除', {
+                t('path.confirm.text1'),
+                t('path.confirm.title'), {
                     type: 'warning'
                 }).then(async () => {
 
@@ -218,8 +220,8 @@ export default defineComponent({
          */
         async rescan_path(pathInfo: any) {
             ElMessageBox.confirm(
-                `确认删除此路径? 将清除与之相关的漫画与章节并重新扫描添加!`,
-                '确认重新扫描', {
+                t('path.confirm.text2'),
+                t('path.confirm.title2'), {
                     type: 'warning'
                 }).then(async () => {
 

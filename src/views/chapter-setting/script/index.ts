@@ -1,8 +1,11 @@
 import {defineComponent} from 'vue'
-import {ElMessageBox} from 'element-plus'
+import {ElMessage, ElMessageBox} from 'element-plus'
 import {Delete, Edit} from '@element-plus/icons-vue'
 import {get_chapter, delete_chapter, update_chapter} from "@/api/chapter";
 import tablePager from "@/components/table-pager.vue";
+import i18n from '@/i18n';
+
+const {t} = i18n.global;
 
 export default defineComponent({
     name: 'index',
@@ -63,7 +66,7 @@ export default defineComponent({
         /**
          * 加载表格数据
          */
-        async load_table(page = 1, pageSize=10) {
+        async load_table(page = 1, pageSize = 10) {
             const start = (page - 1) * pageSize;
             const res = await get_chapter(0, start, pageSize);
             this.count = Number(res.data.count);
@@ -72,7 +75,7 @@ export default defineComponent({
         /**
          * 重载数据 页码不变
          */
-        reload_table(){
+        reload_table() {
             (this.$refs as any).pager.reload_page();
         },
         /**
@@ -89,6 +92,17 @@ export default defineComponent({
          * 执行修改请求
          */
         async update_chapter() {
+            // 表单验证-章节名
+            if (!this.form.chapterName) {
+                ElMessage.warning(t('chapterManage.warning.name'));
+                return false;
+            }
+            // 表单验证-章节路径
+            if (!this.form.chapterPath) {
+                ElMessage.warning(t('chapterManage.warning.path'));
+                return false;
+            }
+
             const res = await update_chapter(this.form);
             if (res.data.code === 0) {
                 this.editChapterDialog = false;
@@ -100,9 +114,9 @@ export default defineComponent({
          * 删除漫画
          * */
         async delete_chapter(index: number, row: any) {
-            ElMessageBox.confirm('确认删除此章节?', '确认删除', {
-                confirmButtonText: '确定',
-                cancelButtonText: '取消',
+            ElMessageBox.confirm(
+                t('chapterManage.confirm.text'),
+                t('chapterManage.confirm.title'), {
                 type: 'warning'
             }).then(async () => {
                 const res = await delete_chapter(row.chapterId);

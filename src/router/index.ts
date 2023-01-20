@@ -23,7 +23,7 @@ const routes: Array<RouteRecordRaw> = [
     {
         path: '/media-list',
         redirect: '/media-list/index',
-        meta: {sidebar: true, title: '媒体库', icon: 'Reading'},
+        meta: {sidebar: true, title: 'mediaList', icon: 'Reading'},
         component: Layout,
         children: [
             {
@@ -62,7 +62,7 @@ const routes: Array<RouteRecordRaw> = [
     {
         path: '/history',
         redirect: '/history/index',
-        meta: {sidebar: true, title: '历史记录', icon: 'Clock'},
+        meta: {sidebar: true, title: 'history', icon: 'Clock'},
         component: Layout,
         children: [
             {
@@ -75,7 +75,7 @@ const routes: Array<RouteRecordRaw> = [
     {
         path: '/bookmark',
         redirect: '/bookmark/index',
-        meta: {sidebar: true, title: '书签', icon: 'Collection'},
+        meta: {sidebar: true, title: 'bookmark', icon: 'Collection'},
         component: Layout,
         children: [
             {
@@ -90,7 +90,7 @@ const routes: Array<RouteRecordRaw> = [
     {
         path: '/account',
         redirect: '/account/index',
-        meta: {sidebar: true, title: '账户管理', icon: 'Stamp'},
+        meta: {sidebar: true, title: 'account', icon: 'Stamp'},
         component: Layout,
         children: [
             {
@@ -103,7 +103,7 @@ const routes: Array<RouteRecordRaw> = [
     {
         path: '/media-setting',
         redirect: '/media-setting/index',
-        meta: {sidebar: true, title: '媒体库管理', icon: 'Reading'},
+        meta: {sidebar: true, title: 'mediaManage', icon: 'Reading'},
         component: Layout,
         children: [
             {
@@ -116,7 +116,7 @@ const routes: Array<RouteRecordRaw> = [
     {
         path: '/manga-setting',
         redirect: '/manga-setting/index',
-        meta: {sidebar: true, title: '漫画管理', icon: 'Notebook'},
+        meta: {sidebar: true, title: 'mangaManage', icon: 'Notebook'},
         component: Layout,
         children: [
             {
@@ -129,7 +129,7 @@ const routes: Array<RouteRecordRaw> = [
     {
         path: '/path-setting',
         redirect: '/path-setting/index',
-        meta: {sidebar: true, title: '路径管理', icon: 'FolderOpened'},
+        meta: {sidebar: true, title: 'pathManage', icon: 'FolderOpened'},
         component: Layout,
         children: [
             {
@@ -142,7 +142,7 @@ const routes: Array<RouteRecordRaw> = [
     {
         path: '/chapter-setting',
         redirect: '/chapter-setting/index',
-        meta: {sidebar: true, title: '章节管理', icon: 'Tickets'},
+        meta: {sidebar: true, title: 'chapterManage', icon: 'Tickets'},
         component: Layout,
         children: [
             {
@@ -155,7 +155,7 @@ const routes: Array<RouteRecordRaw> = [
     {
         path: '/bookmark-setting',
         redirect: '/bookmark-setting/index',
-        meta: {sidebar: true, title: '书签管理', icon: 'Collection'},
+        meta: {sidebar: true, title: 'bookmarkManage', icon: 'Collection'},
         component: Layout,
         children: [
             {
@@ -168,7 +168,7 @@ const routes: Array<RouteRecordRaw> = [
     {
         path: '/compress-setting',
         redirect: '/compress-setting/index',
-        meta: {sidebar: true, title: '转换管理', icon: 'Switch'},
+        meta: {sidebar: true, title: 'compressManage', icon: 'Switch'},
         component: Layout,
         children: [
             {
@@ -210,7 +210,7 @@ const routes: Array<RouteRecordRaw> = [
         path: '/wiki',
         redirect: '/wiki/index',
         component: layout,
-        meta: {sidebar: true, title: '使用说明', icon: 'DataAnalysis'},
+        meta: {sidebar: true, title: 'wiki', icon: 'DataAnalysis'},
         children: [
             {
                 name: 'wiki',

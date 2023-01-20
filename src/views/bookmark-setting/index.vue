@@ -3,46 +3,46 @@
     <!--表格-->
     <el-table
         :data="tableData" stripe border>
-      <el-table-column type="index" label="序号" width="50">
+      <el-table-column type="index" :label="$t('account.serial')" width="54">
       </el-table-column>
 
       <el-table-column
           prop="bookmarkId"
-          label="书签id"
-          width="70">
+          :label="$t('bookmarkManage.id')"
+          width="72">
       </el-table-column>
 
       <el-table-column
           prop="mangaName"
-          label="漫画"
+          :label="$t('mangaManage.name')"
           width="160">
       </el-table-column>
 
       <el-table-column
           prop="chapterName"
-          label="章节"
+          :label="$t('chapterManage.name')"
           width="320">
       </el-table-column>
 
       <el-table-column
           prop="page"
-          label="页码"
-          width="50">
+          :label="$t('bookmarkManage.page')"
+          width="60">
       </el-table-column>
 
       <el-table-column
           prop="createTime"
           label="添加日期"
-          width="180">
+          width="170">
       </el-table-column>
 
-      <el-table-column label="操作">
+      <el-table-column :label="$t('option.option')">
         <template v-slot="scope">
           <el-button
               size="small"
               type="danger"
               :icon="Delete"
-              @click="handleDelete(scope.$index, scope.row)">删除
+              @click="handleDelete(scope.$index, scope.row)">{{$t('option.delete')}}
           </el-button>
         </template>
       </el-table-column>
@@ -58,6 +58,8 @@ import {ElMessageBox} from "element-plus";
 import {Delete, Edit, Plus} from '@element-plus/icons-vue'
 import {delete_bookmark, get_bookmark} from "@/api/bookmark";
 import tablePager from "@/components/table-pager.vue";
+import i18n from '@/i18n';
+const {t} = i18n.global;
 
 export default defineComponent({
   name: 'bookmark-setting',
@@ -96,9 +98,9 @@ export default defineComponent({
      */
     async handleDelete(index: number, val: any) {
 
-      ElMessageBox.confirm('确认删除此书签?', '确认删除', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
+      ElMessageBox.confirm(
+          t('bookmarkManage.confirm.text'),
+          t('bookmarkManage.confirm.title'), {
         type: 'warning'
       }).then(async () => {
         const res = await delete_bookmark(val.bookmarkId);
