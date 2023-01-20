@@ -1,7 +1,8 @@
 <template>
   <div class="index">
     <div class="media">
-      <div class="media-item" v-for="(i) in mediaList" :key="i.mediaId" @click="go_manga_list(i.mediaId)">
+      <div class="media-item" v-for="(i) in mediaList" :key="i.mediaId"
+           @click="go_manga_list(i.mediaId)" @contextmenu.prevent="context_menu">
         {{ i.mediaName }}
       </div>
     </div>
@@ -12,6 +13,7 @@
 import {defineComponent} from 'vue'
 import {get_media} from "@/api/media";
 import {global_set} from "@/utils";
+import {config} from "@/store";
 
 export default defineComponent({
   name: 'index',
@@ -47,7 +49,10 @@ export default defineComponent({
           mediaId
         }
       })
-    }
+    },
+    context_menu() {
+      config.rightSidebar = true;
+    },
   },
 
   // 生命周期

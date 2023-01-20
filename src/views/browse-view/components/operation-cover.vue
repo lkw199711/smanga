@@ -1,5 +1,5 @@
 <template>
-  <div class="operation-cover">
+  <div class="operation-cover" @contextmenu.prevent="context_menu">
     <div class="top" @click="switch_menu"></div>
     <div class="middle">
       <div class="left" @click="before"></div>
@@ -11,6 +11,7 @@
 
 <script lang='ts'>
 import {defineComponent} from 'vue'
+import {config} from "@/store";
 
 export default defineComponent({
   name: 'operation-cover',
@@ -30,17 +31,20 @@ export default defineComponent({
 
   // 方法
   methods: {
-    before(){
+    before() {
       this.$emit('before');
     },
-    next(){
+    next() {
       this.$emit('next');
     },
-    switch_menu(){
+    switch_menu() {
       this.$emit('switchMenu');
     },
-    switch_footer(){
+    switch_footer() {
       this.$emit('switchFooter');
+    },
+    context_menu() {
+      config.rightSidebar = true;
     }
   },
 
@@ -51,7 +55,7 @@ export default defineComponent({
 </script>
 
 <style scoped lang='less'>
-.operation-cover{
+.operation-cover {
   position: absolute;
   display: flex;
   flex-direction: column;
@@ -59,22 +63,27 @@ export default defineComponent({
   top: 0;
   right: 0;
   bottom: 0;
-  .top{
+
+  .top {
     height: 30%;
   }
-  .middle{
+
+  .middle {
     display: flex;
     flex: 1;
-    .left{
+
+    .left {
       width: 50%;
       height: 100%;
     }
-    .right{
+
+    .right {
       width: 50%;
       height: 100%;
     }
   }
-  .bottom{
+
+  .bottom {
     height: 30%;
   }
 }

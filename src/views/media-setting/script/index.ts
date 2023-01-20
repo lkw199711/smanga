@@ -201,8 +201,6 @@ export default defineComponent({
             ElMessageBox.confirm(
                 `确认删除此路径? 与之关联的漫画和章节都会被清除!`,
                 '确认删除', {
-                    confirmButtonText: '确定',
-                    cancelButtonText: '取消',
                     type: 'warning'
                 }).then(async () => {
 
@@ -222,8 +220,6 @@ export default defineComponent({
             ElMessageBox.confirm(
                 `确认删除此路径? 将清除与之相关的漫画与章节并重新扫描添加!`,
                 '确认重新扫描', {
-                    confirmButtonText: '确定',
-                    cancelButtonText: '取消',
                     type: 'warning'
                 }).then(async () => {
 

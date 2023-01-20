@@ -35,7 +35,7 @@ export default defineComponent({
   },
 
   // 传值
-  props: ['count'],
+  props: ['count', 'paramsPage'],
 
   // 计算
   computed: {
@@ -87,7 +87,14 @@ export default defineComponent({
       }
     },
   },
-  watch: {},
+  watch: {
+    paramsPage: {
+      handler(val) {
+        this.page = val;
+        this.page_change(this.page);
+      }
+    }
+  },
 
   // 组件
   components: {},

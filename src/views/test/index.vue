@@ -2,46 +2,72 @@
   <div class="index">
     <h1>test</h1>
     <el-button @click="do_test">测试</el-button>
+    <el-drawer
+        v-model="drawer"
+        title="I am the title"
+        :direction="direction"
+        :before-close="handleClose"
+    >
+      <span>Hi, there!</span>
+    </el-drawer>
+    <el-drawer v-model="drawer2" :direction="direction">
+      <template #header>
+        <h4>set title by slot</h4>
+      </template>
+      <template #default>
+        <div>
+          <el-radio v-model="radio1" label="Option 1" size="large"
+          >Option 1</el-radio
+          >
+          <el-radio v-model="radio1" label="Option 2" size="large"
+          >Option 2</el-radio
+          >
+        </div>
+      </template>
+      <template #footer>
+        <div style="flex: auto">
+          <el-button @click="cancelClick">cancel</el-button>
+          <el-button type="primary" @click="confirmClick">confirm</el-button>
+        </div>
+      </template>
+    </el-drawer>
   </div>
 </template>
 
-<script lang='ts'>
+<script lang='ts' setup>
 import {defineComponent} from 'vue'
 import {testAxios} from "@/api/test";
+import { ref } from 'vue'
+import { ElMessageBox } from 'element-plus'
 
-export default defineComponent({
-  name: 'index',
-  // 数据
-  data() {
-    return {
-      abc: 'php ./chapter/compress.php "/mnt/hhd-2t/00manga/00zip/[アズ][魔术学姐][Vol.01-Vol.08][完结][bili]/Vol.01.cbz" "/www/wwwroot/smanga.mn2.cc/php/public" "14" "109" "2655" "zip"',
-      abc1: 'php ./chapter/compress.php "/mnt/hhd-2t/00manga/00zip/[アズ][魔术学姐][Vol.01-Vol.08][完结][bili]/Vol.04.cbz" "/www/wwwroot/smanga.mn2.cc/php/public" "14" "109" "2658" "zip" "" ""',
-    }
-  },
-
-  // 传值
-  props: [],
-
-  // 引用
-  computed: {},
-
-  // 组件
-  components: {},
-
-  // 方法
-  methods: {
-    do_test(){
-      testAxios.post('http://192.168.2.8:91/php/test/mkdir.php').then(res=>{
-        console.log(res);
+const drawer = ref(false)
+const drawer2 = ref(false)
+const direction = ref('rtl')
+const radio1 = ref('Option 1')
+const handleClose = (done: () => void) => {
+  ElMessageBox.confirm('Are you sure you want to close this?')
+      .then(() => {
+        done()
       })
-    },
-  },
-
-  // 生命周期
-  created() {
-
-  },
-})
+      .catch(() => {
+        // catch error
+      })
+}
+function cancelClick() {
+  drawer2.value = false
+}
+function confirmClick() {
+  ElMessageBox.confirm(`Are you confirm to chose ${radio1.value} ?`)
+      .then(() => {
+        drawer2.value = false
+      })
+      .catch(() => {
+        // catch error
+      })
+}
+function do_test(){
+  drawer.value = true;
+}
 </script>
 
 <style scoped lang='less'>

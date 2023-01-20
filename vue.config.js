@@ -1,7 +1,10 @@
 // eslint-disable-next-line @typescript-eslint/no-var-requires
+// 获取项目版本号
+process.env.VUE_APP_VERSION = require('./package.json').version;
+
 const pxtorem = require('postcss-pxtorem');
 // 网络路径
-const network = 'http://192.168.2.112';
+const network = 'http://192.168.2.8';
 // 本地路径
 const localhost = 'http://127.0.0.1';
 
@@ -63,7 +66,7 @@ module.exports = {
                         // 该项仅在使用 Circle 组件时需要
                         // 原因参见 https://github.com/youzan/vant/issues/1948
                         // 不想转换的单位针对类名增加尾缀-nopost
-                        selectorBlackList: ['posted', 'van-', 'van-circle__layer', 'icon', 'el-'],
+                        selectorBlackList: ['posted'],
                         // 最小转换，如低于 4px的不会进行转成rem
                         minPixelValue: 4,
                         // re单位的小数位数上限

@@ -27,10 +27,11 @@ export function update_chapter(data: any) {
 /**
  * 删除章节记录
  * @param chapterId
+ * @param deleteFile
  */
-export function delete_chapter(chapterId: any) {
+export function delete_chapter(chapterId: any, deleteFile = false) {
     return ajax({
         url: 'php/chapter/delete.php',
-        data: {chapterId}
+        data: {chapterId, deleteFile}
     })
 }

@@ -4,11 +4,12 @@ import {global_get, global_get_array, global_set} from "@/utils";
 import {ElMessage} from "element-plus";
 import {config} from '@/store';
 import {add_history} from "@/api/history";
-import operationCover from "@/components/operation-cover.vue";
+import operationCover from "../components/operation-cover.vue";
 import chapterListMenu from "../components/chapter-list-menu.vue";
 import bookmark from "../components/bookmark.vue";
 import {get_chapter_images} from "@/api/browse";
 import browsePager from "@/components/browse-pager.vue";
+import rightSidebar from "../components/right-sidebar.vue";
 
 export default defineComponent({
     name: 'single',
@@ -33,7 +34,7 @@ export default defineComponent({
     props: [],
 
     // 组件
-    components: {operationCover, chapterListMenu, bookmark, browsePager},
+    components: {operationCover, chapterListMenu, bookmark, browsePager, rightSidebar},
 
     computed: {
         // 页脚是否展示

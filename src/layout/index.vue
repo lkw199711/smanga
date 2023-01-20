@@ -69,14 +69,12 @@ export default defineComponent({
     flex: 1;
     display: flex;
     flex-direction: column;
-    max-height: 100vh;
+    height: 100vh;
     overflow: hidden;
 
     &-middle {
       flex: 1;
       overflow: scroll;
-      //overflow-y: scroll;
-      //overflow-x: hidden;
     }
   }
 }

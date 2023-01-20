@@ -5,7 +5,9 @@ export default defineComponent({
     name: 'wiki',
     // 数据
     data() {
-        return {}
+        return {
+            version: '0.0.0',
+        }
     },
 
     // 传值
@@ -19,5 +21,6 @@ export default defineComponent({
 
     // 生命周期
     created() {
+        this.version = process.env.VUE_APP_VERSION;
     },
 })

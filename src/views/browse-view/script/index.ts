@@ -101,15 +101,6 @@ export default defineComponent({
             page < initPage && await this.load_img();
         },
 
-        refresh_page() {
-            // 重置图片数据
-            this.imgFileList = [];
-            this.page = -1;
-
-            // 开始加载图片
-            this.load_img();
-        },
-
         /**
          * 重载页面
          */

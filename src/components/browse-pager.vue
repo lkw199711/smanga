@@ -118,6 +118,13 @@ export default defineComponent({
     },
 
     /**
+     * 重载数据 不改变页码
+     */
+    reload_static() {
+      this.$emit('pageChange', this.page, false);
+    },
+
+    /**
      * 上一页
      */
     before() {
@@ -138,6 +145,23 @@ export default defineComponent({
         ElMessage.warning('已近位于尾页');
       }
     },
+    direction_key(event: any) {
+      const key = event.keyCode;
+      switch (key) {
+        case 37://"按了←键！"
+          this.before();
+          break;
+          // case 38://"按了↑键！"
+          //   alert("按了↑键！");
+          //   break;
+        case 39://"按了→键！"
+          this.next();
+          break;
+          // case 40://"按了↓键！"
+          //   alert("按了↓键！");
+          //   break;
+      }
+    },
   },
 
   // 生命周期
@@ -146,6 +170,9 @@ export default defineComponent({
     if (this.setPageSize) {
       this.pageSize = this.setPageSize;
     }
+
+    // window.addEventListener('keypress',this.direction_key);
+    window.addEventListener('keydown', this.direction_key);
   },
 })
 </script>

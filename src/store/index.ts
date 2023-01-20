@@ -44,6 +44,7 @@ export const config = reactive({
     browseType: 'flow',
     bookmarkShow: false,
     screenType: 'large',
+    rightSidebar: false,
 });
 
 export const cache = reactive({

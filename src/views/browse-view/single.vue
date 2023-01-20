@@ -3,6 +3,9 @@
     <!--目录列表-->
     <chapterList-menu @before="before" @next="next" @changeChapter="change_chapter"/>
 
+    <!--功能菜单-->
+    <right-sidebar  />
+
     <!--图片容器-->
     <div class="single-page-img-box">
       <bookmark :chapterId="chapterInfo.chapterId"/>

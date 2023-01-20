@@ -24,9 +24,14 @@ export function update_manga(data: any) {
     })
 }
 
-export function delete_manga(mangaId: any) {
+/**
+ * 删除漫画
+ * @param mangaId
+ * @param deleteFile
+ */
+export function delete_manga(mangaId: number, deleteFile = false) {
     return ajax({
         url: 'php/manga/delete.php',
-        data: {mangaId}
+        data: {mangaId, deleteFile}
     })
 }

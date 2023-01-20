@@ -33,19 +33,19 @@
         <el-table-column label="操作">
           <template v-slot="scope">
             <el-button
-                size="mini"
+                size="small"
                 type="success"
                 :icon="RefreshRight"
                 @click="scan_path(scope.$index, scope.row)">增量扫描
             </el-button>
             <el-button
-                size="mini"
+                size="small"
                 type="warning"
                 :icon="Refresh"
                 @click="rescan_path(scope.$index, scope.row)">重新扫描
             </el-button>
             <el-button
-                size="mini"
+                size="small"
                 type="danger"
                 :icon="Delete"
                 @click="delete_path(scope.$index, scope.row)">删除

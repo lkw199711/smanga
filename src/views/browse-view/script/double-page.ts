@@ -4,11 +4,12 @@ import {global_get, global_get_array, global_set} from "@/utils";
 import {ElMessage as msg} from "element-plus";
 import {config} from '@/store';
 import {add_history} from "@/api/history";
-import operationCover from "@/components/operation-cover.vue";
+import operationCover from "../components/operation-cover.vue";
 import chapterListMenu from "../components/chapter-list-menu.vue";
 import bookmark from "../components/bookmark.vue";
 import {get_chapter_images} from "@/api/browse";
 import browsePager from "@/components/browse-pager.vue";
+import RightSidebar from "@/views/browse-view/components/right-sidebar.vue";
 
 export default defineComponent({
     name: 'double',
@@ -20,7 +21,12 @@ export default defineComponent({
             small: false,
             disabled: false,
             background: true,
-            //图片路径 blob
+            // 右侧菜单
+            showPoster: true,
+            directionDesc: true,
+            removeFirst: false,
+            firstImage: '',
+            // 图片路径 blob
             imgSrc1: '',
             imgSrc2: '',
 
@@ -36,7 +42,7 @@ export default defineComponent({
     props: [],
 
     // 组件
-    components: {operationCover, chapterListMenu, bookmark, browsePager},
+    components: {RightSidebar, operationCover, chapterListMenu, bookmark, browsePager},
 
     computed: {
         path() {
@@ -232,8 +238,21 @@ export default defineComponent({
             global_set('chapterPath', chapterInfo.chapterPath);
             global_set('chapterCover', chapterInfo.chapterCover);
         },
+        /**
+         * 切换阅读方向
+         */
+        switch_direction() {
+            this.directionDesc = !this.directionDesc;
+        },
+        remove_poster() {
+            if (this.removeFirst){
+                this.imgPathList.unshift(this.firstImage);
+            }else {
+                this.firstImage = this.imgPathList.shift() || '';
+            }
 
-
+            (this.$refs as any).pager.reload_static();
+        },
         // 阅读状态控制
         switch_menu() {
             config.browseTop = !config.browseTop;

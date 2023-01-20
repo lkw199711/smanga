@@ -1,19 +1,23 @@
 import {defineComponent} from 'vue'
 import chapter from "@/components/chapter.vue";
 import {get_poster} from "@/api";
-import store from "@/store";
+import store, {config} from "@/store";
 import {get_bookmark} from "@/api/bookmark";
 import {get_chapter} from "@/api/chapter";
 import {global_set, global_set_json} from "@/utils";
 import MediaPager from "@/components/media-pager.vue";
+import rightSidebar from "../components/right-sidebar.vue";
 
 export default defineComponent({
     name: 'bookmark',
     // 数据
     data() {
         return {
-            list: [],
+            page: 1,
             count: 0,
+            menuPoster: '',
+            chapterInfo: {},
+            list: [],
         }
     },
 
@@ -21,7 +25,7 @@ export default defineComponent({
     props: [],
 
     // 组件
-    components: {MediaPager, chapter},
+    components: {MediaPager, chapter, rightSidebar},
 
     // 计算
     computed: {},
@@ -77,7 +81,13 @@ export default defineComponent({
          * @param page
          * @param pageSize
          */
-        async page_change(page = 1, pageSize = 12) {
+        async page_change(page = 0, pageSize = 12) {
+            if (page) {
+                this.page = page;
+            } else {
+                page = this.page;
+            }
+
             const start = (page - 1) * pageSize;
             const res = await get_bookmark(start, pageSize);
             this.list = res.data.list;
@@ -86,13 +96,21 @@ export default defineComponent({
             // 为章节请求海报图片
             get_poster(this.list, 'bookmarkAwait', 'pageImage');
         },
+        /**
+         * 打开右侧菜单
+         */
+        context_menu(info: any, key: number) {
+            this.menuPoster = (this.list[key] as any).blob;
+            this.chapterInfo = info;
+            config.rightSidebar = true;
+        },
     },
 
     // 生命周期
     async created() {
         store.commit('switch_await', {running: 'bookmarkAwait', bool: true});
 
-        this.page_change();
+        this.page_change(1);
     },
 
     beforeUnmount() {

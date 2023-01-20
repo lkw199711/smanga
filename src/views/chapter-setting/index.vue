@@ -39,13 +39,13 @@
           <el-table-column label="操作">
             <template v-slot="scope">
               <el-button
-                  size="mini"
+                  size="small"
                   type="primary"
                   :icon="Edit"
                   @click="edit_chapter(scope.$index, scope.row)">编辑
               </el-button>
               <el-button
-                  size="mini"
+                  size="small"
                   type="danger"
                   :icon="Delete"
                   @click="delete_chapter(scope.$index, scope.row)">删除

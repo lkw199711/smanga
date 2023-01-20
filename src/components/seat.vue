@@ -18,7 +18,7 @@ export default defineComponent({
   // 计算
   computed: {
     style() {
-      let style: any;
+      let style: any = {};
 
       if (this.height)
         style.height = this.height;

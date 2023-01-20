@@ -3,22 +3,11 @@
     <!--目录列表-->
     <chapterList-menu @before="before" @next="next" @changeChapter="change_chapter"/>
 
-    <!--列表下拉刷新-->
-    <van-pull-refresh
-        v-model="refreshing"
-        @refresh="refresh_page"
-    >
-      <!--列表-->
-      <van-list
-          v-model="loading"
-          :finished="finished"
-          :immediate-check="false"
-          @load="load_img"
-          @click.stop="switch_menu"
-      >
-        <img v-for="(k, i) in imgFileList" :src="k" :key="i" alt="接收图片"/>
-      </van-list>
-    </van-pull-refresh>
+    <!--列表-->
+    <div v-infinite-scroll="load_img" :infinite-scroll-immediate="false"
+         :infinite-scroll-disabled="loading || finished">
+      <img v-for="(k, i) in imgFileList" :src="k" :key="i" alt="接收图片"/>
+    </div>
 
     <!--翻页按钮-->
     <div class="btn-box" v-show="imgFileList.length">

@@ -45,7 +45,7 @@
       <el-table-column label="操作">
         <template v-slot="scope">
           <el-button
-              size="mini"
+              size="small"
               type="danger"
               :icon="Delete"
               @click="handleDelete(scope.$index, scope.row)">删除

@@ -49,7 +49,7 @@ export default defineComponent({
   left: 4rem;
   width: 5rem;
   height: 5rem;
-  line-height: 1rem;
+  line-height: 4rem;
   text-align: center;
   background-color: @button-back;
   border-radius: 100%;
@@ -79,7 +79,7 @@ export default defineComponent({
   top: 0;
   right: 0;
   bottom: 0;
-  font-size: 8rem;
+  font-size: 4rem;
   text-align: center;
   color: #f0f0f0;
   background-color: #fff;

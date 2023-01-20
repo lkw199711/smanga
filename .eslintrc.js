@@ -28,6 +28,7 @@ module.exports = {
         // 允许空方法
         '@typescript-eslint/no-empty-function': ['off'],
         'eslint-disable-next-line': 0,
-        '@typescript-eslint/ban-ts-comment': 0
+        '@typescript-eslint/ban-ts-comment': 0,
+        '@typescript-eslint/no-var-requires': 0
     }
 }

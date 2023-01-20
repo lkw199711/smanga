@@ -29,14 +29,19 @@
   </div>
 
   <div class="sidebar-phone">
-    <van-popup v-model:show="config.sidebarCollapse" position="left" class="sidebar-popup">
+    <el-drawer
+        v-model="config.sidebarCollapse"
+        size="auto"
+        direction="ltr"
+        :with-header="false"
+    >
       <el-menu
           router
+          class="sidebar sidebar-phone"
           active-text-color="#ffd04b"
           background-color="#545c64"
           text-color="#fff"
           default-active="/"
-          class="sidebar"
       >
         <!--<logo/>-->
         <el-menu-item index="/" class="no-padding">
@@ -54,7 +59,7 @@
           </el-menu-item>
         </template>
       </el-menu>
-    </van-popup>
+    </el-drawer>
   </div>
 
 </template>
@@ -95,10 +100,6 @@ onMounted(() => {
   .sidebar-phone {
     display: none;
   }
-}
-
-.sidebar-popup {
-  width: 80vw;
 }
 
 .el-menu {
