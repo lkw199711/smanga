@@ -19,11 +19,11 @@
           <el-option
               v-for="item in theme"
               :key="item.value"
-              :label="item.label"
+              :label="$t(`theme.${item.value}`)"
               :value="item.value"
           >
             <span class="op-color" :style="theme_color(item.value)"/>
-            <span class="op-text">{{ item.label }}</span>
+            <span class="op-text">{{ $t(`theme.${item.value}`) }}</span>
           </el-option>
         </el-select>
       </div>
@@ -52,7 +52,6 @@ import theme from "@/store/theme";
 import {computed, ref} from 'vue'
 import {useI18n} from "vue-i18n";
 import {set_theme, themes} from "@/style/theme";
-import Seat from "@/components/seat.vue";
 
 const value = ref(config.language);
 const {locale} = useI18n();

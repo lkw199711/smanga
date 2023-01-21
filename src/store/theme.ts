@@ -1,6 +1,6 @@
 export const theme = [
     {
-        label: '灰色',
+        label: 'grey',
         value: 'grey',
     },
     {
@@ -49,7 +49,7 @@ export const theme = [
     },
     {
         label: '极客蓝',
-        value: 'blue'
+        value: 'blueDraw'
     },
     {
         label: '酱紫',

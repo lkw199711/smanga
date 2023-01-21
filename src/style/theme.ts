@@ -77,7 +77,7 @@ export const themes = {
         's-active': '#fa541c',
         's-hover-back': '#0958d9',
     },
-    blue: {
+    blueDraw: {
         's-back': '#2f54eb',
         's-text': '#ffffff',
         's-active': '#f5222d',

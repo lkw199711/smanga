@@ -64,7 +64,6 @@ import {useRouter} from "vue-router";
 import {config} from '@/store';
 import Logo from "@/layout/components/logo.vue";
 import {useI18n} from "vue-i18n";
-
 const {t} = useI18n();
 
 const router = useRouter();
@@ -87,13 +86,13 @@ onMounted(() => {
 <style scoped lang="less">
 
 //响应式手机
-@media only screen and (max-width: 999px) {
+@media only screen and (max-width: 1199px) {
   .sidebar-pc {
     display: none;
   }
 }
 
-@media only screen and (min-width: 1000px) {
+@media only screen and (min-width: 1200px) {
   .sidebar-phone {
     display: none;
   }
