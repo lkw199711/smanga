@@ -1,11 +1,11 @@
 @font-face {
   font-family: "iconfont"; /* Project id 3852924 */
-  src: url('iconfont.eot?t=1673094891416'); /* IE9 */
-  src: url('iconfont.eot?t=1673094891416#iefix') format('embedded-opentype'), /* IE6-IE8 */
-       url('iconfont.woff2?t=1673094891416') format('woff2'),
-       url('iconfont.woff?t=1673094891416') format('woff'),
-       url('iconfont.ttf?t=1673094891416') format('truetype'),
-       url('iconfont.svg?t=1673094891416#iconfont') format('svg');
+  src: url('iconfont.eot?t=1674297433541'); /* IE9 */
+  src: url('iconfont.eot?t=1674297433541#iefix') format('embedded-opentype'), /* IE6-IE8 */
+       url('iconfont.woff2?t=1674297433541') format('woff2'),
+       url('iconfont.woff?t=1674297433541') format('woff'),
+       url('iconfont.ttf?t=1674297433541') format('truetype'),
+       url('iconfont.svg?t=1674297433541#iconfont') format('svg');
 }
 
 .iconfont {
@@ -14,6 +14,10 @@
   font-style: normal;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-yuyan:before {
+  content: "\e618";
 }
 
 .icon-mulu:before {

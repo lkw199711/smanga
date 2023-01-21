@@ -6,7 +6,8 @@ import {config} from '@/store';
 import {add_history} from "@/api/history";
 import chapterListMenu from "../components/chapter-list-menu.vue";
 import {get_chapter_images} from "@/api/browse";
-
+import i18n from '@/i18n';
+const {t} = i18n.global;
 export default defineComponent({
     name: 'browse-views',
 
@@ -146,7 +147,7 @@ export default defineComponent({
         async before() {
 
             if (this.index == 0) {
-                msg('已经到了第一章');
+                msg(t('page.firstChapter'));
                 return false;
             }
 
@@ -176,7 +177,7 @@ export default defineComponent({
          * */
         async next() {
             if (this.index == this.chapterList.length - 1) {
-                msg('已经到了最后一章');
+                msg(t('page.lastChapter'));
                 return false;
             }
 

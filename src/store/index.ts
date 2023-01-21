@@ -46,6 +46,7 @@ export const config = reactive({
     screenType: 'large',
     rightSidebar: false,
     language: 'zhCn',
+    theme: 'grey',
 });
 
 export const cache = reactive({

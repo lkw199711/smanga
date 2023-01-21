@@ -198,6 +198,12 @@ export default {
         single: 'single',
         double: 'double',
     },
+    page: {
+        lastPage: 'Already on the first page',
+        firstPage: 'Already at the end page',
+        lastChapter: 'It\'s the last chapter',
+        firstChapter: 'It\'s the first chapter',
+    },
     404: 'The file you requested does not exist',
 }
 

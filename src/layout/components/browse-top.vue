@@ -3,9 +3,6 @@
       :default-active="activeIndex"
       class="browse-top"
       mode="horizontal"
-      background-color="#545c64"
-      text-color="#fff"
-      active-text-color="#ffd04b"
       @select="handleSelect"
       popper-effect="light"
   >

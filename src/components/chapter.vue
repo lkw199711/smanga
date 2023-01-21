@@ -78,7 +78,7 @@ export default defineComponent({
   position: absolute;
   top: 0;
   left: 0;
-  color: @button-back;
+  color: @s-bookmark;
   font-size: 2rem;
 }
 

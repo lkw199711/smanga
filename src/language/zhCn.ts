@@ -197,5 +197,11 @@ export default {
         single: '单页模式',
         double: '双页模式',
     },
+    page: {
+        lastPage: '已经位于首页',
+        firstPage: '已经位于尾页',
+        lastChapter: '已经到了最后一章',
+        firstChapter: '已经位于第一章',
+    },
     404: '404，您请求的文件不存在!',
 }

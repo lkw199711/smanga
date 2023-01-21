@@ -6,6 +6,13 @@
   "description": "漫画流媒体库",
   "glyphs": [
     {
+      "icon_id": "26257242",
+      "name": "语言",
+      "font_class": "yuyan",
+      "unicode": "e618",
+      "unicode_decimal": 58904
+    },
+    {
       "icon_id": "3727371",
       "name": "目录",
       "font_class": "mulu",

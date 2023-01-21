@@ -10,7 +10,8 @@ import bookmark from "../components/bookmark.vue";
 import {get_chapter_images} from "@/api/browse";
 import browsePager from "@/components/browse-pager.vue";
 import rightSidebar from "../components/right-sidebar.vue";
-
+import i18n from '@/i18n';
+const {t} = i18n.global;
 export default defineComponent({
     name: 'single',
 
@@ -147,7 +148,7 @@ export default defineComponent({
         async before() {
 
             if (this.index == 0) {
-                ElMessage.warning('已经到了第一章');
+                ElMessage.warning(t('page.firstChapter'));
                 return false;
             }
 
@@ -178,7 +179,7 @@ export default defineComponent({
          * */
         async next() {
             if (this.index == this.chapterList.length - 1) {
-                ElMessage.warning('已经到了最后一章');
+                ElMessage.warning(t('page.lastChapter'));
                 return false;
             }
 

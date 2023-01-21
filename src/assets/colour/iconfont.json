@@ -6,6 +6,13 @@
   "description": "漫画流媒体管理-彩色图标",
   "glyphs": [
     {
+      "icon_id": "12296962",
+      "name": "语言切换",
+      "font_class": "yuyanqiehuan",
+      "unicode": "e616",
+      "unicode_decimal": 58902
+    },
+    {
       "icon_id": "3727371",
       "name": "目录",
       "font_class": "mulu",

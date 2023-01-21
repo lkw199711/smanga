@@ -23,7 +23,8 @@
 import {defineComponent} from 'vue'
 import {config} from "@/store";
 import {ElMessage} from "element-plus";
-
+import i18n from '@/i18n';
+const {t} = i18n.global;
 export default defineComponent({
   name: 'browse-pager',
   // 数据
@@ -131,7 +132,7 @@ export default defineComponent({
       if (this.page > 1) {
         this.page_change(--this.page);
       } else {
-        ElMessage.warning('已近位于首页');
+        ElMessage.warning(t('page.firstPage'));
       }
     },
 
@@ -139,10 +140,12 @@ export default defineComponent({
      * 下一页
      */
     next() {
+      console.log(this.count);
+      console.log(this.page);
       if (this.page < this.count / this.pageSize) {
         this.page_change(++this.page);
       } else {
-        ElMessage.warning('已近位于尾页');
+        ElMessage.warning(t('page.lastPage'));
       }
     },
     direction_key(event: any) {

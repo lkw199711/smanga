@@ -73,7 +73,7 @@ export default defineComponent({
   z-index: 1;
 
   i {
-    color: @button-back;
+    color: @s-bookmark;
     font-size: 10rem;
   }
 }

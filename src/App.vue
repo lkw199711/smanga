@@ -20,6 +20,7 @@ import {ElConfigProvider} from 'element-plus'
 import languages from "@/store/language";
 import {computed, onMounted} from "vue";
 import {useI18n} from "vue-i18n";
+import {set_theme} from "@/style/theme";
 
 const {locale} = useI18n();
 
@@ -43,10 +44,18 @@ set_bookmark();
 
 // 生命周期
 onMounted(() => {
+  // 设置语言
   const language = localStorage.getItem('language');
   if (language) {
     config.language = language;
     locale.value = language;
+  }
+
+  // 设置主题
+  const theme = localStorage.getItem('theme');
+  if (theme) {
+    config.theme = theme;
+    set_theme(theme);
   }
 })
 

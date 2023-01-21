@@ -2,9 +2,6 @@
   <div class="sidebar-pc">
     <el-menu
         router
-        active-text-color="#ffd04b"
-        background-color="#545c64"
-        text-color="#fff"
         default-active="/"
         :class="['sidebar','sidebar-pc',{close:config.sidebarCollapse}]"
         :collapse="config.sidebarCollapse"
@@ -38,9 +35,6 @@
       <el-menu
           router
           class="sidebar sidebar-phone"
-          active-text-color="#ffd04b"
-          background-color="#545c64"
-          text-color="#fff"
           default-active="/"
       >
         <!--<logo/>-->
