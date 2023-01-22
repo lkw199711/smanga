@@ -11,9 +11,19 @@ function print_error($name){
 	ini_set('display_errors', '1');
 
 	#将出错信息输出到一个文本文件
-	ini_set('error_log','/app/php/logs/'.$name.'_error.txt');
+	ini_set('error_log','I:/0web/sunlight/php/log/'.$name.'_error.txt');
 
 	return true;
+}
+
+/**
+ * 输出request 并结束运行
+ * @param  [type] $request [description]
+ * @return [type]          [description]
+ */
+function exit_request($request){
+    echo json_encode($request);
+    exit;
 }
 
 /**
@@ -22,17 +32,17 @@ function print_error($name){
  * @return [num]          [description]
  * 获取一个sql值
  */
-function get_sql_value($sqlComm){
-	#执行sql
-	$sql = mysql_query($sqlComm);
-	$num = mysql_num_rows($sql);
+function get_sql_value($link,$sqlComm){
+    #执行sql
+    $sql = mysqli_query($link,$sqlComm);
+    $num = mysqli_num_rows($sql);
 
-	#如果找不到数据则返回错误信息
-	if($num===0) return false;
-	#返回数据
-	while ($row = mysql_fetch_array($sql,MYSQL_ASSOC)){
-		 return $row;
-	}
+    #如果找不到数据则返回错误信息
+    if($num===0) return false;
+    #返回数据
+    while ($row = mysqli_fetch_array($sql,MYSQLI_ASSOC)){
+         return $row;
+    }
 }
 
 /**
@@ -42,7 +52,7 @@ function get_sql_value($sqlComm){
  * @return string
  */
 function send_post($post_data, $url) {
-
+ 
     $postdata = http_build_query($post_data);
     $options = array(
         'http' => array(
@@ -54,7 +64,7 @@ function send_post($post_data, $url) {
     );
     $context = stream_context_create($options);
     $result = file_get_contents($url, false, $context);
-
+ 
     return $result;
 }
 
@@ -154,7 +164,7 @@ function assoc_unique($arr, $key) {
 
     }
 
-    sort($arr);
+    sort($arr); 
 
     return $arr;
 

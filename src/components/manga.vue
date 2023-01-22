@@ -47,11 +47,15 @@ export default {
       const mangaId = this.mangaInfo.mangaId;
       const mangaCover = this.mangaInfo.mangaCover;
       const browseType = this.mangaInfo.browseType;
+      const removeFirst = this.mangaInfo.removeFirst;
+      const direction = this.mangaInfo.direction;
 
       // 缓存漫画信息
       global_set('mangaId', mangaId);
       global_set('mangaName', this.title);
       global_set('mangaCover', mangaCover);
+      global_set('removeFirst', removeFirst);
+      global_set('direction', direction);
 
       this.$router.push({
         name: 'chapter-list',

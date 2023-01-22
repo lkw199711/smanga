@@ -34,6 +34,8 @@ export const globalData: GlobalData = reactive({
     page: 0,
     doublePage: 0,
     pageImage: '',
+    removeFirst: '0',
+    direction: '0',
 });
 
 export const config = reactive({

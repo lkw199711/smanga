@@ -14,6 +14,7 @@ import {ElMessage, ElMessageBox} from 'element-plus'
 import tablePager from "@/components/table-pager.vue";
 import {scan_path} from "@/api/path";
 import i18n from '@/i18n';
+
 const {t} = i18n.global;
 
 export default defineComponent({
@@ -42,6 +43,8 @@ export default defineComponent({
                 mediaPath: '',
                 defaultBrowse: '',
                 directoryFormat: '0',
+                removeFirst: '0',
+                direction: '1',
             } as any,
             formInit: {
                 mediaName: '',
@@ -49,7 +52,9 @@ export default defineComponent({
                 fileType: '0',
                 mediaPath: '',
                 defaultBrowse: 'flow',
-                directoryFormat: '0'
+                directoryFormat: '0',
+                removeFirst: '0',
+                direction: '1',
             },
             pathCache: '',
             pathArr: [] as any[],

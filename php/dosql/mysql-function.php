@@ -35,7 +35,7 @@ cond json类型 包含二级条件 根据操作类型不同而不同
 	目前仅有 在sql中执行的 now()函数
  */
 #声明关键字数组
-$sqlKeyword = array('now()','max(createTime) as nearTime');
+$sqlKeyword = array('/now\(\)/i','/max\(.*\) as nearTime/i');
 
 function dosql($params){
 	#输出所有错误信息
@@ -44,10 +44,6 @@ function dosql($params){
 
 	#将出错信息输出到一个文本文件
 	ini_set('error_log', dirname(__FILE__) . '/mysql_error.txt');
-
-	#设置跨域
-	header('Access-Control-Allow-Origin:*');
-	header("content-type:text/html;charset=UTF-8");
 
 	#设置默认值
 	$ip = @getValue($params['ip'],'localhost');
@@ -113,6 +109,10 @@ function dosql($params){
 			$value = getNum($name,$table,$cond);
 			break;
 
+		case 'getcount':
+			$value = getcount($table,$cond);
+			break;
+
 		default:
 			# code...
 			break;
@@ -146,7 +146,7 @@ function select($name,$table,$cond){
 	$num = mysql_num_rows($sql);
 
 	#如果找不到数据则返回错误信息
-	if($num===0) return 0;
+	if($num===0) return array();
 	#讲数据打包成数组
 	while ($row = mysql_fetch_array($sql,MYSQL_ASSOC)){
 		 array_push($value,$row);
@@ -224,6 +224,23 @@ function search($name,$table,$cond){
 	// $value['num'] = $num;
 
 	return $value;
+}
+
+#获取记录数量
+function getcount($table,$cond){
+	#初始化所需变量
+	$value = array();
+	#附加条件
+	$limit = limit($cond);
+	$where = where($cond);
+	$group = group($cond);
+
+	$sqlComm = "select count(*) as count from $table $where $group;";
+	$sql = mysql_query($sqlComm);
+
+	while ($row = mysql_fetch_array($sql,MYSQL_ASSOC)){
+		 return $row['count'];
+	}
 }
 
 #获取记录数量
@@ -328,7 +345,7 @@ function is_keyword($str){
 	global $sqlKeyword;
 
 	for ($i=0,$length=count($sqlKeyword); $i < $length; $i++) { 
-		if($str===$sqlKeyword[$i]) return true;
+		if(preg_match($sqlKeyword[$i],$str)) return true;
 	}
 
 	return false;

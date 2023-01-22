@@ -47,19 +47,34 @@ export default {
         formWarning: '用户名长3-20位,以字母开头',
         before: '上一章',
         next: '下一章',
+        note:{
+            name:'"用户名": 长3-20位,以字母开头',
+            pass:'"密码": 留空为不修改',
+        },
     },
     mediaManage: {
         add: '新增媒体库',
+        modify: '修改媒体库',
         id: '媒体库id',
         name: '媒体库名称',
         createTime: '创建时间',
         path: '路径',
         form: {
             name: '媒体库名称:',
-            type: '媒体库类型',
-            file: '文件类型',
-            browse: '默认浏览方式',
-            directory: '文件夹结构'
+            type: '媒体库类型:',
+            file: '文件类型:',
+            browse: '默认浏览方式:',
+            directory: '文件夹结构:',
+            removeFirst: '剔除首页:',
+            direction: '翻页方向:',
+        },
+        note: {
+            name: '"媒体库名称": 必填,不能为空',
+            type: '"媒体库类型": 会影响smanga对媒体库路径的扫描方式.目前分为普通漫画与单本漫画,单本漫画对于普通漫画会少一个"章节"的目录层级.',
+            browse: '"默认浏览方式": 选择此媒体库里漫画的默认浏览方式.您还可以通过浏览界面的顶部功能菜单调整,但我们还是建议将不同类型的漫画放在不同的媒体库,以便于进行管理.',
+            directory: '"文件夹结构": 此选项支持为路径多加一层目录,例如您希望通过年份来管理漫画 "example/2022/manga/chapter/..."',
+            removeFirst: '"剔除首页": 在"双页模式"下,通过在阅读中暂时剔除首页,可对其偶数页码,使漫画左右两页合成一张整图,请熟悉漫画页码后更改此项.您也可以在浏览界面通过功能菜单来临时更改此项.',
+            direction: '"翻页方向": 在"双页模式"下,更改第一与第二张图的展示顺序,使得漫画左右两页合成一张整图.您也可以在浏览界面通过功能菜单来临时更改此项.',
         },
         place: {
             name: '请输入媒体库名称',
@@ -73,12 +88,17 @@ export default {
             browse1: '单页',
             browse2: '双页',
             directory0: '漫画 -> 章节(或压缩包) -> 图片',
-            directory1: '目录 -> 漫画 -> 章节(或压缩包) -> 图片'
+            directory1: '目录 -> 漫画 -> 章节(或压缩包) -> 图片',
+            ltr: '左到右',
+            rtl: '右到左',
         },
         confirm: {
             title: '确认删除',
             text: '确认删除此媒体库?',
-        }
+        },
+        title:{
+            read:'阅读选项',
+        },
     },
     path: {
         id: '路径id',
@@ -138,7 +158,8 @@ export default {
         warning: {
             name: '漫画名不能为空!',
             path: '漫画路径不能为空!'
-        }
+        },
+
     },
     chapterManage: {
         id: '章节id',
@@ -198,6 +219,8 @@ export default {
         double: '双页模式',
     },
     page: {
+        before: '上一章',
+        next: '下一章',
         lastPage: '已经位于首页',
         firstPage: '已经位于尾页',
         lastChapter: '已经到了最后一章',

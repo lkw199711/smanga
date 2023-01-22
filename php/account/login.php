@@ -1,7 +1,7 @@
 <?
 	require_once '../public/common.php';
 	require_once '../public/connect.php';
-	require_once '../dosql/mysql-function.php';
+	require_once '../dosql/mysql-1.0.php';
 	require_once '../public/lkw.php';
 
 	$userName = $_POST['userName'];
@@ -12,10 +12,10 @@
 	$code = 0;
 	$message = '';
 
-	$sqlComm = sprintf("SELECT userId,userName,nickName,passWord FROM user WHERE userName = '%s';",mysql_real_escape_string($userName));
+	$sqlComm = sprintf("SELECT userId,userName,nickName,passWord FROM user WHERE userName = '%s';",mysqli_real_escape_string($link,$userName));
 
 	#查找数据库中密码
-	$user = get_sql_value($sqlComm);
+	$user = get_sql_value($link,$sqlComm);
 	$userInfo = array();
 
 	if ($user) {
@@ -27,10 +27,8 @@
 			dosql(array(
 				'table'=>'login',
 				'type'=>'insert',
-				'cond'=>array(
-					'field'=>array('userId','userName','nickName','request','ip','loginTime'),
-					'value'=>array($user['userId'],$user['userName'],$user['nickName'],0,$ip,'now()'),
-				),
+				'field'=>array('userId','userName','nickName','request','ip','loginTime'),
+				'value'=>array($user['userId'],$user['userName'],$user['nickName'],0,$ip,'now()'),
 			));
 
 			$userInfo = array(
@@ -45,10 +43,8 @@
 			dosql(array(
 				'table'=>'login',
 				'type'=>'insert',
-				'cond'=>array(
-					'field'=>array('userId','userName','nickName','request','ip','loginTime'),
-					'value'=>array($user['userId'],$user['userName'],$user['nickName'],1,$ip,'now()'),
-				),
+				'field'=>array('userId','userName','nickName','request','ip','loginTime'),
+				'value'=>array($user['userId'],$user['userName'],$user['nickName'],1,$ip,'now()'),
 			));
 
 			$message = '密码错误';

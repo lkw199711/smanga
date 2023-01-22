@@ -26,9 +26,9 @@
 
     <!--分页按钮-->
     <div class="footer" v-show="browseFooter">
-      <el-button class="btn" type="warning" plain @click="before">{{ $t('option.before') }}</el-button>
+      <el-button class="btn" type="warning" plain @click="before">{{ $t('page.before') }}</el-button>
       <browse-pager ref="pager" @pageChange="page_change" @reloadPage="reload_page" :count="count" :set-page-size="2"/>
-      <el-button class="btn" type="success" plain @click="next">{{ $t('option.next') }}</el-button>
+      <el-button class="btn" type="success" plain @click="next">{{ $t('page.next') }}</el-button>
     </div>
   </div>
 </template>

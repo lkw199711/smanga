@@ -15,4 +15,6 @@ export interface GlobalData {
     page: number,
     doublePage: number,
     pageImage: string,
+    direction: string,
+    removeFirst: string,
 }

@@ -62,36 +62,61 @@
           <el-form-item :label="$t('mediaManage.form.name')">
             <el-input v-model="form.mediaName" :placeholder="$t('mediaManage.place.name')"></el-input>
           </el-form-item>
+          <p class="note">{{ $t('mediaManage.note.name') }}</p>
 
           <el-form-item :label="$t('mediaManage.form.type')">
-            <el-select v-model="form.mediaType" placeholder="">
+            <el-select v-model="form.mediaType">
               <el-option :label="$t('mediaManage.select.mediaType0')" value="0"/>
               <el-option :label="$t('mediaManage.select.mediaType1')" value="1"/>
             </el-select>
           </el-form-item>
 
-          <el-form-item :label="$t('mediaManage.form.file')">
-            <el-select v-model="form.fileType" placeholder="">
-              <el-option :label="$t('mediaManage.select.fileType0')" value="0"/>
-              <el-option label="zip" value="1"/>
-              <el-option label="pdf" value="2"/>
-            </el-select>
-          </el-form-item>
+          <!--<el-form-item :label="$t('mediaManage.form.file')">-->
+          <!--  <el-select v-model="form.fileType">-->
+          <!--    <el-option :label="$t('mediaManage.select.fileType0')" value="0"/>-->
+          <!--    <el-option label="zip" value="1"/>-->
+          <!--    <el-option label="pdf" value="2"/>-->
+          <!--  </el-select>-->
+          <!--</el-form-item>-->
+          <!--<el-space fill class="note">-->
+          <!--  <el-alert :closable="false">-->
+          <!--    <p class="note-text">{{$t('mangaManage.note.type')}}</p>-->
+          <!--  </el-alert>-->
+          <!--</el-space>-->
+
+          <p class="note">{{ $t('mediaManage.note.type') }}</p>
 
           <el-form-item :label="$t('mediaManage.form.browse')">
-            <el-select v-model="form.defaultBrowse" placeholder="">
+            <el-select v-model="form.defaultBrowse">
               <el-option :label="$t('mediaManage.select.browse0')" value="flow"/>
               <el-option :label="$t('mediaManage.select.browse1')" value="single"/>
               <el-option :label="$t('mediaManage.select.browse2')" value="double"/>
             </el-select>
           </el-form-item>
+          <p class="note">{{ $t('mediaManage.note.browse') }}</p>
 
           <el-form-item :label="$t('mediaManage.form.directory')">
-            <el-select v-model="form.directoryFormat" placeholder="">
+            <el-select v-model="form.directoryFormat" class="r30">
               <el-option :label="$t('mediaManage.select.directory0')" value="0"/>
               <el-option :label="$t('mediaManage.select.directory1')" value="1"/>
             </el-select>
           </el-form-item>
+          <p class="note">{{ $t('mediaManage.note.directory') }}</p>
+
+          <!--阅读字段-->
+          <p class="s-form-title">{{ $t('mediaManage.title.read') }}</p>
+          <el-form-item :label="$t('mediaManage.form.removeFirst')">
+            <el-switch v-model="form.removeFirst" active-value="1" inactive-value="0"/>
+          </el-form-item>
+          <p class="note">{{ $t('mediaManage.note.removeFirst') }}</p>
+
+          <el-form-item :label="$t('mediaManage.form.direction')">
+            <el-radio-group v-model="form.direction" class="ml-4">
+              <el-radio label="0" size="large">{{ $t('mediaManage.select.ltr') }}</el-radio>
+              <el-radio label="1" size="large">{{ $t('mediaManage.select.rtl') }}</el-radio>
+            </el-radio-group>
+          </el-form-item>
+          <p class="note">{{ $t('mediaManage.note.direction') }}</p>
         </el-form>
 
         <template v-slot:footer>
@@ -110,36 +135,47 @@
           <el-form-item :label="$t('mediaManage.form.name')">
             <el-input v-model="form.mediaName" :placeholder="$t('mediaManage.place.name')"></el-input>
           </el-form-item>
+          <p class="note">{{ $t('mediaManage.note.name') }}</p>
 
           <el-form-item :label="$t('mediaManage.form.type')">
-            <el-select v-model="form.mediaType" placeholder="">
+            <el-select v-model="form.mediaType">
               <el-option :label="$t('mediaManage.select.mediaType0')" value="0"/>
               <el-option :label="$t('mediaManage.select.mediaType1')" value="1"/>
             </el-select>
           </el-form-item>
-
-          <el-form-item :label="$t('mediaManage.form.file')">
-            <el-select v-model="form.fileType" placeholder="">
-              <el-option :label="$t('mediaManage.select.fileType0')" value="0"/>
-              <el-option label="zip" value="1"/>
-              <el-option label="pdf" value="2"/>
-            </el-select>
-          </el-form-item>
+          <p class="note">{{ $t('mediaManage.note.type') }}</p>
 
           <el-form-item :label="$t('mediaManage.form.browse')">
-            <el-select v-model="form.defaultBrowse" placeholder="">
+            <el-select v-model="form.defaultBrowse">
               <el-option :label="$t('mediaManage.select.browse0')" value="flow"/>
               <el-option :label="$t('mediaManage.select.browse1')" value="single"/>
               <el-option :label="$t('mediaManage.select.browse2')" value="double"/>
             </el-select>
           </el-form-item>
+          <p class="note">{{ $t('mediaManage.note.browse') }}</p>
 
           <el-form-item :label="$t('mediaManage.form.directory')">
-            <el-select v-model="form.directoryFormat" placeholder="">
+            <el-select v-model="form.directoryFormat" class="r30">
               <el-option :label="$t('mediaManage.select.directory0')" value="0"/>
               <el-option :label="$t('mediaManage.select.directory1')" value="1"/>
             </el-select>
           </el-form-item>
+          <p class="note">{{ $t('mediaManage.note.directory') }}</p>
+
+          <!--阅读字段-->
+          <p class="s-form-title">{{ $t('mediaManage.title.read') }}</p>
+          <el-form-item :label="$t('mediaManage.form.removeFirst')">
+            <el-switch v-model="form.removeFirst" active-value="1" inactive-value="0"/>
+          </el-form-item>
+          <p class="note">{{ $t('mediaManage.note.removeFirst') }}</p>
+
+          <el-form-item :label="$t('mediaManage.form.direction')">
+            <el-radio-group v-model="form.direction" class="ml-4">
+              <el-radio label="0" size="large">{{ $t('mediaManage.select.ltr') }}</el-radio>
+              <el-radio label="1" size="large">{{ $t('mediaManage.select.rtl') }}</el-radio>
+            </el-radio-group>
+          </el-form-item>
+          <p class="note">{{ $t('mediaManage.note.direction') }}</p>
         </el-form>
         <template v-slot:footer>
           <div class="dialog-footer">
@@ -188,7 +224,7 @@
           <div class="dialog-footer">
             <!--按钮盒子-->
             <div class="btn-box">
-              <el-button type="primary" @click="addPathDialog=false">{{ $t('option.delete') }}</el-button>
+              <el-button type="primary" @click="addPathDialog=false">{{ $t('option.confirm') }}</el-button>
               <el-button type="warning" @click="addPathDialog=false">{{ $t('option.cancel') }}</el-button>
             </div>
           </div>

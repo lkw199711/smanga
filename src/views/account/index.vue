@@ -54,10 +54,12 @@
         <el-form-item :label="$t('account.nameLabel')">
           <el-input v-model="form.userName" :placeholder="$t('account.namePlace')"></el-input>
         </el-form-item>
+        <p class="note">{{$t('account.note.name')}}</p>
 
         <el-form-item :label="$t('account.passLabel')">
           <el-input v-model="form.passWord" :placeholder="$t('account.passPlace')"></el-input>
         </el-form-item>
+        <p class="note">{{$t('account.note.pass')}}</p>
       </el-form>
 
       <template v-slot:footer>
@@ -76,10 +78,12 @@
         <el-form-item :label="$t('account.nameLabel')">
           <el-input v-model="form.userName" :placeholder="$t('account.namePlace')"></el-input>
         </el-form-item>
+        <p class="note">{{$t('account.note.name')}}</p>
 
         <el-form-item :label="$t('account.passLabel')">
           <el-input v-model="form.passWord" :placeholder="$t('account.passModifyPlace')"></el-input>
         </el-form-item>
+        <p class="note">{{$t('account.note.pass')}}</p>
       </el-form>
 
       <template v-slot:footer>

@@ -1,18 +1,16 @@
 <?
 	require_once '../public/common.php';
 	require_once '../public/lkw.php';
-	require_once '../dosql/mysql-function.php';
+	require_once '../dosql/mysql-1.0.php';
 
 	// 用户id
-	$userId = $_POST['userId'];
+	$userId = $_POST['targetUserId'];
 
 	# 执行删除
 	$sqlRes=dosql(array(
 		'table'=>'user',
 		'type'=>'delete',
-		'cond'=>array(
-			'like'=>'userId='.$userId,
-		)
+		'where'=>'userId='.$userId,
 		
 	),$dosqlUrl);
 

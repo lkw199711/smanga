@@ -2,9 +2,9 @@
 	require_once '../public/common.php';
 	require_once '../public/connect.php';
 	require_once '../public/lkw.php';
-	require_once '../dosql/mysql-function.php';
+	require_once '../dosql/mysql-1.0.php';
 
-	$userId = $_POST['userId'];
+	$userId = $_POST['targetUserId'];
 	$userName = $_POST['userName'];
 	$passWord = $_POST['passWord'];
 	$passMd5 = md5($passWord);
@@ -14,21 +14,17 @@
 		$sqlRes=dosql(array(
 			'table'=>'user',
 			'type'=>'update',
-			'cond'=>array(
-				'like'=>'userId='.$userId,
-				'field'=>array('userName','passWord','updateTime'),
-				'value'=>array($userName,$passMd5,'now()')
-			)
+			'where'=>'userId='.$userId,
+			'field'=>array('userName','passWord','updateTime'),
+			'value'=>array($userName,$passMd5,'now()')
 		));
 	} else {
 		$sqlRes=dosql(array(
 			'table'=>'user',
 			'type'=>'update',
-			'cond'=>array(
-				'like'=>'userId='.$userId,
-				'field'=>array('userName','updateTime'),
-				'value'=>array($userName,'now()')
-			)
+			'where'=>'userId='.$userId,
+			'field'=>array('userName','updateTime'),
+			'value'=>array($userName,'now()')
 		));
 	}
 

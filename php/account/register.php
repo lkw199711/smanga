@@ -1,7 +1,7 @@
 <?
 	require_once '../public/common.php';
 	require_once '../public/lkw.php';
-	require_once '../dosql/mysql-function.php';
+	require_once '../dosql/mysql-1.0.php';
 
 	// 获取post参数
 	$userName = $_POST['userName'];
@@ -12,10 +12,8 @@
 	$sqlRes=dosql(array(
 		'table'=>'user',
 		'type'=>'insert',
-		'cond'=>array(
-			'field'=>array('userName','passWord','registerTime'),
-			'value'=>array($userName,$passMd5,'now()')
-		)
+		'field'=>array('userName','passWord','registerTime','updateTime'),
+		'value'=>array($userName,$passMd5,'now()','now()')
 	),$dosqlUrl);
 
 	$request = array(

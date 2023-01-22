@@ -4,6 +4,7 @@ import {ElMessage, ElMessageBox} from 'element-plus'
 import {get_manga, update_manga, delete_manga} from "@/api/manga";
 import tablePager from "@/components/table-pager.vue";
 import i18n from '@/i18n';
+
 const {t} = i18n.global;
 export default defineComponent({
     name: 'index',
@@ -25,6 +26,8 @@ export default defineComponent({
                 mangaPath: '',
                 mangaCover: '',
                 browseType: '',
+                removeFirst: '',
+                direction: '0',
             },
             formInit: {
                 mangaId: '',
@@ -32,6 +35,8 @@ export default defineComponent({
                 mangaPath: '',
                 mangaCover: '',
                 browseType: 'flow',
+                removeFirst: '0',
+                direction: '1',
             },
         }
     },

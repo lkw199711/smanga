@@ -1,21 +1,22 @@
 <?
 	require_once '../public/common.php';
 	require_once '../public/lkw.php';
-	require_once '../dosql/mysql-function.php';
+	require_once '../dosql/mysql-1.0.php';
 
 	$mediaName = $_POST['mediaName'];
 	$mediaType = $_POST['mediaType'];
 	$directoryFormat = $_POST['directoryFormat'];
 	$fileType = $_POST['fileType'];
+	$defaultBrowse = $_POST['defaultBrowse'];
+	$removeFirst = $_POST['removeFirst'];
+	$direction = $_POST['direction'];
 
 	#执行注册
 	$sqlRes=dosql(array(
 		'table'=>'media',
 		'type'=>'insert',
-		'cond'=>array(
-			'field'=>array('mediaName','mediaType','directoryFormat','fileType','createtime'),
-			'value'=>array($mediaName,$mediaType,$directoryFormat,$fileType,'now()')
-		)
+		'field'=>array('mediaName','mediaType','directoryFormat','fileType','defaultBrowse','removeFirst','direction','createtime','updateTime'),
+		'value'=>array($mediaName,$mediaType,$directoryFormat,$fileType,$defaultBrowse,$removeFirst,$direction,'now()','now()')
 	));
 
 	$request = array(

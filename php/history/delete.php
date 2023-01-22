@@ -1,7 +1,7 @@
 <?
 	require_once '../public/common.php';
 	require_once '../public/lkw.php';
-	require_once '../dosql/mysql-function.php';
+	require_once '../dosql/mysql-1.0.php';
 
 	$historyId = $_POST['historyId'];
 
@@ -9,9 +9,7 @@
 	$sqlRes=dosql(array(
 		'table'=>'history',
 		'type'=>'delete',
-		'cond'=>array(
-			'like'=>'historyId='.$historyId,
-		)
+		'where'=>'historyId='.$historyId,
 		
 	));
 

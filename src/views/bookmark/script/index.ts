@@ -44,6 +44,8 @@ export default defineComponent({
             const mangaId = item.mangaId;
             const mangaCover = item.mangaCover;
             const browseType = item.browseType;
+            const removeFirst = item.removeFirst;
+            const direction = item.direction;
             let page = Number(item.page);
 
             if (browseType === 'double') {
@@ -63,6 +65,8 @@ export default defineComponent({
             global_set('browseType', browseType);
             global_set('chapterCover', chapterCover);
             global_set_json('chapterList', chapterList);
+            global_set('removeFirst', removeFirst);
+            global_set('direction', direction);
 
             // 不存储历史记录
             await this.$router.push({

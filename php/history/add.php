@@ -1,7 +1,7 @@
 <?
 	require_once '../public/common.php';
 	require_once '../public/lkw.php';
-	require_once '../dosql/mysql-function.php';
+	require_once '../dosql/mysql-1.0.php';
 
 	$userId = $_POST['userId'];
 	$mediaId = $_POST['mediaId'];
@@ -10,7 +10,6 @@
 	$chapterId = $_POST['chapterId'];
 	$chapterName = $_POST['chapterName'];
 	$chapterPath = $_POST['chapterPath'];
-	$chapterCover = $_POST['chapterCover'];
 
 	if (!$userId) exit;
 
@@ -18,10 +17,8 @@
 	$sqlRes=dosql(array(
 		'table'=>'history',
 		'type'=>'insert',
-		'cond'=>array(
-			'field'=>array('userId','mediaId','mangaId','mangaName','chapterId','chapterName','chapterPath','chapterCover','createTime'),
-			'value'=>array($userId,$mediaId,$mangaId,$mangaName,$chapterId,$chapterName,$chapterPath,$chapterCover,'now()')
-		),
+		'field'=>array('userId','mediaId','mangaId','chapterId','createTime'),
+		'value'=>array($userId,$mediaId,$mangaId,$chapterId,'now()')
 	));
 
 	$request = array(

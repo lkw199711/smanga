@@ -47,6 +47,10 @@ export default {
         confirmBoxTitle: 'confirm deletion',
         confirmBoxText: 'are you sure to delete this user?',
         formWarning: 'The user name is 3-20 characters long and starts with a letter',
+        note:{
+            name:'"userName": 3-20 digits long, beginning with a letter',
+            pass:'"passWord": Leave blank to not modify',
+        },
     },
     mediaManage: {
         add: 'addMedia',
@@ -57,10 +61,20 @@ export default {
         path: 'path',
         form: {
             name: 'mediaName:',
-            type: 'mediaType',
-            file: 'fileType',
-            browse: 'defaultBrowse',
-            directory: 'directoryType'
+            type: 'mediaType:',
+            file: 'fileType:',
+            browse: 'defaultBrowse:',
+            directory: 'directoryType:',
+            removeFirst: 'removeFirst:',
+            direction: 'direction:',
+        },
+        note: {
+            name: '"mediaName": Required, cannot be blank',
+            type: '"mediaType": It will affect the way that smanga scans the path of the media library. Currently, it is divided into ordinary comics and single comics. A single comics will have one less "chapter" directory level for ordinary comics',
+            browse: '"defaultBrowse": Select the default browsing method of comics in this media library. You can also adjust it through the top function menu of the browsing interface, but we still recommend that different types of comics be placed in different media libraries for easy management',
+            directory:'"directoryType": This option supports adding one more level of directory to the path. For example, you want to manage comics by year "example/2022/manga/chapter/..."',
+            removeFirst: '"removeFirst": In the "double page mode", by temporarily removing the first page in reading, you can combine the left and right pages of the cartoon into a whole picture by removing the even number of page numbers. Please change this item after getting familiar with the page numbers of the cartoon. You can also change this item temporarily through the function menu in the browsing interface.',
+            direction: '"direction": In the "double page mode", change the display order of the first and second pictures so that the left and right pages of the cartoon can be combined into a whole picture. You can also change this item temporarily through the function menu in the browsing interface.',
         },
         place: {
             name: 'please enter mediaName',
@@ -74,12 +88,17 @@ export default {
             browse1: 'single',
             browse2: 'double',
             directory0: 'manga->chapter(or zip)->images',
-            directory1: 'directory->manga->chapter(or zip)->images'
+            directory1: 'directory->manga->chapter(or zip)->images',
+            ltr: 'left to right',
+            rtl: 'right to left',
         },
         confirm: {
             title: 'confirm deletion',
             text: 'are you sure to delete this media?',
-        }
+        },
+        title:{
+            read:'read option',
+        },
     },
     path: {
         id: 'pathId',
@@ -199,6 +218,8 @@ export default {
         double: 'double',
     },
     page: {
+        before: 'beforeChapter',
+        next: 'nextChapter',
         lastPage: 'Already on the first page',
         firstPage: 'Already at the end page',
         lastChapter: 'It\'s the last chapter',

@@ -2,8 +2,7 @@
 	require_once '../public/common.php';
 	require_once '../public/connect.php';
 	require_once '../public/lkw.php';
-	require_once '../dosql/mysql-function.php';
-	require_once './scan.php';
+	require_once '../dosql/mysql-1.0.php';
 	
 	$path = $_POST['path'];
 	$pathId = $_POST['pathId'];
@@ -13,18 +12,14 @@
 	$mangaSqlRes = dosql(array(
 		'table'=>'manga',
 		'type'=>'delete',
-		'cond'=>array(
-			'like'=>'pathId='.$pathId,
-		)
+		'where'=>'pathId='.$pathId,
 	));
 
 	// 删除相关章节
 	$chapterSqlRes = dosql(array(
 		'table'=>'chapter',
 		'type'=>'delete',
-		'cond'=>array(
-			'like'=>'pathId='.$pathId,
-		)
+		'where'=>'pathId='.$pathId,
 	));
 
 	$request = array(
@@ -32,7 +27,7 @@
 		'message'=>'重新扫描成功',
 	);
 
-	scan_path($path,$pathId,$mediaId);
+	scan_path_exec($path,$pathId,$mediaId);
 
 	echo json_encode($request);
 ?>

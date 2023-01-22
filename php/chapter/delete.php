@@ -1,17 +1,32 @@
 <?
 	require_once '../public/common.php';
 	require_once '../public/lkw.php';
-	require_once '../dosql/mysql-function.php';
+	require_once '../dosql/mysql-1.0.php';
 
 	$chapterId = $_POST['chapterId'];
+	$deleteFile = $_POST['deleteFile'];
+
+	// 查询漫画信息
+	$chapterPathRes = dosql([
+		'table'=>'chapter',
+		'where'=>'chapterId='.$chapterId,
+	]);
+
+	if (!count($chapterPathRes)) {
+		exit_request(['code'=>2,'message'=>'无此章节!']);
+	}
+
+	// 删除文件
+	if ($deleteFile) {
+		$chapterPath = $chapterPathRes[0]['chapterPath'];
+		shell_exec("rm -rf \"$chapterPath\"");
+	}
 
 	#执行注册
 	$sqlRes=dosql(array(
 		'table'=>'chapter',
 		'type'=>'delete',
-		'cond'=>array(
-			'like'=>'chapterId='.$chapterId,
-		)
+		'where'=>'chapterId='.$chapterId,
 		
 	));
 

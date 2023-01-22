@@ -4,7 +4,7 @@ process.env.VUE_APP_VERSION = require('./package.json').version;
 
 const pxtorem = require('postcss-pxtorem');
 // 网络路径
-const network = 'http://192.168.2.112';
+const network = 'http://192.168.2.8';
 // 本地路径
 const localhost = 'http://127.0.0.1';
 

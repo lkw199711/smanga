@@ -11,6 +11,7 @@ import {get_chapter_images} from "@/api/browse";
 import browsePager from "@/components/browse-pager.vue";
 import RightSidebar from "@/views/browse-view/components/right-sidebar.vue";
 import i18n from '@/i18n';
+
 const {t} = i18n.global;
 export default defineComponent({
     name: 'double',
@@ -267,13 +268,21 @@ export default defineComponent({
 
     // 生命周期
     created() {
+
+    },
+    async mounted() {
         // 设置浏览模式
         config.browseType = 'double';
         const page = this.$route.params.page || global_get('page') || 1;
         const notAddHistory = this.$route.params.notAddHistory || false;
         const target = Number(page);
 
-        this.reload_page(target, !notAddHistory);
+        await this.reload_page(target, !notAddHistory);
 
-    },
+        const removeFirst = global_get('removeFirst');
+        const direction = global_get('direction');
+
+        if (removeFirst) this.remove_poster();
+        if (!direction) this.switch_direction();
+    }
 })
