@@ -1,0 +1,24 @@
+#!/usr/bin/with-contenv bash
+
+mysql_init(){
+ps -ef | grep /usr/bin/mariadbd | grep -v grep
+if [ $? -ne 0 ]; then
+    sleep 1
+    mysql_init
+else
+    if [ ! -d /var/lib/mysql/smanga ]; then
+        mysql -e "grant all privileges on *.* to 'root'@'%' identified by '123456' with grant option; alter user 'root'@'%' IDENTIFIED BY '123456';"
+        mysql -e "grant all privileges on *.* to 'smanga'@'%' identified by 'smanga' with grant option;"
+        mysql -e "grant all privileges on *.* to 'smanga'@'localhost' identified by 'smanga' with grant option;"
+        mysql -e "flush privileges;"
+        mysql -e "select User, host from mysql.user;"
+        mysql -e "create database smanga;"
+        mysql -e "show databases;"
+        mysql -e "use smanga; source /default/smanga.sql;"
+    fi
+
+    tail -f /dev/null
+fi
+}
+
+mysql_init

@@ -1,0 +1,13 @@
+#!/usr/bin/with-contenv bash
+
+if [ ! -d /compress ]; then
+	mkdir /compress
+fi
+
+if [ ! -d /poster ]; then
+	mkdir /poster
+fi
+
+if [ ! -d /config ]; then
+	mkdir /config
+fi

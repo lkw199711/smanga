@@ -1,0 +1,10 @@
+#!/usr/bin/with-contenv bash
+
+groupmod -o -g "${PGID}" smanga
+usermod -o -u "${PUID}" smanga
+
+chown smanga:smanga -R /app /config
+
+chown smanga:smanga \
+    /compress \
+    /poster
