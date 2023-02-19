@@ -180,7 +180,7 @@ function get_manga_list($path){
 		$posterName = $targetPath;
 		// 是文件
 		if(!is_dir($targetPath)){
-			if (preg_match('/(.cbr|.cbz|.zip)/i',$file)) {
+			if (preg_match('/(.cbr|.cbz|.zip|.7z)/i',$file)) {
 				$type = 'zip';
 
 			}
@@ -193,7 +193,7 @@ function get_manga_list($path){
 				continue;
 			}
 
-			$posterName = preg_replace('/(.cbr|.cbz|.zip|.rar|.pdf)/i','',$posterName);
+			$posterName = preg_replace('/(.cbr|.cbz|.zip|.7z|.rar|.pdf)/i','',$posterName);
 		};
 
   		array_push($list,array(
@@ -224,7 +224,7 @@ function get_chapter_list($path){
 		$posterName = $targetPath;
 		// 是文件
 		if(!is_dir($targetPath)){
-			if (preg_match('/(.cbr|.cbz|.zip)/i',$file)) {
+			if (preg_match('/(.cbr|.cbz|.zip|.7z)/i',$file)) {
 				$type = 'zip';
 			}
 			elseif (preg_match('/.rar/i',$file)) {
@@ -236,7 +236,7 @@ function get_chapter_list($path){
 				continue;
 			}
 
-			$posterName = preg_replace('/(.cbr|.cbz|.zip|.rar|.pdf)/i','',$posterName);
+			$posterName = preg_replace('/(.cbr|.cbz|.zip|.7z|.rar|.pdf)/i','',$posterName);
 		}
 
   		array_push($list,array(
@@ -281,33 +281,30 @@ function file_exist_name($fileName,$fileList){
 	return $finalName;
 }
 
-function get_first_image($dir){
-	$files=array();//定义一个数组，做为返回值
-	if(is_dir($dir))//判断路径是否存在
-	{
-		if($handle=opendir($dir))//打开这个路径，并赋值给 handle 变量
-		{
-			while(($file=readdir($handle))!==false)//用 readdir 读取路径，并且绝对不能为 false
-			{
-				if($file!="." && $file!="..")//返回的目录名称，不能是.或..,表示还有下一层目录，递归
-				{
-					if(is_dir($dir."/".$file))//将得到新的目录名称，判断是否存在，
-					{
-						$img = get_first_image($dir."/".$file);//存在就将路径再传递给 my_scandir 函数，进行新一轮读取
-						if ($img) {return $img;}
-					}
-					else
-					{
-						if (is_img($file)) {
-							closedir($handle);//关闭路径
-							return $dir."/".$file;
-						}
-					}
-				}
-			}
-		closedir($handle);//关闭路径
+function get_file_list($path){
+	$list = array();
+	$dir = dir($path);
+
+	while (($file = $dir->read()) !== false){
+		if($file=='.'||$file=='..') continue;
+
+		$route = $path."/".$file;
+
+		// 添加图片
+		if(is_img($route)) {
+			array_push($list,$route);
+		}
+		// 遍历所有路径
+		if (is_dir($route)) {
+			$list = array_merge($list,get_file_list($route));
 		}
 	}
+
+	$dir->close();
+
+	sort($list,SORT_NATURAL | SORT_FLAG_CASE);
+
+	return $list;
 }
 
 function get_poster($path,$name){
@@ -321,7 +318,7 @@ function get_poster($path,$name){
 	if (is_file($png)) return $png;
 	if (is_file($JPG)) return $JPG;
 
-	return get_first_image($path);
+	return get_file_list($path)[0];
 }
 	
 ?>

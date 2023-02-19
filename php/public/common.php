@@ -7,6 +7,8 @@
 
 	#当前路径
 	$publicPath = dirname(__file__);
+	// 配置文件啊目录
+	$configPath = '/config';
 	// 转化缓存目录
 	$cacheBasePath = '/compress';
 	// 封面存放路径
@@ -22,6 +24,8 @@
 		$posterPath = '/mnt/hhd-2t/02poster';
 
 		$bookmarkPosterPath = '/mnt/hhd-2t/02poster/bookmark';
+
+		$configPath = '/mnt/hhd-2t/04config';
 	} else {
 		// 在docker环境
 		if (!is_dir($cacheBasePath)) mkdir($cacheBasePath,0755,true);

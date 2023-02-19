@@ -37,7 +37,22 @@ cond json类型 包含二级条件 根据操作类型不同而不同
 #声明关键字数组
 $sqlKeyword = array('/now\(\)/i','/max\(.*\) as nearTime/i');
 
+require_once '../public/common.php';
+require_once '../public/lkw.php';
+require_once '../public/ini.php';
+$configFile = "$configPath/sql.ini";
+
+#初始化变量
+$gIp = read_ini('config','ip',$configFile);
+$gUserName = read_ini('config','port',$configFile);
+$gPassWord = read_ini('config','userName',$configFile);
+$gDatabase = read_ini('config','passWord',$configFile);
+
 function dosql($params){
+	global $gIp;
+	global $gUserName;
+	global $gPassWord;
+	global $gDatabase;
 	#输出所有错误信息
 	error_reporting(E_ALL);
 	ini_set('display_errors', '1');

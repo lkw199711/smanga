@@ -19,16 +19,16 @@
       <div class="btn-box">
         <el-button class="login-btn" type="primary" @click="do_login">登录</el-button>
       </div>
-
     </div>
-
+    <database class="database"/>
   </div>
 </template>
 
 <script lang='ts'>
 import {defineComponent} from 'vue'
 import {login} from "@/api/account";
-import {Cookies} from "@/utils";
+import { Cookies } from "@/utils";
+import database from './components/database.vue';
 
 export default defineComponent({
   name: 'index',
@@ -49,7 +49,7 @@ export default defineComponent({
   computed: {},
 
   // 组件
-  components: {},
+  components: {database},
 
   // 方法
   methods: {

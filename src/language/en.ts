@@ -220,8 +220,8 @@ export default {
     page: {
         before: 'beforeChapter',
         next: 'nextChapter',
-        lastPage: 'Already on the first page',
-        firstPage: 'Already at the end page',
+        firstPage: 'Already on the first page',
+        lastPage: 'Already at the end page',
         lastChapter: 'It\'s the last chapter',
         firstChapter: 'It\'s the first chapter',
     },

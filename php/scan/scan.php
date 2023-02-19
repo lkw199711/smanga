@@ -146,7 +146,7 @@ function get_chapter_list($path){
 		if($file=='.'||$file=='..') continue;
 		// 是文件
 		if(!is_dir($path."/".$file)){
-			if (preg_match('/(.cbr|.cbz|.zip)/i',$file)) {
+			if (preg_match('/(.cbr|.cbz|.zip|.7z)/i',$file)) {
 				$type = 'zip';
 			}
 			elseif (preg_match('/.rar/i',$file)) {

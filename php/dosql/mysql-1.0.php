@@ -1,6 +1,9 @@
 <?php
 
 /*
+
+1.1 使用ini外置读取参数 支持外置数据库
+
 php-mysql对js接口 by 太阳
 
 传递post或get数据
@@ -35,7 +38,23 @@ keyword 搜索关键字 当type为search时 此参数必填
 #声明关键字数组
 $sqlKeyword = array('/now\(\)/i','/max\(.*\) as nearTime/i');
 
+require_once $_SERVER['DOCUMENT_ROOT'].'/php/public/common.php';
+require_once $_SERVER['DOCUMENT_ROOT'].'/php/public/lkw.php';
+require_once $_SERVER['DOCUMENT_ROOT'].'/php/public/ini.php';
+$configFile = "$configPath/sql.ini";
+
+#初始化变量
+$gIp = read_ini('config','ip',$configFile);
+$gUserName = read_ini('config','userName',$configFile);
+$gPassWord = read_ini('config','passWord',$configFile);
+$gPort = read_ini('config','port',$configFile);
+
 function dosql($params){
+	global $gIp;
+	global $gUserName;
+	global $gPassWord;
+	global $gDatabase;
+	
 	#输出所有错误信息
 	error_reporting(E_ALL);
 	ini_set('display_errors', '1');
@@ -44,11 +63,11 @@ function dosql($params){
 	ini_set('error_log', dirname(__FILE__) . '/mysql_error.txt');
 
 	#设置默认值
-	$ip = @getValue($params['ip'],'localhost');
-	$username = @getValue($params['username'],'smanga');
-	$password = @getValue($params['password'],'smanga');
+	$ip = @getValue($params['ip'],$gIp);
+	$username = @getValue($params['username'],$gUserName);
+	$password = @getValue($params['password'],$gPassWord);
 	$database = @getValue($params['database'],'smanga');
-	$port = @getValue($params['port'],3306);
+	$port = @getValue($params['port'],$gPort);
 	$type = @getValue($params['type'],'select');
 	$name = @getValue($params['name'],'*');
 	$where = @getValue($params['where'],array());

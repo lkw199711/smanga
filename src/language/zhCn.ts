@@ -221,8 +221,8 @@ export default {
     page: {
         before: '上一章',
         next: '下一章',
-        lastPage: '已经位于首页',
-        firstPage: '已经位于尾页',
+        firstPage: '已经位于首页',
+        lastPage: '已经位于尾页',
         lastChapter: '已经到了最后一章',
         firstChapter: '已经位于第一章',
     },
