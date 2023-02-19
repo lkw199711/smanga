@@ -38,16 +38,28 @@ keyword 搜索关键字 当type为search时 此参数必填
 #声明关键字数组
 $sqlKeyword = array('/now\(\)/i','/max\(.*\) as nearTime/i');
 
-require_once $_SERVER['DOCUMENT_ROOT'].'/php/public/common.php';
-require_once $_SERVER['DOCUMENT_ROOT'].'/php/public/lkw.php';
-require_once $_SERVER['DOCUMENT_ROOT'].'/php/public/ini.php';
-$configFile = "$configPath/sql.ini";
+$configFile = "/config/sql.ini";
+if (!is_dir('/app/php')){
+	$configFile = '/mnt/hhd-2t/04config/sql.ini';
+}
 
 #初始化变量
-$gIp = read_ini('config','ip',$configFile);
-$gUserName = read_ini('config','userName',$configFile);
-$gPassWord = read_ini('config','passWord',$configFile);
-$gPort = read_ini('config','port',$configFile);
+$gIp = read_ini_copy('config','ip',$configFile);
+$gUserName = read_ini_copy('config','userName',$configFile);
+$gPassWord = read_ini_copy('config','passWord',$configFile);
+$gPort = read_ini_copy('config','port',$configFile);
+
+/***
+ * 读取ini文件的数值
+ * */
+function read_ini_copy($title,$key,$file){
+	$data = filesize($file)==0 ? [] : parse_ini_file($file,true);
+
+	if (!$data[$title]) return false;
+	if (!$data[$title][$key]) return false;
+
+	return $data[$title][$key];
+}
 
 function dosql($params){
 	global $gIp;

@@ -283,6 +283,11 @@ function file_exist_name($fileName,$fileList){
 
 function get_file_list($path){
 	$list = array();
+
+	if (!is_dir($path)) {
+		return $list;
+	}
+	
 	$dir = dir($path);
 
 	while (($file = $dir->read()) !== false){
@@ -318,7 +323,13 @@ function get_poster($path,$name){
 	if (is_file($png)) return $png;
 	if (is_file($JPG)) return $JPG;
 
-	return get_file_list($path)[0];
+	$list = get_file_list($path);
+
+	if (count($list)>0) {
+		return $list[0];
+	}else{
+		return '';
+	}
 }
 	
 ?>
