@@ -1,0 +1,5 @@
+#!/usr/bin/with-contenv bash
+
+mysql_install_db --user=smanga --datadir=/var/lib/mysql
+
+chown smanga:smanga -R /var/lib/mysql

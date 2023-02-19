@@ -1,13 +1,11 @@
 # syntax=docker/dockerfile:1.4
 
-ARG SMANGA_VERSION
-ARG SMANGA_BASE_NAME
+ARG SMANGA_VERSION=3.0.8
+ARG SMANGA_BASE_NAME=ddsderek
 
 FROM alpine:3.17 AS Build
 COPY --chmod=755 . /build
-RUN cp -r /build/docker/rootfs_mysql /rootfs && \
-    mkdir -p /rootfs/default && \
-    cp -r /build/sql/smanga.sql /rootfs/default/smanga.sql
+RUN cp -r /build/rootfs_mysql /rootfs
 
 FROM ${SMANGA_BASE_NAME}/smanga:${SMANGA_VERSION}
 
