@@ -18,7 +18,7 @@
     "lib-flexible": "^0.3.2",
     "lodash": "^4.17.21",
     "postcss-pxtorem": "^5.1.1",
-    "qs": "^7.5",
+    "qs": "^6.11.0",
     "register-service-worker": "^1.7.1",
     "reset-css": "^5.0.1",
     "ts-md5": "^1.2.10",
