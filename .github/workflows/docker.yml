@@ -51,8 +51,6 @@ jobs:
           platforms: |
             linux/amd64
             linux/arm64/v8
-            linux/arm/v7
-            linux/arm/v6
           push: true
           build-args: |
             SMANGA_VERSION=${{ steps.set-version.outputs.version }}
@@ -100,6 +98,7 @@ jobs:
           file: docker/mysql.Dockerfile
           platforms: |
             linux/amd64
+            linux/arm64/v8
           push: true
           build-args: |
             SMANGA_VERSION=${{ steps.set-version.outputs.version }}
