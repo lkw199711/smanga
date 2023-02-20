@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1.4
 
-ARG SMANGA_BASE_VERSION=3.0.7
+ARG SMANGA_BASE_VERSION=latest
 ARG SMANGA_BASE_NAME
 
 # Build web
