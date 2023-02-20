@@ -49,6 +49,8 @@ export const config = reactive({
     rightSidebar: false,
     language: 'zhCn',
     theme: 'grey',
+    env: 'web',
+    android: false,
 });
 
 export const cache = reactive({
