@@ -1,43 +1,39 @@
 <template>
-  <el-menu
-      :default-active="activeIndex"
-      class="browse-top"
-      mode="horizontal"
-      @select="handleSelect"
-      popper-effect="light"
-  >
+  <el-menu :default-active="activeIndex" :class="['browse-top',{android: config.android }]" mode="horizontal" @select="handleSelect"
+    popper-effect="light">
     <!--<logo/>-->
     <el-menu-item class="padding logo-box" index="home">
-      <logo/>
+      <logo />
     </el-menu-item>
-    <el-menu-item index="media-list">{{$t('sidebar.mediaList')}}</el-menu-item>
-    <el-menu-item index="manga-list">{{$t('sidebar.mangaList')}}</el-menu-item>
-    <el-menu-item index="chapter-list">{{$t('sidebar.chapterList')}}</el-menu-item>
+    <el-menu-item index="media-list">{{ $t('sidebar.mediaList') }}</el-menu-item>
+    <el-menu-item index="manga-list">{{ $t('sidebar.mangaList') }}</el-menu-item>
+    <el-menu-item index="chapter-list">{{ $t('sidebar.chapterList') }}</el-menu-item>
     <el-sub-menu index="browse">
       <template #title>{{ browseType }}</template>
-      <el-menu-item index="flow">{{$t('browse.flow')}}</el-menu-item>
-      <el-menu-item index="single">{{$t('browse.single')}}</el-menu-item>
-      <el-menu-item index="double">{{$t('browse.double')}}</el-menu-item>
+      <el-menu-item index="flow">{{ $t('browse.flow') }}</el-menu-item>
+      <el-menu-item index="single">{{ $t('browse.single') }}</el-menu-item>
+      <el-menu-item index="double">{{ $t('browse.double') }}</el-menu-item>
     </el-sub-menu>
     <el-menu-item index="addBookmark">{{ bookmarkTitle }}</el-menu-item>
   </el-menu>
 </template>
 
 <script lang='ts'>
-import {defineComponent} from 'vue'
+import { defineComponent } from 'vue'
 import logo from "@/layout/components/logo.vue";
-import {global_get, global_set_json} from "@/utils";
-import {add_bookmark, delete_bookmark, get_bookmark} from "@/api/bookmark";
-import {cache, config} from "@/store";
+import { global_get, global_set_json } from "@/utils";
+import { add_bookmark, delete_bookmark, get_bookmark } from "@/api/bookmark";
+import { cache, config } from "@/store";
 import i18n from '@/i18n';
 
-const {t} = i18n.global;
+const { t } = i18n.global;
 export default defineComponent({
   name: 'browse-top',
   // 数据
   data() {
     return {
       activeIndex: '',
+      config: { browseTop : true, android: false},
     }
   },
 
@@ -64,7 +60,7 @@ export default defineComponent({
   },
 
   // 组件
-  components: {logo},
+  components: { logo },
 
   // 方法
   methods: {
@@ -99,7 +95,7 @@ export default defineComponent({
       }
 
       // 传参记录浏览模式
-      if (key === 'chapter-list') Object.assign(params, {browseType: this.$route.name})
+      if (key === 'chapter-list') Object.assign(params, { browseType: this.$route.name })
 
       this.$router.push({
         name: key,
@@ -111,22 +107,27 @@ export default defineComponent({
 
   // 生命周期
   created() {
+    this.config = config;
   },
 })
 </script>
 
 <style scoped lang='less'>
 .browse-top {
+  position: fixed;
   width: 100%;
+  z-index: 1;
+}
+
+.browse-top.android{
+  padding-top: 3.2rem;
 }
 
 .padding {
   padding: 0 20px 0 0;
 }
 
-@media only screen and (min-width: 1200px) {
-
-}
+@media only screen and (min-width: 1200px) {}
 
 @media only screen and (max-width: 1199px) and (min-width: 768px) {
   .browse-top {
@@ -146,6 +147,7 @@ export default defineComponent({
 }
 
 @media only screen and (max-width: 767px) {
+
   // 隐藏顶栏logo以节省空间
   .browse-top {
     .logo-box {

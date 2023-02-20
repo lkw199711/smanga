@@ -2,7 +2,7 @@
   <div class="browse-pager">
     <!--分页-->
     <el-pagination
-        class="pagination"
+        :class="['pagination',{android:config.android}]"
         v-model:current-page="page"
         v-model:page-size="pageSize"
         :default-current-page="1"
@@ -31,7 +31,7 @@ export default defineComponent({
   data() {
     return {
       page: 1, pageSize: 1, disabled: false, background: true, pageSizeArray: [1, 2, 3, 4],
-
+      config:{android:false},
     }
   },
 
@@ -51,7 +51,7 @@ export default defineComponent({
         case 'middle':
           return 9;
         case 'small':
-          return 7;
+          return 5;
         default:
           return 21;
       }
@@ -176,11 +176,16 @@ export default defineComponent({
 
     // window.addEventListener('keypress',this.direction_key);
     window.addEventListener('keydown', this.direction_key);
+
+    this.config = config;
   },
 })
 </script>
 
 <style scoped lang='less'>
+.pagination.android{
+  padding-bottom: 2rem;
+}
 @media only screen and (min-width: 1200px) {
   :deep(.el-pagination__jump) {
     margin-left: .12rem;
