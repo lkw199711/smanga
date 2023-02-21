@@ -26,5 +26,5 @@
 		'sqlRes'=>$sqlRes,
 	);
 
-	echo json_encode($sqlRes);
+	echo json_encode($request);
 ?>

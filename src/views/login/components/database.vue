@@ -2,7 +2,9 @@
     <div class="database-box">
         <p class="title">数据库链接</p>
         <p class="note"></p>
-        <p class="note">请先处理好数据库连通, 然后新建一个'smanga'的数据库, 测试链接方可成功. 之后请手动导入sql文件.</p>
+        <p class="note">外置数据库操作, 请先处理好数据库连通, 然后新建一个'smanga'的数据库, 测试链接方可成功. 之后请手动导入sql文件. 如不使用外置数据库则不需要设置此项. 
+            <a href="/file/smanga.sql">数据库导入文件</a>
+        </p>
         <el-form :model="form" :inline="true">
             <el-form-item label="ip:">
                 <el-input v-model="form.ip" style="width:16rem" />

@@ -69,7 +69,8 @@ export default defineComponent({
 
   &-item {
     text-align: center;
-    background-color: rgba(92, 219, 211, .4);
+    background-color: @s-background;
+    color: @s-text;
     box-shadow: #9a6e3a 1px 2px 4px;
     cursor: pointer;
   }

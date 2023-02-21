@@ -15,6 +15,11 @@
         </el-form-item>
       </el-form>
 
+      <p class="app-box">
+        <a href="/file/smanga1.1.apk">下载Android应用</a>
+      </p>
+      
+
       <!--按钮盒子-->
       <div class="btn-box">
         <el-button class="login-btn" type="primary" @click="do_login">登录</el-button>
@@ -111,6 +116,10 @@ export default defineComponent({
   .login-btn {
     width: 100%;
   }
+}
+
+.app-box{
+  margin: 2rem 0 2rem 6rem;
 }
 
 @media only screen and (min-width: 1200px) {

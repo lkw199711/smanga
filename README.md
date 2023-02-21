@@ -46,6 +46,7 @@ docker run -itd --name smanga \
 -v /route/compress:/compress \	#解压缓存目录
 -v /route/poster:/poster \		#封面缓存目录
 -v /route/mysql:/var/lib/mysql \#mysql数据库目录目录
+-v /route/config:/config \		#配置文件目录
 lkw199711/smanga;
 ```
 
