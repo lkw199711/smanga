@@ -9,8 +9,7 @@ COPY --chmod=755 . /build
 RUN mkdir /rootfs && \
     cp -r /build/dist /rootfs/app && \
     cp -r /build/php /rootfs/app/php && \
-    cp -r /build/file /rootfs/app/file && \
-    cp -r /build/docker/rootfs /
+    cp -r /build/file /rootfs/app/file
 
 # Main program
 FROM ${SMANGA_BASE_NAME}/smanga-base:${SMANGA_BASE_VERSION}
@@ -28,5 +27,6 @@ ENV S6_SERVICES_GRACETIME=30000 \
     UMASK=022
 
 COPY --chmod=755 --from=Build /rootfs /app
+COPY --chmod=755 ./docker/rootfs /
 
 EXPOSE 80
