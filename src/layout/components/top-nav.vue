@@ -1,4 +1,7 @@
 <template>
+  <!-- 安卓端占位 -->
+  <div class="android-seat" v-if="config.android"></div>
+
   <div class="top-nav posted">
     <div class="menu_collapse" @click="handleSelect('switch_sidebar')">
       <!--大屏幕-->
@@ -51,7 +54,7 @@ import languages from "@/store/language";
 import theme from "@/store/theme";
 import {computed, ref} from 'vue'
 import {useI18n} from "vue-i18n";
-import {set_theme, themes} from "@/style/theme";
+import { set_theme, themes } from "@/style/theme";
 
 const value = ref(config.language);
 const {locale} = useI18n();
@@ -101,6 +104,9 @@ function theme_color(theme: string) {
 </script>
 
 <style scoped lang='less'>
+.android-seat {
+  height: 4rem;
+}
 .top-nav.posted {
   display: flex;
   justify-content: space-between;

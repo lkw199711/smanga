@@ -16,9 +16,9 @@ import {Cookies, global_set_json} from "@/utils";
 import {get_bookmark} from "@/api/bookmark";
 import {config} from "@/store";
 import {useRouter} from "vue-router";
-import {ElConfigProvider} from 'element-plus'
+import {ElConfigProvider, ElMessage, ElMessageBox} from 'element-plus'
 import languages from "@/store/language";
-import {computed, onMounted} from "vue";
+import {computed, onMounted } from "vue";
 import {useI18n} from "vue-i18n";
 import {set_theme} from "@/style/theme";
 
@@ -56,6 +56,11 @@ onMounted(() => {
   if (theme) {
     config.theme = theme;
     set_theme(theme);
+  }
+
+  // 设置安卓环境
+  if (window.javaObj) {
+    config.android = true;
   }
 })
 

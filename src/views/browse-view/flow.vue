@@ -5,7 +5,8 @@
 
     <!--列表-->
     <div v-infinite-scroll="load_img" :infinite-scroll-immediate="false"
-         :infinite-scroll-disabled="loading || finished">
+         :infinite-scroll-disabled="loading || finished" 
+         @click="switch_menu">
       <img v-for="(k, i) in imgFileList" :src="k" :key="i" alt="接收图片"/>
     </div>
 

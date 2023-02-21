@@ -19,7 +19,7 @@
         </el-form>
         <el-button type="success" @click="check">测试链接</el-button>
         <el-button type="primary" @click="setting">确认修改</el-button>
-        
+
     </div>
 </template>
 
@@ -36,11 +36,11 @@ const form = reactive({
     passWord: 'smanga',
 })
 
-onMounted(async() => {
+onMounted(async () => {
     const res = await database_get();
     const data = res.data.data;
 
-    Object.assign(form,data);
+    Object.assign(form, data);
 })
 
 const onSubmit = () => {
@@ -80,20 +80,48 @@ function setting() {
 </script>
 
 <style scoped lang="less">
-.database-box {
-    position: absolute;
-    top: 60%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    padding: 2rem 2rem;
-    width: 40rem;
-    background-color: #ffffff;
-    box-shadow: #cccccc 2px 2px 8px;
-}
-
 .title {
     color: grey;
     font-size: 1.6rem;
     margin-bottom: 2rem;
+}
+
+@media only screen and (min-width: 1200px) {
+    .database-box {
+        position: absolute;
+        top: 60%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        padding: 2rem 2rem;
+        width: 40rem;
+        background-color: #ffffff;
+        box-shadow: #cccccc 2px 2px 8px;
+    }
+}
+
+@media only screen and (max-width: 1199px) and (min-width: 768px) {
+    .database-box {
+        position: absolute;
+        top: 60%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        padding: 2rem 2rem;
+        width: 40rem;
+        background-color: #ffffff;
+        box-shadow: #cccccc 2px 2px 8px;
+    }
+}
+
+@media only screen and (max-width: 767px) {
+    .database-box {
+        position: absolute;
+        top: 74%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        padding: 2rem 2rem;
+        width: 32rem;
+        background-color: #ffffff;
+        box-shadow: #cccccc 2px 2px 8px;
+    }
 }
 </style>
