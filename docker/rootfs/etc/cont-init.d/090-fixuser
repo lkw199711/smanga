@@ -3,8 +3,12 @@
 groupmod -o -g "${PGID}" smanga
 usermod -o -u "${PUID}" smanga
 
+# smanga app
 chown smanga:smanga -R /app /config
 
 chown smanga:smanga \
     /compress \
     /poster
+
+# Nginx
+chown smanga:smanga -R /var/lib/nginx /run/nginx /var/log/nginx

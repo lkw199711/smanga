@@ -14,7 +14,7 @@ else
         mysql -e "select User, host from mysql.user;" > /dev/null
         mysql -e "create database smanga;"
         mysql -e "show databases;" > /dev/null
-        mysql -e "use smanga; source /default/smanga.sql;"
+        mysql -e "use smanga; source /app/file/smanga.sql;"
     fi
 
     tail -f /dev/null

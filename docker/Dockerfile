@@ -7,7 +7,8 @@ ARG SMANGA_BASE_NAME
 FROM alpine:3.17 AS Build
 COPY --chmod=755 . /build
 RUN cp -r /build/dist /rootfs && \
-    cp -r /build/php /rootfs/php
+    cp -r /build/php /rootfs/php && \
+    cp -r /build/file /rootfs/file
 
 # Main program
 FROM ${SMANGA_BASE_NAME}/smanga-base:${SMANGA_BASE_VERSION}
@@ -28,3 +29,4 @@ COPY --chmod=755 --from=Build /rootfs /app
 COPY --chmod=755 ./docker/rootfs /
 
 EXPOSE 80
+VOLUME [ "/config", "/poster", "/compress" ]
