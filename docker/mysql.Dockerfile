@@ -18,3 +18,4 @@ RUN apk add --no-cache \
     sed -i "s/skip-networking/#skip-networking/g" /etc/my.cnf.d/mariadb-server.cnf
 
 COPY --chmod=755 ./docker/rootfs_mysql /
+VOLUME [ "/var/lib/mysql" ]

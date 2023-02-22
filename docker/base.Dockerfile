@@ -44,10 +44,12 @@ RUN set -ex && \
 RUN addgroup -S smanga -g 911 && \
     adduser -S smanga -G smanga -h /app -u 911 && \
     usermod -s /bin/bash smanga && \
+    # Log Links
     mkdir -p /log && \
     ln -s /var/log/php7/error.log /log/php7_error.log && \
     ln -s /var/log/nginx/access.log /log/nginx_access.log && \
     ln -s /var/log/nginx/error.log /log/nginx_error.log && \
+    # PHP settings
     sed -i "s/short_open_tag = Off/short_open_tag = On/g" /etc/php7/php.ini && \
     sed -i "s#;open_basedir =#open_basedir = /#g" /etc/php7/php.ini && \
     sed -i "s/register_argc_argv = Off/register_argc_argv = On/g" /etc/php7/php.ini && \
