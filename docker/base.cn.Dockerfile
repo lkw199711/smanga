@@ -3,7 +3,8 @@
 FROM alpine:3.17
 
 RUN set -ex && \
-    apk add --no-cache --repository https://dl-cdn.alpinelinux.org/alpine/v3.15/community \
+    sed -i 's/dl-cdn.alpinelinux.org/mirrors.ustc.edu.cn/g' /etc/apk/repositories && \
+    apk add --no-cache --repository https://mirrors.ustc.edu.cn/alpine/v3.15/community \
         nginx \
         pcre \
         xz \
@@ -12,7 +13,7 @@ RUN set -ex && \
         tzdata \
         shadow \
     && \
-    apk add --no-cache --repository https://dl-cdn.alpinelinux.org/alpine/v3.15/community \
+    apk add --no-cache --repository https://mirrors.ustc.edu.cn/alpine/v3.15/community \
         php7 \
         php7-common \
         php7-fpm \
