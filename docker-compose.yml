@@ -9,7 +9,12 @@ services:
             - './compress:/compress'
             - './poster:/poster'
             - './config:/config'
+            - './mysql:/var/lib/mysql'
             - '/mnt:/mnt'
+        environment:
+            - PUID=1000
+            - PGID=1000
+            - TZ=Asia/Shanghai
         networks:
             - default
         image: lkw199711/smanga:mysql

@@ -10,6 +10,10 @@ services:
             - './poster:/poster'
             - './config:/config'
             - '/mnt:/mnt'
+        environment:
+            - PUID=1000
+            - PGID=1000
+            - TZ=Asia/Shanghai
         networks:
             - default
         depends_on:
