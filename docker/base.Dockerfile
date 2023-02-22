@@ -47,6 +47,11 @@ RUN addgroup -S smanga -g 911 && \
     mkdir -p /log && \
     ln -s /var/log/php7/error.log /log/php7_error.log && \
     ln -s /var/log/nginx/access.log /log/nginx_access.log && \
-    ln -s /var/log/nginx/error.log /log/nginx_error.log
+    ln -s /var/log/nginx/error.log /log/nginx_error.log && \
+    sed -i "s/short_open_tag = Off/short_open_tag = On/g" /etc/php7/php.ini && \
+    sed -i "s#;open_basedir =#open_basedir = /#g" /etc/php7/php.ini && \
+    sed -i "s/register_argc_argv = Off/register_argc_argv = On/g" /etc/php7/php.ini && \
+    sed -i "s/user = nobody/user = smanga/g" /etc/php7/php-fpm.d/www.conf && \
+    sed -i "s/group = nobody/group = smanga/g" /etc/php7/php-fpm.d/www.conf
 
 ENTRYPOINT [ "/init" ]
