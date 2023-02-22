@@ -12,23 +12,7 @@ services:
             - '/mnt:/mnt'
         networks:
             - default
-        depends_on:
-            - db
-        image: ddsderek/smanga:3.0.8
-    db:
-        container_name: smanga-db
-        image: mysql:5.7
-        restart: always
-        environment:
-            - MYSQL_RANDOM_ROOT_PASSWORD=smanga
-            - MYSQL_DATABASE=smanga
-            - MYSQL_USER=smanga
-            - MYSQL_PASSWORD=smanga
-        volumes:
-            - './smanga_db:/var/lib/mysql'
-            - './sql:/docker-entrypoint-initdb.d'
-        networks:
-            - default
+        image: lkw199711/smanga:mysql
 
 networks:
   default:
