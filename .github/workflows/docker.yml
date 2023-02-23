@@ -56,8 +56,8 @@ jobs:
             SMANGA_VERSION=${{ steps.set-version.outputs.version }}
             SMANGA_BASE_NAME=${{ secrets.DOCKER_USERNAME }}
           tags: |
-            ${{ secrets.DOCKER_USERNAME }}/smanga:${{ steps.set-version.outputs.version }}
-            ${{ secrets.DOCKER_USERNAME }}/smanga:latest
+            ${{ secrets.DOCKER_USERNAME }}/smanga:nosql-${{ steps.set-version.outputs.version }}
+            ${{ secrets.DOCKER_USERNAME }}/smanga:nosql
 
 
   build_mysql:
@@ -104,8 +104,8 @@ jobs:
             SMANGA_VERSION=${{ steps.set-version.outputs.version }}
             SMANGA_BASE_NAME=${{ secrets.DOCKER_USERNAME }}
           tags: |
-            ${{ secrets.DOCKER_USERNAME }}/smanga:${{ steps.set-version.outputs.version }}-mysql
-            ${{ secrets.DOCKER_USERNAME }}/smanga:mysql
+            ${{ secrets.DOCKER_USERNAME }}/smanga:${{ steps.set-version.outputs.version }}
+            ${{ secrets.DOCKER_USERNAME }}/smanga:latest
 
   update:
     needs: [build, build_mysql]
