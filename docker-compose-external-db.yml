@@ -18,7 +18,7 @@ services:
             - default
         depends_on:
             - db
-        image: lkw199711/smanga:latest
+        image: lkw199711/smanga:nosql
     db:
         container_name: smanga-db
         image: mysql:5.7

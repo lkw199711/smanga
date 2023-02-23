@@ -17,7 +17,7 @@ services:
             - TZ=Asia/Shanghai
         networks:
             - default
-        image: lkw199711/smanga:mysql
+        image: lkw199711/smanga:latest
 
 networks:
   default:
