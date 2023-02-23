@@ -1,5 +1,5 @@
 #!/usr/bin/with-contenv bash
 
-if [ ! -f /config/sql.ini ]; then
-	cp /default/sql.ini /config/sql.ini
+if [ ! -f /config/config.ini ]; then
+	cp /app/config/config.ini /config/config.ini
 fi
