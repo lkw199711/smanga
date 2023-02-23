@@ -1,13 +1,13 @@
-import {defineComponent} from 'vue'
-import {get_image_blob} from "@/api";
-import {global_get_array, global_set, window_go_top} from "@/utils";
-import {ElMessage as msg} from "element-plus";
-import {config} from '@/store';
-import {add_history} from "@/api/history";
+import { defineComponent } from 'vue'
+import { get_image_blob } from "@/api";
+import { global_get_array, global_set, window_go_top } from "@/utils";
+import { ElMessage as msg } from "element-plus";
+import { config } from '@/store';
+import { add_history } from "@/api/history";
 import chapterListMenu from "../components/chapter-list-menu.vue";
-import {get_chapter_images} from "@/api/browse";
+import { get_chapter_images } from "@/api/browse";
 import i18n from '@/i18n';
-const {t} = i18n.global;
+const { t } = i18n.global;
 export default defineComponent({
     name: 'browse-views',
 
@@ -35,7 +35,7 @@ export default defineComponent({
     props: [],
 
     // 组件
-    components: {chapterListMenu},
+    components: { chapterListMenu },
 
     computed: {
         path(): string {
@@ -81,7 +81,7 @@ export default defineComponent({
             const initPage = this.initPage - 1;
 
             if (this.loading) return;
-
+            console.log(list);
             // 开启加载状态
             this.loading = true;
 
@@ -105,17 +105,19 @@ export default defineComponent({
         /**
          * 重载页面
          */
-        async reload_page(addHistory = true) {
+        async reload_page(addHistory = true, clearPage = true) {
             // 重置图片数据
-            this.imgFileList = [];
-            this.page = -1;
+            if (clearPage) {
+                this.imgFileList = [];
+                this.page = -1;
+                // 重置滚动条
+                window_go_top();
+            }
+            
 
             if (addHistory) {
                 add_history();
             }
-
-            // 重置滚动条
-            window_go_top();
 
             const res = await get_chapter_images();
 
@@ -126,10 +128,15 @@ export default defineComponent({
                     }, 2000);
                     break;
                 case 'compressing':
-                    this.imgPathList = res.data.list;
-                    this.load_img();
+                    // 进度有所增加 则更新图片列表
+                    if (res.data.list.length > this.imgFileList.length) {
+                        this.imgPathList = res.data.list;
+                        this.finished = false;
+                        this.load_img();
+                    }
+                    // 再次加载解压进度
                     setTimeout(() => {
-                        this.reload_page(false)
+                        this.reload_page(false, false)
                     }, 2000);
                     break;
                 case 'compressed':
@@ -140,6 +147,10 @@ export default defineComponent({
                     this.imgPathList = res.data.list;
                     this.load_img();
             }
+        },
+        load_again() {
+            this.finished = false;
+
         },
         /**
          * 上一页
@@ -159,7 +170,7 @@ export default defineComponent({
                     name: this.chapterList[this.index - 1].chapterName,
                     path: this.chapterList[this.index - 1].chapterPath,
                 }),
-                params: {page: 1},
+                params: { page: 1 },
             })
 
             this.update_chapter_info();
@@ -187,7 +198,7 @@ export default defineComponent({
                     name: this.chapterList[this.index + 1].chapterName,
                     path: this.chapterList[this.index + 1].chapterPath,
                 }),
-                params: {page: 1},
+                params: { page: 1 },
             })
 
             this.update_chapter_info();
@@ -227,7 +238,7 @@ export default defineComponent({
         // 阅读状态控制
         switch_menu() {
             config.browseTop = !config.browseTop;
-        }
+        },
     },
 
     // 生命周期

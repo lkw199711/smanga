@@ -40,7 +40,7 @@ if (preg_match('/(rar|pdf|zip)/i',$chapterType)) {
 		$message = '正在进行压缩转换';
 		// $params = json_encode($_POST);
 		$command = "php ./compress/compress.php \"$chapterPath\" \"$publicPath\" \"$mediaId\" \"$mangaId\" \"$chapterId\" \"$chapterType\" \"$mangaCover\" \"$chapterCover\" \"$userId\"";
-
+		
 		pclose(popen('nohup '.$command.' & 2>&1','r'));
 	}
 }else{

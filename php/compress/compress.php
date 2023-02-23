@@ -70,7 +70,7 @@
 
 	if ($chapterType=='pdf') {
 		#进行转换操作
-		$imageCount = pdf2png($chapterPath,$extractTo);
+		$imageCount = un_pdf($chapterPath,$extractTo);
 	}
 
 	
@@ -155,92 +155,42 @@ function un_rar($path,$extractTo){
 	return count($entries);
 }
 
+function un_pdf($path,$extractTo){
+	// 内存 1gb
+	$memory = read_ini_compress('imagick','memory');
+	// 缓存 1gb
+	$map = read_ini_compress('imagick','map');
+	// 每英寸的像素数 100-300
+	$density = read_ini_compress('imagick','density');
+	// 压缩比 100
+	$quality = read_ini_compress('imagick','quality');
 
-/**
-* 将pdf文件转化为多张png图片
-* @param string $pdf  pdf所在路径 （/www/pdf/abc.pdf pdf所在的绝对路径）
-* @param string $path 新生成图片所在路径 (/www/pngs/)
-*
-* @return array|bool
-*/
-function pdf2png($pdf, $path)
-{
-    # 引入全局变量 再次说明 php函数不能自动继承全局变量
-    global $chapterId;
-    
-    $finish = 0;
+	$command = "convert -limit memory $memory -limit map $map -density $density -quality $quality '$path' '$extractTo/x-%05d.jpg'";
 
-    if (!extension_loaded('imagick')) {
-    	echo "no imagick";
-        return false;
-    }
-    if (!file_exists($pdf)) {
-    	echo "no file";
-        return false;
-    }
-    if (!is_dir($path)) {
-    	echo "no dir";
-    	return false;
-    }
-    $im = new Imagick();
-    //$im->setResolution(80, 80); //设置分辨率 值越大分辨率越高
-    //$im->setCompressionQuality(100);			// 新图
-    //$im->setImageCompressionQuality(30);	// 旧图
-    
-    $im->readImage($pdf);
+	shell_exec($command);
 
-    $count = count($im);
+	$count = count(get_file_list($extractTo));
 
-    foreach ($im as $k => $v) {
-        $v->setImageFormat('png');
-        $fileName = "$path/$k.png";
-        if ($v->writeImage($fileName) == true) {
-            $return[] = $fileName;
-        }
-    }
-
-    return $count;
-}
- 
-/**
- * 将pdf转化为单一png图片
- * @param string $pdf  pdf所在路径 （/www/pdf/abc.pdf pdf所在的绝对路径）
- * @param string $path 新生成图片所在路径 (/www/pngs/)
- *
- * @throws Exception
- */
-function pdf2png2($pdf, $path)
-{
-    try {
-        $im = new Imagick();
-        $im->setCompressionQuality(100);
-        $im->setResolution(120, 120);//设置分辨率 值越大分辨率越高
-        $im->readImage($pdf);
- 
-        $canvas = new Imagick();
-        $imgNum = $im->getNumberImages();
-        //$canvas->setResolution(120, 120);
-        foreach ($im as $k => $sub) {
-            $sub->setImageFormat('png');
-            //$sub->setResolution(120, 120);
-            $sub->stripImage();
-            $sub->trimImage(0);
-            $width  = $sub->getImageWidth() + 10;
-            $height = $sub->getImageHeight() + 10;
-            if ($k + 1 == $imgNum) {
-                $height += 10;
-            } //最后添加10的height
-            $canvas->newImage($width, $height, new ImagickPixel('white'));
-            $canvas->compositeImage($sub, Imagick::COMPOSITE_DEFAULT, 5, 5);
-        }
- 
-        $canvas->resetIterator();
-        $canvas->appendImages(true)->writeImage($path . microtime(true) . '.png');
-    } catch (Exception $e) {
-        throw $e;
-    }
+	return $count;
 }
 
+
+/***
+ * 读取ini文件的数值
+ * */
+function read_ini_compress($title,$key){
+	$file = "/config/config.ini";
+	if (!is_dir('/app/php')){
+		$file = '/mnt/hhd-2t/04config/config.ini';
+	}
+
+	$data = filesize($file)==0 ? [] : parse_ini_file($file,true);
+
+	if (!$data[$title]) return false;
+	if (!$data[$title][$key]) return false;
+
+	return $data[$title][$key];
+}
 
 function get_first_image($dir){
 	$files=array();//定义一个数组，做为返回值
