@@ -3,7 +3,7 @@
                 shell_exec('mv /var/lib/mysql-bak/* /var/lib/mysql/');
         }
 
-        if(!is_file('/config/sql.ini')){
-                shell_exec('mv /config-bak/sql.ini /config/');
+        if(!is_file('/config/config.ini')){
+                shell_exec('mv /config-bak/config.ini /config/');
         }
 ?>

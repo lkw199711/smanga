@@ -11,10 +11,11 @@
 	#初始化变量
 	$database = 'smanga';
 
-	$configFile = "$configPath/sql.ini";
+	$configFile = "$configPath/config.ini";
 
 	if (!is_file($configFile)) {
-		write_txt($configFile,'[config]');
+		write_txt($configFile,'[sql]');
+		write_txt($configFile,'[imagick]');
 	}
 
 	#创建连接

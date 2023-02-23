@@ -3,13 +3,13 @@
 require_once '../public/common.php';
 require_once '../public/lkw.php';
 require_once '../public/ini.php';
-$configFile = "$configPath/sql.ini";
+$configFile = "$configPath/config.ini";
 
 #初始化变量
-$ip = read_ini('config','ip',$configFile);
-$userName = read_ini('config','userName',$configFile);
-$passWord = read_ini('config','passWord',$configFile);
-$port = read_ini('config','port',$configFile);
+$ip = read_ini('sql','ip',$configFile);
+$userName = read_ini('sql','userName',$configFile);
+$passWord = read_ini('sql','passWord',$configFile);
+$port = read_ini('sql','port',$configFile);
 $database = 'smanga';
 
 #创建连接

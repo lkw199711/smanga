@@ -38,16 +38,16 @@ keyword 搜索关键字 当type为search时 此参数必填
 #声明关键字数组
 $sqlKeyword = array('/now\(\)/i','/max\(.*\) as nearTime/i');
 
-$configFile = "/config/sql.ini";
+$configFile = "/config/config.ini";
 if (!is_dir('/app/php')){
-	$configFile = '/mnt/hhd-2t/04config/sql.ini';
+	$configFile = '/mnt/hhd-2t/04config/config.ini';
 }
 
 #初始化变量
-$gIp = read_ini_copy('config','ip',$configFile);
-$gUserName = read_ini_copy('config','userName',$configFile);
-$gPassWord = read_ini_copy('config','passWord',$configFile);
-$gPort = read_ini_copy('config','port',$configFile);
+$gIp = read_ini_copy('sql','ip',$configFile);
+$gUserName = read_ini_copy('sql','userName',$configFile);
+$gPassWord = read_ini_copy('sql','passWord',$configFile);
+$gPort = read_ini_copy('sql','port',$configFile);
 
 /***
  * 读取ini文件的数值

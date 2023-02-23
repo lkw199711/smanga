@@ -40,13 +40,13 @@ $sqlKeyword = array('/now\(\)/i','/max\(.*\) as nearTime/i');
 require_once '../public/common.php';
 require_once '../public/lkw.php';
 require_once '../public/ini.php';
-$configFile = "$configPath/sql.ini";
+$configFile = "$configPath/config.ini";
 
 #初始化变量
-$gIp = read_ini('config','ip',$configFile);
-$gUserName = read_ini('config','port',$configFile);
-$gPassWord = read_ini('config','userName',$configFile);
-$gDatabase = read_ini('config','passWord',$configFile);
+$gIp = read_ini('sql','ip',$configFile);
+$gUserName = read_ini('sql','port',$configFile);
+$gPassWord = read_ini('sql','userName',$configFile);
+$gDatabase = read_ini('sql','passWord',$configFile);
 
 function dosql($params){
 	global $gIp;
