@@ -3,7 +3,7 @@
 ARG SMANGA_VERSION
 ARG SMANGA_BASE_NAME
 
-FROM ${SMANGA_BASE_NAME}/smanga:${SMANGA_VERSION}
+FROM ${SMANGA_BASE_NAME}/smanga:nosql-${SMANGA_VERSION}
 
 RUN apk add --no-cache \
         mysql \
