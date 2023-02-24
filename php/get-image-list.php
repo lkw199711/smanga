@@ -20,7 +20,7 @@ $status = 'success';
 $command = '';
 
 // 判断章节文件类型
-if (preg_match('/(rar|pdf|zip)/i',$chapterType)) {
+if (preg_match("/$compressTypes/i",$chapterType)) {
 
 	$sqlRes = dosql(array(
 		'table'=>'compress',

@@ -16,6 +16,8 @@
 
 	$bookmarkPosterPath = '/poster/bookmark';
 
+	$compressTypes = '(cbr|cbz|zip|7z|rar|pdf)';
+
 	// 采用网站外目录
 	if (!is_dir('/app/php')) {
 		// 在web环境

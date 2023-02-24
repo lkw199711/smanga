@@ -62,6 +62,11 @@
 		$imageCount = un_zip($chapterPath,$extractTo);
 	}
 
+	if($chapterType=='7z'){
+		// 解压缩并获取文件总数据 (总数量包括文件夹与其他文件 仅具有参考意义)
+		$imageCount = un_7z($chapterPath,$extractTo);
+	}
+
 	if($chapterType=='rar'){
 		// 解压缩并获取文件总数据 (总数量包括文件夹与其他文件 仅具有参考意义)
 		$imageCount = un_rar($chapterPath,$extractTo);
@@ -153,6 +158,16 @@ function un_rar($path,$extractTo){
 	rar_close($rar_file);
 
 	return count($entries);
+}
+
+function un_7z($path,$extractTo){
+	$command = "7za x '$path' -r -o'$extractTo'";
+
+	shell_exec($command);
+
+	$count = count(get_file_list($extractTo));
+
+	return $count;
 }
 
 function un_pdf($path,$extractTo){

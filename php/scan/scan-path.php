@@ -180,9 +180,12 @@ function get_manga_list($path){
 		$posterName = $targetPath;
 		// 是文件
 		if(!is_dir($targetPath)){
-			if (preg_match('/(.cbr|.cbz|.zip|.7z)/i',$file)) {
+			if (preg_match('/(.cbr|.cbz|.zip|.epub)/i',$file)) {
 				$type = 'zip';
 
+			}
+			elseif (preg_match('/.7z/i',$file)) {
+				$type = '7z';
 			}
 			elseif (preg_match('/.rar/i',$file)) {
 				$type = 'rar';
@@ -224,8 +227,11 @@ function get_chapter_list($path){
 		$posterName = $targetPath;
 		// 是文件
 		if(!is_dir($targetPath)){
-			if (preg_match('/(.cbr|.cbz|.zip|.7z)/i',$file)) {
+			if (preg_match('/(.cbr|.cbz|.zip|.epub)/i',$file)) {
 				$type = 'zip';
+			}
+			elseif (preg_match('/.7z/i',$file)) {
+				$type = '7z';
 			}
 			elseif (preg_match('/.rar/i',$file)) {
 				$type = 'rar';
@@ -236,7 +242,7 @@ function get_chapter_list($path){
 				continue;
 			}
 
-			$posterName = preg_replace('/(.cbr|.cbz|.zip|.7z|.rar|.pdf)/i','',$posterName);
+			$posterName = preg_replace('/(.cbr|.cbz|.zip|.7z|.epub|.rar|.pdf)/i','',$posterName);
 		}
 
   		array_push($list,array(
