@@ -11,6 +11,7 @@ RUN set -ex && \
         bash \
         tzdata \
         shadow \
+        p7zip \
     && \
     apk add --no-cache --repository https://dl-cdn.alpinelinux.org/alpine/v3.15/community \
         php7 \
