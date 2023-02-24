@@ -3,15 +3,24 @@
 FROM alpine:3.17
 
 RUN set -ex && \
-    apk add --no-cache --repository https://dl-cdn.alpinelinux.org/alpine/v3.15/community \
-        nginx \
-        pcre \
-        xz \
-        s6-overlay \
+    apk add --no-cache \
         bash \
-        tzdata \
-        shadow \
         p7zip \
+        s6-overlay \
+        shadow \
+        tzdata \
+        xz \
+    && \
+    apk add --no-cache --upgrade --virtual=build-dependencies \
+        build-base \
+        gcc \
+        g++ \
+        make \
+        musl-dev \
+    && \
+    apk add --no-cache --repository https://dl-cdn.alpinelinux.org/alpine/v3.15/community \
+        pcre \
+        nginx \
     && \
     apk add --no-cache --repository https://dl-cdn.alpinelinux.org/alpine/v3.15/community \
         php7 \
@@ -25,13 +34,6 @@ RUN set -ex && \
         php7-mysqli \
         php7-mysqlnd \
         php7-pear \
-    && \
-    apk add --no-cache --upgrade --virtual=build-dependencies \
-        build-base \
-        gcc \
-        g++ \
-        make \
-        musl-dev \
     && \
     pecl install rar && \
     echo "extension=rar.so" > /etc/php7/conf.d/00_rar.ini && \
