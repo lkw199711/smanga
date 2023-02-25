@@ -1,7 +1,7 @@
 #!/usr/bin/with-contenv bash
 
 mysql_init(){
-ps -ef | grep -q /usr/bin/mariadbd | grep -v grep
+ps -ef | grep /usr/bin/mariadbd | grep -v grep
 if [ $? -ne 0 ]; then
     sleep 1
     mysql_init
@@ -17,7 +17,7 @@ else
         mysql -e "use smanga; source /app/file/smanga.sql;"
     fi
 
-    tail -f /dev/null
+    exec s6-setuidgid smanga tail -f /dev/null
 fi
 }
 
