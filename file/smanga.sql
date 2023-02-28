@@ -62,7 +62,7 @@ CREATE TABLE `chapter`  (
 DROP TABLE IF EXISTS `compress`;
 CREATE TABLE `compress`  (
   `compressId` int(11) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '转换id',
-  `compressType` enum('zip','rar','pdf','image') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '转换类型',
+  `compressType` enum('zip','rar','pdf','image','7z') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '转换类型',
   `compressPath` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '转换路径',
   `compressStatus` enum('uncompressed','compressing','compressed') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '转换状态',
   `createTime` datetime(0) NULL DEFAULT NULL COMMENT '转换时间',
