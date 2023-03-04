@@ -1,8 +1,15 @@
 import {ajax} from "./index";
-import {global_get} from "@/utils";
+import {global_get, global_get_array} from "@/utils";
 import {config} from "@/store";
 
 export function add_bookmark(page: number) {
+    let pageImage = global_get('pageImage');
+
+    if (config.browseType == 'flow') {
+        const imgPathList = global_get_array('imgPathList');
+        pageImage = imgPathList[page];
+    }
+
     return ajax({
         url: 'php/bookmark/add.php',
         data: {
@@ -16,7 +23,7 @@ export function add_bookmark(page: number) {
             chapterType: global_get('chapterType'),
             chapterCover: global_get('chapterCover'),
             page,
-            pageImage: global_get('pageImage'),
+            pageImage,
             browseType: config.browseType,
         },
     })

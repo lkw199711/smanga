@@ -1,6 +1,6 @@
 import { defineComponent } from 'vue'
 import { get_image_blob } from "@/api";
-import { global_get_array, global_set, window_go_top } from "@/utils";
+import { global_get_array, global_set, global_set_json, window_go_top } from "@/utils";
 import { ElMessage as msg } from "element-plus";
 import { config } from '@/store';
 import { add_history } from "@/api/history";
@@ -8,6 +8,7 @@ import chapterListMenu from "../components/chapter-list-menu.vue";
 import { get_chapter_images } from "@/api/browse";
 import i18n from '@/i18n';
 const { t } = i18n.global;
+import bookmark from "../components/bookmark.vue";
 export default defineComponent({
     name: 'browse-views',
 
@@ -35,7 +36,7 @@ export default defineComponent({
     props: [],
 
     // 组件
-    components: { chapterListMenu },
+    components: { chapterListMenu, bookmark },
 
     computed: {
         path(): string {
@@ -81,7 +82,7 @@ export default defineComponent({
             const initPage = this.initPage - 1;
 
             if (this.loading) return;
-            console.log(list);
+
             // 开启加载状态
             this.loading = true;
 
@@ -90,7 +91,7 @@ export default defineComponent({
 
             // 页码递增
             const page = ++this.page;
-
+            
             const res = await get_image_blob(list[page]);
             this.imgFileList.push(res.data);
             // 加载结束,更新状态
@@ -100,16 +101,18 @@ export default defineComponent({
             this.finished = this.page === this.imgPathList.length - 1;
             // 是否完成页面初始化加载,未完成则再次加载图片
             page < initPage && await this.load_img();
+
+            global_set('loadedImages', this.page);
         },
 
         /**
          * 重载页面
          */
-        async reload_page(addHistory = true, clearPage = true) {
+        async reload_page(addHistory = true, clearPage = true, page=-1) {
             // 重置图片数据
             if (clearPage) {
                 this.imgFileList = [];
-                this.page = -1;
+                this.page = page;
                 // 重置滚动条
                 window_go_top();
             }
@@ -147,6 +150,9 @@ export default defineComponent({
                     this.imgPathList = res.data.list;
                     this.load_img();
             }
+
+            global_set_json('imgPathList', this.imgPathList);
+            global_set('loadedImages', this.page);
         },
         load_again() {
             this.finished = false;
@@ -246,8 +252,10 @@ export default defineComponent({
         // 设置浏览模式
         config.browseType = 'flow';
 
+        const page = Number(this.$route.params.page) || 0;
+
         // 加载页面
         const notAddHistory = this.$route.params.notAddHistory || false;
-        this.reload_page(!notAddHistory);
+        this.reload_page(!notAddHistory, true, page-1);
     },
 })

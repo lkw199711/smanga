@@ -1,6 +1,7 @@
 export interface GlobalData {
     bookmarkList: any[],
     chapterList: any[],
+    imgPathList: string[],
     chapterIndex: number,
     chapterId: number,
     chapterName: string,
@@ -17,4 +18,5 @@ export interface GlobalData {
     pageImage: string,
     direction: string,
     removeFirst: string,
+    loadedImages: number,
 }

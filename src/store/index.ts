@@ -20,6 +20,7 @@ export default createStore({
 export const globalData: GlobalData = reactive({
     bookmarkList: [],
     chapterList: [],
+    imgPathList: [],
     chapterIndex: 0,
     chapterId: 0,
     chapterName: '',
@@ -36,6 +37,7 @@ export const globalData: GlobalData = reactive({
     pageImage: '',
     removeFirst: '0',
     direction: '0',
+    loadedImages: 0,
 });
 
 export const config = reactive({

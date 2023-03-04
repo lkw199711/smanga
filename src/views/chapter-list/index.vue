@@ -68,13 +68,18 @@ export default defineComponent({
       global_set('chapterType', chapterType);
       global_set('chapterCover', chapterCover);
 
+      let page = 1;
+      if (this.browseType==='flow') {
+        page = 0;
+      }
+
       this.$router.push({
         name: this.browseType,
         query: {
           name: chapterName,
           path: chapterPath,
         },
-        params: {page: 1},
+        params: {page},
       })
     },
     /**
