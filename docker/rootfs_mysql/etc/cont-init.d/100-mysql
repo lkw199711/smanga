@@ -1,7 +1,7 @@
 #!/usr/bin/with-contenv bash
 
 if [ ! -d /var/lib/mysql/smanga ]; then
-    mysql_install_db --user=smanga --datadir=/var/lib/mysql
+    cp -r /var/lib/mysql_bak/* /var/lib/mysql
 fi
 
-chown smanga:smanga -R /var/lib/mysql
+chown smanga:smanga -R /var/lib/mysql /run/mysqld
