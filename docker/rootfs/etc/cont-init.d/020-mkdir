@@ -1,5 +1,6 @@
 #!/usr/bin/with-contenv bash
 
+function 020_mkdir {
 if [ ! -d /compress ]; then
 	mkdir /compress
 fi
@@ -11,3 +12,6 @@ fi
 if [ ! -d /config ]; then
 	mkdir /config
 fi
+}
+
+020_mkdir 2>&1 | sed "s#^#cont-init: info: $(realpath $0): \1#g"
