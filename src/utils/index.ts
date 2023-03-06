@@ -107,3 +107,7 @@ export const Cookies = {
     },
 }
 
+export function get_cookie(key: string) {
+    const arr = document.cookie.match(new RegExp("\\b" + key + "=([^;]+)(;|$)"));
+    return arr ? arr[1] : '';
+}

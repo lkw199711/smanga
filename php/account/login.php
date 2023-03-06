@@ -12,7 +12,7 @@
 	$code = 0;
 	$message = '';
 
-	$sqlComm = sprintf("SELECT userId,userName,nickName,passWord FROM user WHERE userName = '%s';",mysqli_real_escape_string($link,$userName));
+	$sqlComm = sprintf("SELECT * FROM user WHERE userName = '%s';",mysqli_real_escape_string($link,$userName));
 
 	#查找数据库中密码
 	$user = get_sql_value($link,$sqlComm);
@@ -35,6 +35,9 @@
 				'userId'=>$user['userId'],
 				'userName'=>$user['userName'],
 				'nickName'=>$user['nickName'],
+				'mediaLimit'=>$user['mediaLimit'],
+				'editUser'=>$user['editUser'],
+				'editMedia'=>$user['editMedia'],
 			);
 		}else{
 			$code = 1;

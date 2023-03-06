@@ -37,6 +37,7 @@ export default {
         pass: '密码',
         registerTime: '注册日期',
         option: '操作',
+        power:'权限',
         nameLabel: '用户名:',
         passLabel: '密码:',
         namePlace: '请输入用户名',
@@ -50,6 +51,16 @@ export default {
         note:{
             name:'"用户名": 长3-20位,以字母开头',
             pass:'"密码": 留空为不修改',
+        },
+        form:{
+            label:{
+                editUser:'编辑用户',
+                editMedia:'编辑媒体库',
+            },
+            title:{
+                power: '权限',
+                mediaPower: '媒体库阅读权限',
+            }
         },
     },
     mediaManage: {

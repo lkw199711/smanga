@@ -15,7 +15,7 @@
       </el-menu-item>
 
       <template v-for="(item,key) in routes" :key="key">
-        <el-menu-item v-if="item.meta.sidebar" :index="item.path">
+        <el-menu-item v-if="item.meta.sidebar && userLimit(item)" :index="item.path">
           <el-icon v-if="item.meta.icon">
             <component :is="item.meta.icon"></component>
           </el-icon>
@@ -45,7 +45,7 @@
         </el-menu-item>
 
         <template v-for="(item,key) in routes" :key="key">
-          <el-menu-item v-if="item.meta.sidebar" :index="item.path">
+          <el-menu-item v-if="item.meta.sidebar && userLimit(item)" :index="item.path">
             <el-icon v-if="item.meta.icon">
               <component :is="item.meta.icon"></component>
             </el-icon>
@@ -76,6 +76,22 @@ const go_home = () => {
 
 const routes = computed(() => {
   return router.options.routes;
+})
+
+const userLimit = computed(()=>(item:any)=>{
+
+  const title = item.meta.title;
+
+  if (title==='mediaManage' && !config.editMedia){
+    return false;
+  }
+
+  if (title==='account' && !config.editUser){
+    return false;
+  }
+
+  return true;
+
 })
 
 onMounted(() => {

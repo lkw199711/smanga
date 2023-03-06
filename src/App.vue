@@ -20,7 +20,8 @@ import {ElConfigProvider, ElMessage, ElMessageBox} from 'element-plus'
 import languages from "@/store/language";
 import {computed, onMounted } from "vue";
 import {useI18n} from "vue-i18n";
-import {set_theme} from "@/style/theme";
+import { set_theme } from "@/style/theme";
+import { system_init } from "@/api/login";
 
 const {locale} = useI18n();
 
@@ -62,6 +63,8 @@ onMounted(() => {
   if (window.javaObj) {
     config.android = true;
   }
+
+  system_init();
 })
 
 // 设置屏幕尺寸

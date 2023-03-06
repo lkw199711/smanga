@@ -81,7 +81,7 @@ export default defineComponent({
               const item = <HTMLElement>doms[i];
                 //@ts-ignore
               const screenTop = Math.abs(item.offsetTop + item.y);
-              console.log(screenTop);
+
               if (screenTop < minTop) {
                 minTop = screenTop;
                 page = i;
@@ -89,7 +89,7 @@ export default defineComponent({
             }
             const loadedImages = Number(global_get('loadedImages'));
             page = loadedImages+1 - doms.length + page;
-            
+
           } else {
             // 区分单双页
             page = Number(global_get('page'));
@@ -97,7 +97,7 @@ export default defineComponent({
               page = page * 2 - 1;
             }
           }
-          
+
 
           await add_bookmark(page);
         }

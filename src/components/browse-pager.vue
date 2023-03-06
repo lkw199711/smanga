@@ -140,8 +140,6 @@ export default defineComponent({
      * 下一页
      */
     next() {
-      console.log(this.count);
-      console.log(this.page);
       if (this.page < this.count / this.pageSize) {
         this.page_change(++this.page);
       } else {

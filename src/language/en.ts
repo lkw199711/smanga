@@ -42,6 +42,7 @@ export default {
         passLabel: 'passWord:',
         registerTime: 'registerTime',
         option: 'option',
+        power:'power',
         namePlace: 'place enter userName',
         passPlace: 'place enter passWord(Leave blank to not modify)',
         confirmBoxTitle: 'confirm deletion',
@@ -50,6 +51,16 @@ export default {
         note:{
             name:'"userName": 3-20 digits long, beginning with a letter',
             pass:'"passWord": Leave blank to not modify',
+        },
+        form:{
+            label:{
+                editUser:'editUser',
+                editMedia:'editMedia',
+            },
+            title:{
+                power: 'power',
+                mediaPower: 'mediaReadPower',
+            }
         },
     },
     mediaManage: {

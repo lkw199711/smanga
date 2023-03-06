@@ -39,7 +39,6 @@ const props = defineProps(['rightSidebar', 'direction', 'removeFirst']);
 const emit = defineEmits(['contextMenu', 'direction', 'removeFirst'])
 
 const removeFirstTitle = computed(() => {
-  console.log(props.removeFirst);
   return props.removeFirst ? t('option.recoveryFirst') : t('option.removeFirst');
 });
 

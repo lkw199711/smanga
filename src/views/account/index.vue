@@ -42,6 +42,12 @@
                 :icon="Delete"
                 @click="handleDelete(scope.$index, scope.row)">{{ $t('option.delete') }}
             </el-button>
+            <el-button
+                    size="small"
+                    type="success"
+                    :icon="Lollipop"
+                    @click="handlePower(scope.$index, scope.row)">{{ $t('account.power') }}
+            </el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -84,6 +90,22 @@
           <el-input v-model="form.passWord" :placeholder="$t('account.passModifyPlace')"></el-input>
         </el-form-item>
         <p class="note">{{$t('account.note.pass')}}</p>
+
+        <!--权限-->
+        <p class="s-form-title">{{ $t('account.form.title.power') }}</p>
+        <el-form-item :label="$t('account.form.label.editUser')">
+          <el-switch v-model="form.editUser" active-value="1" inactive-value="0"/>
+        </el-form-item>
+
+
+        <!--编辑媒体库-->
+        <el-form-item :label="$t('account.form.label.editMedia')">
+          <el-switch v-model="form.editMedia" active-value="1" inactive-value="0"/>
+        </el-form-item>
+
+        <!--媒体库权限-->
+        <p class="s-form-title">{{ $t('account.form.title.mediaPower') }}</p>
+        <el-checkbox v-for="i in medias" v-model="i.permit" :label="i.mediaName" size="large" />
       </el-form>
 
       <template v-slot:footer>
@@ -96,6 +118,7 @@
         </div>
       </template>
     </el-dialog>
+
   </div>
 </template>
 

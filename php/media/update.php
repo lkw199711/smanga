@@ -3,6 +3,9 @@
 	require_once '../public/connect.php';
 	require_once '../public/lkw.php';
 	require_once '../dosql/mysql-1.0.php';
+	require_once '../public/check-power.php';
+
+	check_media_power();
 
 	$mediaId = $_POST['mediaId'];
 	$mediaName = $_POST['mediaName'];

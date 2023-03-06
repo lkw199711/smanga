@@ -1,6 +1,7 @@
 import {createStore} from 'vuex'
 import {reactive} from 'vue'
 import {GlobalData} from "@/store/type";
+import {get_cookie} from "../utils/index";
 
 export default createStore({
     state: {
@@ -40,6 +41,9 @@ export const globalData: GlobalData = reactive({
     loadedImages: 0,
 });
 
+const editUser = get_cookie('editUser');
+const editMedia = get_cookie('editMedia');
+
 export const config = reactive({
     sidebarCollapse: false,
     browseTop: true,
@@ -53,6 +57,8 @@ export const config = reactive({
     theme: 'grey',
     env: 'web',
     android: false,
+    editUser: editUser==='1',
+    editMedia: editMedia==='1',
 });
 
 export const cache = reactive({

@@ -18,7 +18,7 @@
       <p class="app-box">
         <a href="/file/smanga1.1.apk">下载Android应用</a>
       </p>
-      
+
 
       <!--按钮盒子-->
       <div class="btn-box">
@@ -34,6 +34,7 @@ import {defineComponent} from 'vue'
 import {login} from "@/api/account";
 import { Cookies } from "@/utils";
 import database from './components/database.vue';
+import {config} from "@/store";
 
 export default defineComponent({
   name: 'index',
@@ -65,6 +66,10 @@ export default defineComponent({
         const userInfo = res.data.userInfo;
         Cookies.set('userName', userInfo.username);
         Cookies.set('userId', userInfo.userId);
+        Cookies.set('editMedia', userInfo.editMedia);
+        Cookies.set('editUser', userInfo.editUser);
+        config.editMedia = userInfo.editMedia==='1';
+        config.editUser = userInfo.editUser==='1';
 
         await this.$router.push('media-list');
       }

@@ -2,6 +2,9 @@
 	require_once '../public/common.php';
 	require_once '../public/lkw.php';
 	require_once '../dosql/mysql-1.0.php';
+	require_once '../public/check-power.php';
+
+	check_media_power();
 
 	$mediaName = $_POST['mediaName'];
 	$mediaType = $_POST['mediaType'];

@@ -17,7 +17,7 @@
 			'where'=>['manga.mediaId='.$mediaId,'manga.mediaId=media.mediaId'],
 			'limit'=>$pageSize,
 			'start'=>$recordStart,
-		),$dosqlUrl);
+		));
 
 		$count = dosql(array(
 			'table'=>'manga',
@@ -30,7 +30,7 @@
 			'table'=>'manga',
 			'limit'=>$pageSize,
 			'start'=>$recordStart,
-		),$dosqlUrl);
+		));
 
 		$count = dosql(array('table'=>'manga','type'=>'getcount'));
 	}
