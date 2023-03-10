@@ -52,7 +52,7 @@ export default defineComponent({
         case 'middle':
           return 11;
         case 'small':
-          return 7;
+          return 4;
         default:
           return 21;
       }
@@ -147,9 +147,11 @@ export default defineComponent({
 
 <style scoped lang='less'>
 .media-pager {
-  margin-top: 1.4rem;
+  padding: 1.4rem 0px;
   width: 100%;
-  overflow-x: scroll;
+  overflow-x: auto;
+  display: flex;
+  justify-content: center;
 }
 
 @media only screen and (min-width: 1200px) {

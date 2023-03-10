@@ -1,7 +1,7 @@
 <template>
   <div class="manga-list">
     <div class="manga-list-box">
-      <manga v-for="(i,k) in list" :key="k" :mangaInfo="i" @contextmenu.prevent="context_menu(i,k)"/>
+      <manga v-for="(i,k) in list" :key="k" :mangaInfo="i" @contextmenu.prevent="context_menu(i,k)" @more="context_menu(i,k)" />
     </div>
 
     <!--分页组件-->

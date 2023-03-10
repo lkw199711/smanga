@@ -1,14 +1,16 @@
 <template>
-  <div class="manga" @click="go_chapter">
-
+  <div class="manga">
+    <div  @click="go_chapter">
     <!--封面图片-->
-    <el-image v-if="finish" class="anim cover-img" :src="poster" :fit="fit" :alt="title"/>
-
-    <!--占位图标-->
-    <el-image v-else class="cover-img" :src="placeholder" fit="fill"/>
-
+      <el-image v-if="finish" class="anim cover-img" :src="poster" :fit="fit" :alt="title"/>
+      <!--占位图标-->
+      <el-image v-else class="cover-img" :src="placeholder" fit="fill"/>
+    </div>
+    <div class="mange_content_wrapper">
+      <p class="manga-name single-line-text-overflow">{{ title }}</p>
+      <el-icon @click="openMore"><Menu /></el-icon>
+    </div>
     <!--漫画名称-->
-    <p class="manga-name single-line-text-overflow">{{ title }}</p>
   </div>
 </template>
 
@@ -43,6 +45,9 @@ export default {
   },
 
   methods: {
+    openMore(){
+      this.$emit('more')
+    },
     go_chapter() {
       const mangaId = this.mangaInfo.mangaId;
       const mangaCover = this.mangaInfo.mangaCover;
@@ -74,6 +79,9 @@ export default {
 .manga {
   cursor: pointer;
   overflow: hidden;
+  /deep/ .el-image__inner {
+    -webkit-touch-callout:none;
+  }
 }
 
 .cover-img {
@@ -104,7 +112,12 @@ export default {
     opacity: 1;
   }
 }
-
+.mange_content_wrapper{
+  display: grid;
+  grid-template-columns: 1fr 20px;
+  grid-column-gap: 5px;
+  align-items: center;
+}
 
 @media only screen and (min-width: 1200px) {
   .cover-img {

@@ -2,9 +2,8 @@
   <div class="chapter-list">
     <!--章节列表-->
     <div class="chapter-list-box">
-      <chapter v-for="(i,k) in list" :key="k" :chapterInfo="i" @click="go_browse(i)" @contextmenu.prevent="context_menu(i,k)"/>
+      <chapter v-for="(i,k) in list" :key="k" :chapterInfo="i" @goto="go_browse(i)" @contextmenu.prevent="context_menu(i,k)"  @more="context_menu(i,k)" />
     </div>
-
     <!--分页组件-->
     <media-pager ref="pager" :count="count" :params-page="page" @page-change="page_change"/>
 

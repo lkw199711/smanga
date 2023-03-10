@@ -1,16 +1,19 @@
 <template>
   <div class="chapter">
-    <!--封面图片-->
-    <el-image v-if="finish" class="anim chapter-cover-img" :src="poster" :fit="fit" :alt="chapterName"/>
-
-    <!--占位图标-->
-    <el-image v-else :src="placeholder" class="chapter-cover-img" fit="fill"/>
-
+    <div @click="goToChapter">
+      <!--封面图片-->
+      <el-image v-if="finish" class="anim chapter-cover-img" :src="poster" :fit="fit" :alt="chapterName"/>
+      <!--占位图标-->
+      <el-image v-else :src="placeholder" class="chapter-cover-img" fit="fill"/>
+    </div>
     <!--书签图标-->
     <i class="iconfont icon-Bookmark- icon-bookmark" v-if="bookmark"/>
-
+    <div class="mange_content_wrapper">
     <!--章节名称-->
-    <p class="chapter-name single-line-text-overflow">{{ chapterName }}</p>
+      <p class="chapter-name single-line-text-overflow">{{ chapterName }}</p>
+      <el-icon @click="openMore"><Menu /></el-icon>
+    </div>
+    
   </div>
 </template>
 
@@ -47,7 +50,14 @@ export default defineComponent({
   components: {},
 
   // 方法
-  methods: {},
+  methods: {
+    openMore(){
+      this.$emit('more')
+    },
+    goToChapter(){
+      this.$emit('goto')
+    },
+  },
 
   // 生命周期
   created() {
@@ -114,7 +124,12 @@ export default defineComponent({
     font-size: 4rem;
   }
 }
-
+.mange_content_wrapper{
+  display: grid;
+  grid-template-columns: 1fr 20px;
+  grid-column-gap: 5px;
+  align-items: center;
+}
 @media only screen and (max-width: 1199px) and (min-width: 768px) {
   .chapter-cover-img {
     height: 18rem;

@@ -74,7 +74,7 @@ export default defineComponent({
 
     &-middle {
       flex: 1;
-      overflow: scroll;
+      overflow-y: scroll;
     }
   }
 }
