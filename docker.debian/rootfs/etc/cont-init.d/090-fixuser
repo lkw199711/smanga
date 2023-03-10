@@ -1,0 +1,18 @@
+#!/usr/bin/with-contenv bash
+
+function 090_fixuser {
+groupmod -o -g "${PGID}" smanga
+usermod -o -u "${PUID}" smanga
+
+# smanga app
+chown smanga:smanga -R /app /config
+
+chown smanga:smanga \
+    /compress \
+    /poster
+
+# Nginx
+chown smanga:smanga -R /var/lib/nginx /var/log/nginx
+}
+
+090_fixuser 2>&1 | sed "s#^#[cont-init.d] info: $(realpath $0): &#g"

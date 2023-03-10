@@ -1,0 +1,3 @@
+#!/usr/bin/with-contenv bash
+
+exec s6-setuidgid root /usr/sbin/php-fpm7.4 -F -R
