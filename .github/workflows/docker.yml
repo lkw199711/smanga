@@ -16,11 +16,11 @@ jobs:
         id: set-version
         run: |
           SMANGA_VERSION=$(cat package.json | grep 'version' | cut -d\" -f4 | head -1)
-          echo "::set-output name=version::${SMANGA_VERSION}"
+          echo "version=${SMANGA_VERSION}" >> $GITHUB_OUTPUT
 
       -
         name: Setup node
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
           node-version: '14'
       -
@@ -73,7 +73,7 @@ jobs:
         id: set-version
         run: |
           SMANGA_VERSION=$(cat package.json | grep 'version' | cut -d\" -f4 | head -1)
-          echo "::set-output name=version::${SMANGA_VERSION}"
+          echo "version=${SMANGA_VERSION}" >> $GITHUB_OUTPUT
 
       - 
         name: Set Up QEMU
@@ -125,7 +125,7 @@ jobs:
 
       -
         name: Docker Hub Description
-        uses: peter-evans/dockerhub-description@v2
+        uses: peter-evans/dockerhub-description@v3
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}

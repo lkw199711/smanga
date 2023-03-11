@@ -1,4 +1,4 @@
-name: Build Smanga Base Docker
+name: Build Smanga Base Debian Docker
 
 on:
     workflow_dispatch:
@@ -6,8 +6,8 @@ on:
       branches:
         - master
       paths:
-        - docker/base.Dockerfile
-        - .github/workflows/docker_base.yml
+        - docker.debian/base.Dockerfile
+        - .github/workflows/docker_base_debian.yml
 
 jobs:
   build:
@@ -43,7 +43,7 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           context: .
-          file: docker/base.Dockerfile
+          file: docker.debian/base.Dockerfile
           platforms: |
             linux/amd64
             linux/arm64/v8
@@ -51,5 +51,5 @@ jobs:
           build-args: |
             SMANGA_VERSION=${{ steps.set-version.outputs.version }}
           tags: |
-            ${{ secrets.DOCKER_USERNAME }}/smanga-base:${{ steps.set-version.outputs.version }}
-            ${{ secrets.DOCKER_USERNAME }}/smanga-base:latest
+            ${{ secrets.DOCKER_USERNAME }}/smanga-base:debian-${{ steps.set-version.outputs.version }}
+            ${{ secrets.DOCKER_USERNAME }}/smanga-base:debian-latest

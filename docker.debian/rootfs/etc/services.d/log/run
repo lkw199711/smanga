@@ -1,0 +1,5 @@
+#!/usr/bin/with-contenv bash
+
+sleep 4
+
+exec s6-setuidgid root tail -f /log/*.log

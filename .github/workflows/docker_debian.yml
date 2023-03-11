@@ -1,16 +1,11 @@
-name: Build Smanga Base Docker
+name: Build Smanga Debian Docker
 
 on:
     workflow_dispatch:
-    push:
-      branches:
-        - master
-      paths:
-        - docker/base.Dockerfile
-        - .github/workflows/docker_base.yml
 
 jobs:
   build:
+    name: Build Smanga Docker
     runs-on: ubuntu-latest
     steps:
       - 
@@ -22,6 +17,15 @@ jobs:
         run: |
           SMANGA_VERSION=$(cat package.json | grep 'version' | cut -d\" -f4 | head -1)
           echo "version=${SMANGA_VERSION}" >> $GITHUB_OUTPUT
+
+      -
+        name: Setup node
+        uses: actions/setup-node@v3
+        with:
+          node-version: '14'
+      -
+        name: Build Web
+        run: npm install && npm run build
 
       - 
         name: Set Up QEMU
@@ -39,17 +43,18 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
 
       - 
-        name: Build Base
+        name: Build
         uses: docker/build-push-action@v3
         with:
           context: .
-          file: docker/base.Dockerfile
+          file: docker.debian/Dockerfile
           platforms: |
             linux/amd64
             linux/arm64/v8
           push: true
           build-args: |
             SMANGA_VERSION=${{ steps.set-version.outputs.version }}
+            SMANGA_BASE_NAME=${{ secrets.DOCKER_USERNAME }}
           tags: |
-            ${{ secrets.DOCKER_USERNAME }}/smanga-base:${{ steps.set-version.outputs.version }}
-            ${{ secrets.DOCKER_USERNAME }}/smanga-base:latest
+            ${{ secrets.DOCKER_USERNAME }}/smanga:debian-${{ steps.set-version.outputs.version }}
+            ${{ secrets.DOCKER_USERNAME }}/smanga:debian
