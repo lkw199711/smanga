@@ -1,0 +1,40 @@
+version: '3.3'
+services:
+
+    smanga:
+        container_name: smanga
+        ports:
+            - '8097:80'
+        volumes:
+            - './compress:/compress'
+            - './poster:/poster'
+            - './config:/config'
+            - './sql:/sql'
+            - '/mnt:/mnt'
+        environment:
+            - PUID=1000
+            - PGID=1000
+            - TZ=Asia/Shanghai
+        networks:
+            - default
+        depends_on:
+            - db
+        image: lkw199711/smanga:debian
+    db:
+        container_name: smanga-db
+        image: mysql:8.0
+        restart: always
+        environment:
+            - MYSQL_RANDOM_ROOT_PASSWORD=smanga
+            - MYSQL_DATABASE=smanga
+            - MYSQL_USER=smanga
+            - MYSQL_PASSWORD=smanga
+        volumes:
+            - './smanga_db:/var/lib/mysql'
+            - './sql:/docker-entrypoint-initdb.d'
+        networks:
+            - default
+
+networks:
+  default:
+    name: smanga

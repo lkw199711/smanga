@@ -28,3 +28,6 @@ COPY --chmod=755 ./docker.debian/rootfs /
 
 EXPOSE 80
 VOLUME [ "/config", "/poster", "/compress" ]
+
+# 与mysql容器共享的挂载目录，用来初始化sql。
+VOLUME [ "/sql" ]
