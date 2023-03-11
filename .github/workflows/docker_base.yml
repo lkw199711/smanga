@@ -21,7 +21,7 @@ jobs:
         id: set-version
         run: |
           SMANGA_VERSION=$(cat package.json | grep 'version' | cut -d\" -f4 | head -1)
-          echo "::set-output name=version::${SMANGA_VERSION}"
+          echo "version=${SMANGA_VERSION}" >> $GITHUB_OUTPUT
 
       - 
         name: Set Up QEMU
