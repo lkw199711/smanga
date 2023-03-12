@@ -52,7 +52,7 @@ export default defineComponent({
         case 'middle':
           return 11;
         case 'small':
-          return 4;
+          return 5;
         default:
           return 21;
       }
