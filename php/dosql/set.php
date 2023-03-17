@@ -25,10 +25,10 @@
 		]);
 
 	// 写入文件
-	write_ini('config','ip', $ip,$configFile);
-	write_ini('config','port', $port,$configFile);
-	write_ini('config','userName', $userName,$configFile);
-	write_ini('config','passWord', $passWord,$configFile);
+	write_ini('sql','ip', $ip,$configFile);
+	write_ini('sql','port', $port,$configFile);
+	write_ini('sql','userName', $userName,$configFile);
+	write_ini('sql','passWord', $passWord,$configFile);
 
 
 
