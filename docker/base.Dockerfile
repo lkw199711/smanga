@@ -37,12 +37,6 @@ RUN set -ex && \
     && \
     pecl install rar && \
     echo "extension=rar.so" > /etc/php7/conf.d/00_rar.ini && \
-    apk del --purge build-dependencies && \
-    rm -rf \
-        /var/cache/apk/* \
-        /usr/share/man \
-        /usr/share/php7 \
-        /tmp/* && \
     # Add user
     addgroup -S smanga -g 911 && \
     adduser -S smanga -G smanga -h /app -u 911 && \
@@ -52,15 +46,22 @@ RUN set -ex && \
     ln -s /var/log/nginx/access.log /log/nginx_access.log && \
     ln -s /var/log/nginx/error.log /log/nginx_error.log && \
     # PHP Nginx settings
-    sed -i "s/short_open_tag = Off/short_open_tag = On/g" /etc/php7/php.ini && \
+    sed -i "s#short_open_tag = Off#short_open_tag = On#g" /etc/php7/php.ini && \
     sed -i "s#;open_basedir =#open_basedir = /#g" /etc/php7/php.ini && \
-    sed -i "s/register_argc_argv = Off/register_argc_argv = On/g" /etc/php7/php.ini && \
+    sed -i "s#register_argc_argv = Off#register_argc_argv = On#g" /etc/php7/php.ini && \
     mkdir -p /run/php && \
     chown -R smanga:smanga /run/php && \
     rm -rf \
         /etc/nginx/nginx.conf \
         /etc/nginx/http.d/* \
-        /etc/php7/php-fpm.d/www.conf
+        /etc/php7/php-fpm.d/www.conf && \
+    # Clear
+    apk del --purge build-dependencies && \
+    rm -rf \
+        /var/cache/apk/* \
+        /usr/share/man \
+        /usr/share/php7 \
+        /tmp/*
 
 COPY --chmod=755 ./docker/rootfs_base /
 

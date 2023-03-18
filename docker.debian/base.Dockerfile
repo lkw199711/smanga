@@ -17,8 +17,7 @@ RUN set -ex && \
         -O /tmp/s6-overlay-installer \
         https://github.com/just-containers/s6-overlay/releases/download/${OVERLAY_VERSION}/s6-overlay-${ARCH}-installer && \
     chmod 755 /tmp/s6-overlay-installer && \
-    /tmp/s6-overlay-installer / \
-    && \
+    /tmp/s6-overlay-installer / && \
     apt install -y \
         nginx \
     && \
@@ -51,12 +50,9 @@ RUN set -ex && \
     usermod -G users smanga && \
     groupmod -g 911 smanga && \
     # PHP Nginx settings
-    sed -i "s/short_open_tag = Off/short_open_tag = On/g" /etc/php/7.4/cli/php.ini && \
-    sed -i "s#;open_basedir =#open_basedir = /#g" /etc/php/7.4/cli/php.ini && \
-    sed -i "s/register_argc_argv = Off/register_argc_argv = On/g" /etc/php/7.4/cli/php.ini && \
-    sed -i "s/short_open_tag = Off/short_open_tag = On/g" /etc/php/7.4/fpm/php.ini && \
-    sed -i "s#;open_basedir =#open_basedir = /#g" /etc/php/7.4/fpm/php.ini && \
-    sed -i "s/register_argc_argv = Off/register_argc_argv = On/g" /etc/php/7.4/fpm/php.ini && \
+    sed -i "s#short_open_tag = Off#short_open_tag = On#g" /etc/php/7.4/cli/php.ini /etc/php/7.4/fpm/php.ini && \
+    sed -i "s#;open_basedir =#open_basedir = /#g" /etc/php/7.4/cli/php.ini /etc/php/7.4/fpm/php.ini && \
+    sed -i "s#register_argc_argv = Off#register_argc_argv = On#g" /etc/php/7.4/cli/php.ini /etc/php/7.4/fpm/php.ini && \
     mkdir -p /run/php && \
     chown -R smanga:smanga /run/php && \
     rm -rf \
