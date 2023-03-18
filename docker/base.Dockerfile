@@ -42,21 +42,26 @@ RUN set -ex && \
         /var/cache/apk/* \
         /usr/share/man \
         /usr/share/php7 \
-        /tmp/*
-
-RUN addgroup -S smanga -g 911 && \
+        /tmp/* && \
+    # Add user
+    addgroup -S smanga -g 911 && \
     adduser -S smanga -G smanga -h /app -u 911 && \
     usermod -s /bin/bash smanga && \
     # Log Links
     mkdir -p /log && \
-    ln -s /var/log/php7/error.log /log/php7_error.log && \
     ln -s /var/log/nginx/access.log /log/nginx_access.log && \
     ln -s /var/log/nginx/error.log /log/nginx_error.log && \
-    # PHP settings
+    # PHP Nginx settings
     sed -i "s/short_open_tag = Off/short_open_tag = On/g" /etc/php7/php.ini && \
     sed -i "s#;open_basedir =#open_basedir = /#g" /etc/php7/php.ini && \
     sed -i "s/register_argc_argv = Off/register_argc_argv = On/g" /etc/php7/php.ini && \
-    sed -i "s/user = nobody/user = smanga/g" /etc/php7/php-fpm.d/www.conf && \
-    sed -i "s/group = nobody/group = smanga/g" /etc/php7/php-fpm.d/www.conf
+    mkdir -p /run/php && \
+    chown -R smanga:smanga /run/php && \
+    rm -rf \
+        /etc/nginx/nginx.conf \
+        /etc/nginx/http.d/* \
+        /etc/php7/php-fpm.d/www.conf
+
+COPY --chmod=755 ./docker/rootfs_base /
 
 ENTRYPOINT [ "/init" ]
