@@ -6,6 +6,13 @@
   "description": "漫画流媒体库",
   "glyphs": [
     {
+      "icon_id": "7159324",
+      "name": "排序",
+      "font_class": "paixu",
+      "unicode": "e610",
+      "unicode_decimal": 58896
+    },
+    {
       "icon_id": "1727500",
       "name": "253列表视图、菜单",
       "font_class": "liebiaoshitu",

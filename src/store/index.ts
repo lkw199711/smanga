@@ -58,6 +58,7 @@ export const config = reactive({
     env: 'web',
     android: false,
     viewType: 'block',
+    order: 'time',
     editUser: editUser==='1',
     editMedia: editMedia==='1',
 });

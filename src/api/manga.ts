@@ -6,11 +6,11 @@ import {ajax} from "./index";
  * @param recordStart
  * @param pageSize
  */
-export function get_manga(mediaId: number, recordStart: number, pageSize: number) {
+export function get_manga(mediaId: number, recordStart: number, pageSize: number,order='') {
     return ajax({
-        url: 'php/manga/get.php',
-        data: {mediaId, recordStart, pageSize}
-    })
+			url: "php/manga/get.php",
+			data: { mediaId, recordStart, pageSize, order },
+		});
 }
 
 /**

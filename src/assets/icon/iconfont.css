@@ -1,11 +1,11 @@
 @font-face {
   font-family: "iconfont"; /* Project id 3852924 */
-  src: url('iconfont.eot?t=1680315405078'); /* IE9 */
-  src: url('iconfont.eot?t=1680315405078#iefix') format('embedded-opentype'), /* IE6-IE8 */
-       url('iconfont.woff2?t=1680315405078') format('woff2'),
-       url('iconfont.woff?t=1680315405078') format('woff'),
-       url('iconfont.ttf?t=1680315405078') format('truetype'),
-       url('iconfont.svg?t=1680315405078#iconfont') format('svg');
+  src: url('iconfont.eot?t=1680361686680'); /* IE9 */
+  src: url('iconfont.eot?t=1680361686680#iefix') format('embedded-opentype'), /* IE6-IE8 */
+       url('iconfont.woff2?t=1680361686680') format('woff2'),
+       url('iconfont.woff?t=1680361686680') format('woff'),
+       url('iconfont.ttf?t=1680361686680') format('truetype'),
+       url('iconfont.svg?t=1680361686680#iconfont') format('svg');
 }
 
 .iconfont {
@@ -14,6 +14,10 @@
   font-style: normal;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-paixu:before {
+  content: "\e610";
 }
 
 .icon-liebiaoshitu:before {

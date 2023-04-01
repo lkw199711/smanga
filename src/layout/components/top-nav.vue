@@ -16,10 +16,31 @@
 
 		<!--右侧菜单-->
 		<div class="right-option">
-			<div class="view">
-				<i :class="['iconfont', sortClass]" @click="switch_view_type" />
+			<div class="view-type">
+				<i :class="['iconfont', viewClass]" @click="switch_view_type" />
 			</div>
 
+			<!-- 排序方式 -->
+			<div class="sort">
+				<i :class="['sort-label', 'iconfont', 'icon-paixu']" @click="switch_view_type" />
+				<el-select
+					v-model="config.order"
+					class="sort-select"
+					size="default"
+					@change="sort_order_change"
+				>
+					<el-option
+						v-for="item in sortOrder"
+						:key="item"
+						:label="$t(`sortOrder.${item}`)"
+						:value="item"
+					>
+						<span class="op-text">{{ $t(`sortOrder.${item}`) }}</span>
+					</el-option>
+				</el-select>
+			</div>
+			
+			<!-- 主题皮肤 -->
 			<div class="theme" v-show="config.screenType !== 'small'">
 				<span class="theme-label" />
 				<el-select
@@ -72,7 +93,11 @@
 	const value = ref(config.language);
 	const { locale } = useI18n();
 
-	const sortClass = computed(() => {
+	// 排序方式
+	const sortOrder = ["name", "nameDesc", "time", "timeDesc"];
+
+	// 视图类型
+	const viewClass = computed(() => {
 		const viewType = config.viewType;
 		switch (viewType) {
 			case "block":
@@ -107,6 +132,8 @@
 				break;
 		}
 	}
+
+	function sort_order_change(val: string) {}
 
 	function language_change(val: string) {
 		locale.value = val;
@@ -169,12 +196,26 @@
 		margin-top: 1.4rem;
 	}
 
-	.view {
+	.view-type {
 		margin-right: 1rem;
 
 		i {
 			font-size: 3.2rem;
 			color: @s-background;
+		}
+	}
+
+	.sort {
+		&-label {
+			margin-right: 1rem;
+			vertical-align: middle;
+			font-size: 2.6rem;
+			color: @s-background;
+		}
+
+		&-select {
+			width: 12rem;
+			margin-right: 2rem;
 		}
 	}
 
