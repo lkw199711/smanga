@@ -57,7 +57,7 @@ export const config = reactive({
     theme: 'grey',
     env: 'web',
     android: false,
-    viewType: 'list',
+    viewType: 'block',
     editUser: editUser==='1',
     editMedia: editMedia==='1',
 });
