@@ -28,7 +28,11 @@ export default defineComponent({
     components: {RightSidebar, MediaPager, chapter},
 
     // 计算
-    computed: {},
+    computed: {
+        config() {
+            return config;
+        }
+    },
 
     // 方法
     methods: {

@@ -6,6 +6,20 @@
   "description": "漫画流媒体库",
   "glyphs": [
     {
+      "icon_id": "1727500",
+      "name": "253列表视图、菜单",
+      "font_class": "liebiaoshitu",
+      "unicode": "e8dc",
+      "unicode_decimal": 59612
+    },
+    {
+      "icon_id": "1727501",
+      "name": "252宫格视图",
+      "font_class": "gonggeshitu",
+      "unicode": "e8dd",
+      "unicode_decimal": 59613
+    },
+    {
       "icon_id": "26257242",
       "name": "语言",
       "font_class": "yuyan",

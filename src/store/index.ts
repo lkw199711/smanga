@@ -51,12 +51,13 @@ export const config = reactive({
     chapterSelect: false,
     browseType: 'flow',
     bookmarkShow: false,
-    screenType: 'large',
+    screenType: 'large', //small | middle | large | 2k | 4k
     rightSidebar: false,
     language: 'zhCn',
     theme: 'grey',
     env: 'web',
     android: false,
+    viewType: 'list',
     editUser: editUser==='1',
     editMedia: editMedia==='1',
 });

@@ -1,7 +1,7 @@
 <template>
   <div class="manga-list">
-    <div class="manga-list-box">
-      <manga v-for="(i,k) in list" :key="k" :mangaInfo="i" @contextmenu.prevent="context_menu(i,k)"/>
+    <div :class="['manga-list-box',{'block':config.viewType==='list'}]">
+      <manga v-for="(i,k) in list" :key="k" :viewType="config.viewType" :mangaInfo="i" @contextmenu.prevent="context_menu(i,k)"/>
     </div>
 
     <!--分页组件-->
@@ -46,6 +46,9 @@ export default defineComponent({
   computed: {
     mediaId() {
       return Number(this.$route.query.mediaId || global_get('mediaId'));
+    },
+    config() {
+      return config;
     }
   },
 

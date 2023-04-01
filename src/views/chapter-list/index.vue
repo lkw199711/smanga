@@ -1,8 +1,8 @@
 <template>
   <div class="chapter-list">
     <!--章节列表-->
-    <div class="chapter-list-box">
-      <chapter v-for="(i,k) in list" :key="k" :chapterInfo="i" @click="go_browse(i)" @contextmenu.prevent="context_menu(i,k)"/>
+    <div :class="['chapter-list-box',{'block':config.viewType==='list'}]">
+      <chapter v-for="(i,k) in list" :key="k" :view-type="config.viewType" :chapterInfo="i" @click="go_browse(i)" @contextmenu.prevent="context_menu(i,k)"/>
     </div>
 
     <!--分页组件-->
@@ -50,6 +50,9 @@ export default defineComponent({
     browseType(): string {
       return String(this.$route.params.browseType || global_get('browseType'));
     },
+    config() {
+      return config;
+    }
   },
 
   // 方法

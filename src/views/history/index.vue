@@ -1,8 +1,8 @@
 <template>
   <div class="history-list">
     <!--列表-->
-    <div class="chapter-list-box">
-      <chapter v-for="(i,k) in list" :key="k" :chapterInfo="i" @click="go_browse(i)" @contextmenu.prevent="context_menu(i,k)"/>
+    <div :class="['chapter-list-box',{'block':config.viewType==='list'}]">
+      <chapter v-for="(i,k) in list" :key="k" :viewType="config.viewType" :chapterInfo="i" @click="go_browse(i)" @contextmenu.prevent="context_menu(i,k)"/>
     </div>
 
     <!--分页组件-->

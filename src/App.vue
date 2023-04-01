@@ -77,6 +77,7 @@ window.addEventListener('resize', set_screen_type);
 function set_screen_type() {
   // const screen = window.screen.width;
   const screen = document.body.scrollWidth;
+  
   // ElMessage(String(screen));
   if (screen < 768) {
     config.screenType = 'small';
@@ -87,6 +88,8 @@ function set_screen_type() {
   } else {
     config.screenType = '2k';
   }
+
+  console.log(config.screenType);
 }
 
 /**
