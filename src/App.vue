@@ -88,8 +88,6 @@ function set_screen_type() {
   } else {
     config.screenType = '2k';
   }
-
-  console.log(config.screenType);
 }
 
 /**
