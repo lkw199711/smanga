@@ -44,7 +44,7 @@
     "less": "^3.0.4",
     "less-loader": "^5.0.0",
     "lint-staged": "^9.5.0",
-    "sass-resources-loader": "^2.2.4",
+    "sass-resources-loader": "^2.2.5",
     "style-resources-loader": "^1.3.3",
     "typescript": "~5.0.3",
     "vue-cli-plugin-style-resources-loader": "^0.1.5"
