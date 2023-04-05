@@ -1778,12 +1778,19 @@
     webpack "^4.0.0"
     yorkie "^2.0.0"
 
-"@vue/cli-plugin-router@^4.5.15", "@vue/cli-plugin-router@~4.5.0":
+"@vue/cli-plugin-router@^4.5.15":
   version "4.5.15"
   resolved "https://registry.npmmirror.com/@vue/cli-plugin-router/download/@vue/cli-plugin-router-4.5.15.tgz?cache=0&sync_timestamp=1637121138678&other_urls=https%3A%2F%2Fregistry.npmmirror.com%2F%40vue%2Fcli-plugin-router%2Fdownload%2F%40vue%2Fcli-plugin-router-4.5.15.tgz"
   integrity sha1-HnXIyJ30LGlPFDufECjePPXWHh4=
   dependencies:
     "@vue/cli-shared-utils" "^4.5.15"
+
+"@vue/cli-plugin-router@~5.0.8":
+  version "5.0.8"
+  resolved "https://registry.yarnpkg.com/@vue/cli-plugin-router/-/cli-plugin-router-5.0.8.tgz#a113ec626f3d4216d20496c42d35533bce9e889f"
+  integrity sha512-Gmv4dsGdAsWPqVijz3Ux2OS2HkMrWi1ENj2cYL75nUeL+Xj5HEstSqdtfZ0b1q9NCce+BFB6QnHfTBXc/fCvMg==
+  dependencies:
+    "@vue/cli-shared-utils" "^5.0.8"
 
 "@vue/cli-plugin-typescript@~5.0.8":
   version "5.0.8"
