@@ -174,7 +174,7 @@ export default defineComponent({
 
     // 生命周期
     async created() {
-        const res = await get_media(0,1000);
+        const res = await get_media(0,10000);
         const medias = res.data.list||[];
         this.medias = medias;
         this.load_table();

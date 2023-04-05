@@ -81,6 +81,10 @@ function scan_path($path,$pathId,$mediaId){
 	global $direction;
 	global $removeFirst;
 
+	// mysql插入值空置处理 (插入空字符串会报错)
+	$direction = $direction ? $direction : 1;
+	$removeFirst = $removeFirst ? $removeFirst : 0;
+
 	$mangaList = get_manga_list($path);
 
 	// 插入漫画数据
@@ -92,7 +96,7 @@ function scan_path($path,$pathId,$mediaId){
 		$mangaType = $value['type'];
 
 		// 插入漫画记录
-		dosql(array(
+		$rres = dosql(array(
 			'type'=>'insert',
 			'table'=>'manga',
 			'field'=>array('mediaId','pathId','mangaName','mangaCover','mangaPath','browseType','direction','removeFirst','createTime','updateTime'),
@@ -112,8 +116,8 @@ function scan_path($path,$pathId,$mediaId){
 			$sqlRes = dosql(array(
 				'type'=>'insert',
 				'table'=>'chapter',
-				'field'=>array('mangaId','mediaId','pathId','chapterName','chapterCover','chapterPath','chapterType','createTime','updateTime'),
-				'value'=>array($mangaId,$mediaId,$pathId,$sqlName,$sqlPoster,$sqlPath,$mangaType,'now()','now()'),
+				'field'=>array('mangaId','mediaId','pathId','chapterName','chapterCover','chapterPath','chapterType','browseType','createTime','updateTime'),
+				'value'=>array($mangaId,$mediaId,$pathId,$sqlName,$sqlPoster,$sqlPath,$mangaType,$defaultBrowse,'now()','now()'),
 			));
 			$chapterNum = 1;
 		}else{
@@ -145,6 +149,7 @@ function scan_path($path,$pathId,$mediaId){
  */
 function scan_chapter($path,$mangaId,$mediaId,$pathId){
 	global $link;
+	global $defaultBrowse;
 
 	$chapter = get_chapter_list($path);
 
@@ -158,8 +163,8 @@ function scan_chapter($path,$mangaId,$mediaId,$pathId){
 		$sqlRes = dosql(array(
 			'type'=>'insert',
 			'table'=>'chapter',
-			'field'=>array('mangaId','mediaId','pathId','chapterName','chapterCover','chapterPath','chapterType','createTime','updateTime'),
-			'value'=>array($mangaId,$mediaId,$pathId,$chapterName,$chapterCover,$chapterPath,$chapterType,'now()','now()'),
+			'field'=>array('mangaId','mediaId','pathId','chapterName','chapterCover','chapterPath','chapterType','browseType','createTime','updateTime'),
+			'value'=>array($mangaId,$mediaId,$pathId,$chapterName,$chapterCover,$chapterPath,$chapterType,$defaultBrowse,'now()','now()'),
 		));
 	}
 

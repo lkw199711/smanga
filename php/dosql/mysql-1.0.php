@@ -90,6 +90,7 @@ function dosql($params){
 	$start = @getValue($params['start'],'');
 	$order = @getValue($params['order'],'');
 	$desc = @getValue($params['desc'],'');
+	$keyword = @getValue($params['keyword'],'');
 
 	#链接mysql
 	if (isset($params['link'])) {
@@ -148,6 +149,10 @@ function dosql($params){
 
 		case 'getnum':
 			$request = getnum($link,$name,$table,$where,$group);
+			break;
+		
+		case 'searchcount':
+			$request = search_count($link,$name,$table,$where,$field,$keyword,$group,$order,$desc,$limit,$start);
 			break;
 
 		default:
@@ -238,15 +243,19 @@ function search($link,$name,$table,$where,$field,$keyword,$group,$order,$desc,$l
 	$order = order($order,$desc);
 	$limit = limit($limit,$start);
 	$where = where($where);
+	$field = implode(',',$field);
 
 	if($where!=''){
 		$where = str_replace('where','and',$where);
 	}
 	if (!$keyword) {echo "关键字(keyword)不能为空！";exit;}
 
-	$keyword = 	'%'.$keyword.'%';
-	#参数化查询命令
+	// $keyword = mysqli_real_escape_string($link,$keyword);
+	// $sqlComm = "select $name from $table where $field like '%$keyword%' $where $order $limit;";
+
+	// #参数化查询命令
 	$sqlComm = sprintf("select $name from $table where $field like '%s' $where $order $limit;",mysqli_real_escape_string($link,'%'.$keyword.'%'));
+	
 	#执行
 	$sql = mysqli_query($link,$sqlComm);
 	if (!$sql) {
@@ -262,6 +271,43 @@ function search($link,$name,$table,$where,$field,$keyword,$group,$order,$desc,$l
 	}
 	#共有多少条记录
 	// $value['num'] = $num;
+
+	return $value;
+}
+
+function search_count($link,$name,$table,$where,$field,$keyword,$group,$order,$desc,$limit,$start){
+	#初始化所需变量
+	$value = array();
+	#附加条件
+	$order = order($order,$desc);
+	$limit = limit($limit,$start);
+	$where = where($where);
+	$field = implode(',',$field);
+
+	if($where!=''){
+		$where = str_replace('where','and',$where);
+	}
+	if (!$keyword) {echo "关键字(keyword)不能为空！";exit;}
+
+	// #参数化查询命令
+	$sqlComm = sprintf("select $name from $table where $field like '%s' $where;",mysqli_real_escape_string($link,'%'.$keyword.'%'));
+	
+	#执行
+	$sql = mysqli_query($link,$sqlComm);
+	if (!$sql) {
+		return array();
+	}
+	#获取记录数量
+	$num = mysqli_num_rows($sql);
+	#没有记录返回0
+	if($num===0) return array();
+	
+	#共有多少条记录
+	return $num;
+	#讲数据打包成数组
+	while ($row = mysqli_fetch_array($sql,MYSQLI_ASSOC)){
+		 array_push($value,$row);
+	}
 
 	return $value;
 }

@@ -1,0 +1,50 @@
+export default {
+	list: {
+		'4k': ['search', 'view', 'sort', 'theme', 'language'],
+		'2k': ['search', 'view', 'sort', 'theme', 'language'],
+		large: ['search', 'view', 'sort', 'theme', 'language'],
+		middle: ['miniSearch', 'view', 'sort', 'theme', 'language'],
+		small: ['miniSearch', 'view', 'sort'],
+		mini: ['miniSearch', 'view', 'sort'],
+	},
+	setting: {
+		'4k': ['search', 'view', 'sort', 'theme', 'language'],
+		'2k': ['search', 'view', 'sort', 'theme', 'language'],
+		large: ['search', 'view', 'sort', 'theme', 'language'],
+		middle: ['miniSearch', 'view', 'sort', 'theme', 'language'],
+		small: ['miniSearch', 'theme', 'language'],
+		mini: ['theme', 'language'],
+	},
+	browse: {
+		'4k': ['search', 'view', 'sort', 'theme', 'language'],
+		'2k': ['search', 'view', 'sort', 'theme', 'language'],
+		large: ['search', 'view', 'sort', 'theme', 'language'],
+		middle: ['search', 'theme', 'language'],
+		small: ['search'],
+		mini: ['search'],
+	},
+	search: {
+		'4k': ['view', 'sort', 'theme', 'language'],
+		'2k': ['view', 'sort', 'theme', 'language'],
+		large: ['view', 'sort', 'theme', 'language'],
+		middle: ['view', 'sort', 'theme', 'language'],
+		small: ['view', 'sort'],
+		mini: ['view', 'sort'],
+	},
+	default: {
+		'4k': ['search', 'view', 'sort', 'theme', 'language'],
+		'2k': ['search', 'view', 'sort', 'theme', 'language'],
+		large: ['search', 'view', 'sort', 'theme', 'language'],
+		middle: ['miniSearch', 'view', 'sort', 'theme', 'language'],
+		small: ['miniSearch', 'theme', 'language'],
+		mini: ['miniSearch', 'view', 'sort'],
+	},
+	/*
+	'4k': {},
+	'2k': {},
+	large: {},
+	middle: {},
+	small: {},
+	default: [],
+    */
+};

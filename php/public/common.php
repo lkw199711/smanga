@@ -46,7 +46,7 @@ function scan_path_exec($path,$pathId,$mediaId){
 	global $publicPath;
 
 	$command = "php ../scan/scan-path.php \"$path\" \"$pathId\" \"$mediaId\" \"$publicPath\"";
-
+// echo "$command";exit;
 	pclose(popen('nohup '.$command.' & 2>&1','r'));
 }
 

@@ -59,14 +59,12 @@
 </template>
 
 <script lang="ts" setup>
-import {ref, onMounted, computed} from 'vue'
-import {useRouter} from "vue-router";
+import { ref, onMounted, computed } from 'vue'
+import router from '@/router';
 import {config} from '@/store';
 import Logo from "@/layout/components/logo.vue";
 import {useI18n} from "vue-i18n";
 const {t} = useI18n();
-
-const router = useRouter();
 
 const show = ref(true);
 

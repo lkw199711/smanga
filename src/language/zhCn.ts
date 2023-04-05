@@ -5,6 +5,7 @@ export default {
 		chapterList: "章节列表",
 		history: "历史记录",
 		bookmark: "书签",
+		search:'搜索',
 		account: "账户管理",
 		mediaManage: "媒体库管理",
 		mangaManage: "漫画管理",

@@ -1,9 +1,7 @@
 import { ajax } from "./index";
-import { useRouter, useRoute } from "vue-router";
+import { useRoute } from "vue-router";
+import router from "@/router";
 import { Cookies } from "@/utils";
-
-const route = useRoute();
-const router = useRouter();
 
 export function database_check(data: any) {
     return ajax({

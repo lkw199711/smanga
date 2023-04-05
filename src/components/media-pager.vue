@@ -149,7 +149,7 @@ export default defineComponent({
 .media-pager {
   margin-top: 1.4rem;
   width: 100%;
-  overflow-x: scroll;
+  overflow-x: auto;
 }
 
 @media only screen and (min-width: 1200px) {

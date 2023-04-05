@@ -5,6 +5,7 @@ export default {
 		chapterList: "chapterList",
 		history: "history",
 		bookmark: "bookmark",
+		search: "search",
 		account: "account",
 		mediaManage: "mediaManage",
 		mangaManage: "mangaManage",

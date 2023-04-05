@@ -45,10 +45,6 @@ onMounted(async () => {
     Object.assign(form, data);
 })
 
-const onSubmit = () => {
-    console.log('submit!')
-}
-
 function check() {
     if (!form_check()) return false;
     database_check(form);

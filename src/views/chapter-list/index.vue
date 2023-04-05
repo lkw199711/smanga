@@ -120,21 +120,33 @@ export default defineComponent({
       const res = await get_chapter(this.mangaId);
       global_set_json('chapterList', res.data.list);
     },
+
+    init() {
+      // 缓存浏览方式
+      const browseType = this.$route.params.browseType;
+      if (browseType) global_set('browseType', browseType);
+
+      store.commit('switch_await', {running: 'chapterAwait', bool: true});
+      this.page_change();
+      this.load_chapter();
+    }
   },
 
   // 生命周期
-  async created() {
-    // 缓存浏览方式
-    const browseType = this.$route.params.browseType;
-    if (browseType) global_set('browseType', browseType);
-
-    store.commit('switch_await', {running: 'chapterAwait', bool: true});
-    this.page_change();
-    this.load_chapter();
+  created() {
+    this.init();
   },
   beforeUnmount() {
     store.commit('switch_await', {running: 'chapterAwait', bool: false});
   },
+  activated() {
+    const clear = this.$route.params.clear;
+    
+    if (clear) {
+      this.init();
+      this.$route.params.clear = '';
+    }
+  }
 })
 
 </script>
