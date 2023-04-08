@@ -1,23 +1,15 @@
-FROM debian:11
-
-ARG OVERLAY_VERSION="v2.2.0.3"
+FROM debian:11-slim
 
 RUN set -ex && \
+    export DEBIAN_FRONTEND=noninteractive && \
     apt update -y && \
-    DEBIAN_FRONTEND=noninteractive apt install -y \
+    apt install -y \
         p7zip \
         tzdata \
         xz-utils \
         wget \
         procps \
     && \
-    if [ "$(uname -m)" = "x86_64" ]; then ARCH=amd64; elif [ "$(uname -m)" = "aarch64" ]; then ARCH=aarch64; elif [ "$(uname -m)" = "armv7l" ]; then ARCH=arm; fi && \
-    wget \
-        --no-check-certificate \
-        -O /tmp/s6-overlay-installer \
-        https://github.com/just-containers/s6-overlay/releases/download/${OVERLAY_VERSION}/s6-overlay-${ARCH}-installer && \
-    chmod 755 /tmp/s6-overlay-installer && \
-    /tmp/s6-overlay-installer / && \
     apt install -y \
         nginx \
     && \
@@ -72,6 +64,7 @@ RUN set -ex && \
 	    /var/lib/apt/lists/* \
 	    /var/tmp/*
 
+COPY --from=shinsenter/s6-overlay / /
 COPY --chmod=755 ./docker.debian/rootfs_base /
 
 ENTRYPOINT [ "/init" ]

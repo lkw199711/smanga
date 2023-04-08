@@ -1,4 +1,5 @@
 #!/usr/bin/with-contenv bash
+# shellcheck shell=bash
 
 function 020_mkdir {
 if [ ! -d /compress ]; then
