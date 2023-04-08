@@ -1,4 +1,5 @@
 #!/usr/bin/with-contenv bash
+# shellcheck shell=bash
 
 function 030_config {
 if [ ! -f /config/config.ini ]; then

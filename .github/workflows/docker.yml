@@ -2,6 +2,11 @@ name: Build Smanga Docker
 
 on:
     workflow_dispatch:
+    push:
+      branches:
+        - master
+      paths:
+        - package.json
 
 jobs:
   build:
@@ -25,7 +30,7 @@ jobs:
           node-version: '14'
       -
         name: Build Web
-        run: npm install && npm run build
+        run: npm run build
 
       - 
         name: Set Up QEMU
@@ -106,29 +111,3 @@ jobs:
           tags: |
             ${{ secrets.DOCKER_USERNAME }}/smanga:${{ steps.set-version.outputs.version }}
             ${{ secrets.DOCKER_USERNAME }}/smanga:latest
-
-  update:
-    needs: [build, build_mysql]
-    name: Update Dockerhub Docs
-    runs-on: ubuntu-latest
-    steps:
-      - 
-        name: Checkout
-        uses: actions/checkout@master
-        
-      - 
-        name: Login DockerHub
-        uses: docker/login-action@v2
-        with:
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
-
-      -
-        name: Docker Hub Description
-        uses: peter-evans/dockerhub-description@v3
-        with:
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
-          repository: ${{ secrets.DOCKER_USERNAME }}/smanga
-          short-description: A simple cartoon browser
-          readme-filepath: ./README.md

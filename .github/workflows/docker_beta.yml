@@ -2,6 +2,11 @@ name: Build Smanga Beta Docker
 
 on:
     workflow_dispatch:
+    push:
+      branches:
+        - dev
+      paths:
+        - package.json
 
 jobs:
   build:
@@ -25,7 +30,7 @@ jobs:
           node-version: '14'
       -
         name: Build Web
-        run: npm install && npm run build
+        run: npm run build
 
       - 
         name: Set Up QEMU
