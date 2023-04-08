@@ -1,4 +1,5 @@
 #!/usr/bin/with-contenv bash
+# shellcheck shell=bash
 
 function 100_mysql {
 if [ ! -d /var/lib/mysql/smanga ]; then
