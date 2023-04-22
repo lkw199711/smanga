@@ -13,7 +13,7 @@ chown smanga:smanga \
     /poster
 
 # Nginx
-chown smanga:smanga -R /var/lib/nginx /run/nginx /var/log/nginx
+chown smanga:smanga -R /var/lib/nginx /var/log/nginx
 }
 
-090_fixuser 2>&1 | sed "s#^#cont-init: info: $(realpath $0): \1#g"
+090_fixuser 2>&1 | sed "s#^#cont-init: info: $(realpath $0): &#g"

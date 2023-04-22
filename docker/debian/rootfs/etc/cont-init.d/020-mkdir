@@ -13,6 +13,11 @@ fi
 if [ ! -d /config ]; then
 	mkdir /config
 fi
+
+if [ ! -d /sql ]; then
+	mkdir /sql
+fi
+
 }
 
-020_mkdir 2>&1 | sed "s#^#cont-init: info: $(realpath $0): \1#g"
+020_mkdir 2>&1 | sed "s#^#cont-init: info: $(realpath $0): &#g"

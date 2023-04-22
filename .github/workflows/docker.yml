@@ -16,8 +16,9 @@ jobs:
       - 
         name: Checkout
         uses: actions/checkout@master
-      
-      - name: Set Version
+
+      - 
+        name: Set Version
         id: set-version
         run: |
           SMANGA_VERSION=$(cat package.json | grep 'version' | cut -d\" -f4 | head -1)
@@ -52,7 +53,7 @@ jobs:
         uses: docker/build-push-action@v4
         with:
           context: .
-          file: docker/Dockerfile
+          file: docker/alpine/Dockerfile
           platforms: |
             linux/amd64
             linux/arm64/v8
@@ -74,7 +75,8 @@ jobs:
         name: Checkout
         uses: actions/checkout@master
       
-      - name: Set Version
+      - 
+        name: Set Version
         id: set-version
         run: |
           SMANGA_VERSION=$(cat package.json | grep 'version' | cut -d\" -f4 | head -1)
@@ -100,7 +102,7 @@ jobs:
         uses: docker/build-push-action@v4
         with:
           context: .
-          file: docker/mysql.Dockerfile
+          file: docker/alpine/mysql.Dockerfile
           platforms: |
             linux/amd64
             linux/arm64/v8
