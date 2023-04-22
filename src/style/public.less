@@ -1,6 +1,6 @@
-@import "el-modify.less";
-@import "color.less";
-@import "table.less";
+@import 'el-modify.less';
+@import 'color.less';
+@import 'table.less';
 
 .example {
 	width: 3rem;
@@ -19,11 +19,13 @@ body {
 .note {
 	padding: 0.6rem 2rem;
 	transform: translateY(-1.6rem);
-	color: @note-text;
-	background-color: @note-back;
 	font-size: 1.2rem;
 	text-indent: 1em;
 	line-height: 1.6;
+	&.form-note {
+		color: @note-form-text;
+		background-color: @note-form-back;
+	}
 }
 
 .s-form-title {
@@ -153,12 +155,92 @@ body {
 }
 
 .primary {
-    color: @s-text;
+	color: @s-text;
 	background-color: @s-background;
 }
 
 .primary-btn {
-    color: @s-text;
+	color: @s-text;
 	background-color: @s-background;
-    border: @s-background;
+	border: @s-background;
+}
+
+.custom-block .custom-block-title {
+	font-weight: 700;
+}
+
+.custom-block p:not(.custom-block-title) {
+	font-size: 0.9rem;
+}
+
+.custom-block.tip {
+	padding: 8px 16px;
+	background-color: fadeout(#409eff, 80%);
+	border-radius: 4px;
+	border-left: 5px solid #409eff;
+	margin: 20px 0;
+}
+
+.custom-block.warning {
+	padding: 8px 16px;
+	background-color: var(--block-warning-bg-color);
+	border-radius: 4px;
+	border-left: 5px solid var(--el-color-danger);
+	margin: 20px 0;
+}
+
+:root {
+	--el-color-white: #ffffff;
+	--el-color-black: #000000;
+	--el-color-primary-rgb: 64, 158, 255;
+	--el-color-success-rgb: 103, 194, 58;
+	--el-color-warning-rgb: 230, 162, 60;
+	--el-color-danger-rgb: 245, 108, 108;
+	--el-color-error-rgb: 245, 108, 108;
+	--el-color-info-rgb: 144, 147, 153;
+	--el-font-size-extra-large: 20px;
+	--el-font-size-large: 18px;
+	--el-font-size-medium: 16px;
+	--el-font-size-base: 14px;
+	--el-font-size-small: 13px;
+	--el-font-size-extra-small: 12px;
+	--el-font-family: 'Helvetica Neue', Helvetica, 'PingFang SC',
+		'Hiragino Sans GB', 'Microsoft YaHei', '\5fae\8f6f\96c5\9ed1', Arial,
+		sans-serif;
+	--el-font-weight-primary: 500;
+	--el-font-line-height-primary: 24px;
+	--el-index-normal: 1;
+	--el-index-top: 1000;
+	--el-index-popper: 2000;
+	--el-border-radius-base: 4px;
+	--el-border-radius-small: 2px;
+	--el-border-radius-round: 20px;
+	--el-border-radius-circle: 100%;
+	--el-transition-duration: 0.3s;
+	--el-transition-duration-fast: 0.2s;
+	--el-transition-function-ease-in-out-bezier: cubic-bezier(
+		0.645,
+		0.045,
+		0.355,
+		1
+	);
+	--el-transition-function-fast-bezier: cubic-bezier(0.23, 1, 0.32, 1);
+	--el-transition-all: all var(--el-transition-duration)
+		var(--el-transition-function-ease-in-out-bezier);
+	--el-transition-fade: opacity var(--el-transition-duration)
+		var(--el-transition-function-fast-bezier);
+	--el-transition-md-fade: transform var(--el-transition-duration)
+			var(--el-transition-function-fast-bezier),
+		opacity var(--el-transition-duration)
+			var(--el-transition-function-fast-bezier);
+	--el-transition-fade-linear: opacity var(--el-transition-duration-fast) linear;
+	--el-transition-border: border-color var(--el-transition-duration-fast)
+		var(--el-transition-function-ease-in-out-bezier);
+	--el-transition-box-shadow: box-shadow var(--el-transition-duration-fast)
+		var(--el-transition-function-ease-in-out-bezier);
+	--el-transition-color: color var(--el-transition-duration-fast)
+		var(--el-transition-function-ease-in-out-bezier);
+	--el-component-size-large: 40px;
+	--el-component-size: 32px;
+	--el-component-size-small: 24px;
 }

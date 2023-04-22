@@ -81,12 +81,12 @@
               <el-option :label="$t('mediaManage.select.browse2')" value="double"/>
             </el-select>
           </el-form-item>
-          <p class="note">{{ $t('mediaManage.note.browse') }}</p>
+          <p class="note form-note">{{ $t('mediaManage.note.browse') }}</p>
 
           <el-form-item :label="$t('mediaManage.form.removeFirst')">
             <el-switch v-model="form.removeFirst" active-value="1" inactive-value="0"/>
           </el-form-item>
-          <p class="note">{{ $t('mediaManage.note.removeFirst') }}</p>
+          <p class="note form-note">{{ $t('mediaManage.note.removeFirst') }}</p>
 
           <el-form-item :label="$t('mediaManage.form.direction')">
             <el-radio-group v-model="form.direction" class="ml-4">
@@ -94,7 +94,7 @@
               <el-radio label="1" size="large">{{ $t('mediaManage.select.rtl') }}</el-radio>
             </el-radio-group>
           </el-form-item>
-          <p class="note">{{ $t('mediaManage.note.direction') }}</p>
+          <p class="note form-note">{{ $t('mediaManage.note.direction') }}</p>
 
         </el-form>
 

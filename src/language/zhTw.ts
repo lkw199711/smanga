@@ -7,6 +7,7 @@ export default {
 		bookmark: "書簽",
 		search: "搜索",
 		account: "賬戶管理",
+		userSetting: "用戶設置",
 		mediaManage: "媒體庫管理",
 		mangaManage: "漫畫管理",
 		pathManage: "路徑管理",

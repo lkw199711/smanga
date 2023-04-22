@@ -17,7 +17,8 @@ jobs:
         name: Checkout
         uses: actions/checkout@master
       
-      - name: Set Version
+      - 
+        name: Set Version
         id: set-version
         run: |
           SMANGA_VERSION=$(cat package.json | grep 'version' | cut -d\" -f4 | head -1)
@@ -28,9 +29,13 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: '14'
+
       -
         name: Build Web
-        run: npm run build
+        run: |
+          npm install -g @vue/cli
+          npm install
+          npm run build
 
       - 
         name: Set Up QEMU
@@ -52,7 +57,7 @@ jobs:
         uses: docker/build-push-action@v4
         with:
           context: .
-          file: docker.debian/Dockerfile
+          file: docker/debian/Dockerfile
           platforms: |
             linux/amd64
             linux/arm64/v8

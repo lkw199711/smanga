@@ -204,6 +204,20 @@ const routes: Array<RouteRecordRaw> = [
 			},
 		],
 	},
+	{
+		path: '/user-setting',
+		redirect: '/user-setting/index',
+		meta: {sidebar: true, title: 'userSetting', icon: 'Stamp'},
+		component: Layout,
+		children: [
+			{
+				path: 'index',
+				name: 'user-setting',
+				meta: {view: 'searchOnly'},
+				component: () => import('../views/user-setting/index.vue'),
+			},
+		],
+	},
 
 	// 浏览界面
 	{
@@ -233,7 +247,7 @@ const routes: Array<RouteRecordRaw> = [
 			},
 		],
 	},
-
+	
 	// wiki
 	{
 		path: '/wiki',

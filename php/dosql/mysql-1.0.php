@@ -255,7 +255,7 @@ function search($link,$name,$table,$where,$field,$keyword,$group,$order,$desc,$l
 
 	// #参数化查询命令
 	$sqlComm = sprintf("select $name from $table where $field like '%s' $where $order $limit;",mysqli_real_escape_string($link,'%'.$keyword.'%'));
-	
+	// echo "$sqlComm";exit;
 	#执行
 	$sql = mysqli_query($link,$sqlComm);
 	if (!$sql) {
@@ -295,12 +295,11 @@ function search_count($link,$name,$table,$where,$field,$keyword,$group,$order,$d
 	#执行
 	$sql = mysqli_query($link,$sqlComm);
 	if (!$sql) {
-		return array();
+		return 0;
 	}
+
 	#获取记录数量
 	$num = mysqli_num_rows($sql);
-	#没有记录返回0
-	if($num===0) return array();
 	
 	#共有多少条记录
 	return $num;
@@ -428,12 +427,19 @@ function is_keyword($str){
 #拼接需要写改的值
 function modify($field,$value){
 	$sentence = Array();
-	$values = explode(',',value($value));
+
+	if (count($value)) {
+		foreach ($value as $key => $val) {
+			if (!is_keyword($val)) {
+				$value[$key] = '\''.$val.'\'';
+			}
+		}
+	}
 
 	#拼接set语句
 	if($field && $value){
 		for($i=0,$length=count($field);$i<$length;$i++)
-			array_push($sentence,$field[$i].' = '.$values[$i]);
+			array_push($sentence,$field[$i].' = '.$value[$i]);
 	}else{
 		echo "字段(field) 与 值(value)不能为空！";
 		exit;

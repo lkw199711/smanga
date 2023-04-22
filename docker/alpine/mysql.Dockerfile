@@ -5,7 +5,7 @@ ARG SMANGA_BASE_NAME
 
 FROM ${SMANGA_BASE_NAME}/smanga:nosql-${SMANGA_VERSION}
 
-COPY --chmod=755 ./docker/rootfs_mysql /
+COPY --chmod=755 ./docker/alpine/rootfs_mysql /
 
 RUN bash /install_mysql/install.bash
 
