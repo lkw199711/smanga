@@ -6,7 +6,7 @@ on:
       branches:
         - master
       paths:
-        - docker/base.Dockerfile
+        - docker/alpine/base.Dockerfile
         - .github/workflows/docker_base.yml
 
 jobs:
@@ -17,7 +17,8 @@ jobs:
         name: Checkout
         uses: actions/checkout@master
       
-      - name: Set Version
+      - 
+        name: Set Version
         id: set-version
         run: |
           SMANGA_VERSION=$(cat package.json | grep 'version' | cut -d\" -f4 | head -1)
@@ -43,7 +44,7 @@ jobs:
         uses: docker/build-push-action@v4
         with:
           context: .
-          file: docker/base.Dockerfile
+          file: docker/alpine/base.Dockerfile
           platforms: |
             linux/amd64
             linux/arm64/v8

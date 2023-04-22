@@ -6,7 +6,7 @@ on:
       branches:
         - master
       paths:
-        - docker.debian/base.Dockerfile
+        - docker/debian/base.Dockerfile
         - .github/workflows/docker_base_debian.yml
 
 jobs:
@@ -17,7 +17,8 @@ jobs:
         name: Checkout
         uses: actions/checkout@master
       
-      - name: Set Version
+      - 
+        name: Set Version
         id: set-version
         run: |
           SMANGA_VERSION=$(cat package.json | grep 'version' | cut -d\" -f4 | head -1)
@@ -43,7 +44,7 @@ jobs:
         uses: docker/build-push-action@v4
         with:
           context: .
-          file: docker.debian/base.Dockerfile
+          file: docker/debian/base.Dockerfile
           platforms: |
             linux/amd64
             linux/arm64/v8

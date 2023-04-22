@@ -25,7 +25,7 @@ ENV S6_SERVICES_GRACETIME=30000 \
     UMASK=022
 
 COPY --chmod=755 --from=Build /rootfs /app
-COPY --chmod=755 ./docker.debian/rootfs /
+COPY --chmod=755 ./docker/debian/rootfs /
 
 EXPOSE 80
 VOLUME [ "/config", "/poster", "/compress" ]

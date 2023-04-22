@@ -65,6 +65,6 @@ RUN set -ex && \
 	    /var/tmp/*
 
 COPY --from=shinsenter/s6-overlay / /
-COPY --chmod=755 ./docker.debian/rootfs_base /
+COPY --chmod=755 ./docker/debian/rootfs_base /
 
 ENTRYPOINT [ "/init" ]
