@@ -1,5 +1,7 @@
 FROM debian:11-slim
 
+COPY --from=shinsenter/s6-overlay / /
+
 RUN set -ex && \
     export DEBIAN_FRONTEND=noninteractive && \
     apt update -y && \
@@ -53,8 +55,10 @@ RUN set -ex && \
         /etc/php/7.4/fpm/pool.d/www.conf && \
     # Log Links
     mkdir -p /log && \
-    ln -s /var/log/nginx/access.log /log/nginx_access.log && \
-    ln -s /var/log/nginx/error.log /log/nginx_error.log && \
+    ln -sf /var/log/nginx/access.log /log/nginx_access.log && \
+    ln -sf /var/log/nginx/error.log /log/nginx_error.log && \
+    # s6-overlay
+    ln -sf /command/with-contenv /usr/bin/with-contenv && \
     # Clear
     apt-get remove -y php-pear && \
     apt-get autoremove -y && \
@@ -64,7 +68,6 @@ RUN set -ex && \
 	    /var/lib/apt/lists/* \
 	    /var/tmp/*
 
-COPY --from=shinsenter/s6-overlay / /
 COPY --chmod=755 ./docker/debian/rootfs_base /
 
 ENTRYPOINT [ "/init" ]
