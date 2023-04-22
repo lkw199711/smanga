@@ -49,19 +49,7 @@ get_setting();
 
 // 生命周期
 onMounted(() => {
-	// 设置语言
-	const language = localStorage.getItem('language');
-	if (language) {
-		userConfig.language = language;
-		locale.value = language;
-	}
-
-	// 设置主题
-	const theme = localStorage.getItem('theme');
-	if (theme) {
-		userConfig.theme = theme;
-		set_theme(theme);
-	}
+	
 
 	// 设置安卓环境
 	if (window.javaObj) {
@@ -125,7 +113,12 @@ async function get_setting() {
 	// 使用数据库用户设置，覆盖当前设置
 	Object.assign(userConfig, configValue.userConfig);
 	Object.assign(pageSizeConfig, configValue.pageSizeConfig);
-	
+
+	// 设置语言
+	locale.value = userConfig.language;
+
+	// 设置主题
+	set_theme(userConfig.theme);
 }
 </script>
 

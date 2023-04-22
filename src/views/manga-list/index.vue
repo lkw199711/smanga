@@ -76,6 +76,7 @@ watch(
 onMounted(() => {
 	store.commit('switch_await', {running: 'mangaAwait', bool: true});
 	reload();
+	route.params.clear = '';
 });
 
 onBeforeUnmount(() => {

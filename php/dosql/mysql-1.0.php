@@ -183,7 +183,7 @@ function select($link,$name,$table,$where,$group,$order,$desc,$limit,$start){
 	$where = where($where);	
 
 	$sqlComm = "select $name from $table $where $group $order $limit;";
-// echo $sqlComm;
+// echo $sqlComm;exit();
 	$sql = mysqli_query($link,$sqlComm);
 
 	if (!$sql) {
