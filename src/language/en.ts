@@ -7,6 +7,7 @@ export default {
 		bookmark: "bookmark",
 		search: "search",
 		account: "account",
+		userSetting: "userSetting",
 		mediaManage: "mediaManage",
 		mangaManage: "mangaManage",
 		pathManage: "pathManage",

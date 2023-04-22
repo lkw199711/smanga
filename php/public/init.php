@@ -57,11 +57,74 @@
 				'field'=>['version','versionDescribe','createTime','updateTime'],
 				'value'=>['3.1.6','新增用户权限管理','2023-3-5 18:05:00','now()']
 			]);
+		}
+
+		// 317
+		if (array_search('3.1.7', $vers)===false) {
+			dosql([
+				'table'=>'version',
+				'type'=>'insert',
+				'field'=>['version','versionDescribe','createTime','updateTime'],
+				'value'=>['3.1.7','外置sql设置错误问题','2023-3-18 00:27:31','now()']
+			]);
 		} 
 		
+		// 318
+		if (array_search('3.1.8', $vers)===false) {
+			dosql([
+				'table'=>'version',
+				'type'=>'insert',
+				'field'=>['version','versionDescribe','createTime','updateTime'],
+				'value'=>['3.1.8','新增视图切换功能, 解决文字展示不全的问题.','2023-4-1 13:23:08','now()']
+			]);
+		} 
+
+		// 319
+		if (array_search('3.1.9', $vers)===false) {
+			dosql([
+				'table'=>'version',
+				'type'=>'insert',
+				'field'=>['version','versionDescribe','createTime','updateTime'],
+				'value'=>['3.1.9','新增排序方式切换功能.','2023-4-1 23:33:43','now()']
+			]);
+		} 
+
+		// 320
+		if (array_search('3.2.0', $vers)===false) {
+			dosql([
+				'table'=>'version',
+				'type'=>'insert',
+				'field'=>['version','versionDescribe','createTime','updateTime'],
+				'value'=>['3.2.0','新增搜索功能;处理扫描错误.','2023-4-5 21:02:03','now()']
+			]);
+		} 
+
+		// 321
+		if (array_search('3.2.1', $vers)===false) {
+			// 创建版本表
+			$sqlComm = "CREATE TABLE IF NOT EXISTS smanga.config (
+				`configId` int(0) NOT NULL AUTO_INCREMENT COMMENT '设置项主键',
+				`userId` int(0) NULL COMMENT '关联的用户id',
+				`userName` varchar(255) NULL COMMENT '关联的用户名',
+				`configValue` text NULL COMMENT '设置的详细内容 json打包',
+				`createTime` datetime(0) NULL COMMENT '设置的创建时间',
+				`updateTime` datetime(0) NULL COMMENT '设置的最近升级时间',
+				PRIMARY KEY (`configId`),
+				UNIQUE INDEX `id`(`userId`) USING BTREE COMMENT '用户id唯一'
+			)";
+
+			$link->query($sqlComm);
+
+			dosql([
+				'table'=>'version',
+				'type'=>'insert',
+				'field'=>['version','versionDescribe','createTime','updateTime'],
+				'value'=>['3.2.1','新增用户设置模块','2023-3-18 00:27:31','now()']
+			]);
+		} 
 
 		// 记录版本 代表初始化结束
-		write_txt('./version','3.1.6');
+		write_txt('./version','3.2.1');
 
 		exit_request([
 				'code'=>0,

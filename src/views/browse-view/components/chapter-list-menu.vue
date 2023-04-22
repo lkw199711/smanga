@@ -66,9 +66,6 @@ export default defineComponent({
     browseTop() {
       return config.browseTop;
     },
-    chapterSelect() {
-      return config.chapterSelect;
-    },
     chapterName() {
       return this.$route.query.name;
     },

@@ -6,7 +6,11 @@
 				v-model="searchText"
 				clearable
 				@clear="clear"
-				@keyup.enter="()=>{page_change()}">
+				@keyup.enter="
+					() => {
+						page_change();
+					}
+				">
 				<template #append>
 					<el-select
 						v-model="searchType"
@@ -81,13 +85,22 @@
 	</div>
 </template>
 
-<script lang="ts">export default {name: 'search'}</script>
+<script lang="ts">
+export default {name: 'search'};
+</script>
 
 <script lang="ts" setup name="search">
-import {watch, onMounted, onBeforeUnmount, ref, onActivated} from 'vue';
+import {
+	computed,
+	watch,
+	onMounted,
+	onBeforeUnmount,
+	ref,
+	onActivated,
+} from 'vue';
 import {useRoute} from 'vue-router';
 import {Search} from '@element-plus/icons-vue';
-import store, {config} from '@/store';
+import store, {config, userConfig, pageSizeConfig} from '@/store';
 import {search} from '@/api/search';
 import router from '@/router';
 import {get_poster} from '@/api';
@@ -103,6 +116,12 @@ const searchType = ref('manga');
 
 const route = useRoute();
 
+const defaultPageSize = computed<number>(() => {
+	const screen = config.screenType;
+	// @ts-ignore
+	return Number(pageSizeConfig[screen][0]);
+});
+
 let page = ref(1);
 let count = ref(0);
 let list = ref([]);
@@ -111,7 +130,7 @@ let menuPoster = '';
 
 // 切换排序规则时 重新加载列表
 watch(
-	() => config.order,
+	() => userConfig.order,
 	() => {
 		page_change(1);
 	}
@@ -153,7 +172,10 @@ function clear() {
  * @param page
  * @param pageSize
  */
-async function page_change(pageC = 1, pageSize = 16) {
+async function page_change(
+	pageC = 1,
+	pageSize: number = defaultPageSize.value
+) {
 	if (pageC) {
 		page.value = pageC;
 	}
@@ -169,7 +191,7 @@ async function page_change(pageC = 1, pageSize = 16) {
 		searchType.value,
 		start,
 		pageSize,
-		config.order
+		userConfig.order
 	);
 	list.value = res.data.list;
 	count.value = res.data.count;

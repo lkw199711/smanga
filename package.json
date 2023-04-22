@@ -1,6 +1,6 @@
 {
 	"name": "smanga",
-	"version": "3.2.0",
+	"version": "3.2.1",
 	"private": true,
 	"scripts": {
 		"serve": "set NODE_OPTIONS=--openssl-legacy-provider & vue-cli-service serve",
@@ -39,6 +39,8 @@
 		"@vue/cli-service": "~4.5.0",
 		"@vue/compiler-sfc": "^3.0.0",
 		"@vue/eslint-config-typescript": "^7.0.0",
+		"babel-plugin-component": "^1.1.1",
+		"babel-plugin-transform-remove-console": "^6.9.4",
 		"eslint": "^6.7.2",
 		"eslint-plugin-vue": "^7.0.0",
 		"less": "^3.0.4",

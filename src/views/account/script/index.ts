@@ -66,7 +66,7 @@ export default defineComponent({
 
             // 加载媒体库许可列表
             const mediaLimitArr = (val.mediaLimit||'').split('/') || [];
-            this.medias.map((i:any)=>{
+            this.medias.map((i: any) => {                
                 i.permit = !mediaLimitArr.includes(i.mediaId);
             })
         },

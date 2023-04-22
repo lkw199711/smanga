@@ -2,7 +2,7 @@
 	<div class="login-index">
 		<div class="seat"></div>
 
-    <!-- 登录面板 -->
+		<!-- 登录面板 -->
 		<div class="login-box">
 			<div class="logo">
 				<img src="../../assets/smanga-logo.png" alt="logo" />
@@ -32,7 +32,9 @@
 		</div>
 
 		<!-- 数据库设置 -->
-		<database :class="['database', {zindex2: showDatabase}]" @click="showDatabase = !showDatabase" />
+		<database
+			:class="['database', {zindex2: showDatabase}]"
+			@click="showDatabase = !showDatabase" />
 	</div>
 </template>
 
@@ -41,7 +43,7 @@ import {defineComponent} from 'vue';
 import {login} from '@/api/account';
 import {Cookies} from '@/utils';
 import database from './components/database.vue';
-import {config} from '@/store';
+import {power} from '@/store';
 
 export default defineComponent({
 	name: 'index',
@@ -72,12 +74,12 @@ export default defineComponent({
 			if (res.data.code === 0) {
 				// 缓存用户信息
 				const userInfo = res.data.userInfo;
-				Cookies.set('userName', userInfo.username);
+				Cookies.set('userName', userInfo.userName);
 				Cookies.set('userId', userInfo.userId);
 				Cookies.set('editMedia', userInfo.editMedia);
 				Cookies.set('editUser', userInfo.editUser);
-				config.editMedia = userInfo.editMedia === '1';
-				config.editUser = userInfo.editUser === '1';
+				power.editMedia = userInfo.editMedia === '1';
+				power.editUser = userInfo.editUser === '1';
 
 				await this.$router.push('media-list');
 			}
@@ -106,14 +108,23 @@ export default defineComponent({
 	z-index: 2;
 }
 
+.login-index {
+	width: 100vw;
+	height: 100vh;
+	background: url('../../assets/banner/0.png') no-repeat;
+	background-size: cover;
+}
+
 .login-box {
 	position: absolute;
 	z-index: 1;
 	top: 50%;
 	left: 50%;
+	border-radius: 1rem;
 	transform: translate(-50%, -50%);
-	background-color: #ffffff;
+	background-color: rgba(255, 255, 255, 0.25);
 	box-shadow: #cccccc 2px 2px 8px;
+	backdrop-filter: blur(15px);
 
 	.logo {
 		text-align: center;

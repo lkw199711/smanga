@@ -20,7 +20,7 @@
 	$mediaLimit = $sqlRes[0]['mediaLimit'];
 	$mediaLimitArr = explode('/',$mediaLimit);
 
-	#执行注册
+	// 执行搜索
 	$sqlRes=dosql(array(
 		'table'=>'media',
 		'limit'=>$pageSize,
