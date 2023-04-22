@@ -6,16 +6,39 @@
 	$mangaId = $_POST['mangaId'];
 	$pageSize = $_POST['pageSize'];
 	$recordStart = $_POST['recordStart'];
+	$order = $_POST['order'];
+
+	
 
 	if ($mangaId) {
-		# 执行查询
-		$sqlRes=dosql(array(
+		$params = [
 			'table'=>'chapter',
 			'where'=>'mangaId='.$mangaId,
 			'order'=>'chapterId',
 			'limit'=>$pageSize,
 			'start'=>$recordStart,
-		));
+		];
+
+		// 设置排序规则
+		if ($order) {
+			if ($order==='name') {
+				$params['order'] = 'chapter.chapterName';
+
+			}elseif ($order==='nameDesc') {
+				$params['order'] = 'chapter.chapterName';
+				$params['desc'] = true;
+
+			}elseif ($order==='time') {
+				$params['order'] = 'chapter.createTime';
+
+			}elseif ($order==='timeDesc') {
+				$params['order'] = 'chapter.createTime';
+				$params['desc'] = true;
+			}
+		}
+
+		# 执行查询
+		$sqlRes=dosql($params);
 
 		$count = dosql(array(
 			'table'=>'chapter',

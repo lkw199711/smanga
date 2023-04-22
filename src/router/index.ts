@@ -207,7 +207,7 @@ const routes: Array<RouteRecordRaw> = [
 	{
 		path: '/user-setting',
 		redirect: '/user-setting/index',
-		meta: {sidebar: true, title: 'userSetting', icon: 'Stamp'},
+		meta: {sidebar: true, title: 'userSetting', icon: 'User'},
 		component: Layout,
 		children: [
 			{
