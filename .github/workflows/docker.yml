@@ -31,7 +31,7 @@ jobs:
           node-version: '14'
       -
         name: Build Web
-        run: npm run build
+        run: npm install && npm run build
 
       - 
         name: Set Up QEMU
