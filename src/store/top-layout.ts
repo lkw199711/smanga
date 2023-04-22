@@ -31,6 +31,14 @@ export default {
 		small: ['view', 'sort'],
 		mini: ['view', 'sort'],
 	},
+	searchOnly: {
+		'4k': ['search'],
+		'2k': ['search'],
+		large: ['search'],
+		middle: ['search'],
+		small: ['search'],
+		mini: ['search'],
+	},
 	default: {
 		'4k': ['search', 'view', 'sort', 'theme', 'language'],
 		'2k': ['search', 'view', 'sort', 'theme', 'language'],

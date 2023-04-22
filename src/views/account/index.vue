@@ -42,12 +42,12 @@
                 :icon="Delete"
                 @click="handleDelete(scope.$index, scope.row)">{{ $t('option.delete') }}
             </el-button>
-            <el-button
+            <!-- <el-button
                     size="small"
                     type="success"
                     :icon="Lollipop"
                     @click="handlePower(scope.$index, scope.row)">{{ $t('account.power') }}
-            </el-button>
+            </el-button> -->
           </template>
         </el-table-column>
       </el-table>
@@ -60,12 +60,12 @@
         <el-form-item :label="$t('account.nameLabel')">
           <el-input v-model="form.userName" :placeholder="$t('account.namePlace')"></el-input>
         </el-form-item>
-        <p class="note">{{$t('account.note.name')}}</p>
+        <p class="note form-note">{{$t('account.note.name')}}</p>
 
         <el-form-item :label="$t('account.passLabel')">
           <el-input v-model="form.passWord" :placeholder="$t('account.passPlace')"></el-input>
         </el-form-item>
-        <p class="note">{{$t('account.note.pass')}}</p>
+        <p class="note form-note">{{$t('account.note.pass')}}</p>
       </el-form>
 
       <template v-slot:footer>
@@ -84,12 +84,12 @@
         <el-form-item :label="$t('account.nameLabel')">
           <el-input v-model="form.userName" :placeholder="$t('account.namePlace')"></el-input>
         </el-form-item>
-        <p class="note">{{$t('account.note.name')}}</p>
+        <p class="note form-note">{{$t('account.note.name')}}</p>
 
         <el-form-item :label="$t('account.passLabel')">
           <el-input v-model="form.passWord" :placeholder="$t('account.passModifyPlace')"></el-input>
         </el-form-item>
-        <p class="note">{{$t('account.note.pass')}}</p>
+        <p class="note form-note">{{$t('account.note.pass')}}</p>
 
         <!--权限-->
         <p class="s-form-title">{{ $t('account.form.title.power') }}</p>
@@ -105,7 +105,7 @@
 
         <!--媒体库权限-->
         <p class="s-form-title">{{ $t('account.form.title.mediaPower') }}</p>
-        <el-checkbox v-for="i in medias" v-model="i.permit" :label="i.mediaName" size="large" />
+        <el-checkbox v-for="i in medias" v-model="i.permit" :label="i.mediaName" :key="i.mediaId" size="large" />
       </el-form>
 
       <template v-slot:footer>

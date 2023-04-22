@@ -1,68 +1,94 @@
-import {createStore} from 'vuex'
-import {reactive} from 'vue'
-import {GlobalData} from "@/store/type";
-import {get_cookie} from "../utils/index";
+import {createStore} from 'vuex';
+import {reactive} from 'vue';
+import {GlobalData} from '@/store/type';
+import {get_cookie} from '../utils/index';
 
 export default createStore({
-    state: {
-        chapterAwait: true,
-        mangaAwait: true,
-        previewAwait: true,
-    } as any,
-    mutations: {
-        switch_await(state, {bool = true, running = 'chapterAwait',}) {
-            state[running] = bool;
-        },
-    },
-    actions: {},
-    modules: {},
-})
+	state: {
+		chapterAwait: true,
+		mangaAwait: true,
+		previewAwait: true,
+	} as any,
+	mutations: {
+		switch_await(state, {bool = true, running = 'chapterAwait'}) {
+			state[running] = bool;
+		},
+	},
+	actions: {},
+	modules: {},
+});
 
 export const globalData: GlobalData = reactive({
-    bookmarkList: [],
-    chapterList: [],
-    imgPathList: [],
-    chapterIndex: 0,
-    chapterId: 0,
-    chapterName: '',
-    chapterPath: '',
-    chapterType: '',
-    chapterCover: '',
-    browseType: 'flow',
-    mediaId: 0,
-    mangaId: 0,
-    mangaName: '',
-    mangaCover: '',
-    page: 0,
-    doublePage: 0,
-    pageImage: '',
-    removeFirst: '0',
-    direction: '0',
-    loadedImages: 0,
+	bookmarkList: [],
+	chapterList: [],
+	imgPathList: [],
+	chapterIndex: 0,
+	chapterId: 0,
+	chapterName: '',
+	chapterPath: '',
+	chapterType: '',
+	chapterCover: '',
+	browseType: 'flow',
+	mediaId: 0,
+	mangaId: 0,
+	mangaName: '',
+	mangaCover: '',
+	page: 0,
+	doublePage: 0,
+	pageImage: '',
+	removeFirst: '0',
+	direction: '0',
+	loadedImages: 0,
 });
 
 const editUser = get_cookie('editUser');
 const editMedia = get_cookie('editMedia');
 
 export const config = reactive({
-    sidebarCollapse: false,
-    browseTop: true,
-    browseFooter: true,
-    chapterSelect: false,
-    browseType: 'flow',
-    bookmarkShow: false,
-    screenType: 'large', //small | middle | large | 2k | 4k
-    rightSidebar: false,
-    language: 'zhCn',
-    theme: 'grey',
-    env: 'web',
-    android: false,
-    viewType: 'block',
-    order: 'time',
-    editUser: editUser==='1',
-    editMedia: editMedia==='1',
+	sidebarCollapse: false,
+	browseTop: true,
+	browseFooter: true,
+	browseType: 'flow',
+	bookmarkShow: false,
+	screenType: 'large', // mini | small | middle | large | 2k | 4k
+	rightSidebar: false,
+	android: false,
+	viewType: 'block',
+});
+
+export const power = reactive({
+	editUser: editUser === '1',
+	editMedia: editMedia === '1',
+});
+
+/**
+ * 用户设置 
+ * 用户的操作习惯配置 将保存至数据库
+ */
+export const userConfig = reactive({
+	// 语言
+	language: 'zhCn',
+	// 主题皮肤
+	theme: 'grey',
+	// 默认排序规则
+	order: 'time',
+	// 翻页按钮调转
+	pageTurningReverse: false,
+	// 阅读操作面板 顶部与底部尺寸
+	browseOperationTop: 30,
+	browseOperationBottom: 30
 });
 
 export const cache = reactive({
-    bookmarkId: 0,
+	bookmarkId: 0,
 });
+
+export const pageSizeConfig = reactive({
+	mini: [9, 12, 15, 18, 21],
+    small: [12, 18, 32, 38, 44],
+    middle: [12, 18, 32, 38, 44],
+	large: [8, 16, 32, 40, 48],
+	'2k': [27, 36, 45, 54, 63],
+	'4k': [32, 40, 48, 54, 62],
+});
+

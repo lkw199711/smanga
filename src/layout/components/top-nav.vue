@@ -54,7 +54,7 @@
 					:class="['sort-label', 'iconfont', 'icon-paixu']"
 					@click="switch_view_type" />
 				<el-select
-					v-model="config.order"
+					v-model="userConfig.order"
 					class="sort-select"
 					size="default"
 					@change="sort_order_change">
@@ -72,7 +72,7 @@
 			<div class="theme" v-show="layoutLimit('theme')">
 				<span class="theme-label" />
 				<el-select
-					v-model="config.theme"
+					v-model="userConfig.theme"
 					class="theme-select"
 					size="default"
 					@change="theme_change">
@@ -91,7 +91,7 @@
 			<div class="language" v-show="layoutLimit('language')">
 				<i class="colour colour-yuyanqiehuan" />
 				<el-select
-					v-model="config.language"
+					v-model="userConfig.language"
 					class="language-select"
 					size="default"
 					@change="language_change">
@@ -107,7 +107,7 @@
 </template>
 
 <script lang="ts" setup>
-import {config} from '@/store';
+import {config,userConfig} from '@/store';
 import languages from '@/store/language';
 import theme from '@/store/theme';
 import {computed, ref} from 'vue';
@@ -163,10 +163,6 @@ const layoutLimit = computed(() => (key: string) => {
 	} else {
 		layoutArr = layoutDic.default[screen];
 	}
-
-	// console.log(route.meta.view);
-
-	// console.log(layoutArr);
 
 	return layoutArr.includes(key);
 });

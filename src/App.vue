@@ -15,7 +15,7 @@
 <script lang="ts" setup>
 import {Cookies, global_set_json} from '@/utils';
 import {get_bookmark} from '@/api/bookmark';
-import {config} from '@/store';
+import {config,pageSizeConfig,userConfig} from '@/store';
 import router from '@/router';
 import {ElConfigProvider, ElMessage, ElMessageBox} from 'element-plus';
 import languages from '@/store/language';
@@ -23,11 +23,12 @@ import {computed, onMounted} from 'vue';
 import {useI18n} from 'vue-i18n';
 import {set_theme} from '@/style/theme';
 import {system_init} from '@/api/login';
+import { get_user_config } from './api/account';
 
 const {locale} = useI18n();
 
 const elLocale = computed(() => {
-	const index = config.language;
+	const index = userConfig.language;
 	for (let i = 0; i < languages.length; i++) {
 		if (languages[i].value === index) {
 			return languages[i].components;
@@ -36,25 +37,29 @@ const elLocale = computed(() => {
 	return '';
 });
 
+system_init();
+
 // 检查登录状态
 check_login();
 
 // 获取书签列表
 set_bookmark();
 
+get_setting();
+
 // 生命周期
 onMounted(() => {
 	// 设置语言
 	const language = localStorage.getItem('language');
 	if (language) {
-		config.language = language;
+		userConfig.language = language;
 		locale.value = language;
 	}
 
 	// 设置主题
 	const theme = localStorage.getItem('theme');
 	if (theme) {
-		config.theme = theme;
+		userConfig.theme = theme;
 		set_theme(theme);
 	}
 
@@ -62,8 +67,6 @@ onMounted(() => {
 	if (window.javaObj) {
 		config.android = true;
 	}
-
-	system_init();
 });
 
 // 设置屏幕尺寸
@@ -86,9 +89,13 @@ function set_screen_type() {
 		config.screenType = 'middle';
 	} else if (screen < 2000) {
 		config.screenType = 'large';
-	} else {
+	} else if (screen < 4095) {
 		config.screenType = '2k';
+	} else {
+		config.screenType = '4k';
 	}
+
+	// ElMessage(String(config.screenType));
 }
 
 /**
@@ -109,6 +116,16 @@ function check_login() {
 async function set_bookmark() {
 	const res = await get_bookmark();
 	global_set_json('bookmarkList', res.data.list);
+}
+
+async function get_setting() {
+	const res = await get_user_config();
+	const configValue = JSON.parse(res.data.configValue);
+
+	// 使用数据库用户设置，覆盖当前设置
+	Object.assign(userConfig, configValue.userConfig);
+	Object.assign(pageSizeConfig, configValue.pageSizeConfig);
+	
 }
 </script>
 

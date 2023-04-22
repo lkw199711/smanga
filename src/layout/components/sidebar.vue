@@ -61,7 +61,7 @@
 <script lang="ts" setup>
 import { ref, onMounted, computed } from 'vue'
 import router from '@/router';
-import {config} from '@/store';
+import {config,power} from '@/store';
 import Logo from "@/layout/components/logo.vue";
 import {useI18n} from "vue-i18n";
 const {t} = useI18n();
@@ -80,11 +80,11 @@ const userLimit = computed(()=>(item:any)=>{
 
   const title = item.meta.title;
 
-  if (title==='mediaManage' && !config.editMedia){
+  if (title==='mediaManage' && !power.editMedia){
     return false;
   }
 
-  if (title==='account' && !config.editUser){
+  if (title==='account' && !power.editUser){
     return false;
   }
 

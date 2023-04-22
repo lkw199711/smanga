@@ -8,35 +8,51 @@
 	$recordStart = $_POST['recordStart'];
 	$pageSize = $_POST['pageSize'];
 	$order = $_POST['order'];
+	$userId = $_POST['userId'];
+
+	$sqlRes = dosql(['table'=>'user','where'=>"userId=$userId"]);
+
+	if (!$sqlRes) {
+		exit_request([
+			'code'=>1,
+			'message'=>'用户信息错误',
+		]);
+	}
+
+	$mediaLimit = $sqlRes[0]['mediaLimit'];
+	$mediaLimitArr = explode('/',$mediaLimit);
+
 
 	$searchField = $searchType.'Name';
 
-	$list = dosql([
+	$params = [
 		'type'=>'search',
 		'table'=>$searchType,
 		'field'=>$searchField,
 		'keyword'=>$searchText,
 		'limit'=>$pageSize,
 		'start'=>$recordStart,
-	]);
+	];
 
 	// 设置排序规则
 	if ($order) {
 		if ($order==='name') {
-			$params['order'] = 'mangaName';
+			$params['order'] = $searchField;
 
 		}elseif ($order==='nameDesc') {
-			$params['order'] = 'mangaName';
+			$params['order'] = $searchField;
 			$params['desc'] = true;
 
 		}elseif ($order==='time') {
-			$params['order'] = 'manga.createTime';
+			$params['order'] = 'createTime';
 
 		}elseif ($order==='timeDesc') {
-			$params['order'] = 'manga.createTime';
+			$params['order'] = 'createTime';
 			$params['desc'] = true;
 		}
 	}
+
+	$list = dosql($params);
 
 	$count = dosql([
 		'type'=>'searchcount',
@@ -44,6 +60,21 @@
 		'field'=>$searchField,
 		'keyword'=>$searchText,
 	]);
+
+	// 提出不允许的媒体库
+	$unsetNum = 0;
+	for ($i=0,$length=count($list); $i < $length; $i++) { 
+		if (array_search($list[$i]['mediaId'],$mediaLimitArr)!==false) {
+			// 删除元素
+			unset($list[$i]);
+			$unsetNum++;
+		}
+	}
+	// 重新排列数组
+	$list = array_values($list);
+
+	// 减去提出的数量
+	$count = $count - $unsetNum;
 
 	$request = [
 		'code'=>0,

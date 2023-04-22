@@ -24,7 +24,9 @@
 	</div>
 </template>
 
-<script lang="ts">export default {name: 'manga-list'}</script>
+<script lang="ts">
+export default {name: 'manga-list'};
+</script>
 
 <script lang="ts" setup>
 import {
@@ -38,7 +40,7 @@ import {
 import {useRoute} from 'vue-router';
 import {get_poster} from '@/api';
 import {get_manga} from '@/api/manga';
-import store, {config} from '@/store';
+import store, {config, pageSizeConfig, userConfig} from '@/store';
 import {global_get} from '@/utils';
 import manga from '@/components/manga.vue';
 import mediaPager from '@/components/media-pager.vue';
@@ -57,9 +59,15 @@ const mediaId = computed<number>(() => {
 	return Number(route.query.mediaId || global_get('mediaId'));
 });
 
+const defaultPageSize = computed<number>(() => {
+	const screen = config.screenType;
+	// @ts-ignore
+	return Number(pageSizeConfig[screen][0]);
+});
+
 // 切换排序规则时 重新加载列表
 watch(
-	() => config.order,
+	() => userConfig.order,
 	() => {
 		page_change();
 	}
@@ -74,13 +82,13 @@ onBeforeUnmount(() => {
 	store.commit('switch_await', {running: 'mangaAwait', bool: false});
 });
 
-onActivated(() => { 
+onActivated(() => {
 	const clear = route.params.clear;
-	
-    if (clear) {
-      reload();
-      route.params.clear = '';
-    }
+
+	if (clear) {
+		reload();
+		route.params.clear = '';
+	}
 });
 
 /**
@@ -88,13 +96,16 @@ onActivated(() => {
  * @param page
  * @param pageSize
  */
-async function page_change(pageC = 0, pageSize = 12) {
+async function page_change(
+	pageC = 0,
+	pageSize: number = defaultPageSize.value
+) {
 	if (pageC) {
 		page.value = pageC;
 	}
 
 	const start = (page.value - 1) * pageSize;
-	const res = await get_manga(mediaId.value, start, pageSize, config.order);
+	const res = await get_manga(mediaId.value, start, pageSize, userConfig.order);
 	list.value = res.data.list;
 	// list.push(...res.data.list)
 	count = res.data.count;
