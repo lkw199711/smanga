@@ -31,11 +31,11 @@ jobs:
           node-version: '14'
 
       -
-        run: npm install -g @vue/cli
-
-      -
         name: Build Web
-        run: npm install && npm run build
+        run: |
+          npm install -g @vue/cli
+          npm install
+          npm run build
 
       - 
         name: Set Up QEMU
