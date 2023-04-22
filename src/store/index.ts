@@ -62,7 +62,7 @@ export const power = reactive({
 });
 
 /**
- * 用户设置 
+ * 用户设置
  * 用户的操作习惯配置 将保存至数据库
  */
 export const userConfig = reactive({
@@ -71,24 +71,25 @@ export const userConfig = reactive({
 	// 主题皮肤
 	theme: 'grey',
 	// 默认排序规则
-	order: 'time',
+	order: 'name',
 	// 翻页按钮调转
 	pageTurningReverse: false,
 	// 阅读操作面板 顶部与底部尺寸
 	browseOperationTop: 30,
-	browseOperationBottom: 30
+	browseOperationBottom: 30,
 });
 
 export const cache = reactive({
 	bookmarkId: 0,
+	chapterKeepAlive: true,
+	mangaKeepAlive: true,
 });
 
 export const pageSizeConfig = reactive({
 	mini: [9, 12, 15, 18, 21],
-    small: [12, 18, 32, 38, 44],
-    middle: [12, 18, 32, 38, 44],
+	small: [12, 18, 32, 38, 44],
+	middle: [12, 18, 32, 38, 44],
 	large: [8, 16, 32, 40, 48],
 	'2k': [27, 36, 45, 54, 63],
 	'4k': [32, 40, 48, 54, 62],
 });
-

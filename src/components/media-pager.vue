@@ -87,12 +87,12 @@ export default defineComponent({
 					return 'total, sizes, prev, pager, next, jumper';
 			}
 		},
-    pageSizeArray() {
-      const screenType: any = config.screenType;
-      
-      // @ts-ignore
-      return pageSizeConfig[screenType];
-    },
+		pageSizeArray() {
+			const screenType: any = config.screenType;
+
+			// @ts-ignore
+			return pageSizeConfig[screenType];
+		},
 	},
 	watch: {
 		paramsPage: {
@@ -146,10 +146,10 @@ export default defineComponent({
 	},
 
 	// 生命周期
-  created() {
-    this.pageSize = this.pageSizeArray[0];
-    // 初始化加载
-    this.page_change()
+	created() {
+		this.pageSize = this.pageSizeArray[0];
+		// 初始化加载
+		// this.page_change()
 	},
 });
 </script>
