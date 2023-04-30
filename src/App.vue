@@ -108,6 +108,8 @@ async function set_bookmark() {
 
 async function get_setting() {
 	const res = await get_user_config();
+	if (res.data.code == 1) return false;
+	
 	const configValue = JSON.parse(res.data.configValue);
 
 	// 使用数据库用户设置，覆盖当前设置

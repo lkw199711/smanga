@@ -54,7 +54,7 @@ let page = ref(1);
 let count = ref(0);
 let list = ref([]);
 let chapterInfo = ref({});
-let menuPoster = '';
+let menuPoster = ref('');
 
 const defaultPageSize = computed<number>(() => {
 	const screen = config.screenType;
@@ -88,12 +88,12 @@ onBeforeUnmount(() => {
 });
 
 onActivated(() => {
-	const clear = route.params.clear;
+	// const clear = route.params.clear;
 
-	if (clear) {
-		init();
-		route.params.clear = '';
-	}
+	// if (clear) {
+	// 	init();
+	// 	route.params.clear = '';
+	// }
 });
 
 function go_browse(item: any) {
@@ -128,8 +128,8 @@ function go_browse(item: any) {
  * 打开右侧菜单
  */
 function context_menu(info: any, key: number) {
-	menuPoster = (list.value[key] as any).blob;
-	chapterInfo = info;
+	menuPoster.value = (list.value[key] as any).blob;
+	chapterInfo.value = info;
 	config.rightSidebar = true;
 }
 

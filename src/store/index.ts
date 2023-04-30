@@ -8,6 +8,8 @@ export default createStore({
 		chapterAwait: true,
 		mangaAwait: true,
 		previewAwait: true,
+		collectAwait: true,
+		searchAwait: true
 	} as any,
 	mutations: {
 		switch_await(state, {bool = true, running = 'chapterAwait'}) {

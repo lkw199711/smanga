@@ -101,7 +101,7 @@
 
 		// 321
 		if (array_search('3.2.1', $vers)===false) {
-			// 创建版本表
+			// 创建个人设置表
 			$sqlComm = "CREATE TABLE IF NOT EXISTS smanga.config (
 				`configId` int(0) NOT NULL AUTO_INCREMENT COMMENT '设置项主键',
 				`userId` int(0) NULL COMMENT '关联的用户id',
@@ -119,12 +119,50 @@
 				'table'=>'version',
 				'type'=>'insert',
 				'field'=>['version','versionDescribe','createTime','updateTime'],
-				'value'=>['3.2.1','新增用户设置模块','2023-3-18 00:27:31','now()']
+				'value'=>['3.2.1','新增用户设置模块','2023-4-22 18:12:57','now()']
+			]);
+		} 
+
+		// 322
+		if (array_search('3.2.2', $vers)===false) {
+			dosql([
+				'table'=>'version',
+				'type'=>'insert',
+				'field'=>['version','versionDescribe','createTime','updateTime'],
+				'value'=>['3.2.2','修复缓存与排序的bug.','2023-4-22 23:49:03','now()']
+			]);
+		} 
+
+		// 323
+		if (array_search('3.2.3', $vers)===false) {
+			// 创建个人设置表
+			$sqlComm = "CREATE TABLE IF NOT EXISTS smanga.collect (
+				`collectId` int(0) NOT NULL AUTO_INCREMENT COMMENT '收藏id',
+				`collectType` varchar(255) NULL COMMENT '收藏类型',
+				`userId` int(0) NOT NULL COMMENT '用户id',
+				`mediaId` int(0) NULL COMMENT '媒体库id',
+				`mangaId` int(0) NULL COMMENT '漫画id',
+				`mangaName` varchar(255) NULL COMMENT '漫画名称',
+				`chapterId` int(0) NULL COMMENT '章节id',
+				`chapterName` varchar(255) NULL COMMENT '章节名称',
+				`createTime` datetime(0) NULL COMMENT '收藏日期',
+				PRIMARY KEY (`collectId`),
+				UNIQUE INDEX `uManga`(`collectType`, `mangaId`) USING BTREE COMMENT '漫画id不允许重复',
+				UNIQUE INDEX `uChapter`(`collectType`, `chapterId`) USING BTREE COMMENT '章节id不允许重复'
+			)";
+
+			$link->query($sqlComm);
+
+			dosql([
+				'table'=>'version',
+				'type'=>'insert',
+				'field'=>['version','versionDescribe','createTime','updateTime'],
+				'value'=>['3.2.3','新增收藏模块','2023-4-24 23:36:57','now()']
 			]);
 		} 
 
 		// 记录版本 代表初始化结束
-		write_txt('./version','3.2.1');
+		write_txt('./version','3.2.3');
 
 		exit_request([
 				'code'=>0,
@@ -137,4 +175,3 @@
 				'vers'=>$vers
 			]);
 	}
-?>

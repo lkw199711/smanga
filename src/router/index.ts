@@ -91,6 +91,20 @@ const routes: Array<RouteRecordRaw> = [
 		],
 	},
 	{
+		path: '/collect',
+		redirect: '/collect/index',
+		meta: {sidebar: true, title: 'collect', icon: 'Star'},
+		component: Layout,
+		children: [
+			{
+				path: 'index',
+				name: 'collect',
+				meta: {view: 'list'},
+				component: () => import('../views/collect/index.vue'),
+			},
+		],
+	},
+	{
 		path: '/search',
 		redirect: '/search/index',
 		meta: {sidebar: true, title: 'search', icon: 'Search'},

@@ -118,7 +118,8 @@ onMounted(() => {
 
 .sidebar {
   height: 100vh;
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 
 .sidebar:not(.el-menu--collapse) {
