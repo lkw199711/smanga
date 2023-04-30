@@ -9,9 +9,9 @@
 			</div>
 			<div class="layout-right-middle">
 				<router-view v-slot="{Component}">
-					<keep-alive :include="['search', 'manga-list', 'chapter-list']">
+					<!-- <keep-alive :include="['search', 'manga-list', 'chapter-list']"> -->
 						<component :is="Component" />
-					</keep-alive>
+					<!-- </keep-alive> -->
 				</router-view>
 			</div>
 		</div>
@@ -77,7 +77,7 @@ export default defineComponent({
 
 		&-middle {
 			flex: 1;
-			overflow: scroll;
+			overflow: auto;
 		}
 	}
 }

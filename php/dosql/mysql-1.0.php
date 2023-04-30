@@ -91,6 +91,7 @@ function dosql($params){
 	$order = @getValue($params['order'],'');
 	$desc = @getValue($params['desc'],'');
 	$keyword = @getValue($params['keyword'],'');
+	$test = @getValue($params['test'],false);
 
 	#链接mysql
 	if (isset($params['link'])) {
@@ -132,7 +133,7 @@ function dosql($params){
 			break;
 
 		case 'select':
-			$request = select($link,$name,$table,$where,$group,$order,$desc,$limit,$start);
+			$request = select($link,$name,$table,$where,$group,$order,$desc,$limit,$start,$test);
 			break;
 
 		case 'update':
@@ -173,7 +174,7 @@ function dosql($params){
 
 
 #查表操作
-function select($link,$name,$table,$where,$group,$order,$desc,$limit,$start){
+function select($link,$name,$table,$where,$group,$order,$desc,$limit,$start,$test){
 	#初始化所需变量
 	$value = array();
 	#附加条件
@@ -183,7 +184,11 @@ function select($link,$name,$table,$where,$group,$order,$desc,$limit,$start){
 	$where = where($where);	
 
 	$sqlComm = "select $name from $table $where $group $order $limit;";
-// echo $sqlComm;exit();
+
+	if($test){
+		echo $sqlComm;exit();
+	}
+
 	$sql = mysqli_query($link,$sqlComm);
 
 	if (!$sql) {
@@ -210,7 +215,8 @@ function insert($link,$table,$field,$value){
 	$value = value($value);
 
 	$sqlComm = "insert into $table (".$field.") values (".$value.");";#调试语句错误
-// echo $sqlComm;
+	// echo $sqlComm;
+	// exit();
 	return mysqli_query($link,$sqlComm);
 }
 
@@ -401,7 +407,9 @@ function value($value){
 
 	if (count($value)) {
 		foreach ($value as $key => $val) {
-			if (!is_keyword($val)) {
+			if ($val===null) {
+				$value[$key] = 'null';
+			} elseif (!is_keyword($val)) {
 				$value[$key] = '\''.$val.'\'';
 			}
 		}
@@ -468,5 +476,3 @@ function to_array($val){
 function to_string($val){
 	return is_array($val) ? implode(',',$val) : $val;
 }
-
-?>

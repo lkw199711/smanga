@@ -1,50 +1,11 @@
 <template>
 	<div class="search">
 		<div class="top">
-			<el-input
-				class="search-input"
-				v-model="searchText"
-				clearable
-				@clear="clear"
-				@keyup.enter="
-					() => {
-						page_change();
-					}
-				">
-				<template #append>
-					<el-select
-						v-model="searchType"
-						placeholder="Select"
-						class="search-select">
-						<el-option :label="$t('search.manga')" value="manga" />
-						<el-option :label="$t('search.chapter')" value="chapter" />
-					</el-select>
-				</template>
-				<template #prepend>
-					<el-button
-						:icon="Search"
-						@click="
-							() => {
-								page_change();
-							}
-						" />
-				</template>
-			</el-input>
-			<el-button
-				class="search-btn"
-				type="primary"
-				v-if="config.screenType !== 'small'"
-				@click="
-					() => {
-						page_change();
-					}
-				"
-				>全局搜索</el-button
-			>
+			<tabs v-model="collectType" :items="items" @change="tabs_change"></tabs>
 		</div>
 
 		<div class="middle">
-			<div class="manga-list" v-if="searchType === 'manga'">
+			<div class="manga-list" v-if="collectType === 'manga'">
 				<div :class="['manga-list-box', {block: config.viewType === 'list'}]">
 					<manga
 						v-for="(i, k) in list"
@@ -62,7 +23,7 @@
 					@page-change="page_change" />
 			</div>
 
-			<div class="chapter-list" v-if="searchType === 'chapter'">
+			<div class="chapter-list" v-if="collectType === 'chapter'">
 				<!--章节列表-->
 				<div :class="['chapter-list-box', {block: config.viewType === 'list'}]">
 					<chapter
@@ -86,10 +47,10 @@
 </template>
 
 <script lang="ts">
-export default {name: 'search'};
+export default {name: 'collect'};
 </script>
 
-<script lang="ts" setup name="search">
+<script lang="ts" setup>
 import {
 	computed,
 	watch,
@@ -110,6 +71,28 @@ import manga from '@/components/manga.vue';
 import chapter from '@/components/chapter.vue';
 import mediaPager from '@/components/media-pager.vue';
 import {ElMessage} from 'element-plus';
+import {get_collect} from '@/api/collect';
+import type {TabsPaneContext} from 'element-plus';
+import tabs from './tabs.vue';
+import i18n from '@/i18n';
+const {t} = i18n.global;
+
+const items = ref([
+	{
+		label: t('collect.manga'),
+		value: 'manga',
+	},
+	{
+		label: t('collect.chapter'),
+		value: 'chapter',
+	},
+]);
+
+const collectType = ref('manga');
+
+const handleClick = (tab: TabsPaneContext, event: Event) => {
+	console.log(tab, event);
+};
 
 const searchText = ref('');
 const searchType = ref('manga');
@@ -135,12 +118,17 @@ watch(
 		page_change(1);
 	}
 );
-onMounted(() => {
-	store.commit('switch_await', {running: 'searchAwait', bool: true});
+onMounted(async () => {
+	store.commit('switch_await', {running: 'collectAwait', bool: true});
+
+	page_change();
+
+	// 为漫画请求海报图片
+	get_poster(list.value, 'mangaAwait');
 });
 
 onBeforeUnmount(() => {
-	store.commit('switch_await', {running: 'searchAwait', bool: false});
+	store.commit('switch_await', {running: 'collectAwait', bool: false});
 });
 
 // KeepAlive相关联 生命周期
@@ -154,6 +142,11 @@ onActivated(() => {
 		route.params.searchText = '';
 	}
 });
+
+function tabs_change(val: string) {
+	list.value = [];
+	page_change();
+}
 
 async function do_search() {
 	const res: any = await search(searchText.value, searchType.value, 0, 12);
@@ -180,15 +173,9 @@ async function page_change(
 		page.value = pageC;
 	}
 
-	if (!searchText.value) {
-		ElMessage.warning('请输入搜索关键词！');
-		return false;
-	}
-
 	const start = (page.value - 1) * pageSize;
-	const res: any = await search(
-		searchText.value,
-		searchType.value,
+	const res: any = await get_collect(
+		collectType.value,
 		start,
 		pageSize,
 		userConfig.order

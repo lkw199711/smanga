@@ -1,0 +1,276 @@
+{
+	"404": "The file you requested does not exist",
+	"sidebar": {
+		"mediaList": "mediaList",
+		"mangaList": "mangaList",
+		"chapterList": "chapterList",
+		"history": "history",
+		"bookmark": "bookmark",
+		"collect": "collect",
+		"search": "search",
+		"account": "account",
+		"userSetting": "userSetting",
+		"mediaManage": "mediaManage",
+		"mangaManage": "mangaManage",
+		"pathManage": "pathManage",
+		"chapterManage": "chapterManage",
+		"bookmarkManage": "bookmarkManage",
+		"compressManage": "compressManage",
+		"wiki": "wiki"
+	},
+	"option": {
+		"option": "option",
+		"add": "add",
+		"delete": "delete",
+		"collect": "collect",
+		"modify": "modify",
+		"remove": "remove",
+		"confirm": "Ok",
+		"cancel": "Cancel",
+		"bookmark": "addBookmark",
+		"removeFirst": "removeFirstPage",
+		"recoveryFirst": "recoveryFirstPage",
+		"direction": "switchDirection",
+		"ltr": "left -> right",
+		"rtl": "right -> left",
+		"before": "before",
+		"next": "next",
+		"removeCollect": "remove collect"
+	},
+	"account": {
+		"add": "addUser",
+		"modify": "modifyUser",
+		"serial": "Ser",
+		"id": "userId",
+		"name": "userName",
+		"pass": "passWord",
+		"nameLabel": "userName:",
+		"passLabel": "passWord:",
+		"registerTime": "registerTime",
+		"option": "option",
+		"power": "power",
+		"namePlace": "place enter userName",
+		"passPlace": "place enter passWord(Leave blank to not modify)",
+		"confirmBoxTitle": "confirm deletion",
+		"confirmBoxText": "are you sure to delete this user?",
+		"formWarning": "The user name is 3-20 characters long and starts with a letter",
+		"note": {
+			"name": "\"userName\": 3-20 digits long, beginning with a letter",
+			"pass": "\"passWord\": Leave blank to not modify"
+		},
+		"form": {
+			"label": {
+				"editUser": "editUser",
+				"editMedia": "editMedia"
+			},
+			"title": {
+				"power": "power",
+				"mediaPower": "mediaReadPower"
+			}
+		}
+	},
+	"mediaManage": {
+		"add": "addMedia",
+		"modify": "modifyMedia",
+		"id": "mediaId",
+		"name": "mediaName",
+		"createTime": "createTime",
+		"path": "path",
+		"form": {
+			"name": "mediaName:",
+			"type": "mediaType:",
+			"file": "fileType:",
+			"browse": "defaultBrowse:",
+			"directory": "directoryType:",
+			"removeFirst": "removeFirst:",
+			"direction": "direction:"
+		},
+		"note": {
+			"name": "\"mediaName\": Required, cannot be blank",
+			"type": "\"mediaType\": It will affect the way that smanga scans the path of the media library. Currently, it is divided into ordinary comics and single comics. A single comics will have one less \"chapter\" directory level for ordinary comics",
+			"browse": "\"defaultBrowse\": Select the default browsing method of comics in this media library. You can also adjust it through the top function menu of the browsing interface, but we still recommend that different types of comics be placed in different media libraries for easy management",
+			"directory": "\"directoryType\": This option supports adding one more level of directory to the path. For example, you want to manage comics by year \"example/2022/manga/chapter/...\"",
+			"removeFirst": "\"removeFirst\": In the \"double page mode\", by temporarily removing the first page in reading, you can combine the left and right pages of the cartoon into a whole picture by removing the even number of page numbers. Please change this item after getting familiar with the page numbers of the cartoon. You can also change this item temporarily through the function menu in the browsing interface.",
+			"direction": "\"direction\": In the \"double page mode\", change the display order of the first and second pictures so that the left and right pages of the cartoon can be combined into a whole picture. You can also change this item temporarily through the function menu in the browsing interface."
+		},
+		"place": {
+			"name": "please enter mediaName",
+			"browse": "please enter default browse"
+		},
+		"select": {
+			"mediaType0": "manga(manga->chapter->images",
+			"mediaType1": "single(manga->images)",
+			"fileType0": "image",
+			"browse0": "flow",
+			"browse1": "single",
+			"browse2": "double",
+			"directory0": "manga->chapter(or zip)->images",
+			"directory1": "directory->manga->chapter(or zip)->images",
+			"ltr": "left to right",
+			"rtl": "right to left"
+		},
+		"confirm": {
+			"title": "confirm deletion",
+			"text": "are you sure to delete this media?"
+		},
+		"title": {
+			"read": "read option"
+		}
+	},
+	"path": {
+		"id": "pathId",
+		"add": "addPath",
+		"modify": "modifyPath",
+		"path": "path",
+		"createTime": "createTime",
+		"form": {
+			"add": "addPath:",
+			"path": "path:"
+		},
+		"place": {
+			"add": "please enter the path"
+		},
+		"button": {
+			"re": "reScan",
+			"update": "addScan"
+		},
+		"warning": {
+			"name": "mediaName cannot be empty!"
+		},
+		"confirm": {
+			"title": "confirm deletion",
+			"text": "are you sure to delete this media?",
+			"title1": "",
+			"text1": "are you sure to delete this path? The associated manga and chapter also will be deleted!",
+			"title2": "confirm reScan",
+			"text2": "are you sure to reScan this path? The associated manga and chapter also will be cleared and rescanned to add!"
+		}
+	},
+	"mangaManage": {
+		"id": "mangaId",
+		"name": "mangaName",
+		"createTime": "createTime",
+		"updateTime": "updateTime",
+		"modify": "modifyMange",
+		"form": {
+			"name": "mangaName:",
+			"browse": "browseType:",
+			"path": "mangaPath:",
+			"poster": "mangaPoster:"
+		},
+		"place": {
+			"name": "please enter mangaName",
+			"browse": "please select browseType",
+			"path": "please enter manga path",
+			"poster": "please enter manga poster path"
+		},
+		"confirm": {
+			"title": "confirm deletion",
+			"text": "are you sure to delete this manga?",
+			"title1": "confirm remove",
+			"text1": "are you sure to remove this manga?",
+			"title2": "confirm deletion",
+			"text2": "are you sure to remove this manga and delete source file?"
+		},
+		"warning": {
+			"name": "mangaName cannot be empty!",
+			"path": "mangaPath cannot be empty!"
+		}
+	},
+	"chapterManage": {
+		"id": "chapterId",
+		"name": "chapterName",
+		"createTime": "createTime",
+		"updateTime": "updateTime",
+		"modify": "modifyChapter",
+		"form": {
+			"name": "chapterName:",
+			"path": "chapterPath:",
+			"poster": "chapterPoster:"
+		},
+		"place": {
+			"name": "please enter chapterName",
+			"path": "please enter chapterPath",
+			"poster": "please enter chapterPoster path"
+		},
+		"warning": {
+			"name": "chapterName cannot be empty!",
+			"path": "chapterPath cannot be empty!"
+		},
+		"confirm": {
+			"title": "confirm deletion",
+			"text": "are you sure to delete this chapter?",
+			"title1": "confirm remove",
+			"text1": "are you sure to remove this chapter?",
+			"title2": "confirm deletion",
+			"text2": "are you sure to remove this chapter and delete source file?"
+		}
+	},
+	"bookmarkManage": {
+		"add": "addBookmark",
+		"remove": "removeBookmark",
+		"id": "bookmarkId",
+		"page": "page",
+		"createTime": "createTime",
+		"confirm": {
+			"title": "confirm deletion",
+			"text": "are you sure to delete this bookmark?"
+		}
+	},
+	"compressManage": {
+		"id": "compressId",
+		"type": "fileType",
+		"source": "sourcePath",
+		"path": "compressPath",
+		"num": "imagesCount",
+		"createTime": "createTime",
+		"confirm": {
+			"title": "confirm deletion",
+			"text": "are you sure to delete this compress record?"
+		}
+	},
+	"collect": {
+		"manga": "manga",
+		"chapter": "chapter"
+	},
+	"search": {
+		"manga": "manga",
+		"chapter": "chapter"
+	},
+	"browse": {
+		"flow": "flow",
+		"single": "single",
+		"double": "double"
+	},
+	"page": {
+		"before": "beforeChapter",
+		"next": "nextChapter",
+		"firstPage": "Already on the first page",
+		"lastPage": "Already at the end page",
+		"lastChapter": "It's the last chapter",
+		"firstChapter": "It's the first chapter"
+	},
+	"theme": {
+		"grey": "grey",
+		"white": "white",
+		"black": "black",
+		"red": "red",
+		"redLight": "volcano",
+		"orange": "orange",
+		"gold": "gold",
+		"yellow": "yellow",
+		"greenLight": "lime",
+		"green": "green",
+		"cyan": "cyan",
+		"blueLight": "blue",
+		"blueDraw": "drawBlue",
+		"purple": "purple",
+		"magenta": "magenta"
+	},
+	"sortOrder": {
+		"name": "name",
+		"nameDesc": "name-desc",
+		"time": "time",
+		"timeDesc": "time-desc"
+	}
+}

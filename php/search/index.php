@@ -18,10 +18,11 @@
 			'message'=>'用户信息错误',
 		]);
 	}
-
+	
+	// 用逗号重新拼接禁止权限媒体库
 	$mediaLimit = $sqlRes[0]['mediaLimit'];
 	$mediaLimitArr = explode('/',$mediaLimit);
-
+	$mediaLimitRebuild = implode(',',$mediaLimitArr);
 
 	$searchField = $searchType.'Name';
 
@@ -32,8 +33,21 @@
 		'keyword'=>$searchText,
 		'limit'=>$pageSize,
 		'start'=>$recordStart,
+		'where'=>["FIND_IN_SET(manga.mediaId,'$mediaLimitRebuild')=0"]
 	];
 
+	if($searchType==='chapter'){
+		$params = [
+			'type'=>'search',
+			'name'=>['chapter.*','manga.browseType'],
+			'table'=>'chapter,manga',
+			'field'=>"chapter.$searchField",
+			'keyword'=>$searchText,
+			'where'=>['chapter.mangaId=manga.mangaId',"FIND_IN_SET(manga.mediaId,'$mediaLimitRebuild')=0"],
+			'limit'=>$pageSize,
+			'start'=>$recordStart,
+		];
+	}
 	// 设置排序规则
 	if ($order) {
 		if ($order==='name') {
@@ -59,22 +73,23 @@
 		'table'=>$searchType,
 		'field'=>$searchField,
 		'keyword'=>$searchText,
+		'where'=>["FIND_IN_SET(mediaId,'$mediaLimitRebuild')=0"]
 	]);
 
 	// 提出不允许的媒体库
-	$unsetNum = 0;
-	for ($i=0,$length=count($list); $i < $length; $i++) { 
-		if (array_search($list[$i]['mediaId'],$mediaLimitArr)!==false) {
-			// 删除元素
-			unset($list[$i]);
-			$unsetNum++;
-		}
-	}
+	// $unsetNum = 0;
+	// for ($i=0,$length=count($list); $i < $length; $i++) { 
+	// 	if (array_search($list[$i]['mediaId'],$mediaLimitArr)!==false) {
+	// 		// 删除元素
+	// 		unset($list[$i]);
+	// 		$unsetNum++;
+	// 	}
+	// }
 	// 重新排列数组
-	$list = array_values($list);
+	// $list = array_values($list);
 
 	// 减去提出的数量
-	$count = $count - $unsetNum;
+	// $count = $count - $unsetNum;
 
 	$request = [
 		'code'=>0,
