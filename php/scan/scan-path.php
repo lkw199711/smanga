@@ -94,9 +94,11 @@ function scan_path($path,$pathId,$mediaId){
 		$sqlPoster = mysqli_real_escape_string($link,$value['poster']);
 		$sqlPath = mysqli_real_escape_string($link,$value['path']);
 		$mangaType = $value['type'];
+		// echo $sqlPath;exit();
 
 		// 插入漫画记录
-		$rres = dosql(array(
+		$res = dosql(array(
+			// 'test'=>true,
 			'type'=>'insert',
 			'table'=>'manga',
 			'field'=>array('mediaId','pathId','mangaName','mangaCover','mangaPath','browseType','direction','removeFirst','createTime','updateTime'),
@@ -109,6 +111,10 @@ function scan_path($path,$pathId,$mediaId){
 			'name'=>array('mangaId'),
 			'where'=>['pathId='.$pathId,'mangaName=\''.$sqlName.'\''],
 		));
+
+		// 插入漫画失败，结束本次循环
+		if(!$mangaSqlRes) continue;
+		
 		$mangaId = $mangaSqlRes[0]['mangaId'];
 
 		// 扫描漫画章节

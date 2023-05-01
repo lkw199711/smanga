@@ -11,10 +11,10 @@
 	]);
 
 	if (!$res) {
-		exit_request(['code'=>1,'text'=>'无用户配置数据']);
+		exit_request(['code'=>1,'text'=>'无用户配置数据','res'=>$res]);
 	}
 
 	$configValue = $res[0]['configValue'];
 	
-	exit_request(['code'=>1,'configValue'=>$configValue]);
+	exit_request(['code'=>0,'configValue'=>$configValue]);
 ?>

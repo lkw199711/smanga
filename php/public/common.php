@@ -66,7 +66,7 @@ function compress_exec($chapterPath,$mediaId,$mangaId,$chapterId,$chapterType,$m
 	global $publicPath;
 
 	$command = "php ../compress/compress.php \"$chapterPath\" \"$publicPath\" \"$mediaId\" \"$mangaId\" \"$chapterId\" \"$chapterType\" \"$mangaCover\" \"$chapterCover\" \"$userId\"";
-
+	// echo $command;exit();
 	pclose(popen('nohup '.$command.' & 2>&1','r'));
 }
 ?>
