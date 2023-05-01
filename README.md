@@ -1,10 +1,10 @@
-![](https://github.com/lkw199711/smanga/raw/dev/img/asmanga-logo.png)
+# Smanga
 
-# 无需配置，docker直装的漫画流媒体阅读工具。
+无需配置，docker直装的漫画流媒体阅读工具。
 
 以emby plex为灵感，为解决漫画阅读需求而开发的漫画阅读器。
 
-- [无需配置，docker直装的漫画流媒体阅读工具。](#无需配置docker直装的漫画流媒体阅读工具)
+- [Smanga](#smanga)
   - [简介](#简介)
   - [安装](#安装)
     - [1. 使用docker安装](#1-使用docker安装)
