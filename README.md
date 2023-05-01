@@ -1,3 +1,5 @@
+![](https://github.com/lkw199711/smanga/raw/dev/img/asmanga-logo.png)
+
 # Smanga
 
 无需配置，docker直装的漫画流媒体阅读工具。
@@ -23,6 +25,7 @@
   - [最后](#最后)
   - [版本更新记录](#版本更新记录)
 
+![](https://github.com/lkw199711/smanga/raw/master/src/assets/readme/smanga-media-list.PNG)
 
 ## 简介
 
@@ -47,8 +50,6 @@ docker: https://hub.docker.com/r/lkw199711/smanga
 4. 新增历史功能, 可查看自己的浏览记录
 5. 对各尺寸设备的兼容, 现在您在手机、平板、pc等各种设备上使用smanga都可以获得良好的体验.
 6. 新增多种阅读模式, 条漫(瀑布流) , 翻页 以及双页, 选择适合的浏览模式可提升阅读体验. 
-
-![](https://github.com/lkw199711/smanga/raw/master/src/assets/readme/smanga-media-list.PNG)
 
 
 ## 安装
