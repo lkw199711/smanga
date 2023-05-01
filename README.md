@@ -56,13 +56,13 @@ docker: https://hub.docker.com/r/lkw199711/smanga
 
 ```dockerfile
 docker run -itd --name smanga \
--p 3333:3306 \					#数据库端口
--p 8097:80 \					#web端口
--v /mnt:/mnt \					#自定义映射目录
--v /route/compress:/compress \	#解压缓存目录
--v /route/poster:/poster \		#封面缓存目录
--v /route/mysql:/var/lib/mysql \#mysql数据库目录目录
--v /route/config:/config \		#配置文件目录
+-p 3333:3306 \
+-p 8097:80 \
+-v /mnt:/mnt \
+-v /route/compress:/compress \
+-v /route/poster:/poster \
+-v /route/mysql:/var/lib/mysql \
+-v /route/config:/config \
 lkw199711/smanga;
 ```
 
