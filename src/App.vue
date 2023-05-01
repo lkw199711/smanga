@@ -49,8 +49,6 @@ get_setting();
 
 // 生命周期
 onMounted(() => {
-	
-
 	// 设置安卓环境
 	if (window.javaObj) {
 		config.android = true;
@@ -111,6 +109,7 @@ async function get_setting() {
 	if (res.data.code == 1) return false;
 	
 	const configValue = JSON.parse(res.data.configValue);
+console.log(configValue);
 
 	// 使用数据库用户设置，覆盖当前设置
 	Object.assign(userConfig, configValue.userConfig);
