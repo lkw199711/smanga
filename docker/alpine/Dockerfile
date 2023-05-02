@@ -29,4 +29,3 @@ COPY --chmod=755 --from=Build /rootfs /app
 COPY --chmod=755 ./docker/alpine/rootfs /
 
 EXPOSE 80
-VOLUME [ "/config", "/poster", "/compress" ]

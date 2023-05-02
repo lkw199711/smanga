@@ -2,17 +2,23 @@
 # shellcheck shell=bash
 
 function 020_mkdir {
-if [ ! -d /compress ]; then
-	mkdir /compress
-fi
 
-if [ ! -d /poster ]; then
-	mkdir /poster
-fi
+	if [ ! -d /data ]; then
+		mkdir /data
+	fi
 
-if [ ! -d /config ]; then
-	mkdir /config
-fi
+	if [ ! -d /compress ]; then
+		mkdir /compress
+	fi
+
+	if [ ! -d /poster ]; then
+		mkdir /poster
+	fi
+
+	if [ ! -d /config ]; then
+		mkdir /config
+	fi
+
 }
 
 020_mkdir 2>&1 | sed "s#^#cont-init: info: $(realpath $0): &#g"

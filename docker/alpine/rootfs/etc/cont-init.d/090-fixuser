@@ -2,18 +2,24 @@
 # shellcheck shell=bash
 
 function 090_fixuser {
-groupmod -o -g "${PGID}" smanga
-usermod -o -u "${PUID}" smanga
 
-# smanga app
-chown smanga:smanga -R /app /config
+    groupmod -o -g "${PGID}" smanga
+    usermod -o -u "${PUID}" smanga
 
-chown smanga:smanga \
-    /compress \
-    /poster
+    # smanga app
+    chown smanga:smanga -R /app
 
-# Nginx
-chown smanga:smanga -R /var/lib/nginx /run/nginx /var/log/nginx
+    chown smanga:smanga \
+        /data \
+        /compress \
+        /poster \
+        /config
+
+    # Nginx
+    chown smanga:smanga -R /var/lib/nginx /run/nginx /var/log/nginx
+    # PHP
+    chown smanga:smanga -R /run/php
+
 }
 
 090_fixuser 2>&1 | sed "s#^#cont-init: info: $(realpath $0): &#g"

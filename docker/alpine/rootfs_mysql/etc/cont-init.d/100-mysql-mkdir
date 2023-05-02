@@ -1,0 +1,29 @@
+#!/usr/bin/with-contenv bash
+# shellcheck shell=bash
+
+function 100_mysql_mkdir {
+
+    if [ -d /var/lib/mysql ]; then
+        if [[ $(readlink -f /data/db 2>/dev/null) != /var/lib/mysql ]]; then
+            rm -rf /data/db
+            ln -sf /var/lib/mysql /data/db
+        fi
+    else
+        if [ ! -d /data/db ]; then
+            mkdir /data/db
+        fi
+    fi
+
+    if [ ! -d /run/mysqld ]; then
+        mkdir -p /run/mysqld
+    fi
+
+    if [ -d /var/lib/mysql ]; then
+        chown smanga:smanga /data/db /run/mysqld /var/lib/mysql
+    else
+        chown smanga:smanga /data/db /run/mysqld
+    fi
+
+}
+
+100_mysql_mkdir 2>&1 | sed "s#^#cont-init: info: $(realpath $0): &#g"
