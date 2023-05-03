@@ -3,7 +3,7 @@
 
 function 200_app_init {
 
-    if [ -f /config/install.lock ]; then
+    if [ -f ${SMANGA_CONFIG}/install.lock ]; then
         if [ ! -f /app/php/public/version ]; then
 
             # 启动mysql
