@@ -5,6 +5,7 @@ function 030_config {
 
 	if [ ! -f ${SMANGA_CONFIG_INI} ]; then
 		cp /app/config/config.ini ${SMANGA_CONFIG_INI}
+		echo "Create ${SMANGA_CONFIG_INI}"
 	fi
 
 }
