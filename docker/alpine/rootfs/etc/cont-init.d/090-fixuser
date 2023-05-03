@@ -3,6 +3,8 @@
 
 function 090_fixuser {
 
+    echo "Change owner to user smanga..."
+
     groupmod -o -g "${PGID}" smanga
     usermod -o -u "${PUID}" smanga
 
