@@ -12,8 +12,8 @@ function 090_fixuser {
     chown smanga:smanga \
         /data \
         /compress \
-        /poster \
-        /config
+        /poster
+    chown smanga:smanga -R /config
 
     # Nginx
     chown smanga:smanga -R /var/lib/nginx /run/nginx /var/log/nginx
