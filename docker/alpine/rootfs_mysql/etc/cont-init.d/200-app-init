@@ -13,7 +13,9 @@ function 200_app_init {
                 sleep 1
             done
 
-            php /app/php/public/init.php
+            cd /app/php/public
+            s6-setuidgid smanga php7 /app/php/public/init.php
+            echo
 
             # 关闭mysql
             mysqladmin shutdown
