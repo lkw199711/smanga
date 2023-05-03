@@ -8,6 +8,7 @@
 			如不使用外置数据库则不需要设置此项.
 			<a href="/file/smanga.sql">数据库导入文件</a>
 		</p>
+
 		<el-form :model="form" :inline="true">
 			<el-form-item label="ip:">
 				<el-input v-model="form.ip" style="width: 16rem" />
@@ -22,15 +23,21 @@
 				<el-input v-model="form.passWord" style="width: 11rem" />
 			</el-form-item>
 		</el-form>
-		<el-button type="success" @click="check">测试链接</el-button>
-		<el-button type="primary" @click="setting">确认修改</el-button>
+
+		<div class="btn-box">
+			<!-- <el-button type="success" @click="check">测试链接</el-button> -->
+			<el-button type="primary" @click="setting">确认修改</el-button>
+		</div>
 	</div>
 </template>
 
 <script lang="ts" setup>
-import {reactive, onMounted} from 'vue';
+import {reactive, onMounted, defineProps, defineEmits} from 'vue';
 import {database_check, database_set, database_get} from '@/api/login';
 import {ElMessage} from 'element-plus';
+
+const props = defineProps(['firstLoad']);
+const emit = defineEmits(['update']);
 
 // do not use same name with ref
 const form = reactive({
@@ -45,11 +52,17 @@ onMounted(async () => {
 	const data = res.data.data;
 
 	Object.assign(form, data);
+
+	if (props.firstLoad) {
+		await check();
+	}
 });
 
-function check() {
+async function check() {
 	if (!form_check()) return false;
-	database_check(form);
+	const res = await database_check(form);
+	const code = res.data?.code;
+	emit('update', code === 0);
 }
 
 function form_check() {
@@ -73,59 +86,21 @@ function form_check() {
 	return true;
 }
 
-function setting() {
+async function setting() {
 	if (!form_check()) return false;
-	database_set(form);
+	const res = await database_set(form);
+	const code = res.data?.code;
+	emit('update', code === 0);
 }
 </script>
 
 <style scoped lang="less">
-.database-box {
-	background-color: rgba(255, 255, 255, 0.25);
-	box-shadow: #cccccc 2px 2px 8px;
-	backdrop-filter: blur(15px);
-}
-
-.note {
-	background-color: transparent;
-}
-
 .title {
 	color: grey;
 	font-size: 1.6rem;
 	margin-bottom: 2rem;
 }
-
-@media only screen and (min-width: 1200px) {
-	.database-box {
-		position: absolute;
-		top: 60%;
-		left: 50%;
-		transform: translate(-50%, -50%);
-		padding: 2rem 2rem;
-		width: 40rem;
-	}
-}
-
-@media only screen and (max-width: 1199px) and (min-width: 768px) {
-	.database-box {
-		position: absolute;
-		top: 60%;
-		left: 50%;
-		transform: translate(-50%, -50%);
-		padding: 2rem 2rem;
-		width: 40rem;
-	}
-}
-
-@media only screen and (max-width: 767px) {
-	.database-box {
-		position: absolute;
-		top: 74%;
-		left: 50%;
-		transform: translate(-50%, -50%);
-		padding: 2rem 2rem;
-		width: 32rem;
-	}
+.btn-box {
+	text-align: right;
 }
 </style>

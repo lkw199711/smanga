@@ -8,7 +8,7 @@ const routes: Array<RouteRecordRaw> = [
 	{
 		path: '/',
 		name: 'home',
-		redirect: '/media-list/index',
+		redirect: '/media-list',
 		meta: {sidebar: false},
 		component: Layout,
 	},
@@ -232,6 +232,12 @@ const routes: Array<RouteRecordRaw> = [
 			},
 		],
 	},
+	{
+		path: '/init',
+		name: 'init',
+		meta: {sidebar: false, title: 'userSetting'},
+		component: () => import('../views/init/index.vue'),
+	},
 
 	// 浏览界面
 	{
@@ -261,7 +267,7 @@ const routes: Array<RouteRecordRaw> = [
 			},
 		],
 	},
-	
+
 	// wiki
 	{
 		path: '/wiki',

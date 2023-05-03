@@ -5,6 +5,25 @@
 
 	$userId = $_POST['userId'];
 
+	// 初次部署
+	if (!is_file("$configPath/install.lock")) {
+		echo json_encode([
+			'code' => 1,
+			'state' => 'first-deploy',
+			'text' => '初次部署'
+		]);
+		exit();
+	}
+	// 用户信息错误
+	if (!$userId){
+		echo json_encode([
+			'code' => 1,
+			'state' => 'user-error',
+			'message' => '用户信息错误，请重新登陆'
+		]);
+		exit();
+	}
+
 	$res = dosql([
 		'table'=>'config',
 		'where'=>"userId=$userId",
