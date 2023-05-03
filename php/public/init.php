@@ -406,9 +406,10 @@ $installLock = "$configPath/install.lock";
 if (is_file($installLock)) {
 	// 记录版本 代表初始化结束
 	write_txt('./version', '3.2.5');
-} else {
-	write_txt("$configPath/install.lock", 'success');
 }
+
+// 有此文件说明并非初次部署
+write_txt("$configPath/install.lock", 'success');
 
 exit_request([
 	'code' => 0,

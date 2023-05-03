@@ -1,5 +1,11 @@
 <?
 
 $host = getenv('SMANGA_COMPRESS');
-echo $host;
+
+if($host){
+   echo $host; 
+}else{
+    echo '没有值';
+}
+
 ?>
