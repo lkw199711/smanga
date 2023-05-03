@@ -7,16 +7,20 @@ function 020_mkdir {
 		mkdir /data
 	fi
 
-	if [ ! -d /compress ]; then
-		mkdir /compress
+	if [ ! -d ${SMANGA_CONFIG} ]; then
+		mkdir -p ${SMANGA_CONFIG}
 	fi
 
-	if [ ! -d /poster ]; then
-		mkdir /poster
+	if [ ! -d ${SMANGA_COMPRESS} ]; then
+		mkdir -p ${SMANGA_COMPRESS}
 	fi
 
-	if [ ! -d /config ]; then
-		mkdir /config
+	if [ ! -d ${SMANGA_POSTER} ]; then
+		mkdir -p ${SMANGA_POSTER}
+	fi
+
+	if [ ! -d ${SMANGA_BOOKMARK} ]; then
+		mkdir -p ${SMANGA_BOOKMARK}
 	fi
 
 }

@@ -3,12 +3,8 @@
 
 function 030_config {
 
-	if [ ! -f /config/config.ini ]; then
-		cp /app/config/config.ini /config/config.ini
-	fi
-
-	if [ -f /config/sql.ini ]; then
-		echo -e "The sql.ini setting is obsolete!\nPlease manually delete the sql.ini configuration file and reconfigure the config.ini configuration file."
+	if [ ! -f ${SMANGA_CONFIG_INI} ]; then
+		cp /app/config/config.ini ${SMANGA_CONFIG_INI}
 	fi
 
 }
