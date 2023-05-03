@@ -8,32 +8,23 @@ header('content-type:text/html;charset=UTF-8');
 #当前路径
 $publicPath = dirname(__file__);
 // 配置文件啊目录
-$configPath = '/config';
+$configPath = getenv('SMANGA_CONFIG');
+// INI配置文件
+$configIniFile = getenv('SMANGA_CONFIG_INI');
 // 转化缓存目录
-$cacheBasePath = '/compress';
+$cacheBasePath = getenv('SMANGA_COMPRESS');
 // 封面存放路径
-$posterPath = '/poster';
-
-$bookmarkPosterPath = '/poster/bookmark';
-
+$posterPath = getenv('SMANGA_POSTER');
+// 书签存放路径
+$bookmarkPosterPath = getenv('SMANGA_BOOKMARK');
+// 压缩文件支持类型
 $compressTypes = '(cbr|cbz|zip|7z|rar|pdf)';
 
-// 采用网站外目录
-if (!is_dir('/app/php')) {
-	// 在web环境
-	$cacheBasePath = '/mnt/hhd-2t/01compress';
-	// 封面存放路径
-	$posterPath = '/mnt/hhd-2t/02poster';
+// 目录不存在则创建
+if (!is_dir("'$cacheBasePath'")) mkdir($cacheBasePath, 0755, true);
+if (!is_dir($posterPath)) mkdir($posterPath, 0755, true);
+if (!is_dir($bookmarkPosterPath)) mkdir($bookmarkPosterPath, 0755, true);
 
-	$bookmarkPosterPath = '/mnt/hhd-2t/02poster/bookmark';
-
-	$configPath = '/mnt/hhd-2t/04config';
-} else {
-	// 在docker环境
-	if (!is_dir($cacheBasePath)) mkdir($cacheBasePath, 0755, true);
-	if (!is_dir($posterPath)) mkdir($posterPath, 0755, true);
-	if (!is_dir($bookmarkPosterPath)) mkdir($bookmarkPosterPath, 0755, true);
-}
 
 /**
  * 异步 扫描

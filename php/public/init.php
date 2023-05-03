@@ -1,6 +1,6 @@
 <?
 $phpPath = is_dir('/app') ? '/app/php' : '/www/wwwroot/smanga.mn2.cc/php';
-require_once 'lkw.php';
+require_once "$phpPath/public/lkw.php";
 require_once "$phpPath/dosql/mysql-1.0.php";
 
 $link = @mysqli_connect($gIp, $gUserName, $gPassWord, $gDatabase, $gPort)
@@ -390,11 +390,25 @@ if (array_search('3.2.5', $vers) === false) {
 	]);
 }
 
-// 记录版本 代表初始化结束
-write_txt('./version', '3.2.5');
 
-$configPath = is_dir('/config') ? '/config' : '/mnt/hhd-2t/04config';
-write_txt("$configPath/install.lock", '3.2.5');
+
+$configPath = getenv('SMANGA_CONFIG');
+
+if (!$configPath) {
+	exit_request([
+		'code' => 1,
+		'message' => '环境变量错误'
+	]);
+}
+
+$installLock = "$configPath/install.lock";
+
+if (is_file($installLock)) {
+	// 记录版本 代表初始化结束
+	write_txt('./version', '3.2.5');
+} else {
+	write_txt("$configPath/install.lock", 'success');
+}
 
 exit_request([
 	'code' => 0,

@@ -1,7 +1,8 @@
 <?
-	
+	// 转化缓存目录
+	$cacheBasePath = getenv('SMANGA_COMPRESS');
 	// un_zip('/mnt/hhd-2t/00manga/047z/111/漫画示例.7z','/mnt/hhd-2t/01compress/3022');
-	un_zip('/mnt/hhd-2t/01compress/111.7z','/mnt/hhd-2t/01compress/3022');
+	un_zip($cacheBasePath.'/111.7z',$cacheBasePath.'/3022');
 
 	function un_zip($path,$extractTo){
 		$count = '';
@@ -21,4 +22,3 @@
 
 		return $count;
 	}
-?>
