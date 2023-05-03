@@ -1,4 +1,0 @@
-#!/usr/bin/with-contenv bash
-# shellcheck shell=bash
-
-kill -s QUIT $(ps aux | grep php-fpm | grep -v grep | awk '{print $1}')
