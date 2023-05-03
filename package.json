@@ -1,6 +1,6 @@
 {
 	"name": "smanga",
-	"version": "3.2.4",
+	"version": "3.2.5",
 	"private": true,
 	"scripts": {
 		"serve": "set NODE_OPTIONS=--openssl-legacy-provider & vue-cli-service serve",
