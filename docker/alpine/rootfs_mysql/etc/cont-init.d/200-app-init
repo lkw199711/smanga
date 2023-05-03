@@ -15,6 +15,7 @@ function 200_app_init {
 
             cd /app/php/public
             s6-setuidgid smanga php7 /app/php/public/init.php
+            echo
 
             # 关闭mysql
             mysqladmin shutdown
