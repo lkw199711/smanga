@@ -3,6 +3,8 @@
 
 function 090_fixuser {
 
+    echo "Change owner to user smanga..."
+
     groupmod -o -g "${PGID}" smanga
     usermod -o -u "${PUID}" smanga
 
@@ -11,9 +13,10 @@ function 090_fixuser {
 
     chown smanga:smanga \
         /data \
-        /compress \
-        /poster
-    chown smanga:smanga -R /config
+        ${SMANGA_COMPRESS} \
+        ${SMANGA_POSTER} \
+        ${SMANGA_BOOKMARK}
+    chown smanga:smanga -R ${SMANGA_CONFIG}
 
     # Nginx
     chown smanga:smanga -R /var/lib/nginx /run/nginx /var/log/nginx

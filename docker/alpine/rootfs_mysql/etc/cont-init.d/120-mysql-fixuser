@@ -3,6 +3,7 @@
 
 function 120_mysql_fixuser {
 
+    echo "Change mysql owner to user smanga..."
     if [ -d /var/lib/mysql ]; then
         chown smanga:smanga -R /data/db /var/lib/mysql
     else
