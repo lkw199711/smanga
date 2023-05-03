@@ -1,6 +1,7 @@
 <?
+$phpPath = is_dir('/app') ? '/app/php' : '/www/wwwroot/smanga.mn2.cc/php';
 require_once 'lkw.php';
-require_once '../dosql/mysql-1.0.php';
+require_once "$phpPath/dosql/mysql-1.0.php";
 
 $link = @mysqli_connect($gIp, $gUserName, $gPassWord, $gDatabase, $gPort)
 	or exit_request([
@@ -28,7 +29,6 @@ if (is_file('./version')) {
 		'code' => 1,
 		'initCode' => 3,
 		'vers' => $vers,
-		'$firstLoad' => $firstLoad,
 		'text' => '无需部署'
 	]);
 }
