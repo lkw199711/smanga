@@ -380,7 +380,7 @@ if (array_search('3.2.4', $vers) === false) {
 	]);
 }
 
-// 323
+// 325
 if (array_search('3.2.5', $vers) === false) {
 	dosql([
 		'table' => 'version',
@@ -390,7 +390,20 @@ if (array_search('3.2.5', $vers) === false) {
 	]);
 }
 
-
+// 326
+if (array_search('3.2.6', $vers) === false) {
+	$link->query("ALTER TABLE bookmark MODIFY COLUMN `browseType` enum('flow','single','double','half') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT 'single' AFTER `userId`;");
+	$link->query("ALTER TABLE chapter MODIFY COLUMN `browseType` enum('flow','single','double','half') CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL DEFAULT 'flow' COMMENT '浏览方式' AFTER `chapterType`;");
+	$link->query("ALTER TABLE manga MODIFY COLUMN `browseType` enum('flow','single','double','half') CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL DEFAULT 'flow' COMMENT '浏览方式' AFTER `chapterCount`;");
+	$link->query("ALTER TABLE media MODIFY COLUMN `defaultBrowse` enum('flow','single','double','half') CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL DEFAULT 'flow' COMMENT '默认浏览类型' AFTER `fileType`;");
+	
+	dosql([
+		'table' => 'version',
+		'type' => 'insert',
+		'field' => ['version', 'versionDescribe', 'createTime', 'updateTime'],
+		'value' => ['3.2.6', '新增对半裁切模式', '2023-5-3 23:49:36', 'now()']
+	]);
+}
 
 $configPath = getenv('SMANGA_CONFIG');
 
@@ -405,7 +418,7 @@ $installLock = "$configPath/install.lock";
 
 if (is_file($installLock)) {
 	// 记录版本 代表初始化结束
-	write_txt('./version', '3.2.5');
+	write_txt('./version', '3.2.6');
 }
 
 // 有此文件说明并非初次部署

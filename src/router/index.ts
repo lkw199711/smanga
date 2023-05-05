@@ -265,6 +265,12 @@ const routes: Array<RouteRecordRaw> = [
 				meta: {view: 'browse'},
 				component: () => import('../views/browse-view/double.vue'),
 			},
+			{
+				path: 'half',
+				name: 'half',
+				meta: {view: 'browse'},
+				component: () => import('../views/browse-view/half.vue'),
+			},
 		],
 	},
 

@@ -42,6 +42,7 @@ $sqlRes = dosql(array(
 
 // 插入记录失败 直接退出
 if (!$sqlRes) {
+	echo $sqlRes;
 	exit;
 }
 

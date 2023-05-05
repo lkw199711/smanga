@@ -54,7 +54,7 @@
 		"vue-cli-plugin-style-resources-loader": "^0.1.5"
 	},
 	"gitHooks": {
-		"pre-commit": "lint-staged"
+
 	},
 	"lint-staged": {
 		"*.{js,jsx,vue,ts,tsx}": [

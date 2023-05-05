@@ -21,7 +21,7 @@ $bookmarkPosterPath = getenv('SMANGA_BOOKMARK');
 $compressTypes = '(cbr|cbz|zip|7z|rar|pdf)';
 
 // 目录不存在则创建
-if (!is_dir("'$cacheBasePath'")) mkdir($cacheBasePath, 0755, true);
+if (!is_dir($cacheBasePath)) mkdir($cacheBasePath, 0755, true);
 if (!is_dir($posterPath)) mkdir($posterPath, 0755, true);
 if (!is_dir($bookmarkPosterPath)) mkdir($bookmarkPosterPath, 0755, true);
 
