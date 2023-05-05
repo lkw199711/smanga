@@ -15,6 +15,7 @@ $database = 'smanga';
 #创建连接
 $link = @mysqli_connect($ip,$userName,$passWord,$database,$port)or exit_request([
 			'code'=>1,
+			'initCode'=>0,
 			'message'=>'数据库链接错误',
 		]);
 

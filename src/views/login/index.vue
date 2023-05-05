@@ -30,11 +30,6 @@
 				>
 			</div>
 		</div>
-
-		<!-- 数据库设置 -->
-		<database
-			:class="['database', {zindex2: showDatabase}]"
-			@click="showDatabase = !showDatabase" />
 	</div>
 </template>
 
@@ -42,7 +37,7 @@
 import {defineComponent} from 'vue';
 import {login} from '@/api/account';
 import {Cookies} from '@/utils';
-import database from './components/database.vue';
+
 import {power} from '@/store';
 
 export default defineComponent({
@@ -65,7 +60,7 @@ export default defineComponent({
 	computed: {},
 
 	// 组件
-	components: {database},
+	components: {},
 
 	// 方法
 	methods: {

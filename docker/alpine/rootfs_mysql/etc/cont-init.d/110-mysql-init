@@ -1,0 +1,47 @@
+#!/usr/bin/with-contenv bash
+# shellcheck shell=bash
+
+function 110_mysql_init {
+
+    if [ ! -d /data/db/smanga ]; then
+
+        # 初始化mysql文件
+        mysql_install_db \
+            --user=smanga \
+            --group=smanga \
+            --datadir=/data/db \
+            > /dev/null
+
+        mysql_set_file=/tmp/mysql_set_file
+        if [ ! -f "$mysql_set_file" ]; then
+            touch "$mysql_set_file"
+        fi
+
+        # mysql创建设置用户，创建数据库
+        echo "flush privileges;" > "$mysql_set_file"
+        echo "grant all privileges on *.* to 'root'@'%' identified by '123456' with grant option;" >> "$mysql_set_file"
+        echo "alter user 'root'@'%' IDENTIFIED BY '123456';" >> "$mysql_set_file"
+        echo "grant all privileges on *.* to 'smanga'@'%' identified by 'smanga' with grant option;" >> "$mysql_set_file"
+        echo "grant all privileges on *.* to 'smanga'@'localhost' identified by 'smanga' with grant option;" >> "$mysql_set_file"
+        echo "flush privileges;" >> "$mysql_set_file"
+        echo "select User, host from mysql.user;" >> "$mysql_set_file"
+        echo "create database smanga;" >> "$mysql_set_file"
+        echo "show databases;" >> "$mysql_set_file"
+
+        umask 0640
+        /usr/bin/mysqld \
+            --user=smanga \
+            --bootstrap \
+            --verbose=0 \
+            --skip-networking=0 \
+            --datadir=/data/db \
+            < $mysql_set_file
+        umask 022
+
+        rm -rf "$mysql_set_file"
+
+    fi
+
+}
+
+110_mysql_init 2>&1 | sed "s#^#cont-init: info: $(realpath $0): &#g"

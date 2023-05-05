@@ -23,10 +23,14 @@ ENV S6_SERVICES_GRACETIME=30000 \
     PUID=1000 \
     PGID=1000 \
     TZ=Asia/Shanghai \
-    UMASK=022
+    UMASK=022 \
+    SMANGA_CONFIG=/data/config \
+    SMANGA_CONFIG_INI=/data/config/config.ini \
+    SMANGA_COMPRESS=/data/compress \
+    SMANGA_POSTER=/data/poster \
+    SMANGA_BOOKMARK=/data/poster/bookmark
 
 COPY --chmod=755 --from=Build /rootfs /app
 COPY --chmod=755 ./docker/alpine/rootfs /
 
 EXPOSE 80
-VOLUME [ "/config", "/poster", "/compress" ]

@@ -38,9 +38,13 @@ keyword 搜索关键字 当type为search时 此参数必填
 #声明关键字数组
 $sqlKeyword = array('/now\(\)/i', '/max\(.*\) as nearTime/i');
 
-$configFile = "/config/config.ini";
-if (!is_dir('/app/php')) {
-	$configFile = '/mnt/hhd-2t/04config/config.ini';
+$configFile = getenv('SMANGA_CONFIG_INI');
+
+if(!$configFile){
+	die(json_encode([
+		'code' => 1,
+		'message' => '环境变量错误'
+	]));
 }
 
 #初始化变量

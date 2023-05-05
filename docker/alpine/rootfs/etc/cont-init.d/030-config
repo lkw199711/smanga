@@ -2,13 +2,12 @@
 # shellcheck shell=bash
 
 function 030_config {
-if [ ! -f /config/config.ini ]; then
-	cp /app/config/config.ini /config/config.ini
-fi
 
-if [ -f /config/sql.ini ]; then
-	echo -e "sql.ini 设置已过时！\n请手动删除sql.ini配置文件，并重新配置config.ini配置文件。"
-fi
+	if [ ! -f ${SMANGA_CONFIG_INI} ]; then
+		cp /app/config/config.ini ${SMANGA_CONFIG_INI}
+		echo "Create ${SMANGA_CONFIG_INI}"
+	fi
+
 }
 
 030_config 2>&1 | sed "s#^#cont-init: info: $(realpath $0): &#g"

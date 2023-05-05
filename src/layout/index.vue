@@ -10,7 +10,7 @@
 			<div class="layout-right-middle">
 				<router-view v-slot="{Component}">
 					<!-- <keep-alive :include="['search', 'manga-list', 'chapter-list']"> -->
-						<component :is="Component" />
+					<component :is="Component" />
 					<!-- </keep-alive> -->
 				</router-view>
 			</div>
@@ -22,8 +22,6 @@
 import {defineComponent} from 'vue';
 import topNav from './components/top-nav.vue';
 import sidebar from './components/sidebar.vue';
-import {ElMessage} from 'element-plus';
-import {Cookies} from '@/utils';
 
 export default defineComponent({
 	name: 'layout',
@@ -42,21 +40,10 @@ export default defineComponent({
 	components: {topNav, sidebar},
 
 	// 方法
-	methods: {
-		check_login() {
-			const id = Cookies.get('userId');
-			const name = Cookies.get('userName');
-			if (!name || !id) {
-				this.$router.push('/login');
-				ElMessage.warning('会话信息过期,请重新登录!');
-			}
-		},
-	},
+	methods: {},
 
 	// 生命周期
-	created() {
-		this.check_login();
-	},
+	created() {},
 });
 </script>
 

@@ -19,25 +19,18 @@
 
 	$mediaLimit = $sqlRes[0]['mediaLimit'];
 	$mediaLimitArr = explode('/',$mediaLimit);
+	$mediaLimitRebuild = implode(',',$mediaLimitArr);
 
 	// 执行搜索
 	$sqlRes=dosql(array(
 		'table'=>'media',
 		'limit'=>$pageSize,
 		'start'=>$recordStart,
+		'where'=>["FIND_IN_SET(mediaId,'$mediaLimitRebuild')=0"]
 	));
 
-	for ($i=0,$length=count($sqlRes); $i < $length; $i++) { 
-		if (array_search($sqlRes[$i]['mediaId'],$mediaLimitArr)!==false) {
-			// 删除元素
-			unset($sqlRes[$i]);
-		}
-	}
-	// 重新排列数组
-	$sqlRes = array_values($sqlRes);
 
-	$count = dosql(array('table'=>'media','type'=>'getcount'));
-	$count = $count - count($mediaLimitArr);
+	$count = dosql(array('table'=>'media','type'=>'getcount','where'=>["FIND_IN_SET(mediaId,'$mediaLimitRebuild')=0"]));
 
 	$request = array(
 		'code'=>0,
