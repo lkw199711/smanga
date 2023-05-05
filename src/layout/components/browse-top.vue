@@ -91,8 +91,7 @@ export default defineComponent({
 						let minTop = 9999999;
 
 						for (let i = 0; i < doms.length; i++) {
-							const item = <HTMLElement>doms[i];
-							//@ts-ignore
+							const item:any = doms[i];
 							const screenTop = Math.abs(item.offsetTop + item.y);
 
 							if (screenTop < minTop) {
