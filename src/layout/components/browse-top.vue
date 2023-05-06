@@ -23,7 +23,7 @@
 			<el-menu-item index="flow">{{ $t('browse.flow') }}</el-menu-item>
 			<el-menu-item index="single">{{ $t('browse.single') }}</el-menu-item>
 			<el-menu-item index="double">{{ $t('browse.double') }}</el-menu-item>
-			<el-menu-item index="falf">{{ $t('browse.half') }}</el-menu-item>
+			<el-menu-item index="half">{{ $t('browse.half') }}</el-menu-item>
 		</el-sub-menu>
 		<el-menu-item index="addBookmark">{{ bookmarkTitle }}</el-menu-item>
 	</el-menu>
@@ -122,7 +122,7 @@ export default defineComponent({
 			let params = {};
 
 			// 切换浏览模式 保持参数
-			if (/(flow|single|double)/.test(key)) {
+			if (/(flow|single|double|half)/.test(key)) {
 				query = this.$route.query;
 			}
 
