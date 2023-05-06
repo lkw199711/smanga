@@ -11,12 +11,34 @@ function 090_fixuser {
     # smanga app
     chown smanga:smanga -R /app
 
-    chown smanga:smanga \
-        /data \
-        ${SMANGA_COMPRESS} \
-        ${SMANGA_POSTER} \
-        ${SMANGA_BOOKMARK}
-    chown smanga:smanga -R ${SMANGA_CONFIG}
+    if [ -d /config ]; then
+        chown smanga:smanga -R \
+            ${SMANGA_CONFIG} \
+            /config
+    else
+        chown smanga:smanga -R ${SMANGA_CONFIG}
+    fi
+
+    if [ -d /compress ]; then
+        chown smanga:smanga \
+            ${SMANGA_COMPRESS} \
+            /compress
+    else
+        chown smanga:smanga ${SMANGA_COMPRESS}
+    fi
+
+    if [ -d /poster ]; then
+        chown smanga:smanga \
+            ${SMANGA_POSTER} \
+            /poster \
+            ${SMANGA_BOOKMARK} \
+            /poster/bookmark
+    else
+        chown smanga:smanga \
+            ${SMANGA_POSTER} \
+            ${SMANGA_BOOKMARK}
+    fi
+
 
     # Nginx
     chown smanga:smanga -R /var/lib/nginx /run/nginx /var/log/nginx
