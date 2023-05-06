@@ -16,4 +16,4 @@ RUN apk add --no-cache \
         /var/cache/apk/* \
         /tmp/*
 
-COPY --chmod=755 ./docker/alpine/rootfs_mysql /
+COPY --chmod=755 ./docker/rootfs_mysql /

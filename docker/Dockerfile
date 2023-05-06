@@ -31,6 +31,6 @@ ENV S6_SERVICES_GRACETIME=30000 \
     SMANGA_BOOKMARK=/data/poster/bookmark
 
 COPY --chmod=755 --from=Build /rootfs /app
-COPY --chmod=755 ./docker/alpine/rootfs /
+COPY --chmod=755 ./docker/rootfs /
 
 EXPOSE 80
