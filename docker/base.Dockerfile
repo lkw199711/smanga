@@ -42,9 +42,9 @@ RUN set -ex && \
     adduser -S smanga -G smanga -h /app -u 911 && \
     usermod -s /bin/bash smanga && \
     # Log Links
-    mkdir -p /log && \
-    ln -s /var/log/nginx/access.log /log/nginx_access.log && \
-    ln -s /var/log/nginx/error.log /log/nginx_error.log && \
+    mkdir -p /logs && \
+    touch /logs/nginx_access.log && \
+    touch /logs/nginx_error.log && \
     # PHP Nginx settings
     sed -i "s#short_open_tag = Off#short_open_tag = On#g" /etc/php7/php.ini && \
     sed -i "s#;open_basedir =#open_basedir = /#g" /etc/php7/php.ini && \
@@ -63,6 +63,6 @@ RUN set -ex && \
         /usr/share/php7 \
         /tmp/*
 
-COPY --chmod=755 ./docker/alpine/rootfs_base /
+COPY --chmod=755 ./docker/rootfs_base /
 
 ENTRYPOINT [ "/init" ]
