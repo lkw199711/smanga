@@ -10,13 +10,13 @@
     <div class="single-page-img-box">
       <bookmark :chapterId="chapterInfo.chapterId"/>
       <img class="single-page-img" :src="imgSrc" alt="接收图片" @click.stop="switch_menu"/>
-      <canvas id="canvas-cut" width="1920" height="1080" v-show="false"></canvas>
+      
       <operation-cover @before="beforePage" @next="nextPage" @switch-menu="switch_menu"
                        @switch-footer="switch_footer"></operation-cover>
     </div>
 
     <!-- 隐藏的canvas容器 -->
-    
+    <canvas id="canvas-cut" width="1920" height="1080" v-show="false"></canvas>
 
     <!--分页按钮-->
     <div class="footer" v-show="browseFooter">

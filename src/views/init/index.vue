@@ -41,15 +41,15 @@
 					<el-button
 						type="danger"
 						@click="before"
-						:loading="btnLoading"
-						:disabled="btnDisabled"
+						:loading="setps[active].btnLoading"
+						:disabled="setps[active].btnDisabled"
 						>上一步</el-button
 					>
 					<el-button
 						type="success"
 						@click="next"
-						:loading="btnLoading"
-						:disabled="btnDisabled"
+						:loading="setps[active].btnLoading"
+						:disabled="setps[active].btnDisabled"
 						>下一步</el-button
 					>
 				</div>
@@ -72,21 +72,29 @@ import {ref} from 'vue';
 import {config} from '@/store';
 
 const setps = ref([
-	{
+	{//数据库配置
 		titleText: 'smanga正在进行初始化......',
 		titlestate: 'default',
+		btnLoading: true,
+		btnDisabled: true,
 	},
-	{
+	{//新建用户
 		titleText: '创建用户或是跳过',
 		titlestate: 'default',
+		btnLoading: false,
+		btnDisabled: false,
 	},
-	{
+	{//初始化环境
 		titleText: 'smanga正在进行数据库与环境升级......',
 		titlestate: 'default',
+		btnLoading: true,
+		btnDisabled: true,
 	},
-	{
+	{//成功跳转
 		titleText: 'smanga初始化成功!',
 		titlestate: 'success',
+		btnLoading: false,
+		btnDisabled: false,
 	},
 ]);
 
@@ -109,8 +117,8 @@ function next() {
 }
 
 function update_database_view(test: boolean) {
-	btnLoading.value = false;
-	btnDisabled.value = !test;
+	setps.value[0].btnLoading = false;
+	setps.value[0].btnDisabled = !test;
 	firstLoad.value = false;
 
 	setps.value[0].titleText = test
@@ -120,8 +128,8 @@ function update_database_view(test: boolean) {
 }
 
 function update_user_view(test: boolean) {
-	btnLoading.value = false;
-	btnDisabled.value = !test;
+	setps.value[1].btnLoading = false;
+	setps.value[1].btnDisabled = !test;
 	firstLoad.value = false;
 
 	setps.value[1].titleText = test ? '新建用户成功' : '新建用户失败';
@@ -133,6 +141,8 @@ function update_system_view(
 	targetStep: number,
 	targetText: string
 ) {
+	setps.value[targetStep].btnLoading = false;
+	setps.value[targetStep].btnDisabled = !test;
 	active.value = targetStep;
 	setps.value[targetStep].titleText = targetText;
 	setps.value[targetStep].titlestate = test ? 'success' : 'fail';

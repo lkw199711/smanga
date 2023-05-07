@@ -104,7 +104,7 @@ export default defineComponent({
 			global_set('pageImage', pageImage);
 
 			const res: any = await get_image_blob(pageImage);
-			this.imgSrc = res.data;
+			// this.imgSrc = res.data;
 
 			const img = new Image();
 			img.src = res.data;

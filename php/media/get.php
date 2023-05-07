@@ -13,6 +13,7 @@
 	if (!$sqlRes) {
 		exit_request([
 			'code'=>1,
+			'state' => 'user-error',
 			'message'=>'用户信息错误',
 		]);
 	}
