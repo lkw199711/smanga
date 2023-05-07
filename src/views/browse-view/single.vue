@@ -4,7 +4,7 @@
     <chapterList-menu @before="before" @next="next" @changeChapter="change_chapter"/>
 
     <!--功能菜单-->
-    <right-sidebar  />
+    <right-sidebar @dwonload="dwonload_image" />
 
     <!--图片容器-->
     <div class="single-page-img-box">

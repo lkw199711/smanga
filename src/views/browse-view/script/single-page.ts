@@ -238,6 +238,18 @@ export default defineComponent({
         switch_footer() {
             config.browseFooter = !config.browseFooter;
         },
+
+        /**
+         * 下载当前图片
+         */
+        dwonload_image() {
+            const src = this.imgSrc;
+
+            const a = document.createElement('a');
+            a.href = src;
+            a.download = 'smangaImage.png';
+            a.click();
+        }
     },
 
     // 生命周期

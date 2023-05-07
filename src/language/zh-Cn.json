@@ -32,7 +32,8 @@
     "recoveryFirst": "恢复首页",
     "direction": "切换阅读方向",
     "ltr": "左 -> 右",
-    "rtl": "右 -> 左"
+    "rtl": "右 -> 左",
+    "dwonload": "下载图片"
   },
   "account": {
     "add": "新增用户",

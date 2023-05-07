@@ -35,7 +35,8 @@
     "rtl": "right -> left",
     "before": "before",
     "next": "next",
-    "removeCollect": "remove collect"
+    "removeCollect": "remove collect",
+    "dwonload": "dwonload image"
   },
   "account": {
     "add": "addUser",
