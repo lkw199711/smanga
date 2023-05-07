@@ -24,15 +24,6 @@ if ($verRes) {
 	}
 }
 
-if (is_file('./version')) {
-	exit_request([
-		'code' => 1,
-		'initCode' => 3,
-		'vers' => $vers,
-		'text' => '无需部署'
-	]);
-}
-
 // 书签表
 $link->query("
 		CREATE TABLE IF NOT EXISTS `bookmark`  (
@@ -416,13 +407,13 @@ if (!$configPath) {
 
 $installLock = "$configPath/install.lock";
 
+// 有此文件说明并非初次部署
+write_txt("$configPath/install.lock", 'success');
+
 if (is_file($installLock)) {
 	// 记录版本 代表初始化结束
 	write_txt('./version', '3.2.6');
 }
-
-// 有此文件说明并非初次部署
-write_txt("$configPath/install.lock", 'success');
 
 exit_request([
 	'code' => 0,

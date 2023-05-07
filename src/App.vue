@@ -47,7 +47,9 @@ onMounted(async () => {
 	await router.isReady();
 
 	// 获取用户设置
-	await get_setting();
+	const res = await get_setting();
+	// 用户信息错误 不继续执行
+	if (!res) return;
 
 	// 获取书签列表
 	set_bookmark();
@@ -132,6 +134,8 @@ async function get_setting() {
 
 	// 设置主题
 	set_theme(userConfig.theme);
+
+	return true;
 }
 </script>
 

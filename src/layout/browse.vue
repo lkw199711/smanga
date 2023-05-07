@@ -64,11 +64,12 @@ export default defineComponent({
 		flex: 1;
 		overflow: hidden;
 	}
-}
 
-.single,
-.double {
-	height: 100vh;
+	&.single,
+	&.double,
+	&.half {
+		height: 100vh;
+	}
 }
 
 .seat.posted {
