@@ -53,7 +53,7 @@ let page = ref(1);
 let count = ref(0);
 let list = ref([]);
 let mangaInfo = ref({});
-let menuPoster = '';
+let menuPoster = ref('');
 
 const mediaId = computed<number>(() => {
 	return Number(route.query.mediaId || global_get('mediaId'));
@@ -126,9 +126,9 @@ function reload() {
 /**
  * 打开右侧菜单
  */
-function context_menu(mangaInfo: any, key: number) {
-	menuPoster = (list[key] as any).blob;
-	mangaInfo = mangaInfo;
+function context_menu(mangaInfoProps: any, key: number) {
+	menuPoster.value = (list.value[key] as any).blob;
+	mangaInfo = mangaInfoProps;
 	config.rightSidebar = true;
 }
 </script>

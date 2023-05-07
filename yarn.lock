@@ -1372,6 +1372,16 @@
     "@typescript-eslint/types" "4.33.0"
     eslint-visitor-keys "^2.0.0"
 
+"@vant/popperjs@^1.3.0":
+  version "1.3.0"
+  resolved "https://registry.npmmirror.com/@vant/popperjs/-/popperjs-1.3.0.tgz"
+  integrity sha512-hB+czUG+aHtjhaEmCJDuXOep0YTZjdlRR+4MSmIFnkCQIxJaXLQdSsR90XWvAI2yvKUI7TCGqR8pQg2RtvkMHw==
+
+"@vant/use@^1.5.1":
+  version "1.5.1"
+  resolved "https://registry.npmmirror.com/@vant/use/-/use-1.5.1.tgz"
+  integrity sha512-Zxd7lDz/LliVYEQi3PR9a8CQa/kGCVzF0u9hqDMaTlgXlbG0wHMFPllrcG0ThR6bfs8xrYVuSFM9pJn6HSoUGQ==
+
 "@vue/babel-helper-vue-jsx-merge-props@^1.2.1":
   version "1.2.1"
   resolved "https://registry.npm.taobao.org/@vue/babel-helper-vue-jsx-merge-props/download/@vue/babel-helper-vue-jsx-merge-props-1.2.1.tgz"
@@ -3939,10 +3949,10 @@ elegant-spinner@^1.0.1:
   resolved "https://registry.nlark.com/elegant-spinner/download/elegant-spinner-1.0.1.tgz?cache=0&sync_timestamp=1631023306232&other_urls=https%3A%2F%2Fregistry.nlark.com%2Felegant-spinner%2Fdownload%2Felegant-spinner-1.0.1.tgz"
   integrity sha1-2wQ1IcldfjA/2PNFvtwzSc+wcp4=
 
-element-plus@^2.2.28:
-  version "2.3.2"
-  resolved "https://registry.npmjs.org/element-plus/-/element-plus-2.3.2.tgz"
-  integrity sha512-NIK0QckKKagdlMm3eLoVoD4Lkfj5ECzpZAxwrRLdm1Yi5qiTU9Guor33+IbIa52z4gHMuhMxgSVS2xAGmjLHsw==
+element-plus@^2.3.4:
+  version "2.3.4"
+  resolved "https://registry.npmmirror.com/element-plus/-/element-plus-2.3.4.tgz"
+  integrity sha512-SQr0J9z7N4z48WYk/l9NE2tizl8Q7j2OhqlpTc42k4pGncry3+rVX6dsmcsglFynn6vt3NzYxWJqmLFyDKQq+g==
   dependencies:
     "@ctrl/tinycolor" "^3.4.1"
     "@element-plus/icons-vue" "^2.0.6"
@@ -9404,9 +9414,9 @@ typedarray@^0.0.6:
   integrity sha1-hnrHTjhkGHsdPUfZlqeOxciDB3c=
 
 typescript@*, typescript@>=2, "typescript@>=2.1.0 || >=2.1.0-dev || >=2.2.0-dev || >=2.3.0-dev || >=2.4.0-dev || >=2.5.0-dev || >=2.6.0-dev || >=2.7.0-dev || >=2.8.0-dev || >=2.9.0-dev || >= 3.0.0-dev || >= 3.1.0-dev", "typescript@>=2.3.0-dev || >=2.4.0-dev || >=2.5.0-dev || >=2.6.0-dev || >=2.7.0-dev || >=2.8.0-dev || >=2.9.0-dev || >=3.0.0-dev || >= 3.1.0-dev || >= 3.2.0-dev", "typescript@>=2.8.0 || >= 3.2.0-dev || >= 3.3.0-dev || >= 3.4.0-dev || >= 3.5.0-dev || >= 3.6.0-dev || >= 3.6.0-beta || >= 3.7.0-dev || >= 3.7.0-beta", typescript@~5.0.3:
-  version "5.0.3"
-  resolved "https://registry.npmjs.org/typescript/-/typescript-5.0.3.tgz"
-  integrity sha512-xv8mOEDnigb/tN9PSMTwSEqAnUvkoXMQlicOb0IUVDBSQCgBSaAAROUZYy2IcUy5qU6XajK5jjjO7TMWqBTKZA==
+  version "5.0.4"
+  resolved "https://registry.npmmirror.com/typescript/-/typescript-5.0.4.tgz"
+  integrity sha512-cW9T5W9xY37cc+jfEnaUvX91foxtHkza3Nw3wkoF4sSlKn0MONdkdEndig/qPBWXNkmplh3NzayQzCiHM4/hqw==
 
 uglify-js@3.4.x:
   version "3.4.10"
@@ -9632,6 +9642,14 @@ validate-npm-package-license@^3.0.1:
   dependencies:
     spdx-correct "^3.0.0"
     spdx-expression-parse "^3.0.0"
+
+vant@^4.2.0:
+  version "4.2.0"
+  resolved "https://registry.npmmirror.com/vant/-/vant-4.2.0.tgz"
+  integrity sha512-x8kYAxoXjlXZnilBx/0Np3XhcOLdPzqerZWwOl7DsqgLu17OCYFzkoLuFDbxXM8fciX15xFITqdmtBcgqaWQWg==
+  dependencies:
+    "@vant/popperjs" "^1.3.0"
+    "@vant/use" "^1.5.1"
 
 vary@~1.1.2:
   version "1.1.2"

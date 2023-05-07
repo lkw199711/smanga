@@ -8,7 +8,7 @@ const routes: Array<RouteRecordRaw> = [
 	{
 		path: '/',
 		name: 'home',
-		redirect: '/media-list/index',
+		redirect: '/media-list',
 		meta: {sidebar: false},
 		component: Layout,
 	},
@@ -87,6 +87,20 @@ const routes: Array<RouteRecordRaw> = [
 				name: 'bookmark',
 				meta: {view: 'list'},
 				component: () => import('../views/bookmark/index.vue'),
+			},
+		],
+	},
+	{
+		path: '/collect',
+		redirect: '/collect/index',
+		meta: {sidebar: true, title: 'collect', icon: 'Star'},
+		component: Layout,
+		children: [
+			{
+				path: 'index',
+				name: 'collect',
+				meta: {view: 'list'},
+				component: () => import('../views/collect/index.vue'),
 			},
 		],
 	},
@@ -218,6 +232,12 @@ const routes: Array<RouteRecordRaw> = [
 			},
 		],
 	},
+	{
+		path: '/init',
+		name: 'init',
+		meta: {sidebar: false, title: 'userSetting'},
+		component: () => import('../views/init/index.vue'),
+	},
 
 	// 浏览界面
 	{
@@ -245,9 +265,15 @@ const routes: Array<RouteRecordRaw> = [
 				meta: {view: 'browse'},
 				component: () => import('../views/browse-view/double.vue'),
 			},
+			{
+				path: 'half',
+				name: 'half',
+				meta: {view: 'browse'},
+				component: () => import('../views/browse-view/half.vue'),
+			},
 		],
 	},
-	
+
 	// wiki
 	{
 		path: '/wiki',

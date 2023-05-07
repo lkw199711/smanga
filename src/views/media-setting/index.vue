@@ -71,19 +71,6 @@
             </el-select>
           </el-form-item>
 
-          <!--<el-form-item :label="$t('mediaManage.form.file')">-->
-          <!--  <el-select v-model="form.fileType">-->
-          <!--    <el-option :label="$t('mediaManage.select.fileType0')" value="0"/>-->
-          <!--    <el-option label="zip" value="1"/>-->
-          <!--    <el-option label="pdf" value="2"/>-->
-          <!--  </el-select>-->
-          <!--</el-form-item>-->
-          <!--<el-space fill class="note">-->
-          <!--  <el-alert :closable="false">-->
-          <!--    <p class="note-text">{{$t('mangaManage.note.type')}}</p>-->
-          <!--  </el-alert>-->
-          <!--</el-space>-->
-
           <p class="note form-note">{{ $t('mediaManage.note.type') }}</p>
 
           <el-form-item :label="$t('mediaManage.form.browse')">
@@ -91,6 +78,7 @@
               <el-option :label="$t('mediaManage.select.browse0')" value="flow"/>
               <el-option :label="$t('mediaManage.select.browse1')" value="single"/>
               <el-option :label="$t('mediaManage.select.browse2')" value="double"/>
+              <el-option :label="$t('mediaManage.select.browse3')" value="half"/>
             </el-select>
           </el-form-item>
           <p class="note form-note">{{ $t('mediaManage.note.browse') }}</p>
@@ -150,6 +138,7 @@
               <el-option :label="$t('mediaManage.select.browse0')" value="flow"/>
               <el-option :label="$t('mediaManage.select.browse1')" value="single"/>
               <el-option :label="$t('mediaManage.select.browse2')" value="double"/>
+              <el-option :label="$t('mediaManage.select.browse3')" value="half"/>
             </el-select>
           </el-form-item>
           <p class="note form-note">{{ $t('mediaManage.note.browse') }}</p>

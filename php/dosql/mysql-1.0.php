@@ -36,24 +36,29 @@ keyword 搜索关键字 当type为search时 此参数必填
 	目前仅有 在sql中执行的 now()函数
  */
 #声明关键字数组
-$sqlKeyword = array('/now\(\)/i','/max\(.*\) as nearTime/i');
+$sqlKeyword = array('/now\(\)/i', '/max\(.*\) as nearTime/i');
 
-$configFile = "/config/config.ini";
-if (!is_dir('/app/php')){
-	$configFile = '/mnt/hhd-2t/04config/config.ini';
+$configFile = getenv('SMANGA_CONFIG_INI');
+
+if(!$configFile){
+	die(json_encode([
+		'code' => 1,
+		'message' => '环境变量错误'
+	]));
 }
 
 #初始化变量
-$gIp = read_ini_copy('sql','ip',$configFile);
-$gUserName = read_ini_copy('sql','userName',$configFile);
-$gPassWord = read_ini_copy('sql','passWord',$configFile);
-$gPort = read_ini_copy('sql','port',$configFile);
+$gIp = read_ini_copy('sql', 'ip', $configFile);
+$gUserName = read_ini_copy('sql', 'userName', $configFile);
+$gPassWord = read_ini_copy('sql', 'passWord', $configFile);
+$gPort = read_ini_copy('sql', 'port', $configFile);
 
 /***
  * 读取ini文件的数值
  * */
-function read_ini_copy($title,$key,$file){
-	$data = filesize($file)==0 ? [] : parse_ini_file($file,true);
+function read_ini_copy($title, $key, $file)
+{
+	$data = filesize($file) == 0 ? [] : parse_ini_file($file, true);
 
 	if (!$data[$title]) return false;
 	if (!$data[$title][$key]) return false;
@@ -61,12 +66,13 @@ function read_ini_copy($title,$key,$file){
 	return $data[$title][$key];
 }
 
-function dosql($params){
+function dosql($params)
+{
 	global $gIp;
 	global $gUserName;
 	global $gPassWord;
 	global $gDatabase;
-	
+
 	#输出所有错误信息
 	error_reporting(E_ALL);
 	ini_set('display_errors', '1');
@@ -75,42 +81,44 @@ function dosql($params){
 	ini_set('error_log', dirname(__FILE__) . '/mysql_error.txt');
 
 	#设置默认值
-	$ip = @getValue($params['ip'],$gIp);
-	$username = @getValue($params['username'],$gUserName);
-	$password = @getValue($params['password'],$gPassWord);
-	$database = @getValue($params['database'],'smanga');
-	$port = @getValue($params['port'],$gPort);
-	$type = @getValue($params['type'],'select');
-	$name = @getValue($params['name'],'*');
-	$where = @getValue($params['where'],array());
-	$group = @getValue($params['group'],'');
-	$field = @getValue($params['field'],array());
-	$value = @getValue($params['value'],array());
-	$limit = @getValue($params['limit'],'');
-	$start = @getValue($params['start'],'');
-	$order = @getValue($params['order'],'');
-	$desc = @getValue($params['desc'],'');
-	$keyword = @getValue($params['keyword'],'');
+	$ip = @getValue($params['ip'], $gIp);
+	$username = @getValue($params['username'], $gUserName);
+	$password = @getValue($params['password'], $gPassWord);
+	$database = @getValue($params['database'], 'smanga');
+	$port = @getValue($params['port'], $gPort);
+	$type = @getValue($params['type'], 'select');
+	$name = @getValue($params['name'], '*');
+	$where = @getValue($params['where'], array());
+	$group = @getValue($params['group'], '');
+	$field = @getValue($params['field'], array());
+	$value = @getValue($params['value'], array());
+	$limit = @getValue($params['limit'], '');
+	$start = @getValue($params['start'], '');
+	$order = @getValue($params['order'], '');
+	$desc = @getValue($params['desc'], '');
+	$keyword = @getValue($params['keyword'], '');
+	$test = @getValue($params['test'], false);
+	$charset = @getValue($params['charset'], 'utf8');
 
 	#链接mysql
 	if (isset($params['link'])) {
 		$link = $params['link'];
-	}else{
-		$link = @mysqli_connect($ip,$username,$password,$database,$port)
-	or die("数据库连接失败！失败信息：".mysqli_connect_error($link));
+	} else {
+		$link = @mysqli_connect($ip, $username, $password, $database, $port)
+			or die("数据库连接失败！失败信息：" . mysqli_connect_error($link));
 	}
-	
+
 
 	#设置数据库
 	// @mysqli_select_db($link,$database,);
-	
+
 	#设置数据编码
-	mysqli_set_charset($link,'utf8') or die ("数据库编码集设置失败！");
+	mysqli_set_charset($link, 'utf8mb4') or die("数据库编码集设置失败！");
 
 	#获取数据表名。如获取失败，则返回错误
-	if(isset($params['table'])){
+	if (isset($params['table'])) {
 		$table = $params['table'];
-	}else{
+	} else {
 		echo "表名(table)不能为空！";
 		exit;
 	}
@@ -124,35 +132,35 @@ function dosql($params){
 	#判别操作类型
 	switch ($type) {
 		case 'insert':
-			$request = insert($link,$table,$field,$value);
+			$request = insert($link, $table, $field, $value, $test);
 			break;
 
 		case 'delete':
-			$request = delete($link,$table,$where);
+			$request = delete($link, $table, $where, $test);
 			break;
 
 		case 'select':
-			$request = select($link,$name,$table,$where,$group,$order,$desc,$limit,$start);
+			$request = select($link, $name, $table, $where, $group, $order, $desc, $limit, $start, $test);
 			break;
 
 		case 'update':
-			$request = update($link,$table,$where,$field,$value);
+			$request = update($link, $table, $where, $field, $value, $test);
 			break;
 
 		case 'search':
-			$request = search($link,$name,$table,$where,$field,$keyword,$group,$order,$desc,$limit,$start);
+			$request = search($link, $name, $table, $where, $field, $keyword, $group, $order, $desc, $limit, $start, $test);
 			break;
 
 		case 'getcount':
-			$request = getcount($link,$table,$where,$group);
+			$request = getcount($link, $table, $where, $group, $test);
 			break;
 
 		case 'getnum':
-			$request = getnum($link,$name,$table,$where,$group);
+			$request = getnum($link, $name, $table, $where, $group, $test);
 			break;
-		
+
 		case 'searchcount':
-			$request = search_count($link,$name,$table,$where,$field,$keyword,$group,$order,$desc,$limit,$start);
+			$request = search_count($link, $name, $table, $where, $field, $keyword, $group, $order, $desc, $limit, $start, $test);
 			break;
 
 		default:
@@ -173,18 +181,24 @@ function dosql($params){
 
 
 #查表操作
-function select($link,$name,$table,$where,$group,$order,$desc,$limit,$start){
+function select($link, $name, $table, $where, $group, $order, $desc, $limit, $start, $test)
+{
 	#初始化所需变量
 	$value = array();
 	#附加条件
 	$group = group($group);
-	$order = order($order,$desc);
-	$limit = limit($limit,$start);
-	$where = where($where);	
+	$order = order($order, $desc);
+	$limit = limit($limit, $start);
+	$where = where($where);
 
 	$sqlComm = "select $name from $table $where $group $order $limit;";
-// echo $sqlComm;exit();
-	$sql = mysqli_query($link,$sqlComm);
+
+	if ($test) {
+		echo $sqlComm;
+		exit();
+	}
+
+	$sql = mysqli_query($link, $sqlComm);
 
 	if (!$sql) {
 		return array();
@@ -193,81 +207,92 @@ function select($link,$name,$table,$where,$group,$order,$desc,$limit,$start){
 	$num = mysqli_num_rows($sql);
 
 	#如果找不到数据则返回错误信息
-	if($num===0) return array();
+	if ($num === 0) return array();
 
 	#讲数据打包成数组
-	while ($row = mysqli_fetch_array($sql,MYSQLI_ASSOC)){
-		 array_push($value,$row);
+	while ($row = mysqli_fetch_array($sql, MYSQLI_ASSOC)) {
+		array_push($value, $row);
 	}
 
 	return $value;
 }
 
 #新增记录
-function insert($link,$table,$field,$value){
+function insert($link, $table, $field, $value, $test)
+{
 	#附加条件
 	$field = field($field);
 	$value = value($value);
 
-	$sqlComm = "insert into $table (".$field.") values (".$value.");";#调试语句错误
-// echo $sqlComm;
-	return mysqli_query($link,$sqlComm);
+	$sqlComm = "insert into $table (" . $field . ") values (" . $value . ");"; #调试语句错误
+	if ($test) {
+		echo $sqlComm;
+		exit();
+	}
+
+	return mysqli_query($link, $sqlComm);
 }
 
 #修改记录
-function update($link,$table,$where,$field,$value){
+function update($link, $table, $where, $field, $value)
+{
 	#附加条件
 	$where = where($where);
-	$modify = modify($field,$value);
+	$modify = modify($field, $value);
 
-	$sqlComm = "update $table set $modify $where;";#调试语句错误
-// echo $sqlComm;
-	return mysqli_query($link,$sqlComm);
+	$sqlComm = "update $table set $modify $where;"; #调试语句错误
+	// echo $sqlComm;
+	return mysqli_query($link, $sqlComm);
 }
 
 #删除记录
-function delete($link,$table,$where){
+function delete($link, $table, $where)
+{
 	#附加条件
 	$where = where($where);
 
 	$sqlComm = "delete from $table $where;";
 
-	return mysqli_query($link,$sqlComm);
+	return mysqli_query($link, $sqlComm);
 }
 
 #搜索
-function search($link,$name,$table,$where,$field,$keyword,$group,$order,$desc,$limit,$start){
+function search($link, $name, $table, $where, $field, $keyword, $group, $order, $desc, $limit, $start)
+{
 	#初始化所需变量
 	$value = array();
 	#附加条件
-	$order = order($order,$desc);
-	$limit = limit($limit,$start);
+	$order = order($order, $desc);
+	$limit = limit($limit, $start);
 	$where = where($where);
-	$field = implode(',',$field);
+	$field = implode(',', $field);
 
-	if($where!=''){
-		$where = str_replace('where','and',$where);
+	if ($where != '') {
+		$where = str_replace('where', 'and', $where);
 	}
-	if (!$keyword) {echo "关键字(keyword)不能为空！";exit;}
+	if (!$keyword) {
+		echo "关键字(keyword)不能为空！";
+		exit;
+	}
 
 	// $keyword = mysqli_real_escape_string($link,$keyword);
 	// $sqlComm = "select $name from $table where $field like '%$keyword%' $where $order $limit;";
 
 	// #参数化查询命令
-	$sqlComm = sprintf("select $name from $table where $field like '%s' $where $order $limit;",mysqli_real_escape_string($link,'%'.$keyword.'%'));
+	$sqlComm = sprintf("select $name from $table where $field like '%s' $where $order $limit;", mysqli_real_escape_string($link, '%' . $keyword . '%'));
 	// echo "$sqlComm";exit;
 	#执行
-	$sql = mysqli_query($link,$sqlComm);
+	$sql = mysqli_query($link, $sqlComm);
 	if (!$sql) {
 		return array();
 	}
 	#获取记录数量
 	$num = mysqli_num_rows($sql);
 	#没有记录返回0
-	if($num===0) return array();
+	if ($num === 0) return array();
 	#讲数据打包成数组
-	while ($row = mysqli_fetch_array($sql,MYSQLI_ASSOC)){
-		 array_push($value,$row);
+	while ($row = mysqli_fetch_array($sql, MYSQLI_ASSOC)) {
+		array_push($value, $row);
 	}
 	#共有多少条记录
 	// $value['num'] = $num;
@@ -275,96 +300,105 @@ function search($link,$name,$table,$where,$field,$keyword,$group,$order,$desc,$l
 	return $value;
 }
 
-function search_count($link,$name,$table,$where,$field,$keyword,$group,$order,$desc,$limit,$start){
+function search_count($link, $name, $table, $where, $field, $keyword, $group, $order, $desc, $limit, $start)
+{
 	#初始化所需变量
 	$value = array();
 	#附加条件
-	$order = order($order,$desc);
-	$limit = limit($limit,$start);
+	$order = order($order, $desc);
+	$limit = limit($limit, $start);
 	$where = where($where);
-	$field = implode(',',$field);
+	$field = implode(',', $field);
 
-	if($where!=''){
-		$where = str_replace('where','and',$where);
+	if ($where != '') {
+		$where = str_replace('where', 'and', $where);
 	}
-	if (!$keyword) {echo "关键字(keyword)不能为空！";exit;}
+	if (!$keyword) {
+		echo "关键字(keyword)不能为空！";
+		exit;
+	}
 
 	// #参数化查询命令
-	$sqlComm = sprintf("select $name from $table where $field like '%s' $where;",mysqli_real_escape_string($link,'%'.$keyword.'%'));
-	
+	$sqlComm = sprintf("select $name from $table where $field like '%s' $where;", mysqli_real_escape_string($link, '%' . $keyword . '%'));
+
 	#执行
-	$sql = mysqli_query($link,$sqlComm);
+	$sql = mysqli_query($link, $sqlComm);
 	if (!$sql) {
 		return 0;
 	}
 
 	#获取记录数量
 	$num = mysqli_num_rows($sql);
-	
+
 	#共有多少条记录
 	return $num;
 	#讲数据打包成数组
-	while ($row = mysqli_fetch_array($sql,MYSQLI_ASSOC)){
-		 array_push($value,$row);
+	while ($row = mysqli_fetch_array($sql, MYSQLI_ASSOC)) {
+		array_push($value, $row);
 	}
 
 	return $value;
 }
 
 #获取记录数量
-function getcount($link,$table,$where,$group){
+function getcount($link, $table, $where, $group)
+{
 	#附加条件
 	$where = where($where);
 	$group = group($group);
 
 	$sqlComm = "select count(*) as count from $table $where $group;";
-	$sql = mysqli_query($link,$sqlComm);
+	$sql = mysqli_query($link, $sqlComm);
 
-	while ($row = mysqli_fetch_array($sql,MYSQLI_ASSOC)){
-		 return $row['count'];
+	while ($row = mysqli_fetch_array($sql, MYSQLI_ASSOC)) {
+		return $row['count'];
 	}
 }
 
 #获取记录数量
-function getnum($link,$name,$table,$where,$group){
+function getnum($link, $name, $table, $where, $group)
+{
 	#附加条件
 	$where = where($where);
 	$group = group($group);
 
 	$sqlComm = "select $name from $table $where $group;";
-	$sql = mysqli_query($link,$sqlComm);
+	$sql = mysqli_query($link, $sqlComm);
 	$num = mysqli_num_rows($sql);
 	return $num;
 }
 
 // 分组
-function group($group){
-	return $group ? 'group by '.$group : '';
+function group($group)
+{
+	return $group ? 'group by ' . $group : '';
 }
 
 
 #设置查询排序方式
-function order($order,$desc){
+function order($order, $desc)
+{
 	$request = '';
 
-	if($order){
-		$request = "order by ".$order;	
+	if ($order) {
+		$request = "order by " . $order;
 
 		#排序正反顺序	
-		if($desc) $request = $request." desc";
+		if ($desc) $request = $request . " desc";
 	}
 
 	return $request;
 }
 
 #设置查询数量限制
-function limit($limit,$start){
+function limit($limit, $start)
+{
 	$request = '';
 
-	if($limit){
+	if ($limit) {
 		// 加一个逗号
-		if ($start || $start==0) $start = $start.',';
-		
+		if ($start || $start == 0) $start = $start . ',';
+
 		$request = "limit $start $limit";
 	}
 
@@ -372,80 +406,86 @@ function limit($limit,$start){
 }
 
 #设置查询条件
-function where($where){
+function where($where)
+{
 	$request = '';
 
-	if(count($where)){
+	if (count($where)) {
 		#拼接条件
-		$request = 'where '.implode(' and ',$where);
+		$request = 'where ' . implode(' and ', $where);
 	}
 
 	return $request;
 }
 
 #拼接所需查询的字段
-function field($field){
+function field($field)
+{
 	$request = '';
 
 	// 目标字段拼接
-	if(count($field)){
-		return implode(',',$field);
+	if (count($field)) {
+		return implode(',', $field);
 	}
 
 	return $request;
 }
 
 #拼接需要新增的值
-function value($value){
+function value($value)
+{
 	$request = '';
 
 	if (count($value)) {
 		foreach ($value as $key => $val) {
-			if (!is_keyword($val)) {
-				$value[$key] = '\''.$val.'\'';
+			if ($val === null) {
+				$value[$key] = 'null';
+			} elseif (!is_keyword($val)) {
+				$value[$key] = '\'' . $val . '\'';
 			}
 		}
 
-		$request = implode(',',$value);
+		$request = implode(',', $value);
 	}
 
 	return $request;
-	
 }
 
 #判断是否为php sql关键字
-function is_keyword($str){
+function is_keyword($str)
+{
 	global $sqlKeyword;
 
-	for ($i=0,$length=count($sqlKeyword); $i < $length; $i++) { 
-		if(preg_match($sqlKeyword[$i],$str)) return true;
+	for ($i = 0, $length = count($sqlKeyword); $i < $length; $i++) {
+		if (preg_match($sqlKeyword[$i], $str)) return true;
 	}
 
 	return false;
 }
 
 #拼接需要写改的值
-function modify($field,$value){
-	$sentence = Array();
+function modify($field, $value)
+{
+	$sentence = array();
 
 	if (count($value)) {
 		foreach ($value as $key => $val) {
 			if (!is_keyword($val)) {
-				$value[$key] = '\''.$val.'\'';
+				$value[$key] = '\'' . $val . '\'';
 			}
 		}
 	}
 
 	#拼接set语句
-	if($field && $value){
-		for($i=0,$length=count($field);$i<$length;$i++)
-			array_push($sentence,$field[$i].' = '.$value[$i]);
-	}else{
+	if ($field && $value) {
+		for ($i = 0, $length = count($field); $i < $length; $i++)
+			array_push($sentence, $field[$i] . ' = ' . $value[$i]);
+	} else {
 		echo "字段(field) 与 值(value)不能为空！";
 		exit;
 	}
 
-	return implode(',',$sentence);
+	return implode(',', $sentence);
 }
 
 /**
@@ -454,19 +494,20 @@ function modify($field,$value){
  * @param  [type] $b [description]
  * @return [type]    [description]
  */
-function getValue($a,$b){
-	if(isset($a))
+function getValue($a, $b)
+{
+	if (isset($a))
 		return $a;
 	else
 		return $b;
 }
 
-function to_array($val){
-	return is_string($val) ? explode(',',$val) : $val;
+function to_array($val)
+{
+	return is_string($val) ? explode(',', $val) : $val;
 }
 
-function to_string($val){
-	return is_array($val) ? implode(',',$val) : $val;
+function to_string($val)
+{
+	return is_array($val) ? implode(',', $val) : $val;
 }
-
-?>

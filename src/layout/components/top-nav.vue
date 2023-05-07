@@ -26,8 +26,8 @@
 						v-model="searchType"
 						placeholder="Select"
 						class="search-select">
-						<el-option label="漫画" value="manga" />
-						<el-option label="章节" value="chapter" />
+						<el-option :label="$t('search.manga')" value="manga" />
+						<el-option :label="$t('search.chapter')" value="chapter" />
 					</el-select>
 				</template>
 				<template #append>

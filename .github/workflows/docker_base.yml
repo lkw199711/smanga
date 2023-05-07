@@ -6,7 +6,7 @@ on:
       branches:
         - master
       paths:
-        - docker/alpine/base.Dockerfile
+        - docker/base.Dockerfile
         - .github/workflows/docker_base.yml
 
 jobs:
@@ -44,7 +44,7 @@ jobs:
         uses: docker/build-push-action@v4
         with:
           context: .
-          file: docker/alpine/base.Dockerfile
+          file: docker/base.Dockerfile
           platforms: |
             linux/amd64
             linux/arm64/v8

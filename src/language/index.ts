@@ -1,9 +1,9 @@
-import en from './en';
-import zhCn from "./zhCn";
-import zhTw from "./zhTw";
+import enLocale from './en-US.json';
+import zhLocale from "./zh-Cn.json";
+import twLocale from "./zh-Tw.json";
 
 export default {
-    en: en,
-    zhCn: zhCn,
-    zhTw: zhTw,
+    en: enLocale,
+    zhCn: zhLocale,
+    zhTw: twLocale,
 }

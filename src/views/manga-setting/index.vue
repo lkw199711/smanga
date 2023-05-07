@@ -79,6 +79,7 @@
               <el-option :label="$t('mediaManage.select.browse0')" value="flow"/>
               <el-option :label="$t('mediaManage.select.browse1')" value="single"/>
               <el-option :label="$t('mediaManage.select.browse2')" value="double"/>
+              <el-option :label="$t('mediaManage.select.browse3')" value="half"/>
             </el-select>
           </el-form-item>
           <p class="note form-note">{{ $t('mediaManage.note.browse') }}</p>

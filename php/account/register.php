@@ -4,8 +4,14 @@
 	require_once '../dosql/mysql-1.0.php';
 	require_once '../public/check-power.php';
 
-	// 检查用户权限
-	check_user_power();
+	// 如果版本表中没有任何字段(无版本记录则跳过权限验证)
+	$sqlRes = dosql(['table' => 'version']);
+
+	if($sqlRes){
+		// 检查用户权限
+		check_user_power();
+	}
+	
 
 	// 获取post参数
 	$userName = $_POST['userName'];

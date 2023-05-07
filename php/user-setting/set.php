@@ -33,10 +33,7 @@
 	}
 
 	if ($res) {
-		exit_request(['code'=>0,'message'=>'保存成功']);
+		exit_request(['code'=>0,'message'=>'保存成功','res'=>$res]);
 	}else{
 		exit_request(['code'=>1,'message'=>'数据库操作失败','sqlRes'=>$res]);
 	}
-	
-
-?>

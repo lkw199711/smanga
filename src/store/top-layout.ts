@@ -32,9 +32,9 @@ export default {
 		mini: ['view', 'sort'],
 	},
 	searchOnly: {
-		'4k': ['search'],
-		'2k': ['search'],
-		large: ['search'],
+		'4k': ['search', 'view', 'sort', 'theme', 'language'],
+		'2k': ['search', 'view', 'sort', 'theme', 'language'],
+		large: ['search', 'view', 'sort', 'theme', 'language'],
 		middle: ['search'],
 		small: ['search'],
 		mini: ['search'],

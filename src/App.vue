@@ -15,16 +15,17 @@
 <script lang="ts" setup>
 import {Cookies, global_set_json} from '@/utils';
 import {get_bookmark} from '@/api/bookmark';
-import {config,pageSizeConfig,userConfig} from '@/store';
-import router from '@/router';
+import {config, pageSizeConfig, userConfig} from '@/store';
+import {useRoute, useRouter} from 'vue-router';
 import {ElConfigProvider, ElMessage, ElMessageBox} from 'element-plus';
 import languages from '@/store/language';
 import {computed, onMounted} from 'vue';
 import {useI18n} from 'vue-i18n';
 import {set_theme} from '@/style/theme';
-import {system_init} from '@/api/login';
-import { get_user_config } from './api/account';
+import {get_user_config} from './api/account';
 
+const route = useRoute();
+const router = useRouter();
 const {locale} = useI18n();
 
 const elLocale = computed(() => {
@@ -37,24 +38,22 @@ const elLocale = computed(() => {
 	return '';
 });
 
-system_init();
-
-// 检查登录状态
-check_login();
-
-// 获取书签列表
-set_bookmark();
-
-get_setting();
-
 // 生命周期
-onMounted(() => {
-	
-
+onMounted(async () => {
 	// 设置安卓环境
 	if (window.javaObj) {
 		config.android = true;
 	}
+	await router.isReady();
+
+	// 获取用户设置
+	const res = await get_setting();
+	// 用户信息错误 不继续执行
+	if (!res) return;
+
+	// 获取书签列表
+	set_bookmark();
+	
 });
 
 // 设置屏幕尺寸
@@ -89,11 +88,11 @@ function set_screen_type() {
 /**
  * 检查登录状态
  */
-function check_login() {
+async function check_login() {
 	const id = Cookies.get('userId');
 	const name = Cookies.get('userName');
 
-	if (!name || !id) {
+	if ((!name || !id) && route.name !== 'init') {
 		router.push('/login');
 	}
 }
@@ -108,6 +107,22 @@ async function set_bookmark() {
 
 async function get_setting() {
 	const res = await get_user_config();
+
+	// 非正常状态
+	if (res.data.code === 1) {
+		switch (res.data.state) {
+			case 'first-deploy':
+				router.push('/init');
+				break;
+			case 'user-error':
+				router.push('/login');
+				break;
+			default:
+				break;
+		}
+		return false;
+	}
+
 	const configValue = JSON.parse(res.data.configValue);
 
 	// 使用数据库用户设置，覆盖当前设置
@@ -119,6 +134,8 @@ async function get_setting() {
 
 	// 设置主题
 	set_theme(userConfig.theme);
+
+	return true;
 }
 </script>
 
