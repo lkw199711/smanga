@@ -264,6 +264,22 @@ export default defineComponent({
         switch_footer() {
             config.browseFooter = !config.browseFooter;
         },
+        /**
+         * 下载当前图片
+         */
+        dwonload_image() {
+            const src1 = this.imgSrc1;
+            const src2 = this.imgSrc2;
+
+            const a = document.createElement('a');
+            a.href = src1;
+            a.download = 'smangaImageLeft.png';
+            a.click();
+
+            a.href = src2;
+            a.download = 'smangaImageRight.png';
+            a.click();
+        }
     },
 
     // 生命周期

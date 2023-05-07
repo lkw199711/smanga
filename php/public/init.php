@@ -396,6 +396,27 @@ if (array_search('3.2.6', $vers) === false) {
 	]);
 }
 
+// 327
+if (array_search('3.2.7', $vers) === false) {
+	dosql([
+		'table' => 'version',
+		'type' => 'insert',
+		'field' => ['version', 'versionDescribe', 'createTime', 'updateTime'],
+		'value' => ['3.2.7', '修正裁切尺寸', '2023-5-7 13:25:12', 'now()']
+	]);
+}
+
+
+// 328
+if (array_search('3.2.8', $vers) === false) {
+	dosql([
+		'table' => 'version',
+		'type' => 'insert',
+		'field' => ['version', 'versionDescribe', 'createTime', 'updateTime'],
+		'value' => ['3.2.8', '新增图片下载功能', '2023-5-8 00:09:00', 'now()']
+	]);
+}
+
 $configPath = getenv('SMANGA_CONFIG');
 
 if (!$configPath) {

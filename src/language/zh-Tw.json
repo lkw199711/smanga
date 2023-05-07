@@ -32,7 +32,8 @@
     "direction": "切換閱讀方向",
     "ltr": "左 -> 右",
     "rtl": "右 -> 左",
-    "removeCollect": "移除收藏"
+    "removeCollect": "移除收藏",
+    "dwonload": "下載圖片"
   },
   "account": {
     "add": "新增用戶",
