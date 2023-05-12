@@ -85,7 +85,6 @@ export default defineComponent({
 		async load_img() {
 			const list = this.imgPathList;
 			const initPage = this.initPage - 1;
-			console.log(this.loading);
 
 			// if (this.loading) return;
 

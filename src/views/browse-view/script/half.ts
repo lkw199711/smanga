@@ -26,6 +26,7 @@ export default defineComponent({
 			imgSrc: '',
 			// 图片路径列表
 			imgPathList: [] as string[],
+			imgPathFiles: [] as any,
 			// 是否正在加载图片 (单页模式加载动画待制作)
 			loading: false,
 			canvasHeight: 0,
@@ -97,11 +98,16 @@ export default defineComponent({
 		 */
 		async page_change(page: number) {
 			const even = page % 2 === 0;
-			console.log(even);
 
 			const pageImage = this.imgPathList[page - 1];
 			global_set('page', page);
 			global_set('pageImage', pageImage);
+
+			// 有缓存则加载缓存的图片
+            if (this.imgPathFiles[page - 1]) {
+                this.imgSrc = this.imgPathFiles[page - 1];
+                return;
+            }
 
 			const res: any = await get_image_blob(pageImage);
 			// this.imgSrc = res.data;
@@ -120,10 +126,6 @@ export default defineComponent({
 			//处理toDataURL遇跨域资源导致的报错
 			img.crossOrigin = 'Anonymous';
 
-			// context.fillStyle = '#ffffff';
-			// context.fillRect(0, 0, this.canvasWidth, this.canvasHeight);
-
-			// this.canvasHeight = 0;
 			img.onload = () => {
 				const h = img.naturalHeight;
 				const w = img.naturalWidth;
@@ -139,7 +141,7 @@ export default defineComponent({
 
 				const imgbase64 = canvas.toDataURL('image/png');
 				this.imgSrc = imgbase64;
-
+				this.imgPathFiles[page - 1] = imgbase64;
 			};
 		},
 
