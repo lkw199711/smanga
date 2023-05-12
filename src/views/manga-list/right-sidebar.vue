@@ -89,7 +89,6 @@ watch(
 	async (val) => {
 		const res = await is_collect('manga', val);
 		isCollect.value = res.data.isCollect;
-		console.log(val);
 	}
 );
 

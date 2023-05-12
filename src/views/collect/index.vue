@@ -91,7 +91,6 @@ const items = ref([
 const collectType = ref('manga');
 
 const handleClick = (tab: TabsPaneContext, event: Event) => {
-	console.log(tab, event);
 };
 
 const searchText = ref('');

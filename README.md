@@ -1,3 +1,7 @@
+
+
+
+
 # Smanga
 
 无需配置，docker直装的漫画流媒体阅读工具。
@@ -54,6 +58,35 @@ docker: https://hub.docker.com/r/lkw199711/smanga
 
 ### 1. 使用docker安装
 
+#### 整合映射
+
+```dockerfile
+docker run -itd --name smanga \
+-p 3333:3306 \
+-p 8097:80 \
+-v /mnt:/mnt \
+-v /route/smanga:/data \
+lkw199711/smanga;
+```
+
+smanga的部署，仅映射一个data目录即可。
+
+#### 推荐映射
+
+```dockerfile
+docker run -itd --name smanga \
+-p 3333:3306 \
+-p 8097:80 \
+-v /mnt:/mnt \
+-v /route/smanga:/data \
+-v /route/compress:/compress \
+lkw199711/smanga;
+```
+
+通常我们在使用系统时，应用池与存储池是分开的，就好比我们不会在C盘储存大量的媒体资源。compress目录是解压缩文件的缓存目录，smanga将所有的压缩文件解压为图片放置在compress目录中。这些文件并非关键文件，丢失不会影响系统正常运行，但是会占用大量空间，因此建议您将此目录单独映射，而其余的目录保持默认即可。
+
+#### 全目录映射
+
 ```dockerfile
 docker run -itd --name smanga \
 -p 3333:3306 \
@@ -66,16 +99,18 @@ docker run -itd --name smanga \
 lkw199711/smanga;
 ```
 
-|         参数         |                             含义                             |
-| :------------------: | :----------------------------------------------------------: |
-|       `--name`       |                           容器命名                           |
-|        `-itd`        |                交互模式 后台启动 避免容器停止                |
-|       `-p 80`        |                       Web管理界面端口                        |
-|      `-p 3306`       |            mysq数据库端口, 推荐映射, 方便管理数据            |
+|         参数         | 含义                                                         |
+| :------------------: | :----------------------------------------------------------- |
+|       `--name`       | 容器命名                                                     |
+|        `-itd`        | 交互模式 后台启动 避免容器停止                               |
+|       `-p 80`        | Web管理界面端口                                              |
+|      `-p 3306`       | mysq数据库端口, 推荐映射, 方便管理数据                       |
+|      `-v /data`      | 整合目录，包含（compress,config,poster,mysql）与单独映射方式二选一 |
 |   `-v /compress `    | 压缩转换目录（将zip cbz等压缩文件解压后存放在此目录读取，请挂在到对容量有信心的硬盘上。） |
 |    `-v /poster `     | 封面存储目录（解压缩后, smanga将提取一张图片作为封面，存放在次目录中。） |
-|     `-v /config`     |                       配置文件存储目录                       |
+|     `-v /config`     | 配置文件存储目录                                             |
 | `-v /var/lib/mysql ` | mysql数据目录（此目录必须映射, 否则升级smanga容器后, 将丢失所有数据。nosql版本的镜像无需映射。） |
+|      `-v /mnt`       | mnt为linux系统（centos，debian，centos）通用挂载目录，您所有的外置硬盘一般都会挂载在此目录，映射此目录可使您镜像内外访问资源具有一致性。 |
 
 ### 2. ~~LNMP环境安装~~
 
@@ -198,3 +233,4 @@ Telegram 交流群：https://t.me/+FFgQ7AMIdrg2M2Y1
     - 3.2.5 修改初始化流程
     - 3.2.6 新增对半裁切模式
     - 3.2.8 新增图片下载功能
+    - 3.2.9 分页浏览模式新增图片缓存

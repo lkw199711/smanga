@@ -26,6 +26,7 @@ export default defineComponent({
             imgSrc: '',
             // 图片路径列表
             imgPathList: [] as string[],
+            imgPathFiles: [] as any,
             // 是否正在加载图片 (单页模式加载动画待制作)
             loading: false,
         }
@@ -92,8 +93,16 @@ export default defineComponent({
             global_set('page', page);
             global_set('pageImage', pageImage);
 
+            // 有缓存则加载缓存的图片
+            if (this.imgPathFiles[page - 1]) {
+                this.imgSrc = this.imgPathFiles[page - 1];
+                return;
+            }
+
             const res: any = await get_image_blob(pageImage);
             this.imgSrc = res.data;
+
+            this.imgPathFiles[page - 1] = res.data;
         },
 
         /**

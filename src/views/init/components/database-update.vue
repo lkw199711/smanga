@@ -11,7 +11,6 @@ const props = defineProps(['firstLoad']);
 const emit = defineEmits(['update']);
 
 onMounted(async () => {
-	console.log(props.firstLoad);
 
 	const res = await system_init(props.firstLoad);
 	const initCode = res.data?.initCode;
