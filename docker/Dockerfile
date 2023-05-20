@@ -4,12 +4,14 @@ ARG SMANGA_BASE_VERSION=latest
 ARG SMANGA_BASE_NAME
 
 # Build web
-FROM alpine:3.18 AS Build
+FROM ${SMANGA_BASE_NAME}/smanga-base:${SMANGA_BASE_VERSION} AS Build
 COPY --chmod=755 . /build
 RUN cp -r /build/dist /rootfs && \
     cp -r /build/php /rootfs/php && \
     cp -r /build/file /rootfs/file && \
     cp -r /build/config /rootfs/config
+WORKDIR /rootfs/php/laravel
+RUN composer install --no-dev --prefer-dist
 
 # Main program
 FROM ${SMANGA_BASE_NAME}/smanga-base:${SMANGA_BASE_VERSION}
