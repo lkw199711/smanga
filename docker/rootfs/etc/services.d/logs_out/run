@@ -1,4 +1,4 @@
 #!/usr/bin/with-contenv bash
 # shellcheck shell=bash
 
-exec s6-setuidgid root tail -f /logs/*.log
+exec s6-setuidgid root tail -f /logs/*.log | grep -v "${EXCLUDE_LOG}"
