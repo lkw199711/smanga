@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1.4
 
-FROM alpine:3.18
+FROM alpine:3.15
 
 ARG UNRAR_VERSION=6.1.7
 
@@ -11,6 +11,8 @@ ENV S6_SERVICES_GRACETIME=30000 \
     LANG=C.UTF-8 \
     PS1="\[\e[32m\][\[\e[m\]\[\e[36m\]\u \[\e[m\]\[\e[37m\]@ \[\e[m\]\[\e[34m\]\h\[\e[m\]\[\e[32m\]]\[\e[m\] \[\e[37;35m\]in\[\e[m\] \[\e[33m\]\w\[\e[m\] \[\e[32m\][\[\e[m\]\[\e[37m\]\d\[\e[m\] \[\e[m\]\[\e[37m\]\t\[\e[m\]\[\e[32m\]]\[\e[m\] \n\[\e[1;31m\]$ \[\e[0m\]"
 
+COPY --from=crazymax/alpine-s6-dist:3.15 / /
+
 RUN set -ex && \
     apk add --no-cache \
         bash \
@@ -19,9 +21,8 @@ RUN set -ex && \
         coreutils \
         jq \
         netcat-openbsd \
-        procps-ng \
+        procps \
         p7zip \
-        s6-overlay \
         shadow \
         tzdata \
         xz \
@@ -46,12 +47,12 @@ RUN set -ex && \
     make && \
     install -v -m755 unrar /usr/local/bin && \
     # Install nginx
-    apk add --no-cache --repository https://dl-cdn.alpinelinux.org/alpine/v3.15/community \
+    apk add --no-cache \
         pcre \
         nginx \
     && \
-    # Install php7 php7-common php7-fpm php7-json php7-pecl-imagick php7-dev php7-xml php7-zip php7-mysqli php7-mysqlnd
-    apk add --no-cache --repository https://dl-cdn.alpinelinux.org/alpine/v3.15/community \
+    # Install php7
+    apk add --no-cache \
         php7 \
         php7-common \
         php7-fpm \
@@ -62,7 +63,14 @@ RUN set -ex && \
         php7-zip \
         php7-mysqli \
         php7-mysqlnd \
+        php7-phar \
+        php7-iconv \
+        php7-mbstring \
+        php7-curl \
     && \
+    # Install composer
+    curl -o /usr/local/bin/composer https://getcomposer.org/composer.phar && \
+    chmod +x /usr/local/bin/composer && \
     # Add user
     addgroup -S smanga -g 911 && \
     adduser -S smanga -G smanga -h /app -u 911 -s /bin/bash && \
