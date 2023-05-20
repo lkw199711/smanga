@@ -65,7 +65,11 @@ class Daemon extends Command
             $AppPath = getenv('SMANGA_APP');
             $versionFile = "$AppPath/version";
 
-            if (!is_file($installLock) || is_file($versionFile)) continue;
+            if (!is_file($installLock) || is_file($versionFile)) {
+                // 睡眠一段时间
+                sleep(10);
+                continue;
+            }
 
             // 记录版本 代表初始化结束
             Utils::write_txt($versionFile, '3.3.0');
@@ -91,7 +95,7 @@ class Daemon extends Command
             }
 
             // 睡眠一段时间
-            sleep(10);
+            sleep(5);
         }
 
         return 0;
