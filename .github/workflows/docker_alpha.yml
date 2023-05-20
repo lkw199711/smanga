@@ -1,16 +1,11 @@
-name: Build Smanga Docker
+name: Build Smanga Alpha Docker
 
 on:
     workflow_dispatch:
-    push:
-      branches:
-        - master
-      paths:
-        - package.json
 
 jobs:
-  build:
-    name: Build Smanga Docker
+  base:
+    name: Build Smanga Base Docker
     runs-on: ubuntu-latest
     steps:
       - 
@@ -18,17 +13,49 @@ jobs:
         uses: actions/checkout@master
 
       - 
-        name: Set Version
-        id: set-version
-        run: |
-          SMANGA_VERSION=$(cat package.json | grep 'version' | cut -d\" -f4 | head -1)
-          echo "version=${SMANGA_VERSION}" >> $GITHUB_OUTPUT
+        name: Set Up QEMU
+        uses: docker/setup-qemu-action@v2
+
+      - 
+        name: Set Up Buildx
+        uses: docker/setup-buildx-action@v2
+        
+      - 
+        name: Login DockerHub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - 
+        name: Build Base
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          file: docker/base.Dockerfile
+          platforms: |
+            linux/amd64
+          push: true
+          build-args: |
+            SMANGA_VERSION=alpha
+          tags: |
+            ${{ secrets.DOCKER_USERNAME }}/smanga-base:alpha
+
+  build:
+    needs: [base]
+    name: Build Smanga Docker
+    runs-on: ubuntu-latest
+    steps:
+      - 
+        name: Checkout
+        uses: actions/checkout@master
 
       -
         name: Setup node
         uses: actions/setup-node@v3
         with:
           node-version: '14'
+
       -
         name: Build Web
         run: |
@@ -58,31 +85,23 @@ jobs:
           file: docker/Dockerfile
           platforms: |
             linux/amd64
-            linux/arm64/v8
           push: true
           build-args: |
-            SMANGA_VERSION=${{ steps.set-version.outputs.version }}
+            SMANGA_VERSION=alpha
+            SMANGA_BASE_VERSION=alpha
             SMANGA_BASE_NAME=${{ secrets.DOCKER_USERNAME }}
           tags: |
-            ${{ secrets.DOCKER_USERNAME }}/smanga:nosql-${{ steps.set-version.outputs.version }}
-            ${{ secrets.DOCKER_USERNAME }}/smanga:nosql
+            ${{ secrets.DOCKER_USERNAME }}/smanga:nosql-alpha
 
 
   build_mysql:
-    needs: [build]
+    needs: [build, base]
     name: Build Smanga Mysql Docker
     runs-on: ubuntu-latest
     steps:
       - 
         name: Checkout
         uses: actions/checkout@master
-      
-      - 
-        name: Set Version
-        id: set-version
-        run: |
-          SMANGA_VERSION=$(cat package.json | grep 'version' | cut -d\" -f4 | head -1)
-          echo "version=${SMANGA_VERSION}" >> $GITHUB_OUTPUT
 
       - 
         name: Set Up QEMU
@@ -107,11 +126,9 @@ jobs:
           file: docker/mysql.Dockerfile
           platforms: |
             linux/amd64
-            linux/arm64/v8
           push: true
           build-args: |
-            SMANGA_VERSION=${{ steps.set-version.outputs.version }}
+            SMANGA_VERSION=alpha
             SMANGA_BASE_NAME=${{ secrets.DOCKER_USERNAME }}
           tags: |
-            ${{ secrets.DOCKER_USERNAME }}/smanga:${{ steps.set-version.outputs.version }}
-            ${{ secrets.DOCKER_USERNAME }}/smanga:latest
+            ${{ secrets.DOCKER_USERNAME }}/smanga:alpha

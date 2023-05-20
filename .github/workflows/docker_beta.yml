@@ -32,7 +32,6 @@ jobs:
       -
         name: Build Web
         run: |
-          npm install -g @vue/cli
           npm install
           npm run build
 
@@ -56,7 +55,7 @@ jobs:
         uses: docker/build-push-action@v4
         with:
           context: .
-          file: docker/alpine/Dockerfile
+          file: docker/Dockerfile
           platforms: |
             linux/amd64
             linux/arm64/v8
@@ -105,7 +104,7 @@ jobs:
         uses: docker/build-push-action@v4
         with:
           context: .
-          file: docker/alpine/mysql.Dockerfile
+          file: docker/mysql.Dockerfile
           platforms: |
             linux/amd64
             linux/arm64/v8
