@@ -14,10 +14,12 @@ RUN cp -r /build/dist /rootfs && \
 # Main program
 FROM ${SMANGA_BASE_NAME}/smanga-base:${SMANGA_BASE_VERSION}
 
-ENV PUID=1000 \
+ENV PATH=${PATH}:/app/php/laravel \
+    PUID=1000 \
     PGID=1000 \
     TZ=Asia/Shanghai \
     UMASK=022 \
+    SMANGA_APP=/app \
     SMANGA_CONFIG=/data/config \
     SMANGA_CONFIG_INI=/data/config/config.ini \
     SMANGA_COMPRESS=/data/compress \

@@ -1,4 +1,5 @@
 #!/usr/bin/with-contenv bash
 # shellcheck shell=bash
 
-exec s6-setuidgid root tail -f /logs/nginx_error.log
+exec s6-setuidgid root \
+    tail -f /logs/nginx_error.log

@@ -2,4 +2,4 @@
 # shellcheck shell=bash
 
 exec s6-setuidgid root \
-    /usr/sbin/nginx -g "daemon off;"
+    /usr/sbin/crond -f -S -l 5

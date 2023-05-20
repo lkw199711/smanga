@@ -1,4 +1,5 @@
 #!/usr/bin/with-contenv bash
 # shellcheck shell=bash
 
-exec s6-setuidgid root /usr/sbin/php-fpm7 -F -R
+exec s6-setuidgid root \
+    /usr/sbin/php-fpm7 -F -R
