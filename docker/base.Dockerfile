@@ -46,12 +46,12 @@ RUN set -ex && \
     make && \
     install -v -m755 unrar /usr/local/bin && \
     # Install nginx
-    apk add --no-cache --repository https://dl-cdn.alpinelinux.org/alpine/v3.13/community \
+    apk add --no-cache --repository https://dl-cdn.alpinelinux.org/alpine/v3.15/community \
         pcre \
         nginx \
     && \
-    # Install php7
-    apk add --no-cache --repository https://dl-cdn.alpinelinux.org/alpine/v3.13/community \
+    # Install php7 php7-common php7-fpm php7-json php7-pecl-imagick php7-dev php7-xml php7-zip php7-mysqli php7-mysqlnd
+    apk add --no-cache --repository https://dl-cdn.alpinelinux.org/alpine/v3.15/community \
         php7 \
         php7-common \
         php7-fpm \
@@ -66,8 +66,10 @@ RUN set -ex && \
         php7-iconv \
         php7-mbstring \
         php7-curl \
-        composer \
     && \
+    # Install composer
+    curl -o /usr/local/bin/composer https://getcomposer.org/composer.phar && \
+    chmod +x /usr/local/bin/composer && \
     # Add user
     addgroup -S smanga -g 911 && \
     adduser -S smanga -G smanga -h /app -u 911 -s /bin/bash && \
