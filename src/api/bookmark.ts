@@ -19,7 +19,7 @@ export function add_bookmark(page: number) {
     }
 
     return ajax({
-        url: 'php/laravel/public/index.php/bookmark/add',
+        url: 'bookmark/add',
         data: {
             mediaId: global_get('mediaId'),
             mangaId: global_get('mangaId'),
@@ -39,14 +39,14 @@ export function add_bookmark(page: number) {
 
 export function get_bookmark(page: number | undefined = undefined, pageSize: number | undefined = undefined) {
     return ajax({
-        url: 'php/laravel/public/index.php/bookmark/get',
+        url: 'bookmark/get',
         data: {page, pageSize}
     })
 }
 
 export function delete_bookmark(bookmarkId: number) {
     return ajax({
-        url: 'php/laravel/public/index.php/bookmark/remove',
+        url: 'bookmark/remove',
         data: {
             bookmarkId
         }

@@ -9,6 +9,6 @@ import {ajax} from './index';
 
 export function get_version() {
 	return ajax({
-		url: 'php/laravel/public/index.php/version/get',
+		url: 'version/get',
 	});
 }

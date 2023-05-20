@@ -6,8 +6,10 @@ import {ElMessage} from 'element-plus';
 import {Cookies} from '@/utils';
 import router from '@/router';
 
+const phpPath = '/php/laravel10/public/index.php/';
+
 // 接口路径的设置
-const url = process.env.NODE_ENV === 'development' ? '/cms' + '/' : '/';
+const url = process.env.NODE_ENV === 'development' ? '/cms' + phpPath : phpPath;
 
 /**
  * 创建默认接口请求设置
@@ -71,7 +73,7 @@ const ajax = Axios.create({
 					type: type,
 				});
 			}
-			
+
 			// 初次部署
 			if (data.status === 'first deploy') {
 				router.push('/init');
@@ -92,7 +94,7 @@ const ajax = Axios.create({
  * @type {Axios}
  */
 const img = Axios.create({
-	baseURL: url + 'php/laravel/public/index.php/image/get',
+	baseURL: url + 'image/get',
 	timeout: 15 * 1000,
 	method: 'post',
 	responseType: 'blob', // 设置接收格式为blob格式

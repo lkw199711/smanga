@@ -3,7 +3,7 @@
  * @Author: error: error: git config user.name & please set dead value or install git && error: git config user.email & please set dead value or install git & please set dead value or install git
  * @Date: 2023-05-17 23:35:49
  * @LastEditors: error: error: git config user.name & please set dead value or install git && error: git config user.email & please set dead value or install git & please set dead value or install git
- * @LastEditTime: 2023-05-20 02:31:43
+ * @LastEditTime: 2023-05-20 21:39:32
  * @FilePath: /php/laravel/app/Http/Controllers/Utils.php
  */
 
@@ -99,8 +99,8 @@ class Utils extends Controller
 
         $data = filesize($file) == 0 ? [] : parse_ini_file($file, true);
 
-        if (!$data[$title]) return false;
-        if (!$data[$title][$key]) return false;
+        if (!isset($data[$title])) return false;
+        if (!isset($data[$title][$key])) return false;
 
         return $data[$title][$key];
     }

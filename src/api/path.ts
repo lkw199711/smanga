@@ -15,7 +15,7 @@ import {ajax} from "./index";
  */
 export function get_path(mediaId: number, recordStart: number, pageSize: number) {
     return ajax({
-        url: 'php/laravel/public/index.php/path/get',
+        url: 'path/get',
         data: {mediaId, recordStart, pageSize}
     })
 }
@@ -28,7 +28,7 @@ export function get_path(mediaId: number, recordStart: number, pageSize: number)
  */
 export function rescan_path(mediaId: any, path: any, pathId: any) {
     return ajax({
-        url: 'php/laravel/public/index.php/path/rescan',
+        url: 'path/rescan',
         data: {mediaId, path, pathId}
     })
 }
@@ -41,7 +41,7 @@ export function rescan_path(mediaId: any, path: any, pathId: any) {
  */
 export function scan_path(mediaId: any, path: any, pathId: any){
     return ajax({
-        url: 'php/laravel/public/index.php/path/scan',
+        url: 'path/scan',
         data: {mediaId, path, pathId}
     })
 }
@@ -52,7 +52,7 @@ export function scan_path(mediaId: any, path: any, pathId: any){
  */
 export function delete_path(pathId: any) {
     return ajax({
-        url: 'php/laravel/public/index.php/path/delete',
+        url: 'path/delete',
         data: {pathId}
     })
 }
@@ -64,7 +64,7 @@ export function delete_path(pathId: any) {
  */
 export function add_path(mediaId: any, path: any) {
     return ajax({
-        url: 'php/laravel/public/index.php/path/add',
+        url: 'path/add',
         data: {
             mediaId, path
         }

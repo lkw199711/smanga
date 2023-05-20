@@ -21,7 +21,7 @@ export function get_collect(
 	order: string
 ) {
 	return ajax({
-		url: 'php/laravel/public/index.php/collect/get',
+		url: 'collect/get',
 		data: {collectType, page, pageSize, order},
 	});
 }
@@ -32,21 +32,21 @@ export function get_collect(
  */
 export function add_collect(data: any) {
 	return ajax({
-		url: 'php/laravel/public/index.php/collect/add',
+		url: 'collect/add',
 		data,
 	});
 }
 
 export function is_collect(collectType: string, targetId: number) {
 	return ajax({
-		url: 'php/laravel/public/index.php/collect/is-collect',
+		url: 'collect/is-collect',
 		data: {collectType, targetId},
 	});
 }
 
 export function remove_collect(collectType: string, targetId: number) {
 	return ajax({
-		url: 'php/laravel/public/index.php/collect/remove',
+		url: 'collect/remove',
 		data: {collectType, targetId},
 	});
 }

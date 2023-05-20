@@ -12,7 +12,7 @@ import {ajax} from "./index";
  */
 export function get_media(page: number, pageSize: number) {
     return ajax({
-        url: 'php/laravel/public/index.php/media/get',
+        url: 'media/get',
         data: {page, pageSize}
     })
 }
@@ -23,7 +23,7 @@ export function get_media(page: number, pageSize: number) {
  */
 export function update_media(data: any) {
     return ajax({
-        url: 'php/laravel/public/index.php/media/update',
+        url: 'media/update',
         data
     })
 }
@@ -34,7 +34,7 @@ export function update_media(data: any) {
  */
 export function add_media(data: any) {
     return ajax({
-        url: 'php/laravel/public/index.php/media/add',
+        url: 'media/add',
         data
     })
 }
@@ -47,7 +47,7 @@ export function add_media(data: any) {
  */
 export function get_path(mediaId: any, recordStart: number | undefined = undefined, pageSize: number | undefined = undefined) {
     return ajax({
-        url: 'php/laravel/public/index.php/path/get',
+        url: 'path/get',
         data: {mediaId,recordStart,pageSize}
     })
 }
@@ -58,7 +58,7 @@ export function get_path(mediaId: any, recordStart: number | undefined = undefin
  */
 export function delete_path(pathId: any) {
     return ajax({
-        url: 'php/laravel/public/index.php/path/delete',
+        url: 'path/delete',
         data: {pathId}
     })
 }
@@ -69,7 +69,7 @@ export function delete_path(pathId: any) {
  */
 export function delete_media(mediaId: any) {
     return ajax({
-        url: 'php/laravel/public/index.php/media/delete',
+        url: 'media/delete',
         data: {mediaId}
     })
 }

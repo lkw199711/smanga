@@ -3,7 +3,7 @@
  * @Author: error: error: git config user.name & please set dead value or install git && error: git config user.email & please set dead value or install git & please set dead value or install git
  * @Date: 2023-05-20 01:43:27
  * @LastEditors: error: error: git config user.name & please set dead value or install git && error: git config user.email & please set dead value or install git & please set dead value or install git
- * @LastEditTime: 2023-05-20 12:49:21
+ * @LastEditTime: 2023-05-20 21:54:19
  * @FilePath: /php/laravel/app/Console/Commands/Daemon.php
  */
 
@@ -70,9 +70,6 @@ class Daemon extends Command
                 sleep(10);
                 continue;
             }
-
-            // 记录版本 代表初始化结束
-            Utils::write_txt($versionFile, '3.3.0');
 
             $ip = Utils::config_read('sql', 'ip');
             $userName = Utils::config_read('sql', 'userName');

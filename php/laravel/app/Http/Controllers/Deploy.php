@@ -80,6 +80,26 @@ class Deploy extends Controller
         $userName = $request->post('userName');
         $passWord = $request->post('passWord');
 
+        $ip = Utils::config_read('sql', 'ip');
+        $sqlUserName = Utils::config_read('sql', 'userName');
+        $sqlPassWord = Utils::config_read('sql', 'passWord');
+        $database = Utils::config_read('sql', 'database');
+        if(!$database) $database = 'smanga';
+        $port = Utils::config_read('sql', 'port');
+
+        $link = @mysqli_connect($ip, $sqlUserName, $sqlPassWord, $database, $port)
+            or die(json_encode([
+                'code' => 1,
+                'initCode' => 0,
+                'message' => '数据库链接错误',
+            ]));
+
+        // 设置默认字符集
+        $link->set_charset('utf8mb4');
+        // 切换当前数据库
+        $link->query('use smanga;');
+
+
         $version = VersionSql::list();
         $vers = [];
         if ($version['code'] == 0) {
@@ -88,7 +108,7 @@ class Deploy extends Controller
                 array_push($vers, $verList[$i]['version']);
             }
         } else {
-            DB::select("
+            $link->query("
             CREATE TABLE IF NOT EXISTS `bookmark`  (
                 `bookmarkId` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
                 `mediaId` int(11) NULL DEFAULT NULL,
@@ -104,7 +124,7 @@ class Deploy extends Controller
                 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
             ");
 
-            DB::select("
+            $link->query("
                 CREATE TABLE IF NOT EXISTS `chapter`  (
                     `chapterId` int(10) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '章节记录',
                     `mangaId` int(11) NULL DEFAULT NULL COMMENT '漫画id',
@@ -123,7 +143,7 @@ class Deploy extends Controller
                 ) ENGINE = MyISAM AUTO_INCREMENT = 1 CHARACTER SET = utf8mb3 COLLATE = utf8mb3_unicode_ci ROW_FORMAT = Dynamic;
             ");
 
-            DB::select("
+            $link->query("
                 CREATE TABLE IF NOT EXISTS `compress`  (
                     `compressId` int(11) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '转换id',
                     `compressType` enum('zip','rar','pdf','image') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '转换类型',
@@ -142,7 +162,7 @@ class Deploy extends Controller
                     UNIQUE INDEX `oChapter`(`chapterId`) USING BTREE
                 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
             ");
-            DB::select("
+            $link->query("
                 CREATE TABLE IF NOT EXISTS `history`  (
                     `historyId` int(10) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '历史记录id',
                     `userid` int(11) NULL DEFAULT NULL COMMENT '用户id',
@@ -156,7 +176,7 @@ class Deploy extends Controller
                     PRIMARY KEY (`historyId`) USING BTREE
                 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
             ");
-            DB::select("
+            $link->query("
                 CREATE TABLE IF NOT EXISTS `login`  (
                     `loginId` int(10) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '登录记录',
                     `userId` int(11) NULL DEFAULT NULL COMMENT '用户记录',
@@ -168,7 +188,7 @@ class Deploy extends Controller
                     PRIMARY KEY (`loginId`) USING BTREE
                 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
             ");
-            DB::select("
+            $link->query("
                 CREATE TABLE IF NOT EXISTS `manga`  (
                     `mangaId` int(10) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '漫画id',
                     `mediaId` int(11) NOT NULL COMMENT '媒体库id',
@@ -186,7 +206,7 @@ class Deploy extends Controller
                     UNIQUE INDEX `oname`(`mediaId`, `mangaPath`) USING BTREE
                 ) ENGINE = MyISAM AUTO_INCREMENT = 1 CHARACTER SET = utf8mb3 COLLATE = utf8mb3_unicode_ci ROW_FORMAT = Dynamic;
             ");
-            DB::select("
+            $link->query("
                 CREATE TABLE IF NOT EXISTS `media`  (
                     `mediaId` int(10) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '媒体库id',
                     `mediaName` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL COMMENT '媒体库名称',
@@ -204,7 +224,7 @@ class Deploy extends Controller
                     UNIQUE INDEX `name`(`mediaName`) USING BTREE
                 ) ENGINE = MyISAM AUTO_INCREMENT = 1 CHARACTER SET = utf8mb3 COLLATE = utf8mb3_unicode_ci ROW_FORMAT = Dynamic;
             ");
-            DB::select("
+            $link->query("
                 CREATE TABLE IF NOT EXISTS `path`  (
                     `pathId` int(10) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '路径id',
                     `mediaId` int(11) NOT NULL COMMENT '媒体库id',
@@ -214,7 +234,7 @@ class Deploy extends Controller
                     UNIQUE INDEX `opath`(`mediaId`, `path`) USING BTREE
                 ) ENGINE = MyISAM AUTO_INCREMENT = 1 CHARACTER SET = utf8mb3 COLLATE = utf8mb3_unicode_ci ROW_FORMAT = Dynamic;
             ");
-            DB::select("
+            $link->query("
                 CREATE TABLE IF NOT EXISTS `user`  (
                     `userId` int(10) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '用户id',
                     `userName` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL COMMENT '用户名',
@@ -226,7 +246,7 @@ class Deploy extends Controller
                     UNIQUE INDEX `username`(`userName`) USING BTREE
                 ) ENGINE = MyISAM AUTO_INCREMENT = 2 CHARACTER SET = utf8mb3 COLLATE = utf8mb3_unicode_ci ROW_FORMAT = Dynamic;
             ");
-            DB::select("
+            $link->query("
                 CREATE TABLE IF NOT EXISTS `version` (
                     `versionId` int(10) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '版本记录',
                     `versionDescribe` VARCHAR(255) NULL DEFAULT NULL COMMENT '版本描述',
@@ -238,12 +258,12 @@ class Deploy extends Controller
             ");
 
             // 插入smanga的用户名密码
-            DB::select("INSERT INTO `user` VALUES (1, 'smanga', 'f7f1fe7186209906a97756ff912bb644', NULL, NULL, NULL);");
+            $link->query("INSERT INTO `user` VALUES (1, 'smanga', 'f7f1fe7186209906a97756ff912bb644', NULL, NULL, NULL);");
 
             // 插入自定义用户名密码
             if ($userName && $passWord) {
                 $passMd5 = md5($passWord);
-                DB::select("INSERT INTO `user` VALUES (1, $userName, $passMd5, NULL, NULL, NULL);");
+                $link->query("INSERT INTO `user` VALUES (1, $userName, $passMd5, NULL, NULL, NULL);");
             }
 
             // 生成任务队列表
@@ -253,7 +273,7 @@ class Deploy extends Controller
 
         // 314
         if (array_search('3.1.4', $vers) === false) {
-            DB::select("ALTER TABLE compress MODIFY COLUMN compressType enum('zip','rar','pdf','image','7z')");
+            $link->query("ALTER TABLE compress MODIFY COLUMN compressType enum('zip','rar','pdf','image','7z')");
             VersionSql::add([
                 'version' => '3.1.4',
                 'versionDescribe' => '添加7z,修复shell参数',
@@ -272,9 +292,9 @@ class Deploy extends Controller
 
         // 316
         if (array_search('3.1.6', $vers) === false) {
-            DB::select("ALTER TABLE user ADD `mediaLimit` varchar(255)");
-            DB::select("ALTER TABLE user ADD `editMedia` int(1) DEFAULT 1");
-            DB::select("ALTER TABLE user ADD `editUser` int(1) DEFAULT 1");
+            $link->query("ALTER TABLE user ADD `mediaLimit` varchar(255)");
+            $link->query("ALTER TABLE user ADD `editMedia` int(1) DEFAULT 1");
+            $link->query("ALTER TABLE user ADD `editUser` int(1) DEFAULT 1");
 
             VersionSql::add([
                 'version' => '3.1.6',
@@ -323,7 +343,7 @@ class Deploy extends Controller
         if (array_search('3.2.1', $vers) === false) {
             // 创建个人设置表
 
-            DB::select("
+            $link->query("
                 CREATE TABLE IF NOT EXISTS `config` (
                     `configId` int(0) NOT NULL AUTO_INCREMENT COMMENT '设置项主键',
                     `userId` int(0) NULL COMMENT '关联的用户id',
@@ -355,7 +375,7 @@ class Deploy extends Controller
         // 323
         if (array_search('3.2.3', $vers) === false) {
             // 创建个人设置表
-            DB::select("
+            $link->query("
                 CREATE TABLE IF NOT EXISTS `collect` (
                     `collectId` int(0) NOT NULL AUTO_INCREMENT COMMENT '收藏id',
                     `collectType` varchar(255) NULL COMMENT '收藏类型',
@@ -381,14 +401,14 @@ class Deploy extends Controller
         // 324
         if (array_search('3.2.4', $vers) === false) {
             // 修改搜索表varchar字段 字符集为utf8mb4
-            DB::select("
+            $link->query("
         ALTER TABLE `manga` 
             MODIFY COLUMN `mangaName` varchar(191) CHARACTER SET utf8mb4 NOT NULL COMMENT '漫画名称' AFTER `pathId`,
             MODIFY COLUMN `mangaPath` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '漫画路径' AFTER `mangaName`,
             MODIFY COLUMN `mangaCover` varchar(191) CHARACTER SET utf8mb4 NULL DEFAULT NULL COMMENT '漫画封面' AFTER `mangaPath`;
     ");
 
-            DB::select("
+            $link->query("
         ALTER TABLE `chapter` 
             MODIFY COLUMN `chapterName` varchar(191) CHARACTER SET utf8mb4 NULL DEFAULT NULL COMMENT '章节名称' AFTER `pathId`,
             MODIFY COLUMN `chapterPath` varchar(191) CHARACTER SET utf8mb4 NULL DEFAULT NULL COMMENT '章节路径' AFTER `chapterName`,
@@ -396,18 +416,18 @@ class Deploy extends Controller
             MODIFY COLUMN `chapterCover` varchar(191) CHARACTER SET utf8mb4 NULL DEFAULT NULL COMMENT '章节封面' AFTER `browseType`;
     ");
 
-            DB::select("
+            $link->query("
         ALTER TABLE `media` 
             MODIFY COLUMN `mediaName` varchar(191) CHARACTER SET utf8mb4 NOT NULL COMMENT '媒体库名称' AFTER `mediaId`,
             MODIFY COLUMN `mediaCover` varchar(191) CHARACTER SET utf8mb4 NULL DEFAULT NULL COMMENT '媒体库封面' AFTER `mediaType`;
     ");
 
-            DB::select("
+            $link->query("
         ALTER TABLE `path` 
             MODIFY COLUMN `path` varchar(191) CHARACTER SET utf8mb4 NOT NULL COMMENT '路径' AFTER `mediaId`;
     ");
 
-            DB::select("
+            $link->query("
         ALTER TABLE `user` 
             MODIFY COLUMN `userName` varchar(191) CHARACTER SET utf8mb4 NOT NULL COMMENT '用户名' AFTER `userId`,
             MODIFY COLUMN `nickName` varchar(191) CHARACTER SET utf8mb4 NULL DEFAULT NULL COMMENT '昵称' AFTER `passWord`,
@@ -430,10 +450,10 @@ class Deploy extends Controller
         }
         // 326
         if (array_search('3.2.6', $vers) === false) {
-            DB::select("ALTER TABLE bookmark MODIFY COLUMN `browseType` enum('flow','single','double','half') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT 'single' AFTER `userId`;");
-            DB::select("ALTER TABLE chapter MODIFY COLUMN `browseType` enum('flow','single','double','half') CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL DEFAULT 'flow' COMMENT '浏览方式' AFTER `chapterType`;");
-            DB::select("ALTER TABLE manga MODIFY COLUMN `browseType` enum('flow','single','double','half') CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL DEFAULT 'flow' COMMENT '浏览方式' AFTER `chapterCount`;");
-            DB::select("ALTER TABLE media MODIFY COLUMN `defaultBrowse` enum('flow','single','double','half') CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL DEFAULT 'flow' COMMENT '默认浏览类型' AFTER `fileType`;");
+            $link->query("ALTER TABLE bookmark MODIFY COLUMN `browseType` enum('flow','single','double','half') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT 'single' AFTER `userId`;");
+            $link->query("ALTER TABLE chapter MODIFY COLUMN `browseType` enum('flow','single','double','half') CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL DEFAULT 'flow' COMMENT '浏览方式' AFTER `chapterType`;");
+            $link->query("ALTER TABLE manga MODIFY COLUMN `browseType` enum('flow','single','double','half') CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL DEFAULT 'flow' COMMENT '浏览方式' AFTER `chapterCount`;");
+            $link->query("ALTER TABLE media MODIFY COLUMN `defaultBrowse` enum('flow','single','double','half') CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL DEFAULT 'flow' COMMENT '默认浏览类型' AFTER `fileType`;");
 
             VersionSql::add([
                 'version' => '3.2.6',

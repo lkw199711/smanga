@@ -15,7 +15,7 @@ export function search(
 	order = ''
 ) {
 	return ajax({
-		url: 'php/laravel/public/index.php/search/get',
+		url: 'search/get',
 		data: {searchText, searchType, page, pageSize, order},
 	});
 }

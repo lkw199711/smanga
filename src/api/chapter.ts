@@ -20,7 +20,7 @@ export function get_chapter(
 	order = ''
 ) {
 	return ajax({
-		url: 'php/laravel/public/index.php/chapter/get',
+		url: 'chapter/get',
 		data: {mangaId, page, pageSize, order},
 	});
 }
@@ -31,7 +31,7 @@ export function get_chapter(
  */
 export function update_chapter(data: any) {
 	return ajax({
-		url: 'php/laravel/public/index.php/chapter/update',
+		url: 'chapter/update',
 		data,
 	});
 }
@@ -43,7 +43,7 @@ export function update_chapter(data: any) {
  */
 export function delete_chapter(chapterId: any, deleteFile = false) {
 	return ajax({
-		url: 'php/laravel/public/index.php/chapter/delete',
+		url: 'chapter/delete',
 		data: {chapterId, deleteFile},
 	});
 }

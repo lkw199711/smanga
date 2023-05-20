@@ -14,14 +14,14 @@ import {ajax} from "./index";
  */
 export function get_compress(recordStart: number, pageSize: number) {
     return ajax({
-        url: 'php/laravel/public/index.php/compress/get',
+        url: 'compress/get',
         data: {recordStart, pageSize}
     })
 }
 
 export function delete_compress(compressId: number) {
     return ajax({
-        url: 'php/laravel/public/index.php/compress/delete',
+        url: 'compress/delete',
         data: {
             compressId
         }

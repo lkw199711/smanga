@@ -9,6 +9,6 @@ import {ajax} from './index';
 
 export function system_init() {
 	return ajax({
-		url: 'php/laravel/public/index.php/deploy/database-init',
+		url: 'deploy/database-init',
 	});
 }

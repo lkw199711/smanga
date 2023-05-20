@@ -9,20 +9,20 @@ import { ajax } from "./index";
 
 export function database_check(data: any) {
     return ajax({
-        url: 'php/laravel/public/index.php/deploy/database-test',
+        url: 'deploy/database-test',
         data,
     })
 }
 
 export function database_set(data: any) {
     return ajax({
-        url: 'php/laravel/public/index.php/deploy/database-set',
+        url: 'deploy/database-set',
         data,
     })
 }
 
 export function database_get() {
     return ajax({
-        url: 'php/laravel/public/index.php/deploy/database-get'
+        url: 'deploy/database-get'
     })
 }

@@ -10,7 +10,7 @@ import {global_get} from "@/utils";
 
 export function add_history() {
     return ajax({
-        url: 'php/laravel/public/index.php/history/add',
+        url: 'history/add',
         data: {
             mediaId: global_get('mediaId'),
             mangaId: global_get('mangaId'),
@@ -27,14 +27,14 @@ export function add_history() {
 
 export function get_history(page: number | undefined = undefined, pageSize: number | undefined = undefined) {
     return ajax({
-        url: 'php/laravel/public/index.php/history/get',
+        url: 'history/get',
         data: {page, pageSize}
     })
 }
 
 export function delete_history(historyId: number) {
     return ajax({
-        url: 'php/laravel/public/index.php/history/delete',
+        url: 'history/delete',
         data: {
             historyId
         }

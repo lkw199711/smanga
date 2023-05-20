@@ -8,7 +8,7 @@ import {ajax} from "./index";
  */
 export function get_manga(mediaId: number, page: number, pageSize: number,order='') {
     return ajax({
-			url: "php/laravel/public/index.php/manga/get",
+			url: "manga/get",
 			data: { mediaId, page, pageSize, order },
 		});
 }
@@ -19,7 +19,7 @@ export function get_manga(mediaId: number, page: number, pageSize: number,order=
  */
 export function update_manga(data: any) {
     return ajax({
-        url: 'php/laravel/public/index.php/manga/update',
+        url: 'manga/update',
         data
     })
 }
@@ -31,7 +31,7 @@ export function update_manga(data: any) {
  */
 export function delete_manga(mangaId: number, deleteFile = false) {
     return ajax({
-        url: 'php/laravel/public/index.php/manga/delete',
+        url: 'manga/delete',
         data: {mangaId, deleteFile}
     })
 }

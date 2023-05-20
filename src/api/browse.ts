@@ -13,7 +13,7 @@ import {global_get} from "@/utils";
  */
 export function get_chapter_images() {
     return ajax({
-        url: 'php/laravel/public/index.php/chapter/image',
+        url: 'chapter/image',
         data:{
             imagePath: global_get('chapterPath'),
             mediaId: global_get('mediaId'),
