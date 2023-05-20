@@ -42,6 +42,7 @@ jobs:
             ${{ secrets.DOCKER_USERNAME }}/smanga-base:alpha
 
   build:
+    needs: [base]
     name: Build Smanga Docker
     runs-on: ubuntu-latest
     steps:
