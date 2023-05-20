@@ -37,7 +37,7 @@ jobs:
             linux/amd64
           push: true
           build-args: |
-            SMANGA_VERSION=${{ steps.set-version.outputs.version }}
+            SMANGA_VERSION=alpha
           tags: |
             ${{ secrets.DOCKER_USERNAME }}/smanga-base:alpha
 
@@ -88,6 +88,7 @@ jobs:
           push: true
           build-args: |
             SMANGA_VERSION=alpha
+            SMANGA_BASE_VERSION=alpha
             SMANGA_BASE_NAME=${{ secrets.DOCKER_USERNAME }}
           tags: |
             ${{ secrets.DOCKER_USERNAME }}/smanga:nosql-alpha
