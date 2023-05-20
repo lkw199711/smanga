@@ -62,7 +62,14 @@ RUN set -ex && \
         php7-zip \
         php7-mysqli \
         php7-mysqlnd \
+        php7-phar \
+        php7-iconv \
+        php7-mbstring \
+        php7-curl \
     && \
+    # Install composer
+    curl -o /usr/local/bin/composer https://getcomposer.org/composer.phar && \
+    chmod +x /usr/local/bin/composer && \
     # Add user
     addgroup -S smanga -g 911 && \
     adduser -S smanga -G smanga -h /app -u 911 -s /bin/bash && \
