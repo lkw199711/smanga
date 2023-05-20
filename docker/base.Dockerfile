@@ -67,6 +67,11 @@ RUN set -ex && \
         php7-iconv \
         php7-mbstring \
         php7-curl \
+        php7-dom \
+        php7-xml \
+        php7-xmlwriter \
+        php7-fileinfo \
+        php7-tokenizer \
     && \
     # Install composer
     curl -o /usr/local/bin/composer https://getcomposer.org/composer.phar && \
