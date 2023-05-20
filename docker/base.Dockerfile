@@ -73,6 +73,11 @@ RUN set -ex && \
         php7-fileinfo \
         php7-tokenizer \
         php7-pdo \
+        php7-bcmath \
+        php7-ctype \
+        php7-openssl \
+        php7-json \
+        php7-session \
     && \
     # Install composer
     curl -o /usr/local/bin/composer https://getcomposer.org/composer.phar && \
