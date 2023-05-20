@@ -72,6 +72,7 @@ RUN set -ex && \
         php7-xmlwriter \
         php7-fileinfo \
         php7-tokenizer \
+        php7-pdo \
     && \
     # Install composer
     curl -o /usr/local/bin/composer https://getcomposer.org/composer.phar && \
