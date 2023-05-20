@@ -277,5 +277,10 @@
     "time": "入庫時間",
     "timeDesc": "入庫時間-倒序"
   },
-  "readModel": "閱讀模式"
+  "readModel": "閱讀模式",
+  "history": {
+    "confirm": {
+      "text": "確認刪除此記錄?"
+    }
+  }
 }

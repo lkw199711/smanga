@@ -1,3 +1,10 @@
+<!--
+ * @Author: lkw199711 lkw199711@163.com
+ * @Date: 2023-05-03 11:35:53
+ * @LastEditors: lkw199711 lkw199711@163.com
+ * @LastEditTime: 2023-05-20 11:04:16
+ * @FilePath: \smanga\src\views\init\components\new-user.vue
+-->
 <template>
 	<div class="new-user-box">
 		<p class="title">创建用户</p>
@@ -43,12 +50,12 @@ async function setting() {
 			message: t('account.formWarning'),
 			type: 'warning',
 		});
+
+		emit('update', false);
 		return false;
 	}
-	const res = await register(form);
-	const code = res.data?.code;
 
-	emit('update', code === 0);
+	emit('update', true, form.userName, form.passWord);
 }
 </script>
 

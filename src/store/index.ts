@@ -59,8 +59,8 @@ export const config = reactive({
 });
 
 export const power = reactive({
-	editUser: editUser === '1',
-	editMedia: editMedia === '1',
+	editUser: editUser == '1',
+	editMedia: editMedia == '1',
 });
 
 /**
@@ -91,7 +91,7 @@ export const pageSizeConfig = reactive({
 	mini: [9, 12, 15, 18, 21],
 	small: [12, 18, 32, 38, 44],
 	middle: [12, 18, 32, 38, 44],
-	large: [8, 16, 32, 40, 48],
+	large: [8, 16, 32, 40, 48] as number[],
 	'2k': [27, 36, 45, 54, 63],
 	'4k': [32, 40, 48, 54, 62],
 });

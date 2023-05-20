@@ -123,10 +123,9 @@ export default defineComponent({
      * @returns {Promise<void>}
      */
     async load_table(page = 1, pageSize = 10) {
-      const start = (page - 1) * pageSize;
-      const res = await get_compress(start, pageSize);
-      this.count = Number(res.data.count);
-      this.tableData = res.data.list;
+      const res = await get_compress(page, pageSize);
+      this.count = Number(res.data.list.total);
+      this.tableData = res.data.list.data;
     },
     /**
      * 重载数据 页码不变

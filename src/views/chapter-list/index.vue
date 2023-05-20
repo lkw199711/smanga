@@ -153,8 +153,8 @@ async function page_change(
 		pageSize,
 		userConfig.order
 	);
-	list.value = res.data.list;
-	count.value = res.data.count;
+	list.value = res.data.list.data;
+	count.value = res.data.list.total;
 
 	// 为章节请求海报图片
 	get_poster(list.value, 'chapterAwait');
@@ -165,7 +165,7 @@ async function page_change(
  */
 async function load_chapter() {
 	const res = await get_chapter(mangaId.value);
-	global_set_json('chapterList', res.data.list);
+	global_set_json('chapterList', res.data.list.data);
 }
 
 function init() {

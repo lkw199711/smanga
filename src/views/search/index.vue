@@ -176,25 +176,23 @@ async function page_change(
 	pageC = 1,
 	pageSize: number = defaultPageSize.value
 ) {
-	if (pageC) {
-		page.value = pageC;
-	}
+	page.value = pageC;
+
 
 	if (!searchText.value) {
 		ElMessage.warning('请输入搜索关键词！');
 		return false;
 	}
 
-	const start = (page.value - 1) * pageSize;
 	const res: any = await search(
 		searchText.value,
 		searchType.value,
-		start,
+		page.value,
 		pageSize,
 		userConfig.order
 	);
-	list.value = res.data.list;
-	count.value = res.data.count;
+	list.value = res.data.list.data;
+	count.value = res.data.list.total;
 
 	// 为漫画请求海报图片
 	get_poster(list.value, 'mangaAwait');
@@ -235,7 +233,7 @@ async function go_browse(item: any) {
 
 	// 加载章节列表
 	const res = await get_chapter(item.mangaId);
-	global_set_json('chapterList', res.data.list);
+	global_set_json('chapterList', res.data.list.data);
 
 	let page = 1;
 	if (browseType === 'flow') {

@@ -276,5 +276,10 @@
     "nameDesc": "名称-倒序",
     "time": "入库时间",
     "timeDesc": "入库时间-倒序"
+  },
+  "history": {
+    "confirm": {
+      "text": "确认删除此记录?"
+    }
   }
 }

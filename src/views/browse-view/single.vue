@@ -1,3 +1,10 @@
+<!--
+ * @Author: lkw199711 lkw199711@163.com
+ * @Date: 2023-03-17 20:18:31
+ * @LastEditors: lkw199711 lkw199711@163.com
+ * @LastEditTime: 2023-05-19 21:31:12
+ * @FilePath: \smanga\src\views\browse-view\single.vue
+-->
 <template>
   <div class="single-page">
     <!--目录列表-->

@@ -90,8 +90,7 @@ const items = ref([
 
 const collectType = ref('manga');
 
-const handleClick = (tab: TabsPaneContext, event: Event) => {
-};
+const handleClick = (tab: TabsPaneContext, event: Event) => {};
 
 const searchText = ref('');
 const searchType = ref('manga');
@@ -121,9 +120,6 @@ onMounted(async () => {
 	store.commit('switch_await', {running: 'collectAwait', bool: true});
 
 	page_change();
-
-	// 为漫画请求海报图片
-	get_poster(list.value, 'mangaAwait');
 });
 
 onBeforeUnmount(() => {
@@ -168,30 +164,19 @@ async function page_change(
 	pageC = 1,
 	pageSize: number = defaultPageSize.value
 ) {
-	if (pageC) {
-		page.value = pageC;
-	}
+	page.value = pageC;
 
-	const start = (page.value - 1) * pageSize;
 	const res: any = await get_collect(
 		collectType.value,
-		start,
+		page.value,
 		pageSize,
 		userConfig.order
 	);
-	list.value = res.data.list;
-	count.value = res.data.count;
+	list.value = res.data.list.data;
+	count.value = res.data.list.total;
 
 	// 为漫画请求海报图片
-	get_poster(list.value, 'mangaAwait');
-}
-
-function reload() {
-	/*  关于首页首次加载的页面容量 因逻辑bug暂时不处理
-		const screenType = config.screenType;
-		const pageSize = mediaPageSize[screenType];
-    */
-	page_change(1);
+	get_poster(list.value, 'collectAwait', collectType.value + 'Cover');
 }
 
 /**
@@ -221,7 +206,7 @@ async function go_browse(item: any) {
 
 	// 加载章节列表
 	const res = await get_chapter(item.mangaId);
-	global_set_json('chapterList', res.data.list);
+	global_set_json('chapterList', res.data.list.data);
 
 	let page = 1;
 	if (browseType === 'flow') {

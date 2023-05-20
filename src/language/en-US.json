@@ -277,5 +277,10 @@
     "time": "time",
     "timeDesc": "time-desc"
   },
-  "readModel": "readModel"
+  "readModel": "readModel",
+  "history": {
+    "confirm": {
+      "text": "Are you sure to delete this record?"
+    }
+  }
 }

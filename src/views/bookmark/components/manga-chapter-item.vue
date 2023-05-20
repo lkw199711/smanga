@@ -64,7 +64,7 @@ export default defineComponent({
       const browseType = this.chapterInfo.browseType;
 
       const chapterListRes = await get_chapter(mangaId);
-      const chapterList = chapterListRes.data;
+      const chapterList = chapterListRes.data.list.data;
 
       // 缓存章节信息
       global_set('mangaId', mangaId);

@@ -62,7 +62,7 @@ export default defineComponent({
       const mangaCover = this.chapterInfo.mangaCover;
 
       const chapterListRes = await get_chapter(mangaId);
-      const chapterList = chapterListRes.data;
+      const chapterList = chapterListRes.data.list.data;
 
       // 缓存章节信息
       global_set('mangaId', mangaId);

@@ -78,7 +78,7 @@
         </div>
       </template>
     </el-dialog>
-
+    <!-- 修改用户信息表单 -->
     <el-dialog :title="$t('account.modify')" v-model="dialogFormVisible" :before-close="dialog_close">
       <el-form :model="form" label-width="100px">
         <el-form-item :label="$t('account.nameLabel')">
@@ -94,13 +94,13 @@
         <!--权限-->
         <p class="s-form-title">{{ $t('account.form.title.power') }}</p>
         <el-form-item :label="$t('account.form.label.editUser')">
-          <el-switch v-model="form.editUser" active-value="1" inactive-value="0"/>
+          <el-switch v-model.number="form.editUser" :active-value="1" :inactive-value="0"/>
         </el-form-item>
 
 
         <!--编辑媒体库-->
         <el-form-item :label="$t('account.form.label.editMedia')">
-          <el-switch v-model="form.editMedia" active-value="1" inactive-value="0"/>
+          <el-switch v-model.number="form.editMedia" :active-value="1" :inactive-value="0"/>
         </el-form-item>
 
         <!--媒体库权限-->

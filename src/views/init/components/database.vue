@@ -10,6 +10,9 @@
 		</p>
 
 		<el-form :model="form" :inline="true">
+			<el-form-item label="database:">
+				<el-input v-model="form.database" style="width: 28rem" />
+			</el-form-item>
 			<el-form-item label="ip:">
 				<el-input v-model="form.ip" style="width: 16rem" />
 			</el-form-item>
@@ -42,6 +45,7 @@ const emit = defineEmits(['update']);
 // do not use same name with ref
 const form = reactive({
 	ip: '127.0.0.1',
+	database: 'smanga',
 	port: '3306',
 	userName: 'smanga',
 	passWord: 'smanga',

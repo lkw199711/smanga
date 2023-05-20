@@ -1,3 +1,11 @@
+/*
+ * @Author: lkw199711 lkw199711@163.com
+ * @Date: 2023-03-17 20:18:30
+ * @LastEditors: lkw199711 lkw199711@163.com
+ * @LastEditTime: 2023-05-16 22:26:09
+ * @FilePath: \smanga\src\api\bookmark.ts
+ * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+ */
 import {ajax} from "./index";
 import {global_get, global_get_array} from "@/utils";
 import {config} from "@/store";
@@ -11,7 +19,7 @@ export function add_bookmark(page: number) {
     }
 
     return ajax({
-        url: 'php/bookmark/add.php',
+        url: 'php/laravel/public/index.php/bookmark/add',
         data: {
             mediaId: global_get('mediaId'),
             mangaId: global_get('mangaId'),
@@ -29,25 +37,18 @@ export function add_bookmark(page: number) {
     })
 }
 
-export function get_bookmark(recordStart: number | undefined = undefined, pageSize: number | undefined = undefined) {
+export function get_bookmark(page: number | undefined = undefined, pageSize: number | undefined = undefined) {
     return ajax({
-        url: 'php/bookmark/get.php',
-        data: {recordStart, pageSize}
+        url: 'php/laravel/public/index.php/bookmark/get',
+        data: {page, pageSize}
     })
 }
 
 export function delete_bookmark(bookmarkId: number) {
     return ajax({
-        url: 'php/bookmark/delete.php',
+        url: 'php/laravel/public/index.php/bookmark/remove',
         data: {
             bookmarkId
         }
-    })
-}
-
-export function update_bookmark(data: any) {
-    return ajax({
-        url: 'php/bookmark/update.php',
-        data
     })
 }

@@ -27,7 +27,7 @@ export default defineComponent({
                 mangaCover: '',
                 browseType: '',
                 removeFirst: '',
-                direction: '0',
+                direction: 0,
             },
             formInit: {
                 mangaId: '',
@@ -35,8 +35,8 @@ export default defineComponent({
                 mangaPath: '',
                 mangaCover: '',
                 browseType: 'flow',
-                removeFirst: '0',
-                direction: '1',
+                removeFirst: 0,
+                direction: 1,
             },
         }
     },
@@ -72,10 +72,9 @@ export default defineComponent({
          * 加载表格数据
          */
         async load_table(page = 1, pageSize = 10) {
-            const start = (page - 1) * pageSize;
-            const res = await get_manga(0, start, pageSize);
-            this.count = Number(res.data.count);
-            this.tableData = res.data.list;
+            const res = await get_manga(0, page, pageSize);
+            this.count = Number(res.data.list.total);
+            this.tableData = res.data.list.data;
         },
         /**
          * 重载数据 页码不变

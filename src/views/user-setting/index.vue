@@ -68,7 +68,7 @@
 				<el-form-item label="mini">
 					<el-col :span="4">
 						<el-input
-							v-model="pageSizeConfig.mini[0]"
+							v-model.number="pageSizeConfig.mini[0]"
 							type="number"
 							:controls="false"></el-input>
 					</el-col>
@@ -77,7 +77,7 @@
 					</el-col>
 					<el-col :span="4">
 						<el-input
-							v-model="pageSizeConfig.mini[1]"
+							v-model.number="pageSizeConfig.mini[1]"
 							type="number"
 							:controls="false"></el-input>
 					</el-col>
@@ -86,7 +86,7 @@
 					</el-col>
 					<el-col :span="4">
 						<el-input
-							v-model="pageSizeConfig.mini[2]"
+							v-model.number="pageSizeConfig.mini[2]"
 							type="number"
 							:controls="false"></el-input>
 					</el-col>
@@ -95,7 +95,7 @@
 					</el-col>
 					<el-col :span="4">
 						<el-input
-							v-model="pageSizeConfig.mini[3]"
+							v-model.number="pageSizeConfig.mini[3]"
 							type="number"
 							:controls="false"></el-input>
 					</el-col>
@@ -104,7 +104,7 @@
 				<el-form-item label="small">
 					<el-col :span="4">
 						<el-input
-							v-model="pageSizeConfig.small[0]"
+							v-model.number="pageSizeConfig.small[0]"
 							type="number"
 							:controls="false"></el-input>
 					</el-col>
@@ -113,7 +113,7 @@
 					</el-col>
 					<el-col :span="4">
 						<el-input
-							v-model="pageSizeConfig.small[1]"
+							v-model.number="pageSizeConfig.small[1]"
 							type="number"
 							:controls="false"></el-input>
 					</el-col>
@@ -122,7 +122,7 @@
 					</el-col>
 					<el-col :span="4">
 						<el-input
-							v-model="pageSizeConfig.small[2]"
+							v-model.number="pageSizeConfig.small[2]"
 							type="number"
 							:controls="false"></el-input>
 					</el-col>
@@ -131,7 +131,7 @@
 					</el-col>
 					<el-col :span="4">
 						<el-input
-							v-model="pageSizeConfig.small[3]"
+							v-model.number="pageSizeConfig.small[3]"
 							type="number"
 							:controls="false"></el-input>
 					</el-col>
@@ -140,7 +140,7 @@
 				<el-form-item label="middle">
 					<el-col :span="4">
 						<el-input
-							v-model="pageSizeConfig.middle[0]"
+							v-model.number="pageSizeConfig.middle[0]"
 							type="number"
 							:controls="false"></el-input>
 					</el-col>
@@ -149,7 +149,7 @@
 					</el-col>
 					<el-col :span="4">
 						<el-input
-							v-model="pageSizeConfig.middle[1]"
+							v-model.number="pageSizeConfig.middle[1]"
 							type="number"
 							:controls="false"></el-input>
 					</el-col>
@@ -158,7 +158,7 @@
 					</el-col>
 					<el-col :span="4">
 						<el-input
-							v-model="pageSizeConfig.middle[2]"
+							v-model.number="pageSizeConfig.middle[2]"
 							type="number"
 							:controls="false"></el-input>
 					</el-col>
@@ -167,7 +167,7 @@
 					</el-col>
 					<el-col :span="4">
 						<el-input
-							v-model="pageSizeConfig.middle[3]"
+							v-model.number="pageSizeConfig.middle[3]"
 							type="number"
 							:controls="false"></el-input>
 					</el-col>
@@ -176,7 +176,7 @@
 				<el-form-item label="large">
 					<el-col :span="4">
 						<el-input
-							v-model="pageSizeConfig.large[0]"
+							v-model.number="pageSizeConfig.large[0]"
 							type="number"
 							:controls="false"></el-input>
 					</el-col>
@@ -185,7 +185,7 @@
 					</el-col>
 					<el-col :span="4">
 						<el-input
-							v-model="pageSizeConfig.large[1]"
+							v-model.number="pageSizeConfig.large[1]"
 							type="number"
 							:controls="false"></el-input>
 					</el-col>
@@ -194,7 +194,7 @@
 					</el-col>
 					<el-col :span="4">
 						<el-input
-							v-model="pageSizeConfig.large[2]"
+							v-model.number="pageSizeConfig.large[2]"
 							type="number"
 							:controls="false"></el-input>
 					</el-col>
@@ -203,7 +203,7 @@
 					</el-col>
 					<el-col :span="4">
 						<el-input
-							v-model="pageSizeConfig.large[3]"
+							v-model.number="pageSizeConfig.large[3]"
 							type="number"
 							:controls="false"></el-input>
 					</el-col>
@@ -212,7 +212,7 @@
 				<el-form-item label="2k">
 					<el-col :span="4">
 						<el-input
-							v-model="pageSizeConfig['2k'][0]"
+							v-model.number="pageSizeConfig['2k'][0]"
 							type="number"
 							:controls="false"></el-input>
 					</el-col>
@@ -221,7 +221,7 @@
 					</el-col>
 					<el-col :span="4">
 						<el-input
-							v-model="pageSizeConfig['2k'][1]"
+							v-model.number="pageSizeConfig['2k'][1]"
 							type="number"
 							:controls="false"></el-input>
 					</el-col>
@@ -230,7 +230,7 @@
 					</el-col>
 					<el-col :span="4">
 						<el-input
-							v-model="pageSizeConfig['2k'][2]"
+							v-model.number="pageSizeConfig['2k'][2]"
 							type="number"
 							:controls="false"></el-input>
 					</el-col>
@@ -239,7 +239,7 @@
 					</el-col>
 					<el-col :span="4">
 						<el-input
-							v-model="pageSizeConfig['2k'][3]"
+							v-model.number="pageSizeConfig['2k'][3]"
 							type="number"
 							:controls="false"></el-input>
 					</el-col>
@@ -248,7 +248,7 @@
 				<el-form-item label="4k">
 					<el-col :span="4">
 						<el-input
-							v-model="pageSizeConfig['4k'][0]"
+							v-model.number="pageSizeConfig['4k'][0]"
 							type="number"
 							:controls="false"></el-input>
 					</el-col>
@@ -257,7 +257,7 @@
 					</el-col>
 					<el-col :span="4">
 						<el-input
-							v-model="pageSizeConfig['4k'][1]"
+							v-model.number="pageSizeConfig['4k'][1]"
 							type="number"
 							:controls="false"></el-input>
 					</el-col>
@@ -266,7 +266,7 @@
 					</el-col>
 					<el-col :span="4">
 						<el-input
-							v-model="pageSizeConfig['4k'][2]"
+							v-model.number="pageSizeConfig['4k'][2]"
 							type="number"
 							:controls="false"></el-input>
 					</el-col>
@@ -275,7 +275,7 @@
 					</el-col>
 					<el-col :span="4">
 						<el-input
-							v-model="pageSizeConfig['4k'][3]"
+							v-model.number="pageSizeConfig['4k'][3]"
 							type="number"
 							:controls="false"></el-input>
 					</el-col>
