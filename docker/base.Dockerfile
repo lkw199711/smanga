@@ -70,6 +70,7 @@ RUN set -ex && \
         php7-dom \
         php7-xml \
         php7-xmlwriter \
+        php7-xmlreader \
         php7-fileinfo \
         php7-tokenizer \
         php7-pdo \
@@ -78,6 +79,14 @@ RUN set -ex && \
         php7-openssl \
         php7-json \
         php7-session \
+        php7-pcntl \
+        php7-pgsql \
+        php7-pdo_mysql \
+        php7-pdo_pgsql \
+        php7-pdo_sqlite \
+        php7-posix \
+        php7-zlib \
+        php7-opcache \
     && \
     # Install composer
     curl -o /usr/local/bin/composer https://getcomposer.org/composer.phar && \
