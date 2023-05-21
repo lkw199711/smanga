@@ -88,12 +88,11 @@ onBeforeUnmount(() => {
 });
 
 onActivated(() => {
-	// const clear = route.params.clear;
-
-	// if (clear) {
-	// 	init();
-	// 	route.params.clear = '';
-	// }
+	const clear = route.params.clear;
+	if (clear) {
+		init();
+		route.params.clear = '';
+	}
 });
 
 function go_browse(item: any) {
@@ -142,9 +141,7 @@ async function page_change(
 	pageC = 1,
 	pageSize: number = defaultPageSize.value
 ) {
-	if (page.value) {
-		page.value = pageC;
-	}
+	page.value = pageC;
 
 	const start = (page.value - 1) * pageSize;
 	const res = await get_chapter(

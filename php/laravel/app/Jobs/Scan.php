@@ -3,7 +3,7 @@
  * @Author: error: error: git config user.name & please set dead value or install git && error: git config user.email & please set dead value or install git & please set dead value or install git
  * @Date: 2023-05-16 23:33:11
  * @LastEditors: error: error: git config user.name & please set dead value or install git && error: git config user.email & please set dead value or install git & please set dead value or install git
- * @LastEditTime: 2023-05-19 01:12:46
+ * @LastEditTime: 2023-05-21 11:55:16
  * @FilePath: /php/laravel/app/Jobs/Scan.php
  */
 
@@ -124,7 +124,7 @@ class Scan implements ShouldQueue
                 $mangaInfo = MangaSql::add($mangaData);
                 
                 if($mangaInfo['code']==1){
-                    echo "error: 漫画 \"{$value['name']}\" 插入失败,请查询是否重复";
+                    echo "error: 漫画 \"{$value['name']}\" 插入失败,请查询是否重复。{$mangaInfo['eMsg']}";
                     continue;
                 }
                 
@@ -141,14 +141,14 @@ class Scan implements ShouldQueue
 
                 ChapterSql::add($chapterData);
             } else {
-                $chapterList = self::get_chapter_list($path);
+                $chapterList = self::get_chapter_list($value['path']);
                 // 普通结构
                 $mangaData['chaptercount'] = count($chapterList);
                 // 插入漫画
                 $mangaInfo = MangaSql::add($mangaData);
 
-                if(!$mangaInfo['code']==1){
-                    echo "error: 漫画 \"{$value['name']}\" 插入失败,请查询是否重复";
+                if($mangaInfo['code']==1){
+                    echo "error: 漫画 \"{$value['name']}\" 插入失败,请查询是否重复。{$mangaInfo['eMsg']}";
                     continue;
                 }
 

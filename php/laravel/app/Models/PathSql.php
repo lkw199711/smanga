@@ -3,7 +3,7 @@
  * @Author: error: error: git config user.name & please set dead value or install git && error: git config user.email & please set dead value or install git & please set dead value or install git
  * @Date: 2023-05-13 20:17:40
  * @LastEditors: error: error: git config user.name & please set dead value or install git && error: git config user.email & please set dead value or install git & please set dead value or install git
- * @LastEditTime: 2023-05-18 01:18:49
+ * @LastEditTime: 2023-05-21 11:17:02
  * @FilePath: /php/laravel/app/Models/PathSql.php
  */
 
@@ -72,7 +72,7 @@ class PathSql extends Model
     public static function add($data)
     {
         try {
-            return self::create($data);
+            return ['code' => 0, 'message' => '新增成功', 'info' => self::create($data)];
         } catch (\Exception $e) {
             return ['code' => 1, 'message' => '系统错误', 'eMsg' => $e->getMessage()];
         }

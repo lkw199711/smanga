@@ -3,7 +3,7 @@
  * @Author: error: error: git config user.name & please set dead value or install git && error: git config user.email & please set dead value or install git & please set dead value or install git
  * @Date: 2023-05-13 20:17:40
  * @LastEditors: error: error: git config user.name & please set dead value or install git && error: git config user.email & please set dead value or install git & please set dead value or install git
- * @LastEditTime: 2023-05-17 22:17:58
+ * @LastEditTime: 2023-05-21 11:18:10
  * @FilePath: /php/laravel/app/Http/Controllers/Path.php
  */
 
@@ -62,9 +62,16 @@ class Path extends Controller
             return ['code' => 1, 'message' => '路径已存在,请勿重复添加', 'status' => 'path add filed'];
         }
         // 获取pathId
-        $pathInfo = PathSql::add(['mediaId' => $mediaId, 'path' => $path]);
+        $sqlRes = PathSql::add(['mediaId' => $mediaId, 'path' => $path]);
+        
+        if ($sqlRes['code'] == 1) {
+            return $sqlRes;
+        }
+
+        $pathInfo = $sqlRes['info'];
+        
         // 添加扫描任务
-        Scan::dispatch($pathInfo->pathId);
+        Scan::dispatch($pathInfo->pathId)->onQueue('scan');
 
         return ['code' => 0, 'message' => '新增成功', 'status' => 'path add success'];
     }

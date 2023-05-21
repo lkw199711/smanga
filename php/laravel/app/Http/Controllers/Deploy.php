@@ -84,7 +84,7 @@ class Deploy extends Controller
         $sqlUserName = Utils::config_read('sql', 'userName');
         $sqlPassWord = Utils::config_read('sql', 'passWord');
         $database = Utils::config_read('sql', 'database');
-        if(!$database) $database = 'smanga';
+        if (!$database) $database = 'smanga';
         $port = Utils::config_read('sql', 'port');
 
         $link = @mysqli_connect($ip, $sqlUserName, $sqlPassWord, $database, $port)
@@ -256,6 +256,35 @@ class Deploy extends Controller
                     PRIMARY KEY (`versionId`) USING BTREE,
                     UNIQUE INDEX `version`(`version`) USING BTREE);
             ");
+            
+            // 生成任务队列表
+            $link->query("
+                CREATE TABLE IF NOT EXISTS `failed_jobs` (
+                    `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+                    `uuid` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+                    `connection` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+                    `queue` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+                    `payload` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+                    `exception` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+                    `failed_at` timestamp(0) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                    PRIMARY KEY (`id`) USING BTREE,
+                    UNIQUE INDEX `failed_jobs_uuid_unique`(`uuid`) USING BTREE
+                ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
+            ");
+
+            $link->query("
+                CREATE TABLE IF NOT EXISTS `jobs` (
+                    `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+                    `queue` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+                    `payload` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+                    `attempts` tinyint(3) UNSIGNED NOT NULL,
+                    `reserved_at` int(10) UNSIGNED NULL DEFAULT NULL,
+                    `available_at` int(10) UNSIGNED NOT NULL,
+                    `created_at` int(10) UNSIGNED NOT NULL,
+                    PRIMARY KEY (`id`) USING BTREE,
+                    INDEX `jobs_queue_index`(`queue`) USING BTREE
+                    ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
+            ");
 
             // 插入smanga的用户名密码
             $link->query("INSERT INTO `user` VALUES (1, 'smanga', 'f7f1fe7186209906a97756ff912bb644', NULL, NULL, NULL);");
@@ -265,10 +294,6 @@ class Deploy extends Controller
                 $passMd5 = md5($passWord);
                 $link->query("INSERT INTO `user` VALUES (1, $userName, $passMd5, NULL, NULL, NULL);");
             }
-
-            // 生成任务队列表
-            Artisan::call('queue:table');
-            Artisan::call('migrate');
         }
 
         // 314
@@ -374,7 +399,7 @@ class Deploy extends Controller
 
         // 323
         if (array_search('3.2.3', $vers) === false) {
-            // 创建个人设置表
+            // 创建个人收藏表
             $link->query("
                 CREATE TABLE IF NOT EXISTS `collect` (
                     `collectId` int(0) NOT NULL AUTO_INCREMENT COMMENT '收藏id',
