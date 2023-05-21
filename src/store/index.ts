@@ -1,3 +1,10 @@
+/*
+ * @Author: lkw199711 lkw199711@163.com
+ * @Date: 2023-03-17 20:18:30
+ * @LastEditors: lkw199711 lkw199711@163.com
+ * @LastEditTime: 2023-05-21 14:13:01
+ * @FilePath: \smanga\src\store\index.ts
+ */
 import {createStore} from 'vuex';
 import {reactive} from 'vue';
 import {GlobalData} from '@/store/type';
@@ -59,8 +66,8 @@ export const config = reactive({
 });
 
 export const power = reactive({
-	editUser: editUser === '1',
-	editMedia: editMedia === '1',
+	editUser: editUser == '1',
+	editMedia: editMedia == '1',
 });
 
 /**
@@ -73,7 +80,7 @@ export const userConfig = reactive({
 	// 主题皮肤
 	theme: 'grey',
 	// 默认排序规则
-	order: 'name',
+	order: 'id',
 	// 翻页按钮调转
 	pageTurningReverse: false,
 	// 阅读操作面板 顶部与底部尺寸
@@ -91,7 +98,7 @@ export const pageSizeConfig = reactive({
 	mini: [9, 12, 15, 18, 21],
 	small: [12, 18, 32, 38, 44],
 	middle: [12, 18, 32, 38, 44],
-	large: [8, 16, 32, 40, 48],
+	large: [8, 16, 32, 40, 48] as number[],
 	'2k': [27, 36, 45, 54, 63],
 	'4k': [32, 40, 48, 54, 62],
 });

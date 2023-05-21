@@ -19,7 +19,7 @@ import {config, pageSizeConfig, userConfig} from '@/store';
 import {useRoute, useRouter} from 'vue-router';
 import {ElConfigProvider, ElMessage, ElMessageBox} from 'element-plus';
 import languages from '@/store/language';
-import {computed, onMounted} from 'vue';
+import {computed, onMounted, onBeforeMount} from 'vue';
 import {useI18n} from 'vue-i18n';
 import {set_theme} from '@/style/theme';
 import {get_user_config} from './api/account';
@@ -39,12 +39,11 @@ const elLocale = computed(() => {
 });
 
 // 生命周期
-onMounted(async () => {
+onBeforeMount(async () => {
 	// 设置安卓环境
 	if (window.javaObj) {
 		config.android = true;
 	}
-	await router.isReady();
 
 	// 获取用户设置
 	const res = await get_setting();
@@ -53,7 +52,6 @@ onMounted(async () => {
 
 	// 获取书签列表
 	set_bookmark();
-	
 });
 
 // 设置屏幕尺寸
@@ -112,9 +110,11 @@ async function get_setting() {
 	if (res.data.code === 1) {
 		switch (res.data.state) {
 			case 'first-deploy':
+				await router.isReady();
 				router.push('/init');
 				break;
 			case 'user-error':
+				await router.isReady();
 				router.push('/login');
 				break;
 			default:

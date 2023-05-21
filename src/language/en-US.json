@@ -272,10 +272,17 @@
     "magenta": "magenta"
   },
   "sortOrder": {
+    "id": "id",
+    "idDesc": "id-倒序",
     "name": "name",
     "nameDesc": "name-desc",
     "time": "time",
     "timeDesc": "time-desc"
   },
-  "readModel": "readModel"
+  "readModel": "readModel",
+  "history": {
+    "confirm": {
+      "text": "Are you sure to delete this record?"
+    }
+  }
 }

@@ -6,10 +6,10 @@ import {ajax} from "./index";
  * @param recordStart
  * @param pageSize
  */
-export function get_manga(mediaId: number, recordStart: number, pageSize: number,order='') {
+export function get_manga(mediaId: number, page: number, pageSize: number,order='') {
     return ajax({
-			url: "php/manga/get.php",
-			data: { mediaId, recordStart, pageSize, order },
+			url: "manga/get",
+			data: { mediaId, page, pageSize, order },
 		});
 }
 
@@ -19,7 +19,7 @@ export function get_manga(mediaId: number, recordStart: number, pageSize: number
  */
 export function update_manga(data: any) {
     return ajax({
-        url: 'php/manga/update.php',
+        url: 'manga/update',
         data
     })
 }
@@ -31,7 +31,7 @@ export function update_manga(data: any) {
  */
 export function delete_manga(mangaId: number, deleteFile = false) {
     return ajax({
-        url: 'php/manga/delete.php',
+        url: 'manga/delete',
         data: {mangaId, deleteFile}
     })
 }

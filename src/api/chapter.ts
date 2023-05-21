@@ -1,3 +1,10 @@
+/*
+ * @Author: lkw199711 lkw199711@163.com
+ * @Date: 2023-03-17 20:18:30
+ * @LastEditors: lkw199711 lkw199711@163.com
+ * @LastEditTime: 2023-05-15 23:39:21
+ * @FilePath: \smanga\src\api\chapter.ts
+ */
 import {ajax} from './index';
 
 /**
@@ -8,13 +15,13 @@ import {ajax} from './index';
  */
 export function get_chapter(
 	mangaId: number,
-	recordStart: number | undefined = undefined,
+	page: number | undefined = undefined,
 	pageSize: number | undefined = undefined,
 	order = ''
 ) {
 	return ajax({
-		url: 'php/chapter/get.php',
-		data: {mangaId, recordStart, pageSize, order},
+		url: 'chapter/get',
+		data: {mangaId, page, pageSize, order},
 	});
 }
 
@@ -24,7 +31,7 @@ export function get_chapter(
  */
 export function update_chapter(data: any) {
 	return ajax({
-		url: 'php/chapter/update.php',
+		url: 'chapter/update',
 		data,
 	});
 }
@@ -36,7 +43,7 @@ export function update_chapter(data: any) {
  */
 export function delete_chapter(chapterId: any, deleteFile = false) {
 	return ajax({
-		url: 'php/chapter/delete.php',
+		url: 'chapter/delete',
 		data: {chapterId, deleteFile},
 	});
 }

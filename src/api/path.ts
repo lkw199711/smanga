@@ -1,3 +1,10 @@
+/*
+ * @Author: lkw199711 lkw199711@163.com
+ * @Date: 2023-03-17 20:18:30
+ * @LastEditors: lkw199711 lkw199711@163.com
+ * @LastEditTime: 2023-05-17 21:36:43
+ * @FilePath: \smanga\src\api\path.ts
+ */
 import {ajax} from "./index";
 
 /**
@@ -8,7 +15,7 @@ import {ajax} from "./index";
  */
 export function get_path(mediaId: number, recordStart: number, pageSize: number) {
     return ajax({
-        url: 'php/path/get.php',
+        url: 'path/get',
         data: {mediaId, recordStart, pageSize}
     })
 }
@@ -21,7 +28,7 @@ export function get_path(mediaId: number, recordStart: number, pageSize: number)
  */
 export function rescan_path(mediaId: any, path: any, pathId: any) {
     return ajax({
-        url: 'php/path/rescan.php',
+        url: 'path/rescan',
         data: {mediaId, path, pathId}
     })
 }
@@ -34,7 +41,7 @@ export function rescan_path(mediaId: any, path: any, pathId: any) {
  */
 export function scan_path(mediaId: any, path: any, pathId: any){
     return ajax({
-        url: 'php/path/scan.php',
+        url: 'path/scan',
         data: {mediaId, path, pathId}
     })
 }
@@ -45,7 +52,7 @@ export function scan_path(mediaId: any, path: any, pathId: any){
  */
 export function delete_path(pathId: any) {
     return ajax({
-        url: 'php/path/delete.php',
+        url: 'path/delete',
         data: {pathId}
     })
 }
@@ -57,7 +64,7 @@ export function delete_path(pathId: any) {
  */
 export function add_path(mediaId: any, path: any) {
     return ajax({
-        url: 'php/path/add.php',
+        url: 'path/add',
         data: {
             mediaId, path
         }

@@ -73,8 +73,8 @@ export default defineComponent({
 				Cookies.set('userId', userInfo.userId);
 				Cookies.set('editMedia', userInfo.editMedia);
 				Cookies.set('editUser', userInfo.editUser);
-				power.editMedia = userInfo.editMedia === '1';
-				power.editUser = userInfo.editUser === '1';
+				power.editMedia = userInfo.editMedia == 1;
+				power.editUser = userInfo.editUser == 1;
 
 				await this.$router.push('media-list');
 			}

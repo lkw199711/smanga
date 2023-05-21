@@ -10,6 +10,9 @@
 		</p>
 
 		<el-form :model="form" :inline="true">
+			<el-form-item label="database:">
+				<el-input v-model="form.database" style="width: 28rem" />
+			</el-form-item>
 			<el-form-item label="ip:">
 				<el-input v-model="form.ip" style="width: 16rem" />
 			</el-form-item>
@@ -36,12 +39,12 @@ import {reactive, onMounted, defineProps, defineEmits} from 'vue';
 import {database_check, database_set, database_get} from '@/api/login';
 import {ElMessage} from 'element-plus';
 
-const props = defineProps(['firstLoad']);
 const emit = defineEmits(['update']);
 
 // do not use same name with ref
 const form = reactive({
 	ip: '127.0.0.1',
+	database: 'smanga',
 	port: '3306',
 	userName: 'smanga',
 	passWord: 'smanga',
@@ -53,9 +56,7 @@ onMounted(async () => {
 
 	Object.assign(form, data);
 
-	if (props.firstLoad) {
-		await check();
-	}
+	await check();
 });
 
 async function check() {

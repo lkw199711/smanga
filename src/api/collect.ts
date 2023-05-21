@@ -1,3 +1,11 @@
+/*
+ * @Author: lkw199711 lkw199711@163.com
+ * @Date: 2023-05-03 11:35:44
+ * @LastEditors: lkw199711 lkw199711@163.com
+ * @LastEditTime: 2023-05-14 01:55:19
+ * @FilePath: \smanga\src\api\collect.ts
+ * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+ */
 import {ajax} from './index';
 
 /**
@@ -8,13 +16,13 @@ import {ajax} from './index';
  */
 export function get_collect(
 	collectType: string,
-	recordStart: number,
+	page: number,
 	pageSize: number,
 	order: string
 ) {
 	return ajax({
-		url: 'php/collect/get.php',
-		data: {collectType, recordStart, pageSize, order},
+		url: 'collect/get',
+		data: {collectType, page, pageSize, order},
 	});
 }
 
@@ -24,33 +32,21 @@ export function get_collect(
  */
 export function add_collect(data: any) {
 	return ajax({
-		url: 'php/collect/add.php',
+		url: 'collect/add',
 		data,
-	});
-}
-
-/**
- * 删除章节记录
- * @param chapterId
- * @param deleteFile
- */
-export function delete_chapter(chapterId: any, deleteFile = false) {
-	return ajax({
-		url: 'php/collect/delete.php',
-		data: {chapterId, deleteFile},
 	});
 }
 
 export function is_collect(collectType: string, targetId: number) {
 	return ajax({
-		url: 'php/collect/is-collect.php',
+		url: 'collect/is-collect',
 		data: {collectType, targetId},
 	});
 }
 
 export function remove_collect(collectType: string, targetId: number) {
 	return ajax({
-		url: 'php/collect/remove-collect.php',
+		url: 'collect/remove',
 		data: {collectType, targetId},
 	});
 }

@@ -88,12 +88,11 @@ onBeforeUnmount(() => {
 });
 
 onActivated(() => {
-	// const clear = route.params.clear;
-
-	// if (clear) {
-	// 	init();
-	// 	route.params.clear = '';
-	// }
+	const clear = route.params.clear;
+	if (clear) {
+		init();
+		route.params.clear = '';
+	}
 });
 
 function go_browse(item: any) {
@@ -142,9 +141,7 @@ async function page_change(
 	pageC = 1,
 	pageSize: number = defaultPageSize.value
 ) {
-	if (page.value) {
-		page.value = pageC;
-	}
+	page.value = pageC;
 
 	const start = (page.value - 1) * pageSize;
 	const res = await get_chapter(
@@ -153,8 +150,8 @@ async function page_change(
 		pageSize,
 		userConfig.order
 	);
-	list.value = res.data.list;
-	count.value = res.data.count;
+	list.value = res.data.list.data;
+	count.value = res.data.list.total;
 
 	// 为章节请求海报图片
 	get_poster(list.value, 'chapterAwait');
@@ -165,7 +162,7 @@ async function page_change(
  */
 async function load_chapter() {
 	const res = await get_chapter(mangaId.value);
-	global_set_json('chapterList', res.data.list);
+	global_set_json('chapterList', res.data.list.data);
 }
 
 function init() {
