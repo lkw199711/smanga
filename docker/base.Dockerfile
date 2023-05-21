@@ -30,7 +30,9 @@ RUN set -ex && \
         p7zip \
         procps \
         shadow \
+        zip \
         tzdata \
+        unzip \
         xz \
     && \
     # Install build packages
