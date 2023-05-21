@@ -16,13 +16,13 @@ COPY --from=crazymax/alpine-s6-dist:3.15 / /
 RUN set -ex && \
     apk add --no-cache \
         bash \
-        curl \
         ca-certificates \
         coreutils \
+        curl \
         jq \
         netcat-openbsd \
-        procps \
         p7zip \
+        procps \
         shadow \
         tzdata \
         xz \
@@ -46,47 +46,46 @@ RUN set -ex && \
     cd /tmp/unrar && \
     make && \
     install -v -m755 unrar /usr/local/bin && \
-    # Install nginx
+    # Install nginx php7
     apk add --no-cache \
-        pcre \
         nginx \
-    && \
-    # Install php7
-    apk add --no-cache \
+        pcre \
         php7 \
+        php7-bcmath \
         php7-common \
-        php7-fpm \
-        php7-json \
-        php7-pecl-imagick \
+        php7-ctype \
+        php7-curl \
         php7-dev \
-        php7-xml \
-        php7-zip \
+        php7-dom \
+        php7-fileinfo \
+        php7-fpm \
+        php7-gettext \
+        php7-iconv \
+        php7-json \
+        php7-mbstring \
         php7-mysqli \
         php7-mysqlnd \
-        php7-phar \
-        php7-iconv \
-        php7-mbstring \
-        php7-curl \
-        php7-dom \
-        php7-xml \
-        php7-xmlwriter \
-        php7-xmlreader \
-        php7-fileinfo \
-        php7-tokenizer \
-        php7-pdo \
-        php7-bcmath \
-        php7-ctype \
+        php7-opcache \
         php7-openssl \
-        php7-json \
-        php7-session \
         php7-pcntl \
-        php7-pgsql \
+        php7-pecl-imagick \
+        php7-pdo \
         php7-pdo_mysql \
         php7-pdo_pgsql \
         php7-pdo_sqlite \
+        php7-phar \
+        php7-pgsql \
         php7-posix \
+        php7-redis \
+        php7-session \
+        php7-simplexml \
+        php7-sockets \
+        php7-tokenizer \
+        php7-xml \
+        php7-xmlreader \
+        php7-xmlwriter \
+        php7-zip \
         php7-zlib \
-        php7-opcache \
     && \
     # Install composer
     curl -o /usr/local/bin/composer https://getcomposer.org/composer.phar && \
@@ -116,6 +115,6 @@ RUN set -ex && \
         /usr/share/php7 \
         /tmp/*
 
-COPY --chmod=755 ./docker/rootfs_base /
+COPY --chmod=755 ./rootfs_base /
 
 ENTRYPOINT [ "/init" ]
