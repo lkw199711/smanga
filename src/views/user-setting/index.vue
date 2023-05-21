@@ -339,7 +339,7 @@ const {locale} = useI18n();
 const form = ref({removeFirst: 0, range1: 30});
 
 // 排序方式
-const sortOrder = ['name', 'nameDesc', 'time', 'timeDesc'];
+const sortOrder = ['id', 'idDesc', 'name', 'nameDesc', 'time', 'timeDesc'];
 
 function language_change(val: string) {
 	locale.value = val;

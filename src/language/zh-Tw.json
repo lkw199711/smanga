@@ -272,6 +272,8 @@
     "magenta": "洋紅"
   },
   "sortOrder": {
+    "id": "id",
+    "idDesc": "id-倒序",
     "name": "名稱",
     "nameDesc": "名稱-倒序",
     "time": "入庫時間",

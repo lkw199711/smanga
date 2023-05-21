@@ -1,3 +1,10 @@
+/*
+ * @Author: lkw199711 lkw199711@163.com
+ * @Date: 2023-03-17 20:18:30
+ * @LastEditors: lkw199711 lkw199711@163.com
+ * @LastEditTime: 2023-05-21 14:13:01
+ * @FilePath: \smanga\src\store\index.ts
+ */
 import {createStore} from 'vuex';
 import {reactive} from 'vue';
 import {GlobalData} from '@/store/type';
@@ -73,7 +80,7 @@ export const userConfig = reactive({
 	// 主题皮肤
 	theme: 'grey',
 	// 默认排序规则
-	order: 'name',
+	order: 'id',
 	// 翻页按钮调转
 	pageTurningReverse: false,
 	// 阅读操作面板 顶部与底部尺寸

@@ -39,7 +39,10 @@
 		<!--右侧菜单-->
 		<div class="right-option">
 			<!-- 简化版搜索 -->
-			<div class="search-small" @click="router.push('/search')" v-show="layoutLimit('miniSearch')">
+			<div
+				class="search-small"
+				@click="router.push('/search')"
+				v-show="layoutLimit('miniSearch')">
 				<i class="iconfont icon-sousuo" @click="switch_view_type" />
 			</div>
 
@@ -107,7 +110,7 @@
 </template>
 
 <script lang="ts" setup>
-import {config,userConfig} from '@/store';
+import {config, userConfig} from '@/store';
 import languages from '@/store/language';
 import theme from '@/store/theme';
 import {computed, ref} from 'vue';
@@ -124,7 +127,7 @@ const searchText = ref('');
 const searchType = ref('manga');
 
 // 排序方式
-const sortOrder = ['name', 'nameDesc', 'time', 'timeDesc'];
+const sortOrder = ['id', 'idDesc', 'name', 'nameDesc', 'time', 'timeDesc'];
 
 // 视图类型
 const viewClass = computed(() => {
@@ -358,10 +361,10 @@ function switch_view_type() {
 
 @media only screen and (max-width: 767px) {
 	.theme {
-		margin-right: .8rem;
+		margin-right: 0.8rem;
 	}
 	.language {
-		margin-right: .8rem;
+		margin-right: 0.8rem;
 	}
 }
 </style>
