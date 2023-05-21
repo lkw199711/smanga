@@ -120,6 +120,6 @@ RUN set -ex && \
         /usr/share/php7 \
         /tmp/*
 
-COPY --chmod=755 ./rootfs_base /
+COPY --chmod=755 ./docker/rootfs_base /
 
 ENTRYPOINT [ "/init" ]
