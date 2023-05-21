@@ -1,8 +1,13 @@
 # syntax=docker/dockerfile:1.4
 
-FROM alpine:3.15
+ARG ALPINE_VERSION=3.15
+
+FROM crazymax/alpine-s6-dist:${ALPINE_VERSION} AS S6
+
+FROM alpine:${ALPINE_VERSION}
 
 ARG UNRAR_VERSION=6.1.7
+ARG COMPOSER_VERSION=2.5.5
 
 ENV S6_SERVICES_GRACETIME=30000 \
     S6_KILL_GRACETIME=60000 \
@@ -11,7 +16,7 @@ ENV S6_SERVICES_GRACETIME=30000 \
     LANG=C.UTF-8 \
     PS1="\[\e[32m\][\[\e[m\]\[\e[36m\]\u \[\e[m\]\[\e[37m\]@ \[\e[m\]\[\e[34m\]\h\[\e[m\]\[\e[32m\]]\[\e[m\] \[\e[37;35m\]in\[\e[m\] \[\e[33m\]\w\[\e[m\] \[\e[32m\][\[\e[m\]\[\e[37m\]\d\[\e[m\] \[\e[m\]\[\e[37m\]\t\[\e[m\]\[\e[32m\]]\[\e[m\] \n\[\e[1;31m\]$ \[\e[0m\]"
 
-COPY --from=crazymax/alpine-s6-dist:3.15 / /
+COPY --from=S6 / /
 
 RUN set -ex && \
     apk add --no-cache \
@@ -88,8 +93,8 @@ RUN set -ex && \
         php7-zlib \
     && \
     # Install composer
-    curl -o /usr/local/bin/composer https://getcomposer.org/composer.phar && \
-    chmod +x /usr/local/bin/composer && \
+    curl -o /usr/bin/composer https://getcomposer.org/download/${COMPOSER_VERSION}/composer.phar && \
+    chmod +x /usr/bin/composer && \
     # Add user
     addgroup -S smanga -g 911 && \
     adduser -S smanga -G smanga -h /app -u 911 -s /bin/bash && \
