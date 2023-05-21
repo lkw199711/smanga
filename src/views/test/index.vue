@@ -3,6 +3,8 @@
 		<h1>test</h1>
 		<el-button @click="do_test">测试</el-button>
 		<el-button @click="test_laravel">测试laravel</el-button>
+		<el-button @click="websocket_send">发送消息</el-button>
+		<el-button @click="websocket_close">关闭连接</el-button>
 		<el-drawer
 			v-model="drawer"
 			title="I am the title"
@@ -37,7 +39,7 @@
 <script lang="ts" setup>
 import {defineComponent} from 'vue';
 import {testAxios} from '@/api/test';
-import {ref} from 'vue';
+import {ref, onMounted, onBeforeUnmount} from 'vue';
 import {ElMessageBox} from 'element-plus';
 import {ajax} from '@/api';
 import {Cookies} from '@/utils';
@@ -55,6 +57,11 @@ const handleClose = (done: () => void) => {
 			// catch error
 		});
 };
+
+onMounted(() => {});
+
+onBeforeUnmount(() => {});
+
 function cancelClick() {
 	drawer2.value = false;
 }

@@ -3,7 +3,7 @@
  * @Author: error: error: git config user.name & please set dead value or install git && error: git config user.email & please set dead value or install git & please set dead value or install git
  * @Date: 2023-05-18 01:56:35
  * @LastEditors: error: error: git config user.name & please set dead value or install git && error: git config user.email & please set dead value or install git & please set dead value or install git
- * @LastEditTime: 2023-05-19 21:18:23
+ * @LastEditTime: 2023-05-22 00:00:52
  * @FilePath: /php/laravel/app/Jobs/Compress.php
  */
 
@@ -111,18 +111,19 @@ class Compress implements ShouldQueue
 
         if ($poster) {
             copy($poster, $copyPoster);
+
+            if (!$chapterInfo->mangaCover) {
+                MangaSql::manga_update($chapterInfo->mangaId, ['mangaCover' => $copyPoster]);
+            }
+    
+            if (!$chapterInfo->chapterCover) {
+                ChapterSql::chapter_update($chapterInfo->chapterId, ['chapterCover' => $copyPoster]);
+            }
         } else {
             echo "error 漫画 {$chapterInfo->chapteName} 封面获取失败";
-            return false;
         }
 
-        if (!$chapterInfo->mangaCover) {
-            MangaSql::manga_update($chapterInfo->mangaId, ['mangaCover' => $copyPoster]);
-        }
-
-        if (!$chapterInfo->chapterCover) {
-            ChapterSql::chapter_update($chapterInfo->chapterId, ['chapterCover' => $copyPoster]);
-        }
+        Utils::socket_send_array($this->userId, 0, '解压完成', $chapterInfo->mangaName . ':\n\r' . $chapterInfo->chapterName);
     }
     /**
      * @description: md5加密生成缓存路径

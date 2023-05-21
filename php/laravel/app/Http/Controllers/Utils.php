@@ -3,12 +3,12 @@
  * @Author: error: error: git config user.name & please set dead value or install git && error: git config user.email & please set dead value or install git & please set dead value or install git
  * @Date: 2023-05-17 23:35:49
  * @LastEditors: error: error: git config user.name & please set dead value or install git && error: git config user.email & please set dead value or install git & please set dead value or install git
- * @LastEditTime: 2023-05-20 21:39:32
+ * @LastEditTime: 2023-05-21 23:49:56
  * @FilePath: /php/laravel/app/Http/Controllers/Utils.php
  */
 
 namespace App\Http\Controllers;
-
+use App\Models\SocketSql;
 use Illuminate\Support\Facades\Storage;
 
 class Utils extends Controller
@@ -213,6 +213,32 @@ class Utils extends Controller
                 "$key=" . $value,
                 file_get_contents($path)
             ));
+        }
+    }
+    public static function socket_send($data)
+    {
+        $curl = curl_init();
+        curl_setopt($curl, CURLOPT_URL, "http://127.0.0.1:9501");
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($curl, CURLOPT_HEADER, 1);
+        curl_setopt($curl, CURLOPT_POST, 1);
+        curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
+        curl_exec($curl);
+        curl_close($curl);
+    }
+    public static function socket_send_array($userId, $code, $title, $message)
+    {
+        $socketRes = SocketSql::get_fd_by_user($userId);
+
+        $fds = $socketRes['fds'];
+        
+        foreach ($fds as $value) {
+            self::socket_send([
+                'fd' => $value,
+                'code' => $code,
+                'title' => $title,
+                'message' => $message
+            ]);
         }
     }
 }
