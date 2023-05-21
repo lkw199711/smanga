@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\UserSql;
 use App\Models\VersionSql;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
@@ -256,7 +257,7 @@ class Deploy extends Controller
                     PRIMARY KEY (`versionId`) USING BTREE,
                     UNIQUE INDEX `version`(`version`) USING BTREE);
             ");
-            
+
             // 生成任务队列表
             $link->query("
                 CREATE TABLE IF NOT EXISTS `failed_jobs` (
@@ -288,12 +289,14 @@ class Deploy extends Controller
 
             // 插入smanga的用户名密码
             $link->query("INSERT INTO `user` VALUES (1, 'smanga', 'f7f1fe7186209906a97756ff912bb644', NULL, NULL, NULL);");
+        }
 
-            // 插入自定义用户名密码
-            if ($userName && isset($passWord)) {
-                $passMd5 = md5($passWord);
-                $link->query("INSERT INTO `user` VALUES (1, $userName, $passMd5, NULL, NULL, NULL);");
-            }
+        // 插入自定义用户名密码
+        if ($userName) {
+            if(!$passWord) $passWord = '';
+            $passMd5 = md5($passWord);
+            UserSql::add(['userName' => $userName, 'passWord' => $passMd5]);
+            // $link->query("INSERT INTO `user` VALUES (1, $userName, $passMd5, NULL, NULL, NULL);");
         }
 
         // 314

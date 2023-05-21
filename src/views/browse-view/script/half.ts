@@ -133,7 +133,7 @@ export default defineComponent({
 				canvas.height = h;
                 canvas.width = w / 2;
                 
-				if (even) {
+				if (!even) {
 					context.drawImage(img, w / 2, 0, w, h, 0, 0, w, h);
 				} else {
 					context.drawImage(img, 0, 0, w, h, 0, 0, w, h);

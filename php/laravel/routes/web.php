@@ -43,7 +43,7 @@ Route::any('collect/is-collect', [App\Http\Controllers\Collect::class, 'is_colle
 // 用户
 Route::any('user/config/get', [App\Http\Controllers\Config::class, 'get']);
 Route::any('user/config/set', [App\Http\Controllers\Config::class, 'set']);
-Route::any('user/login', [App\Http\Controllers\User::class, 'login']);
+
 Route::any('user/get', [App\Http\Controllers\User::class, 'get']);
 Route::any('user/register', [App\Http\Controllers\User::class, 'add']);
 Route::any('user/update', [App\Http\Controllers\User::class, 'update']);

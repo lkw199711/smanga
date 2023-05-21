@@ -3,7 +3,7 @@
  * @Author: error: error: git config user.name & please set dead value or install git && error: git config user.email & please set dead value or install git & please set dead value or install git
  * @Date: 2023-05-19 22:11:32
  * @LastEditors: error: error: git config user.name & please set dead value or install git && error: git config user.email & please set dead value or install git & please set dead value or install git
- * @LastEditTime: 2023-05-21 12:03:09
+ * @LastEditTime: 2023-05-21 13:46:50
  * @FilePath: /php/laravel/routes/deploy.php
  */
 
@@ -14,6 +14,8 @@ Route::post('deploy/database-get', [App\Http\Controllers\Deploy::class, 'databas
 Route::post('deploy/database-set', [App\Http\Controllers\Deploy::class, 'database_set']);
 Route::post('deploy/database-init', [App\Http\Controllers\Deploy::class, 'database_init']);
 
+// 登录接口无验证
+Route::any('user/login', [App\Http\Controllers\User::class, 'login']);
 
 Route::any('info',  function(){
     return phpinfo();
