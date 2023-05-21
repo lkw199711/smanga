@@ -290,7 +290,7 @@ class Deploy extends Controller
             $link->query("INSERT INTO `user` VALUES (1, 'smanga', 'f7f1fe7186209906a97756ff912bb644', NULL, NULL, NULL);");
 
             // 插入自定义用户名密码
-            if ($userName && $passWord) {
+            if ($userName && isset($passWord)) {
                 $passMd5 = md5($passWord);
                 $link->query("INSERT INTO `user` VALUES (1, $userName, $passMd5, NULL, NULL, NULL);");
             }

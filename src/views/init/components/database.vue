@@ -39,7 +39,6 @@ import {reactive, onMounted, defineProps, defineEmits} from 'vue';
 import {database_check, database_set, database_get} from '@/api/login';
 import {ElMessage} from 'element-plus';
 
-const props = defineProps(['firstLoad']);
 const emit = defineEmits(['update']);
 
 // do not use same name with ref
@@ -57,9 +56,7 @@ onMounted(async () => {
 
 	Object.assign(form, data);
 
-	if (props.firstLoad) {
-		await check();
-	}
+	await check();
 });
 
 async function check() {
