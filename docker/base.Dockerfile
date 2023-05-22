@@ -76,6 +76,7 @@ RUN set -ex && \
         php7-opcache \
         php7-openssl \
         php7-pcntl \
+        php7-pear \
         php7-pecl-imagick \
         php7-pdo \
         php7-pdo_mysql \
@@ -95,6 +96,10 @@ RUN set -ex && \
         php7-zip \
         php7-zlib \
     && \
+    pecl channel-update pecl.php.net && \
+    # Install php7-swoole
+    echo yes | pecl install swoole-4.6.7 && \
+    echo "extension=swoole.so" > /etc/php7/conf.d/00_swoole.ini && \
     # Install composer
     curl -o /usr/bin/composer https://getcomposer.org/download/${COMPOSER_VERSION}/composer.phar && \
     chmod +x /usr/bin/composer && \
