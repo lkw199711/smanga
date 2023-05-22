@@ -3,7 +3,7 @@
  * @Author: error: error: git config user.name & please set dead value or install git && error: git config user.email & please set dead value or install git & please set dead value or install git
  * @Date: 2023-05-21 17:44:56
  * @LastEditors: error: error: git config user.name & please set dead value or install git && error: git config user.email & please set dead value or install git & please set dead value or install git
- * @LastEditTime: 2023-05-21 22:39:54
+ * @LastEditTime: 2023-05-22 20:57:44
  * @FilePath: /php/laravel/app/Console/Commands/Websocket.php
  */
 
@@ -119,7 +119,9 @@ class Websocket extends Command
      */
     public function message($ws, $frame)
     {
-
+        if (!$frame->data) {
+            return;
+        }
         SocketSql::socket_update($frame->fd, ['fd' => $frame->fd, 'userId' => $frame->data]);
 
         // $this->ws->push($frame->fd, $frame->data);

@@ -518,7 +518,44 @@ class Deploy extends Controller
             VersionSql::add([
                 'version' => '3.3.0',
                 'versionDescribe' => '使用laravel重构后端;裁剪模式支持阅读朝向设置;按名称排序按照数字排序方式;新增按id排序.',
-                'createTime' => '2023-5-12 22:51:22'
+                'createTime' => '2023-5-21 23:51:22'
+            ]);
+        }
+
+        // 330
+        if (array_search('3.3.0', $vers) === false) {
+            // 创建长连接表
+            $link->query("
+                CREATE TABLE IF NOT EXISTS `socket` (
+                    `socketId` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+                    `ip` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+                    `fd` int(11) NOT NULL,
+                    `userId` int(11) NULL DEFAULT NULL,
+                    `status` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+                    `createTime` datetime(0) NULL DEFAULT NULL,
+                    `updateTime` datetime(0) NULL DEFAULT NULL,
+                    PRIMARY KEY (`socketId`, `fd`) USING BTREE
+                    ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+            ");
+            
+            // 创建消息表
+            $link->query("
+                CREATE TABLE IF NOT EXISTS `notice` (
+                    `noticeId` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+                    `userId` int(11) NULL DEFAULT NULL,
+                    `code` int(1) NULL DEFAULT NULL,
+                    `message` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+                    `createTime` datetime(0) NULL DEFAULT NULL,
+                    `updateTime` datetime(0) NULL DEFAULT NULL,
+                    PRIMARY KEY (`noticeId`) USING BTREE
+                    ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+            ");
+            
+            // 新增3.3.1版本记录
+            VersionSql::add([
+                'version' => '3.3.1',
+                'versionDescribe' => '使用websocket进行消息通知.',
+                'createTime' => '2023-5-22 21:05:00'
             ]);
         }
 
@@ -527,7 +564,7 @@ class Deploy extends Controller
 
         if (is_file($installLock)) {
             // 记录版本 代表初始化结束
-            Utils::write_txt($versionFile, '3.3.0');
+            Utils::write_txt($versionFile, '3.3.1');
         }
 
         return [
