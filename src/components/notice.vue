@@ -2,7 +2,7 @@
  * @Author: lkw199711 lkw199711@163.com
  * @Date: 2023-05-21 22:52:41
  * @LastEditors: lkw199711 lkw199711@163.com
- * @LastEditTime: 2023-05-22 21:21:51
+ * @LastEditTime: 2023-05-22 22:27:55
  * @FilePath: \smanga\src\components\notice.vue
 -->
 <template>
@@ -20,7 +20,7 @@ let ws: any;
 const url =
 	process.env.NODE_ENV === 'development'
 		? 'ws://192.168.5.8:9501'
-		: 'ws://127.0.0.1/websocket';
+		: '/websocket';
 
 // userid变换重新告知
 watch(
