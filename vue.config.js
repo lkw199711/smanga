@@ -40,14 +40,6 @@ module.exports = {
                 pathRewrite: {
                     '^/cms': ''
                 }
-            },
-            '/ws': {
-                target: wsTarget,
-                changeOrigin: true,
-                ws: true,
-                pathRewrite: {
-                    '^/ws': ''
-                }
             }
         }
     },

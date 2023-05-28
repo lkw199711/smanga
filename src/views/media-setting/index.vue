@@ -105,6 +105,13 @@
             </el-radio-group>
           </el-form-item>
           <p class="note form-note">{{ $t('mediaManage.note.direction') }}</p>
+
+          <!--阅读字段-->
+          <p class="s-form-title">{{ $t('mediaManage.title.scan') }}</p>
+          <el-form-item :label="$t('mediaManage.form.autoScan')">
+            <el-switch v-model.number="form.autoScan" :active-value="1" :inactive-value="0"/>
+          </el-form-item>
+          <p class="note form-note">{{ $t('mediaManage.note.autoScan') }}</p>
         </el-form>
 
         <template v-slot:footer>

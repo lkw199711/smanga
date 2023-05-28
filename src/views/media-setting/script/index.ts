@@ -50,6 +50,7 @@ export default defineComponent({
 				directoryFormat: 0,
 				removeFirst: 0,
 				direction: 1,
+				autoScan: 0,
 			} as any,
 			formInit: {
 				mediaName: '',
@@ -60,6 +61,7 @@ export default defineComponent({
 				directoryFormat: 0,
 				removeFirst: 0,
 				direction: 1,
+				autoScan: 0,
 			},
 			pathCache: '',
 			pathArr: [] as any[],

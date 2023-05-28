@@ -84,7 +84,8 @@
       "browse": "defaultBrowse:",
       "directory": "directoryType:",
       "removeFirst": "removeFirst:",
-      "direction": "direction:"
+      "direction": "direction:",
+      "autoScan": "auto scan"
     },
     "note": {
       "name": "\"mediaName\": Required, cannot be blank",
@@ -92,7 +93,8 @@
       "browse": "\"defaultBrowse\": Select the default browsing method of comics in this media library. You can also adjust it through the top function menu of the browsing interface, but we still recommend that different types of comics be placed in different media libraries for easy management",
       "directory": "\"directoryType\": This option supports adding one more level of directory to the path. For example, you want to manage comics by year \"example/2022/manga/chapter/...\"",
       "removeFirst": "\"removeFirst\": In the \"double page mode\", by temporarily removing the first page in reading, you can combine the left and right pages of the cartoon into a whole picture by removing the even number of page numbers. Please change this item after getting familiar with the page numbers of the cartoon. You can also change this item temporarily through the function menu in the browsing interface.",
-      "direction": "\"direction\": In the \"double page mode\", change the display order of the first and second pictures so that the left and right pages of the cartoon can be combined into a whole picture. You can also change this item temporarily through the function menu in the browsing interface."
+      "direction": "\"direction\": In the \"double page mode\", change the display order of the first and second pictures so that the left and right pages of the cartoon can be combined into a whole picture. You can also change this item temporarily through the function menu in the browsing interface.",
+      "autoScan": "When the folder sending changes, comics and chapters will be automatically added or deleted. Enabling this option will greatly increase the pressure on the server. Please be careful when opening multi-path media libraries"
     },
     "place": {
       "name": "please enter mediaName",
@@ -116,7 +118,8 @@
       "text": "are you sure to delete this media?"
     },
     "title": {
-      "read": "read option"
+      "read": "read option",
+      "scan": "Scan Options"
     }
   },
   "path": {
