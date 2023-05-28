@@ -25,6 +25,7 @@ RUN set -ex && \
         ca-certificates \
         coreutils \
         curl \
+        inotify-tools \
         jq \
         netcat-openbsd \
         p7zip \
