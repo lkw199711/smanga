@@ -18,7 +18,7 @@ RUN rm -rf /rootfs/php/.git
 # Main program
 FROM ${SMANGA_BASE_NAME}/smanga-base:${SMANGA_BASE_VERSION}
 
-ENV PATH=${PATH}:/app/php/laravel \
+ENV PATH=${PATH}:/app/php \
     PUID=1000 \
     PGID=1000 \
     TZ=Asia/Shanghai \
