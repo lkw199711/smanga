@@ -63,7 +63,12 @@ export default defineComponent({
 				direction: 1,
 				autoScan: 0,
 			},
-			pathCache: '',
+			pathForm: {
+				path: '',
+				autoScan: 0,
+				include: '',
+				exclude: ''
+			},
 			pathArr: [] as any[],
 		};
 	},
@@ -256,16 +261,21 @@ export default defineComponent({
 		 * 添加路径信息到缓存
 		 */
 		async add_path_cache() {
-			const path: any = this.pathCache;
+			const path: any = this.pathForm.path;
 			const mediaId = this.form.mediaId;
 			if (!path) return;
 
-			const res = await add_path(mediaId, path);
+			const res = await add_path(mediaId, this.pathForm);
 
 			if (res.data.code === 0) {
-				this.pathCache = '';
+				// 重置表单
+				Object.assign(this.pathForm, {
+					path: '',
+					autoScan: 0,
+					include: '',
+					exclude: ''
+				});
 				this.load_path(mediaId);
-				this.pathCache = '';
 			}
 		},
 	},

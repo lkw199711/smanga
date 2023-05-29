@@ -130,10 +130,14 @@
     "createTime": "createTime",
     "form": {
       "add": "addPath:",
-      "path": "path:"
+      "path": "path:",
+      "include": "include",
+      "exclude": "exclude"
     },
     "place": {
-      "add": "please enter the path"
+      "add": "please enter the path",
+      "include": "Please enter a match",
+      "exclude": "Please enter an exclusion match"
     },
     "button": {
       "re": "reScan",
@@ -149,6 +153,9 @@
       "text1": "are you sure to delete this path? The associated manga and chapter also will be deleted!",
       "title2": "confirm reScan",
       "text2": "are you sure to reScan this path? The associated manga and chapter also will be cleared and rescanned to add!"
+    },
+    "note": {
+      "clude": "Include and exclude are the matching and exclusion rules. The scanned comics use the include matching path. If they are matched, they are added; if they are not matched, they are excluded; Exclude is the opposite, matching to exclude and not matching to add. When two values exist simultaneously, include takes precedence<br>\nBoth include and exclude are regular expression values. If you want to match multiple rules, please write them like this {0}"
     }
   },
   "mangaManage": {
