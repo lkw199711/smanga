@@ -2,4 +2,4 @@
 # shellcheck shell=bash
 
 exec s6-setuidgid smanga \
-    php7 /app/php/laravel/artisan queue:listen --queue=scan
+    php7 /app/php/artisan queue:listen --queue=scan
