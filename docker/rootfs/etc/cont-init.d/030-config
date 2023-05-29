@@ -3,7 +3,6 @@
 
 function 030_config {
 
-	# 旧配置情况下肯定会存在config.ini配置文件，所以这部不用管。
 	if [ ! -f ${SMANGA_CONFIG_INI} ]; then
 		cp /app/config/config.ini ${SMANGA_CONFIG_INI}
 		echo "Create ${SMANGA_CONFIG_INI}"
