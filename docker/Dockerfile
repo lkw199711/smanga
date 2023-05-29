@@ -5,13 +5,15 @@ ARG SMANGA_BASE_NAME
 
 # Build web
 FROM ${SMANGA_BASE_NAME}/smanga-base:${SMANGA_BASE_VERSION} AS Build
+RUN apk add git
 COPY --chmod=755 . /build
 RUN cp -r /build/dist /rootfs && \
-    cp -r /build/php /rootfs/php && \
     cp -r /build/file /rootfs/file && \
     cp -r /build/config /rootfs/config
-WORKDIR /rootfs/php/laravel
+WORKDIR /rootfs/php
+RUN git clone -b main https://github.com/lkw199711/smanga-php.git /rootfs/php
 RUN composer install --no-dev --prefer-dist
+RUN rm -rf /rootfs/php/.git
 
 # Main program
 FROM ${SMANGA_BASE_NAME}/smanga-base:${SMANGA_BASE_VERSION}
