@@ -8,6 +8,7 @@ FROM alpine:${ALPINE_VERSION}
 
 ARG UNRAR_VERSION=6.1.7
 ARG COMPOSER_VERSION=2.5.5
+ARG PHP7_SWOOLE_VERSION=4.6.7
 
 ENV S6_SERVICES_GRACETIME=30000 \
     S6_KILL_GRACETIME=60000 \
@@ -90,6 +91,10 @@ RUN set -ex && \
         php7-session \
         php7-simplexml \
         php7-sockets \
+        php7-sodium \
+        php7-sysvshm \
+        php7-sysvmsg \
+        php7-sysvsem \
         php7-tokenizer \
         php7-xml \
         php7-xmlreader \
@@ -99,7 +104,7 @@ RUN set -ex && \
     && \
     pecl channel-update pecl.php.net && \
     # Install php7-swoole
-    echo yes | pecl install swoole-4.6.7 && \
+    echo yes | pecl install swoole-${PHP7_SWOOLE_VERSION} && \
     echo "extension=swoole.so" > /etc/php7/conf.d/00_swoole.ini && \
     # Install composer
     curl -o /usr/bin/composer https://getcomposer.org/download/${COMPOSER_VERSION}/composer.phar && \

@@ -2,6 +2,9 @@ name: Build Smanga Alpha Docker
 
 on:
     workflow_dispatch:
+    push:
+      paths:
+        - .github/workflows/docker_alpha.yml
 
 env:
   BUILD_BASE: false

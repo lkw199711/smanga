@@ -16,7 +16,8 @@ RUN rm -rf /rootfs/php/.git
 
 FROM ${SMANGA_BASE_NAME}/smanga-base:${SMANGA_BASE_VERSION}
 
-ENV PATH=${PATH}:/app/php \
+ENV OUT_LOG_FILES="/logs/nginx_error.log" \
+    PATH=${PATH}:/app/php \
     PUID=1000 \
     PGID=1000 \
     UMASK=022 \

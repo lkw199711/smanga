@@ -2,4 +2,4 @@
 # shellcheck shell=bash
 
 exec s6-setuidgid root \
-    tail -f /logs/nginx_error.log
+    tail -f ${OUT_LOG_FILES}
