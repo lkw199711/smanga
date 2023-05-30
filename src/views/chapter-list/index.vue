@@ -143,10 +143,9 @@ async function page_change(
 ) {
 	page.value = pageC;
 
-	const start = (page.value - 1) * pageSize;
 	const res = await get_chapter(
 		mangaId.value,
-		start,
+		page.value,
 		pageSize,
 		userConfig.order
 	);
