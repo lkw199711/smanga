@@ -4,6 +4,7 @@
 function 090_fixuser {
 
     echo "Change owner to user smanga..."
+    echo "It may take a while"
 
     groupmod -o -g "${PGID}" smanga
     usermod -o -u "${PUID}" smanga
