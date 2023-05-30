@@ -3,8 +3,6 @@
 
 function 090_fixuser {
 
-    echo "Change owner to user smanga..."
-
     groupmod -o -g "${PGID}" smanga
     usermod -o -u "${PUID}" smanga
 
@@ -47,5 +45,6 @@ function 090_fixuser {
     chown smanga:smanga -R /run/php
 
 }
+echo -e "Change owner to user smanga...\nIt may take a while" | sed "s#^#cont-init: info: $(realpath $0): &#g"
 
 090_fixuser 2>&1 | sed "s#^#cont-init: info: $(realpath $0): &#g"
