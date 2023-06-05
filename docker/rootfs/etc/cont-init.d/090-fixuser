@@ -43,6 +43,8 @@ function 090_fixuser {
     chown smanga:smanga -R /var/lib/nginx /run/nginx /var/log/nginx
     # PHP
     chown smanga:smanga -R /run/php
+    # Supervisor
+    chown smanga:smanga -R /etc/auto-scan /run/supervisord
 
 }
 echo -e "Change owner to user smanga...\nIt may take a while" | sed "s#^#cont-init: info: $(realpath $0): &#g"
