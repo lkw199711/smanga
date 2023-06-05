@@ -31,7 +31,9 @@ RUN set -ex && \
         netcat-openbsd \
         p7zip \
         procps \
+        python3 \
         shadow \
+        supervisor \
         zip \
         tzdata \
         unzip \
@@ -116,16 +118,19 @@ RUN set -ex && \
     mkdir -p /logs && \
     touch /logs/nginx_access.log && \
     touch /logs/nginx_error.log && \
-    # PHP Nginx settings
+    # PHP nginx supervisord settings
     sed -i "s#short_open_tag = Off#short_open_tag = On#g" /etc/php7/php.ini && \
     sed -i "s#;open_basedir =#open_basedir = /#g" /etc/php7/php.ini && \
     sed -i "s#register_argc_argv = Off#register_argc_argv = On#g" /etc/php7/php.ini && \
     mkdir -p /run/php && \
     chown -R smanga:smanga /run/php && \
+    mkdir /etc/auto-scan /run/supervisord && \
+    chown smanga:smanga /etc/auto-scan /run/supervisord && \
     rm -rf \
         /etc/nginx/nginx.conf \
         /etc/nginx/http.d/* \
-        /etc/php7/php-fpm.d/www.conf && \
+        /etc/php7/php-fpm.d/www.conf \
+        /etc/supervisord.conf && \
     # Clear
     apk del --purge build-dependencies && \
     rm -rf \
