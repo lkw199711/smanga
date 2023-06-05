@@ -2,7 +2,7 @@
  * @Author: lkw199711 lkw199711@163.com
  * @Date: 2023-05-21 22:52:41
  * @LastEditors: lkw199711 lkw199711@163.com
- * @LastEditTime: 2023-05-23 03:55:00
+ * @LastEditTime: 2023-06-04 20:23:08
  * @FilePath: \smanga\src\components\notice.vue
 -->
 <template>
@@ -17,7 +17,7 @@ import {onMounted, onBeforeUnmount, watch} from 'vue';
 
 let ws: any;
 
-const localhost = 'ws://192.168.5.8:9501';
+const localhost = 'ws://192.168.5.4:8097/websocket';
 const network = 'ws://' + location.host + '/websocket';
 
 const url = process.env.NODE_ENV === 'development' ? localhost : network;

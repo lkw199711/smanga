@@ -161,7 +161,7 @@ async function page_change(
  */
 async function load_chapter() {
 	const res = await get_chapter(mangaId.value);
-	global_set_json('chapterList', res.data.list.data);
+	global_set_json('chapterList', res.data.list.data || res.data.list);
 }
 
 function init() {
