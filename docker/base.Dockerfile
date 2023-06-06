@@ -118,6 +118,11 @@ RUN set -ex && \
     mkdir -p /logs && \
     touch /logs/nginx_access.log && \
     touch /logs/nginx_error.log && \
+    touch \
+        /logs/smanga-compress.log \
+        /logs/smanga-websocket.log \
+        /logs/smanga-scan.log \
+        /logs/smanga-daemon.log && \
     # PHP nginx supervisord settings
     sed -i "s#short_open_tag = Off#short_open_tag = On#g" /etc/php7/php.ini && \
     sed -i "s#;open_basedir =#open_basedir = /#g" /etc/php7/php.ini && \
