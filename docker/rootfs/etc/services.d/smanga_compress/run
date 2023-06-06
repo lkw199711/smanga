@@ -1,5 +1,0 @@
-#!/usr/bin/with-contenv bash
-# shellcheck shell=bash
-
-exec s6-setuidgid smanga \
-    php7 /app/php/artisan queue:listen --queue=compress
