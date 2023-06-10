@@ -4,7 +4,7 @@ process.env.VUE_APP_VERSION = require('./package.json').version;
 
 const pxtorem = require('postcss-pxtorem');
 // 网络路径
-const network = 'http://192.168.5.4:8097';
+const network = 'http://smanga.mn2.cc';
 // 本地路径
 const localhost = 'http://127.0.0.1';
 
