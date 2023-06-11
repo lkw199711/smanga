@@ -2,7 +2,7 @@
  * @Author: lkw199711 lkw199711@163.com
  * @Date: 2023-03-17 20:18:30
  * @LastEditors: lkw199711 lkw199711@163.com
- * @LastEditTime: 2023-05-21 14:13:01
+ * @LastEditTime: 2023-05-22 21:19:17
  * @FilePath: \smanga\src\store\index.ts
  */
 import {createStore} from 'vuex';
@@ -66,6 +66,13 @@ export const config = reactive({
 });
 
 export const power = reactive({
+	editUser: editUser == '1',
+	editMedia: editMedia == '1',
+});
+
+export const userInfo = reactive({
+	userName: '',
+	userId: 0,
 	editUser: editUser == '1',
 	editMedia: editMedia == '1',
 });

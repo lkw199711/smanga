@@ -8,6 +8,7 @@ FROM alpine:${ALPINE_VERSION}
 
 ARG UNRAR_VERSION=6.1.7
 ARG COMPOSER_VERSION=2.5.5
+ARG PHP7_SWOOLE_VERSION=4.6.7
 
 ENV S6_SERVICES_GRACETIME=30000 \
     S6_KILL_GRACETIME=60000 \
@@ -30,7 +31,9 @@ RUN set -ex && \
         netcat-openbsd \
         p7zip \
         procps \
+        python3 \
         shadow \
+        supervisor \
         zip \
         tzdata \
         unzip \
@@ -77,6 +80,7 @@ RUN set -ex && \
         php7-opcache \
         php7-openssl \
         php7-pcntl \
+        php7-pear \
         php7-pecl-imagick \
         php7-pdo \
         php7-pdo_mysql \
@@ -89,6 +93,10 @@ RUN set -ex && \
         php7-session \
         php7-simplexml \
         php7-sockets \
+        php7-sodium \
+        php7-sysvshm \
+        php7-sysvmsg \
+        php7-sysvsem \
         php7-tokenizer \
         php7-xml \
         php7-xmlreader \
@@ -96,6 +104,10 @@ RUN set -ex && \
         php7-zip \
         php7-zlib \
     && \
+    pecl channel-update pecl.php.net && \
+    # Install php7-swoole
+    echo yes | pecl install swoole-${PHP7_SWOOLE_VERSION} && \
+    echo "extension=swoole.so" > /etc/php7/conf.d/00_swoole.ini && \
     # Install composer
     curl -o /usr/bin/composer https://getcomposer.org/download/${COMPOSER_VERSION}/composer.phar && \
     chmod +x /usr/bin/composer && \
@@ -106,16 +118,24 @@ RUN set -ex && \
     mkdir -p /logs && \
     touch /logs/nginx_access.log && \
     touch /logs/nginx_error.log && \
-    # PHP Nginx settings
+    touch \
+        /logs/smanga-compress.log \
+        /logs/smanga-websocket.log \
+        /logs/smanga-scan.log \
+        /logs/smanga-daemon.log && \
+    # PHP nginx supervisord settings
     sed -i "s#short_open_tag = Off#short_open_tag = On#g" /etc/php7/php.ini && \
     sed -i "s#;open_basedir =#open_basedir = /#g" /etc/php7/php.ini && \
     sed -i "s#register_argc_argv = Off#register_argc_argv = On#g" /etc/php7/php.ini && \
     mkdir -p /run/php && \
     chown -R smanga:smanga /run/php && \
+    mkdir /etc/auto-scan /run/supervisord && \
+    chown smanga:smanga /etc/auto-scan /run/supervisord && \
     rm -rf \
         /etc/nginx/nginx.conf \
         /etc/nginx/http.d/* \
-        /etc/php7/php-fpm.d/www.conf && \
+        /etc/php7/php-fpm.d/www.conf \
+        /etc/supervisord.conf && \
     # Clear
     apk del --purge build-dependencies && \
     rm -rf \

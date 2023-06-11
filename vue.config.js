@@ -4,11 +4,12 @@ process.env.VUE_APP_VERSION = require('./package.json').version;
 
 const pxtorem = require('postcss-pxtorem');
 // 网络路径
-const network = 'http://192.168.5.8';
+const network = 'http://smanga.mn2.cc';
 // 本地路径
 const localhost = 'http://127.0.0.1';
 
 const target = process.env.NODE_ENV === 'production' ? localhost : network;
+const wsTarget = process.env.NODE_ENV === 'production' ? 'ws://192.168.5.8' : 'ws://127.0.0.1';
 
 // 路径
 // eslint-disable-next-line @typescript-eslint/no-var-requires

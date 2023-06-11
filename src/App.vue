@@ -1,6 +1,8 @@
 <template>
 	<div class="main" id="app">
 		<div class="view">
+			<!-- 消息通知 -->
+			<notice />
 			<el-config-provider :locale="elLocale">
 				<router-view v-slot="{Component}">
 					<keep-alive include="layout">
@@ -22,7 +24,8 @@ import languages from '@/store/language';
 import {computed, onMounted, onBeforeMount} from 'vue';
 import {useI18n} from 'vue-i18n';
 import {set_theme} from '@/style/theme';
-import {get_user_config} from './api/account';
+import { get_user_config } from './api/account';
+import notice from '@/components/notice.vue';
 
 const route = useRoute();
 const router = useRouter();
@@ -52,6 +55,8 @@ onBeforeMount(async () => {
 
 	// 获取书签列表
 	set_bookmark();
+
+	
 });
 
 // 设置屏幕尺寸

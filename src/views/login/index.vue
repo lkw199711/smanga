@@ -38,7 +38,7 @@ import {defineComponent} from 'vue';
 import {login} from '@/api/account';
 import {Cookies} from '@/utils';
 
-import {power} from '@/store';
+import {power, userInfo} from '@/store';
 
 export default defineComponent({
 	name: 'index',
@@ -68,13 +68,14 @@ export default defineComponent({
 			const res = await login(this.form);
 			if (res.data.code === 0) {
 				// 缓存用户信息
-				const userInfo = res.data.userInfo;
-				Cookies.set('userName', userInfo.userName);
-				Cookies.set('userId', userInfo.userId);
-				Cookies.set('editMedia', userInfo.editMedia);
-				Cookies.set('editUser', userInfo.editUser);
-				power.editMedia = userInfo.editMedia == 1;
-				power.editUser = userInfo.editUser == 1;
+				const resInfo = res.data.userInfo;
+				Object.assign(userInfo, res.data.userInfo);
+				Cookies.set('userName', resInfo.userName);
+				Cookies.set('userId', resInfo.userId);
+				Cookies.set('editMedia', resInfo.editMedia);
+				Cookies.set('editUser', resInfo.editUser);
+				power.editMedia = resInfo.editMedia == 1;
+				power.editUser = resInfo.editUser == 1;
 
 				await this.$router.push('media-list');
 			}

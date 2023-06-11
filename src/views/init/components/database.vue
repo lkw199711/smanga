@@ -52,9 +52,11 @@ const form = reactive({
 
 onMounted(async () => {
 	const res = await database_get();
-	const data = res.data.data;
+	const data = res.data;
 
-	Object.assign(form, data);
+	if (data.code === 0) {
+		Object.assign(form, data);
+	}
 
 	await check();
 });

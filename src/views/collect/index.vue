@@ -206,7 +206,7 @@ async function go_browse(item: any) {
 
 	// 加载章节列表
 	const res = await get_chapter(item.mangaId);
-	global_set_json('chapterList', res.data.list.data);
+	global_set_json('chapterList', res.data.list.data || res.data.list);
 
 	let page = 1;
 	if (browseType === 'flow') {

@@ -6,10 +6,11 @@ import {ElMessage} from 'element-plus';
 import {Cookies} from '@/utils';
 import router from '@/router';
 
-const phpPath = '/php/laravel/public/index.php/';
+const networkPath = '/index.php/';
+const localhostPath = '/php/public/index.php/';
 
 // 接口路径的设置
-const url = process.env.NODE_ENV === 'development' ? '/cms' + phpPath : phpPath;
+const url = process.env.NODE_ENV === 'development' ? '/cms' + networkPath : localhostPath;
 
 /**
  * 创建默认接口请求设置
