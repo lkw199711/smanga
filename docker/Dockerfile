@@ -27,7 +27,8 @@ ENV OUT_LOG_FILES="/logs/nginx_error.log /logs/smanga*" \
     SMANGA_CONFIG_INI=/data/config/config.ini \
     SMANGA_COMPRESS=/data/compress \
     SMANGA_POSTER=/data/poster \
-    SMANGA_BOOKMARK=/data/poster/bookmark
+    SMANGA_BOOKMARK=/data/poster/bookmark \
+    SMANGA_SUPERVISOR=/etc/auto-scan
 
 COPY --chmod=755 --from=Build /rootfs /app
 COPY --chmod=755 ./docker/rootfs /
