@@ -233,6 +233,20 @@ const routes: Array<RouteRecordRaw> = [
 		],
 	},
 	{
+		path: '/serve-setting',
+		redirect: '/serve-setting/index',
+		meta: {sidebar: true, title: 'serveSetting', icon: 'Setting'},
+		component: Layout,
+		children: [
+			{
+				path: 'index',
+				name: 'serve-setting',
+				meta: {view: 'default'},
+				component: () => import('../views/serve-setting/index.vue'),
+			},
+		],
+	},
+	{
 		path: '/init',
 		name: 'init',
 		meta: {sidebar: false, title: 'userSetting'},
