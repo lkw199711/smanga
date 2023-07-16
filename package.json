@@ -3,9 +3,11 @@
 	"version": "3.3.2",
 	"private": true,
 	"scripts": {
-		"serve": "set NODE_OPTIONS=--openssl-legacy-provider & vue-cli-service serve",
-		"build": "set NODE_OPTIONS=--openssl-legacy-provider & vue-cli-service build",
-		"lint": "set NODE_OPTIONS=--openssl-legacy-provider & vue-cli-service lint"
+		"serve": "vue-cli-service serve",
+		"build": "vue-cli-service build",
+		"build-baota": "vue-cli-service build --mode baota",
+		"build-docker": "vue-cli-service build --mode docker",
+		"lint": "vue-cli-service lint"
 	},
 	"dependencies": {
 		"@element-plus/icons": "^0.0.11",

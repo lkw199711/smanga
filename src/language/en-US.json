@@ -161,6 +161,7 @@
   },
   "mangaManage": {
     "id": "mangaId",
+    "mediaId": "mediaId",
     "name": "mangaName",
     "createTime": "createTime",
     "updateTime": "updateTime",

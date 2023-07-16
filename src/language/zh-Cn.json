@@ -160,7 +160,8 @@
     }
   },
   "mangaManage": {
-    "id": "媒体库id",
+    "id": "漫画id",
+    "mediaId": "媒体库id",
     "name": "漫画名称",
     "createTime": "创建时间",
     "updateTime": "更新时间",
