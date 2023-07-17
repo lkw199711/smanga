@@ -2,7 +2,7 @@
  * @Author: lkw199711 lkw199711@163.com
  * @Date: 2023-05-21 22:52:41
  * @LastEditors: lkw199711 lkw199711@163.com
- * @LastEditTime: 2023-06-04 20:23:08
+ * @LastEditTime: 2023-07-17 14:34:20
  * @FilePath: \smanga\src\components\notice.vue
 -->
 <template>
@@ -17,10 +17,10 @@ import {onMounted, onBeforeUnmount, watch} from 'vue';
 
 let ws: any;
 
-const localhost = 'ws://192.168.5.4:8097/websocket';
-const network = 'ws://' + location.host + '/websocket';
+const devUrl = process.env.VUE_APP_WS_URL;
+const prodUrl = 'ws://' + location.host + '/websocket';
 
-const url = process.env.NODE_ENV === 'development' ? localhost : network;
+const url = process.env.NODE_ENV === 'development' ? devUrl : prodUrl;
 
 // userid变换重新告知
 watch(
