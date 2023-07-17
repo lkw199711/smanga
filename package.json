@@ -19,6 +19,7 @@
 		"js-md5": "^0.7.3",
 		"lib-flexible": "^0.3.2",
 		"lodash": "^4.17.21",
+		"nrm": "^1.2.6",
 		"postcss-pxtorem": "^5.1.1",
 		"qs": "^6.11.0",
 		"register-service-worker": "^1.7.1",
