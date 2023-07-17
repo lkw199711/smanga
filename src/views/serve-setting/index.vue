@@ -1,3 +1,10 @@
+<!--
+ * @Author: lkw199711 lkw199711@163.com
+ * @Date: 2023-07-16 12:02:34
+ * @LastEditors: lkw199711 lkw199711@163.com
+ * @LastEditTime: 2023-07-17 20:17:33
+ * @FilePath: /smanga/src/views/serve-setting/index.vue
+-->
 <template>
     <div class="serve-setting">
         <el-form :model="form" label-width="10rem">
@@ -9,6 +16,9 @@
                     <el-button type="primary" @click="comfirm_interval">确定</el-button>
                 </el-form-item>
             </div>
+            <p class="note form-note">
+                扫描周期单位为秒,可使用*表达式.设置周期最短为10
+            </p>
         </el-form>
     </div>
 </template>
@@ -19,14 +29,14 @@ import { ref, onMounted } from 'vue';
 import { interval_set, interval_get } from '@/api/serve-setting'
 
 const form = ref({
-    interval: '24*60*60'
+    interval: ''
 })
 
 async function comfirm_interval() {
     interval_set(form.value.interval)
 }
 
-onMounted(async() => {
+onMounted(async () => {
     const res = await interval_get();
     form.value.interval = res.data.data.interval
 })
@@ -34,7 +44,6 @@ onMounted(async() => {
 </script>
 
 <style scoped lang="less">
-
 .interval {
     margin-right: 2rem;
     width: 20rem;
@@ -67,9 +76,8 @@ onMounted(async() => {
         margin: 3rem 2rem 0;
     }
 
-    .interval{
+    .interval {
         width: 14rem;
     }
 }
-
 </style>
