@@ -275,12 +275,12 @@
 					<!--扫描字段-->
 					<p class="s-form-title">{{ $t('mediaManage.title.scan') }}</p>
 					<!-- 自动扫描还没做好 -->
-					<!-- <el-form-item :label="$t('mediaManage.form.autoScan')">
+					<el-form-item :label="$t('mediaManage.form.autoScan')">
 						<el-switch
 							v-model.number="pathForm.autoScan"
 							:active-value="1"
 							:inactive-value="0" />
-					</el-form-item> -->
+					</el-form-item>
 					<p class="note form-note">{{ $t('mediaManage.note.autoScan') }}</p>
 					<el-form-item :label="$t('path.form.include')">
 						<el-input

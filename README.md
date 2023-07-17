@@ -26,6 +26,7 @@
     - [虽然为条漫开发, 但是并不支持长图条漫(需裁切)](#虽然为条漫开发-但是并不支持长图条漫需裁切)
   - [最后](#最后)
   - [版本更新记录](#版本更新记录)
+  - [开发注意事项](#开发注意事项)
 
 ![](https://github.com/lkw199711/smanga/raw/master/src/assets/readme/smanga-media-list.PNG)
 
@@ -63,7 +64,7 @@ docker: https://hub.docker.com/r/lkw199711/smanga
 ```dockerfile
 docker run -itd --name smanga \
 -p 3333:3306 \
--p 8097:80 \
+-p 9797:80 \
 -v /mnt:/mnt \
 -v /route/smanga:/data \
 lkw199711/smanga;
@@ -76,7 +77,7 @@ smanga的部署，仅映射一个data目录即可。
 ```dockerfile
 docker run -itd --name smanga \
 -p 3333:3306 \
--p 8097:80 \
+-p 9797:80 \
 -v /mnt:/mnt \
 -v /route/smanga:/data \
 -v /route/compress:/compress \
@@ -90,7 +91,7 @@ lkw199711/smanga;
 ```dockerfile
 docker run -itd --name smanga \
 -p 3333:3306 \
--p 8097:80 \
+-p 9797:80 \
 -v /mnt:/mnt \
 -v /route/compress:/compress \
 -v /route/poster:/poster \
@@ -112,7 +113,77 @@ lkw199711/smanga;
 | `-v /var/lib/mysql ` | mysql数据目录（此目录必须映射, 否则升级smanga容器后, 将丢失所有数据。nosql版本的镜像无需映射。） |
 |      `-v /mnt`       | mnt为linux系统（centos，debian，centos）通用挂载目录，您所有的外置硬盘一般都会挂载在此目录，映射此目录可使您镜像内外访问资源具有一致性。 |
 
-### 2. ~~LNMP环境安装~~
+### 2.使用docker-compose进行部署
+
+#### 以下给出一个compose文件示例
+
+```
+version: "3"
+services:
+  smanga:
+    image: lkw199711/smanga:alpha
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 1G
+        reservations:
+          memory: 16M
+    ports:
+      - 9798:80
+    volumes:
+      - /route/smanga:/data
+      - /route/compress:/compress
+      - /mnt:/mnt
+    environment:
+      PUID: 1000    # 想切换为哪个用户来运行程序，该用户的uid
+      PGID: 1000    # 想切换为哪个用户来运行程序，该用户的gid
+      UMASK: 022
+      TZ: Asia/Shanghai
+    restart: unless-stopped
+    hostname: smanga-alpha
+    container_name: smanga-alpha
+```
+
+#### macvlan部署示例
+
+```
+version: "3"
+services:
+  smanga:
+    image: lkw199711/smanga
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 1G
+        reservations:
+          memory: 16M
+    networks:
+      macvlan_1:
+        ipv4_address: 192.168.2.21
+    ports:
+      - 9798:80
+    volumes:
+      - /route/smanga:/data
+      - /route/compress:/compress
+      - /mnt:/mnt
+    environment:
+      PUID: 1000    # 想切换为哪个用户来运行程序，该用户的uid
+      PGID: 1000    # 想切换为哪个用户来运行程序，该用户的gid
+      UMASK: 022
+      TZ: Asia/Shanghai
+    restart: unless-stopped
+    hostname: smanga-alpha
+    container_name: smanga-alpha
+
+networks:
+  macvlan_1:
+    external: true
+    driver: macvlan
+```
+
+### 3. ~~LNMP环境安装~~
 
 ~~安装宝塔面板或是其他web环境（支持php），然后将web项目放入站点目录即可。~~
 
@@ -234,5 +305,12 @@ Telegram 交流群：https://t.me/+FFgQ7AMIdrg2M2Y1
     - 3.2.6 新增对半裁切模式
     - 3.2.8 新增图片下载功能
     - 3.2.9 分页浏览模式新增图片缓存
-    - 3.3.0 使用laravel重构项目,并优化排序功能
+  - 3.3.0 使用laravel重构项目,并优化排序功能
     - 3.3.1 新增websocket功能,进行解压成功通知
+    - 3.3.2 新增日志模块
+    - 3.3.3 扫描系统做节流处理
+    - 3.3.4 新增自动扫描时间设置
+
+## 开发注意事项
+
+此项目使用nodejs16运行,请注意版本

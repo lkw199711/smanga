@@ -7,7 +7,7 @@ on:
         - .github/workflows/docker_alpha.yml
 
 env:
-  BUILD_BASE: true
+  BUILD_BASE: false
 
 jobs:
   base:
@@ -70,7 +70,7 @@ jobs:
         name: Build Web
         run: |
           npm install
-          npm run build
+          npm run build-docker
 
       - 
         name: Set Up QEMU

@@ -10,6 +10,8 @@
     "search": "search",
     "account": "account",
     "userSetting": "userSetting",
+    "serveSetting": "serveSetting",
+    "log": "log",
     "mediaManage": "mediaManage",
     "mangaManage": "mangaManage",
     "pathManage": "pathManage",
@@ -160,6 +162,7 @@
   },
   "mangaManage": {
     "id": "mangaId",
+    "mediaId": "mediaId",
     "name": "mangaName",
     "createTime": "createTime",
     "updateTime": "updateTime",

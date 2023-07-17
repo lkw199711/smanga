@@ -2,7 +2,7 @@
  * @Author: lkw199711 lkw199711@163.com
  * @Date: 2023-03-17 20:18:30
  * @LastEditors: lkw199711 lkw199711@163.com
- * @LastEditTime: 2023-05-19 23:03:54
+ * @LastEditTime: 2023-06-13 21:23:35
  * @FilePath: \smanga\src\api\login.ts
  */
 import { ajax } from "./index";

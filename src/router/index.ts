@@ -227,8 +227,22 @@ const routes: Array<RouteRecordRaw> = [
 			{
 				path: 'index',
 				name: 'user-setting',
-				meta: {view: 'searchOnly'},
+				meta: {view: 'default'},
 				component: () => import('../views/user-setting/index.vue'),
+			},
+		],
+	},
+	{
+		path: '/serve-setting',
+		redirect: '/serve-setting/index',
+		meta: {sidebar: true, title: 'serveSetting', icon: 'Setting'},
+		component: Layout,
+		children: [
+			{
+				path: 'index',
+				name: 'serve-setting',
+				meta: {view: 'default'},
+				component: () => import('../views/serve-setting/index.vue'),
 			},
 		],
 	},
@@ -237,6 +251,20 @@ const routes: Array<RouteRecordRaw> = [
 		name: 'init',
 		meta: {sidebar: false, title: 'userSetting'},
 		component: () => import('../views/init/index.vue'),
+	},
+	{
+		path: '/log',
+		redirect: '/log/index',
+		meta: {sidebar: true, title: 'log', icon: 'Document'},
+		component: Layout,
+		children: [
+			{
+				path: 'index',
+				name: 'log',
+				meta: {view: 'searchOnly'},
+				component: () => import('../views/log/index.vue'),
+			},
+		],
 	},
 
 	// 浏览界面

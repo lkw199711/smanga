@@ -10,6 +10,8 @@
     "search": "搜索",
     "account": "账户管理",
     "userSetting": "用户设置",
+    "serveSetting": "服务器设置",
+    "log": "日志",
     "mediaManage": "媒体库管理",
     "mangaManage": "漫画管理",
     "pathManage": "路径管理",
@@ -159,7 +161,8 @@
     }
   },
   "mangaManage": {
-    "id": "媒体库id",
+    "id": "漫画id",
+    "mediaId": "媒体库id",
     "name": "漫画名称",
     "createTime": "创建时间",
     "updateTime": "更新时间",
