@@ -3,7 +3,7 @@
 
 function 080_crond {
 
-    echo -e "0 3 * * * find /logs -type f -name '*.log' -exec truncate -s 0 {} \;" >> /tmp/crontab.list
+    echo -e "0 3 * * * find /data/logs -type f -name '*.log' -exec truncate -s 0 {} \;" >> /tmp/crontab.list
 
     echo "Set crontab to system..."
     crontab /tmp/crontab.list
@@ -13,4 +13,4 @@ function 080_crond {
 
 }
 
-080_crond 2>&1 | sed "s#^#cont-init: info: $(realpath $0): &#g"
+#080_crond 2>&1 | sed "s#^#cont-init: info: $(realpath $0): &#g"

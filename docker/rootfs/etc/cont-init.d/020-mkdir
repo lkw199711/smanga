@@ -8,6 +8,11 @@ function 020_mkdir {
 		echo "Create /data"
 	fi
 
+	if [ ! -d /data/logs ]; then
+		mkdir /data/logs
+		echo "Create /data/logs"
+	fi
+
 	if [ -d /config ]; then
 		if [ "${SMANGA_CONFIG}" != /config ]; then
 			if [[ $(readlink -f /data/config 2>/dev/null) != /config ]]; then

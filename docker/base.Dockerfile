@@ -114,23 +114,14 @@ RUN set -ex && \
     # Add user
     addgroup -S smanga -g 911 && \
     adduser -S smanga -G smanga -h /app -u 911 -s /bin/bash && \
-    # Log Links
-    mkdir -p /logs && \
-    touch /logs/nginx_access.log && \
-    touch /logs/nginx_error.log && \
-    touch \
-        /logs/smanga-compress.log \
-        /logs/smanga-websocket.log \
-        /logs/smanga-scan.log \
-        /logs/smanga-daemon.log && \
     # PHP nginx supervisord settings
     sed -i "s#short_open_tag = Off#short_open_tag = On#g" /etc/php7/php.ini && \
     sed -i "s#;open_basedir =#open_basedir = /#g" /etc/php7/php.ini && \
     sed -i "s#register_argc_argv = Off#register_argc_argv = On#g" /etc/php7/php.ini && \
     mkdir -p /run/php && \
     chown -R smanga:smanga /run/php && \
-    mkdir /etc/auto-scan /run/supervisord && \
-    chown smanga:smanga /etc/auto-scan /run/supervisord && \
+    mkdir /etc/supervisor.d /run/supervisord && \
+    chown smanga:smanga /etc/supervisor.d /run/supervisord && \
     rm -rf \
         /etc/nginx/nginx.conf \
         /etc/nginx/http.d/* \
