@@ -70,7 +70,7 @@ jobs:
         name: Build Web
         run: |
           npm install
-          npm run build
+          npm run build-docker
 
       - 
         name: Set Up QEMU

@@ -16,7 +16,7 @@ RUN rm -rf /rootfs/php/.git
 
 FROM ${SMANGA_BASE_NAME}/smanga-base:${SMANGA_BASE_VERSION}
 
-ENV OUT_LOG_FILES="/logs/nginx_error.log /logs/smanga*" \
+ENV OUT_LOG_FILES="/data/logs/nginx_error.log /data/logs/smanga*" \
     PATH=${PATH}:/app/php \
     PUID=1000 \
     PGID=1000 \
@@ -28,7 +28,7 @@ ENV OUT_LOG_FILES="/logs/nginx_error.log /logs/smanga*" \
     SMANGA_COMPRESS=/data/compress \
     SMANGA_POSTER=/data/poster \
     SMANGA_BOOKMARK=/data/poster/bookmark \
-    SMANGA_SUPERVISOR=/etc/auto-scan
+    SMANGA_SUPERVISOR=/etc/supervisor.d
 
 COPY --chmod=755 --from=Build /rootfs /app
 COPY --chmod=755 ./docker/rootfs /
