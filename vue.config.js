@@ -4,7 +4,7 @@ process.env.VUE_APP_VERSION = require('./package.json').version;
 
 const pxtorem = require('postcss-pxtorem');
 // 开发模式请求地址
-const devUrl = 'http://smanga-php.com';
+const devUrl = process.env.VUE_APP_PROXY_HTTP_URL;
 // 生产环境请求地址
 const prodUrl = 'http://127.0.0.1';
 
