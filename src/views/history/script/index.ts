@@ -4,7 +4,7 @@ import {get_poster} from '@/api';
 import store, {config} from '@/store';
 import {global_set, global_set_json} from '@/utils';
 import {get_history} from '@/api/history';
-import {get_chapter} from '@/api/chapter';
+import chapterApi from '@/api/chapter';
 import MediaPager from '@/components/media-pager.vue';
 import RightSidebar from '../components/right-sidebar.vue';
 
@@ -52,8 +52,8 @@ export default defineComponent({
 			const removeFirst = item.removeFirst;
 			const direction = item.direction;
 
-			const chapterListRes = await get_chapter(mangaId);
-			const chapterList = chapterListRes.data.list.data;
+			const chapterListRes = await chapterApi.get(mangaId);
+			const chapterList = chapterListRes.list;
 
 			// 缓存章节信息
 			global_set('mangaId', mangaId);

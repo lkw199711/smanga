@@ -65,7 +65,7 @@ import store, {config, userConfig, pageSizeConfig} from '@/store';
 import {search} from '@/api/search';
 import router from '@/router';
 import {get_poster} from '@/api';
-import {get_chapter} from '@/api/chapter';
+import chapterApi from '@/api/chapter';
 import {global_set, global_set_json} from '@/utils';
 import manga from '@/components/manga.vue';
 import chapter from '@/components/chapter.vue';
@@ -205,8 +205,8 @@ async function go_browse(item: any) {
 	global_set('chapterCover', chapterCover);
 
 	// 加载章节列表
-	const res = await get_chapter(item.mangaId);
-	global_set_json('chapterList', res.data.list.data || res.data.list);
+	const res = await chapterApi.get(item.mangaId);
+	global_set_json('chapterList', res.list);
 
 	let page = 1;
 	if (browseType === 'flow') {

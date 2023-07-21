@@ -3,7 +3,7 @@ import chapter from '@/components/chapter.vue';
 import {get_poster} from '@/api';
 import store, {config, pageSizeConfig} from '@/store';
 import {get_bookmark} from '@/api/bookmark';
-import {get_chapter} from '@/api/chapter';
+import chapterApi from '@/api/chapter';
 import {global_set, global_set_json} from '@/utils';
 import MediaPager from '@/components/media-pager.vue';
 import rightSidebar from '../components/right-sidebar.vue';
@@ -61,8 +61,8 @@ export default defineComponent({
 				page = Math.ceil((page + 1) / 2);
 			}
 
-			const chapterListRes = await get_chapter(mangaId);
-			const chapterList = chapterListRes.data.list.data;
+			const chapterListRes = await chapterApi.get(mangaId);
+			const chapterList = chapterListRes.list;
 
 			// 缓存章节信息
 			global_set('mangaId', mangaId);
