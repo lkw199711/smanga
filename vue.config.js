@@ -16,9 +16,12 @@ const wsTarget =
 
 // 路径
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const path = require('path')
+const path = require('path');
+
+const outputDir = output_dir();
 
 module.exports = {
+	outputDir,
 	// 公共路径的配置 生产环境下,可能是子目录 要使用相对路径
 	publicPath: process.env.NODE_ENV === 'development' ? '/' : './',
 
@@ -108,3 +111,13 @@ module.exports = {
 	},
 };
 
+function output_dir() {
+	switch (process.env.NODE_ENV) {
+		case 'docker':
+			return './dist/docker';
+		case 'baota':
+			return './dist/baota';
+		default:
+			return './dist/default';
+	}
+}
