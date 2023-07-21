@@ -109,7 +109,11 @@ module.exports = {
 			msTileImage: 'favicon.ico',
 		},
 	},
+	configureWebpack: {
+		devtool: 'source-map',
+	},
 };
+
 
 function output_dir() {
 	switch (process.env.NODE_ENV) {
