@@ -4,7 +4,7 @@ process.env.VUE_APP_VERSION = require('./package.json').version;
 
 const pxtorem = require('postcss-pxtorem');
 // 开发模式请求地址
-const devUrl = 'http://smanga-php.com';
+const devUrl = process.env.VUE_APP_PROXY_HTTP_URL;
 // 生产环境请求地址
 const prodUrl = 'http://127.0.0.1';
 
@@ -16,9 +16,12 @@ const wsTarget =
 
 // 路径
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const path = require('path')
+const path = require('path');
+
+const outputDir = output_dir();
 
 module.exports = {
+	outputDir,
 	// 公共路径的配置 生产环境下,可能是子目录 要使用相对路径
 	publicPath: process.env.NODE_ENV === 'development' ? '/' : './',
 
@@ -106,5 +109,19 @@ module.exports = {
 			msTileImage: 'favicon.ico',
 		},
 	},
+	configureWebpack: {
+		devtool: 'source-map',
+	},
 };
 
+
+function output_dir() {
+	switch (process.env.NODE_ENV) {
+		case 'docker':
+			return './dist/docker';
+		case 'baota':
+			return './dist/baota';
+		default:
+			return './dist/default';
+	}
+}

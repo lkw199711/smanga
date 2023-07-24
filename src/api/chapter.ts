@@ -5,7 +5,15 @@
  * @LastEditTime: 2023-05-15 23:39:21
  * @FilePath: \smanga\src\api\chapter.ts
  */
+import {userConfig} from '@/store';
 import {ajax} from './index';
+
+interface chapterGetRes extends ResType {
+	list: {
+		data: [];
+		total: number;
+	};
+}
 
 /**
  * 获取章节记录
@@ -47,3 +55,41 @@ export function delete_chapter(chapterId: any, deleteFile = false) {
 		data: {chapterId, deleteFile},
 	});
 }
+
+const chapterApi = {
+	get: async function (
+		mangaId: number,
+		page: number | undefined = undefined,
+		pageSize: number | undefined = undefined,
+		order = userConfig.order
+	) {
+		const res = await ajax({
+			url: 'chapter/get',
+			data: {mangaId, page, pageSize, order},
+		});
+
+		const resData: chapterGetRes = res.data;
+
+		// 接口错误返回默认值
+		if (resData.code !== 0) {
+			return {
+				list: [],
+				count: 0,
+			};
+		}
+
+		const resFormat: chapterGetFormatType = {
+			list: resData.list.data,
+			count: resData.list.total,
+		};
+
+		return resFormat;
+	},
+};
+
+type chapterGetFormatType = {
+	list: [];
+	count: number;
+};
+
+export default chapterApi;

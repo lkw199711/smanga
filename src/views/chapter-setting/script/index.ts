@@ -1,7 +1,7 @@
 import {defineComponent} from 'vue'
 import {ElMessage, ElMessageBox} from 'element-plus'
 import {Delete, Edit} from '@element-plus/icons-vue'
-import {get_chapter, delete_chapter, update_chapter} from "@/api/chapter";
+import chapterApi,{delete_chapter, update_chapter} from "@/api/chapter";
 import tablePager from "@/components/table-pager.vue";
 import i18n from '@/i18n';
 
@@ -67,9 +67,9 @@ export default defineComponent({
          * 加载表格数据
          */
         async load_table(page = 1, pageSize = 10) {
-            const res = await get_chapter(0, page, pageSize);
-            this.count = Number(res.data.list.total);
-            this.tableData = res.data.list.data;
+            const res = await chapterApi.get(0, page, pageSize);
+            this.count = Number(res.count);
+            this.tableData = res.list;
         },
         /**
          * 重载数据 页码不变
