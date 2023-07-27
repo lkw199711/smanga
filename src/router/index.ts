@@ -205,6 +205,20 @@ const routes: Array<RouteRecordRaw> = [
 		],
 	},
 	{
+		path: '/tag-setting',
+		redirect: '/tag-setting/index',
+		meta: {sidebar: true, title: 'tagManage', icon: 'Ticket'},
+		component: Layout,
+		children: [
+			{
+				path: 'index',
+				name: 'tag-setting',
+				meta: {view: 'setting'},
+				component: () => import('../views/tag-setting/index.vue'),
+			},
+		],
+	},
+	{
 		path: '/compress-setting',
 		redirect: '/compress-setting/index',
 		meta: {sidebar: true, title: 'compressManage', icon: 'Switch'},

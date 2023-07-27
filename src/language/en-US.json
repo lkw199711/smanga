@@ -17,6 +17,7 @@
     "pathManage": "pathManage",
     "chapterManage": "chapterManage",
     "bookmarkManage": "bookmarkManage",
+    "tagManage": "tagManage",
     "compressManage": "compressManage",
     "wiki": "wiki"
   },
@@ -297,5 +298,15 @@
     "confirm": {
       "text": "Are you sure to delete this record?"
     }
+  },
+  "tagSetting": {
+    "dialog": {
+      "tagName": "tagName",
+      "addTitle": "Add Tag",
+      "tagNamePlaceholder": "Please enter tag name",
+      "tagColor": "Tag Color",
+      "tagColorPlaceholder": "Please enter the tag color"
+    },
+    "addButton": "Add tag"
   }
 }

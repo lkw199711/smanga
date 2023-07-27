@@ -16,6 +16,7 @@
     "pathManage": "路徑管理",
     "chapterManage": "章節管理",
     "bookmarkManage": "書簽管理",
+    "tagManage": "標簽管理",
     "compressManage": "轉換管理",
     "wiki": "使用說明"
   },
@@ -295,5 +296,15 @@
     "confirm": {
       "text": "確認刪除此記錄?"
     }
+  },
+  "tagSetting": {
+    "dialog": {
+      "tagColor": "標簽顏色",
+      "tagColorPlaceholder": "請輸入標簽顔色",
+      "addTitle": "新增標簽",
+      "tagName": "標簽名稱",
+      "tagNamePlaceholder": "請輸入標簽名稱"
+    },
+    "addButton": "新增標簽"
   }
 }

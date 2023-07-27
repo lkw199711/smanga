@@ -17,6 +17,7 @@
     "pathManage": "路径管理",
     "chapterManage": "章节管理",
     "bookmarkManage": "书签管理",
+    "tagManage": "标签管理",
     "compressManage": "转换管理",
     "wiki": "使用说明"
   },
@@ -296,5 +297,14 @@
     "confirm": {
       "text": "确认删除此记录?"
     }
+  },
+  "tagSetting": {
+    "dialog": {
+      "tagColorPlaceholder": "请输入标签颜色",
+      "addTitle": "新增标签",
+      "tagName": "标签名称",
+      "tagNamePlaceholder": "请输入标签名称"
+    },
+    "addButton": "新增标签"
   }
 }
