@@ -118,7 +118,7 @@ module.exports = {
 function output_dir() {
 	switch (process.env.NODE_ENV) {
 		case 'docker':
-			return './dist';
+			return './dist/docker';
 		case 'baota':
 			return './dist/baota';
 		default:
