@@ -6,7 +6,7 @@ ARG SMANGA_BASE_NAME
 FROM ${SMANGA_BASE_NAME}/smanga-base:${SMANGA_BASE_VERSION} AS Build
 RUN apk add --no-cache git
 COPY --chmod=755 . /build
-RUN cp -r /build/dist/docker /rootfs && \
+RUN cp -r /build/dist/web /rootfs && \
     cp -r /build/file /rootfs/file && \
     cp -r /build/config /rootfs/config
 WORKDIR /rootfs/php
