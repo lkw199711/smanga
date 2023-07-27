@@ -303,7 +303,8 @@
       "tagColorPlaceholder": "请输入标签颜色",
       "addTitle": "新增标签",
       "tagName": "标签名称",
-      "tagNamePlaceholder": "请输入标签名称"
+      "tagNamePlaceholder": "请输入标签名称",
+      "tagColor": "标签颜色"
     },
     "addButton": "新增标签"
   }

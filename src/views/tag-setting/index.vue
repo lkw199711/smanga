@@ -1,3 +1,10 @@
+<!--
+ * @Author: lkw199711 lkw199711@163.com
+ * @Date: 2023-07-27 10:30:46
+ * @LastEditors: lkw199711 lkw199711@163.com
+ * @LastEditTime: 2023-07-27 14:49:34
+ * @FilePath: /smanga/src/views/tag-setting/index.vue
+-->
 <template>
   <div class="manga-setting-index">
     <div class="manga-setting-box">
@@ -56,8 +63,8 @@
             <div class="dialog-footer">
               <!--按钮盒子-->
               <div class="btn-box">
-                <el-button type="primary" @click="update_manga">{{ $t('option.confirm') }}</el-button>
-                <el-button type="warning" @click="editMangaDialog = false">{{ $t('option.cancel') }}</el-button>
+                <el-button type="primary" @click="add_tag">{{ $t('option.confirm') }}</el-button>
+                <el-button type="warning" @click="new_dialog(false)">{{ $t('option.cancel') }}</el-button>
               </div>
             </div>
           </template>

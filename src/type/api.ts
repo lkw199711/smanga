@@ -4,7 +4,7 @@ interface ResType {
 	list: {
 		data: [];
 		total: number;
-	}|[];
+	};
 	message: string;
 	status: string;
 	eMsg: string;

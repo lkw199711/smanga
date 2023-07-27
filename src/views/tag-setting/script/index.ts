@@ -8,6 +8,7 @@ import {
 import {defineComponent} from 'vue';
 import {ElMessage, ElMessageBox} from 'element-plus';
 import {get_manga, update_manga, delete_manga} from '@/api/manga';
+import tagApi from '@/api/tag';
 import tablePager from '@/components/table-pager.vue';
 import i18n from '@/i18n';
 
@@ -31,22 +32,16 @@ export default defineComponent({
 			addTagDialog: false,
 			editTagDialog: false,
 			form: {
-				mangaId: '',
-				mangaName: '',
-				mangaPath: '',
-				mangaCover: '',
-				browseType: '',
-				removeFirst: '',
-				direction: 0,
+				tagId: '',
+				tagName: '',
+				tagColor: '',
+				description: '',
 			},
 			formInit: {
-				mangaId: '',
-				mangaName: '',
-				mangaPath: '',
-				mangaCover: '',
-				browseType: 'flow',
-				removeFirst: 0,
-				direction: 1,
+				tagId: '',
+				tagName: '',
+				tagColor: '',
+				description: '',
 			},
 		};
 	},
@@ -81,12 +76,25 @@ export default defineComponent({
 		},
 
 		/**
+		 * @description: 新增标签
+		 * @return {*}
+		 */
+		add_tag() {
+			const tagName = this.form.tagName;
+			const tagColor = this.form.tagColor;
+			const description = this.form.description;
+
+			tagApi.add(tagName, tagColor, description);
+		},
+
+		/**
 		 * 加载表格数据
 		 */
 		async load_table(page = 1, pageSize = 10) {
-			const res = await get_manga(0, page, pageSize);
-			this.count = Number(res.data.list.total);
-			this.tableData = res.data.list.data;
+			const res = (await tagApi.get());
+			
+			this.count = res.count;
+			this.tableData = res.list;
 		},
 		/**
 		 * 重载数据 页码不变
