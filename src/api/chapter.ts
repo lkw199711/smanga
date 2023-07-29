@@ -2,7 +2,7 @@
  * @Author: lkw199711 lkw199711@163.com
  * @Date: 2023-03-17 20:18:30
  * @LastEditors: lkw199711 lkw199711@163.com
- * @LastEditTime: 2023-05-15 23:39:21
+ * @LastEditTime: 2023-07-29 17:12:06
  * @FilePath: \smanga\src\api\chapter.ts
  */
 import {userConfig} from '@/store';
@@ -13,24 +13,6 @@ interface chapterGetRes extends ResType {
 		data: [];
 		total: number;
 	};
-}
-
-/**
- * 获取章节记录
- * @param mangaId
- * @param recordStart
- * @param pageSize
- */
-export function get_chapter(
-	mangaId: number,
-	page: number | undefined = undefined,
-	pageSize: number | undefined = undefined,
-	order = ''
-) {
-	return ajax({
-		url: 'chapter/get',
-		data: {mangaId, page, pageSize, order},
-	});
 }
 
 /**
@@ -84,7 +66,7 @@ const chapterApi = {
 		};
 
 		return resFormat;
-	},
+	}
 };
 
 type chapterGetFormatType = {

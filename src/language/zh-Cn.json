@@ -17,8 +17,10 @@
     "pathManage": "路径管理",
     "chapterManage": "章节管理",
     "bookmarkManage": "书签管理",
+    "tagManage": "标签管理",
     "compressManage": "转换管理",
-    "wiki": "使用说明"
+    "wiki": "使用说明",
+    "tagList": "标签展示"
   },
   "option": {
     "option": "操作",
@@ -35,7 +37,8 @@
     "direction": "切换阅读方向",
     "ltr": "左 -> 右",
     "rtl": "右 -> 左",
-    "dwonload": "下载图片"
+    "dwonload": "下载图片",
+    "editTags": "编辑标签"
   },
   "account": {
     "add": "新增用户",
@@ -296,5 +299,33 @@
     "confirm": {
       "text": "确认删除此记录?"
     }
+  },
+  "tagSetting": {
+    "dialog": {
+      "tagColorPlaceholder": "请输入标签颜色",
+      "addTitle": "新增标签",
+      "tagName": "标签名称",
+      "tagNamePlaceholder": "请输入标签名称",
+      "tagColor": "标签颜色",
+      "description": "描述",
+      "descriptionPlaceholder": "请输入描述",
+      "updateTitle": "修改标签",
+      "nameWarning": "标签名不能为空",
+      "confirmText": "确认删除此标签?",
+      "confirmTitle": "删除标签",
+      "tagColorNote": "请输入一个十六进制格式的颜色,如果留空,默认为\"#a0d911\"(绿色)"
+    },
+    "addButton": "新增标签",
+    "table": {
+      "tagId": "标签id",
+      "tagName": "标签名称",
+      "description": "描述",
+      "tagColor": "标签颜色"
+    }
+  },
+  "rightSidebar": {
+    "editTags": "编辑标签",
+    "baseTagTitle": "备选标签",
+    "ckeckedTagTitle": "当前标签"
   }
 }
