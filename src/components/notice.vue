@@ -2,7 +2,7 @@
  * @Author: lkw199711 lkw199711@163.com
  * @Date: 2023-05-21 22:52:41
  * @LastEditors: lkw199711 lkw199711@163.com
- * @LastEditTime: 2023-07-17 14:34:20
+ * @LastEditTime: 2023-07-28 00:10:23
  * @FilePath: \smanga\src\components\notice.vue
 -->
 <template>
@@ -23,6 +23,7 @@ const prodUrl = 'ws://' + location.host + '/websocket';
 const url = process.env.NODE_ENV === 'development' ? devUrl : prodUrl;
 
 // userid变换重新告知
+/*
 watch(
 	() => userInfo.userId,
 	() => {
@@ -38,7 +39,7 @@ onMounted(() => {
 onBeforeUnmount(() => {
 	ws.close();
 });
-
+*/
 /**
  * @description: 初始化连接
  * @return {*}

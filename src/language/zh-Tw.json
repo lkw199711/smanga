@@ -19,7 +19,8 @@
     "bookmarkManage": "書簽管理",
     "tagManage": "標簽管理",
     "compressManage": "轉換管理",
-    "wiki": "使用說明"
+    "wiki": "使用說明",
+    "tagList": "標簽展示"
   },
   "option": {
     "option": "操作",
@@ -36,7 +37,8 @@
     "direction": "切換閱讀方向",
     "ltr": "左 -> 右",
     "rtl": "右 -> 左",
-    "dwonload": "下載圖片"
+    "dwonload": "下載圖片",
+    "editTags": "編輯標簽"
   },
   "account": {
     "add": "新增用戶",
@@ -304,8 +306,26 @@
       "addTitle": "新增標簽",
       "tagName": "標簽名稱",
       "tagNamePlaceholder": "請輸入標簽名稱",
-      "tagColor": "標簽顏色"
+      "tagColor": "標簽顏色",
+      "description": "描述",
+      "descriptionPlaceholder": "請輸入描述",
+      "updateTitle": "修改標簽",
+      "nameWarning": "標簽名不能為空",
+      "confirmText": "確認刪除此標簽?",
+      "confirmTitle": "刪除標簽",
+      "tagColorNote": "請輸入一個十六進製格式的顏色,如果留空,默認為\"#a0d911\"(綠色)"
     },
-    "addButton": "新增標簽"
+    "addButton": "新增標簽",
+    "table": {
+      "tagId": "標簽id",
+      "tagName": "標簽名稱",
+      "description": "描述",
+      "tagColor": "標簽顏色"
+    }
+  },
+  "rightSidebar": {
+    "editTags": "編輯標簽",
+    "baseTagTitle": "備選標簽",
+    "ckeckedTagTitle": "當前標簽"
   }
 }

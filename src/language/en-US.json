@@ -19,7 +19,8 @@
     "bookmarkManage": "bookmarkManage",
     "tagManage": "tagManage",
     "compressManage": "compressManage",
-    "wiki": "wiki"
+    "wiki": "wiki",
+    "tagList": "tagList"
   },
   "option": {
     "option": "option",
@@ -39,7 +40,8 @@
     "before": "before",
     "next": "next",
     "removeCollect": "remove collect",
-    "dwonload": "dwonload image"
+    "dwonload": "dwonload image",
+    "editTags": "ediaTags"
   },
   "account": {
     "add": "addUser",
@@ -305,8 +307,26 @@
       "addTitle": "Add Tag",
       "tagNamePlaceholder": "Please enter tag name",
       "tagColor": "Tag Color",
-      "tagColorPlaceholder": "Please enter the tag color"
+      "tagColorPlaceholder": "Please enter the tag color",
+      "description": "description",
+      "descriptionPlaceholder": "Please enter description",
+      "updateTitle": "Modify Tag",
+      "nameWarning": "The tag name cannot be empty",
+      "confirmText": "Are you sure to delete this tag?",
+      "confirmTitle": "delete tag",
+      "tagColorNote": "Please enter a color in hexadecimal format. If left blank, the default is \"#a0d911\" (green)"
     },
-    "addButton": "Add tag"
+    "addButton": "Add tag",
+    "table": {
+      "tagId": "tagId",
+      "tagName": "tagName",
+      "description": "description",
+      "tagColor": "tagColor"
+    }
+  },
+  "rightSidebar": {
+    "editTags": "editTags",
+    "baseTagTitle": "Alternative tags",
+    "ckeckedTagTitle": "Current tag"
   }
 }

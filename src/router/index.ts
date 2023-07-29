@@ -105,6 +105,20 @@ const routes: Array<RouteRecordRaw> = [
 		],
 	},
 	{
+		path: '/tag-list',
+		redirect: '/tag-list/index',
+		meta: {sidebar: true, title: 'tagList', icon: 'Ticket'},
+		component: Layout,
+		children: [
+			{
+				path: 'index',
+				name: 'tag-list',
+				meta: {view: 'list'},
+				component: () => import('../views/tag-list/index.vue'),
+			},
+		],
+	},
+	{
 		path: '/search',
 		redirect: '/search/index',
 		meta: {sidebar: true, title: 'search', icon: 'Search'},
