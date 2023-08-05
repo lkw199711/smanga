@@ -2,4 +2,4 @@
 # shellcheck shell=bash
 
 exec s6-setuidgid root \
-    tail -f ${OUT_LOG_FILES}
+    tail -f ${LOG_OUT_FILES}

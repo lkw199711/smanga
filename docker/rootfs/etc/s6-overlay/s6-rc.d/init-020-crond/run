@@ -1,8 +1,7 @@
 #!/usr/bin/with-contenv bash
 # shellcheck shell=bash
 
-function crond {
-
+if [ ${LOG_CLEAR} == "true" ]; then
     echo -e "0 3 * * * find /data/logs -type f -name '*.log' -exec truncate -s 0 {} \;" >> /tmp/crontab.list
 
     echo "Set crontab to system..."
@@ -10,7 +9,4 @@ function crond {
     echo "Current crontab is:"
     crontab -l
     rm -f /tmp/crontab.list
-
-}
-
-#crond
+fi
