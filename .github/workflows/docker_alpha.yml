@@ -7,7 +7,7 @@ on:
         - .github/workflows/docker_alpha.yml
 
 env:
-  BUILD_BASE: false
+  BUILD_BASE: true
 
 jobs:
   base:
