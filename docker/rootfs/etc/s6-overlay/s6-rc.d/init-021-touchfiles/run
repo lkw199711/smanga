@@ -1,0 +1,26 @@
+#!/usr/bin/with-contenv bash
+# shellcheck shell=bash
+
+if [ ! -f /data/logs/nginx_access.log ]; then
+    touch /data/logs/nginx_access.log
+fi
+
+if [ ! -f /data/logs/nginx_error.log ]; then
+    touch /data/logs/nginx_error.log
+fi
+
+if [ ! -f /data/logs/smanga-compress.log ]; then
+    touch /data/logs/smanga-compress.log
+fi
+
+if [ ! -f /data/logs/smanga-websocket.log ]; then
+    touch /data/logs/smanga-websocket.log
+fi
+
+if [ ! -f /data/logs/smanga-scan.log ]; then
+    touch /data/logs/smanga-scan.log
+fi
+
+if [ ! -f /data/logs/smanga-daemon.log ]; then
+    touch /data/logs/smanga-daemon.log
+fi

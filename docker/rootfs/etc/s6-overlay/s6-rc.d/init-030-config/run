@@ -1,0 +1,7 @@
+#!/usr/bin/with-contenv bash
+# shellcheck shell=bash
+
+if [ ! -f ${SMANGA_CONFIG_INI} ]; then
+	cp /app/config/config.ini ${SMANGA_CONFIG_INI}
+	echo "Create ${SMANGA_CONFIG_INI}"
+fi

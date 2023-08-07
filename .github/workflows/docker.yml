@@ -21,7 +21,7 @@ jobs:
         name: Set Version
         id: set-version
         run: |
-          SMANGA_VERSION=$(cat package.json | grep 'version' | cut -d\" -f4 | head -1)
+          SMANGA_VERSION=$(jq -r '.version' package.json)
           echo "version=${SMANGA_VERSION}" >> $GITHUB_OUTPUT
 
       -
@@ -81,7 +81,7 @@ jobs:
         name: Set Version
         id: set-version
         run: |
-          SMANGA_VERSION=$(cat package.json | grep 'version' | cut -d\" -f4 | head -1)
+          SMANGA_VERSION=$(jq -r '.version' package.json)
           echo "version=${SMANGA_VERSION}" >> $GITHUB_OUTPUT
 
       - 
