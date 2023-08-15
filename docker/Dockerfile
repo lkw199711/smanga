@@ -4,15 +4,21 @@ ARG SMANGA_BASE_VERSION=latest
 ARG SMANGA_BASE_NAME
 
 FROM ${SMANGA_BASE_NAME}/smanga-base:${SMANGA_BASE_VERSION} AS Build
-RUN apk add --no-cache git
+
+ARG SMANGA_VERSION
+
 COPY --chmod=755 . /build
-RUN cp -r /build/dist/docker /rootfs && \
+RUN set -ex && \
+    cp -r /build/dist/docker /rootfs && \
     cp -r /build/file /rootfs/file && \
     cp -r /build/config /rootfs/config
+
 WORKDIR /rootfs/php
-RUN git clone -b main https://github.com/lkw199711/smanga-php.git /rootfs/php
-RUN composer install --no-dev --prefer-dist
-RUN rm -rf /rootfs/php/.git
+RUN set -ex && \
+    apk add --no-cache git && \
+    git clone -b "version/${SMANGA_VERSION}" https://github.com/lkw199711/smanga-php.git /rootfs/php && \
+    composer install --no-dev --prefer-dist && \
+    rm -rf /rootfs/php/.git
 
 FROM ${SMANGA_BASE_NAME}/smanga-base:${SMANGA_BASE_VERSION}
 
