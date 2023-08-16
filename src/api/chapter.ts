@@ -1,8 +1,8 @@
 /*
  * @Author: lkw199711 lkw199711@163.com
  * @Date: 2023-03-17 20:18:30
- * @LastEditors: lkw199711 lkw199711@163.com
- * @LastEditTime: 2023-07-29 17:12:06
+ * @LastEditors: error: error: git config user.name & please set dead value or install git && error: git config user.email & please set dead value or install git & please set dead value or install git
+ * @LastEditTime: 2023-08-16 22:09:22
  * @FilePath: \smanga\src\api\chapter.ts
  */
 import {userConfig} from '@/store';
@@ -66,7 +66,40 @@ const chapterApi = {
 		};
 
 		return resFormat;
-	}
+	},
+
+	/**
+	 * @description: 获取漫画第一章
+	 * @param {number} mangaId
+	 * @param {string} order
+	 * @return {*}
+	 */
+	async get_first(mangaId: number, order: string) {
+		const res = await ajax({
+			url: 'chapter/get_first',
+			data: {mangaId, order},
+		});
+
+		return res.data;
+	},
+
+	/**
+	 * @description: 获取漫画最后阅读记录
+	 * @param {number} mangaId
+	 * @return {*}
+	 */
+	async get_latest(mangaId: number) {
+		const res = await ajax({
+			url: 'chapter/get_first',
+			data: {mangaId},
+		});
+
+		if (res.data.code == 1) {
+			return false;
+		} else {
+			return res.data.info;
+		}
+	},
 };
 
 type chapterGetFormatType = {

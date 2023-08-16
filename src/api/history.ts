@@ -1,8 +1,8 @@
 /*
  * @Author: lkw199711 lkw199711@163.com
  * @Date: 2023-03-17 20:18:30
- * @LastEditors: lkw199711 lkw199711@163.com
- * @LastEditTime: 2023-05-15 23:40:53
+ * @LastEditors: error: error: git config user.name & please set dead value or install git && error: git config user.email & please set dead value or install git & please set dead value or install git
+ * @LastEditTime: 2023-08-16 23:05:11
  * @FilePath: \smanga\src\api\history.ts
  */
 import {ajax} from "./index";
@@ -40,3 +40,29 @@ export function delete_history(historyId: number) {
         }
     })
 }
+
+/**
+ * @description: 历史记录接口
+ * @return {*}
+ */
+const historyApi = {
+	/**
+	 * @description: 获取漫画最后阅读记录
+	 * @param {number} mangaId
+	 * @return {*}
+	 */
+	async get_latest(mangaId: number) {
+		const res = await ajax({
+			url: 'history/get_latest',
+			data: {mangaId},
+		});
+
+		if (res.data.code == 1) {
+			return false;
+		} else {
+			return res.data.info;
+		}
+	},
+};
+
+export default historyApi;

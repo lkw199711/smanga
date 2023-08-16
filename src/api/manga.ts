@@ -42,6 +42,14 @@ export function delete_manga(mangaId: number, deleteFile = false) {
 }
 
 const mangaApi = {
+	/**
+	 * @description: 获取漫画列表
+	 * @param {number} mediaId
+	 * @param {number} page
+	 * @param {number} pageSize
+	 * @param {*} order
+	 * @return {*}
+	 */
 	async get(mediaId: number, page: number, pageSize: number, order = '') {
 		const res = ajax({
 			url: 'manga/get',
@@ -50,6 +58,11 @@ const mangaApi = {
 
 		return (await res).data;
 	},
+
+	/**
+	 * @description: 根据标签获取漫画
+	 * @return {*}
+	 */
 	async get_by_tags(
 		tagIds: string,
 		page: number,
@@ -67,6 +80,22 @@ const mangaApi = {
 			list: data.list.data,
 			count: data.list.total,
 		};
+	},
+
+	/**
+	 * @description: 获取漫画元数据
+	 * @param {number} mangaId
+	 * @return {*}
+	 */
+	async get_manga_info(mangaId: number) {
+		const res = ajax({
+			url: 'manga/get_manga_info',
+			data: {mangaId},
+		});
+
+		const data = (await res).data;
+
+		return data;
 	},
 };
 
