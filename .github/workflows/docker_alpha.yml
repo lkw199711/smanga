@@ -126,7 +126,7 @@ jobs:
         run: |
           SMANGA_VERSION=$(jq -r '.version' package.json)
           echo "version=${SMANGA_VERSION}" >> $GITHUB_OUTPUT
-          
+
       - 
         name: Set Up QEMU
         uses: docker/setup-qemu-action@v2
@@ -152,7 +152,7 @@ jobs:
             linux/amd64
           push: true
           build-args: |
-            SMANGA_VERSION=${{ steps.set-version.outputs.version }}
+            SMANGA_VERSION=alpha
             SMANGA_BASE_NAME=${{ secrets.DOCKER_USERNAME }}
           tags: |
             ${{ secrets.DOCKER_USERNAME }}/smanga:alpha
