@@ -2,48 +2,55 @@
  * @Author: error: error: git config user.name & please set dead value or install git && error: git config user.email & please set dead value or install git & please set dead value or install git
  * @Date: 2023-08-15 23:05:47
  * @LastEditors: lkw199711 lkw199711@163.com
- * @LastEditTime: 2023-08-17 00:56:36
+ * @LastEditTime: 2023-08-23 01:52:12
  * @FilePath: /smanga/src/views/manga-info/index.vue
 -->
 <template>
     <div class="manga-info">
-        <el-carousel class="carousel" :interval="interval" :type="carouselType">
-            <el-carousel-item class="banner-box" v-for="item in banner" :key="item">
-                <img class="banner" :src="item.blob" alt="banner">
-            </el-carousel-item>
-            <!-- 使用一张图片撑开容器的高度 -->
-            <img class="banner seat" :src="banner.length ? banner[0].blob : ''" alt="banner">
-        </el-carousel>
+        <div class="top">
+            <el-carousel class="carousel" :interval="interval" :type="carouselType" v-if="banner.length">
+                <el-carousel-item class="banner-box" v-for="item in banner" :key="item">
+                    <img class="banner" :src="item.blob" alt="banner">
+                </el-carousel-item>
+                <!-- 使用一张图片撑开容器的高度 -->
+                <img class="banner seat" :src="banner.length ? banner[0].blob : ''" alt="banner">
+            </el-carousel>
 
-        <div class="character" @wheel="character_wheel">
-            <p class="character-title">角色</p>
-            <perfect-scrollbar class="character-scroll" @wheel="character_wheel"
-                :options="{ suppressScrollX: false, suppressScrollY: true }">
-                <div v-for="item in character" class="character-item" :key="item.characterId">
-                    <img :src="item.blob" :alt="item.characterName">
-                    <div class="right">
-                        <p class="name">{{ item.characterName }}</p>
-                        <p class="description">{{ item.description }}</p>
-                    </div>
-
-                </div>
-            </perfect-scrollbar>
+            <el-image class="anim cover-img" :src="mangaCover" v-else></el-image>
         </div>
 
-        <el-descriptions class="meta-info" title="漫画信息" :column="infoColum">
-            <el-descriptions-item label="漫画名称">{{ title }}</el-descriptions-item>
-            <el-descriptions-item label="作者">{{ mangaInfo.author }}</el-descriptions-item>
-            <el-descriptions-item label="发布时间">{{ mangaInfo.publishDate }}</el-descriptions-item>
-            <el-descriptions-item label="章节总数">{{ mangaInfo.chapterCount }}</el-descriptions-item>
-            <el-descriptions-item label="阅读方式">{{ mangaInfo.browseType }}</el-descriptions-item>
-            <el-descriptions-item label="入库时间">{{ mangaInfo.createTime }}</el-descriptions-item>
-            <el-descriptions-item label="更新时间">{{ mangaInfo.updateTime }}</el-descriptions-item>
-            <el-descriptions-item label="评分">{{ mangaInfo.star }}</el-descriptions-item>
-            <el-descriptions-item label="标签">
-                <el-tag v-for="item in tags" :key="item.tagId" class="tag" size="small" :color="item.tagColor">{{ item.tagName }}</el-tag>
-            </el-descriptions-item>
-            <el-descriptions-item label="简介">{{ mangaInfo.describe }}</el-descriptions-item>
-        </el-descriptions>
+        <div class="middle">
+            <div class="character" @wheel="character_wheel" v-if="character.length">
+                <p class="character-title">角色</p>
+                <perfect-scrollbar class="character-scroll" @wheel="character_wheel"
+                    :options="{ suppressScrollX: false, suppressScrollY: true }">
+                    <div v-for="item in character" class="character-item" :key="item.characterId">
+                        <img :src="item.blob" :alt="item.characterName">
+                        <div class="right">
+                            <p class="name">{{ item.characterName }}</p>
+                            <p class="description">{{ item.description }}</p>
+                        </div>
+
+                    </div>
+                </perfect-scrollbar>
+            </div>
+
+            <el-descriptions class="meta-info" title="漫画信息" :column="infoColum">
+                <el-descriptions-item label="漫画名称">{{ title }}</el-descriptions-item>
+                <el-descriptions-item label="作者">{{ mangaInfo.author }}</el-descriptions-item>
+                <el-descriptions-item label="发布时间">{{ mangaInfo.publishDate }}</el-descriptions-item>
+                <el-descriptions-item label="章节总数">{{ mangaInfo.chapterCount }}</el-descriptions-item>
+                <el-descriptions-item label="阅读方式">{{ mangaInfo.browseType }}</el-descriptions-item>
+                <el-descriptions-item label="入库时间">{{ mangaInfo.createTime }}</el-descriptions-item>
+                <el-descriptions-item label="更新时间">{{ mangaInfo.updateTime }}</el-descriptions-item>
+                <el-descriptions-item label="评分">{{ mangaInfo.star }}</el-descriptions-item>
+                <el-descriptions-item label="标签">
+                    <el-tag v-for="item in tags" :key="item.tagId" class="tag" size="small" :color="item.tagColor">{{
+                        item.tagName }}</el-tag>
+                </el-descriptions-item>
+                <el-descriptions-item label="简介">{{ mangaInfo.describe }}</el-descriptions-item>
+            </el-descriptions>
+        </div>
 
         <div class="btn-box bottom">
             <el-button class="btn" type="primary" @click="go_chapter_list">章节列表</el-button>
@@ -102,6 +109,7 @@ let title = ref('');
 let tags = ref<tagItemType[]>([]);
 let banner = ref<metaItemType[]>([]);
 let character = ref<characterItem[]>([]);
+let mangaCover = ref<string>('');
 
 // 轮播自动滚动时间间隔 默认为6秒钟
 const interval = ref(6 * 1000);
@@ -170,7 +178,7 @@ async function get_latest_reading() {
  */
 function go_chapter() {
     const chapterInfo = latestChapterInfo.value ? latestChapterInfo.value : firstChapterInfo.value;
-    
+
     // 缓存章节信息
     global_set('chapterId', chapterInfo.chapterId);
     global_set('chapterName', chapterInfo.chapterName);
@@ -231,16 +239,19 @@ async function render_meta() {
         item.blob = blob;
     })
 
-    if (info.meta.length == 0) return;
-
-    // banner图
-    for (let i = 0; i < info.meta.length; i++) {
-        const metaItem = info.meta[i];
-        if (metaItem.metaType === 'banner') {
-            metaItem.blob = await imageApi.get(metaItem.metaFile);
-            bannerSoft.push(metaItem);
+    if (info.meta.length > 0) {
+        // banner图
+        for (let i = 0; i < info.meta.length; i++) {
+            const metaItem = info.meta[i];
+            if (metaItem.metaType === 'banner') {
+                metaItem.blob = await imageApi.get(metaItem.metaFile);
+                bannerSoft.push(metaItem);
+            }
         }
     }
+
+    // 漫画封面
+    mangaCover.value = await imageApi.get(info.info.mangaCover);
 
     // 将图片进行排序
     bannerSoft.sort((a: any, b: any) => { return a.metaFile - b.metaFile });
@@ -270,6 +281,10 @@ function character_wheel(event: Event) {
 
 :deep(.el-carousel__mask) {
     background-color: transparent;
+}
+
+.top{
+    margin-top: 2rem;
 }
 
 .carousel {
@@ -355,6 +370,16 @@ function character_wheel(event: Event) {
 // 底层占位符 怕手机点不到
 .bottom {
     margin-bottom: 6rem;
+}
+
+// 封面
+.cover-img {
+    display: block;
+    margin: 0 auto;
+    // height: 26rem;
+    width: 28rem;
+    min-width: 14rem;
+    height: 40rem;
 }
 
 @media only screen and (min-width: 4096px) {
