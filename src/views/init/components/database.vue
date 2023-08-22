@@ -64,7 +64,7 @@ onMounted(async () => {
 async function check() {
 	if (!form_check()) return false;
 	const res = await database_check(form);
-	const code = res.data?.code;
+	const code = res.data.code;
 	emit('update', code === 0);
 }
 
@@ -92,7 +92,7 @@ function form_check() {
 async function setting() {
 	if (!form_check()) return false;
 	const res = await database_set(form);
-	const code = res.data?.code;
+	const code = res.data.code;
 	emit('update', code === 0);
 }
 </script>

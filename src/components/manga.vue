@@ -80,9 +80,9 @@ export default {
 			global_set('mangaCover', mangaCover);
 			global_set('removeFirst', removeFirst);
 			global_set('direction', direction);
-
+			
 			this.$router.push({
-				name: 'chapter-list',
+				name: 'manga-info',
 				query: { mangaId },
 				params: { browseType, clear: '1' },
 			});

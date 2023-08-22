@@ -47,7 +47,7 @@ jobs:
             linux/amd64
           push: true
           build-args: |
-            SMANGA_VERSION=alpha
+            SMANGA_VERSION=${{ steps.set-version.outputs.version }}
           tags: |
             ${{ secrets.DOCKER_USERNAME }}/smanga-base:alpha
 
@@ -59,6 +59,13 @@ jobs:
       - 
         name: Checkout
         uses: actions/checkout@master
+
+      - 
+        name: Set Version
+        id: set-version
+        run: |
+          SMANGA_VERSION=$(jq -r '.version' package.json)
+          echo "version=${SMANGA_VERSION}" >> $GITHUB_OUTPUT
 
       -
         name: Setup node
@@ -97,7 +104,7 @@ jobs:
             linux/amd64
           push: true
           build-args: |
-            SMANGA_VERSION=alpha
+            SMANGA_VERSION=${{ steps.set-version.outputs.version }}
             SMANGA_BASE_VERSION=alpha
             SMANGA_BASE_NAME=${{ secrets.DOCKER_USERNAME }}
           tags: |
@@ -112,6 +119,13 @@ jobs:
       - 
         name: Checkout
         uses: actions/checkout@master
+
+      - 
+        name: Set Version
+        id: set-version
+        run: |
+          SMANGA_VERSION=$(jq -r '.version' package.json)
+          echo "version=${SMANGA_VERSION}" >> $GITHUB_OUTPUT
 
       - 
         name: Set Up QEMU

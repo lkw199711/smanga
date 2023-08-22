@@ -206,4 +206,4 @@ function array_sort_name(arr: any[]) {
 	});
 }
 
-export {ajax, get_poster, get_image_blob, array_sort, array_sort_name};
+export {ajax, url, get_poster, get_image_blob, array_sort, array_sort_name};

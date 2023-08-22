@@ -132,6 +132,20 @@ const routes: Array<RouteRecordRaw> = [
 			},
 		],
 	},
+	{
+		path: '/manga-info',
+		redirect: '/manga-info/index',
+		meta: {sidebar: false, title: 'manga-info'},
+		component: Layout,
+		children: [
+			{
+				path: 'index',
+				name: 'manga-info',
+				meta: {view: 'list'},
+				component: () => import('../views/manga-info/index.vue'),
+			},
+		],
+	},
 
 	// 设置界面
 	{

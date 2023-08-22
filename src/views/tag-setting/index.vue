@@ -2,7 +2,7 @@
  * @Author: lkw199711 lkw199711@163.com
  * @Date: 2023-07-27 10:30:46
  * @LastEditors: lkw199711 lkw199711@163.com
- * @LastEditTime: 2023-07-29 15:45:42
+ * @LastEditTime: 2023-08-17 20:57:47
  * @FilePath: /smanga/src/views/tag-setting/index.vue
 -->
 <template>
@@ -197,7 +197,7 @@ async function load_table(page = 1, pageSize = 10) {
  * @return {*}
  */
 function reload_table() {
-  pager.value?.reload_page();
+  pager.value.reload_page();
 }
 
 /**
