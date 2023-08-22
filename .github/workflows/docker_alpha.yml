@@ -19,13 +19,6 @@ jobs:
         uses: actions/checkout@master
 
       - 
-        name: Set Version
-        id: set-version
-        run: |
-          SMANGA_VERSION=$(jq -r '.version' package.json)
-          echo "::set-output name=version::${SMANGA_VERSION}"
-
-      - 
         name: Set Up QEMU
         if: ${{ env.BUILD_BASE == 'true' }}
         uses: docker/setup-qemu-action@v2
@@ -66,6 +59,13 @@ jobs:
       - 
         name: Checkout
         uses: actions/checkout@master
+
+      - 
+        name: Set Version
+        id: set-version
+        run: |
+          SMANGA_VERSION=$(jq -r '.version' package.json)
+          echo "version=${SMANGA_VERSION}" >> $GITHUB_OUTPUT
 
       -
         name: Setup node
@@ -120,6 +120,13 @@ jobs:
         name: Checkout
         uses: actions/checkout@master
 
+      - 
+        name: Set Version
+        id: set-version
+        run: |
+          SMANGA_VERSION=$(jq -r '.version' package.json)
+          echo "version=${SMANGA_VERSION}" >> $GITHUB_OUTPUT
+          
       - 
         name: Set Up QEMU
         uses: docker/setup-qemu-action@v2
