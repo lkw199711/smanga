@@ -50,10 +50,16 @@ const mangaApi = {
 	 * @param {*} order
 	 * @return {*}
 	 */
-	async get(mediaId: number, page: number, pageSize: number, order = '') {
+	async get(
+		mediaId: number,
+		page: number,
+		pageSize: number,
+		order = '',
+		keyWord = ''
+	) {
 		const res = ajax({
 			url: 'manga/get',
-			data: {mediaId, page, pageSize, order},
+			data: {mediaId, page, pageSize, order, keyWord},
 		});
 
 		return (await res).data;
