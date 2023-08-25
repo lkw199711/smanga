@@ -1,20 +1,15 @@
 <template>
   <div class="sidebar-pc">
-    <el-menu
-        router
-        default-active="/"
-        :class="['sidebar','sidebar-pc',{close:config.sidebarCollapse}]"
-        :collapse="config.sidebarCollapse"
-        :collapse-transition="true"
-    >
+    <el-menu router default-active="/" :class="['sidebar', 'sidebar-pc', { close: config.sidebarCollapse }]"
+      :collapse="config.sidebarCollapse" :collapse-transition="true">
       <el-menu-item index="/" class="no-padding">
-        <div :class="['logo','posted',{'collapse':!config.sidebarCollapse}]">
+        <div :class="['logo', 'posted', { 'collapse': !config.sidebarCollapse }]">
           <img v-show="config.sidebarCollapse" src="@/assets/logo2.png" alt="logo">
-          <logo v-show="!config.sidebarCollapse"/>
+          <logo v-show="!config.sidebarCollapse" />
         </div>
       </el-menu-item>
 
-      <template v-for="(item,key) in routes" :key="key">
+      <template v-for="(item, key) in routes" :key="key">
         <el-menu-item v-if="item.meta.sidebar && userLimit(item)" :index="item.path">
           <el-icon v-if="item.meta.icon">
             <component :is="item.meta.icon"></component>
@@ -26,25 +21,18 @@
   </div>
 
   <div class="sidebar-phone">
-    <el-drawer
-        v-model="config.sidebarCollapse"
-        size="auto"
-        direction="ltr"
-        :with-header="false"
-    >
-      <el-menu
-          router
-          class="sidebar sidebar-phone"
-          default-active="/"
-      >
+    <el-drawer v-model="config.sidebarCollapse" size="auto" direction="ltr" :with-header="false">
+      <!-- 顶部占位符 -->
+      <div class="top-seat" v-if="config.android"></div>
+      <el-menu router class="sidebar sidebar-phone" default-active="/">
         <!--<logo/>-->
         <el-menu-item index="/" class="no-padding">
-          <div :class="['logo','posted']">
-            <logo/>
+          <div :class="['logo', 'posted']">
+            <logo />
           </div>
         </el-menu-item>
 
-        <template v-for="(item,key) in routes" :key="key">
+        <template v-for="(item, key) in routes" :key="key">
           <el-menu-item v-if="item.meta.sidebar && userLimit(item)" :index="item.path">
             <el-icon v-if="item.meta.icon">
               <component :is="item.meta.icon"></component>
@@ -55,16 +43,15 @@
       </el-menu>
     </el-drawer>
   </div>
-
 </template>
 
 <script lang="ts" setup>
 import { ref, onMounted, computed } from 'vue'
 import router from '@/router';
-import {config,power} from '@/store';
+import { config, power } from '@/store';
 import Logo from "@/layout/components/logo.vue";
-import {useI18n} from "vue-i18n";
-const {t} = useI18n();
+import { useI18n } from "vue-i18n";
+const { t } = useI18n();
 
 const show = ref(true);
 
@@ -76,15 +63,15 @@ const routes = computed(() => {
   return router.options.routes;
 })
 
-const userLimit = computed(()=>(item:any)=>{
+const userLimit = computed(() => (item: any) => {
 
   const title = item.meta.title;
 
-  if (title==='mediaManage' && !power.editMedia){
+  if (title === 'mediaManage' && !power.editMedia) {
     return false;
   }
 
-  if (title==='account' && !power.editUser){
+  if (title === 'account' && !power.editUser) {
     return false;
   }
 
@@ -98,7 +85,6 @@ onMounted(() => {
 </script>
 
 <style scoped lang="less">
-
 //响应式手机
 @media only screen and (max-width: 1199px) {
   .sidebar-pc {
@@ -110,6 +96,11 @@ onMounted(() => {
   .sidebar-phone {
     display: none;
   }
+}
+
+.top-seat {
+  height: 4rem;
+  background-color: @s-background;
 }
 
 .el-menu {

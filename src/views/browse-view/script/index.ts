@@ -75,6 +75,9 @@ export default defineComponent({
 		browseTop() {
 			return config.browseTop;
 		},
+		config() {
+			return config;
+		}
 	},
 
 	// 方法
