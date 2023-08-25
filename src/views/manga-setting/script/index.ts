@@ -4,6 +4,7 @@ import {ElMessage, ElMessageBox} from 'element-plus';
 import mangaApi, {update_manga, delete_manga} from '@/api/manga';
 import tablePager from '@/components/table-pager.vue';
 import i18n from '@/i18n';
+import {Search} from '@element-plus/icons-vue';
 
 const {t} = i18n.global;
 export default defineComponent({
@@ -12,6 +13,7 @@ export default defineComponent({
 		return {
 			Edit,
 			Delete,
+			Search,
 		};
 	},
 	// 数据
@@ -20,6 +22,7 @@ export default defineComponent({
 			count: 0,
 			tableData: [],
 			editMangaDialog: false,
+			keyWord: '',
 			form: {
 				mangaId: '',
 				mangaName: '',
@@ -70,8 +73,8 @@ export default defineComponent({
 		/**
 		 * 加载表格数据
 		 */
-		async load_table(page = 1, pageSize = 10) {
-			const res = await mangaApi.get(0, page, pageSize);
+		async load_table(page = 1, pageSize = 10) {	
+			const res = await mangaApi.get(0, page, pageSize, '', this.keyWord);
 			this.count = res.count;
 			this.tableData = res.list;
 		},

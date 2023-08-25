@@ -1,6 +1,6 @@
 {
 	"name": "smanga",
-	"version": "3.3.8",
+	"version": "3.3.9",
 	"private": true,
 	"scripts": {
 		"serve": "vue-cli-service serve",

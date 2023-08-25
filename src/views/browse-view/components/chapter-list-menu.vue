@@ -1,21 +1,14 @@
 <template>
   <div class="chapter-list-menu">
     <!--目录列表-->
-    <el-drawer
-        v-model="popup"
-        size="auto"
-        direction="ltr"
-        :with-header="false"
-    >
-      <el-menu
-          class="chapter-list"
-          active-text-color="#ee0a24"
-          :default-active="String(chapterIndex)"
-          @select="change_chapter"
-      >
-        <el-menu-item v-for="(k,i) in chapterList" :index="String(i)" :key="k.chapterId">{{ k.chapterName }}
+    <el-drawer v-model="popup" size="auto" direction="ltr" :with-header="false">
+      <!-- 顶部占位符 -->
+      <div class="top-seat" v-if="config.android"></div>
+      <el-menu class="chapter-list" active-text-color="#ee0a24" :default-active="String(chapterIndex)"
+        @select="change_chapter">
+        <el-menu-item v-for="(k, i) in chapterList" :index="String(i)" :key="k.chapterId">{{ k.chapterName }}
         </el-menu-item>
-        <seat height="4rem"/>
+        <seat height="4rem" />
       </el-menu>
 
       <!--翻页按钮-->
@@ -28,15 +21,15 @@
 
     <!--目录按钮-->
     <div v-show="browseTop" class="show-menu-btn" @click.stop="button_click">
-      <i class="colour colour-mulu"/>
+      <i class="colour colour-mulu" />
     </div>
   </div>
 </template>
 
 <script lang='ts'>
-import {defineComponent, ref} from 'vue';
-import {config} from "@/store";
-import {global_get_array, global_set} from "@/utils";
+import { defineComponent, ref } from 'vue';
+import { config } from "@/store";
+import { global_get_array, global_set } from "@/utils";
 import Seat from "@/components/seat.vue";
 
 export default defineComponent({
@@ -87,10 +80,13 @@ export default defineComponent({
 
       return -1;
     },
+    config() {
+      return config;
+    }
   },
 
   // 组件
-  components: {Seat},
+  components: { Seat },
 
   // 方法
   methods: {
@@ -115,6 +111,11 @@ export default defineComponent({
 </script>
 
 <style scoped lang='less'>
+.top-seat {
+  height: 4rem;
+  background-color: @s-background;
+}
+
 // 使抽屉滚动
 :deep(.el-drawer__body) {
   overflow-y: auto;

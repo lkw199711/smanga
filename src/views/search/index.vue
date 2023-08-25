@@ -101,7 +101,7 @@ import {
 import {useRoute} from 'vue-router';
 import {Search} from '@element-plus/icons-vue';
 import store, {config, userConfig, pageSizeConfig} from '@/store';
-import {search} from '@/api/search';
+import searchApi from '@/api/search';
 import router from '@/router';
 import {get_poster} from '@/api';
 import chapterApi from '@/api/chapter';
@@ -156,8 +156,8 @@ onActivated(() => {
 });
 
 async function do_search() {
-	const res: any = await search(searchText.value, searchType.value, 0, 12);
-	list.value = res.data.list;
+	const res: any = await searchApi.get(searchText.value, searchType.value, 0, 12);
+	list.value = res.list;
 }
 
 /**
@@ -184,15 +184,15 @@ async function page_change(
 		return false;
 	}
 
-	const res: any = await search(
+	const res: any = await searchApi.get(
 		searchText.value,
 		searchType.value,
 		page.value,
 		pageSize,
 		userConfig.order
 	);
-	list.value = res.data.list.data;
-	count.value = res.data.list.total;
+	list.value = res.list;
+	count.value = res.count;
 
 	// 为漫画请求海报图片
 	get_poster(list.value, 'mangaAwait');
