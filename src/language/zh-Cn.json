@@ -10,13 +10,17 @@
     "search": "搜索",
     "account": "账户管理",
     "userSetting": "用户设置",
+    "serveSetting": "服务器设置",
+    "log": "日志",
     "mediaManage": "媒体库管理",
     "mangaManage": "漫画管理",
     "pathManage": "路径管理",
     "chapterManage": "章节管理",
     "bookmarkManage": "书签管理",
+    "tagManage": "标签管理",
     "compressManage": "转换管理",
-    "wiki": "使用说明"
+    "wiki": "使用说明",
+    "tagList": "标签展示"
   },
   "option": {
     "option": "操作",
@@ -32,7 +36,9 @@
     "recoveryFirst": "恢复首页",
     "direction": "切换阅读方向",
     "ltr": "左 -> 右",
-    "rtl": "右 -> 左"
+    "rtl": "右 -> 左",
+    "dwonload": "下载图片",
+    "editTags": "编辑标签"
   },
   "account": {
     "add": "新增用户",
@@ -83,7 +89,8 @@
       "browse": "默认浏览方式:",
       "directory": "文件夹结构:",
       "removeFirst": "剔除首页:",
-      "direction": "翻页方向:"
+      "direction": "翻页方向:",
+      "autoScan": "自动扫描"
     },
     "note": {
       "name": "\"媒体库名称\": 必填,不能为空",
@@ -91,7 +98,8 @@
       "browse": "\"默认浏览方式\": 选择此媒体库里漫画的默认浏览方式.您还可以通过浏览界面的顶部功能菜单调整,但我们还是建议将不同类型的漫画放在不同的媒体库,以便于进行管理.",
       "directory": "\"文件夹结构\": 此选项支持为路径多加一层目录,例如您希望通过年份来管理漫画 \"example/2022/manga/chapter/...\"",
       "removeFirst": "\"剔除首页\": 在\"双页模式\"下,通过在阅读中暂时剔除首页,可对其偶数页码,使漫画左右两页合成一张整图,请熟悉漫画页码后更改此项.您也可以在浏览界面通过功能菜单来临时更改此项.",
-      "direction": "\"翻页方向\": 在\"双页模式\"下,更改第一与第二张图的展示顺序,使得漫画左右两页合成一张整图.您也可以在浏览界面通过功能菜单来临时更改此项."
+      "direction": "\"翻页方向\": 在\"双页模式\"下,更改第一与第二张图的展示顺序,使得漫画左右两页合成一张整图.您也可以在浏览界面通过功能菜单来临时更改此项.",
+      "autoScan": "当文件夹发送变化时,自动新增或删除漫画与章节.开启此选项会极大程度增加服务器压力,在多路径媒体库请谨慎开启."
     },
     "place": {
       "name": "请输入媒体库名称",
@@ -115,7 +123,8 @@
       "text": "确认删除此媒体库?"
     },
     "title": {
-      "read": "阅读选项"
+      "read": "阅读选项",
+      "scan": "扫描选项"
     }
   },
   "path": {
@@ -126,10 +135,14 @@
     "createTime": "创建时间",
     "form": {
       "add": "新增路径:",
-      "path": "路径:"
+      "path": "路径:",
+      "include": "包含匹配",
+      "exclude": "排除匹配"
     },
     "place": {
-      "add": "请输入路径"
+      "add": "请输入路径",
+      "include": "请输入包含匹配",
+      "exclude": "请输入排除匹配"
     },
     "button": {
       "re": "重新扫描",
@@ -145,10 +158,14 @@
       "text1": "确认删除此路径? 与之关联的漫画和章节都会被清除!",
       "title2": "确认重新扫描",
       "text2": "确认删除此路径? 将清除与之相关的漫画与章节并重新扫描添加!"
+    },
+    "note": {
+      "clude": "include,exclude为匹配规则与排除规则,扫描到的漫画使用include匹配路径,如匹配到则加入,未匹配到则排除;exclude相反,匹配到排除,未匹配到加入.当两个值同时存在的时候,include优先.<br>\ninclude,exclude两项均为正则表达式值,如您想匹配多个规则,请像这样书写 {0}"
     }
   },
   "mangaManage": {
-    "id": "媒体库id",
+    "id": "漫画id",
+    "mediaId": "媒体库id",
     "name": "漫画名称",
     "createTime": "创建时间",
     "updateTime": "更新时间",
@@ -271,9 +288,44 @@
     "magenta": "洋红"
   },
   "sortOrder": {
+    "id": "id",
+    "idDesc": "id-倒序",
     "name": "名称",
     "nameDesc": "名称-倒序",
     "time": "入库时间",
     "timeDesc": "入库时间-倒序"
+  },
+  "history": {
+    "confirm": {
+      "text": "确认删除此记录?"
+    }
+  },
+  "tagSetting": {
+    "dialog": {
+      "tagColorPlaceholder": "请输入标签颜色",
+      "addTitle": "新增标签",
+      "tagName": "标签名称",
+      "tagNamePlaceholder": "请输入标签名称",
+      "tagColor": "标签颜色",
+      "description": "描述",
+      "descriptionPlaceholder": "请输入描述",
+      "updateTitle": "修改标签",
+      "nameWarning": "标签名不能为空",
+      "confirmText": "确认删除此标签?",
+      "confirmTitle": "删除标签",
+      "tagColorNote": "请输入一个十六进制格式的颜色,如果留空,默认为\"#a0d911\"(绿色)"
+    },
+    "addButton": "新增标签",
+    "table": {
+      "tagId": "标签id",
+      "tagName": "标签名称",
+      "description": "描述",
+      "tagColor": "标签颜色"
+    }
+  },
+  "rightSidebar": {
+    "editTags": "编辑标签",
+    "baseTagTitle": "备选标签",
+    "ckeckedTagTitle": "当前标签"
   }
 }

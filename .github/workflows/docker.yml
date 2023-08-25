@@ -21,19 +21,19 @@ jobs:
         name: Set Version
         id: set-version
         run: |
-          SMANGA_VERSION=$(cat package.json | grep 'version' | cut -d\" -f4 | head -1)
+          SMANGA_VERSION=$(jq -r '.version' package.json)
           echo "version=${SMANGA_VERSION}" >> $GITHUB_OUTPUT
 
       -
         name: Setup node
         uses: actions/setup-node@v3
         with:
-          node-version: '14'
+          node-version: '16'
       -
         name: Build Web
         run: |
           npm install
-          npm run build
+          npm run build-docker
 
       - 
         name: Set Up QEMU
@@ -81,7 +81,7 @@ jobs:
         name: Set Version
         id: set-version
         run: |
-          SMANGA_VERSION=$(cat package.json | grep 'version' | cut -d\" -f4 | head -1)
+          SMANGA_VERSION=$(jq -r '.version' package.json)
           echo "version=${SMANGA_VERSION}" >> $GITHUB_OUTPUT
 
       - 

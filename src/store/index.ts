@@ -1,3 +1,10 @@
+/*
+ * @Author: lkw199711 lkw199711@163.com
+ * @Date: 2023-03-17 20:18:30
+ * @LastEditors: lkw199711 lkw199711@163.com
+ * @LastEditTime: 2023-05-22 21:19:17
+ * @FilePath: \smanga\src\store\index.ts
+ */
 import {createStore} from 'vuex';
 import {reactive} from 'vue';
 import {GlobalData} from '@/store/type';
@@ -59,8 +66,15 @@ export const config = reactive({
 });
 
 export const power = reactive({
-	editUser: editUser === '1',
-	editMedia: editMedia === '1',
+	editUser: editUser == '1',
+	editMedia: editMedia == '1',
+});
+
+export const userInfo = reactive({
+	userName: '',
+	userId: 0,
+	editUser: editUser == '1',
+	editMedia: editMedia == '1',
 });
 
 /**
@@ -91,7 +105,7 @@ export const pageSizeConfig = reactive({
 	mini: [9, 12, 15, 18, 21],
 	small: [12, 18, 32, 38, 44],
 	middle: [12, 18, 32, 38, 44],
-	large: [8, 16, 32, 40, 48],
+	large: [8, 16, 32, 40, 48] as number[],
 	'2k': [27, 36, 45, 54, 63],
 	'4k': [32, 40, 48, 54, 62],
 });

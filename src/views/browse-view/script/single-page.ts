@@ -26,6 +26,7 @@ export default defineComponent({
             imgSrc: '',
             // 图片路径列表
             imgPathList: [] as string[],
+            imgPathFiles: [] as any,
             // 是否正在加载图片 (单页模式加载动画待制作)
             loading: false,
         }
@@ -92,8 +93,16 @@ export default defineComponent({
             global_set('page', page);
             global_set('pageImage', pageImage);
 
+            // 有缓存则加载缓存的图片
+            if (this.imgPathFiles[page - 1]) {
+                this.imgSrc = this.imgPathFiles[page - 1];
+                return;
+            }
+
             const res: any = await get_image_blob(pageImage);
             this.imgSrc = res.data;
+
+            this.imgPathFiles[page - 1] = res.data;
         },
 
         /**
@@ -120,7 +129,6 @@ export default defineComponent({
 
             switch (res.data.status) {
                 case 'uncompressed':
-                    (this.$refs as any).pager.page_change(page);
                     setTimeout(() => {
                         (this.$refs as any).pager.reload();
                     }, 2000);
@@ -139,6 +147,7 @@ export default defineComponent({
                 default:
                     this.imgPathList = res.data.list;
                     (this.$refs as any).pager.page_change(page);
+                    break;
             }
         },
 
@@ -238,6 +247,18 @@ export default defineComponent({
         switch_footer() {
             config.browseFooter = !config.browseFooter;
         },
+
+        /**
+         * 下载当前图片
+         */
+        dwonload_image() {
+            const src = this.imgSrc;
+
+            const a = document.createElement('a');
+            a.href = src;
+            a.download = 'smangaImage.png';
+            a.click();
+        }
     },
 
     // 生命周期
@@ -246,6 +267,8 @@ export default defineComponent({
         config.browseType = 'single';
         const page = this.$route.params.page || global_get('page') || 1;
         const notAddHistory = this.$route.params.notAddHistory || false;
+        // 组件被渲染了两遍
+console.log('created');
 
         // 加载页面
         this.reload_page(Number(page), !notAddHistory);

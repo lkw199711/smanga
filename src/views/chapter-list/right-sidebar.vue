@@ -85,7 +85,6 @@ watch(
 	async (val) => {
 		const res = await is_collect('chapter', val);
 		isCollect.value = res.data.isCollect;
-		console.log(val);
 	}
 );
 

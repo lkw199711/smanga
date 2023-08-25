@@ -40,7 +40,7 @@ import {
 } from 'vue';
 import {useRoute, useRouter} from 'vue-router';
 import {get_poster} from '@/api';
-import {get_chapter} from '@/api/chapter';
+import chapterApi from '@/api/chapter';
 import store, {config, pageSizeConfig, userConfig} from '@/store';
 import {global_get, global_set, global_set_json} from '@/utils';
 import chapter from '@/components/chapter.vue';
@@ -88,12 +88,11 @@ onBeforeUnmount(() => {
 });
 
 onActivated(() => {
-	// const clear = route.params.clear;
-
-	// if (clear) {
-	// 	init();
-	// 	route.params.clear = '';
-	// }
+	const clear = route.params.clear;
+	if (clear) {
+		init();
+		route.params.clear = '';
+	}
 });
 
 function go_browse(item: any) {
@@ -142,19 +141,16 @@ async function page_change(
 	pageC = 1,
 	pageSize: number = defaultPageSize.value
 ) {
-	if (page.value) {
-		page.value = pageC;
-	}
+	page.value = pageC;
 
-	const start = (page.value - 1) * pageSize;
-	const res = await get_chapter(
+	const res = await chapterApi.get(
 		mangaId.value,
-		start,
+		page.value,
 		pageSize,
 		userConfig.order
 	);
-	list.value = res.data.list;
-	count.value = res.data.count;
+	list.value = res.list;
+	count.value = res.count;
 
 	// 为章节请求海报图片
 	get_poster(list.value, 'chapterAwait');
@@ -164,8 +160,8 @@ async function page_change(
  * 获取全部漫画章节
  */
 async function load_chapter() {
-	const res = await get_chapter(mangaId.value);
-	global_set_json('chapterList', res.data.list);
+	const res = await chapterApi.get(mangaId.value);
+	global_set_json('chapterList', res.list);
 }
 
 function init() {

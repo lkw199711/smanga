@@ -10,6 +10,9 @@
 		</p>
 
 		<el-form :model="form" :inline="true">
+			<el-form-item label="database:">
+				<el-input v-model="form.database" style="width: 28rem" />
+			</el-form-item>
 			<el-form-item label="ip:">
 				<el-input v-model="form.ip" style="width: 16rem" />
 			</el-form-item>
@@ -36,12 +39,12 @@ import {reactive, onMounted, defineProps, defineEmits} from 'vue';
 import {database_check, database_set, database_get} from '@/api/login';
 import {ElMessage} from 'element-plus';
 
-const props = defineProps(['firstLoad']);
 const emit = defineEmits(['update']);
 
 // do not use same name with ref
 const form = reactive({
 	ip: '127.0.0.1',
+	database: 'smanga',
 	port: '3306',
 	userName: 'smanga',
 	passWord: 'smanga',
@@ -49,19 +52,19 @@ const form = reactive({
 
 onMounted(async () => {
 	const res = await database_get();
-	const data = res.data.data;
+	const data = res.data;
 
-	Object.assign(form, data);
-
-	if (props.firstLoad) {
-		await check();
+	if (data.code === 0) {
+		Object.assign(form, data);
 	}
+
+	await check();
 });
 
 async function check() {
 	if (!form_check()) return false;
 	const res = await database_check(form);
-	const code = res.data?.code;
+	const code = res.data.code;
 	emit('update', code === 0);
 }
 
@@ -89,7 +92,7 @@ function form_check() {
 async function setting() {
 	if (!form_check()) return false;
 	const res = await database_set(form);
-	const code = res.data?.code;
+	const code = res.data.code;
 	emit('update', code === 0);
 }
 </script>

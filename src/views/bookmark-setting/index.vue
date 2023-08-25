@@ -117,10 +117,9 @@ export default defineComponent({
      * @returns {Promise<void>}
      */
     async load_table(page = 1, pageSize = 10) {
-      const start = (page - 1) * pageSize;
-      const res = await get_bookmark(start, pageSize);
-      this.tableData = res.data.list;
-      this.count = Number(res.data.count);
+      const res = await get_bookmark(page, pageSize);
+      this.tableData = res.data.list.data;
+      this.count = Number(res.data.list.total);
     },
     /**
      * 重载数据 页码不变

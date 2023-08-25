@@ -104,7 +104,7 @@ import store, {config, userConfig, pageSizeConfig} from '@/store';
 import {search} from '@/api/search';
 import router from '@/router';
 import {get_poster} from '@/api';
-import {get_chapter} from '@/api/chapter';
+import chapterApi from '@/api/chapter';
 import {global_set, global_set_json} from '@/utils';
 import manga from '@/components/manga.vue';
 import chapter from '@/components/chapter.vue';
@@ -176,25 +176,23 @@ async function page_change(
 	pageC = 1,
 	pageSize: number = defaultPageSize.value
 ) {
-	if (pageC) {
-		page.value = pageC;
-	}
+	page.value = pageC;
+
 
 	if (!searchText.value) {
 		ElMessage.warning('请输入搜索关键词！');
 		return false;
 	}
 
-	const start = (page.value - 1) * pageSize;
 	const res: any = await search(
 		searchText.value,
 		searchType.value,
-		start,
+		page.value,
 		pageSize,
 		userConfig.order
 	);
-	list.value = res.data.list;
-	count.value = res.data.count;
+	list.value = res.data.list.data;
+	count.value = res.data.list.total;
 
 	// 为漫画请求海报图片
 	get_poster(list.value, 'mangaAwait');
@@ -234,8 +232,8 @@ async function go_browse(item: any) {
 	global_set('chapterCover', chapterCover);
 
 	// 加载章节列表
-	const res = await get_chapter(item.mangaId);
-	global_set_json('chapterList', res.data.list);
+	const res = await chapterApi.get(item.mangaId);
+	global_set_json('chapterList', res.list);
 
 	let page = 1;
 	if (browseType === 'flow') {

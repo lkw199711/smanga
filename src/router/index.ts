@@ -105,6 +105,20 @@ const routes: Array<RouteRecordRaw> = [
 		],
 	},
 	{
+		path: '/tag-list',
+		redirect: '/tag-list/index',
+		meta: {sidebar: true, title: 'tagList', icon: 'Ticket'},
+		component: Layout,
+		children: [
+			{
+				path: 'index',
+				name: 'tag-list',
+				meta: {view: 'list'},
+				component: () => import('../views/tag-list/index.vue'),
+			},
+		],
+	},
+	{
 		path: '/search',
 		redirect: '/search/index',
 		meta: {sidebar: true, title: 'search', icon: 'Search'},
@@ -115,6 +129,20 @@ const routes: Array<RouteRecordRaw> = [
 				name: 'search',
 				meta: {view: 'search'},
 				component: () => import('../views/search/index.vue'),
+			},
+		],
+	},
+	{
+		path: '/manga-info',
+		redirect: '/manga-info/index',
+		meta: {sidebar: false, title: 'manga-info'},
+		component: Layout,
+		children: [
+			{
+				path: 'index',
+				name: 'manga-info',
+				meta: {view: 'list'},
+				component: () => import('../views/manga-info/index.vue'),
 			},
 		],
 	},
@@ -205,6 +233,20 @@ const routes: Array<RouteRecordRaw> = [
 		],
 	},
 	{
+		path: '/tag-setting',
+		redirect: '/tag-setting/index',
+		meta: {sidebar: true, title: 'tagManage', icon: 'Ticket'},
+		component: Layout,
+		children: [
+			{
+				path: 'index',
+				name: 'tag-setting',
+				meta: {view: 'setting'},
+				component: () => import('../views/tag-setting/index.vue'),
+			},
+		],
+	},
+	{
 		path: '/compress-setting',
 		redirect: '/compress-setting/index',
 		meta: {sidebar: true, title: 'compressManage', icon: 'Switch'},
@@ -227,8 +269,22 @@ const routes: Array<RouteRecordRaw> = [
 			{
 				path: 'index',
 				name: 'user-setting',
-				meta: {view: 'searchOnly'},
+				meta: {view: 'default'},
 				component: () => import('../views/user-setting/index.vue'),
+			},
+		],
+	},
+	{
+		path: '/serve-setting',
+		redirect: '/serve-setting/index',
+		meta: {sidebar: true, title: 'serveSetting', icon: 'Setting'},
+		component: Layout,
+		children: [
+			{
+				path: 'index',
+				name: 'serve-setting',
+				meta: {view: 'default'},
+				component: () => import('../views/serve-setting/index.vue'),
 			},
 		],
 	},
@@ -237,6 +293,20 @@ const routes: Array<RouteRecordRaw> = [
 		name: 'init',
 		meta: {sidebar: false, title: 'userSetting'},
 		component: () => import('../views/init/index.vue'),
+	},
+	{
+		path: '/log',
+		redirect: '/log/index',
+		meta: {sidebar: true, title: 'log', icon: 'Document'},
+		component: Layout,
+		children: [
+			{
+				path: 'index',
+				name: 'log',
+				meta: {view: 'searchOnly'},
+				component: () => import('../views/log/index.vue'),
+			},
+		],
 	},
 
 	// 浏览界面

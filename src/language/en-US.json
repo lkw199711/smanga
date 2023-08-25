@@ -10,13 +10,17 @@
     "search": "search",
     "account": "account",
     "userSetting": "userSetting",
+    "serveSetting": "serveSetting",
+    "log": "log",
     "mediaManage": "mediaManage",
     "mangaManage": "mangaManage",
     "pathManage": "pathManage",
     "chapterManage": "chapterManage",
     "bookmarkManage": "bookmarkManage",
+    "tagManage": "tagManage",
     "compressManage": "compressManage",
-    "wiki": "wiki"
+    "wiki": "wiki",
+    "tagList": "tagList"
   },
   "option": {
     "option": "option",
@@ -35,7 +39,9 @@
     "rtl": "right -> left",
     "before": "before",
     "next": "next",
-    "removeCollect": "remove collect"
+    "removeCollect": "remove collect",
+    "dwonload": "dwonload image",
+    "editTags": "ediaTags"
   },
   "account": {
     "add": "addUser",
@@ -83,7 +89,8 @@
       "browse": "defaultBrowse:",
       "directory": "directoryType:",
       "removeFirst": "removeFirst:",
-      "direction": "direction:"
+      "direction": "direction:",
+      "autoScan": "auto scan"
     },
     "note": {
       "name": "\"mediaName\": Required, cannot be blank",
@@ -91,7 +98,8 @@
       "browse": "\"defaultBrowse\": Select the default browsing method of comics in this media library. You can also adjust it through the top function menu of the browsing interface, but we still recommend that different types of comics be placed in different media libraries for easy management",
       "directory": "\"directoryType\": This option supports adding one more level of directory to the path. For example, you want to manage comics by year \"example/2022/manga/chapter/...\"",
       "removeFirst": "\"removeFirst\": In the \"double page mode\", by temporarily removing the first page in reading, you can combine the left and right pages of the cartoon into a whole picture by removing the even number of page numbers. Please change this item after getting familiar with the page numbers of the cartoon. You can also change this item temporarily through the function menu in the browsing interface.",
-      "direction": "\"direction\": In the \"double page mode\", change the display order of the first and second pictures so that the left and right pages of the cartoon can be combined into a whole picture. You can also change this item temporarily through the function menu in the browsing interface."
+      "direction": "\"direction\": In the \"double page mode\", change the display order of the first and second pictures so that the left and right pages of the cartoon can be combined into a whole picture. You can also change this item temporarily through the function menu in the browsing interface.",
+      "autoScan": "When the folder sending changes, comics and chapters will be automatically added or deleted. Enabling this option will greatly increase the pressure on the server. Please be careful when opening multi-path media libraries"
     },
     "place": {
       "name": "please enter mediaName",
@@ -115,7 +123,8 @@
       "text": "are you sure to delete this media?"
     },
     "title": {
-      "read": "read option"
+      "read": "read option",
+      "scan": "Scan Options"
     }
   },
   "path": {
@@ -126,10 +135,14 @@
     "createTime": "createTime",
     "form": {
       "add": "addPath:",
-      "path": "path:"
+      "path": "path:",
+      "include": "include",
+      "exclude": "exclude"
     },
     "place": {
-      "add": "please enter the path"
+      "add": "please enter the path",
+      "include": "Please enter a match",
+      "exclude": "Please enter an exclusion match"
     },
     "button": {
       "re": "reScan",
@@ -145,10 +158,14 @@
       "text1": "are you sure to delete this path? The associated manga and chapter also will be deleted!",
       "title2": "confirm reScan",
       "text2": "are you sure to reScan this path? The associated manga and chapter also will be cleared and rescanned to add!"
+    },
+    "note": {
+      "clude": "Include and exclude are the matching and exclusion rules. The scanned comics use the include matching path. If they are matched, they are added; if they are not matched, they are excluded; Exclude is the opposite, matching to exclude and not matching to add. When two values exist simultaneously, include takes precedence<br>\nBoth include and exclude are regular expression values. If you want to match multiple rules, please write them like this {0}"
     }
   },
   "mangaManage": {
     "id": "mangaId",
+    "mediaId": "mediaId",
     "name": "mangaName",
     "createTime": "createTime",
     "updateTime": "updateTime",
@@ -271,10 +288,45 @@
     "magenta": "magenta"
   },
   "sortOrder": {
+    "id": "id",
+    "idDesc": "id-倒序",
     "name": "name",
     "nameDesc": "name-desc",
     "time": "time",
     "timeDesc": "time-desc"
   },
-  "readModel": "readModel"
+  "readModel": "readModel",
+  "history": {
+    "confirm": {
+      "text": "Are you sure to delete this record?"
+    }
+  },
+  "tagSetting": {
+    "dialog": {
+      "tagName": "tagName",
+      "addTitle": "Add Tag",
+      "tagNamePlaceholder": "Please enter tag name",
+      "tagColor": "Tag Color",
+      "tagColorPlaceholder": "Please enter the tag color",
+      "description": "description",
+      "descriptionPlaceholder": "Please enter description",
+      "updateTitle": "Modify Tag",
+      "nameWarning": "The tag name cannot be empty",
+      "confirmText": "Are you sure to delete this tag?",
+      "confirmTitle": "delete tag",
+      "tagColorNote": "Please enter a color in hexadecimal format. If left blank, the default is \"#a0d911\" (green)"
+    },
+    "addButton": "Add tag",
+    "table": {
+      "tagId": "tagId",
+      "tagName": "tagName",
+      "description": "description",
+      "tagColor": "tagColor"
+    }
+  },
+  "rightSidebar": {
+    "editTags": "editTags",
+    "baseTagTitle": "Alternative tags",
+    "ckeckedTagTitle": "Current tag"
+  }
 }

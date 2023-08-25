@@ -1,0 +1,10 @@
+#!/usr/bin/with-contenv bash
+# shellcheck shell=bash
+
+echo "Change mysql owner to user smanga..."
+echo "It may take a while"
+if [ -d /var/lib/mysql ]; then
+    chown smanga:smanga -R /data/db /var/lib/mysql
+else
+    chown smanga:smanga -R /data/db
+fi

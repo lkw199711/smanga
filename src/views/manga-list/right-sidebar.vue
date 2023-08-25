@@ -1,15 +1,7 @@
 <template>
 	<div class="right-sidebar">
-		<el-drawer
-			v-model="drawer"
-			size="auto"
-			:with-header="false"
-			:before-close="close_sidebar">
-			<el-menu
-				class="right-sidebar-menu"
-				active-text-color="#ffd04b"
-				background-color="#545c64"
-				text-color="#fff"
+		<el-drawer v-model="drawer" size="auto" :with-header="false" :before-close="close_sidebar">
+			<el-menu class="right-sidebar-menu" active-text-color="#ffd04b" background-color="#545c64" text-color="#fff"
 				@select="menu_select">
 				<!--封面-->
 				<img class="poster" :src="blob" alt="漫画封面" />
@@ -37,30 +29,70 @@
 					</el-icon>
 					{{ isCollect ? $t('option.removeCollect') : $t('option.collect') }}
 				</el-menu-item>
+				<el-menu-item index="tags">
+					<el-icon>
+						<Ticket />
+					</el-icon>
+					{{ $t('option.editTags') }}
+				</el-menu-item>
 			</el-menu>
 		</el-drawer>
+
+		<el-dialog :title="$t('rightSidebar.editTags')" v-model="editTagsDialog">
+			<div class="base-tag-box">
+				<p class="tag-title">{{ $t('rightSidebar.baseTagTitle') }}</p>
+				<el-tag v-for="tagItem in noCheckedTagList" class="tag base-tag" :color="tagItem.tagColor" :key="tagItem.tagId"
+					@click="add_manga_tag(tagItem)">{{
+						tagItem.tagName }}</el-tag>
+			</div>
+
+			<div class="ckecked-tag-box">
+				<p class="tag-title">{{ $t('rightSidebar.ckeckedTagTitle') }}</p>
+				<el-tag v-for="tagItem in checkedTagList" class="tag ckecked-tag" :color="tagItem.tagColor" :key="tagItem.tagId" closable
+					@close="remove_tag(tagItem.mangaTagId)">{{
+						tagItem.tagName }}</el-tag>
+			</div>
+		</el-dialog>
 	</div>
 </template>
 
 <script lang="ts" setup>
-import {watch, ref, defineProps, defineEmits, computed, onMounted} from 'vue';
-import {useRoute} from 'vue-router';
-import {config} from '@/store';
-import {delete_manga} from '@/api/manga';
+import { watch, ref, defineProps, defineEmits, computed, onMounted } from 'vue';
+import { useRoute } from 'vue-router';
+import { config } from '@/store';
+import { delete_manga } from '@/api/manga';
 import {
 	get_collect,
 	add_collect,
 	is_collect,
 	remove_collect,
 } from '@/api/collect';
-import {ElMessageBox} from 'element-plus';
+import { ElMessageBox } from 'element-plus';
 import i18n from '@/i18n';
-const {t} = i18n.global;
+import tagApi,{ tagItemType } from '@/api/tag';
+
+const { t } = i18n.global;
 
 const route = useRoute();
 
 const drawer = ref(false);
 const isCollect = ref(false);
+const editTagsDialog = ref(false);
+
+let tagList = ref<tagItemType[]>([]);
+let checkedTagList = ref<tagItemType[]>([]);
+
+let noCheckedTagList = computed<tagItemType[]>(() => {
+	let arr: tagItemType[] = [];
+	const checkedTagListNames = checkedTagList.value.map((i) => i.tagId);
+
+	tagList.value.forEach(element => {
+
+		if (!checkedTagListNames.includes(element.tagId)) arr.push(element);
+	});
+
+	return arr;
+});
 
 const props = defineProps(['mangaInfo', 'menuPoster']);
 const emit = defineEmits(['reload']);
@@ -89,29 +121,76 @@ watch(
 	async (val) => {
 		const res = await is_collect('manga', val);
 		isCollect.value = res.data.isCollect;
-		console.log(val);
 	}
 );
 
 onMounted(async () => {
-	const res = await is_collect('manga', mangaId.value);
-	const isCollect = res.data.isCollect;
+	tagList.value = await tagApi.get_nopage();
 });
 
+/**
+ * @description: 更新漫画收藏状态
+ * @return {*}
+ */
 async function update_collect_state() {
 	const res = await is_collect('manga', mangaId.value);
 	isCollect.value = res.data.isCollect;
 }
 
+/**
+ * @description: 更新标签状态
+ * @return {*}
+ */
+async function update_tags_state() {
+	checkedTagList.value = await tagApi.get_manga_tag(mangaId.value);
+}
+
+/**
+ * @description: 关闭右侧菜单
+ * @return {*}
+ */
 function close_sidebar() {
 	config.rightSidebar = false;
 }
 
+/**
+ * @description: 更新标签状态
+ * @return {*}
+ */
+function update_tags() {
+	ElMessageBox.alert('我正在编辑标签');
+}
+
+/**
+ * @description: 增加漫画标签
+ * @param {*} tagItem
+ * @return {*}
+ */
+async function add_manga_tag(tagItem: tagItemType) {
+	await tagApi.add_manga_tag(mangaId.value, tagItem.tagId);
+	update_tags_state();
+}
+
+/**
+ * @description: 移除漫画标签
+ * @param {*} mangaTagId
+ * @return {*}
+ */
+async function remove_tag(mangaTagId: number) {
+	await tagApi.remove_manga_tag(mangaTagId);
+	update_tags_state();
+}
+
+/**
+ * @description: 右侧菜单项选择事件
+ * @param {*} key
+ * @return {*}
+ */
 async function menu_select(key: string) {
 	const mangaInfo = props.mangaInfo;
 	switch (key) {
 		case 'remove':
-			ElMessageBox.confirm(t('mangaManage.confirm.text1'), {type: 'warning'})
+			ElMessageBox.confirm(t('mangaManage.confirm.text1'), { type: 'warning' })
 				.then(async () => {
 					await delete_manga(mangaId.value);
 					emit('reload');
@@ -142,6 +221,11 @@ async function menu_select(key: string) {
 			}
 			update_collect_state();
 			break;
+		case 'tags':
+			editTagsDialog.value = true;
+			update_tags_state();
+			break;
+
 	}
 	close_sidebar();
 }
@@ -166,4 +250,19 @@ async function menu_select(key: string) {
 	color: @button-back;
 	font-size: 1.6rem;
 }
+
+.tag-title {
+	margin-bottom: 1rem;
+	font-size: 1.4rem;
+}
+
+.base-tag-box {
+	margin-bottom: 2rem;
+
+	.base-tag {
+		cursor: pointer;
+	}
+}
+
+.ckecked-tag-box {}
 </style>

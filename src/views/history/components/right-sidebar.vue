@@ -77,7 +77,7 @@ function close_sidebar() {
 function menu_select(key: string) {
   switch (key) {
     case 'delete':
-      ElMessageBox.confirm(t('bookmarkManage.confirm.text'), {type: 'warning'}).then(async () => {
+      ElMessageBox.confirm(t('history.confirm.text'), {type: 'warning'}).then(async () => {
         await delete_history(historyId.value);
         emit('reload');
       });

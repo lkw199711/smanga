@@ -12,13 +12,13 @@
 			<div class="middle-content">
 				<!-- 数据库设置 -->
 				<database
-					:firstLoad="firstLoad"
 					@update="update_database_view"
 					v-if="active === 0" />
 				<new-user @update="update_user_view" v-if="active === 1" />
 				<database-update
 					@update="update_system_view"
-					:firstLoad="firstLoad"
+					:userName="userName"
+					:passWord="passWord"
 					v-if="active === 2" />
 				<result v-if="active === 3" />
 			</div>
@@ -71,26 +71,33 @@ const router = useRouter();
 import {ref} from 'vue';
 import {config} from '@/store';
 
+const userName = ref('');
+const passWord = ref('');
+
 const setps = ref([
-	{//数据库配置
+	{
+		//数据库配置
 		titleText: 'smanga正在进行初始化......',
 		titlestate: 'default',
 		btnLoading: true,
 		btnDisabled: true,
 	},
-	{//新建用户
+	{
+		//新建用户
 		titleText: '创建用户或是跳过',
 		titlestate: 'default',
 		btnLoading: false,
 		btnDisabled: false,
 	},
-	{//初始化环境
+	{
+		//初始化环境
 		titleText: 'smanga正在进行数据库与环境升级......',
 		titlestate: 'default',
 		btnLoading: true,
 		btnDisabled: true,
 	},
-	{//成功跳转
+	{
+		//成功跳转
 		titleText: 'smanga初始化成功!',
 		titlestate: 'success',
 		btnLoading: false,
@@ -101,7 +108,6 @@ const setps = ref([
 const active = ref(0);
 const btnLoading = ref(true);
 const btnDisabled = ref(false);
-const firstLoad = ref(true);
 
 const isPhone = computed(() => {
 	const screenType = config.screenType;
@@ -119,7 +125,6 @@ function next() {
 function update_database_view(test: boolean) {
 	setps.value[0].btnLoading = false;
 	setps.value[0].btnDisabled = !test;
-	firstLoad.value = false;
 
 	setps.value[0].titleText = test
 		? '数据库连接成功,您可以继续操作'
@@ -127,13 +132,21 @@ function update_database_view(test: boolean) {
 	setps.value[0].titlestate = test ? 'success' : 'fail';
 }
 
-function update_user_view(test: boolean) {
+function update_user_view(
+	test: boolean,
+	inputUserName: string,
+	inputPassWord: string
+) {
 	setps.value[1].btnLoading = false;
 	setps.value[1].btnDisabled = !test;
-	firstLoad.value = false;
 
 	setps.value[1].titleText = test ? '新建用户成功' : '新建用户失败';
 	setps.value[1].titlestate = test ? 'success' : 'fail';
+
+	if (test) {
+		userName.value = inputUserName;
+		passWord.value = inputPassWord;
+	}
 }
 
 function update_system_view(

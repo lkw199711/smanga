@@ -6,6 +6,7 @@
     <!--功能菜单-->
     <right-sidebar :direction="directionDesc"
                    @direction="switch_direction"
+                   @dwonload="dwonload_image"
                    :removeFirst="removeFirst" @removeFirst="remove_poster"/>
 
     <!--图片容器-->

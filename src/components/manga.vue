@@ -1,12 +1,8 @@
 <template>
+	<!-- 矩形视图 -->
 	<div class="manga" @click="go_chapter" v-if="viewTypeCopy !== 'list'">
 		<!--封面图片-->
-		<el-image
-			v-if="finish"
-			class="anim cover-img"
-			:src="poster"
-			:fit="fit"
-			:alt="title" />
+		<el-image v-if="finish" class="anim cover-img" :src="poster" :fit="fit" :alt="title" />
 
 		<!--占位图标-->
 		<el-image v-else class="cover-img" :src="placeholder" fit="fill" />
@@ -15,25 +11,29 @@
 		<p class="manga-name single-line-text-overflow">{{ title }}</p>
 	</div>
 
+	<!-- 列表视图 -->
 	<div class="manga-view-list" @click="go_chapter" v-else>
 		<!--封面图片-->
-		<el-image
-			v-if="finish"
-			class="anim cover-img"
-			:src="poster"
-			:fit="fit"
-			:alt="title" />
+		<el-image v-if="finish" class="anim cover-img" :src="poster" :fit="fit" :alt="title" />
 
 		<!--占位图标-->
 		<el-image v-else class="cover-img" :src="placeholder" fit="fill" />
 
 		<!--漫画名称-->
-		<p class="manga-name">{{ title }}</p>
+		<div class="manga-content">
+			<p class="manga-name">{{ title }}</p>
+			<p class="tag-box">
+				<el-tag v-for="tagItem in mangaInfo.tags" class="tag base-tag" :color="tagItem.tagColor" :key="tagItem.tagId">
+					{{ tagItem.tagName }}
+				</el-tag>
+			</p>
+		</div>
+
 	</div>
 </template>
 
 <script>
-import {global_set} from '@/utils';
+import { global_set } from '@/utils';
 
 export default {
 	name: 'manga-list-item',
@@ -80,15 +80,15 @@ export default {
 			global_set('mangaCover', mangaCover);
 			global_set('removeFirst', removeFirst);
 			global_set('direction', direction);
-
+			
 			this.$router.push({
-				name: 'chapter-list',
-				query: {mangaId},
-				params: {browseType, clear: '1'},
+				name: 'manga-info',
+				query: { mangaId },
+				params: { browseType, clear: '1' },
 			});
 		},
 	},
-	created() {},
+	created() { },
 };
 </script>
 
@@ -102,6 +102,12 @@ export default {
 	display: flex;
 	overflow: hidden;
 	margin-bottom: 1rem;
+
+	.manga-content{
+        .tag-box{
+			text-indent: 0.8rem;
+		}
+    }
 }
 
 .cover-img {
@@ -119,15 +125,19 @@ export default {
 	10% {
 		opacity: 0.1;
 	}
+
 	50% {
 		opacity: 0.5;
 	}
+
 	60% {
 		opacity: 0.6;
 	}
+
 	90% {
 		opacity: 0.9;
 	}
+
 	100% {
 		opacity: 1;
 	}

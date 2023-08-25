@@ -39,7 +39,7 @@ import {
 } from 'vue';
 import {useRoute} from 'vue-router';
 import {get_poster} from '@/api';
-import {get_manga} from '@/api/manga';
+import mangaApi from '@/api/manga';
 import store, {config, pageSizeConfig, userConfig} from '@/store';
 import {global_get} from '@/utils';
 import manga from '@/components/manga.vue';
@@ -98,18 +98,14 @@ onActivated(() => {
  * @param pageSize
  */
 async function page_change(
-	pageC = 0,
+	pageC = 1,
 	pageSize: number = defaultPageSize.value
 ) {
-	if (pageC) {
-		page.value = pageC;
-	}
+	page.value = pageC;
 
-	const start = (page.value - 1) * pageSize;
-	const res = await get_manga(mediaId.value, start, pageSize, userConfig.order);
-	list.value = res.data.list;
-	// list.push(...res.data.list)
-	count = res.data.count;
+	const res = await mangaApi.get(mediaId.value, page.value, pageSize, userConfig.order);
+	list.value = res.list;
+	count = res.count;
 
 	// 为漫画请求海报图片
 	get_poster(list.value, 'mangaAwait');

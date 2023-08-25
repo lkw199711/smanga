@@ -97,10 +97,9 @@ export default defineComponent({
          * @returns {Promise<void>}
          */
         async load_table(page = 1, pageSize = 10) {
-            const start = (page - 1) * pageSize;
-            const res = await get_account(start, pageSize);
-            this.count = Number(res.data.count);
-            this.tableData = res.data.list;
+            const res = await get_account(page, pageSize);
+            this.count = Number(res.data.list.total);
+            this.tableData = res.data.list.data;
         },
         /**
          * 更改用户请求
@@ -174,8 +173,8 @@ export default defineComponent({
 
     // 生命周期
     async created() {
-        const res = await get_media(0,10000);
-        const medias = res.data.list||[];
+        const res = await get_media(1,10000);
+        const medias = res.data.list.data;
         this.medias = medias;
         this.load_table();
     },

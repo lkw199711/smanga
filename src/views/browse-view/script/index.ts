@@ -55,7 +55,7 @@ export default defineComponent({
 			return global_get_array('chapterList');
 		},
 		chapterInfo() {
-			return this.chapterList[this.index];
+			return this.chapterList[this.index] || {chapterId: 0};
 		},
 		// 章节的坐标索引
 		index() {
@@ -85,7 +85,6 @@ export default defineComponent({
 		async load_img() {
 			const list = this.imgPathList;
 			const initPage = this.initPage - 1;
-			console.log(this.loading);
 
 			// if (this.loading) return;
 

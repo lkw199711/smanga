@@ -1,4 +1,4 @@
-import {ajax} from "./index";
+import {ajax} from './index';
 
 /**
  * 获取漫画记录
@@ -6,11 +6,16 @@ import {ajax} from "./index";
  * @param recordStart
  * @param pageSize
  */
-export function get_manga(mediaId: number, recordStart: number, pageSize: number,order='') {
-    return ajax({
-			url: "php/manga/get.php",
-			data: { mediaId, recordStart, pageSize, order },
-		});
+export function get_manga(
+	mediaId: number,
+	page: number,
+	pageSize: number,
+	order = ''
+) {
+	return ajax({
+		url: 'manga/get',
+		data: {mediaId, page, pageSize, order},
+	});
 }
 
 /**
@@ -18,10 +23,10 @@ export function get_manga(mediaId: number, recordStart: number, pageSize: number
  * @param data
  */
 export function update_manga(data: any) {
-    return ajax({
-        url: 'php/manga/update.php',
-        data
-    })
+	return ajax({
+		url: 'manga/update',
+		data,
+	});
 }
 
 /**
@@ -30,8 +35,68 @@ export function update_manga(data: any) {
  * @param deleteFile
  */
 export function delete_manga(mangaId: number, deleteFile = false) {
-    return ajax({
-        url: 'php/manga/delete.php',
-        data: {mangaId, deleteFile}
-    })
+	return ajax({
+		url: 'manga/delete',
+		data: {mangaId, deleteFile},
+	});
 }
+
+const mangaApi = {
+	/**
+	 * @description: 获取漫画列表
+	 * @param {number} mediaId
+	 * @param {number} page
+	 * @param {number} pageSize
+	 * @param {*} order
+	 * @return {*}
+	 */
+	async get(mediaId: number, page: number, pageSize: number, order = '') {
+		const res = ajax({
+			url: 'manga/get',
+			data: {mediaId, page, pageSize, order},
+		});
+
+		return (await res).data;
+	},
+
+	/**
+	 * @description: 根据标签获取漫画
+	 * @return {*}
+	 */
+	async get_by_tags(
+		tagIds: string,
+		page: number,
+		pageSize: number,
+		order = ''
+	) {
+		const res = ajax({
+			url: 'manga/get_by_tags',
+			data: {tagIds, page, pageSize, order},
+		});
+
+		const data: ResType = (await res).data;
+
+		return {
+			list: data.list.data,
+			count: data.list.total,
+		};
+	},
+
+	/**
+	 * @description: 获取漫画元数据
+	 * @param {number} mangaId
+	 * @return {*}
+	 */
+	async get_manga_info(mangaId: number) {
+		const res = ajax({
+			url: 'manga/get_manga_info',
+			data: {mangaId},
+		});
+
+		const data = (await res).data;
+
+		return data;
+	},
+};
+
+export default mangaApi;

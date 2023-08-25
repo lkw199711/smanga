@@ -14,7 +14,7 @@
 <script lang='ts'>
 import {defineComponent} from 'vue'
 import {global_set, global_set_json} from "@/utils";
-import {get_chapter} from "@/api/chapter";
+import chapterApi from "@/api/chapter";
 
 export default defineComponent({
   name: 'manga-chapter-item',
@@ -61,8 +61,8 @@ export default defineComponent({
       const mangaId = this.chapterInfo.mangaId;
       const mangaCover = this.chapterInfo.mangaCover;
 
-      const chapterListRes = await get_chapter(mangaId);
-      const chapterList = chapterListRes.data;
+      const chapterListRes = await chapterApi.get(mangaId);
+      const chapterList = chapterListRes.list;
 
       // 缓存章节信息
       global_set('mangaId', mangaId);

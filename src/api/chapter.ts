@@ -1,21 +1,18 @@
+/*
+ * @Author: lkw199711 lkw199711@163.com
+ * @Date: 2023-03-17 20:18:30
+ * @LastEditors: error: error: git config user.name & please set dead value or install git && error: git config user.email & please set dead value or install git & please set dead value or install git
+ * @LastEditTime: 2023-08-16 22:09:22
+ * @FilePath: \smanga\src\api\chapter.ts
+ */
+import {userConfig} from '@/store';
 import {ajax} from './index';
 
-/**
- * 获取章节记录
- * @param mangaId
- * @param recordStart
- * @param pageSize
- */
-export function get_chapter(
-	mangaId: number,
-	recordStart: number | undefined = undefined,
-	pageSize: number | undefined = undefined,
-	order = ''
-) {
-	return ajax({
-		url: 'php/chapter/get.php',
-		data: {mangaId, recordStart, pageSize, order},
-	});
+interface chapterGetRes extends ResType {
+	list: {
+		data: [];
+		total: number;
+	};
 }
 
 /**
@@ -24,7 +21,7 @@ export function get_chapter(
  */
 export function update_chapter(data: any) {
 	return ajax({
-		url: 'php/chapter/update.php',
+		url: 'chapter/update',
 		data,
 	});
 }
@@ -36,7 +33,78 @@ export function update_chapter(data: any) {
  */
 export function delete_chapter(chapterId: any, deleteFile = false) {
 	return ajax({
-		url: 'php/chapter/delete.php',
+		url: 'chapter/delete',
 		data: {chapterId, deleteFile},
 	});
 }
+
+const chapterApi = {
+	get: async function (
+		mangaId: number,
+		page: number | undefined = undefined,
+		pageSize: number | undefined = undefined,
+		order = userConfig.order
+	) {
+		const res = await ajax({
+			url: 'chapter/get',
+			data: {mangaId, page, pageSize, order},
+		});
+
+		const resData: chapterGetRes = res.data;
+
+		// 接口错误返回默认值
+		if (resData.code !== 0) {
+			return {
+				list: [],
+				count: 0,
+			};
+		}
+
+		const resFormat: chapterGetFormatType = {
+			list: resData.list.data,
+			count: resData.list.total,
+		};
+
+		return resFormat;
+	},
+
+	/**
+	 * @description: 获取漫画第一章
+	 * @param {number} mangaId
+	 * @param {string} order
+	 * @return {*}
+	 */
+	async get_first(mangaId: number, order: string) {
+		const res = await ajax({
+			url: 'chapter/get_first',
+			data: {mangaId, order},
+		});
+
+		return res.data;
+	},
+
+	/**
+	 * @description: 获取漫画最后阅读记录
+	 * @param {number} mangaId
+	 * @return {*}
+	 */
+	async get_latest(mangaId: number) {
+		const res = await ajax({
+			url: 'chapter/get_first',
+			data: {mangaId},
+		});
+
+		if (res.data.code == 1) {
+			return false;
+		} else {
+			return res.data.info;
+		}
+	},
+};
+
+type chapterGetFormatType = {
+	list: [];
+	count: number;
+};
+
+export default chapterApi;

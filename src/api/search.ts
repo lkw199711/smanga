@@ -1,8 +1,21 @@
-import { ajax } from "./index";
+/*
+ * @Author: lkw199711 lkw199711@163.com
+ * @Date: 2023-04-04 00:30:31
+ * @LastEditors: lkw199711 lkw199711@163.com
+ * @LastEditTime: 2023-05-16 21:22:10
+ * @FilePath: \smanga\src\api\search.ts
+ */
+import {ajax} from './index';
 
-export function search(searchText: string, searchType: string,recordStart: number, pageSize: number,order='') {
+export function search(
+	searchText: string,
+	searchType: string,
+	page: number,
+	pageSize: number,
+	order = ''
+) {
 	return ajax({
-		url: 'php/search/index.php',
-		data: {searchText, searchType, recordStart, pageSize, order},
+		url: 'search/get',
+		data: {searchText, searchType, page, pageSize, order},
 	});
 }

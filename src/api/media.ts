@@ -1,12 +1,19 @@
+/*
+ * @Author: lkw199711 lkw199711@163.com
+ * @Date: 2023-03-17 20:18:30
+ * @LastEditors: lkw199711 lkw199711@163.com
+ * @LastEditTime: 2023-05-17 21:38:19
+ * @FilePath: \smanga\src\api\media.ts
+ */
 import {ajax} from "./index";
 
 /**
  * 获取媒体记录
  */
-export function get_media(recordStart: number, pageSize: number) {
+export function get_media(page: number, pageSize: number) {
     return ajax({
-        url: 'php/media/get.php',
-        data: {recordStart, pageSize}
+        url: 'media/get',
+        data: {page, pageSize}
     })
 }
 
@@ -16,7 +23,7 @@ export function get_media(recordStart: number, pageSize: number) {
  */
 export function update_media(data: any) {
     return ajax({
-        url: 'php/media/update.php',
+        url: 'media/update',
         data
     })
 }
@@ -27,7 +34,7 @@ export function update_media(data: any) {
  */
 export function add_media(data: any) {
     return ajax({
-        url: 'php/media/add.php',
+        url: 'media/add',
         data
     })
 }
@@ -40,21 +47,8 @@ export function add_media(data: any) {
  */
 export function get_path(mediaId: any, recordStart: number | undefined = undefined, pageSize: number | undefined = undefined) {
     return ajax({
-        url: 'php/path/get.php',
+        url: 'path/get',
         data: {mediaId,recordStart,pageSize}
-    })
-}
-
-/**
- * 扫描路径
- * @param mediaId
- * @param path
- * @param pathId
- */
-export function rescan_path(mediaId: any, path: any, pathId: any) {
-    return ajax({
-        url: 'php/path/rescan.php',
-        data: {mediaId, path, pathId}
     })
 }
 
@@ -64,22 +58,8 @@ export function rescan_path(mediaId: any, path: any, pathId: any) {
  */
 export function delete_path(pathId: any) {
     return ajax({
-        url: 'php/path/delete.php',
+        url: 'path/delete',
         data: {pathId}
-    })
-}
-
-/**
- * 新增路径
- * @param mediaId
- * @param path
- */
-export function add_path(mediaId: any, path: any) {
-    return ajax({
-        url: 'php/path/add.php',
-        data: {
-            mediaId, path
-        }
     })
 }
 
@@ -89,7 +69,7 @@ export function add_path(mediaId: any, path: any) {
  */
 export function delete_media(mediaId: any) {
     return ajax({
-        url: 'php/media/delete.php',
+        url: 'media/delete',
         data: {mediaId}
     })
 }
