@@ -2,7 +2,7 @@
  * @Author: lkw199711 lkw199711@163.com
  * @Date: 2023-07-16 12:02:34
  * @LastEditors: lkw199711 lkw199711@163.com
- * @LastEditTime: 2023-08-26 04:44:32
+ * @LastEditTime: 2023-08-26 07:56:37
  * @FilePath: /smanga/src/views/serve-setting/index.vue
 -->
 <template>
@@ -55,6 +55,7 @@ async function comfirm_auto_compressl() {
 onMounted(async () => {
     const res = await serveSettingApi.get();
     form.value.interval = res.interval
+    form.value.autoCompress = res.autoCompress
 })
 
 </script>
