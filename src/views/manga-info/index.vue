@@ -2,7 +2,7 @@
  * @Author: error: error: git config user.name & please set dead value or install git && error: git config user.email & please set dead value or install git & please set dead value or install git
  * @Date: 2023-08-15 23:05:47
  * @LastEditors: lkw199711 lkw199711@163.com
- * @LastEditTime: 2023-08-23 01:52:12
+ * @LastEditTime: 2023-08-25 10:39:14
  * @FilePath: /smanga/src/views/manga-info/index.vue
 -->
 <template>
@@ -283,7 +283,7 @@ function character_wheel(event: Event) {
     background-color: transparent;
 }
 
-.top{
+.top {
     margin-top: 2rem;
 }
 
@@ -407,6 +407,9 @@ function character_wheel(event: Event) {
 }
 
 @media only screen and (max-width: 1199px) and (min-width: 768px) {
+    .top {
+        margin-top: 0;
+    }
     .character {
         img {
             width: 8rem;
@@ -429,6 +432,10 @@ function character_wheel(event: Event) {
 }
 
 @media only screen and (max-width: 767px) {
+    .top {
+        margin-top: 0;
+    }
+
     .character {
         margin-top: 2rem;
 

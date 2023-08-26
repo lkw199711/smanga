@@ -1,5 +1,14 @@
 <template>
   <div class="manga-setting-index">
+    <div class="top">
+      <el-input
+        v-model="keyWord"
+        class="search-input"
+        placeholder="请输入漫画名称"
+        :suffix-icon="Search"
+        @change="()=>{ load_table() }"
+      />
+    </div>
     <div class="manga-setting-box">
       <!--表格-->
       <el-table :data="tableData" stripe border>

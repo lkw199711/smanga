@@ -1,3 +1,10 @@
+<!--
+ * @Author: lkw199711 lkw199711@163.com
+ * @Date: 2023-08-25 10:45:47
+ * @LastEditors: lkw199711 lkw199711@163.com
+ * @LastEditTime: 2023-08-25 10:47:37
+ * @FilePath: /smanga/src/views/browse-view/flow.vue
+-->
 <template>
 	<div class="browse-view">
 		<!--目录列表-->
@@ -29,6 +36,9 @@
 				>下一章</el-button
 			>
 		</div>
+
+		<!-- 安卓端占位符 -->
+		<div class="bottom-seat" v-if="config.android"></div>
 	</div>
 </template>
 
