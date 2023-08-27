@@ -46,8 +46,6 @@ jobs:
           platforms: |
             linux/amd64
           push: true
-          build-args: |
-            SMANGA_VERSION=${{ steps.set-version.outputs.version }}
           tags: |
             ${{ secrets.DOCKER_USERNAME }}/smanga-base:alpha
 
