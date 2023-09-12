@@ -1,5 +1,6 @@
 <template>
 	<div class="user-setting">
+		<el-button type="primary" @click="user_logout">登出用户</el-button>
 		<p class="note form-note">
 			请注意，设置调配完成后，需要点击保存按钮才能够提交保存。否则有些配置项不能够生效。
 		</p>
@@ -334,6 +335,8 @@ import {pageSizeConfig} from '@/store';
 import { ref } from 'vue';
 import {set_user_config} from '@/api/account'
 import { Cookies } from '@/utils';
+import { useRouter } from 'vue-router';
+const router = useRouter();
 const {locale} = useI18n();
 
 const form = ref({removeFirst: 0, range1: 30});
@@ -371,6 +374,12 @@ function submit() {
 
 	set_user_config(userName, configValue);
 
+}
+
+function user_logout() {
+	Cookies.remove('userName');
+	Cookies.remove('userId');
+	router.push('/login')
 }
 </script>
 
