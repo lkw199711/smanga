@@ -2,13 +2,14 @@
  * @Author: lkw199711 lkw199711@163.com
  * @Date: 2023-03-17 20:18:30
  * @LastEditors: lkw199711 lkw199711@163.com
- * @LastEditTime: 2023-05-22 21:19:17
+ * @LastEditTime: 2023-09-14 03:45:10
  * @FilePath: \smanga\src\store\index.ts
  */
 import {createStore} from 'vuex';
 import {reactive} from 'vue';
 import {GlobalData} from '@/store/type';
-import {get_cookie} from '../utils/index';
+import { get_cookie } from '../utils/index';
+import {screenType} from '@/type/store';
 
 export default createStore({
 	state: {
@@ -59,7 +60,7 @@ export const config = reactive({
 	browseFooter: true,
 	browseType: 'flow',
 	bookmarkShow: false,
-	screenType: 'large', // mini | small | middle | large | 2k | 4k
+	screenType: 'large' as screenType, // mini | small | middle | large | 2k | 4k
 	rightSidebar: false,
 	android: false,
 	viewType: 'block',
