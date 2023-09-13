@@ -2,7 +2,7 @@
  * @Author: lkw199711 lkw199711@163.com
  * @Date: 2023-03-17 20:18:31
  * @LastEditors: lkw199711 lkw199711@163.com
- * @LastEditTime: 2023-09-13 20:18:43
+ * @LastEditTime: 2023-09-14 04:51:15
  * @FilePath: \smanga\src\views\browse-view\single.vue
 -->
 <template>
@@ -86,7 +86,7 @@ const chapterInfo = computed<chapterInfoType>(() => {
 
 watch(
   () => index.value,
-  (val) => {
+  (val) => {    
     chapterId.value = chapterList.value[val].chapterId;
   },
   {
