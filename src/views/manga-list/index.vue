@@ -140,10 +140,11 @@ async function page_change(
 	pageParams = 1,
 	pageSize: number = defaultPageSize.value
 ) {
-	page.value = pageParams;
-	if (pageParams !== 1 && pageParams > Math.floor(count.value / pageSize)) return;
+	
+	if (pageParams !== 1 && pageParams > Math.ceil(count.value / pageSize)) return;
 	if (pageParams < 1) return;
-
+	page.value = pageParams;
+	
 	const res = await mangaApi.get(mediaId.value, page.value, pageSize, userConfig.order);
 	list.value = res.list;
 	count.value = res.count;
