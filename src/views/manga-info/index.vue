@@ -2,7 +2,7 @@
  * @Author: error: error: git config user.name & please set dead value or install git && error: git config user.email & please set dead value or install git & please set dead value or install git
  * @Date: 2023-08-15 23:05:47
  * @LastEditors: lkw199711 lkw199711@163.com
- * @LastEditTime: 2023-08-25 10:39:14
+ * @LastEditTime: 2023-09-14 05:15:00
  * @FilePath: /smanga/src/views/manga-info/index.vue
 -->
 <template>
@@ -71,7 +71,7 @@ import { characterItem, metaItemType } from '@/type/meta';
 import { mangaInfoType } from '@/type/manga';
 import { chapterInfoType } from '@/type/chapter';
 import chapterApi from '@/api/chapter';
-import { global_set } from '@/utils'
+import { global_set, global_set_json } from '@/utils'
 import historyApi from '@/api/history';
 
 const router = useRouter();
@@ -176,8 +176,11 @@ async function get_latest_reading() {
  * @description: 开始阅读漫画第一章
  * @return {*}
  */
-function go_chapter() {
+async function go_chapter() {
     const chapterInfo = latestChapterInfo.value ? latestChapterInfo.value : firstChapterInfo.value;
+
+    const res = await chapterApi.get(chapterInfo.mangaId);
+    global_set_json('chapterList', res.list);
 
     // 缓存章节信息
     global_set('chapterId', chapterInfo.chapterId);
