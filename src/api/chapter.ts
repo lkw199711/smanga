@@ -1,8 +1,8 @@
 /*
  * @Author: lkw199711 lkw199711@163.com
  * @Date: 2023-03-17 20:18:30
- * @LastEditors: error: error: git config user.name & please set dead value or install git && error: git config user.email & please set dead value or install git & please set dead value or install git
- * @LastEditTime: 2023-08-16 22:09:22
+ * @LastEditors: lkw199711 lkw199711@163.com
+ * @LastEditTime: 2023-09-14 08:43:18
  * @FilePath: \smanga\src\api\chapter.ts
  */
 import {userConfig} from '@/store';
@@ -43,11 +43,12 @@ const chapterApi = {
 		mangaId: number,
 		page: number | undefined = undefined,
 		pageSize: number | undefined = undefined,
-		order = userConfig.order
+		order = userConfig.order,
+		keyWord = ''
 	) {
 		const res = await ajax({
 			url: 'chapter/get',
-			data: {mangaId, page, pageSize, order},
+			data: {mangaId, page, pageSize, order, keyWord},
 		});
 
 		const resData: chapterGetRes = res.data;

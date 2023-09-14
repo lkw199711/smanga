@@ -86,7 +86,8 @@ const chapterInfo = computed<chapterInfoType>(() => {
 
 watch(
   () => index.value,
-  (val) => {    
+  (val) => {
+    if (val < 0 || chapterList.value.length < 1) return 0
     chapterId.value = chapterList.value[val].chapterId;
   },
   {
