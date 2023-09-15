@@ -1,15 +1,15 @@
 version: 2
+
+registries:
+  dockerhub:
+    type: docker-registry
+    url: https://registry.hub.docker.com
+    username: ${{ secrets.DOCKER_USERNAME }}
+    password: ${{ secrets.DOCKER_PASSWORD }}
+    replaces-base: true
+
 updates:
-  # Enable version updates for github actions
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
       interval: "daily"
-
-  # Enable version updates for npm
-#  - package-ecosystem: "npm"
-    # Look for `package.json` and `lock` files in the `root` directory
-#    directory: "/"
-    # Check the npm registry for updates every day (weekdays)
-#    schedule:
-#      interval: "daily"
