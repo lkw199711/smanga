@@ -41,7 +41,7 @@ jobs:
 
       - 
         name: Build Base
-        uses: docker/build-push-action@v4
+        uses: docker/build-push-action@v5
         with:
           context: .
           file: docker/base.Dockerfile
