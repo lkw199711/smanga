@@ -24,6 +24,16 @@ jobs:
         uses: docker/setup-qemu-action@v3
 
       - 
+        name: Docker meta
+        if: ${{ env.BUILD_BASE == 'true' }}
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ secrets.DOCKER_USERNAME }}/smanga-base
+          tags: |
+            type=raw,value=alpha
+
+      - 
         name: Set Up Buildx
         if: ${{ env.BUILD_BASE == 'true' }}
         uses: docker/setup-buildx-action@v3
@@ -46,8 +56,8 @@ jobs:
           platforms: |
             linux/amd64
           push: true
-          tags: |
-            ${{ secrets.DOCKER_USERNAME }}/smanga-base:alpha
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
 
   build:
     needs: [base]
@@ -64,6 +74,15 @@ jobs:
         run: |
           SMANGA_VERSION=$(jq -r '.version' package.json)
           echo "version=${SMANGA_VERSION}" >> $GITHUB_OUTPUT
+
+      - 
+        name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ secrets.DOCKER_USERNAME }}/smanga
+          tags: |
+            type=raw,value=nosql-alpha
 
       -
         name: Setup node
@@ -105,8 +124,8 @@ jobs:
             SMANGA_VERSION=${{ steps.set-version.outputs.version }}
             SMANGA_BASE_VERSION=alpha
             SMANGA_BASE_NAME=${{ secrets.DOCKER_USERNAME }}
-          tags: |
-            ${{ secrets.DOCKER_USERNAME }}/smanga:nosql-alpha
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
 
 
   build_mysql:
@@ -124,6 +143,15 @@ jobs:
         run: |
           SMANGA_VERSION=$(jq -r '.version' package.json)
           echo "version=${SMANGA_VERSION}" >> $GITHUB_OUTPUT
+
+      - 
+        name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ secrets.DOCKER_USERNAME }}/smanga
+          tags: |
+            type=raw,value=alpha
 
       - 
         name: Set Up QEMU
@@ -152,5 +180,5 @@ jobs:
           build-args: |
             SMANGA_VERSION=alpha
             SMANGA_BASE_NAME=${{ secrets.DOCKER_USERNAME }}
-          tags: |
-            ${{ secrets.DOCKER_USERNAME }}/smanga:alpha
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
