@@ -2,7 +2,7 @@
  * @Author: error: error: git config user.name & please set dead value or install git && error: git config user.email & please set dead value or install git & please set dead value or install git
  * @Date: 2023-08-15 23:05:47
  * @LastEditors: lkw199711 lkw199711@163.com
- * @LastEditTime: 2023-09-14 05:15:00
+ * @LastEditTime: 2023-09-23 14:45:02
  * @FilePath: /smanga/src/views/manga-info/index.vue
 -->
 <template>
@@ -54,15 +54,25 @@
 
         <div class="btn-box bottom">
             <el-button class="btn" type="primary" @click="go_chapter_list">章节列表</el-button>
+
             <el-button class="btn" type="warning" @click="go_chapter" v-if="latestChapterInfo">继续阅读</el-button>
             <el-button class="btn" type="success" @click="go_chapter" v-else>开始阅读</el-button>
+
+            <el-button class="btn" type="warning" @click="remove_collect" v-if="isCollect">取消收藏</el-button>
+            <el-button class="btn" type="success" @click="collect_manga" v-else>收藏漫画</el-button>
+
+            <el-button class="btn" type="primary" @click="open_tag_box">编辑标签</el-button>
         </div>
+
+        <el-dialog :title="$t('rightSidebar.editTags')" v-model="editTagsDialog">
+            <mangaTagBox :mangaId="mangaInfo.mangaId" :tags="tags" @update_tags="update_tags" />
+        </el-dialog>
     </div>
 </template>
 
 <script lang="ts" setup>
 import { useRoute, useRouter } from 'vue-router';
-import { onMounted, ref, computed } from 'vue';
+import { onMounted, ref, reactive, computed } from 'vue';
 import mangaApi from '@/api/manga';
 import imageApi from '@/api/image'
 import { config, userConfig } from '@/store'
@@ -73,10 +83,12 @@ import { chapterInfoType } from '@/type/chapter';
 import chapterApi from '@/api/chapter';
 import { global_set, global_set_json } from '@/utils'
 import historyApi from '@/api/history';
+import collectApi from '@/api/collect';
+import mangaTagBox from '@/components/manga-tag-box.vue';
 
 const router = useRouter();
 
-let mangaInfo = ref<mangaInfoType>({
+let mangaInfo = reactive<mangaInfoType>({
     mangaId: 0,
     mangaName: '',
     author: '',
@@ -110,6 +122,8 @@ let tags = ref<tagItemType[]>([]);
 let banner = ref<metaItemType[]>([]);
 let character = ref<characterItem[]>([]);
 let mangaCover = ref<string>('');
+let isCollect = ref(false);
+let editTagsDialog = ref(false);
 
 // 轮播自动滚动时间间隔 默认为6秒钟
 const interval = ref(6 * 1000);
@@ -147,6 +161,8 @@ onMounted(async () => {
     await render_meta();
     await get_first_chapter();
     await get_latest_reading();
+
+    get_collect_status();
 })
 
 /**
@@ -154,7 +170,7 @@ onMounted(async () => {
  * @return {*}
  */
 async function get_first_chapter() {
-    const mangaId = mangaInfo.value.mangaId;
+    const mangaId = mangaInfo.mangaId;
     if (!mangaId) return;
 
     const infoRes = await chapterApi.get_first(mangaId, userConfig.order);
@@ -166,7 +182,7 @@ async function get_first_chapter() {
  * @return {*}
  */
 async function get_latest_reading() {
-    const mangaId = mangaInfo.value.mangaId;
+    const mangaId = mangaInfo.mangaId;
     if (!mangaId) return;
 
     latestChapterInfo.value = await historyApi.get_latest(mangaId);
@@ -212,10 +228,10 @@ function go_chapter_list() {
     router.push({
         name: 'chapter-list',
         query: {
-            mangaId: mangaInfo.value.mangaId,
+            mangaId: mangaInfo.mangaId,
         },
         params: {
-            browseType: mangaInfo.value.browseType,
+            browseType: mangaInfo.browseType,
             clear: '1'
         },
     });
@@ -230,7 +246,7 @@ async function render_meta() {
     const mangaId = Number(route.query.mangaId);
     const info = await mangaApi.get_manga_info(mangaId);
     let bannerSoft: metaItemType[] = [];
-    mangaInfo.value = info.info;
+    mangaInfo = info.info;
     tags.value = info.tags;
     title.value = info.info.mangaName;
 
@@ -274,6 +290,40 @@ function character_wheel(event: Event) {
     event.preventDefault();
 
     content.scrollLeft += event.deltaY
+}
+
+async function get_collect_status() {
+    if (!mangaInfo.mangaId) return;
+    isCollect.value = (await collectApi.is_collect('manga', mangaInfo.mangaId)).request;
+}
+
+async function collect_manga() {
+    if (!mangaInfo.mangaId) return;
+    await collectApi.add_collect(Object.assign(mangaInfo, {
+        collectType: 'manga',
+    }));
+
+    get_collect_status();
+}
+
+async function remove_collect() {
+    if (!mangaInfo.mangaId) return;
+    await collectApi.remove_collect('manga', mangaInfo.mangaId);
+    get_collect_status();
+}
+
+function open_tag_box() {
+    editTagsDialog.value = true;
+    // update_tags_state();
+}
+
+/**
+ * @description: 更新详情页的tag列表
+ * @param {*} tagsParams
+ * @return {*}
+ */
+function update_tags(tagsParams: tagItemType[]) {
+    tags.value = tagsParams;
 }
 </script>
 
@@ -363,10 +413,16 @@ function character_wheel(event: Event) {
 .btn-box {
     display: flex;
     margin: 0 2rem;
+    flex-wrap: wrap;
     justify-content: space-between;
 
+    .el-button+.el-button {
+        margin-left: 0;
+    }
+
     .btn {
-        width: 50%;
+        width: 48%;
+        margin-bottom: 1rem;
     }
 }
 
@@ -413,6 +469,7 @@ function character_wheel(event: Event) {
     .top {
         margin-top: 0;
     }
+
     .character {
         img {
             width: 8rem;

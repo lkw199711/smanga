@@ -48,7 +48,6 @@ import {
 	onActivated,
 } from 'vue';
 import { useRoute } from 'vue-router';
-import { Search } from '@element-plus/icons-vue';
 import store, { config, userConfig, pageSizeConfig } from '@/store';
 import { search } from '@/api/search';
 import router from '@/router';
@@ -58,7 +57,6 @@ import { global_set, global_set_json } from '@/utils';
 import manga from '@/components/manga.vue';
 import chapter from '@/components/chapter.vue';
 import mediaPager from '@/components/media-pager.vue';
-import { ElMessage } from 'element-plus';
 import { get_collect } from '@/api/collect';
 import type { TabsPaneContext } from 'element-plus';
 import tabs from './tabs.vue';
@@ -210,8 +208,8 @@ async function page_change(
 		pageSize,
 		userConfig.order
 	);
-	list.value = res.data.list.data;
-	count.value = res.data.list.total;
+	list.value = res.data.list;
+	count.value = res.data.count;
 
 	// 为漫画请求海报图片
 	get_poster(list.value, 'collectAwait', collectType.value + 'Cover');
