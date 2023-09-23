@@ -25,6 +25,16 @@ jobs:
           echo "version=${SMANGA_VERSION}" >> $GITHUB_OUTPUT
 
       - 
+        name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ secrets.DOCKER_USERNAME }}/smanga-base
+          tags: |
+            type=raw,value=${{ steps.set-version.outputs.version }}
+            type=raw,value=latest
+
+      - 
         name: Set Up QEMU
         uses: docker/setup-qemu-action@v3
 
@@ -51,6 +61,5 @@ jobs:
           push: true
           build-args: |
             SMANGA_VERSION=${{ steps.set-version.outputs.version }}
-          tags: |
-            ${{ secrets.DOCKER_USERNAME }}/smanga-base:${{ steps.set-version.outputs.version }}
-            ${{ secrets.DOCKER_USERNAME }}/smanga-base:latest
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
