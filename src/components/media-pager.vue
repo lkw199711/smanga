@@ -1,26 +1,16 @@
 <template>
 	<div class="media-pager">
 		<!--分页-->
-		<el-pagination
-			class="pagination"
-			v-model:current-page="page"
-			v-model:page-size="pageSize"
-			:default-current-page="1"
-			:page-sizes="pageSizeArray"
-			:pager-count="pageCount"
-			:small="pageSmall"
-			:disabled="disabled"
-			:background="background"
-			:layout="pageLayout"
-			:total="computedCount"
-			@size-change="size_change"
+		<el-pagination class="pagination" v-model:current-page="page" v-model:page-size="pageSize" :default-current-page="1"
+			:page-sizes="pageSizes" :pager-count="pageCount" :small="pageSmall" :disabled="disabled"
+			:background="background" :layout="pageLayout" :total="computedCount" @size-change="size_change"
 			@current-change="page_change" />
 	</div>
 </template>
 
 <script lang="ts">
-import {defineComponent} from 'vue';
-import {config, pageSizeConfig} from '@/store';
+import { defineComponent } from 'vue';
+import { config } from '@/store';
 
 export default defineComponent({
 	name: 'media-pager',
@@ -28,14 +18,15 @@ export default defineComponent({
 	data() {
 		return {
 			page: 1,
-			pageSize: 12,
+			pageSize: 10,
 			disabled: false,
 			background: true,
+			pageSizes: [10, 20, 30, 40]
 		};
 	},
 
 	// 传值
-	props: ['count', 'paramsPage'],
+	props: ['count', 'pageSizeConfig'],
 
 	// 计算
 	computed: {
@@ -54,6 +45,8 @@ export default defineComponent({
 					return 11;
 				case 'small':
 					return 7;
+					case 'mini':
+					return 5;
 				default:
 					return 21;
 			}
@@ -66,6 +59,8 @@ export default defineComponent({
 				case 'middle':
 					return false;
 				case 'small':
+					return true;
+				case 'mini':
 					return true;
 				default:
 					return false;
@@ -83,16 +78,12 @@ export default defineComponent({
 					return 'sizes, prev, pager, next, jumper';
 				case 'small':
 					return 'prev, pager, next, jumper';
+				case 'mini':
+					return 'prev, pager, next, jumper';
 				default:
 					return 'total, sizes, prev, pager, next, jumper';
 			}
-		},
-		pageSizeArray() {
-			const screenType: any = config.screenType;
-
-			// @ts-ignore
-			return pageSizeConfig[screenType];
-		},
+		}
 	},
 	watch: {
 		paramsPage: {
@@ -139,6 +130,8 @@ export default defineComponent({
 					return 16;
 				case 'small':
 					return 12;
+				case 'mini':
+					return 6
 				default:
 					return 12;
 			}
@@ -147,9 +140,8 @@ export default defineComponent({
 
 	// 生命周期
 	created() {
-		this.pageSize = this.pageSizeArray[0];
-		// 初始化加载
-		// this.page_change()
+		this.pageSizes = this.pageSizeConfig;
+		this.pageSize = this.pageSizes[0];
 	},
 });
 </script>

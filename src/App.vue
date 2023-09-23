@@ -4,7 +4,7 @@
 			<!-- 消息通知 -->
 			<notice />
 			<el-config-provider :locale="elLocale">
-				<router-view v-slot="{Component}">
+				<router-view v-slot="{ Component }">
 					<keep-alive include="layout">
 						<component :is="Component" />
 					</keep-alive>
@@ -15,21 +15,21 @@
 </template>
 
 <script lang="ts" setup>
-import {Cookies, global_set_json} from '@/utils';
-import {get_bookmark} from '@/api/bookmark';
-import {config, pageSizeConfig, userConfig} from '@/store';
-import {useRoute, useRouter} from 'vue-router';
-import {ElConfigProvider, ElMessage, ElMessageBox} from 'element-plus';
+import { Cookies, global_set_json } from '@/utils';
+import { get_bookmark } from '@/api/bookmark';
+import { config, pageSizeConfig, userConfig } from '@/store';
+import { useRoute, useRouter } from 'vue-router';
+import { ElConfigProvider, ElMessage, ElMessageBox } from 'element-plus';
 import languages from '@/store/language';
-import {computed, onMounted, onBeforeMount} from 'vue';
-import {useI18n} from 'vue-i18n';
-import {set_theme} from '@/style/theme';
+import { computed, onMounted, onBeforeMount } from 'vue';
+import { useI18n } from 'vue-i18n';
+import { set_theme } from '@/style/theme';
 import { get_user_config } from './api/account';
 import notice from '@/components/notice.vue';
 
 const route = useRoute();
 const router = useRouter();
-const {locale} = useI18n();
+const { locale } = useI18n();
 
 const elLocale = computed(() => {
 	const index = userConfig.language;
@@ -56,7 +56,7 @@ onBeforeMount(async () => {
 	// 获取书签列表
 	set_bookmark();
 
-	
+
 });
 
 // 设置屏幕尺寸
@@ -76,16 +76,19 @@ function set_screen_type() {
 	} else if (screen < 768) {
 		config.screenType = 'small';
 	} else if (screen < 1200) {
+		config.screenType = 'tablet';
+	} else if (screen < 1920) {
 		config.screenType = 'middle';
-	} else if (screen < 2000) {
+	} else if (screen < 2560) {
 		config.screenType = 'large';
-	} else if (screen < 4095) {
+	} else if (screen < 4096) {
 		config.screenType = '2k';
 	} else {
 		config.screenType = '4k';
 	}
 
-	// ElMessage(String(config.screenType));
+	// ElMessage(String(window.screen.height));
+	// ElMessage(String(window.screen.width));
 }
 
 /**
@@ -133,6 +136,10 @@ async function get_setting() {
 	// 使用数据库用户设置，覆盖当前设置
 	Object.assign(userConfig, configValue.userConfig);
 	Object.assign(pageSizeConfig, configValue.pageSizeConfig);
+
+	// 对于功能页面 优先从缓存中加载用户配置
+	global_set_json('userConfig', userConfig);
+	global_set_json('pageSizeConfig', pageSizeConfig);
 
 	// 设置语言
 	locale.value = userConfig.language;

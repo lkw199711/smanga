@@ -9,7 +9,7 @@
     </div>
 
     <!--分页-->
-    <media-pager ref="pager" :count="count" @page-change="page_change" />
+    <media-pager ref="pager" :count="count" :page-size-config="pageSizes" @page-change="page_change" />
 
     <!--功能菜单-->
     <right-sidebar :info="chapterInfo" :menuPoster="menuPoster" @reload="page_change" />
@@ -29,6 +29,20 @@ import rightSidebar from './components/right-sidebar.vue';
 import { chapterInfoType } from '@/type/chapter';
 import { useRoute, useRouter } from 'vue-router';
 import { pageSizeConfigType, screenType } from '@/type/store';
+import { chapterPageSize } from '@/store/page-size';
+
+let pageSizes: number[] = [];
+let defaultPageSize = 10;
+
+get_page_size_array();
+
+function get_page_size_array() {
+  // 获取默认的页面容量
+  const screen: screenType = config.screenType;
+
+  pageSizes = chapterPageSize[screen];
+  defaultPageSize = chapterPageSize[screen][0];
+}
 
 const route = useRoute();
 const router = useRouter();
@@ -51,11 +65,6 @@ const chapterInfo = ref<chapterInfoType>({
   picNum: 0,
   updateTime: '',
 });
-
-const defaultPageSize = computed(() => {
-  const screen: screenType = config.screenType;
-  return Number(pageSizeConfig[screen][0]);
-})
 
 /**
  * 去往浏览界面
@@ -111,7 +120,7 @@ async function go_browse(item: any) {
  * @param page
  * @param pageSize
  */
-async function page_change(pageParams = 1, pageSize: number = defaultPageSize.value) {
+async function page_change(pageParams = 1, pageSize: number = defaultPageSize) {
 
   if (pageParams !== 1 && pageParams > Math.ceil(count.value / pageSize)) return;
   if (pageParams < 1) return;

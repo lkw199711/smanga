@@ -146,7 +146,7 @@ export default {
 @media only screen and (min-width: 1200px) {
 	.manga {
 		.cover-img {
-			height: 26rem;
+			height: 23.8rem;
 		}
 
 		.manga-name {
@@ -202,7 +202,7 @@ export default {
 @media only screen and (max-width: 767px) {
 	.manga {
 		.cover-img {
-			height: 14rem;
+			height: 16rem;
 		}
 
 		.manga-name {
