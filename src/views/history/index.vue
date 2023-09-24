@@ -102,8 +102,7 @@ async function go_browse(item: any) {
   await router.push({
     name: browseType,
     query: {
-      name: chapterName,
-      path: chapterPath,
+      chapterId,
     },
     params: {
       notAddHistory: 1,

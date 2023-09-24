@@ -83,8 +83,7 @@ export default defineComponent({
       await this.$router.push({
         name: browseType,
         query: {
-          name: this.title,
-          path: this.path,
+          chapterId,
         },
         params: {
           page
