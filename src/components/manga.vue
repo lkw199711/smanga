@@ -1,6 +1,6 @@
 <template>
 	<!-- 矩形视图 -->
-	<div class="manga" @click="go_chapter" v-if="viewTypeCopy !== 'list'">
+	<div class="manga" @click="go_chapter" v-if="props.viewType !== 'list'">
 		<!--封面图片-->
 		<el-image v-if="finish" class="anim cover-img" :src="poster" :fit="fit" :alt="title" />
 
@@ -23,7 +23,8 @@
 		<div class="manga-content">
 			<p class="manga-name">{{ title }}</p>
 			<p class="tag-box">
-				<el-tag v-for="tagItem in mangaInfo.tags" class="tag base-tag" :color="tagItem.tagColor" :key="tagItem.tagId">
+				<el-tag v-for="tagItem in mangaInfo.tags" class="tag base-tag" :color="tagItem.tagColor"
+					:key="tagItem.tagId">
 					{{ tagItem.tagName }}
 				</el-tag>
 			</p>
@@ -32,64 +33,57 @@
 	</div>
 </template>
 
-<script>
-import { global_set } from '@/utils';
-
+<script lang="ts">
 export default {
-	name: 'manga-list-item',
+	name: 'manga-list-item'
+}
+</script>
+<script setup lang="ts">
+import { global_set } from '@/utils';
+import { computed, defineProps, defineEmits } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
 
-	data() {
-		return {
-			placeholder: require('@/assets/s-blue.png'),
-			fit: 'cover',
-		};
-	},
+const route = useRoute();
+const router = useRouter();
+// 传值
+const props = defineProps(['mangaInfo', 'viewType']);
+const placeholder = require('@/assets/s-blue.png');
+const fit = 'cover';
 
-	props: ['mangaInfo', 'viewType'],
+const poster = computed(() => {
+	return props.mangaInfo.blob;
+})
 
-	// 引用
-	computed: {
-		poster() {
-			return this.mangaInfo.blob;
-		},
-		finish() {
-			return this.mangaInfo.finish;
-		},
-		title() {
-			return this.mangaInfo.mangaName;
-		},
-		path() {
-			return this.mangaInfo.mangaPath;
-		},
-		viewTypeCopy() {
-			return this.viewType;
-		},
-	},
+const finish = computed(() => {
+	return props.mangaInfo.finish;
+})
 
-	methods: {
-		go_chapter() {
-			const mangaId = this.mangaInfo.mangaId;
-			const mangaCover = this.mangaInfo.mangaCover;
-			const browseType = this.mangaInfo.browseType;
-			const removeFirst = this.mangaInfo.removeFirst;
-			const direction = this.mangaInfo.direction;
+const title = computed(() => {
+	return props.mangaInfo.title;
+})
 
-			// 缓存漫画信息
-			global_set('mangaId', mangaId);
-			global_set('mangaName', this.title);
-			global_set('mangaCover', mangaCover);
-			global_set('removeFirst', removeFirst);
-			global_set('direction', direction);
-			
-			this.$router.push({
-				name: 'manga-info',
-				query: { mangaId },
-				params: { browseType, clear: '1' },
-			});
-		},
-	},
-	created() { },
-};
+function go_chapter() {
+	const mangaInfo = props.mangaInfo;
+
+	const mangaId = mangaInfo.mangaId;
+	const mangaCover = mangaInfo.mangaCover;
+	const browseType = mangaInfo.browseType;
+	const removeFirst = mangaInfo.removeFirst;
+	const direction = mangaInfo.direction;
+
+	// 缓存漫画信息
+	global_set('mangaId', mangaId);
+	global_set('mangaName', title);
+	global_set('mangaCover', mangaCover);
+	global_set('removeFirst', removeFirst);
+	global_set('direction', direction);
+
+	router.push({
+		name: 'manga-info',
+		query: { mangaId },
+		params: { browseType, clear: '1' },
+	});
+}
 </script>
 
 <style scoped lang="less">
@@ -103,11 +97,11 @@ export default {
 	overflow: hidden;
 	margin-bottom: 1rem;
 
-	.manga-content{
-        .tag-box{
+	.manga-content {
+		.tag-box {
 			text-indent: 0.8rem;
 		}
-    }
+	}
 }
 
 .cover-img {
@@ -146,7 +140,7 @@ export default {
 @media only screen and (min-width: 1200px) {
 	.manga {
 		.cover-img {
-			height: 26rem;
+			height: 23.8rem;
 		}
 
 		.manga-name {
@@ -202,7 +196,7 @@ export default {
 @media only screen and (max-width: 767px) {
 	.manga {
 		.cover-img {
-			height: 14rem;
+			height: 16rem;
 		}
 
 		.manga-name {

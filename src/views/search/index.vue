@@ -34,7 +34,7 @@
 				</div>
 
 				<!--分页组件-->
-				<media-pager ref="pager" :count="count" :params-page="page" @page-change="page_change" />
+				<media-pager ref="pager" :page="page" :count="count" :page-size-config="pageSizes" @page-change="page_change" />
 			</div>
 
 			<div class="chapter-list" v-if="searchType === 'chapter'">
@@ -45,7 +45,7 @@
 				</div>
 
 				<!--分页组件-->
-				<media-pager ref="pager" :count="count" :params-page="page" @page-change="page_change" />
+				<media-pager ref="pager" :page="page" :count="count" :page-size-config="pageSizes" @page-change="page_change" />
 			</div>
 		</div>
 	</div>
@@ -76,18 +76,27 @@ import manga from '@/components/manga.vue';
 import chapter from '@/components/chapter.vue';
 import mediaPager from '@/components/media-pager.vue';
 import { ElMessage } from 'element-plus';
-
+import { pageSizeConfigType, screenType } from '@/type/store';
+import { mangaPageSize, chapterPageSize } from '@/store/page-size';
 const searchText = ref('');
 const searchType = ref('manga');
 
 const route = useRoute();
 
-const defaultPageSize = computed<number>(() => {
-	const screen = config.screenType;
-	// @ts-ignore
-	return Number(pageSizeConfig[screen][0]);
-});
+let pageSizes: number[] = [];
+let defaultPageSize = 10;
 
+get_page_size_array();
+
+function get_page_size_array() {
+	// 获取默认的页面容量
+	const screen: screenType = config.screenType;
+
+	const pageSizesConfig = searchType.value === 'manga' ? mangaPageSize : chapterPageSize;
+
+	pageSizes = pageSizesConfig[screen];
+	defaultPageSize = pageSizesConfig[screen][0];
+}
 let page = ref(1);
 let count = ref(0);
 let list = ref([]);
@@ -124,7 +133,7 @@ onActivated(() => {
 });
 
 async function do_search() {
-	const res: any = await searchApi.get(searchText.value, searchType.value, 0, 12);
+	const res: any = await searchApi.get(searchText.value, searchType.value, 1, defaultPageSize);
 	list.value = res.list;
 }
 
@@ -187,7 +196,7 @@ function touch_page_change() {
  */
 async function page_change(
 	pageC = 1,
-	pageSize: number = defaultPageSize.value
+	pageSize: number = defaultPageSize
 ) {
 	page.value = pageC;
 

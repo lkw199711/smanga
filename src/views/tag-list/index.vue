@@ -2,7 +2,7 @@
  * @Author: lkw199711 lkw199711@163.com
  * @Date: 2023-07-29 01:17:01
  * @LastEditors: lkw199711 lkw199711@163.com
- * @LastEditTime: 2023-07-29 17:37:03
+ * @LastEditTime: 2023-09-24 11:00:07
  * @FilePath: \smanga\src\views\tag-list\index.vue
 -->
 <template>
@@ -32,7 +32,7 @@
     </div>
 
     <!--分页组件-->
-    <media-pager ref="pager" :count="count" :params-page="page" @page-change="page_change" />
+    <media-pager ref="pager" :page="page" :count="count" :page-size-config="pageSizes" @page-change="page_change" />
 </template>
 
 <script lang="ts" setup>
@@ -44,6 +44,8 @@ import mangaApi from '@/api/manga';
 import manga from '@/components/manga.vue';
 import mediaPager from '@/components/media-pager.vue';
 import i18n from '@/i18n';
+import { mangaPageSize } from '@/store/page-size';
+import { screenType } from '@/type/store';
 const { t } = i18n.global;
 
 type mangaItemType = {
@@ -63,11 +65,18 @@ type mangaItemType = {
     blob: string;
 }
 
-const defaultPageSize = computed<number>(() => {
-    const screen = config.screenType;
-    // @ts-ignore
-    return Number(pageSizeConfig[screen][0]);
-});
+let pageSizes: number[] = [];
+let defaultPageSize = 10;
+
+get_page_size_array();
+
+function get_page_size_array() {
+    const screen: screenType = config.screenType;
+
+    pageSizes = mangaPageSize[screen];
+    defaultPageSize = mangaPageSize[screen][0];
+}
+
 const page = ref(1);
 const pageSize = ref(10);
 // 漫画列表
@@ -135,7 +144,7 @@ onMounted(async () => {
  */
 async function page_change(
     pageC = 1,
-    pageSize: number = defaultPageSize.value
+    pageSize: number = defaultPageSize
 ) {
     page.value = pageC;
 

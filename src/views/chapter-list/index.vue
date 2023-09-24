@@ -9,7 +9,7 @@
 		</div>
 
 		<!--分页组件-->
-		<media-pager ref="pager" :count="count" :params-page="page" @page-change="page_change" />
+		<media-pager ref="pager" :page="page" :count="count" :page-size-config="pageSizes" @page-change="page_change" />
 
 		<!--功能菜单-->
 		<right-sidebar :info="chapterInfo" :menuPoster="menuPoster" @reload="page_change" />
@@ -33,9 +33,12 @@ import { get_poster } from '@/api';
 import chapterApi from '@/api/chapter';
 import store, { config, pageSizeConfig, userConfig } from '@/store';
 import { global_get, global_set, global_set_json } from '@/utils';
+import chapterListMenu from './components/chapter-list-menu.vue';
 import chapter from '@/components/chapter.vue';
 import mediaPager from '@/components/media-pager.vue';
 import rightSidebar from './right-sidebar.vue';
+import { screenType } from '@/type/store';
+import { chapterPageSize } from '@/store/page-size';
 
 const route = useRoute();
 const router = useRouter();
@@ -46,11 +49,18 @@ let list = ref([]);
 let chapterInfo = ref({});
 let menuPoster = ref('');
 
-const defaultPageSize = computed<number>(() => {
-	const screen = config.screenType;
-	// @ts-ignore
-	return Number(pageSizeConfig[screen][0]);
-});
+let pageSizes: number[] = [];
+let defaultPageSize = 10;
+
+get_page_size_array();
+
+function get_page_size_array() {
+	// 获取默认的页面容量
+	const screen: screenType = config.screenType;
+
+	pageSizes = chapterPageSize[screen];
+	defaultPageSize = chapterPageSize[screen][0];
+}
 
 const mangaId = computed<number>(() => {
 	return Number(route.query.mangaId || global_get('mangaId'));
@@ -176,7 +186,7 @@ function context_menu(info: any, key: number) {
  */
 async function page_change(
 	pageParams = 1,
-	pageSize: number = defaultPageSize.value
+	pageSize: number = defaultPageSize
 ) {
 
 	if (pageParams !== 1 && pageParams > Math.ceil(count.value / pageSize)) return;

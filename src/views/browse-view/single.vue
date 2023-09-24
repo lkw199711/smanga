@@ -2,7 +2,7 @@
  * @Author: lkw199711 lkw199711@163.com
  * @Date: 2023-03-17 20:18:31
  * @LastEditors: lkw199711 lkw199711@163.com
- * @LastEditTime: 2023-09-14 04:51:15
+ * @LastEditTime: 2023-09-24 11:39:06
  * @FilePath: \smanga\src\views\browse-view\single.vue
 -->
 <template>
@@ -59,18 +59,16 @@ const imgPathFiles = ref<string[]>([]);
 const chapterId = ref(0);
 const page = ref(1);
 
-const name = computed(() => {
-  return route.query.name;
-})
 const chapterList = computed<chapterInfoType[]>(() => {
   return global_get_array('chapterList');
 })
 
 const index = computed<number>(() => {
   const list = chapterList.value;
+  const name = route.query.name;
 
   for (let i = 0; i < list.length; i++) {
-    if (name.value === list[i].chapterName) {
+    if (name === list[i].chapterName) {
       //缓存章节坐标
       global_set('chapterIndex', i);
       return i;

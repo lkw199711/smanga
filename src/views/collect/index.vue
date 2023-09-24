@@ -15,7 +15,7 @@
 
 
 				<!--分页组件-->
-				<media-pager ref="pager" :count="count" :params-page="page" @page-change="page_change" />
+				<media-pager ref="pager" :page="page" :count="count" :page-size-config="pageSizes" @page-change="page_change" />
 			</div>
 
 			<div class="chapter-list" v-if="collectType === 'chapter'">
@@ -28,7 +28,7 @@
 				</div>
 
 				<!--分页组件-->
-				<media-pager ref="pager" :count="count" :params-page="page" @page-change="page_change" />
+				<media-pager ref="pager" :page="page" :count="count" :page-size-config="pageSizes" @page-change="page_change" />
 			</div>
 		</div>
 	</div>
@@ -61,6 +61,8 @@ import { get_collect } from '@/api/collect';
 import type { TabsPaneContext } from 'element-plus';
 import tabs from './tabs.vue';
 import i18n from '@/i18n';
+import { pageSizeConfigType, screenType } from '@/type/store';
+import { mangaPageSize, chapterPageSize } from '@/store/page-size';
 const { t } = i18n.global;
 
 const items = ref([
@@ -83,17 +85,26 @@ const searchType = ref('manga');
 
 const route = useRoute();
 
-const defaultPageSize = computed<number>(() => {
-	const screen = config.screenType;
-	// @ts-ignore
-	return Number(pageSizeConfig[screen][0]);
-});
-
 let page = ref(1);
 let count = ref(0);
 let list = ref([]);
 let mangaInfo = ref({});
 let menuPoster = '';
+
+let pageSizes: number[] = [];
+let defaultPageSize = 10;
+
+get_page_size_array();
+
+function get_page_size_array() {
+	// 获取默认的页面容量
+	const screen: screenType = config.screenType;
+
+	const pageSizesConfig = searchType.value === 'manga' ? mangaPageSize : chapterPageSize;
+
+	pageSizes = pageSizesConfig[screen];
+	defaultPageSize = pageSizesConfig[screen][0];
+}
 
 // 切换排序规则时 重新加载列表
 watch(
@@ -174,18 +185,7 @@ function touch_page_change() {
 function tabs_change(val: string) {
 	list.value = [];
 	page_change();
-}
-
-async function do_search() {
-	const res: any = await search(searchText.value, searchType.value, 0, 12);
-	list.value = res.data.list;
-}
-
-/**
- * 清空方法
- */
-function clear() {
-	list.value = [];
+	get_page_size_array();
 }
 
 /**
@@ -195,13 +195,13 @@ function clear() {
  */
 async function page_change(
 	pageParams = 1,
-	pageSize: number = defaultPageSize.value
+	pageSize: number = defaultPageSize
 ) {
-	
+
 	if (pageParams !== 1 && pageParams > Math.ceil(count.value / pageSize)) return;
 	if (pageParams < 1) return;
 	page.value = pageParams;
-	
+
 	const res: any = await get_collect(
 		collectType.value,
 		page.value,

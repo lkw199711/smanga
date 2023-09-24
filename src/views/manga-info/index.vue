@@ -2,7 +2,7 @@
  * @Author: error: error: git config user.name & please set dead value or install git && error: git config user.email & please set dead value or install git & please set dead value or install git
  * @Date: 2023-08-15 23:05:47
  * @LastEditors: lkw199711 lkw199711@163.com
- * @LastEditTime: 2023-09-23 14:45:02
+ * @LastEditTime: 2023-09-23 19:52:04
  * @FilePath: /smanga/src/views/manga-info/index.vue
 -->
 <template>
@@ -421,7 +421,7 @@ function update_tags(tagsParams: tagItemType[]) {
     }
 
     .btn {
-        width: 48%;
+        width: 24%;
         margin-bottom: 1rem;
     }
 }
@@ -435,7 +435,6 @@ function update_tags(tagsParams: tagItemType[]) {
 .cover-img {
     display: block;
     margin: 0 auto;
-    // height: 26rem;
     width: 28rem;
     min-width: 14rem;
     height: 40rem;
@@ -512,6 +511,10 @@ function update_tags(tagsParams: tagItemType[]) {
             width: 14rem;
             line-height: 1.5;
         }
+    }
+
+    .btn-box .btn {
+        width: 48%;
     }
 }
 </style>

@@ -2,13 +2,13 @@
  * @Author: lkw199711 lkw199711@163.com
  * @Date: 2023-03-17 20:18:30
  * @LastEditors: lkw199711 lkw199711@163.com
- * @LastEditTime: 2023-09-14 03:45:10
+ * @LastEditTime: 2023-09-23 23:54:44
  * @FilePath: \smanga\src\store\index.ts
  */
 import {createStore} from 'vuex';
 import {reactive} from 'vue';
 import {GlobalData} from '@/store/type';
-import { get_cookie } from '../utils/index';
+import {get_cookie} from '../utils/index';
 import {screenType} from '@/type/store';
 
 export default createStore({
@@ -17,7 +17,7 @@ export default createStore({
 		mangaAwait: true,
 		previewAwait: true,
 		collectAwait: true,
-		searchAwait: true
+		searchAwait: true,
 	} as any,
 	mutations: {
 		switch_await(state, {bool = true, running = 'chapterAwait'}) {
@@ -49,6 +49,8 @@ export const globalData: GlobalData = reactive({
 	removeFirst: '0',
 	direction: '0',
 	loadedImages: 0,
+	userConfig: null,
+	pageSizeConfig: null,
 });
 
 const editUser = get_cookie('editUser');
@@ -104,9 +106,10 @@ export const cache = reactive({
 
 export const pageSizeConfig = reactive({
 	mini: [9, 12, 15, 18, 21],
-	small: [12, 18, 32, 38, 44],
+	small: [15, 18, 32, 38, 44],
+	tablet: [15, 18, 32, 38, 44],
 	middle: [12, 18, 32, 38, 44],
-	large: [8, 16, 32, 40, 48] as number[],
+	large: [8, 16, 32, 40, 48],
 	'2k': [27, 36, 45, 54, 63],
 	'4k': [32, 40, 48, 54, 62],
 });
