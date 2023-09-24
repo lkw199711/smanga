@@ -2,7 +2,7 @@
  * @Author: lkw199711 lkw199711@163.com
  * @Date: 2023-08-25 10:45:47
  * @LastEditors: lkw199711 lkw199711@163.com
- * @LastEditTime: 2023-09-24 23:24:36
+ * @LastEditTime: 2023-09-25 00:22:57
  * @FilePath: /smanga/src/views/browse-view/flow.vue
 -->
 <template>
@@ -77,7 +77,7 @@ const chapterList = computed(() => { return global_get_array('chapterList') })
 
 const index = computed<number>(() => {
 	const list = chapterList.value;
-	const chapterId = route.query.chapterId;
+	const chapterId = Number(route.query.chapterId);
 
 	for (let i = 0; i < list.length; i++) {
 		if (chapterId === list[i].chapterId) {
@@ -162,7 +162,7 @@ async function load_image(index: number, errNum = 0) {
 async function reload_page(addHistory = true, clearPage = true, pageParams = 1) {
 	// 初始化chapterInfo
 	if (!chapterInfo.chapterId) chapterInfo.chapterId = Number(route.query.chapterId);
-	
+
 	// 重置图片数据
 	if (clearPage) {
 		imgFileList.value = [];

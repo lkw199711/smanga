@@ -2,7 +2,7 @@
  * @Author: lkw199711 lkw199711@163.com
  * @Date: 2023-03-17 20:18:31
  * @LastEditors: lkw199711 lkw199711@163.com
- * @LastEditTime: 2023-09-24 11:39:06
+ * @LastEditTime: 2023-09-25 00:39:17
  * @FilePath: \smanga\src\views\browse-view\single.vue
 -->
 <template>
@@ -65,10 +65,10 @@ const chapterList = computed<chapterInfoType[]>(() => {
 
 const index = computed<number>(() => {
   const list = chapterList.value;
-  const name = route.query.name;
+  const chapterId = Number(route.query.chapterId);
 
   for (let i = 0; i < list.length; i++) {
-    if (name === list[i].chapterName) {
+    if (chapterId === list[i].chapterId) {
       //缓存章节坐标
       global_set('chapterIndex', i);
       return i;
@@ -141,7 +141,7 @@ function nextPage() {
 async function reload_page(page = 1, addHistory = true) {
   if (addHistory) add_history();
   // 加载图片列表
-  const res = await get_chapter_images();
+  const res = await get_chapter_images(chapterId.value);
 
   switch (res.data.status) {
     case 'uncompressed':
@@ -181,8 +181,7 @@ async function before() {
   await router.push({
     name: route.name as string,
     query: {
-      name: chapterList.value[index.value - 1].chapterName,
-      path: chapterList.value[index.value - 1].chapterPath,
+      chapterId: chapterList.value[index.value - 1].chapterId,
     },
     params: { page: 1 },
   });
@@ -209,8 +208,7 @@ async function next() {
   await router.push({
     name: route.name as string,
     query: {
-      name: chapterList.value[index.value + 1].chapterName,
-      path: chapterList.value[index.value + 1].chapterPath,
+      chapterId: chapterList.value[index.value + 1].chapterId,
     },
     params: { page: 1 },
   });
@@ -229,8 +227,7 @@ async function change_chapter(index: any) {
   await router.push({
     name: route.name as string,
     query: {
-      name: chapterList.value[index].chapterName,
-      path: chapterList.value[index].chapterPath,
+      chapterId: chapterList.value[index].chapterId,
     },
     params: { page: 1 },
   });

@@ -20,94 +20,55 @@
 
 
     <!--目录按钮-->
-    <div v-show="browseTop" class="show-menu-btn" @click.stop="button_click">
+    <div v-show="config.browseTop" class="show-menu-btn" @click.stop="button_click">
       <i class="colour colour-mulu" />
     </div>
   </div>
 </template>
 
-<script lang='ts'>
-import { defineComponent, ref } from 'vue';
+<script lang="ts">
+export default { name: 'chapter-list-menu' };
+</script>
+<script setup lang='ts'>
+import { ref, computed, defineEmits } from 'vue';
 import { config } from "@/store";
 import { global_get_array, global_set } from "@/utils";
 import Seat from "@/components/seat.vue";
+import { useRoute, useRouter } from 'vue-router';
+const route = useRoute();
+const router = useRouter();
 
-export default defineComponent({
-  name: 'chapter-list-menu',
-  setup() {
-    const show = ref(false);
-    const showPopup = () => {
-      show.value = true;
-    };
-    return {
-      show,
-      showPopup,
-    };
-  },
-  // 数据
-  data() {
-    return {
-      popup: false,
+const emit = defineEmits(['changeChapter', 'before', 'next']);
+
+let popup = ref(false);
+let chapterList = computed(() => { return global_get_array('chapterList'); })
+let chapterIndex = computed(() => {
+  const chapterId = Number(route.query.chapterId);
+
+  for (let i = 0; i < chapterList.value.length; i++) {
+    if (chapterId === chapterList.value[i].chapterId) {
+      //缓存章节坐标
+      global_set('chapterIndex', i);
+      return i;
     }
-  },
+  }
 
-  // 传值
-  props: [],
-
-  // 引用
-  computed: {
-    browseTop() {
-      return config.browseTop;
-    },
-    chapterName() {
-      return this.$route.query.name;
-    },
-    // 章节列表
-    chapterList() {
-      return global_get_array('chapterList');
-    },
-    // 章节的坐标索引
-    chapterIndex() {
-      const chapterList = this.chapterList;
-
-      for (let i = 0; i < chapterList.length; i++) {
-        if (this.chapterName === chapterList[i].chapterName) {
-          //缓存章节坐标
-          global_set('chapterIndex', i);
-          return i;
-        }
-      }
-
-      return -1;
-    },
-    config() {
-      return config;
-    }
-  },
-
-  // 组件
-  components: { Seat },
-
-  // 方法
-  methods: {
-    change_chapter(index: number) {
-      this.$emit('changeChapter', index);
-    },
-    before() {
-      this.$emit('before');
-    },
-    next() {
-      this.$emit('next');
-    },
-    button_click() {
-      this.popup = true;
-    }
-  },
-
-  // 生命周期
-  created() {
-  },
+  return -1;
 })
+
+
+function change_chapter(index: number) {
+  emit('changeChapter', index);
+}
+function before() {
+  emit('before');
+}
+function next() {
+  emit('next');
+}
+function button_click() {
+  popup.value = true;
+}
 </script>
 
 <style scoped lang='less'>
