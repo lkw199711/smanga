@@ -2,7 +2,7 @@
  * @Author: lkw199711 lkw199711@163.com
  * @Date: 2023-07-29 01:17:01
  * @LastEditors: lkw199711 lkw199711@163.com
- * @LastEditTime: 2023-09-24 01:14:40
+ * @LastEditTime: 2023-09-24 11:00:07
  * @FilePath: \smanga\src\views\tag-list\index.vue
 -->
 <template>
@@ -32,7 +32,7 @@
     </div>
 
     <!--分页组件-->
-    <media-pager ref="pager" :count="count" :page-size-config="pageSizes" @page-change="page_change" />
+    <media-pager ref="pager" :page="page" :count="count" :page-size-config="pageSizes" @page-change="page_change" />
 </template>
 
 <script lang="ts" setup>

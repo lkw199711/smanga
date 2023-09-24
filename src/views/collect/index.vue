@@ -15,7 +15,7 @@
 
 
 				<!--分页组件-->
-				<media-pager ref="pager" :count="count" :page-size-config="pageSizes" @page-change="page_change" />
+				<media-pager ref="pager" :page="page" :count="count" :page-size-config="pageSizes" @page-change="page_change" />
 			</div>
 
 			<div class="chapter-list" v-if="collectType === 'chapter'">
@@ -28,7 +28,7 @@
 				</div>
 
 				<!--分页组件-->
-				<media-pager ref="pager" :count="count" :page-size-config="pageSizes" @page-change="page_change" />
+				<media-pager ref="pager" :page="page" :count="count" :page-size-config="pageSizes" @page-change="page_change" />
 			</div>
 		</div>
 	</div>

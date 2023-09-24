@@ -72,9 +72,10 @@ const chapterList = computed<chapterInfoType[]>(() => {
 
 const index = computed<number>(() => {
   const list = chapterList.value;
+  const name = route.query.name;
 
   for (let i = 0; i < list.length; i++) {
-    if (name.value === list[i].chapterName) {
+    if (name === list[i].chapterName) {
       //缓存章节坐标
       global_set('chapterIndex', i);
       return i;
