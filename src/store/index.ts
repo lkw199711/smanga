@@ -2,7 +2,7 @@
  * @Author: lkw199711 lkw199711@163.com
  * @Date: 2023-03-17 20:18:30
  * @LastEditors: lkw199711 lkw199711@163.com
- * @LastEditTime: 2023-09-25 21:25:17
+ * @LastEditTime: 2023-09-25 22:45:49
  * @FilePath: \smanga\src\store\index.ts
  */
 import {createStore} from 'vuex';
@@ -66,6 +66,7 @@ export const config = reactive({
 	rightSidebar: false,
 	android: false,
 	viewType: 'block',
+	enableOperation: true,
 });
 
 export const power = reactive({

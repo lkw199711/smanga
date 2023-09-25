@@ -1,40 +1,32 @@
 <template>
 	<div class="right-sidebar">
-		<el-drawer
-			v-model="drawer"
-			size="auto"
-			:with-header="false"
-			:before-close="close_sidebar">
-			<el-menu
-				class="right-sidebar-menu"
-				active-text-color="#ffd04b"
-				background-color="#545c64"
-				text-color="#fff"
+		<el-drawer v-model="drawer" size="auto" :with-header="false" :before-close="close_sidebar">
+			<el-menu class="right-sidebar-menu" active-text-color="#ffd04b" background-color="#545c64" text-color="#fff"
 				@select="menu_select">
 				<el-menu-item v-if="idDouble" index="remove-first">{{
 					removeFirstTitle
 				}}</el-menu-item>
 				<el-menu-item index="bookmark">{{ bookmarkTitle }}</el-menu-item>
-				<el-menu-item v-if="idDouble" index="direction"
-					>{{ $t('option.direction') }} ({{ directionTitle }})</el-menu-item
-				>
+				<el-menu-item v-if="idDouble" index="direction">{{ $t('option.direction') }} ({{ directionTitle
+				}})</el-menu-item>
 				<el-menu-item index="dwonload">{{
 					$t('option.dwonload')
 				}}</el-menu-item>
+				<el-menu-item index="operation">{{ operationText }}</el-menu-item>
 			</el-menu>
 		</el-drawer>
 	</div>
 </template>
 
 <script lang="ts" setup>
-import {watch, ref, defineProps, defineEmits, computed} from 'vue';
-import {useRoute} from 'vue-router';
-import {cache, config} from '@/store';
-import {add_bookmark, delete_bookmark, get_bookmark} from '@/api/bookmark';
-import {global_get, global_set_json} from '@/utils';
+import { watch, ref, defineProps, defineEmits, computed } from 'vue';
+import { useRoute } from 'vue-router';
+import { cache, config } from '@/store';
+import { add_bookmark, delete_bookmark, get_bookmark } from '@/api/bookmark';
+import { global_get, global_set_json } from '@/utils';
 import i18n from '@/i18n';
 
-const {t} = i18n.global;
+const { t } = i18n.global;
 
 const route = useRoute();
 
@@ -68,6 +60,10 @@ const idDouble = computed(() => {
 	return route.name === 'double';
 });
 
+const operationText = computed(() => {
+	return config.enableOperation ? '关闭操作面板' : '开启操作面板';
+})
+
 watch(
 	() => config.rightSidebar,
 	(val) => {
@@ -92,6 +88,10 @@ function menu_select(key: string) {
 			break;
 		case 'dwonload':
 			emit('dwonload');
+			break;
+		case 'operation':
+			config.enableOperation = !config.enableOperation;
+			break;
 	}
 	close_sidebar();
 }
