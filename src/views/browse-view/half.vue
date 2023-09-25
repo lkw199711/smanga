@@ -37,7 +37,7 @@ import { ref, reactive, onMounted, watch, computed } from 'vue';
 import { get_image_blob } from '@/api';
 import { global_get, global_get_array, global_set } from '@/utils';
 import { ElMessage } from 'element-plus';
-import { config } from '@/store';
+import { config, userConfig } from '@/store';
 import { add_history } from '@/api/history';
 import operationCover from './components/operation-cover.vue';
 import chapterListMenu from './components/chapter-list-menu.vue';
@@ -371,7 +371,10 @@ onMounted(() => {
   // 加载页面
   reload_page(Number(page), !notAddHistory);
 
-  touch_page_change();
+  if (userConfig.enableTouchPageChange) { 
+    touch_page_change();
+  }
+  
 })
 </script>
 

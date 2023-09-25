@@ -23,12 +23,13 @@
     </div>
 
     <!-- 页码显示 -->
-    <page-number :page="page" :count="imgPathList.length"/>
+    <page-number :page="page" :count="imgPathList.length" />
 
     <!--分页按钮-->
     <div class="footer" v-show="config.browseFooter">
       <el-button class="btn" type="warning" plain @click="before">{{ $t('page.before') }}</el-button>
-      <browse-pager ref="pager" @pageChange="page_change" @reloadPage="reload_page" :page="page" :count="count" :set-page-size="2" />
+      <browse-pager ref="pager" @pageChange="page_change" @reloadPage="reload_page" :page="page" :count="count"
+        :set-page-size="2" />
       <el-button class="btn" type="success" plain @click="next">{{ $t('page.next') }}</el-button>
     </div>
   </div>
@@ -39,7 +40,7 @@ import { ref, reactive, onMounted, watch, computed } from 'vue';
 import { get_image_blob } from '@/api';
 import { global_get, global_get_array, global_set } from '@/utils';
 import { ElMessage } from 'element-plus';
-import { config } from '@/store';
+import { config, userConfig } from '@/store';
 import { add_history } from '@/api/history';
 import operationCover from './components/operation-cover.vue';
 import chapterListMenu from './components/chapter-list-menu.vue';
@@ -394,7 +395,10 @@ onMounted(async () => {
   if (removeFirst) remove_poster();
   if (!direction) switch_direction();
 
-  touch_page_change();
+  if (userConfig.enableTouchPageChange) {
+    touch_page_change();
+  }
+
 })
 </script>
 

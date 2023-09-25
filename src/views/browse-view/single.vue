@@ -2,7 +2,7 @@
  * @Author: lkw199711 lkw199711@163.com
  * @Date: 2023-03-17 20:18:31
  * @LastEditors: lkw199711 lkw199711@163.com
- * @LastEditTime: 2023-09-25 19:53:13
+ * @LastEditTime: 2023-09-25 23:28:17
  * @FilePath: \smanga\src\views\browse-view\single.vue
 -->
 <template>
@@ -22,7 +22,7 @@
     </div>
 
     <!-- 页码显示 -->
-    <page-number :page="page" :count="imgPathList.length"/>
+    <page-number :page="page" :count="imgPathList.length" />
 
     <!--分页按钮-->
     <div class="footer" v-show="config.browseFooter">
@@ -40,7 +40,7 @@ import { ref, reactive, onMounted, watch, computed } from 'vue';
 import { get_image_blob } from '@/api';
 import { global_get, global_get_array, global_set } from '@/utils';
 import { ElMessage } from 'element-plus';
-import { config } from '@/store';
+import { config, userConfig } from '@/store';
 import { add_history } from '@/api/history';
 import operationCover from './components/operation-cover.vue';
 import chapterListMenu from './components/chapter-list-menu.vue';
@@ -345,7 +345,10 @@ onMounted(() => {
   // 加载页面
   reload_page(Number(page), !notAddHistory);
 
-  touch_page_change();
+  if (userConfig.enableTouchPageChange) {
+    touch_page_change();
+  }
+
 })
 </script>
 

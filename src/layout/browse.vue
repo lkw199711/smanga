@@ -2,12 +2,12 @@
  * @Author: lkw199711 lkw199711@163.com
  * @Date: 2023-09-25 22:55:47
  * @LastEditors: lkw199711 lkw199711@163.com
- * @LastEditTime: 2023-09-25 22:59:14
+ * @LastEditTime: 2023-09-25 23:36:31
  * @FilePath: /smanga/src/layout/browse.vue
 -->
 <template>
 	<div class="browse" :class="config.browseType">
-		<div class="header" v-if="browseTop">
+		<div class="header" v-if="config.browseTop">
 			<browse-top class="nav-top" />
 			<div class="seat posted"></div>
 		</div>
