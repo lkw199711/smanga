@@ -2,7 +2,7 @@
  * @Author: lkw199711 lkw199711@163.com
  * @Date: 2023-08-25 10:45:47
  * @LastEditors: lkw199711 lkw199711@163.com
- * @LastEditTime: 2023-09-25 19:20:47
+ * @LastEditTime: 2023-09-26 01:42:30
  * @FilePath: /smanga/src/views/browse-view/flow.vue
 -->
 <template>
@@ -14,9 +14,9 @@
 		<bookmark :chapterId="chapterInfo.chapterId" />
 
 		<!--列表-->
-		<div @click="switch_menu">
+		<div @click="switch_menu" id="flowList" ref="flowList">
 			<van-list v-model:loading="loading" :finished="finished" :immediate-check="false" @load="page_change">
-				<img class="list-img" v-for="(k, i) in imgFileList" :src="k" :key="i" alt="接收图片" />
+				<img :ref="'flow-' + i" class="list-img" v-for="(k, i) in imgFileList" :src="k" :key="i" alt="接收图片" />
 			</van-list>
 		</div>
 
@@ -26,7 +26,7 @@
 			<el-button class="btn" type="success" plain @click="next">下一章</el-button>
 		</div>
 
-		<page-number :page="page" :count="imgPathList.length"/>
+		<page-number :page="currentPage" :count="imgPathList.length" />
 
 		<!-- 安卓端占位符 -->
 		<div class="bottom-seat" v-if="config.android"></div>
@@ -37,7 +37,7 @@
 export default { name: 'browse-views' }
 </script>
 <script setup lang="ts">
-import { computed, ref, reactive } from 'vue';
+import { computed, watch, ref, reactive } from 'vue';
 import { get_image_blob } from '@/api';
 import {
 	global_get_array,
@@ -76,6 +76,8 @@ let refreshing = false;
 // 是否加载完全部图片
 let finished = ref(false);
 
+const flowList = ref();
+
 const chapterList = computed(() => { return global_get_array('chapterList') })
 
 const index = computed<number>(() => {
@@ -108,7 +110,7 @@ let chapterInfo = reactive<chapterInfoType>({
 	updateTime: '',
 })
 
-// 方法
+let currentPage = ref(1);
 
 /**
  * 加载图片
@@ -298,6 +300,28 @@ function switch_menu() {
 	config.browseTop = !config.browseTop;
 }
 
+/**
+ * @description: 绑定滚动事件 用以更新页码
+ * @return {*}
+ */
+function scroll_page() {
+	window.addEventListener('scroll', function () {
+		const flowListDom = flowList.value;
+		const scrollY = window.scrollY;
+
+		if (!flowListDom) return 0;
+
+		let imgs = flowListDom.getElementsByTagName('img');
+
+		for (let i = 0; i < imgs.length; i++) {
+			if (scrollY < imgs[i].offsetTop) {
+				currentPage.value = i + 1;
+				return;
+			}
+		}
+	})
+}
+
 // 生命周期
 onMounted(() => {
 	// 设置浏览模式
@@ -312,6 +336,8 @@ onMounted(() => {
 	const notAddHistory = route.params.notAddHistory || false;
 
 	reload_page(!notAddHistory, true, page);
+
+	scroll_page();
 })
 
 
