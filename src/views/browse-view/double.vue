@@ -9,7 +9,7 @@
 
     <!--图片容器-->
     <div class="double-page-img-box touch-dom">
-      <bookmark :chapterId="chapterInfo.chapterId" />
+      <bookmark :page="page" :chapterId="chapterInfo.chapterId" />
       <template v-if="directionDesc">
         <img class="double-page-img" :src="imgSrc2" alt="接收图片2" v-if="imgSrc2" />
         <img class="double-page-img" :src="imgSrc1" alt="接收图片1" />
@@ -61,7 +61,6 @@ const imgSrc1 = ref('');
 const imgSrc2 = ref('');
 const imgPathList = ref<string[]>([]);
 const imgPathFiles = ref<string[]>([]);
-const chapterId = ref(0);
 const page = ref(1);
 const firstImage = ref('');
 const firstImageFile = ref('');
@@ -102,17 +101,6 @@ let chapterInfo = reactive<chapterInfoType>({
   updateTime: '',
 })
 
-watch(
-  () => index.value,
-  (val) => {
-    if (val < 0 || chapterList.value.length < 1) return 0
-    chapterId.value = chapterList.value[val].chapterId;
-  },
-  {
-    immediate: true
-  }
-)
-
 const count = computed(() => {
   return imgPathList.value.length;
 })
@@ -123,8 +111,9 @@ const pager = ref();
  * 页码变更
  * @param page
  */
-async function page_change(page: number) {
-  const index = (page - 1) * 2;
+async function page_change(pageParams: number) {
+  page.value = pageParams;
+  const index = (pageParams - 1) * 2;
   const pageImage = imgPathList.value[index];
 
   // 有缓存则加载缓存的图片
@@ -151,8 +140,8 @@ async function page_change(page: number) {
   }
 
   // 缓存书签信息
-  global_set('page', page);
-  global_set('doublePage', page * 2 - 1);
+  global_set('page', pageParams);
+  global_set('doublePage', pageParams * 2 - 1);
   global_set('pageImage', pageImage);
 }
 
@@ -174,9 +163,12 @@ function nextPage() {
  * 重载页面
  */
 async function reload_page(page = 1, addHistory = true) {
+  // 初始化chapterInfo
+  if (!chapterInfo.chapterId) chapterInfo.chapterId = Number(route.query.chapterId);
+
   if (addHistory) add_history();
   // 加载图片列表
-  const res = await get_chapter_images(chapterId.value);
+  const res = await get_chapter_images(chapterInfo.chapterId);
 
   switch (res.data.status) {
     case 'uncompressed':

@@ -2,7 +2,7 @@
  * @Author: lkw199711 lkw199711@163.com
  * @Date: 2023-08-25 10:45:47
  * @LastEditors: lkw199711 lkw199711@163.com
- * @LastEditTime: 2023-09-26 01:42:30
+ * @LastEditTime: 2023-09-26 06:57:58
  * @FilePath: /smanga/src/views/browse-view/flow.vue
 -->
 <template>
@@ -11,21 +11,24 @@
 		<chapter-list-menu @before="before" @next="next" @changeChapter="change_chapter" />
 
 		<!-- 书签 -->
-		<bookmark :chapterId="chapterInfo.chapterId" />
+		<bookmark :page="currentPage" :chapterId="chapterInfo.chapterId" />
 
-		<!--列表-->
-		<div @click="switch_menu" id="flowList" ref="flowList">
-			<van-list v-model:loading="loading" :finished="finished" :immediate-check="false" @load="page_change">
-				<img :ref="'flow-' + i" class="list-img" v-for="(k, i) in imgFileList" :src="k" :key="i" alt="接收图片" />
-			</van-list>
-		</div>
-
-		<!--翻页按钮-->
+		<!-- 下拉刷新 -->
+		<van-pull-refresh v-model="loading" @refresh="before_page">
+			<!-- 列表 -->
+			<div @click="switch_menu" id="flowList" ref="flowList">
+				<van-list v-model:loading="loading" :finished="finished" :immediate-check="false" @load="page_change">
+					<img :ref="'flow-' + i" class="list-img" v-for="(k, i) in imgFileList" :src="k" :key="i" alt="接收图片" />
+				</van-list>
+			</div>
+		</van-pull-refresh>
+		<!-- 翻页按钮 -->
 		<div class="btn-box" v-show="imgFileList.length">
 			<el-button class="btn" type="warning" plain @click="before">上一章</el-button>
 			<el-button class="btn" type="success" plain @click="next">下一章</el-button>
 		</div>
 
+		<!-- 页码 -->
 		<page-number :page="currentPage" :count="imgPathList.length" />
 
 		<!-- 安卓端占位符 -->
@@ -71,8 +74,6 @@ let page = 1;
 const initPage = 3;
 // 是否正在加载图片
 const loading = ref(false);
-// 是否正在重载页面
-let refreshing = false;
 // 是否加载完全部图片
 let finished = ref(false);
 
@@ -111,6 +112,7 @@ let chapterInfo = reactive<chapterInfoType>({
 })
 
 let currentPage = ref(1);
+let beforeBookMark = 0;
 
 /**
  * 加载图片
@@ -128,15 +130,13 @@ async function page_change() {
 		return false;
 	}
 
-	load_image(page - 1);
+	await load_image(page - 1);
 
 	// 加载结束,更新状态
 	loading.value = false;
-	refreshing = false;
+
 	// 是否加载完全部
 	finished.value = page >= imgPathList.value.length;
-
-	global_set('loadedImages', page);
 
 	// 页码递增
 	++page;
@@ -145,7 +145,23 @@ async function page_change() {
 	page < initPage && (await page_change());
 }
 
-async function load_image(index: number, errNum = 0) {
+async function before_page() {
+	if (beforeBookMark === 0) {
+		loading.value = false;
+		return;
+	}
+
+	// 加载结束,更新状态
+	loading.value = false;
+
+	await load_image(beforeBookMark - 1, 0, true);
+	beforeBookMark--;
+	currentPage.value--;
+}
+
+async function load_image(index: number, errNum = 0, unshift = false) {
+	console.log(index);
+
 	// 重新请教超过三次 取消此图片加载
 	if (errNum > 3) return false;
 
@@ -154,12 +170,16 @@ async function load_image(index: number, errNum = 0) {
 	// 错误处理
 	if (err) {
 		setTimeout(() => {
-			load_image(index, errNum + 1);
+			return load_image(index, errNum + 1);
 		}, 1000)
-		return false;
 	}
 
-	imgFileList.value[index] = res.data;
+	if (unshift) {
+		imgFileList.value.unshift(res.data);
+	} else {
+		imgFileList.value[index - beforeBookMark] = res.data;
+	}
+
 	return true;
 }
 
@@ -173,6 +193,8 @@ async function reload_page(addHistory = true, clearPage = true, pageParams = 1) 
 	// 重置图片数据
 	if (clearPage) {
 		imgFileList.value = [];
+		beforeBookMark = pageParams - 1;
+		currentPage.value = pageParams;
 		page = pageParams;
 		// 重置滚动条
 		window_go_top();
@@ -212,7 +234,6 @@ async function reload_page(addHistory = true, clearPage = true, pageParams = 1) 
 	}
 
 	global_set_json('imgPathList', imgPathList.value);
-	global_set('loadedImages', page);
 }
 
 function load_again() {
@@ -315,7 +336,10 @@ function scroll_page() {
 
 		for (let i = 0; i < imgs.length; i++) {
 			if (scrollY < imgs[i].offsetTop) {
-				currentPage.value = i + 1;
+				currentPage.value = i + beforeBookMark + 1;
+				const pageImage = imgPathList.value[page - 1];
+				global_set('page', currentPage.value);
+				global_set('pageImage', pageImage);
 				return;
 			}
 		}
@@ -327,7 +351,7 @@ onMounted(() => {
 	// 设置浏览模式
 	config.browseType = 'flow';
 
-	let page = Number(route.params.page) || 0;
+	let page = Number(route.params.page) || 1;
 
 	// 部分旧代码将页码设置为0或者-1 这里做下更正
 	if (page < 1) page = 1;

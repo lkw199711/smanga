@@ -2,7 +2,7 @@
  * @Author: lkw199711 lkw199711@163.com
  * @Date: 2023-03-17 20:18:30
  * @LastEditors: lkw199711 lkw199711@163.com
- * @LastEditTime: 2023-09-25 23:30:07
+ * @LastEditTime: 2023-09-26 05:38:31
  * @FilePath: \smanga\src\store\index.ts
  */
 import {createStore} from 'vuex';
@@ -48,7 +48,6 @@ export const globalData: GlobalData = reactive({
 	pageImage: '',
 	removeFirst: '0',
 	direction: '0',
-	loadedImages: 0,
 	userConfig: null,
 	pageSizeConfig: null,
 });

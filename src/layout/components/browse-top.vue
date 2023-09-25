@@ -76,34 +76,21 @@ async function handleSelect(key: string) {
 	if (key === 'addBookmark') {
 		if (config.bookmarkShow) {
 			await delete_bookmark(cache.bookmarkId);
-		} else {
-			let page = 0;
-			if (config.browseType == 'flow') {
-				page = 1;
-				const doms = document.getElementsByClassName('list-img');
-				let minTop = 9999999;
-
-				for (let i = 0; i < doms.length; i++) {
-					const item: any = doms[i];
-					const screenTop = Math.abs(item.offsetTop + item.y);
-
-					if (screenTop < minTop) {
-						minTop = screenTop;
-						page = i;
-					}
-				}
-				const loadedImages = Number(global_get('loadedImages'));
-				page = loadedImages + 1 - doms.length + page;
-			} else {
-				// 区分单双页
-				page = Number(global_get('page'));
-				if (route.name === 'double') {
-					page = page * 2 - 1;
-				}
-			}
-
-			await add_bookmark(page);
+			return;
 		}
+		
+		let page = global_get('page');
+
+		if (route.name === 'double') {
+			page = page * 2 - 1;
+		}
+
+		if (route.name === 'half') {
+			page = Math.ceil(page / 2);
+		}
+
+		await add_bookmark(page);
+
 		const res = await get_bookmark();
 
 		global_set_json('bookmarkList', res.data.list);

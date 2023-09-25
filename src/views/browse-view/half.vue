@@ -8,7 +8,7 @@
 
     <!--图片容器-->
     <div class="single-page-img-box touch-dom">
-      <bookmark :chapterId="chapterInfo.chapterId" />
+      <bookmark :page="page" :chapterId="chapterInfo.chapterId" />
       <img class="single-page-img" :src="imgSrc" alt="接收图片" @click.stop="switch_menu" />
 
       <operation-cover @before="beforePage" @next="nextPage" @switch-menu="switch_menu"
@@ -57,7 +57,6 @@ const router = useRouter();
 const imgSrc = ref('');
 const imgPathList = ref<string[]>([]);
 const imgPathFiles = ref<string[]>([]);
-const chapterId = ref(0);
 const page = ref(1);
 
 const chapterList = computed<chapterInfoType[]>(() => {
@@ -94,17 +93,6 @@ let chapterInfo = reactive<chapterInfoType>({
   updateTime: '',
 })
 
-watch(
-  () => index.value,
-  (val) => {
-    if (val < 0 || chapterList.value.length < 1) return 0
-    chapterId.value = chapterList.value[val].chapterId;
-  },
-  {
-    immediate: true
-  }
-)
-
 const count = computed(() => {
   return imgPathList.value.length;
 })
@@ -116,6 +104,7 @@ const pager = ref();
  * @param page
  */
 async function page_change(pageParams: number) {
+  page.value = pageParams;
   const even = pageParams % 2 === 0;
 
   const pageImage = imgPathList.value[pageParams - 1];
@@ -181,9 +170,12 @@ function nextPage() {
  * 重载页面
  */
 async function reload_page(page = 1, addHistory = true) {
+  // 初始化chapterInfo
+  if (!chapterInfo.chapterId) chapterInfo.chapterId = Number(route.query.chapterId);
+
   if (addHistory) add_history();
   // 加载图片列表
-  const res = await get_chapter_images(chapterId.value);
+  const res = await get_chapter_images(chapterInfo.chapterId);
 
   switch (res.data.status) {
     case 'uncompressed':

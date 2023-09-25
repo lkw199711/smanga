@@ -2,7 +2,7 @@
  * @Author: lkw199711 lkw199711@163.com
  * @Date: 2023-03-17 20:18:31
  * @LastEditors: lkw199711 lkw199711@163.com
- * @LastEditTime: 2023-09-25 23:28:17
+ * @LastEditTime: 2023-09-26 04:50:25
  * @FilePath: \smanga\src\views\browse-view\single.vue
 -->
 <template>
@@ -15,7 +15,7 @@
 
     <!--图片容器-->
     <div class="single-page-img-box touch-dom">
-      <bookmark :chapterId="chapterId" />
+      <bookmark :page="page" :chapterId="chapterInfo.chapterId" />
       <img class="single-page-img" :src="imgSrc" alt="接收图片" @click.stop="switch_menu" />
       <operation-cover @before="beforePage" @next="nextPage" @switch-menu="switch_menu"
         @switch-footer="switch_footer"></operation-cover>
@@ -60,7 +60,6 @@ const router = useRouter();
 const imgSrc = ref('');
 const imgPathList = ref<string[]>([]);
 const imgPathFiles = ref<string[]>([]);
-const chapterId = ref(0);
 const page = ref(1);
 
 const chapterList = computed<chapterInfoType[]>(() => {
@@ -96,17 +95,6 @@ let chapterInfo = reactive<chapterInfoType>({
   picNum: 0,
   updateTime: '',
 })
-
-watch(
-  () => index.value,
-  (val) => {
-    if (val < 0 || chapterList.value.length < 1) return 0
-    chapterId.value = chapterList.value[val].chapterId;
-  },
-  {
-    immediate: true
-  }
-)
 
 const count = computed(() => {
   return imgPathList.value.length;
@@ -154,9 +142,12 @@ function nextPage() {
  * 重载页面
  */
 async function reload_page(page = 1, addHistory = true) {
+  // 初始化chapterInfo
+  if (!chapterInfo.chapterId) chapterInfo.chapterId = Number(route.query.chapterId);
+  
   if (addHistory) add_history();
   // 加载图片列表
-  const res = await get_chapter_images(chapterId.value);
+  const res = await get_chapter_images(chapterInfo.chapterId);
 
   switch (res.data.status) {
     case 'uncompressed':
@@ -340,7 +331,7 @@ onMounted(() => {
   const page = route.params.page || global_get('page') || 1;
   const notAddHistory = route.params.notAddHistory || false;
   // 组件被渲染了两遍
-  console.log('created');
+  // console.log('created');
 
   // 加载页面
   reload_page(Number(page), !notAddHistory);
