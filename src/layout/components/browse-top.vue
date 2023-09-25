@@ -25,7 +25,7 @@
 			<el-menu-item index="addBookmark">{{ bookmarkTitle }}</el-menu-item>
 		</el-menu>
 
-		<div class="chapter-name">{{ chapterName }}</div>
+		<div :class="['chapter-name', { android: config.android }]">{{ chapterName }}</div>
 	</div>
 </template>
 
@@ -146,7 +146,7 @@ async function handleSelect(key: string) {
 	padding: 0 20px 0 0;
 }
 
-.chapter-name{
+.chapter-name {
 	display: block;
 	position: absolute;
 	top: 6.2rem;
@@ -157,6 +157,11 @@ async function handleSelect(key: string) {
 	text-align: center;
 	line-height: 2;
 }
+
+.chapter-name.android {
+	top: 9.4rem;
+}
+
 @media only screen and (min-width: 1200px) {}
 
 @media only screen and (max-width: 1199px) and (min-width: 768px) {
