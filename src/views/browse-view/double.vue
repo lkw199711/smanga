@@ -22,17 +22,20 @@
       <operation-cover @before="beforePage" @next="nextPage" @switch-menu="switch_menu" @switch-footer="switch_footer" />
     </div>
 
+    <!-- 页码显示 -->
+    <page-number :page="page" :count="imgPathList.length"/>
+
     <!--分页按钮-->
     <div class="footer" v-show="config.browseFooter">
       <el-button class="btn" type="warning" plain @click="before">{{ $t('page.before') }}</el-button>
-      <browse-pager ref="pager" @pageChange="page_change" @reloadPage="reload_page" :count="count" :set-page-size="2" />
+      <browse-pager ref="pager" @pageChange="page_change" @reloadPage="reload_page" :page="page" :count="count" :set-page-size="2" />
       <el-button class="btn" type="success" plain @click="next">{{ $t('page.next') }}</el-button>
     </div>
   </div>
 </template>
 
 <script setup lang='ts'>
-import { ref, onMounted, watch, computed } from 'vue';
+import { ref, reactive, onMounted, watch, computed } from 'vue';
 import { get_image_blob } from '@/api';
 import { global_get, global_get_array, global_set } from '@/utils';
 import { ElMessage } from 'element-plus';
@@ -44,6 +47,7 @@ import bookmark from './components/bookmark.vue';
 import { get_chapter_images } from '@/api/browse';
 import browsePager from '@/components/browse-pager.vue';
 import rightSidebar from './components/right-sidebar.vue';
+import pageNumber from './components/page-number.vue';
 import i18n from '@/i18n';
 import { useRoute, useRouter } from 'vue-router';
 import { chapterInfoType } from '@/type/chapter';
@@ -63,9 +67,6 @@ const firstImageFile = ref('');
 const removeFirst = ref(false);
 const directionDesc = ref(true);
 
-const name = computed(() => {
-  return route.query.name;
-})
 const chapterList = computed<chapterInfoType[]>(() => {
   return global_get_array('chapterList');
 })
@@ -85,8 +86,19 @@ const index = computed<number>(() => {
   return -1;
 })
 
-const chapterInfo = computed<chapterInfoType>(() => {
-  return chapterList.value[index.value] || {};
+let chapterInfo = reactive<chapterInfoType>({
+  chapterId: 0,
+  chapterPath: '',
+  chapterType: 'img',
+  browseType: '',
+  chapterCover: '',
+  chapterName: '',
+  createTime: '',
+  mangaId: 0,
+  mediaId: 0,
+  pathId: 0,
+  picNum: 0,
+  updateTime: '',
 })
 
 watch(
@@ -200,10 +212,12 @@ async function before() {
 
   if (!index.value) return;
 
+  chapterInfo = chapterList.value[index.value - 1];
+
   await router.push({
     name: route.name as string,
     query: {
-      chapterId: chapterList.value[index.value - 1].chapterId,
+      chapterId: chapterInfo.chapterId,
     },
     params: { page: 1 },
   });
@@ -227,10 +241,12 @@ async function next() {
     return false;
   }
 
+  chapterInfo = chapterList.value[index.value + 1];
+
   await router.push({
     name: route.name as string,
     query: {
-      chapterId: chapterList.value[index.value + 1].chapterId,
+      chapterId: chapterInfo.chapterId,
     },
     params: { page: 1 },
   });
@@ -246,10 +262,12 @@ async function next() {
  * @param index
  */
 async function change_chapter(index: any) {
+  chapterInfo = chapterList.value[index];
+
   await router.push({
     name: route.name as string,
     query: {
-      chapterId: chapterList.value[index].chapterId,
+      chapterId: chapterInfo.chapterId,
     },
     params: { page: 1 },
   });
@@ -264,11 +282,10 @@ async function change_chapter(index: any) {
  * 更新阅读缓存
  */
 function update_chapter_info() {
-  const chapterInfoVal = chapterInfo.value;
-  global_set('chapterId', chapterInfoVal.chapterId);
-  global_set('chapterName', chapterInfoVal.chapterName);
-  global_set('chapterPath', chapterInfoVal.chapterPath);
-  global_set('chapterCover', chapterInfoVal.chapterCover);
+  global_set('chapterId', chapterInfo.chapterId);
+  global_set('chapterName', chapterInfo.chapterName);
+  global_set('chapterPath', chapterInfo.chapterPath);
+  global_set('chapterCover', chapterInfo.chapterCover);
 }
 
 // 阅读状态控制

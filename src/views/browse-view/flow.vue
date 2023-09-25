@@ -2,7 +2,7 @@
  * @Author: lkw199711 lkw199711@163.com
  * @Date: 2023-08-25 10:45:47
  * @LastEditors: lkw199711 lkw199711@163.com
- * @LastEditTime: 2023-09-25 11:03:35
+ * @LastEditTime: 2023-09-25 19:20:47
  * @FilePath: /smanga/src/views/browse-view/flow.vue
 -->
 <template>
@@ -25,6 +25,8 @@
 			<el-button class="btn" type="warning" plain @click="before">上一章</el-button>
 			<el-button class="btn" type="success" plain @click="next">下一章</el-button>
 		</div>
+
+		<page-number :page="page" :count="imgPathList.length"/>
 
 		<!-- 安卓端占位符 -->
 		<div class="bottom-seat" v-if="config.android"></div>
@@ -51,6 +53,7 @@ import i18n from '@/i18n';
 import { onMounted } from 'vue';
 import chapterListMenu from './components/chapter-list-menu.vue';
 import bookmark from './components/bookmark.vue';
+import pageNumber from './components/page-number.vue';
 import { useRoute, useRouter } from 'vue-router';
 import { chapterInfoType } from '@/type/chapter';
 const { t } = i18n.global;
@@ -61,7 +64,7 @@ const router = useRouter();
 // 图片文件列表
 let imgFileList = ref<string[]>([]);
 // 图片路径列表
-let imgPathList: string[] = [];
+let imgPathList = ref<string[]>([]);
 // 当前图片页码
 let page = 1;
 // 初始加载页码数量
@@ -118,7 +121,7 @@ async function page_change() {
 	// this.loading = true;
 
 	// 无数据 退出
-	if (!imgPathList.length) {
+	if (!imgPathList.value.length) {
 		loading.value = false;
 		return false;
 	}
@@ -129,7 +132,7 @@ async function page_change() {
 	loading.value = false;
 	refreshing = false;
 	// 是否加载完全部
-	finished.value = page >= imgPathList.length;
+	finished.value = page >= imgPathList.value.length;
 
 	global_set('loadedImages', page);
 
@@ -144,7 +147,7 @@ async function load_image(index: number, errNum = 0) {
 	// 重新请教超过三次 取消此图片加载
 	if (errNum > 3) return false;
 
-	const [res, err] = await get_image_blob(imgPathList[index]).then(res => [res, null]).catch(err => [null, err]);
+	const [res, err] = await get_image_blob(imgPathList.value[index]).then(res => [res, null]).catch(err => [null, err]);
 
 	// 错误处理
 	if (err) {
@@ -188,7 +191,7 @@ async function reload_page(addHistory = true, clearPage = true, pageParams = 1) 
 		case 'compressing':
 			// 进度有所增加 则更新图片列表
 			if (res.data.list.length > imgFileList.value.length) {
-				imgPathList = res.data.list;
+				imgPathList.value = res.data.list;
 				finished.value = false;
 				page_change();
 			}
@@ -198,15 +201,15 @@ async function reload_page(addHistory = true, clearPage = true, pageParams = 1) 
 			}, 2000);
 			break;
 		case 'compressed':
-			imgPathList = res.data.list;
+			imgPathList.value = res.data.list;
 			page_change();
 			break;
 		default:
-			imgPathList = res.data.list;
+			imgPathList.value = res.data.list;
 			page_change();
 	}
 
-	global_set_json('imgPathList', imgPathList);
+	global_set_json('imgPathList', imgPathList.value);
 	global_set('loadedImages', page);
 }
 
