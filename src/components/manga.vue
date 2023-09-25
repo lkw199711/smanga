@@ -2,26 +2,26 @@
 	<!-- 矩形视图 -->
 	<div class="manga" @click="go_chapter" v-if="props.viewType !== 'list'">
 		<!--封面图片-->
-		<el-image v-if="finish" class="anim cover-img" :src="poster" :fit="fit" :alt="title" />
+		<el-image v-if="finish" class="anim cover-img" :src="poster" :fit="fit" :alt="mangaName" />
 
 		<!--占位图标-->
 		<el-image v-else class="cover-img" :src="placeholder" fit="fill" />
 
 		<!--漫画名称-->
-		<p class="manga-name single-line-text-overflow">{{ title }}</p>
+		<p class="manga-name single-line-text-overflow">{{ mangaName }}</p>
 	</div>
 
 	<!-- 列表视图 -->
 	<div class="manga-view-list" @click="go_chapter" v-else>
 		<!--封面图片-->
-		<el-image v-if="finish" class="anim cover-img" :src="poster" :fit="fit" :alt="title" />
+		<el-image v-if="finish" class="anim cover-img" :src="poster" :fit="fit" :alt="mangaName" />
 
 		<!--占位图标-->
 		<el-image v-else class="cover-img" :src="placeholder" fit="fill" />
 
 		<!--漫画名称-->
 		<div class="manga-content">
-			<p class="manga-name">{{ title }}</p>
+			<p class="manga-name">{{ mangaName }}</p>
 			<p class="tag-box">
 				<el-tag v-for="tagItem in mangaInfo.tags" class="tag base-tag" :color="tagItem.tagColor"
 					:key="tagItem.tagId">
@@ -58,8 +58,8 @@ const finish = computed(() => {
 	return props.mangaInfo.finish;
 })
 
-const title = computed(() => {
-	return props.mangaInfo.title;
+const mangaName = computed(() => {
+	return props.mangaInfo.mangaName;
 })
 
 function go_chapter() {
@@ -73,7 +73,7 @@ function go_chapter() {
 
 	// 缓存漫画信息
 	global_set('mangaId', mangaId);
-	global_set('mangaName', title);
+	global_set('mangaName', mangaName);
 	global_set('mangaCover', mangaCover);
 	global_set('removeFirst', removeFirst);
 	global_set('direction', direction);
