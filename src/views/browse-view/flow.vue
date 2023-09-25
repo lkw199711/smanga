@@ -2,7 +2,7 @@
  * @Author: lkw199711 lkw199711@163.com
  * @Date: 2023-08-25 10:45:47
  * @LastEditors: lkw199711 lkw199711@163.com
- * @LastEditTime: 2023-09-25 00:22:57
+ * @LastEditTime: 2023-09-25 11:03:35
  * @FilePath: /smanga/src/views/browse-view/flow.vue
 -->
 <template>
@@ -148,7 +148,9 @@ async function load_image(index: number, errNum = 0) {
 
 	// 错误处理
 	if (err) {
-		load_image(index, errNum + 1);
+		setTimeout(() => {
+			load_image(index, errNum + 1);
+		}, 1000)
 		return false;
 	}
 
