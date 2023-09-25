@@ -297,6 +297,10 @@
 			<el-form-item label="翻页按钮反向">
 				<el-switch v-model="userConfig.pageTurningReverse" @change="switch_change" />
 			</el-form-item>
+
+			<el-form-item label="是否显示页码">
+					<el-switch v-model="userConfig.showPageNumber" @change="switch_change" />
+				</el-form-item>
 			<p class="note form-note">
 				有朋友反馈，单手操作手机的时候，最方便触碰到屏幕的左侧，因此希望可以通过点击左侧翻下一页。那么，您可以通过此选项修改左右翻页按钮使其调换位置。
 			</p>

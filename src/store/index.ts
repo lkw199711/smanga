@@ -2,7 +2,7 @@
  * @Author: lkw199711 lkw199711@163.com
  * @Date: 2023-03-17 20:18:30
  * @LastEditors: lkw199711 lkw199711@163.com
- * @LastEditTime: 2023-09-23 23:54:44
+ * @LastEditTime: 2023-09-25 21:25:17
  * @FilePath: \smanga\src\store\index.ts
  */
 import {createStore} from 'vuex';
@@ -96,6 +96,8 @@ export const userConfig = reactive({
 	// 阅读操作面板 顶部与底部尺寸
 	browseOperationTop: 30,
 	browseOperationBottom: 30,
+	// 是否显示页码
+	showPageNumber: true,
 });
 
 export const cache = reactive({
