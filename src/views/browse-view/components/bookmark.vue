@@ -2,7 +2,7 @@
  * @Author: lkw199711 lkw199711@163.com
  * @Date: 2023-09-26 02:24:07
  * @LastEditors: lkw199711 lkw199711@163.com
- * @LastEditTime: 2023-09-26 04:30:44
+ * @LastEditTime: 2023-09-26 11:34:16
  * @FilePath: /smanga/src/views/browse-view/components/bookmark.vue
 -->
 <template>
@@ -37,8 +37,7 @@ let show = computed(() => {
 
 	const bookmarkList = global_get_array('bookmarkList');
 	const chapterId = props.chapterId;
-	console.log(chapterId)
-	console.log(bookmarkList)
+
 	// 通过章节与页码判断书签展示
 	for (let i = 0; i < bookmarkList.length; i++) {
 		const item = bookmarkList[i];
@@ -46,7 +45,7 @@ let show = computed(() => {
 		if (chapterId != item.chapterId) {
 			continue;
 		}
-		console.log(page, item.page);
+		
 		if (item.page == page) {
 			cache.bookmarkId = item.bookmarkId;
 			config.bookmarkShow = true;

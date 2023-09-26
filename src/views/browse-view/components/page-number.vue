@@ -2,7 +2,7 @@
  * @Author: lkw199711 lkw199711@163.com
  * @Date: 2023-09-25 19:09:52
  * @LastEditors: lkw199711 lkw199711@163.com
- * @LastEditTime: 2023-09-25 21:30:06
+ * @LastEditTime: 2023-09-26 12:43:27
  * @FilePath: /smanga/src/views/browse-view/components/page-number.vue
 -->
 <template>

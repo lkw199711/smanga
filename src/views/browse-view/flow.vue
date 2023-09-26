@@ -2,7 +2,7 @@
  * @Author: lkw199711 lkw199711@163.com
  * @Date: 2023-08-25 10:45:47
  * @LastEditors: lkw199711 lkw199711@163.com
- * @LastEditTime: 2023-09-26 06:57:58
+ * @LastEditTime: 2023-09-26 11:54:33
  * @FilePath: /smanga/src/views/browse-view/flow.vue
 -->
 <template>
@@ -59,6 +59,7 @@ import bookmark from './components/bookmark.vue';
 import pageNumber from './components/page-number.vue';
 import { useRoute, useRouter } from 'vue-router';
 import { chapterInfoType } from '@/type/chapter';
+import { nextTick } from 'vue';
 const { t } = i18n.global;
 const route = useRoute();
 const router = useRouter();
@@ -111,25 +112,23 @@ let chapterInfo = reactive<chapterInfoType>({
 	updateTime: '',
 })
 
+// 正在浏览的页码
 let currentPage = ref(1);
+
+// 在中途加载 前置没有加载的页面数量
 let beforeBookMark = 0;
 
 /**
  * 加载图片
  */
 async function page_change() {
-
-	// if (this.loading) return;
-
-	// 开启加载状态
-	// this.loading = true;
-
 	// 无数据 退出
 	if (!imgPathList.value.length) {
 		loading.value = false;
 		return false;
 	}
 
+	// 加载页面并等待返回
 	await load_image(page - 1);
 
 	// 加载结束,更新状态
@@ -154,14 +153,14 @@ async function before_page() {
 	// 加载结束,更新状态
 	loading.value = false;
 
-	await load_image(beforeBookMark - 1, 0, true);
-	beforeBookMark--;
-	currentPage.value--;
+	// 向前加载一页
+	await load_image(--beforeBookMark, 0, true);
+
+	// 重新计算当前页码
+	scroll_page();
 }
 
 async function load_image(index: number, errNum = 0, unshift = false) {
-	console.log(index);
-
 	// 重新请教超过三次 取消此图片加载
 	if (errNum > 3) return false;
 
@@ -326,24 +325,22 @@ function switch_menu() {
  * @return {*}
  */
 function scroll_page() {
-	window.addEventListener('scroll', function () {
-		const flowListDom = flowList.value;
-		const scrollY = window.scrollY;
+	const flowListDom = flowList.value;
+	const scrollY = window.scrollY;
 
-		if (!flowListDom) return 0;
+	if (!flowListDom) return 0;
 
-		let imgs = flowListDom.getElementsByTagName('img');
+	let imgs = flowListDom.getElementsByTagName('img');
 
-		for (let i = 0; i < imgs.length; i++) {
-			if (scrollY < imgs[i].offsetTop) {
-				currentPage.value = i + beforeBookMark + 1;
-				const pageImage = imgPathList.value[page - 1];
-				global_set('page', currentPage.value);
-				global_set('pageImage', pageImage);
-				return;
-			}
+	for (let i = 0; i < imgs.length; i++) {
+		if (scrollY <= imgs[i].offsetTop) {
+			currentPage.value = i + beforeBookMark + 1;
+			const pageImage = imgPathList.value[page - 1];
+			global_set('page', currentPage.value);
+			global_set('pageImage', pageImage);
+			return;
 		}
-	})
+	}
 }
 
 // 生命周期
@@ -361,7 +358,7 @@ onMounted(() => {
 
 	reload_page(!notAddHistory, true, page);
 
-	scroll_page();
+	window.addEventListener('scroll', scroll_page);
 })
 
 
