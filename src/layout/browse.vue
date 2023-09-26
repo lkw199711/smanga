@@ -1,65 +1,41 @@
+<!--
+ * @Author: lkw199711 lkw199711@163.com
+ * @Date: 2023-09-25 22:55:47
+ * @LastEditors: lkw199711 lkw199711@163.com
+ * @LastEditTime: 2023-09-25 23:36:31
+ * @FilePath: /smanga/src/layout/browse.vue
+-->
 <template>
-	<div class="browse" :class="browseType">
-		<div class="header" v-if="browseTop">
+	<div class="browse" :class="config.browseType">
+		<div class="header" v-if="config.browseTop">
 			<browse-top class="nav-top" />
 			<div class="seat posted"></div>
 		</div>
 
-		<div class="middle">
+		<div class="middle" @contextmenu.prevent="context_menu">
 			<router-view />
 		</div>
 
 		<div class="footer"></div>
 	</div>
 </template>
-
 <script lang="ts">
-import {defineComponent} from 'vue';
-import {config} from '@/store';
+export default { name: 'browse' };
+</script>
+<script setup lang="ts">
+import { config } from '@/store';
 import browseTop from '@/layout/components/browse-top.vue';
 
-export default defineComponent({
-	name: 'browse',
-	// 数据
-	data() {
-		return {};
-	},
-
-	// 传值
-	props: [],
-
-	// 引用
-	computed: {
-		browseTop() {
-			return config.browseTop;
-		},
-		browseType() {
-			return config.browseType;
-		},
-		calcHeight() {
-			if (config.browseType === 'flow') {
-				return {};
-			} else {
-				return {height: '100vh'};
-			}
-		},
-	},
-
-	// 组件
-	components: {browseTop},
-
-	// 方法
-	methods: {},
-
-	// 生命周期
-	created() {},
-});
+function context_menu() {
+	config.rightSidebar = true;
+}
 </script>
 
 <style scoped lang="less">
 .browse {
 	display: flex;
 	flex-direction: column;
+
 	.middle {
 		flex: 1;
 		overflow: hidden;

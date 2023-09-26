@@ -9,16 +9,9 @@
 			<!-- 语言设置 -->
 			<div class="language">
 				<el-form-item label="语言设置">
-					<el-select
-						v-model="userConfig.language"
-						class="language-select"
-						size="default"
+					<el-select v-model="userConfig.language" class="language-select" size="default"
 						@change="language_change">
-						<el-option
-							v-for="item in languages"
-							:key="item.value"
-							:label="item.label"
-							:value="item.value" />
+						<el-option v-for="item in languages" :key="item.value" :label="item.label" :value="item.value" />
 					</el-select>
 				</el-form-item>
 			</div>
@@ -27,15 +20,8 @@
 			<div class="theme">
 				<el-form-item label="主题设置">
 					<span class="theme-label" />
-					<el-select
-						v-model="userConfig.theme"
-						class="theme-select"
-						size="default"
-						@change="theme_change">
-						<el-option
-							v-for="item in theme"
-							:key="item.value"
-							:label="$t(`theme.${item.value}`)"
+					<el-select v-model="userConfig.theme" class="theme-select" size="default" @change="theme_change">
+						<el-option v-for="item in theme" :key="item.value" :label="$t(`theme.${item.value}`)"
 							:value="item.value">
 							<span class="op-color" :style="theme_color(item.value)" />
 							<span class="op-text">{{ $t(`theme.${item.value}`) }}</span>
@@ -48,16 +34,8 @@
 			<!-- 排序方式 -->
 			<div class="sort">
 				<el-form-item label="默认排序规则">
-					<el-select
-						v-model="userConfig.order"
-						class="sort-select"
-						size="default"
-						@change="sort_order_change">
-						<el-option
-							v-for="item in sortOrder"
-							:key="item"
-							:label="$t(`sortOrder.${item}`)"
-							:value="item">
+					<el-select v-model="userConfig.order" class="sort-select" size="default" @change="sort_order_change">
+						<el-option v-for="item in sortOrder" :key="item" :label="$t(`sortOrder.${item}`)" :value="item">
 							<span class="op-text">{{ $t(`sortOrder.${item}`) }}</span>
 						</el-option>
 					</el-select>
@@ -68,217 +46,145 @@
 			<div class="pageSize">
 				<el-form-item label="mini">
 					<el-col :span="4">
-						<el-input
-							v-model.number="pageSizeConfig.mini[0]"
-							type="number"
-							:controls="false"></el-input>
+						<el-input v-model.number="pageSizeConfig.mini[0]" type="number" :controls="false"></el-input>
 					</el-col>
 					<el-col :span="2" class="text-center">
 						<span class="text-gray-500">-</span>
 					</el-col>
 					<el-col :span="4">
-						<el-input
-							v-model.number="pageSizeConfig.mini[1]"
-							type="number"
-							:controls="false"></el-input>
+						<el-input v-model.number="pageSizeConfig.mini[1]" type="number" :controls="false"></el-input>
 					</el-col>
 					<el-col :span="2" class="text-center">
 						<span class="text-gray-500">-</span>
 					</el-col>
 					<el-col :span="4">
-						<el-input
-							v-model.number="pageSizeConfig.mini[2]"
-							type="number"
-							:controls="false"></el-input>
+						<el-input v-model.number="pageSizeConfig.mini[2]" type="number" :controls="false"></el-input>
 					</el-col>
 					<el-col :span="2" class="text-center">
 						<span class="text-gray-500">-</span>
 					</el-col>
 					<el-col :span="4">
-						<el-input
-							v-model.number="pageSizeConfig.mini[3]"
-							type="number"
-							:controls="false"></el-input>
+						<el-input v-model.number="pageSizeConfig.mini[3]" type="number" :controls="false"></el-input>
 					</el-col>
 				</el-form-item>
 
 				<el-form-item label="small">
 					<el-col :span="4">
-						<el-input
-							v-model.number="pageSizeConfig.small[0]"
-							type="number"
-							:controls="false"></el-input>
+						<el-input v-model.number="pageSizeConfig.small[0]" type="number" :controls="false"></el-input>
 					</el-col>
 					<el-col :span="2" class="text-center">
 						<span class="text-gray-500">-</span>
 					</el-col>
 					<el-col :span="4">
-						<el-input
-							v-model.number="pageSizeConfig.small[1]"
-							type="number"
-							:controls="false"></el-input>
+						<el-input v-model.number="pageSizeConfig.small[1]" type="number" :controls="false"></el-input>
 					</el-col>
 					<el-col :span="2" class="text-center">
 						<span class="text-gray-500">-</span>
 					</el-col>
 					<el-col :span="4">
-						<el-input
-							v-model.number="pageSizeConfig.small[2]"
-							type="number"
-							:controls="false"></el-input>
+						<el-input v-model.number="pageSizeConfig.small[2]" type="number" :controls="false"></el-input>
 					</el-col>
 					<el-col :span="2" class="text-center">
 						<span class="text-gray-500">-</span>
 					</el-col>
 					<el-col :span="4">
-						<el-input
-							v-model.number="pageSizeConfig.small[3]"
-							type="number"
-							:controls="false"></el-input>
+						<el-input v-model.number="pageSizeConfig.small[3]" type="number" :controls="false"></el-input>
 					</el-col>
 				</el-form-item>
 
 				<el-form-item label="middle">
 					<el-col :span="4">
-						<el-input
-							v-model.number="pageSizeConfig.middle[0]"
-							type="number"
-							:controls="false"></el-input>
+						<el-input v-model.number="pageSizeConfig.middle[0]" type="number" :controls="false"></el-input>
 					</el-col>
 					<el-col :span="2" class="text-center">
 						<span class="text-gray-500">-</span>
 					</el-col>
 					<el-col :span="4">
-						<el-input
-							v-model.number="pageSizeConfig.middle[1]"
-							type="number"
-							:controls="false"></el-input>
+						<el-input v-model.number="pageSizeConfig.middle[1]" type="number" :controls="false"></el-input>
 					</el-col>
 					<el-col :span="2" class="text-center">
 						<span class="text-gray-500">-</span>
 					</el-col>
 					<el-col :span="4">
-						<el-input
-							v-model.number="pageSizeConfig.middle[2]"
-							type="number"
-							:controls="false"></el-input>
+						<el-input v-model.number="pageSizeConfig.middle[2]" type="number" :controls="false"></el-input>
 					</el-col>
 					<el-col :span="2" class="text-center">
 						<span class="text-gray-500">-</span>
 					</el-col>
 					<el-col :span="4">
-						<el-input
-							v-model.number="pageSizeConfig.middle[3]"
-							type="number"
-							:controls="false"></el-input>
+						<el-input v-model.number="pageSizeConfig.middle[3]" type="number" :controls="false"></el-input>
 					</el-col>
 				</el-form-item>
 
 				<el-form-item label="large">
 					<el-col :span="4">
-						<el-input
-							v-model.number="pageSizeConfig.large[0]"
-							type="number"
-							:controls="false"></el-input>
+						<el-input v-model.number="pageSizeConfig.large[0]" type="number" :controls="false"></el-input>
 					</el-col>
 					<el-col :span="2" class="text-center">
 						<span class="text-gray-500">-</span>
 					</el-col>
 					<el-col :span="4">
-						<el-input
-							v-model.number="pageSizeConfig.large[1]"
-							type="number"
-							:controls="false"></el-input>
+						<el-input v-model.number="pageSizeConfig.large[1]" type="number" :controls="false"></el-input>
 					</el-col>
 					<el-col :span="2" class="text-center">
 						<span class="text-gray-500">-</span>
 					</el-col>
 					<el-col :span="4">
-						<el-input
-							v-model.number="pageSizeConfig.large[2]"
-							type="number"
-							:controls="false"></el-input>
+						<el-input v-model.number="pageSizeConfig.large[2]" type="number" :controls="false"></el-input>
 					</el-col>
 					<el-col :span="2" class="text-center">
 						<span class="text-gray-500">-</span>
 					</el-col>
 					<el-col :span="4">
-						<el-input
-							v-model.number="pageSizeConfig.large[3]"
-							type="number"
-							:controls="false"></el-input>
+						<el-input v-model.number="pageSizeConfig.large[3]" type="number" :controls="false"></el-input>
 					</el-col>
 				</el-form-item>
 
 				<el-form-item label="2k">
 					<el-col :span="4">
-						<el-input
-							v-model.number="pageSizeConfig['2k'][0]"
-							type="number"
-							:controls="false"></el-input>
+						<el-input v-model.number="pageSizeConfig['2k'][0]" type="number" :controls="false"></el-input>
 					</el-col>
 					<el-col :span="2" class="text-center">
 						<span class="text-gray-500">-</span>
 					</el-col>
 					<el-col :span="4">
-						<el-input
-							v-model.number="pageSizeConfig['2k'][1]"
-							type="number"
-							:controls="false"></el-input>
+						<el-input v-model.number="pageSizeConfig['2k'][1]" type="number" :controls="false"></el-input>
 					</el-col>
 					<el-col :span="2" class="text-center">
 						<span class="text-gray-500">-</span>
 					</el-col>
 					<el-col :span="4">
-						<el-input
-							v-model.number="pageSizeConfig['2k'][2]"
-							type="number"
-							:controls="false"></el-input>
+						<el-input v-model.number="pageSizeConfig['2k'][2]" type="number" :controls="false"></el-input>
 					</el-col>
 					<el-col :span="2" class="text-center">
 						<span class="text-gray-500">-</span>
 					</el-col>
 					<el-col :span="4">
-						<el-input
-							v-model.number="pageSizeConfig['2k'][3]"
-							type="number"
-							:controls="false"></el-input>
+						<el-input v-model.number="pageSizeConfig['2k'][3]" type="number" :controls="false"></el-input>
 					</el-col>
 				</el-form-item>
 
 				<el-form-item label="4k">
 					<el-col :span="4">
-						<el-input
-							v-model.number="pageSizeConfig['4k'][0]"
-							type="number"
-							:controls="false"></el-input>
+						<el-input v-model.number="pageSizeConfig['4k'][0]" type="number" :controls="false"></el-input>
 					</el-col>
 					<el-col :span="2" class="text-center">
 						<span class="text-gray-500">-</span>
 					</el-col>
 					<el-col :span="4">
-						<el-input
-							v-model.number="pageSizeConfig['4k'][1]"
-							type="number"
-							:controls="false"></el-input>
+						<el-input v-model.number="pageSizeConfig['4k'][1]" type="number" :controls="false"></el-input>
 					</el-col>
 					<el-col :span="2" class="text-center">
 						<span class="text-gray-500">-</span>
 					</el-col>
 					<el-col :span="4">
-						<el-input
-							v-model.number="pageSizeConfig['4k'][2]"
-							type="number"
-							:controls="false"></el-input>
+						<el-input v-model.number="pageSizeConfig['4k'][2]" type="number" :controls="false"></el-input>
 					</el-col>
 					<el-col :span="2" class="text-center">
 						<span class="text-gray-500">-</span>
 					</el-col>
 					<el-col :span="4">
-						<el-input
-							v-model.number="pageSizeConfig['4k'][3]"
-							type="number"
-							:controls="false"></el-input>
+						<el-input v-model.number="pageSizeConfig['4k'][3]" type="number" :controls="false"></el-input>
 					</el-col>
 				</el-form-item>
 
@@ -301,6 +207,13 @@
 				有朋友反馈，单手操作手机的时候，最方便触碰到屏幕的左侧，因此希望可以通过点击左侧翻下一页。那么，您可以通过此选项修改左右翻页按钮使其调换位置。
 			</p>
 
+			<el-form-item label="显示页码">
+				<el-switch v-model="userConfig.showPageNumber" />
+			</el-form-item>
+
+			<el-form-item label="开启滑动翻页">
+				<el-switch v-model="userConfig.enableTouchPageChange" />
+			</el-form-item>
 			<el-form-item label="顶栏切换范围" class="op-range">
 				<el-col :span="4">
 					<el-input v-model="userConfig.browseOperationTop" type="number" />
@@ -321,25 +234,25 @@
 		<div class="btn-box">
 			<el-button type="primary" @click="submit">保存设置</el-button>
 		</div>
-		
+
 	</div>
 </template>
 
 <script setup lang="ts">
-import {userConfig} from '@/store';
-import {useI18n} from 'vue-i18n';
-import {set_theme, themes} from '@/style/theme';
+import { userConfig } from '@/store';
+import { useI18n } from 'vue-i18n';
+import { set_theme, themes } from '@/style/theme';
 import theme from '@/store/theme';
 import languages from '@/store/language';
-import {pageSizeConfig} from '@/store';
+import { pageSizeConfig } from '@/store';
 import { ref } from 'vue';
-import {set_user_config} from '@/api/account'
+import { set_user_config } from '@/api/account'
 import { Cookies } from '@/utils';
 import { useRouter } from 'vue-router';
 const router = useRouter();
-const {locale} = useI18n();
+const { locale } = useI18n();
 
-const form = ref({removeFirst: 0, range1: 30});
+const form = ref({ removeFirst: 0, range1: 30 });
 
 // 排序方式
 const sortOrder = ['id', 'idDesc', 'name', 'nameDesc', 'time', 'timeDesc'];

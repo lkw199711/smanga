@@ -2,6 +2,8 @@
   <div class="sidebar-pc">
     <el-menu router default-active="/" :class="['sidebar', 'sidebar-pc', { close: config.sidebarCollapse }]"
       :collapse="config.sidebarCollapse" :collapse-transition="true">
+      <!-- 顶部占位符 -->
+      <div class="top-seat" v-if="config.android"></div>
       <el-menu-item index="/" class="no-padding">
         <div :class="['logo', 'posted', { 'collapse': !config.sidebarCollapse }]">
           <img v-show="config.sidebarCollapse" src="@/assets/logo2.png" alt="logo">

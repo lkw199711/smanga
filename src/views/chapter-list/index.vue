@@ -157,15 +157,11 @@ function go_browse(item: any) {
 	global_set('chapterCover', chapterCover);
 
 	let page = 1;
-	if (browseType.value === 'flow') {
-		page = 0;
-	}
 
 	router.push({
 		name: browseType.value,
 		query: {
-			name: chapterName,
-			path: chapterPath,
+			chapterId
 		},
 		params: { page },
 	});

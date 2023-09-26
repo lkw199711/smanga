@@ -29,9 +29,14 @@ const props = defineProps(['page', 'count', 'pageSizeConfig', 'setPageSize']);
 const emit = defineEmits(['pageChange', 'reloadPage']);
 defineExpose({ page_change, reload, reload_static, before, next });
 
-let pagerPage = computed(() => {
-  return props.page;
-})
+let pagerPage = ref(1);
+
+watch(
+  () => props.page,
+  (val) => {
+    pagerPage.value = val;
+  }
+)
 
 const pageCount = computed(() => {
   // 展示最大页码数量

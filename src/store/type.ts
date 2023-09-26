@@ -2,7 +2,7 @@
  * @Author: lkw199711 lkw199711@163.com
  * @Date: 2023-09-23 20:00:38
  * @LastEditors: lkw199711 lkw199711@163.com
- * @LastEditTime: 2023-09-23 20:00:39
+ * @LastEditTime: 2023-09-26 05:38:28
  * @FilePath: /smanga/src/store/type.ts
  */
 export interface GlobalData {
@@ -25,7 +25,6 @@ export interface GlobalData {
 	pageImage: string;
 	direction: string;
 	removeFirst: string;
-	loadedImages: number;
 	userConfig: any;
 	pageSizeConfig: any;
 }

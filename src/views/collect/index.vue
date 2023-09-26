@@ -245,15 +245,11 @@ async function go_browse(item: any) {
 	global_set_json('chapterList', res.list);
 
 	let page = 1;
-	if (browseType === 'flow') {
-		page = 0;
-	}
 
 	router.push({
 		name: browseType,
 		query: {
-			name: chapterName,
-			path: chapterPath,
+			chapterId,
 		},
 		params: { page },
 	});

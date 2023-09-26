@@ -2,7 +2,7 @@
  * @Author: error: error: git config user.name & please set dead value or install git && error: git config user.email & please set dead value or install git & please set dead value or install git
  * @Date: 2023-08-15 23:05:47
  * @LastEditors: lkw199711 lkw199711@163.com
- * @LastEditTime: 2023-09-23 19:52:04
+ * @LastEditTime: 2023-09-25 19:26:36
  * @FilePath: /smanga/src/views/manga-info/index.vue
 -->
 <template>
@@ -206,15 +206,11 @@ async function go_chapter() {
     global_set('chapterCover', chapterInfo.chapterCover);
 
     let page = 1;
-    if (chapterInfo.browseType === 'flow') {
-        page = 0;
-    }
 
     router.push({
         name: chapterInfo.browseType,
         query: {
-            name: chapterInfo.chapterName,
-            path: chapterInfo.chapterPath,
+            chapterId: chapterInfo.chapterId
         },
         params: { page },
     });
