@@ -1,13 +1,13 @@
 <template>
   <div class="double-page">
-    <!--目录列表-->
+    <!-- 目录列表 -->
     <chapter-list-menu @before="before" @next="next" @changeChapter="change_chapter" />
 
-    <!--功能菜单-->
+    <!-- 功能菜单 -->
     <right-sidebar :direction="directionDesc" @direction="switch_direction" @dwonload="dwonload_image"
       :removeFirst="removeFirst" @removeFirst="remove_poster" />
 
-    <!--图片容器-->
+    <!-- 图片容器 -->
     <div class="double-page-img-box touch-dom">
       <bookmark :page="page" :chapterId="chapterInfo.chapterId" />
       <template v-if="directionDesc">
@@ -25,11 +25,10 @@
     <!-- 页码显示 -->
     <page-number :page="page" :count="imgPathList.length" />
 
-    <!--分页按钮-->
+    <!-- 分页按钮 -->
     <div class="footer" v-show="config.browseFooter">
       <el-button class="btn" type="warning" plain @click="before">{{ $t('page.before') }}</el-button>
-      <browse-pager ref="pager" @pageChange="page_change" @reloadPage="reload_page" :page="page" :count="count"
-        :set-page-size="2" />
+      <browse-pager ref="pager" @pageChange="page_change" @reloadPage="reload_page" :page="page" :count="count" :set-page-size="2" />
       <el-button class="btn" type="success" plain @click="next">{{ $t('page.next') }}</el-button>
     </div>
   </div>

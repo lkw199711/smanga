@@ -2,7 +2,7 @@
  * @Author: lkw199711 lkw199711@163.com
  * @Date: 2023-08-25 10:45:47
  * @LastEditors: lkw199711 lkw199711@163.com
- * @LastEditTime: 2023-09-26 11:54:33
+ * @LastEditTime: 2023-09-26 13:59:15
  * @FilePath: /smanga/src/views/browse-view/flow.vue
 -->
 <template>
@@ -22,6 +22,7 @@
 				</van-list>
 			</div>
 		</van-pull-refresh>
+
 		<!-- 翻页按钮 -->
 		<div class="btn-box" v-show="imgFileList.length">
 			<el-button class="btn" type="warning" plain @click="before">上一章</el-button>
@@ -30,6 +31,9 @@
 
 		<!-- 页码 -->
 		<page-number :page="currentPage" :count="imgPathList.length" />
+
+		<!-- 功能菜单 -->
+		<right-sidebar @dwonload="dwonload_image" />
 
 		<!-- 安卓端占位符 -->
 		<div class="bottom-seat" v-if="config.android"></div>
@@ -55,6 +59,7 @@ import { get_chapter_images } from '@/api/browse';
 import i18n from '@/i18n';
 import { onMounted } from 'vue';
 import chapterListMenu from './components/chapter-list-menu.vue';
+import rightSidebar from './components/right-sidebar.vue';
 import bookmark from './components/bookmark.vue';
 import pageNumber from './components/page-number.vue';
 import { useRoute, useRouter } from 'vue-router';
@@ -341,6 +346,19 @@ function scroll_page() {
 			return;
 		}
 	}
+}
+
+/**
+ * 下载当前图片
+ */
+function dwonload_image() {
+	// 获取当前图片
+	const src = imgFileList.value[currentPage.value - 1];
+
+	const a = document.createElement('a');
+	a.href = src;
+	a.download = 'smangaImage.png';
+	a.click();
 }
 
 // 生命周期

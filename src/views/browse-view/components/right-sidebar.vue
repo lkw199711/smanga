@@ -102,8 +102,13 @@ async function bookmark() {
 	} else {
 		// 区分单双页
 		let page = Number(global_get('page'));
+		
 		if (route.name === 'double') {
 			page = page * 2 - 1;
+		}
+
+		if (route.name === 'half') {
+			page = Math.ceil(page / 2);
 		}
 
 		await add_bookmark(page);
