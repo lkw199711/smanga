@@ -2,7 +2,7 @@
  * @Author: lkw199711 lkw199711@163.com
  * @Date: 2023-08-25 10:45:47
  * @LastEditors: lkw199711 lkw199711@163.com
- * @LastEditTime: 2023-10-01 00:03:35
+ * @LastEditTime: 2023-10-01 00:32:37
  * @FilePath: /smanga/src/views/browse-view/flow.vue
 -->
 <template>
@@ -133,19 +133,17 @@ async function page_change() {
 		return false;
 	}
 
-	if (loading.value) return;
-
 	// 加载页面并等待返回
 	await load_image(page - 1);
-
-	// 加载结束,更新状态
-	loading.value = false;
 
 	// 是否加载完全部
 	finished.value = page >= imgPathList.value.length;
 
 	// 页码递增
 	++page;
+
+	// 加载结束,更新状态
+	loading.value = false;
 
 	// 是否完成页面初始化加载,未完成则再次加载图片
 	page < initPage && setTimeout(async () => {
@@ -159,14 +157,14 @@ async function before_page() {
 		return;
 	}
 
-	// 加载结束,更新状态
-	loading.value = false;
-
 	// 向前加载一页
 	await load_image(--beforeBookMark, 0, true);
 
 	// 重新计算当前页码
 	scroll_page();
+
+	// 加载结束,更新状态
+	loading.value = false;
 }
 
 async function load_image(index: number, errNum = 0, unshift = false) {
@@ -222,11 +220,11 @@ async function reload_page(addHistory = true, clearPage = true, pageParams = 1) 
 			break;
 		case 'compressing':
 			// 进度有所增加 则更新图片列表
-			// if (res.data.list.length > imgFileList.value.length) {
-			// 	imgPathList.value = res.data.list;
-			// 	finished.value = false;
-			// 	page_change();
-			// }
+			if (res.data.list.length > imgFileList.value.length) {
+				imgPathList.value = res.data.list;
+				finished.value = false;
+				page_change();
+			}
 			// 再次加载解压进度
 			setTimeout(() => {
 				reload_page(false, false);
