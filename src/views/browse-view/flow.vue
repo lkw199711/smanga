@@ -2,7 +2,7 @@
  * @Author: lkw199711 lkw199711@163.com
  * @Date: 2023-08-25 10:45:47
  * @LastEditors: lkw199711 lkw199711@163.com
- * @LastEditTime: 2023-10-01 00:48:10
+ * @LastEditTime: 2023-10-01 01:09:26
  * @FilePath: /smanga/src/views/browse-view/flow.vue
 -->
 <template>
@@ -142,9 +142,6 @@ async function page_change() {
 	// 页码递增
 	++page;
 
-	// 加载结束,更新状态
-	loading.value = false;
-
 	// 是否完成页面初始化加载,未完成则再次加载图片
 	page < initPage && setTimeout(async () => {
 		await page_change()
@@ -176,8 +173,9 @@ async function load_image(index: number, errNum = 0, unshift = false) {
 	// 错误处理
 	if (err) {
 		setTimeout(() => {
-			return load_image(index, errNum + 1);
+			load_image(index, errNum + 1);
 		}, 1000)
+		return;
 	}
 
 	if (unshift) {
@@ -185,6 +183,9 @@ async function load_image(index: number, errNum = 0, unshift = false) {
 	} else {
 		imgFileList.value[index - beforeBookMark] = res.data;
 	}
+
+	// 加载结束,更新状态
+	loading.value = false;
 
 	return true;
 }
