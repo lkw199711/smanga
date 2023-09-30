@@ -2,7 +2,7 @@
  * @Author: lkw199711 lkw199711@163.com
  * @Date: 2023-08-25 10:45:47
  * @LastEditors: lkw199711 lkw199711@163.com
- * @LastEditTime: 2023-09-26 13:59:15
+ * @LastEditTime: 2023-09-30 23:09:51
  * @FilePath: /smanga/src/views/browse-view/flow.vue
 -->
 <template>
@@ -133,6 +133,8 @@ async function page_change() {
 		return false;
 	}
 
+	if (loading.value) return;
+
 	// 加载页面并等待返回
 	await load_image(page - 1);
 
@@ -146,7 +148,9 @@ async function page_change() {
 	++page;
 
 	// 是否完成页面初始化加载,未完成则再次加载图片
-	page < initPage && (await page_change());
+	page < initPage && setTimeout(async () => {
+		await page_change()
+	}, 500);
 }
 
 async function before_page() {
