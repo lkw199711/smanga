@@ -145,7 +145,7 @@ async function page_change() {
 	// 是否完成页面初始化加载,未完成则再次加载图片
 	page < initPage && setTimeout(async () => {
 		await page_change()
-	}, 500);
+	}, 1000);
 }
 
 async function before_page() {

@@ -1,8 +1,16 @@
+<!--
+ * @Author: lkw199711 lkw199711@163.com
+ * @Date: 2023-10-01 01:40:03
+ * @LastEditors: lkw199711 lkw199711@163.com
+ * @LastEditTime: 2023-10-01 01:40:03
+ * @FilePath: /smanga/src/views/wiki/index.vue
+ * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+-->
 <template>
 	<div class="wiki">
 		<div class="version">
 			当前版本
-			<span class="version-text">{{ version }}</span>
+			<span class="version-text">{{ version }} -- 4</span>
 		</div>
 		<div class="content">
 			<p>
