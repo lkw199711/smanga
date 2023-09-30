@@ -2,7 +2,7 @@
  * @Author: lkw199711 lkw199711@163.com
  * @Date: 2023-08-25 10:45:47
  * @LastEditors: lkw199711 lkw199711@163.com
- * @LastEditTime: 2023-09-30 23:09:51
+ * @LastEditTime: 2023-10-01 00:03:35
  * @FilePath: /smanga/src/views/browse-view/flow.vue
 -->
 <template>
@@ -222,11 +222,11 @@ async function reload_page(addHistory = true, clearPage = true, pageParams = 1) 
 			break;
 		case 'compressing':
 			// 进度有所增加 则更新图片列表
-			if (res.data.list.length > imgFileList.value.length) {
-				imgPathList.value = res.data.list;
-				finished.value = false;
-				page_change();
-			}
+			// if (res.data.list.length > imgFileList.value.length) {
+			// 	imgPathList.value = res.data.list;
+			// 	finished.value = false;
+			// 	page_change();
+			// }
 			// 再次加载解压进度
 			setTimeout(() => {
 				reload_page(false, false);
