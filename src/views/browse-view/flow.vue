@@ -2,7 +2,7 @@
  * @Author: lkw199711 lkw199711@163.com
  * @Date: 2023-08-25 10:45:47
  * @LastEditors: lkw199711 lkw199711@163.com
- * @LastEditTime: 2023-10-01 00:32:37
+ * @LastEditTime: 2023-10-01 00:48:10
  * @FilePath: /smanga/src/views/browse-view/flow.vue
 -->
 <template>
@@ -198,6 +198,7 @@ async function reload_page(addHistory = true, clearPage = true, pageParams = 1) 
 
 	// 重置图片数据
 	if (clearPage) {
+		imgPathList.value = [];
 		imgFileList.value = [];
 		beforeBookMark = pageParams - 1;
 		currentPage.value = pageParams;
@@ -271,7 +272,7 @@ async function before() {
 	 * 自定义重载方法没有重置滚动条,导致vant list不断触发触底事件
 	 * 因此暂时采用刷新页面的方式解决
 	 */
-	reload_page();
+	reload_page(true, true, 1);
 }
 /**
  * 下一页
@@ -293,7 +294,7 @@ async function next() {
 	update_chapter_info();
 
 	// 刷新页面
-	reload_page();
+	reload_page(true, true, 1);
 }
 /**
  * 选择章节
@@ -311,7 +312,7 @@ async function change_chapter(index: number) {
 	update_chapter_info();
 
 	// 重载页面
-	reload_page();
+	reload_page(true, true, 1);
 }
 
 function update_chapter_info() {
