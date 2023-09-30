@@ -2,7 +2,7 @@
  * @Author: lkw199711 lkw199711@163.com
  * @Date: 2023-08-25 10:45:47
  * @LastEditors: lkw199711 lkw199711@163.com
- * @LastEditTime: 2023-10-01 01:09:26
+ * @LastEditTime: 2023-10-01 01:39:09
  * @FilePath: /smanga/src/views/browse-view/flow.vue
 -->
 <template>
@@ -18,7 +18,7 @@
 			<!-- 列表 -->
 			<div @click="switch_menu" id="flowList" ref="flowList">
 				<van-list v-model:loading="loading" :finished="finished" :immediate-check="false" @load="page_change">
-					<img :ref="'flow-' + i" class="list-img" v-for="(k, i) in imgFileList" :src="k" :key="i" alt="接收图片" />
+					<img :ref="'flow-' + i" class="list-img" v-for="(k, i) in imgFileList" :src="k" :key="k" alt="图片加载失败,点击重新加载" @click="load_image(i)" />
 				</van-list>
 			</div>
 		</van-pull-refresh>
