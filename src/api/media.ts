@@ -2,7 +2,7 @@
  * @Author: lkw199711 lkw199711@163.com
  * @Date: 2023-03-17 20:18:30
  * @LastEditors: lkw199711 lkw199711@163.com
- * @LastEditTime: 2023-05-17 21:38:19
+ * @LastEditTime: 2023-10-01 20:57:31
  * @FilePath: \smanga\src\api\media.ts
  */
 import {ajax} from "./index";
@@ -42,13 +42,13 @@ export function add_media(data: any) {
 /**
  * 获取路径记录
  * @param mediaId
- * @param recordStart
+ * @param page
  * @param pageSize
  */
-export function get_path(mediaId: any, recordStart: number | undefined = undefined, pageSize: number | undefined = undefined) {
+export function get_path(mediaId: any, page: number | undefined = undefined, pageSize: number | undefined = undefined) {
     return ajax({
         url: 'path/get',
-        data: {mediaId,recordStart,pageSize}
+        data: {mediaId,page,pageSize}
     })
 }
 
