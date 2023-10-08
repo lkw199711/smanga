@@ -1,73 +1,101 @@
 <template>
 	<div class="index">
+		<div class="manga-list">
+			<div class="title">继续阅读</div>
+			<div :class="['manga-list-box', { block: config.viewType === 'list' }]">
+				<manga v-for="item in lastReadList" :key="item.lastReadId" :viewType="config.viewType" :mangaInfo="item" />
+			</div>
+		</div>
+
 		<div class="media">
-			<div
-				class="media-item"
-				v-for="i in mediaList"
-				:key="i.mediaId"
-				@click="go_manga_list(i.mediaId)"
+			<div class="media-item" v-for="item in mediaList" :key="item.mediaId" @click="go_manga_list(item.mediaId)"
 				@contextmenu.prevent="context_menu">
-				{{ i.mediaName }}
+				{{ item.mediaName }}
 			</div>
 		</div>
 	</div>
 </template>
 
 <script lang="ts">
-import {defineComponent} from 'vue';
-import {get_media} from '@/api/media';
-import {global_set} from '@/utils';
-import {config} from '@/store';
+export default { name: 'media-list' };
+</script>
+<script setup lang="ts">
+import { ref,onMounted, onBeforeUnmount } from 'vue';
+import { get_media } from '@/api/media';
+import { global_set } from '@/utils';
+import store, { config } from '@/store';
+import lastReadApi from '@/api/last-read';
+import { get_poster } from '@/api';
+import manga from '@/components/manga.vue';
+import { useRoute, useRouter } from 'vue-router';
+import { mediaType } from '@/type/media';
+import { lastReadType } from '@/type/last-read';
+const route = useRoute();
+const router = useRouter();
 
-export default defineComponent({
-	name: 'index',
-	// 数据
-	data() {
-		return {
-			mediaList: [],
-		};
-	},
+const mediaList = ref<mediaType[]>([]);
+const lastReadList = ref<lastReadType[]>([]);
 
-	// 传值
-	props: [],
+/**
+ * @description: 读取媒体库
+ * @return {*}
+ */
+async function load_media() {
+	const res = await get_media(1, 10000);
+	mediaList.value = res.data.list.data;
+}
 
-	// 引用
-	computed: {},
+/**
+ * @description: 跳转漫画列表
+ * @param {*} mediaId
+ * @return {*}
+ */
+function go_manga_list(mediaId: number) {
+	// 设置媒体库id
+	global_set('mediaId', mediaId);
 
-	// 组件
-	components: {},
-
-	// 方法
-	methods: {
-		async load_media() {
-			const res = await get_media(1, 10000);
-			this.mediaList = res.data.list.data;
+	router.push({
+		name: 'manga-list',
+		query: {
+			mediaId,
 		},
-		go_manga_list(mediaId: number) {
-			// 设置媒体库id
-			global_set('mediaId', mediaId);
+		params: { clear: '1' },
+	});
+}
 
-			this.$router.push({
-				name: 'manga-list',
-				query: {
-					mediaId,
-				},
-				params: {clear: '1'},
-			});
-		},
-		context_menu() {
-			config.rightSidebar = true;
-		},
-	},
+/**
+ * @description: 上下文菜单
+ * @return {*}
+ */
+function context_menu() {
+	config.rightSidebar = true;
+}
 
-	// 生命周期
-	created() {
-		this.load_media();
-	},
-});
+// 生命周期
+onMounted(async () => {
+	lastReadList.value = await lastReadApi.get();
+
+	// 为漫画请求海报图片
+	get_poster(lastReadList.value, 'mangaAwait');
+
+	store.commit('switch_await', { running: 'mangaAwait', bool: true });
+
+	load_media();
+})
+
+onBeforeUnmount(() => {
+	store.commit('switch_await', { running: 'mangaAwait', bool: false });
+})
+
 </script>
 
 <style scoped lang="less">
+.title {
+	font-size: 2rem;
+	text-indent: 2rem;
+	margin-top: 1rem;
+}
+
 .media {
 	display: grid;
 	justify-content: space-between;
@@ -126,3 +154,5 @@ export default defineComponent({
 	}
 }
 </style>
+
+<style src="@/style/manga-list.less" scoped lang="less"></style>

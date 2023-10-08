@@ -70,6 +70,7 @@ function go_chapter() {
 	const browseType = mangaInfo.browseType;
 	const removeFirst = mangaInfo.removeFirst;
 	const direction = mangaInfo.direction;
+	const page = mangaInfo.page;
 
 	// 缓存漫画信息
 	global_set('mangaId', mangaId);
@@ -77,6 +78,15 @@ function go_chapter() {
 	global_set('mangaCover', mangaCover);
 	global_set('removeFirst', removeFirst);
 	global_set('direction', direction);
+
+	if (route.name === 'media-list') {
+		router.push({
+			name: browseType,
+			query: { chapterId: mangaInfo.chapterId },
+			params: { page },
+		});
+		return;
+	}
 
 	router.push({
 		name: 'manga-info',

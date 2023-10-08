@@ -37,6 +37,7 @@
 <script setup lang='ts'>
 import { ref, reactive, onMounted, watch, computed } from 'vue';
 import { get_image_blob } from '@/api';
+import lastReadApi from '@/api/last-read';
 import { global_get, global_get_array, global_set } from '@/utils';
 import { ElMessage } from 'element-plus';
 import { config, userConfig } from '@/store';
@@ -106,6 +107,14 @@ const count = computed(() => {
 
 const pager = ref();
 
+// 存储进度
+watch(
+  () => page.value,
+  () => {
+    lastReadApi.add(page.value, chapterInfo.chapterId, chapterInfo.mangaId);
+  }
+)
+
 /**
  * 页码变更
  * @param page
@@ -163,7 +172,15 @@ function nextPage() {
  */
 async function reload_page(page = 1, addHistory = true) {
   // 初始化chapterInfo
-  if (!chapterInfo.chapterId) chapterInfo.chapterId = Number(route.query.chapterId);
+  if (!chapterInfo.chapterId) {
+    const chapterId = Number(route.query.chapterId);
+
+    // 获取章节信息
+    chapterInfo = chapterList.value.filter((item: chapterInfoType) => item.chapterId == chapterId)[0]
+
+    // 更新阅读记录
+    lastReadApi.add(page, chapterInfo.chapterId, chapterInfo.mangaId);
+  }
 
   if (addHistory) add_history();
   // 加载图片列表

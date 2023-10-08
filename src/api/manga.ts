@@ -3,7 +3,7 @@ import {ajax} from './index';
 /**
  * 获取漫画记录
  * @param mediaId
- * @param recordStart
+ * @param page
  * @param pageSize
  */
 export function get_manga(

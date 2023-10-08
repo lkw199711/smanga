@@ -19,7 +19,7 @@
     <canvas id="canvas-cut" width="1920" height="1080" v-show="false"></canvas>
 
     <!-- 页码显示 -->
-    <page-number :page="page" :count="imgPathList.length"/>
+    <page-number :page="page" :count="imgPathList.length" />
 
     <!--分页按钮-->
     <div class="footer" v-show="config.browseFooter">
@@ -39,6 +39,7 @@ import { global_get, global_get_array, global_set } from '@/utils';
 import { ElMessage } from 'element-plus';
 import { config, userConfig } from '@/store';
 import { add_history } from '@/api/history';
+import lastReadApi from '@/api/last-read';
 import operationCover from './components/operation-cover.vue';
 import chapterListMenu from './components/chapter-list-menu.vue';
 import bookmark from './components/bookmark.vue';
@@ -99,6 +100,14 @@ const count = computed(() => {
 
 const pager = ref();
 
+// 存储进度
+watch(
+  () => page.value,
+  () => {
+    lastReadApi.add(page.value, chapterInfo.chapterId, chapterInfo.mangaId);
+  }
+)
+
 /**
  * 页码变更
  * @param page
@@ -122,7 +131,7 @@ async function page_change(pageParams: number) {
   const img = new Image();
   img.src = res.data;
 
-  const canvas:HTMLCanvasElement = document.getElementById('canvas-cut');
+  const canvas: HTMLCanvasElement = document.getElementById('canvas-cut');
 
   if (!canvas) { return false }
 
@@ -133,7 +142,7 @@ async function page_change(pageParams: number) {
   //处理toDataURL遇跨域资源导致的报错
   img.crossOrigin = 'Anonymous';
 
-  img.onload = function() {
+  img.onload = function () {
     const h = img.naturalHeight;
     const w = img.naturalWidth;
 
@@ -171,7 +180,15 @@ function nextPage() {
  */
 async function reload_page(page = 1, addHistory = true) {
   // 初始化chapterInfo
-  if (!chapterInfo.chapterId) chapterInfo.chapterId = Number(route.query.chapterId);
+  if (!chapterInfo.chapterId) {
+    const chapterId = Number(route.query.chapterId);
+
+    // 获取章节信息
+    chapterInfo = chapterList.value.filter((item: chapterInfoType) => item.chapterId == chapterId)[0]
+
+    // 更新阅读记录
+    lastReadApi.add(page, chapterInfo.chapterId, chapterInfo.mangaId);
+  }
 
   if (addHistory) add_history();
   // 加载图片列表
@@ -363,10 +380,10 @@ onMounted(() => {
   // 加载页面
   reload_page(Number(page), !notAddHistory);
 
-  if (userConfig.enableTouchPageChange) { 
+  if (userConfig.enableTouchPageChange) {
     touch_page_change();
   }
-  
+
 })
 </script>
 

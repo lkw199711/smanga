@@ -2,7 +2,7 @@
  * @Author: error: error: git config user.name & please set dead value or install git && error: git config user.email & please set dead value or install git & please set dead value or install git
  * @Date: 2023-08-15 23:05:47
  * @LastEditors: lkw199711 lkw199711@163.com
- * @LastEditTime: 2023-09-25 19:26:36
+ * @LastEditTime: 2023-10-08 05:58:19
  * @FilePath: /smanga/src/views/manga-info/index.vue
 -->
 <template>
@@ -82,7 +82,7 @@ import { mangaInfoType } from '@/type/manga';
 import { chapterInfoType } from '@/type/chapter';
 import chapterApi from '@/api/chapter';
 import { global_set, global_set_json } from '@/utils'
-import historyApi from '@/api/history';
+import lastReadApi from '@/api/last-read';
 import collectApi from '@/api/collect';
 import mangaTagBox from '@/components/manga-tag-box.vue';
 
@@ -185,7 +185,7 @@ async function get_latest_reading() {
     const mangaId = mangaInfo.mangaId;
     if (!mangaId) return;
 
-    latestChapterInfo.value = await historyApi.get_latest(mangaId);
+    latestChapterInfo.value = await lastReadApi.get_latest(mangaId);
 }
 
 /**
@@ -205,7 +205,7 @@ async function go_chapter() {
     global_set('chapterType', chapterInfo.chapterType);
     global_set('chapterCover', chapterInfo.chapterCover);
 
-    let page = 1;
+    let page = chapterInfo.page || 1;
 
     router.push({
         name: chapterInfo.browseType,

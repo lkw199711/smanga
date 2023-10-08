@@ -18,6 +18,7 @@ type chapterInfoType = {
 	pathId: number;
 	picNum: number;
 	updateTime: string;
+	page?: number;
 };
 
 export { chapterInfoType };
