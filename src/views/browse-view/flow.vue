@@ -2,7 +2,7 @@
  * @Author: lkw199711 lkw199711@163.com
  * @Date: 2023-08-25 10:45:47
  * @LastEditors: lkw199711 lkw199711@163.com
- * @LastEditTime: 2023-10-01 01:39:09
+ * @LastEditTime: 2023-10-08 07:55:41
  * @FilePath: /smanga/src/views/browse-view/flow.vue
 -->
 <template>
@@ -18,7 +18,8 @@
 			<!-- 列表 -->
 			<div @click="switch_menu" id="flowList" ref="flowList">
 				<van-list v-model:loading="loading" :finished="finished" :immediate-check="false" @load="page_change">
-					<img :ref="'flow-' + i" class="list-img" v-for="(k, i) in imgFileList" :src="k" :key="k" alt="图片加载失败,点击重新加载" @click="load_image(i)" />
+					<img :ref="'flow-' + i" class="list-img" v-for="(k, i) in imgFileList" :src="k" :key="k"
+						alt="图片加载失败,点击重新加载" @click="load_image(i)" />
 				</van-list>
 			</div>
 		</van-pull-refresh>
@@ -45,7 +46,8 @@ export default { name: 'browse-views' }
 </script>
 <script setup lang="ts">
 import { computed, watch, ref, reactive } from 'vue';
-import { get_image_blob } from '@/api';
+import imageApi from '@/api/image';
+import lastReadApi from '@/api/last-read';
 import {
 	global_get_array,
 	global_set,
@@ -64,11 +66,9 @@ import bookmark from './components/bookmark.vue';
 import pageNumber from './components/page-number.vue';
 import { useRoute, useRouter } from 'vue-router';
 import { chapterInfoType } from '@/type/chapter';
-import { nextTick } from 'vue';
 const { t } = i18n.global;
 const route = useRoute();
 const router = useRouter();
-// 数据
 
 // 图片文件列表
 let imgFileList = ref<string[]>([]);
@@ -102,6 +102,7 @@ const index = computed<number>(() => {
 	return -1;
 })
 
+// 章节详情
 let chapterInfo = reactive<chapterInfoType>({
 	chapterId: 0,
 	chapterPath: '',
@@ -122,6 +123,14 @@ let currentPage = ref(1);
 
 // 在中途加载 前置没有加载的页面数量
 let beforeBookMark = 0;
+
+// 存储进度
+watch(
+	() => currentPage.value,
+	() => {
+		lastReadApi.add(currentPage.value, chapterInfo.chapterId, chapterInfo.mangaId);
+	}
+)
 
 /**
  * 加载图片
@@ -148,6 +157,10 @@ async function page_change() {
 	}, 1000);
 }
 
+/**
+ * @description: 上一页
+ * @return {*}
+ */
 async function before_page() {
 	if (beforeBookMark === 0) {
 		loading.value = false;
@@ -164,11 +177,18 @@ async function before_page() {
 	loading.value = false;
 }
 
+/**
+ * @description: 加载图片
+ * @param {*} index
+ * @param {*} errNum
+ * @param {*} unshift
+ * @return {*}
+ */
 async function load_image(index: number, errNum = 0, unshift = false) {
 	// 重新请教超过三次 取消此图片加载
 	if (errNum > 3) return false;
 
-	const [res, err] = await get_image_blob(imgPathList.value[index]).then(res => [res, null]).catch(err => [null, err]);
+	const [res, err] = await imageApi.chapter_img(imgPathList.value[index], index + 1, chapterInfo.chapterId, chapterInfo.mangaId).then(res => [res, null]).catch(err => [null, err]);
 
 	// 错误处理
 	if (err) {
@@ -179,9 +199,9 @@ async function load_image(index: number, errNum = 0, unshift = false) {
 	}
 
 	if (unshift) {
-		imgFileList.value.unshift(res.data);
+		imgFileList.value.unshift(res);
 	} else {
-		imgFileList.value[index - beforeBookMark] = res.data;
+		imgFileList.value[index - beforeBookMark] = res;
 	}
 
 	// 加载结束,更新状态
@@ -195,7 +215,15 @@ async function load_image(index: number, errNum = 0, unshift = false) {
  */
 async function reload_page(addHistory = true, clearPage = true, pageParams = 1) {
 	// 初始化chapterInfo
-	if (!chapterInfo.chapterId) chapterInfo.chapterId = Number(route.query.chapterId);
+	if (!chapterInfo.chapterId) {
+		const chapterId = Number(route.query.chapterId);
+
+		// 获取章节信息
+		chapterInfo = chapterList.value.filter((item: chapterInfoType) => item.chapterId == chapterId)[0]
+
+		// 更新阅读记录
+		lastReadApi.add(currentPage.value, chapterInfo.chapterId, chapterInfo.mangaId);
+	}
 
 	// 重置图片数据
 	if (clearPage) {
@@ -247,6 +275,7 @@ async function reload_page(addHistory = true, clearPage = true, pageParams = 1) 
 function load_again() {
 	finished.value = false;
 }
+
 /**
  * 上一页
  * */
@@ -275,6 +304,7 @@ async function before() {
 	 */
 	reload_page(true, true, 1);
 }
+
 /**
  * 下一页
  * */
@@ -345,8 +375,10 @@ function scroll_page() {
 		if (scrollY <= imgs[i].offsetTop) {
 			currentPage.value = i + beforeBookMark + 1;
 			const pageImage = imgPathList.value[page - 1];
+
 			global_set('page', currentPage.value);
 			global_set('pageImage', pageImage);
+
 			return;
 		}
 	}

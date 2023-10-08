@@ -1,8 +1,8 @@
 /*
  * @Author: error: error: git config user.name & please set dead value or install git && error: git config user.email & please set dead value or install git & please set dead value or install git
  * @Date: 2023-08-16 03:30:05
- * @LastEditors: error: error: git config user.name & please set dead value or install git && error: git config user.email & please set dead value or install git & please set dead value or install git
- * @LastEditTime: 2023-08-16 03:34:49
+ * @LastEditors: lkw199711 lkw199711@163.com
+ * @LastEditTime: 2023-10-08 00:26:55
  * @FilePath: /smanga/src/api/image.ts
  */
 import Axios from 'axios';
@@ -56,6 +56,17 @@ const imageApi = {
 	 */
 	async get(file: string) {
 		const res = img({data: {file}});
+
+		return (await res).data;
+	},
+
+	async chapter_img(
+		file: string,
+		page: number,
+		chapterId: number,
+		mangaId: number
+	) {
+		const res = img({data: {file, page, chapterId, mangaId}});
 
 		return (await res).data;
 	},

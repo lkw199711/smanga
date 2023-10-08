@@ -2,7 +2,7 @@
  * @Author: lkw199711 lkw199711@163.com
  * @Date: 2023-03-17 20:18:31
  * @LastEditors: lkw199711 lkw199711@163.com
- * @LastEditTime: 2023-09-26 04:50:25
+ * @LastEditTime: 2023-10-08 07:40:28
  * @FilePath: \smanga\src\views\browse-view\single.vue
 -->
 <template>
@@ -38,6 +38,7 @@
 <script setup lang='ts'>
 import { ref, reactive, onMounted, watch, computed } from 'vue';
 import { get_image_blob } from '@/api';
+import lastReadApi from '@/api/last-read';
 import { global_get, global_get_array, global_set } from '@/utils';
 import { ElMessage } from 'element-plus';
 import { config, userConfig } from '@/store';
@@ -61,6 +62,14 @@ const imgSrc = ref('');
 const imgPathList = ref<string[]>([]);
 const imgPathFiles = ref<string[]>([]);
 const page = ref(1);
+
+// 存储进度
+watch(
+  () => page.value,
+  () => {
+    lastReadApi.add(page.value, chapterInfo.chapterId, chapterInfo.mangaId);
+  }
+)
 
 const chapterList = computed<chapterInfoType[]>(() => {
   return global_get_array('chapterList');
@@ -143,8 +152,16 @@ function nextPage() {
  */
 async function reload_page(page = 1, addHistory = true) {
   // 初始化chapterInfo
-  if (!chapterInfo.chapterId) chapterInfo.chapterId = Number(route.query.chapterId);
-  
+  if (!chapterInfo.chapterId) {
+    const chapterId = Number(route.query.chapterId);
+
+    // 获取章节信息
+    chapterInfo = chapterList.value.filter((item: chapterInfoType) => item.chapterId == chapterId)[0]
+
+    // 更新阅读记录
+    lastReadApi.add(page, chapterInfo.chapterId, chapterInfo.mangaId);
+  }
+
   if (addHistory) add_history();
   // 加载图片列表
   const res = await get_chapter_images(chapterInfo.chapterId);

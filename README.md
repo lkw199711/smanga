@@ -36,6 +36,9 @@ github: https://github.com/lkw199711/smanga
 
 docker: https://hub.docker.com/r/lkw199711/smanga
 
+后端项目已转移: https://github.com/lkw199711/smanga-php
+
+
 > **在浏览漫画时,你是否有这样那样的烦恼？**
 
 - 图片 压缩包 pdf等格式繁杂, 解压的文件到处都是, 经常找不到想看的漫画且占用空间大
@@ -323,6 +326,7 @@ Telegram 交流群：https://t.me/+FFgQ7AMIdrg2M2Y1
     - 3.4.5 漫画详情页面新增收藏按钮
     - 3.4.6 pageSize逻辑调整
     - 3.4.7 切换章节错误bug修复
+    - 3.4.8 新增"继续阅读模块",准确定位"继续阅读"功能.
 
 ## 开发注意事项
 
