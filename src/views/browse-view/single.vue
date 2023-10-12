@@ -67,7 +67,7 @@ const page = ref(1);
 watch(
   () => page.value,
   () => {
-    lastReadApi.add(page.value, chapterInfo.chapterId, chapterInfo.mangaId);
+    lastReadApi.add(page.value, chapterInfo.chapterId, chapterInfo.mangaId, page.value >= count.value);
   }
 )
 

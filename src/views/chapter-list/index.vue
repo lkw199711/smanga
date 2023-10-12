@@ -97,6 +97,7 @@ function touch_page_change() {
 	var moveX = 0;
 
 	listDom.addEventListener('touchstart', function (this: HTMLDivElement, e: any) {
+		if (config.viewType === 'list') return;
 		// 得到初始的手指坐标
 		startX = e.targetTouches[0].pageX;
 		// 获取盒子坐标
@@ -104,6 +105,7 @@ function touch_page_change() {
 	})
 
 	listDom.addEventListener('touchmove', function (this: HTMLDivElement, e: any) {
+		if (config.viewType === 'list') return;
 		// 手指的移动距离= 手指移动之后的坐标 - 手指初始的坐标
 		moveX = e.targetTouches[0].pageX - startX;
 		// 移动盒子，盒子原来的位置+手指移动的距离
@@ -113,6 +115,7 @@ function touch_page_change() {
 	})
 
 	listDom.addEventListener('touchend', function (this: HTMLDivElement, e) {
+		if (config.viewType === 'list') return;
 		this.style.left = '0';
 
 		// 向左滑动,向右翻页
@@ -124,7 +127,6 @@ function touch_page_change() {
 		if (moveX > 100 && page.value > 1) {
 			page_change(--page.value);
 		}
-
 
 		moveX = 0;
 	})

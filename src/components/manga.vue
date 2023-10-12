@@ -39,9 +39,10 @@ export default {
 }
 </script>
 <script setup lang="ts">
-import { global_set } from '@/utils';
+import { global_set, global_set_json } from '@/utils';
 import { computed, defineProps, defineEmits } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
+import chapterApi from '@/api/chapter';
 
 const route = useRoute();
 const router = useRouter();
@@ -59,10 +60,11 @@ const finish = computed(() => {
 })
 
 const mangaName = computed(() => {
+	if (route.name === 'media-list') return props.mangaInfo.chapterName;
 	return props.mangaInfo.mangaName;
 })
 
-function go_chapter() {
+async function go_chapter() {
 	const mangaInfo = props.mangaInfo;
 
 	const mangaId = mangaInfo.mangaId;
@@ -80,6 +82,11 @@ function go_chapter() {
 	global_set('direction', direction);
 
 	if (route.name === 'media-list') {
+
+		const chapterListRes = await chapterApi.get(mangaId);
+		const chapterList = chapterListRes.list;
+		global_set_json('chapterList', chapterList);
+
 		router.push({
 			name: browseType,
 			query: { chapterId: mangaInfo.chapterId },

@@ -2,7 +2,7 @@
  * @Author: lkw199711 lkw199711@163.com
  * @Date: 2023-08-25 10:45:47
  * @LastEditors: lkw199711 lkw199711@163.com
- * @LastEditTime: 2023-10-08 07:55:41
+ * @LastEditTime: 2023-10-12 21:48:35
  * @FilePath: /smanga/src/views/browse-view/flow.vue
 -->
 <template>
@@ -128,7 +128,7 @@ let beforeBookMark = 0;
 watch(
 	() => currentPage.value,
 	() => {
-		lastReadApi.add(currentPage.value, chapterInfo.chapterId, chapterInfo.mangaId);
+		lastReadApi.add(currentPage.value, chapterInfo.chapterId, chapterInfo.mangaId, finished.value);
 	}
 )
 
