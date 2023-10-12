@@ -6,7 +6,7 @@ import {ElMessage} from 'element-plus';
 import {Cookies} from '@/utils';
 import router from '@/router';
 
-const devUrl = '/index.php/';
+const devUrl = '/php/public/index.php/';
 const prodUrl = process.env.VUE_APP_PATH || '/php/public/index.php/';
 
 // 接口路径的设置

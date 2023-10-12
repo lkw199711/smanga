@@ -1,5 +1,12 @@
+<!--
+ * @Author: lkw199711 lkw199711@163.com
+ * @Date: 2023-09-25 22:59:45
+ * @LastEditors: lkw199711 lkw199711@163.com
+ * @LastEditTime: 2023-09-25 23:35:47
+ * @FilePath: /smanga/src/views/browse-view/components/operation-cover.vue
+-->
 <template>
-	<div class="operation-cover" @contextmenu.prevent="context_menu">
+	<div class="operation-cover" v-show="config.enableOperation">
 		<div class="top" @click="switch_menu" :style="topStyle"></div>
 		<div class="middle">
 			<div class="left" @click="do_left"></div>
@@ -10,69 +17,57 @@
 </template>
 
 <script lang="ts">
-import {defineComponent} from 'vue';
-import {config, userConfig} from '@/store';
+export default { name: 'operation-cover' };
+</script>
+<script setup lang="ts">
+import { computed, defineEmits } from 'vue';
+import { config, userConfig } from '@/store';
 
-export default defineComponent({
-	name: 'operation-cover',
-	// 数据
-	data() {
-		return {};
-	},
+/**
+* 根据反转设置项 如无反转则前翻译 有反转则向后翻页
+*/
+let do_left = computed(() => {
+	return userConfig.pageTurningReverse ? next : before;
+})
 
-	// 传值
-	props: [],
+let do_right = computed(() => {
+	return userConfig.pageTurningReverse ? before : next;
+})
 
-	// 引用
-	computed: {
-		/**
-		 * 根据反转设置项 如无反转则前翻译 有反转则向后翻页
-		 */
-		do_left() {
-			return userConfig.pageTurningReverse ? this.next : this.before;
-		},
-		do_right() {
-			return userConfig.pageTurningReverse ? this.before : this.next;
-		},
+let topStyle = computed(() => {
+	const height = userConfig.browseOperationTop + '%';
+	return { height };
+})
 
-		/**
-		 * 配置上下操作面板的尺寸
-		 */
-		topStyle() {
-			const height = userConfig.browseOperationTop + '%';
-			return {height};
-		},
-		bottomStyle() {
-			const height = userConfig.browseOperationBottom + '%';
-			return {height};
-		},
-	},
+let bottomStyle = computed(() => {
+	const height = userConfig.browseOperationBottom + '%';
+	return { height };
+})
 
-	// 组件
-	components: {},
 
-	// 方法
-	methods: {
-		before() {
-			this.$emit('before');
-		},
-		next() {
-			this.$emit('next');
-		},
-		switch_menu() {
-			this.$emit('switchMenu');
-		},
-		switch_footer() {
-			this.$emit('switchFooter');
-		},
-		context_menu() {
-			config.rightSidebar = true;
-		},
-	},
+const emit = defineEmits([
+	'before',
+	'next',
+	'switchMenu',
+	'switchFooter',
+]);
 
-	// 生命周期
-	created() {},
-});
+function before() {
+	emit('before');
+}
+function next() {
+	emit('next');
+}
+function switch_menu() {
+	emit('switchMenu');
+}
+function switch_footer() {
+	emit('switchFooter');
+}
+function context_menu() {
+	config.rightSidebar = true;
+}
+
 </script>
 
 <style scoped lang="less">

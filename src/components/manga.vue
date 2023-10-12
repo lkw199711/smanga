@@ -1,29 +1,30 @@
 <template>
 	<!-- 矩形视图 -->
-	<div class="manga" @click="go_chapter" v-if="viewTypeCopy !== 'list'">
+	<div class="manga" @click="go_chapter" v-if="props.viewType !== 'list'">
 		<!--封面图片-->
-		<el-image v-if="finish" class="anim cover-img" :src="poster" :fit="fit" :alt="title" />
+		<el-image v-if="finish" class="anim cover-img" :src="poster" :fit="fit" :alt="mangaName" />
 
 		<!--占位图标-->
 		<el-image v-else class="cover-img" :src="placeholder" fit="fill" />
 
 		<!--漫画名称-->
-		<p class="manga-name single-line-text-overflow">{{ title }}</p>
+		<p class="manga-name single-line-text-overflow">{{ mangaName }}</p>
 	</div>
 
 	<!-- 列表视图 -->
 	<div class="manga-view-list" @click="go_chapter" v-else>
 		<!--封面图片-->
-		<el-image v-if="finish" class="anim cover-img" :src="poster" :fit="fit" :alt="title" />
+		<el-image v-if="finish" class="anim cover-img" :src="poster" :fit="fit" :alt="mangaName" />
 
 		<!--占位图标-->
 		<el-image v-else class="cover-img" :src="placeholder" fit="fill" />
 
 		<!--漫画名称-->
 		<div class="manga-content">
-			<p class="manga-name">{{ title }}</p>
+			<p class="manga-name">{{ mangaName }}</p>
 			<p class="tag-box">
-				<el-tag v-for="tagItem in mangaInfo.tags" class="tag base-tag" :color="tagItem.tagColor" :key="tagItem.tagId">
+				<el-tag v-for="tagItem in mangaInfo.tags" class="tag base-tag" :color="tagItem.tagColor"
+					:key="tagItem.tagId">
 					{{ tagItem.tagName }}
 				</el-tag>
 			</p>
@@ -32,64 +33,74 @@
 	</div>
 </template>
 
-<script>
-import { global_set } from '@/utils';
-
+<script lang="ts">
 export default {
-	name: 'manga-list-item',
+	name: 'manga-list-item'
+}
+</script>
+<script setup lang="ts">
+import { global_set, global_set_json } from '@/utils';
+import { computed, defineProps, defineEmits } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
+import chapterApi from '@/api/chapter';
 
-	data() {
-		return {
-			placeholder: require('@/assets/s-blue.png'),
-			fit: 'cover',
-		};
-	},
+const route = useRoute();
+const router = useRouter();
+// 传值
+const props = defineProps(['mangaInfo', 'viewType']);
+const placeholder = require('@/assets/s-blue.png');
+const fit = 'cover';
 
-	props: ['mangaInfo', 'viewType'],
+const poster = computed(() => {
+	return props.mangaInfo.blob;
+})
 
-	// 引用
-	computed: {
-		poster() {
-			return this.mangaInfo.blob;
-		},
-		finish() {
-			return this.mangaInfo.finish;
-		},
-		title() {
-			return this.mangaInfo.mangaName;
-		},
-		path() {
-			return this.mangaInfo.mangaPath;
-		},
-		viewTypeCopy() {
-			return this.viewType;
-		},
-	},
+const finish = computed(() => {
+	return props.mangaInfo.finish;
+})
 
-	methods: {
-		go_chapter() {
-			const mangaId = this.mangaInfo.mangaId;
-			const mangaCover = this.mangaInfo.mangaCover;
-			const browseType = this.mangaInfo.browseType;
-			const removeFirst = this.mangaInfo.removeFirst;
-			const direction = this.mangaInfo.direction;
+const mangaName = computed(() => {
+	if (route.name === 'media-list') return props.mangaInfo.chapterName;
+	return props.mangaInfo.mangaName;
+})
 
-			// 缓存漫画信息
-			global_set('mangaId', mangaId);
-			global_set('mangaName', this.title);
-			global_set('mangaCover', mangaCover);
-			global_set('removeFirst', removeFirst);
-			global_set('direction', direction);
-			
-			this.$router.push({
-				name: 'manga-info',
-				query: { mangaId },
-				params: { browseType, clear: '1' },
-			});
-		},
-	},
-	created() { },
-};
+async function go_chapter() {
+	const mangaInfo = props.mangaInfo;
+
+	const mangaId = mangaInfo.mangaId;
+	const mangaCover = mangaInfo.mangaCover;
+	const browseType = mangaInfo.browseType;
+	const removeFirst = mangaInfo.removeFirst;
+	const direction = mangaInfo.direction;
+	const page = mangaInfo.page;
+
+	// 缓存漫画信息
+	global_set('mangaId', mangaId);
+	global_set('mangaName', mangaName);
+	global_set('mangaCover', mangaCover);
+	global_set('removeFirst', removeFirst);
+	global_set('direction', direction);
+
+	if (route.name === 'media-list') {
+
+		const chapterListRes = await chapterApi.get(mangaId);
+		const chapterList = chapterListRes.list;
+		global_set_json('chapterList', chapterList);
+
+		router.push({
+			name: browseType,
+			query: { chapterId: mangaInfo.chapterId },
+			params: { page },
+		});
+		return;
+	}
+
+	router.push({
+		name: 'manga-info',
+		query: { mangaId },
+		params: { browseType, clear: '1' },
+	});
+}
 </script>
 
 <style scoped lang="less">
@@ -103,11 +114,11 @@ export default {
 	overflow: hidden;
 	margin-bottom: 1rem;
 
-	.manga-content{
-        .tag-box{
+	.manga-content {
+		.tag-box {
 			text-indent: 0.8rem;
 		}
-    }
+	}
 }
 
 .cover-img {
@@ -146,7 +157,7 @@ export default {
 @media only screen and (min-width: 1200px) {
 	.manga {
 		.cover-img {
-			height: 26rem;
+			height: 23.8rem;
 		}
 
 		.manga-name {
@@ -202,7 +213,7 @@ export default {
 @media only screen and (max-width: 767px) {
 	.manga {
 		.cover-img {
-			height: 14rem;
+			height: 16rem;
 		}
 
 		.manga-name {

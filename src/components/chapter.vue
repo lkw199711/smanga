@@ -207,7 +207,7 @@
 	@media only screen and (max-width: 767px) {
 		.chapter {
 			.chapter-cover-img {
-				height: 12rem;
+				height: 12.6rem;
 			}
 
 			.chapter-name {

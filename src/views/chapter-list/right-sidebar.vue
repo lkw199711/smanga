@@ -1,15 +1,9 @@
 <template>
 	<div class="right-sidebar">
-		<el-drawer
-			v-model="drawer"
-			size="auto"
-			:with-header="false"
-			:before-close="close_sidebar">
-			<el-menu
-				class="right-sidebar-menu"
-				active-text-color="#ffd04b"
-				background-color="#545c64"
-				text-color="#fff"
+		<el-drawer v-model="drawer" size="auto" :with-header="false" :before-close="close_sidebar">
+			<!-- 安卓端顶部占位 -->
+			<div class="android-seat-top" v-if="config.android" />
+			<el-menu class="right-sidebar-menu" active-text-color="#ffd04b" background-color="#545c64" text-color="#fff"
 				@select="menu_select">
 				<!--封面-->
 				<img class="poster" :src="blob" alt="漫画封面" />
@@ -43,15 +37,15 @@
 </template>
 
 <script lang="ts" setup>
-import {watch, ref, defineProps, defineEmits, computed} from 'vue';
-import {useRoute} from 'vue-router';
-import {config} from '@/store';
-import {delete_chapter} from '@/api/chapter';
-import {ElMessageBox} from 'element-plus';
+import { watch, ref, defineProps, defineEmits, computed } from 'vue';
+import { useRoute } from 'vue-router';
+import { config } from '@/store';
+import { delete_chapter } from '@/api/chapter';
+import { ElMessageBox } from 'element-plus';
 import i18n from '@/i18n';
-import {add_collect, is_collect, remove_collect} from '@/api/collect';
+import { add_collect, is_collect, remove_collect } from '@/api/collect';
 
-const {t} = i18n.global;
+const { t } = i18n.global;
 
 const route = useRoute();
 
@@ -84,7 +78,7 @@ watch(
 	() => props.info.chapterId,
 	async (val) => {
 		const res = await is_collect('chapter', val);
-		isCollect.value = res.data.isCollect;
+		isCollect.value = res.data.request;
 	}
 );
 
@@ -94,7 +88,7 @@ function close_sidebar() {
 
 async function update_collect_state() {
 	const res = await is_collect('chapter', chapterId.value);
-	isCollect.value = res.data.isCollect;
+	isCollect.value = res.data.request;
 }
 
 async function menu_select(key: string) {

@@ -2,13 +2,14 @@
  * @Author: lkw199711 lkw199711@163.com
  * @Date: 2023-03-17 20:18:30
  * @LastEditors: lkw199711 lkw199711@163.com
- * @LastEditTime: 2023-05-22 21:19:17
+ * @LastEditTime: 2023-09-26 05:38:31
  * @FilePath: \smanga\src\store\index.ts
  */
 import {createStore} from 'vuex';
 import {reactive} from 'vue';
 import {GlobalData} from '@/store/type';
 import {get_cookie} from '../utils/index';
+import {screenType} from '@/type/store';
 
 export default createStore({
 	state: {
@@ -16,7 +17,7 @@ export default createStore({
 		mangaAwait: true,
 		previewAwait: true,
 		collectAwait: true,
-		searchAwait: true
+		searchAwait: true,
 	} as any,
 	mutations: {
 		switch_await(state, {bool = true, running = 'chapterAwait'}) {
@@ -47,7 +48,8 @@ export const globalData: GlobalData = reactive({
 	pageImage: '',
 	removeFirst: '0',
 	direction: '0',
-	loadedImages: 0,
+	userConfig: null,
+	pageSizeConfig: null,
 });
 
 const editUser = get_cookie('editUser');
@@ -59,10 +61,11 @@ export const config = reactive({
 	browseFooter: true,
 	browseType: 'flow',
 	bookmarkShow: false,
-	screenType: 'large', // mini | small | middle | large | 2k | 4k
+	screenType: 'large' as screenType, // mini | small | middle | large | 2k | 4k
 	rightSidebar: false,
 	android: false,
 	viewType: 'block',
+	enableOperation: true,
 });
 
 export const power = reactive({
@@ -93,6 +96,10 @@ export const userConfig = reactive({
 	// 阅读操作面板 顶部与底部尺寸
 	browseOperationTop: 30,
 	browseOperationBottom: 30,
+	// 显示页码
+	showPageNumber: true,
+	// 开启滑动翻页
+	enableTouchPageChange: false,
 });
 
 export const cache = reactive({
@@ -103,9 +110,10 @@ export const cache = reactive({
 
 export const pageSizeConfig = reactive({
 	mini: [9, 12, 15, 18, 21],
-	small: [12, 18, 32, 38, 44],
+	small: [15, 18, 32, 38, 44],
+	tablet: [15, 18, 32, 38, 44],
 	middle: [12, 18, 32, 38, 44],
-	large: [8, 16, 32, 40, 48] as number[],
+	large: [8, 16, 32, 40, 48],
 	'2k': [27, 36, 45, 54, 63],
 	'4k': [32, 40, 48, 54, 62],
 });
