@@ -19,7 +19,7 @@
     <canvas id="canvas-cut" width="1920" height="1080" v-show="false"></canvas>
 
     <!-- 页码显示 -->
-    <page-number :page="page" :count="imgPathList.length" />
+    <page-number :page="page" :count="count" />
 
     <!--分页按钮-->
     <div class="footer" v-show="config.browseFooter">
@@ -95,7 +95,7 @@ let chapterInfo = reactive<chapterInfoType>({
 })
 
 const count = computed(() => {
-  return imgPathList.value.length;
+  return imgPathList.value.length * 2;
 })
 
 const pager = ref();
@@ -104,7 +104,7 @@ const pager = ref();
 watch(
   () => page.value,
   () => {
-    lastReadApi.add(page.value, chapterInfo.chapterId, chapterInfo.mangaId);
+    lastReadApi.add(page.value, chapterInfo.chapterId, chapterInfo.mangaId, page.value >= count.value);
   }
 )
 
@@ -116,7 +116,7 @@ async function page_change(pageParams: number) {
   page.value = pageParams;
   const even = pageParams % 2 === 0;
 
-  const pageImage = imgPathList.value[pageParams - 1];
+  const pageImage = imgPathList.value[Math.ceil(pageParams / 2) - 1];
   global_set('page', pageParams);
   global_set('pageImage', pageImage);
 
@@ -131,7 +131,7 @@ async function page_change(pageParams: number) {
   const img = new Image();
   img.src = res.data;
 
-  const canvas: HTMLCanvasElement = document.getElementById('canvas-cut');
+  const canvas: HTMLCanvasElement | null = document.querySelector('canvas');
 
   if (!canvas) { return false }
 
@@ -139,7 +139,7 @@ async function page_change(pageParams: number) {
 
   if (!context) { return false }
 
-  //处理toDataURL遇跨域资源导致的报错
+  // 处理toDataURL遇跨域资源导致的报错
   img.crossOrigin = 'Anonymous';
 
   img.onload = function () {

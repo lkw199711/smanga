@@ -30,10 +30,10 @@ const lastReadApi = {
 	 * @param {number} mangaId
 	 * @return {*}
 	 */
-	add(page: number, chapterId: number, mangaId: number) {
+	add(page: number, chapterId: number, mangaId: number, finish = false) {
 		ajax({
 			url: 'lastread/add',
-			data: {page, chapterId, mangaId},
+			data: {page, chapterId, mangaId, finish},
 		});
 	},
 

@@ -23,12 +23,12 @@
     </div>
 
     <!-- 页码显示 -->
-    <page-number :page="page" :count="imgPathList.length" />
+    <page-number :page="page" :count="count" />
 
     <!-- 分页按钮 -->
     <div class="footer" v-show="config.browseFooter">
       <el-button class="btn" type="warning" plain @click="before">{{ $t('page.before') }}</el-button>
-      <browse-pager ref="pager" @pageChange="page_change" @reloadPage="reload_page" :page="page" :count="count" :set-page-size="2" />
+      <browse-pager ref="pager" @pageChange="page_change" @reloadPage="reload_page" :page="page" :count="count" />
       <el-button class="btn" type="success" plain @click="next">{{ $t('page.next') }}</el-button>
     </div>
   </div>
@@ -102,7 +102,7 @@ let chapterInfo = reactive<chapterInfoType>({
 })
 
 const count = computed(() => {
-  return imgPathList.value.length;
+  return Math.ceil(imgPathList.value.length / 2);
 })
 
 const pager = ref();
@@ -111,7 +111,7 @@ const pager = ref();
 watch(
   () => page.value,
   () => {
-    lastReadApi.add(page.value, chapterInfo.chapterId, chapterInfo.mangaId);
+    lastReadApi.add(page.value, chapterInfo.chapterId, chapterInfo.mangaId, page.value >= count.value);
   }
 )
 
