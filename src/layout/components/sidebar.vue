@@ -55,14 +55,22 @@ import Logo from "@/layout/components/logo.vue";
 import { useI18n } from "vue-i18n";
 const { t } = useI18n();
 
+type routeItem = {
+  meta: {
+    sidebar: boolean;
+    icon: string;
+    title: string;
+  }
+}
+
 const show = ref(true);
 
 const go_home = () => {
   router.push('/');
 }
 
-const routes = computed(() => {
-  return router.options.routes;
+const routes = computed<routeItem[]>(() => {
+  return router.options.routes as any;
 })
 
 const userLimit = computed(() => (item: any) => {
@@ -83,6 +91,8 @@ const userLimit = computed(() => (item: any) => {
 
 onMounted(() => {
   config.sidebarCollapse = false;
+  console.log(routes.value);
+  
 })
 </script>
 

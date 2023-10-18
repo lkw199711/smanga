@@ -3,6 +3,26 @@ import Layout from '@/layout/index.vue';
 import browse from '@/layout/browse.vue';
 import layout from '@/layout/index.vue';
 
+import NProgress from 'nprogress'
+import 'nprogress/nprogress.css'
+NProgress.configure({
+  easing: 'ease', // 动画方式
+  speed: 500, // 递增进度条的速度
+  showSpinner: false, // 是否显示加载ico
+  trickleSpeed: 200, // 自动递增间隔
+  minimum: 0.3,// 初始化时的最小百分比,
+})
+
+// 打开进度条
+export const start = () => {
+  NProgress.start()
+}
+
+// 关闭进度条
+export const close = () => {
+  NProgress.done()
+}
+
 const routes: Array<RouteRecordRaw> = [
 	// 系统界面
 	{
@@ -385,5 +405,13 @@ const router = createRouter({
 	history: createWebHashHistory(),
 	routes,
 });
+
+router.beforeEach((pre, next) => {
+  start()
+})
+
+router.afterEach(() => {
+  close()
+})
 
 export default router;
