@@ -2,9 +2,9 @@
   font-family: "colour"; /* Project id 3852929 */
   /* Color fonts */
   src: 
-       url('iconfont.woff2?t=1674297430057') format('woff2'),
-       url('iconfont.woff?t=1674297430057') format('woff'),
-       url('iconfont.ttf?t=1674297430057') format('truetype');
+       url('iconfont.woff2?t=1697639370440') format('woff2'),
+       url('iconfont.woff?t=1697639370440') format('woff'),
+       url('iconfont.ttf?t=1697639370440') format('truetype');
 }
 
 .colour {
@@ -13,6 +13,326 @@
   font-style: normal;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.colour-wiki5:before {
+  content: "\e628";
+}
+
+.colour-wiki4:before {
+  content: "\e64c";
+}
+
+.colour-wiki3:before {
+  content: "\e6f9";
+}
+
+.colour-wiki2:before {
+  content: "\e638";
+}
+
+.colour-wiki1:before {
+  content: "\e61f";
+}
+
+.colour-log:before {
+  content: "\e61c";
+}
+
+.colour-log1:before {
+  content: "\e63d";
+}
+
+.colour-log3:before {
+  content: "\f4f1";
+}
+
+.colour-log4:before {
+  content: "\f5f3";
+}
+
+.colour-log5:before {
+  content: "\f8be";
+}
+
+.colour-wiki:before {
+  content: "\10118";
+}
+
+.colour-log6:before {
+  content: "\e61e";
+}
+
+.colour-wodezhanghu:before {
+  content: "\e62e";
+}
+
+.colour-person5:before {
+  content: "\e60a";
+}
+
+.colour-person4:before {
+  content: "\e681";
+}
+
+.colour-person3:before {
+  content: "\e688";
+}
+
+.colour-person2:before {
+  content: "\e620";
+}
+
+.colour-person1:before {
+  content: "\e612";
+}
+
+.colour-zhanghu2:before {
+  content: "\fd8d";
+}
+
+.colour-folder5:before {
+  content: "\e77b";
+}
+
+.colour-folder4:before {
+  content: "\e673";
+}
+
+.colour-folder3:before {
+  content: "\e649";
+}
+
+.colour-folder2:before {
+  content: "\e80c";
+}
+
+.colour-folder1:before {
+  content: "\e641";
+}
+
+.colour-folder:before {
+  content: "\f691";
+}
+
+.colour-person:before {
+  content: "\ff03";
+}
+
+.colour-comporess:before {
+  content: "\e61a";
+}
+
+.colour-comporess1:before {
+  content: "\e619";
+}
+
+.colour-person10:before {
+  content: "\e600";
+}
+
+.colour-person9:before {
+  content: "\e8d1";
+}
+
+.colour-person8:before {
+  content: "\ea2a";
+}
+
+.colour-person7:before {
+  content: "\e9dc";
+}
+
+.colour-star6:before {
+  content: "\e683";
+}
+
+.colour-history:before {
+  content: "\e626";
+}
+
+.colour-bookmark5:before {
+  content: "\e60c";
+}
+
+.colour-star5:before {
+  content: "\e607";
+}
+
+.colour-star:before {
+  content: "\e62b";
+}
+
+.colour-star4:before {
+  content: "\e60f";
+}
+
+.colour-star3:before {
+  content: "\e666";
+}
+
+.colour-heart1:before {
+  content: "\e614";
+}
+
+.colour-star2:before {
+  content: "\e617";
+}
+
+.colour-log2:before {
+  content: "\e61d";
+}
+
+.colour-heart:before {
+  content: "\f4f8";
+}
+
+.colour-star1:before {
+  content: "\ff02";
+}
+
+.colour-search:before {
+  content: "\e609";
+}
+
+.colour-search1:before {
+  content: "\e63f";
+}
+
+.colour-search2:before {
+  content: "\e65b";
+}
+
+.colour-search3:before {
+  content: "\ebd3";
+}
+
+.colour-search4:before {
+  content: "\fc7b";
+}
+
+.colour-time:before {
+  content: "\e605";
+}
+
+.colour-time8:before {
+  content: "\e61b";
+}
+
+.colour-time7:before {
+  content: "\e86e";
+}
+
+.colour-time6:before {
+  content: "\e60b";
+}
+
+.colour-time5:before {
+  content: "\e618";
+}
+
+.colour-time4:before {
+  content: "\e6b2";
+}
+
+.colour-time3:before {
+  content: "\e606";
+}
+
+.colour-time2:before {
+  content: "\ed04";
+}
+
+.colour-time1:before {
+  content: "\ecaf";
+}
+
+.colour-bookmark1:before {
+  content: "\e6e5";
+}
+
+.colour-bookmark2:before {
+  content: "\e602";
+}
+
+.colour-bookmark3:before {
+  content: "\e611";
+}
+
+.colour-bookmark4:before {
+  content: "\e615";
+}
+
+.colour-qiyeruzhushenqing:before {
+  content: "\e60e";
+}
+
+.colour-tag:before {
+  content: "\e65f";
+}
+
+.colour-manage:before {
+  content: "\e6b1";
+}
+
+.colour-manage1:before {
+  content: "\e6b8";
+}
+
+.colour-chapter-manage:before {
+  content: "\e658";
+}
+
+.colour-shezhi2:before {
+  content: "\e647";
+}
+
+.colour-shezhi3:before {
+  content: "\e65a";
+}
+
+.colour-shezhi4:before {
+  content: "\e660";
+}
+
+.colour-setting1:before {
+  content: "\e691";
+}
+
+.colour-shezhi:before {
+  content: "\e63a";
+}
+
+.colour-shezhi1:before {
+  content: "\e610";
+}
+
+.colour-setting:before {
+  content: "\e664";
+}
+
+.colour-bookmark:before {
+  content: "\e646";
+}
+
+.colour-media:before {
+  content: "\e613";
+}
+
+.colour-media-list:before {
+  content: "\e604";
+}
+
+.colour-media-manage:before {
+  content: "\e608";
+}
+
+.colour-manga-manage:before {
+  content: "\e60d";
+}
+
+.colour-a-shuben3:before {
+  content: "\e6e4";
 }
 
 .colour-yuyanqiehuan:before {

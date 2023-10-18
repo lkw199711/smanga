@@ -1,6 +1,9 @@
 {
   "404": "The file you requested does not exist",
   "sidebar": {
+    "media": "Media",
+    "manage": "Management",
+    "setting": "Settings",
     "mediaList": "mediaList",
     "mangaList": "mangaList",
     "chapterList": "chapterList",
@@ -260,7 +263,8 @@
     "single": "single",
     "double": "double",
     "half": "falf-cut",
-    "model": "readModel"
+    "model": "readModel",
+    "imgLoadError": "Image loading failed, click to reload"
   },
   "page": {
     "before": "beforeChapter",

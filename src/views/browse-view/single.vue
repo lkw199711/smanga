@@ -2,7 +2,7 @@
  * @Author: lkw199711 lkw199711@163.com
  * @Date: 2023-03-17 20:18:31
  * @LastEditors: lkw199711 lkw199711@163.com
- * @LastEditTime: 2023-10-08 07:40:28
+ * @LastEditTime: 2023-10-18 23:13:03
  * @FilePath: \smanga\src\views\browse-view\single.vue
 -->
 <template>
@@ -16,7 +16,7 @@
     <!--图片容器-->
     <div class="single-page-img-box touch-dom">
       <bookmark :page="page" :chapterId="chapterInfo.chapterId" />
-      <img class="single-page-img" :src="imgSrc" alt="接收图片" @click.stop="switch_menu" />
+      <img class="single-page-img" :src="imgSrc" :alt="t('browse.imgLoadError')" @click.stop="switch_menu" />
       <operation-cover @before="beforePage" @next="nextPage" @switch-menu="switch_menu"
         @switch-footer="switch_footer"></operation-cover>
     </div>
