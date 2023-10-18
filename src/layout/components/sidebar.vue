@@ -1,6 +1,6 @@
 <template>
   <div class="sidebar-pc">
-    <el-menu router default-active="/" :class="['sidebar', 'sidebar-pc', { close: config.sidebarCollapse }]"
+    <el-menu router :default-active="route.path" :class="['sidebar', 'sidebar-pc', { close: config.sidebarCollapse }]"
       :collapse="config.sidebarCollapse" :collapse-transition="true">
       <!-- 顶部占位符 -->
       <div class="top-seat" v-if="config.android"></div>
@@ -11,14 +11,45 @@
         </div>
       </el-menu-item>
 
-      <template v-for="(item, key) in routes" :key="key">
-        <el-menu-item v-if="item.meta.sidebar && userLimit(item)" :index="item.path">
-          <el-icon v-if="item.meta.icon">
-            <component :is="item.meta.icon"></component>
-          </el-icon>
-          <template #title>{{ $t(`sidebar.${item.meta.title}`) }}</template>
-        </el-menu-item>
+      <template v-for="routeItem in routes" :key="routeItem.path">
+        <template v-if="routeItem.meta.sidebar && userLimit(routeItem)">
+
+          <el-sub-menu :index="routeItem.path" v-if="routeItem.meta.submenu">
+            <template #title>
+              <!-- <i :class="['sidebar-sub-icon', 'colour', 'colour-' + routeItem.meta.icon]"></i> -->
+              <i :class="['sidebar-sub-icon', 'colour']">
+                <svg class="icon" aria-hidden="true">
+                  <use :xlink:href="'#colour-' + routeItem.meta.icon"></use>
+                </svg>
+              </i>
+
+              <span>{{ $t(`sidebar.${routeItem.meta.title}`) }}</span>
+            </template>
+
+            <template v-for="childrenItem in routeItem.children" :key="childrenItem.path">
+              <template v-if="childrenItem.meta.sidebar">
+                <el-menu-item :index="childrenItem.path">
+                  <i :class="['sidebar-icon', 'colour', { 'collapse': config.sidebarCollapse }]">
+                    <svg class="icon" aria-hidden="true">
+                      <use :xlink:href="'#colour-' + childrenItem.meta.icon"></use>
+                    </svg>
+                  </i>
+                  <template #title>{{ $t(`sidebar.${childrenItem.meta.title}`) }}</template>
+                </el-menu-item>
+              </template>
+
+            </template>
+
+          </el-sub-menu>
+
+          <el-menu-item :index="routeItem.path" v-else>
+            <i :class="['sidebar-icon', 'colour', 'colour-' + routeItem.meta.icon]"></i>
+            <template #title>{{ $t(`sidebar.${routeItem.meta.title}`) }}</template>
+          </el-menu-item>
+
+        </template>
       </template>
+
     </el-menu>
   </div>
 
@@ -34,14 +65,45 @@
           </div>
         </el-menu-item>
 
-        <template v-for="(item, key) in routes" :key="key">
-          <el-menu-item v-if="item.meta.sidebar && userLimit(item)" :index="item.path">
-            <el-icon v-if="item.meta.icon">
-              <component :is="item.meta.icon"></component>
-            </el-icon>
-            <template #title>{{ $t(`sidebar.${item.meta.title}`) }}</template>
-          </el-menu-item>
+        <template v-for="routeItem in routes" :key="routeItem.path">
+          <template v-if="routeItem.meta.sidebar && userLimit(routeItem)">
+
+            <el-sub-menu :index="routeItem.path" v-if="routeItem.meta.submenu">
+              <template #title>
+                <!-- <i :class="['sidebar-sub-icon', 'colour', 'colour-' + routeItem.meta.icon]"></i> -->
+                <i :class="['sidebar-sub-icon', 'colour']">
+                  <svg class="icon" aria-hidden="true">
+                    <use :xlink:href="'#colour-' + routeItem.meta.icon"></use>
+                  </svg>
+                </i>
+
+                <span>{{ $t(`sidebar.${routeItem.meta.title}`) }}</span>
+              </template>
+
+              <template v-for="childrenItem in routeItem.children" :key="childrenItem.path">
+                <template v-if="childrenItem.meta.sidebar">
+                  <el-menu-item :index="childrenItem.path">
+                    <i :class="['sidebar-icon', 'colour', { 'collapse': config.sidebarCollapse }]">
+                      <svg class="icon" aria-hidden="true">
+                        <use :xlink:href="'#colour-' + childrenItem.meta.icon"></use>
+                      </svg>
+                    </i>
+                    <template #title>{{ $t(`sidebar.${childrenItem.meta.title}`) }}</template>
+                  </el-menu-item>
+                </template>
+
+              </template>
+
+            </el-sub-menu>
+
+            <el-menu-item :index="routeItem.path" v-else>
+              <i :class="['sidebar-icon', 'colour', 'colour-' + routeItem.meta.icon]"></i>
+              <template #title>{{ $t(`sidebar.${routeItem.meta.title}`) }}</template>
+            </el-menu-item>
+
+          </template>
         </template>
+
       </el-menu>
     </el-drawer>
   </div>
@@ -53,14 +115,21 @@ import router from '@/router';
 import { config, power } from '@/store';
 import Logo from "@/layout/components/logo.vue";
 import { useI18n } from "vue-i18n";
+import { useRoute, useRouter } from 'vue-router';
+const route = useRoute();
+const uRouter = useRouter();
 const { t } = useI18n();
 
 type routeItem = {
   meta: {
+    submenu?: boolean;
     sidebar: boolean;
     icon: string;
     title: string;
-  }
+  },
+  path: string;
+  name: string;
+  children: routeItem[];
 }
 
 const show = ref(true);
@@ -92,11 +161,34 @@ const userLimit = computed(() => (item: any) => {
 onMounted(() => {
   config.sidebarCollapse = false;
   console.log(routes.value);
-  
+
 })
 </script>
 
+<style>
+.icon {
+  width: 1em;
+  height: 1em;
+  vertical-align: -0.15em;
+  fill: currentColor;
+  overflow: hidden;
+}
+</style>
 <style scoped lang="less">
+.sidebar-sub-icon {
+  font-size: 4.2rem;
+  transform: translate(-.8rem, -.6rem);
+}
+
+.sidebar-icon {
+  font-size: 2.6rem;
+  transform: translate(-1rem, -1.2rem);
+}
+
+.sidebar-icon.collapse {
+  transform: translate(-1rem, -1.4rem);
+}
+
 //响应式手机
 @media only screen and (max-width: 1199px) {
   .sidebar-pc {

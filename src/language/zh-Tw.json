@@ -1,6 +1,9 @@
 {
   "404": "404，您請求的文件不存在!",
   "sidebar": {
+    "media": "媒體",
+    "manage": "資源管理",
+    "setting": "用戶設置",
     "mediaList": "媒體庫",
     "mangaList": "漫畫列表",
     "chapterList": "章節列表",
@@ -260,7 +263,8 @@
     "single": "單頁模式",
     "double": "雙頁模式",
     "half": "對半裁剪",
-    "model": "閱讀模式"
+    "model": "閱讀模式",
+    "imgLoadError": "圖片加載失敗,點擊重新加載"
   },
   "page": {
     "before": "上一章",
