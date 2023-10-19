@@ -1,6 +1,6 @@
 <template>
   <div class="sidebar-pc">
-    <el-menu router :default-active="route.path" :class="['sidebar', 'sidebar-pc', { close: config.sidebarCollapse }]"
+    <el-menu router :default-active="menuActive" :class="['sidebar', 'sidebar-pc', { close: config.sidebarCollapse }]"
       :collapse="config.sidebarCollapse" :collapse-transition="true">
       <!-- 顶部占位符 -->
       <div class="top-seat" v-if="config.android"></div>
@@ -57,7 +57,7 @@
     <el-drawer v-model="config.sidebarCollapse" size="auto" direction="ltr" :with-header="false">
       <!-- 顶部占位符 -->
       <div class="top-seat" v-if="config.android"></div>
-      <el-menu router class="sidebar sidebar-phone" default-active="/">
+      <el-menu router class="sidebar sidebar-phone" :default-active="menuActive">
         <!--<logo/>-->
         <el-menu-item index="/" class="no-padding">
           <div :class="['logo', 'posted']">
@@ -140,6 +140,20 @@ const go_home = () => {
 
 const routes = computed<routeItem[]>(() => {
   return router.options.routes as any;
+})
+
+const menuActive = computed(() => {
+  switch (route.path) {
+    case '/manga-list':
+      return '/media-list';
+    case '/chapter-list':
+      return '/media-list';
+    case '/manga-info':
+      return '/media-list';
+    default:
+      return route.path;
+  }
+
 })
 
 const userLimit = computed(() => (item: any) => {
