@@ -26,6 +26,7 @@ RUN set -ex && \
         ca-certificates \
         coreutils \
         curl \
+        grep \
         inotify-tools \
         jq \
         netcat-openbsd \
