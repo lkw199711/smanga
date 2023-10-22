@@ -2,7 +2,7 @@
  * @Author: lkw199711 lkw199711@163.com
  * @Date: 2023-07-29 01:17:01
  * @LastEditors: lkw199711 lkw199711@163.com
- * @LastEditTime: 2023-09-24 11:00:07
+ * @LastEditTime: 2023-10-22 15:51:58
  * @FilePath: \smanga\src\views\tag-list\index.vue
 -->
 <template>
@@ -148,7 +148,7 @@ async function page_change(
 ) {
     page.value = pageC;
 
-    const res = await mangaApi.get_by_tags(tagIds.value, page.value, pageSize);
+    const res = await mangaApi.get_by_tags(tagIds.value, page.value, pageSize, userConfig.order);
     mangaList.value = res.list;
     count.value = res.count;
 
