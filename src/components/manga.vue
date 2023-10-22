@@ -69,15 +69,18 @@ async function go_chapter() {
 
 	const mangaId = mangaInfo.mangaId;
 	const mangaCover = mangaInfo.mangaCover;
+	const chapterId = mangaInfo.chapterId;
+	const chapterName = mangaInfo.chapterName;
 	const browseType = mangaInfo.browseType;
 	const removeFirst = mangaInfo.removeFirst;
 	const direction = mangaInfo.direction;
 	const page = mangaInfo.page;
-
 	// 缓存漫画信息
 	global_set('mangaId', mangaId);
 	global_set('mangaName', mangaName);
 	global_set('mangaCover', mangaCover);
+	global_set('chapterId', chapterId);
+	global_set('chapterName', chapterName);
 	global_set('removeFirst', removeFirst);
 	global_set('direction', direction);
 

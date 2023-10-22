@@ -43,7 +43,7 @@ import lastReadApi from '@/api/last-read';
 import operationCover from './components/operation-cover.vue';
 import chapterListMenu from './components/chapter-list-menu.vue';
 import bookmark from './components/bookmark.vue';
-import { get_chapter_images } from '@/api/browse';
+import chapterApi from '@/api/chapter';
 import browsePager from '@/components/browse-pager.vue';
 import rightSidebar from './components/right-sidebar.vue';
 import pageNumber from './components/page-number.vue';
@@ -192,27 +192,27 @@ async function reload_page(page = 1, addHistory = true) {
 
   if (addHistory) add_history();
   // 加载图片列表
-  const res = await get_chapter_images(chapterInfo.chapterId);
+  const res = await chapterApi.get_images(chapterInfo.chapterId);
 
-  switch (res.data.status) {
+  switch (res.state) {
     case 'uncompressed':
       setTimeout(() => {
         pager.value.reload();
       }, 2000);
       break;
     case 'compressing':
-      imgPathList.value = res.data.list;
+      imgPathList.value = res.list;
       pager.value.page_change(page);
       setTimeout(() => {
         pager.value.reload();
       }, 2000);
       break;
     case 'compressed':
-      imgPathList.value = res.data.list;
+      imgPathList.value = res.list;
       pager.value.page_change(page);
       break;
     default:
-      imgPathList.value = res.data.list;
+      imgPathList.value = res.list;
       pager.value.page_change(page);
       break;
   }

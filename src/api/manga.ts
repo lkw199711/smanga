@@ -101,7 +101,7 @@ const mangaApi = {
 
 		const data = (await res).data;
 
-		return data;
+		return data.request;
 	},
 };
 
