@@ -76,12 +76,12 @@ const ajax = Axios.create({
 			}
 
 			// 初次部署
-			if (data.status === 'first deploy') {
+			if (data.state === 'first deploy') {
 				router.push('/init');
 			}
 
 			// 登录信息错误
-			if (data.status === 'user error') {
+			if (data.state === 'user error') {
 				router.push('/login');
 			}
 

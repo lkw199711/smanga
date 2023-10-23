@@ -20,8 +20,8 @@
 export default { name: 'media-list' };
 </script>
 <script setup lang="ts">
-import { ref,onMounted, onBeforeUnmount } from 'vue';
-import { get_media } from '@/api/media';
+import { ref, onMounted, onBeforeUnmount } from 'vue';
+import mediaApi from '@/api/media';
 import { global_set } from '@/utils';
 import store, { config } from '@/store';
 import lastReadApi from '@/api/last-read';
@@ -41,8 +41,8 @@ const lastReadList = ref<lastReadType[]>([]);
  * @return {*}
  */
 async function load_media() {
-	const res = await get_media(1, 10000);
-	mediaList.value = res.data.list.data;
+	const res = await mediaApi.get(1, 10000);
+	mediaList.value = res.list;
 }
 
 /**

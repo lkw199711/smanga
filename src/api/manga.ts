@@ -83,8 +83,8 @@ const mangaApi = {
 		const data: ResType = (await res).data;
 
 		return {
-			list: data.list.data,
-			count: data.list.total,
+			list: data.list,
+			count: data.count,
 		};
 	},
 

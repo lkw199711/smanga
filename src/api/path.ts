@@ -2,84 +2,95 @@
  * @Author: lkw199711 lkw199711@163.com
  * @Date: 2023-03-17 20:18:30
  * @LastEditors: lkw199711 lkw199711@163.com
- * @LastEditTime: 2023-10-01 20:57:38
+ * @LastEditTime: 2023-10-24 00:57:01
  * @FilePath: \smanga\src\api\path.ts
  */
 import {ajax} from './index';
 
-/**
- * 获取路径记录
- * @param mediaId
- * @param page
- * @param pageSize
- */
-export function get_path(
-	mediaId: number,
-	page: number,
-	pageSize: number
-) {
-	return ajax({
-		url: 'path/get',
-		data: {mediaId, page, pageSize},
-	});
-}
+const pathApi = {
+	/**
+	 * 获取路径记录
+	 * @param mediaId
+	 * @param page
+	 * @param pageSize
+	 */
+	async get_path(mediaId: number, page: number, pageSize: number) {
+		const res = ajax({
+			url: 'path/get',
+			data: {mediaId, page, pageSize},
+		});
 
-/**
- * 扫描路径
- * @param mediaId
- * @param path
- * @param pathId
- */
-export function rescan_path(mediaId: any, path: any, pathId: any) {
-	return ajax({
-		url: 'path/rescan',
-		data: {mediaId, path, pathId},
-	});
-}
+		return (await res).data;
+	},
 
-/**
- * 扫描路径
- * @param mediaId
- * @param path
- * @param pathId
- */
-export function scan_path(mediaId: any, path: any, pathId: any) {
-	return ajax({
-		url: 'path/scan',
-		data: {mediaId, path, pathId},
-	});
-}
+	/**
+	 * 扫描路径
+	 * @param mediaId
+	 * @param path
+	 * @param pathId
+	 */
+	async rescan_path(mediaId: any, path: any, pathId: any) {
+		const res = ajax({
+			url: 'path/rescan',
+			data: {mediaId, path, pathId},
+		});
 
-/**
- * 删除路径
- * @param pathId
- */
-export function delete_path(pathId: any) {
-	return ajax({
-		url: 'path/delete',
-		data: {pathId},
-	});
-}
+		return (await res).data;
+	},
 
-/**
- * 新增路径
- * @param mediaId
- * @param path
- */
-export function add_path(mediaId: any, pathForm: any) {
-	return ajax({
-		url: 'path/add',
-		data: Object.assign({mediaId}, pathForm),
-	});
-}
+	/**
+	 * 扫描路径
+	 * @param mediaId
+	 * @param path
+	 * @param pathId
+	 */
+	async scan_path(mediaId: any, path: any, pathId: any) {
+		const res = ajax({
+			url: 'path/scan',
+			data: {mediaId, path, pathId},
+		});
 
-/**
- * 删除媒体库
- * @param mediaId
- */
-export function delete_media(mediaId: any) {
-	return ajax({
-		url: 'php/media/delete.php',
-		data: {mediaId},
-	});
-}
+		return (await res).data;
+	},
+
+	/**
+	 * 删除路径
+	 * @param pathId
+	 */
+	async delete_path(pathId: any) {
+		const res = ajax({
+			url: 'path/delete',
+			data: {pathId},
+		});
+
+		return (await res).data;
+	},
+
+	/**
+	 * 新增路径
+	 * @param mediaId
+	 * @param path
+	 */
+	async add_path(mediaId: any, pathForm: any) {
+		const res = ajax({
+			url: 'path/add',
+			data: Object.assign({mediaId}, pathForm),
+		});
+
+		return (await res).data;
+	},
+	/**
+	 * 删除媒体库
+	 * @param mediaId
+	 */
+	async delete_media(mediaId: any) {
+		const res = ajax({
+			url: 'php/media/delete.php',
+			data: {mediaId},
+		});
+
+		return (await res).data;
+	},
+};
+
+export default pathApi;
