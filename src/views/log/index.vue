@@ -2,7 +2,7 @@
  * @Author: lkw199711 lkw199711@163.com
  * @Date: 2023-06-12 22:32:48
  * @LastEditors: lkw199711 lkw199711@163.com
- * @LastEditTime: 2023-06-18 11:10:49
+ * @LastEditTime: 2023-10-25 01:18:44
  * @FilePath: \smanga\src\views\log\index.vue
 -->
 <template>
@@ -19,7 +19,7 @@
 </template>
 
 <script lang="ts" setup>
-import {get_log} from '@/api/log';
+import logApi from '@/api/log';
 import {computed, ref, onMounted} from 'vue';
 import tablePager from '@/components/table-pager.vue';
 
@@ -49,9 +49,9 @@ const logColor = computed(() => {
 });
 
 async function load_table(page: number, pageSize: number) {
-	const res: any = await get_log(page, pageSize);
-	count.value = res.data.list.total;
-	list.value = res.data.list.data;
+	const res: any = await logApi.get_log(page, pageSize);
+	count.value = res.count;
+	list.value = res.list;
 }
 
 onMounted(async () => {

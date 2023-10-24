@@ -1,45 +1,12 @@
 /*
  * @Author: lkw199711 lkw199711@163.com
  * @Date: 2023-03-17 20:18:30
- * @LastEditors: error: error: git config user.name & please set dead value or install git && error: git config user.email & please set dead value or install git & please set dead value or install git
- * @LastEditTime: 2023-08-16 23:05:11
+ * @LastEditors: lkw199711 lkw199711@163.com
+ * @LastEditTime: 2023-10-25 02:01:31
  * @FilePath: \smanga\src\api\history.ts
  */
-import {ajax} from "./index";
-import {global_get} from "@/utils";
-
-export function add_history() {
-    return ajax({
-        url: 'history/add',
-        data: {
-            mediaId: global_get('mediaId'),
-            mangaId: global_get('mangaId'),
-            mangaName: global_get('mangaName'),
-            mangaCover: global_get('mangaCover'),
-            chapterId: global_get('chapterId'),
-            chapterName: global_get('chapterName'),
-            chapterPath: global_get('chapterPath'),
-            chapterType: global_get('chapterType'),
-            chapterCover: global_get('chapterCover'),
-        },
-    })
-}
-
-export function get_history(page: number | undefined = undefined, pageSize: number | undefined = undefined) {
-    return ajax({
-        url: 'history/get',
-        data: {page, pageSize}
-    })
-}
-
-export function delete_history(historyId: number) {
-    return ajax({
-        url: 'history/delete',
-        data: {
-            historyId
-        }
-    })
-}
+import {ajax} from './index';
+import {global_get} from '@/utils';
 
 /**
  * @description: 历史记录接口
@@ -62,6 +29,61 @@ const historyApi = {
 		} else {
 			return res.data.info;
 		}
+	},
+
+	/**
+	 * @description: 添加历史记录
+	 * @return {*}
+	 */
+	async add_history() {
+		const res = ajax({
+			url: 'history/add',
+			data: {
+				mediaId: global_get('mediaId'),
+				mangaId: global_get('mangaId'),
+				mangaName: global_get('mangaName'),
+				mangaCover: global_get('mangaCover'),
+				chapterId: global_get('chapterId'),
+				chapterName: global_get('chapterName'),
+				chapterPath: global_get('chapterPath'),
+				chapterType: global_get('chapterType'),
+				chapterCover: global_get('chapterCover'),
+			},
+        });
+        
+        return (await res).data;
+	},
+
+	/**
+	 * @description: 获取历史记录
+	 * @return {*}
+	 */
+	async get_history(
+		page: number | undefined = undefined,
+		pageSize: number | undefined = undefined
+	) {
+		const res = ajax({
+			url: 'history/get',
+			data: {page, pageSize},
+        });
+        
+        return (await res).data;
+	},
+
+	/**
+	 * @description: 删除历史记录
+	 * @param {number} historyId
+	 * @return {*}
+	 */
+	async delete_history(historyId: number) {
+		const res = ajax({
+			url: 'history/delete',
+			data: {
+				historyId,
+			},
+        });
+        
+        return (await res).data;
 	},
 };
 

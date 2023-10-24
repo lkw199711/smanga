@@ -16,7 +16,7 @@
 
 <script lang="ts" setup>
 import { Cookies, global_set_json } from '@/utils';
-import { get_bookmark } from '@/api/bookmark';
+import bookmarkApi from '@/api/bookmark';
 import { config, pageSizeConfig, userConfig } from '@/store';
 import { useRoute, useRouter } from 'vue-router';
 import { ElConfigProvider, ElMessage, ElMessageBox } from 'element-plus';
@@ -24,7 +24,7 @@ import languages from '@/store/language';
 import { computed, onMounted, onBeforeMount } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { set_theme } from '@/style/theme';
-import { get_user_config } from './api/account';
+import userApi from './api/account';
 import notice from '@/components/notice.vue';
 
 const route = useRoute();
@@ -40,6 +40,10 @@ const elLocale = computed(() => {
 	}
 	return '';
 });
+
+type Win = {
+	javaObj: string;
+};
 
 // 生命周期
 onBeforeMount(async () => {
@@ -107,16 +111,16 @@ async function check_login() {
  * 获取书签列表
  */
 async function set_bookmark() {
-	const res = await get_bookmark();
-	global_set_json('bookmarkList', res.data.list);
+	const res = await bookmarkApi.get_bookmark();
+	global_set_json('bookmarkList', res.list);
 }
 
 async function get_setting() {
-	const res = await get_user_config();
+	const res = await userApi.get_user_config();
 
 	// 非正常状态
-	if (res.data.code === 1) {
-		switch (res.data.state) {
+	if (res.code === 1) {
+		switch (res.state) {
 			case 'first-deploy':
 				await router.isReady();
 				router.push('/init');

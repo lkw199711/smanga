@@ -2,7 +2,7 @@
  * @Author: lkw199711 lkw199711@163.com
  * @Date: 2023-09-26 14:29:14
  * @LastEditors: lkw199711 lkw199711@163.com
- * @LastEditTime: 2023-09-26 14:29:15
+ * @LastEditTime: 2023-10-25 00:21:52
  * @FilePath: /smanga/src/views/media-list/right-sidebar.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -25,7 +25,7 @@
 import { watch, ref, defineProps, defineEmits, computed } from 'vue'
 import { useRoute } from "vue-router";
 import { cache, config } from "@/store";
-import { add_bookmark, delete_bookmark, get_bookmark } from "@/api/bookmark";
+import bookmarkApi from "@/api/bookmark";
 import { global_get, global_set_json } from "@/utils";
 
 const route = useRoute();
@@ -79,7 +79,7 @@ function menu_select(key: string) {
 
 async function bookmark() {
   if (config.bookmarkShow) {
-    await delete_bookmark(cache.bookmarkId);
+    await bookmarkApi.delete_and_update(cache.bookmarkId);
   } else {
     // 区分单双页
     let page = Number(global_get('page'));
@@ -87,11 +87,11 @@ async function bookmark() {
       page = page * 2 - 1;
     }
 
-    await add_bookmark(page);
+    await bookmarkApi.add_bookmark(page);
   }
-  const res = await get_bookmark();
+  const res = await bookmarkApi.get_bookmark();
 
-  global_set_json('bookmarkList', res.data.list);
+  global_set_json('bookmarkList', res.list);
 }
 </script>
 

@@ -27,7 +27,7 @@
 import { watch, ref, defineProps, defineEmits, computed } from 'vue'
 import { useRoute } from "vue-router";
 import { config } from "@/store";
-import { delete_history } from "@/api/history";
+import historyApi from "@/api/history";
 import { ElMessageBox } from "element-plus";
 import i18n from '@/i18n';
 const { t } = i18n.global;
@@ -70,7 +70,7 @@ function menu_select(key: string) {
   switch (key) {
     case 'delete':
       ElMessageBox.confirm(t('history.confirm.text'), { type: 'warning' }).then(async () => {
-        await delete_history(historyId.value);
+        await historyApi.delete_history(historyId.value);
         emit('reload');
       });
 

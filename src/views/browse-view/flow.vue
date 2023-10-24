@@ -2,7 +2,7 @@
  * @Author: lkw199711 lkw199711@163.com
  * @Date: 2023-08-25 10:45:47
  * @LastEditors: lkw199711 lkw199711@163.com
- * @LastEditTime: 2023-10-23 01:32:12
+ * @LastEditTime: 2023-10-25 02:04:17
  * @FilePath: /smanga/src/views/browse-view/flow.vue
 -->
 <template>
@@ -56,7 +56,7 @@ import {
 } from '@/utils';
 import { ElMessage as msg } from 'element-plus';
 import { config } from '@/store';
-import { add_history } from '@/api/history';
+import historyApi from '@/api/history';
 import i18n from '@/i18n';
 import { onMounted } from 'vue';
 import chapterListMenu from './components/chapter-list-menu.vue';
@@ -237,7 +237,7 @@ async function reload_page(addHistory = true, clearPage = true, pageParams = 1) 
 	}
 
 	if (addHistory) {
-		add_history();
+		historyApi.add_history();
 	}
 
 	const res = await chapterApi.get_images(chapterInfo.chapterId);

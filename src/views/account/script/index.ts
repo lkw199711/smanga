@@ -1,10 +1,5 @@
 import {defineComponent} from 'vue';
-import {
-	delete_account,
-	get_account,
-	register,
-	update_account,
-} from '@/api/account';
+import userApi from '@/api/account';
 import {Plus, Edit, Delete, Lollipop} from '@element-plus/icons-vue';
 import {ElMessage, ElMessageBox} from 'element-plus';
 import tablePager from '@/components/table-pager.vue';
@@ -94,9 +89,9 @@ export default defineComponent({
 				}
 			)
 				.then(async () => {
-					const res = await delete_account(val.userId);
+					const res = await userApi.delete_account(val.userId);
 
-					if (res.data.code === 0) {
+					if (res.code === 0) {
 						// 进入子组件调用刷新
 						(this.$refs as any).pager.reload_page();
 					}
@@ -108,9 +103,9 @@ export default defineComponent({
 		 * @returns {Promise<void>}
 		 */
 		async load_table(page = 1, pageSize = 10) {
-			const res = await get_account(page, pageSize);
-			this.count = Number(res.data.list.total);
-			this.tableData = res.data.list.data;
+			const res = await userApi.get_account(page, pageSize);
+			this.count = Number(res.count);
+			this.tableData = res.list;
 		},
 		/**
 		 * 更改用户请求
@@ -128,11 +123,11 @@ export default defineComponent({
 				.join('/');
 
 			const targetUserId = this.form.userId;
-			const res = await update_account(
+			const res = await userApi.update_account(
 				Object.assign(this.form, {targetUserId}, {mediaLimit: limits})
 			);
 
-			if (res.data.code === 0) {
+			if (res.code === 0) {
 				// 进入子组件调用刷新
 				(this.$refs as any).pager.reload_page();
 				this.dialogFormVisible = false;
@@ -169,9 +164,9 @@ export default defineComponent({
 				});
 				return;
 			}
-			const res = await register(data);
+			const res = await userApi.register(data);
 
-			if (res.data.code === 0) {
+			if (res.code === 0) {
 				this.add_dialog_close();
 				this.load_table();
 			}

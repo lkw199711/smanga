@@ -2,7 +2,7 @@
  * @Author: lkw199711 lkw199711@163.com
  * @Date: 2023-03-17 20:18:30
  * @LastEditors: lkw199711 lkw199711@163.com
- * @LastEditTime: 2023-07-29 01:24:03
+ * @LastEditTime: 2023-10-25 00:48:36
  * @FilePath: \smanga\src\api\tag.ts
  */
 import {ajax} from './index';
@@ -42,8 +42,8 @@ const tagApi = {
 		const resData: ResType = (await res).data;
 
 		return {
-			list: resData.list.data,
-			count: resData.list.total,
+			list: resData.list,
+			count: resData.count,
 		};
 	},
 

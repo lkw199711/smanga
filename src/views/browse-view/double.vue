@@ -41,7 +41,7 @@ import lastReadApi from '@/api/last-read';
 import { global_get, global_get_array, global_set } from '@/utils';
 import { ElMessage } from 'element-plus';
 import { config, userConfig } from '@/store';
-import { add_history } from '@/api/history';
+import historyApi from '@/api/history';
 import operationCover from './components/operation-cover.vue';
 import chapterListMenu from './components/chapter-list-menu.vue';
 import bookmark from './components/bookmark.vue';
@@ -182,7 +182,7 @@ async function reload_page(page = 1, addHistory = true) {
     lastReadApi.add(page, chapterInfo.chapterId, chapterInfo.mangaId);
   }
 
-  if (addHistory) add_history();
+  if (addHistory) historyApi.add_history();
   // 加载图片列表
   const res = await chapterApi.get_images(chapterInfo.chapterId);
 

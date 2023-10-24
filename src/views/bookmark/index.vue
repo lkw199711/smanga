@@ -21,7 +21,7 @@ import { ref, onMounted, onBeforeMount, computed } from 'vue';
 import chapter from '@/components/chapter.vue';
 import { get_poster } from '@/api';
 import store, { config, pageSizeConfig } from '@/store';
-import { get_bookmark } from '@/api/bookmark';
+import bookmarkApi from '@/api/bookmark';
 import chapterApi from '@/api/chapter';
 import { global_set, global_set_json } from '@/utils';
 import MediaPager from '@/components/media-pager.vue';
@@ -125,9 +125,9 @@ async function page_change(pageParams = 1, pageSize: number = defaultPageSize) {
   if (pageParams < 1) return;
   page.value = pageParams;
 
-  const res = await get_bookmark(pageParams, pageSize);
-  list.value = res.data.list.data;
-  count.value = res.data.list.total;
+  const res = await bookmarkApi.get_bookmark(pageParams, pageSize);
+  list.value = res.list;
+  count.value = res.count;
 
   // 为章节请求海报图片
   get_poster(list.value, 'bookmarkAwait', 'pageImage');
