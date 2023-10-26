@@ -2,7 +2,7 @@
  * @Author: lkw199711 lkw199711@163.com
  * @Date: 2023-03-17 20:18:30
  * @LastEditors: lkw199711 lkw199711@163.com
- * @LastEditTime: 2023-10-23 01:27:51
+ * @LastEditTime: 2023-10-26 20:11:37
  * @FilePath: \smanga\src\api\chapter.ts
  */
 import {userConfig} from '@/store';
@@ -12,29 +12,6 @@ import {global_get} from '@/utils';
 interface chapterGetRes extends ResType {
 	list: [];
 	count: number;
-}
-
-/**
- * 修改章节记录
- * @param data
- */
-export function update_chapter(data: any) {
-	return ajax({
-		url: 'chapter/update',
-		data,
-	});
-}
-
-/**
- * 删除章节记录
- * @param chapterId
- * @param deleteFile
- */
-export function delete_chapter(chapterId: any, deleteFile = false) {
-	return ajax({
-		url: 'chapter/delete',
-		data: {chapterId, deleteFile},
-	});
 }
 
 const chapterApi = {
@@ -97,6 +74,33 @@ const chapterApi = {
 			count: data.count,
 			state: data.state,
 		};
+	},
+
+	/**
+	 * 修改章节记录
+	 * @param data
+	 */
+	async update_chapter(data: any) {
+		const res= ajax({
+			url: 'chapter/update',
+			data,
+		});
+
+		return (await res).data;
+	},
+
+	/**
+	 * 删除章节记录
+	 * @param chapterId
+	 * @param deleteFile
+	 */
+	async delete_chapter(chapterId: any, deleteFile = false) {
+		const res= ajax({
+			url: 'chapter/delete',
+			data: {chapterId, deleteFile},
+		});
+
+		return (await res).data;
 	},
 };
 

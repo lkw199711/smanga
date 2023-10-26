@@ -2,7 +2,7 @@
  * @Author: lkw199711 lkw199711@163.com
  * @Date: 2023-09-14 07:47:45
  * @LastEditors: lkw199711 lkw199711@163.com
- * @LastEditTime: 2023-09-14 09:23:15
+ * @LastEditTime: 2023-10-26 20:13:34
  * @FilePath: /smanga/src/views/chapter-setting/index.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -81,7 +81,7 @@
 import { ref } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { Delete, Edit, Search } from '@element-plus/icons-vue'
-import chapterApi, { delete_chapter, update_chapter } from "@/api/chapter";
+import chapterApi from "@/api/chapter";
 import tablePager from "@/components/table-pager.vue";
 import i18n from '@/i18n';
 import { reactive } from 'vue';
@@ -164,8 +164,8 @@ async function do_update_chapter() {
     return false;
   }
 
-  const res = await update_chapter(form);
-  if (res.data.code === 0) {
+  const res = await chapterApi.update_chapter(form);
+  if (res.code === 0) {
     editChapterDialog.value = false;
     reload_table();
   }
@@ -180,9 +180,9 @@ async function do_delete_chapter(index: number, row: any) {
     t('chapterManage.confirm.title'), {
     type: 'warning'
   }).then(async () => {
-    const res = await delete_chapter(row.chapterId);
+    const res = await chapterApi.delete_chapter(row.chapterId);
 
-    if (res.data.code === 0) {
+    if (res.code === 0) {
       reload_table();
     }
   }).catch(() => {

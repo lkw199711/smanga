@@ -62,7 +62,7 @@ export default defineComponent({
 	methods: {
 		async do_login() {
 			const res = await userApi.login(this.form);
-			if (res.data.code === 0) {
+			if (res.code === 0) {
 				// 缓存用户信息
 				const resInfo = res.data.request;
 				Object.assign(userInfo, res.data.userInfo);

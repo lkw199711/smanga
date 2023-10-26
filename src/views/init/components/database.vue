@@ -36,7 +36,7 @@
 
 <script lang="ts" setup>
 import {reactive, onMounted, defineProps, defineEmits} from 'vue';
-import {database_check, database_set, database_get} from '@/api/login';
+import loginApi from '@/api/login';
 import {ElMessage} from 'element-plus';
 
 const emit = defineEmits(['update']);
@@ -51,11 +51,10 @@ const form = reactive({
 });
 
 onMounted(async () => {
-	const res = await database_get();
-	const data = res.data;
+	const res = await loginApi.database_get();
 
-	if (data.code === 0) {
-		Object.assign(form, data);
+	if (res.code === 0) {
+		Object.assign(form, res);
 	}
 
 	await check();
@@ -63,9 +62,8 @@ onMounted(async () => {
 
 async function check() {
 	if (!form_check()) return false;
-	const res = await database_check(form);
-	const code = res.data.code;
-	emit('update', code === 0);
+	const res = await loginApi.database_check(form);
+	emit('update', res.code === 0);
 }
 
 function form_check() {
@@ -91,9 +89,8 @@ function form_check() {
 
 async function setting() {
 	if (!form_check()) return false;
-	const res = await database_set(form);
-	const code = res.data.code;
-	emit('update', code === 0);
+	const res = await loginApi.database_set(form);
+	emit('update', res.code === 0);
 }
 </script>
 

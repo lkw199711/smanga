@@ -1,7 +1,7 @@
 import {Delete, Edit} from '@element-plus/icons-vue';
 import {defineComponent} from 'vue';
 import {ElMessage, ElMessageBox} from 'element-plus';
-import mangaApi, {update_manga, delete_manga} from '@/api/manga';
+import mangaApi from '@/api/manga';
 import tablePager from '@/components/table-pager.vue';
 import i18n from '@/i18n';
 import {Search} from '@element-plus/icons-vue';
@@ -109,9 +109,9 @@ export default defineComponent({
 				return false;
 			}
 
-			const res = await update_manga(this.form);
+			const res = await mangaApi.update_manga(this.form);
 
-			if (res.data.code === 0) {
+			if (res.code === 0) {
 				this.editMangaDialog = false;
 				this.reload_table();
 			}
@@ -129,9 +129,9 @@ export default defineComponent({
 				}
 			)
 				.then(async () => {
-					const res = await delete_manga(row.mangaId);
+					const res = await mangaApi.delete_manga(row.mangaId);
 
-					if (res.data.code === 0) {
+					if (res.code === 0) {
 						this.reload_table();
 					}
 				})

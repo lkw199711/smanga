@@ -134,6 +134,10 @@ async function get_setting() {
 		}
 		return false;
 	}
+
+	if (!res.request) {
+		return false;
+	}
 	
 	const configValue = JSON.parse(res.request);
 
