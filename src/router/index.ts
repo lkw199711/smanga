@@ -3,6 +3,26 @@ import Layout from '@/layout/index.vue';
 import browse from '@/layout/browse.vue';
 import layout from '@/layout/index.vue';
 
+import NProgress from 'nprogress';
+import 'nprogress/nprogress.css';
+NProgress.configure({
+	easing: 'ease', // 动画方式
+	speed: 500, // 递增进度条的速度
+	showSpinner: false, // 是否显示加载ico
+	trickleSpeed: 200, // 自动递增间隔
+	minimum: 0.3, // 初始化时的最小百分比,
+});
+
+// 打开进度条
+export const start = () => {
+	NProgress.start();
+};
+
+// 关闭进度条
+export const close = () => {
+	NProgress.done();
+};
+
 const routes: Array<RouteRecordRaw> = [
 	// 系统界面
 	{
@@ -21,292 +41,268 @@ const routes: Array<RouteRecordRaw> = [
 
 	// 媒体库界面
 	{
-		path: '/media-list',
-		redirect: '/media-list/index',
-		meta: {sidebar: true, title: 'mediaList', icon: 'Reading', view: 'list'},
+		path: '/media',
+		redirect: '/media-list',
+		meta: {
+			submenu: true,
+			sidebar: true,
+			title: 'media',
+			icon: 'media',
+			view: 'list',
+		},
 		component: Layout,
 		children: [
+			// 媒体库列表
 			{
-				path: 'index',
+				path: '/media-list',
 				name: 'media-list',
-				meta: {view: 'list'},
+				meta: {
+					sidebar: true,
+					title: 'mediaList',
+					icon: 'media-list',
+					view: 'list',
+				},
 				component: () => import('../views/media-list/index.vue'),
 			},
-		],
-	},
-	{
-		path: '/manga-list',
-		redirect: '/manga-list/index',
-		meta: {sidebar: false},
-		component: Layout,
-		children: [
+			// 漫画列表
 			{
-				path: 'index',
+				path: '/manga-list',
 				name: 'manga-list',
-				meta: {view: 'list'},
+				meta: {sidebar: false, view: 'list'},
 				component: () => import('../views/manga-list/index.vue'),
 			},
-		],
-	},
-	{
-		path: '/chapter-list',
-		redirect: '/chapter-list/index',
-		component: Layout,
-		meta: {sidebar: false},
-		children: [
+			// 章节列表
 			{
-				path: 'index',
+				path: '/chapter-list',
 				name: 'chapter-list',
-				meta: {view: 'list'},
+				meta: {sidebar: false, view: 'list'},
 				component: () => import('../views/chapter-list/index.vue'),
 			},
-		],
-	},
-	{
-		path: '/history',
-		redirect: '/history/index',
-		meta: {sidebar: true, title: 'history', icon: 'Clock'},
-		component: Layout,
-		children: [
+			// 历史记录
 			{
-				path: 'index',
+				path: '/history',
 				name: 'history',
-				meta: {view: 'list'},
+				meta: {sidebar: true, title: 'history', icon: 'time2', view: 'list'},
 				component: () => import('../views/history/index.vue'),
 			},
-		],
-	},
-	{
-		path: '/bookmark',
-		redirect: '/bookmark/index',
-		meta: {sidebar: true, title: 'bookmark', icon: 'Collection'},
-		component: Layout,
-		children: [
+			// 书签列表
 			{
-				path: 'index',
+				path: '/bookmark',
 				name: 'bookmark',
-				meta: {view: 'list'},
+				meta: {
+					sidebar: true,
+					title: 'bookmark',
+					icon: 'bookmark',
+					view: 'list',
+				},
 				component: () => import('../views/bookmark/index.vue'),
 			},
-		],
-	},
-	{
-		path: '/collect',
-		redirect: '/collect/index',
-		meta: {sidebar: true, title: 'collect', icon: 'Star'},
-		component: Layout,
-		children: [
+			// 收藏列表
 			{
-				path: 'index',
+				path: '/collect',
 				name: 'collect',
-				meta: {view: 'list'},
+				meta: {sidebar: true, title: 'collect', icon: 'star', view: 'list'},
 				component: () => import('../views/collect/index.vue'),
 			},
-		],
-	},
-	{
-		path: '/tag-list',
-		redirect: '/tag-list/index',
-		meta: {sidebar: true, title: 'tagList', icon: 'Ticket'},
-		component: Layout,
-		children: [
+			// 标签列表
 			{
-				path: 'index',
+				path: '/tag-list',
 				name: 'tag-list',
-				meta: {view: 'list'},
+				meta: {sidebar: true, title: 'tagList', icon: 'tag', view: 'list'},
 				component: () => import('../views/tag-list/index.vue'),
 			},
-		],
-	},
-	{
-		path: '/search',
-		redirect: '/search/index',
-		meta: {sidebar: true, title: 'search', icon: 'Search'},
-		component: Layout,
-		children: [
+			// 搜索界面
 			{
-				path: 'index',
+				path: '/search',
 				name: 'search',
-				meta: {view: 'search'},
+				meta: {sidebar: true, title: 'search', icon: 'search', view: 'search'},
 				component: () => import('../views/search/index.vue'),
 			},
-		],
-	},
-	{
-		path: '/manga-info',
-		redirect: '/manga-info/index',
-		meta: {sidebar: false, title: 'manga-info'},
-		component: Layout,
-		children: [
+			// 漫画信息
 			{
-				path: 'index',
+				path: '/manga-info',
 				name: 'manga-info',
-				meta: {view: 'list'},
+				meta: {sidebar: false, title: 'manga-info', view: 'list'},
 				component: () => import('../views/manga-info/index.vue'),
 			},
 		],
 	},
 
-	// 设置界面
+	// 管理界面
 	{
-		path: '/account',
-		redirect: '/account/index',
-		meta: {sidebar: true, title: 'account', icon: 'Stamp'},
+		path: '/manage',
+		redirect: '/account',
+		meta: {
+			submenu: true,
+			sidebar: true,
+			title: 'manage',
+			icon: 'manage',
+			view: 'setting',
+		},
 		component: Layout,
 		children: [
+			// 用户设置
 			{
-				path: 'index',
+				path: '/account',
 				name: 'account',
-				meta: {view: 'setting'},
+				meta: {
+					sidebar: true,
+					title: 'account',
+					icon: 'person',
+					view: 'setting',
+				},
 				component: () => import('../views/account/index.vue'),
 			},
-		],
-	},
-	{
-		path: '/media-setting',
-		redirect: '/media-setting/index',
-		meta: {sidebar: true, title: 'mediaManage', icon: 'Reading'},
-		component: Layout,
-		children: [
+			// 媒体库设置
 			{
-				path: 'index',
+				path: '/media-setting',
 				name: 'media-setting',
-				meta: {view: 'setting'},
+				meta: {
+					sidebar: true,
+					title: 'mediaManage',
+					icon: 'media-manage',
+					view: 'setting',
+				},
 				component: () => import('../views/media-setting/index.vue'),
 			},
-		],
-	},
-	{
-		path: '/manga-setting',
-		redirect: '/manga-setting/index',
-		meta: {sidebar: true, title: 'mangaManage', icon: 'Notebook'},
-		component: Layout,
-		children: [
+			// 漫画设置
 			{
-				path: 'index',
+				path: '/manga-setting',
 				name: 'manga-setting',
-				meta: {view: 'setting'},
+				meta: {
+					sidebar: true,
+					title: 'mangaManage',
+					icon: 'manga-manage',
+					view: 'setting',
+				},
 				component: () => import('../views/manga-setting/index.vue'),
 			},
-		],
-	},
-	{
-		path: '/path-setting',
-		redirect: '/path-setting/index',
-		meta: {sidebar: true, title: 'pathManage', icon: 'FolderOpened'},
-		component: Layout,
-		children: [
+			// 路径管理
 			{
-				path: 'index',
+				path: '/path-setting',
 				name: 'path-setting',
-				meta: {view: 'setting'},
+				meta: {
+					sidebar: true,
+					title: 'pathManage',
+					icon: 'folder',
+					view: 'setting',
+				},
 				component: () => import('../views/path-setting/index.vue'),
 			},
-		],
-	},
-	{
-		path: '/chapter-setting',
-		redirect: '/chapter-setting/index',
-		meta: {sidebar: true, title: 'chapterManage', icon: 'Tickets'},
-		component: Layout,
-		children: [
+			// 章节管理
 			{
-				path: 'index',
+				path: '/chapter-setting',
 				name: 'chapter-setting',
-				meta: {view: 'setting'},
+				meta: {
+					sidebar: true,
+					title: 'chapterManage',
+					icon: 'chapter-manage',
+					view: 'setting',
+				},
 				component: () => import('../views/chapter-setting/index.vue'),
 			},
-		],
-	},
-	{
-		path: '/bookmark-setting',
-		redirect: '/bookmark-setting/index',
-		meta: {sidebar: true, title: 'bookmarkManage', icon: 'Collection'},
-		component: Layout,
-		children: [
+			// 书签管理
 			{
-				path: 'index',
+				path: '/bookmark-setting',
 				name: 'bookmark-setting',
-				meta: {view: 'setting'},
+				meta: {
+					sidebar: true,
+					title: 'bookmarkManage',
+					icon: 'bookmark',
+					view: 'setting',
+				},
 				component: () => import('../views/bookmark-setting/index.vue'),
 			},
-		],
-	},
-	{
-		path: '/tag-setting',
-		redirect: '/tag-setting/index',
-		meta: {sidebar: true, title: 'tagManage', icon: 'Ticket'},
-		component: Layout,
-		children: [
+			// 标签管理
 			{
-				path: 'index',
+				path: '/tag-setting',
 				name: 'tag-setting',
-				meta: {view: 'setting'},
+				meta: {
+					sidebar: true,
+					title: 'tagManage',
+					icon: 'tag',
+					view: 'setting',
+				},
 				component: () => import('../views/tag-setting/index.vue'),
 			},
-		],
-	},
-	{
-		path: '/compress-setting',
-		redirect: '/compress-setting/index',
-		meta: {sidebar: true, title: 'compressManage', icon: 'Switch'},
-		component: Layout,
-		children: [
+			// 解压管理
 			{
-				path: 'index',
+				path: '/compress-setting',
 				name: 'compress-setting',
-				meta: {view: 'setting'},
+				meta: {
+					sidebar: true,
+					title: 'compressManage',
+					icon: 'comporess',
+					view: 'setting',
+				},
 				component: () => import('../views/compress-setting/index.vue'),
 			},
 		],
 	},
+
+	// 用户与服务器设置
 	{
-		path: '/user-setting',
-		redirect: '/user-setting/index',
-		meta: {sidebar: true, title: 'userSetting', icon: 'User'},
+		path: '/setting',
+		redirect: '/user-setting',
+		meta: {
+			submenu: true,
+			sidebar: true,
+			title: 'setting',
+			icon: 'setting',
+			view: 'default',
+		},
 		component: Layout,
 		children: [
+			// 用户设置
 			{
-				path: 'index',
+				path: '/user-setting',
 				name: 'user-setting',
-				meta: {view: 'default'},
+				meta: {
+					sidebar: true,
+					title: 'userSetting',
+					icon: 'person9',
+					view: 'default',
+				},
 				component: () => import('../views/user-setting/index.vue'),
 			},
-		],
-	},
-	{
-		path: '/serve-setting',
-		redirect: '/serve-setting/index',
-		meta: {sidebar: true, title: 'serveSetting', icon: 'Setting'},
-		component: Layout,
-		children: [
+			// 服务器设置
 			{
-				path: 'index',
+				path: '/serve-setting',
 				name: 'serve-setting',
-				meta: {view: 'default'},
+				meta: {
+					sidebar: true,
+					title: 'serveSetting',
+					icon: 'shezhi',
+					view: 'default',
+				},
 				component: () => import('../views/serve-setting/index.vue'),
+			},
+			{
+				path: '/log',
+				name: 'log',
+				meta: {
+					sidebar: true,
+					title: 'log',
+					icon: 'log',
+					view: 'searchOnly',
+				},
+				component: () => import('../views/log/index.vue'),
+			},
+			// wiki
+			{
+				path: '/wiki',
+				name: 'wiki',
+				component: () => import('../views/wiki/index.vue'),
+				meta: {sidebar: true, title: 'wiki', icon: 'wiki'},
 			},
 		],
 	},
+
 	{
 		path: '/init',
 		name: 'init',
 		meta: {sidebar: false, title: 'userSetting'},
 		component: () => import('../views/init/index.vue'),
-	},
-	{
-		path: '/log',
-		redirect: '/log/index',
-		meta: {sidebar: true, title: 'log', icon: 'Document'},
-		component: Layout,
-		children: [
-			{
-				path: 'index',
-				name: 'log',
-				meta: {view: 'searchOnly'},
-				component: () => import('../views/log/index.vue'),
-			},
-		],
 	},
 
 	// 浏览界面
@@ -344,21 +340,6 @@ const routes: Array<RouteRecordRaw> = [
 		],
 	},
 
-	// wiki
-	{
-		path: '/wiki',
-		redirect: '/wiki/index',
-		component: layout,
-		meta: {sidebar: true, title: 'wiki', icon: 'DataAnalysis'},
-		children: [
-			{
-				name: 'wiki',
-				path: 'index',
-				component: () => import('../views/wiki/index.vue'),
-			},
-		],
-	},
-
 	// 测试界面
 	{
 		path: '/test',
@@ -384,6 +365,14 @@ const routes: Array<RouteRecordRaw> = [
 const router = createRouter({
 	history: createWebHashHistory(),
 	routes,
+});
+
+router.beforeEach((pre, next) => {
+	start();
+});
+
+router.afterEach(() => {
+	close();
 });
 
 export default router;

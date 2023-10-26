@@ -11,12 +11,12 @@
     <div class="double-page-img-box touch-dom">
       <bookmark :page="page" :chapterId="chapterInfo.chapterId" />
       <template v-if="directionDesc">
-        <img class="double-page-img" :src="imgSrc2" alt="接收图片2" v-if="imgSrc2" />
-        <img class="double-page-img" :src="imgSrc1" alt="接收图片1" />
+        <img class="double-page-img" :src="imgSrc2" :alt="t('browse.imgLoadError')" v-if="imgSrc2" />
+        <img class="double-page-img" :src="imgSrc1" :alt="t('browse.imgLoadError')" />
       </template>
       <template v-else>
-        <img class="double-page-img" :src="imgSrc1" alt="接收图片1" />
-        <img class="double-page-img" :src="imgSrc2" alt="接收图片1" v-if="imgSrc2" />
+        <img class="double-page-img" :src="imgSrc1" :alt="t('browse.imgLoadError')" />
+        <img class="double-page-img" :src="imgSrc2" :alt="t('browse.imgLoadError')" v-if="imgSrc2" />
       </template>
 
       <operation-cover @before="beforePage" @next="nextPage" @switch-menu="switch_menu" @switch-footer="switch_footer" />

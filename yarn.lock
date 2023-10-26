@@ -1220,6 +1220,11 @@
   "resolved" "https://registry.npmmirror.com/@types/normalize-package-data/download/@types/normalize-package-data-2.4.1.tgz"
   "version" "2.4.1"
 
+"@types/nprogress@^0.2.1":
+  "integrity" "sha512-TYuyVnp+nOnimgdOydDIDYIxv2kSeuJZw4tF0p/KG7hpzcMF1WkHaREwM8O4blqfT1F7rq0nht6Ko2KVUfWzBA=="
+  "resolved" "https://registry.npmmirror.com/@types/nprogress/-/nprogress-0.2.1.tgz"
+  "version" "0.2.1"
+
 "@types/parse-json@^4.0.0":
   "integrity" "sha512-//oorEZjL6sbPcKUaCdIGlIUeH26mgzimjBB77G6XRgnDl/L5wOnpyBGRe/Mmf5CVW3PwEBE1NjiMZ/ssFh4wA=="
   "resolved" "https://registry.npmmirror.com/@types/parse-json/-/parse-json-4.0.0.tgz"
@@ -7006,6 +7011,11 @@
   "version" "4.0.1"
   dependencies:
     "path-key" "^3.0.0"
+
+"nprogress@^0.2.0":
+  "integrity" "sha512-I19aIingLgR1fmhftnbWWO3dXc0hSxqHQHQb3H8m+K3TnEn/iSeTZZOyvKXWqQESMwuUVnatlCnZdLBZZt2VSA=="
+  "resolved" "https://registry.npmmirror.com/nprogress/-/nprogress-0.2.0.tgz"
+  "version" "0.2.0"
 
 "nrm@^1.2.6":
   "integrity" "sha512-p59wSVciFLTCB0754fNV/IHN6cvuvT4VNTxkSp+DZhhPUQ3QCR4WECd+6X1uTOKDajouX1Z/8FSuvozApH/bAQ=="

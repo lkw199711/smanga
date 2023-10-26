@@ -9,7 +9,7 @@
     <!--图片容器-->
     <div class="single-page-img-box touch-dom">
       <bookmark :page="page" :chapterId="chapterInfo.chapterId" />
-      <img class="single-page-img" :src="imgSrc" alt="接收图片" @click.stop="switch_menu" />
+      <img class="single-page-img" :src="imgSrc" :alt="t('browse.imgLoadError')" @click.stop="switch_menu" />
 
       <operation-cover @before="beforePage" @next="nextPage" @switch-menu="switch_menu"
         @switch-footer="switch_footer"></operation-cover>
