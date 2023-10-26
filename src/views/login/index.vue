@@ -65,7 +65,7 @@ export default defineComponent({
 			if (res.code === 0) {
 				// 缓存用户信息
 				const resInfo = res.request;
-				Object.assign(userInfo, res.data.userInfo);
+				Object.assign(userInfo, resInfo);
 				Cookies.set('userName', resInfo.userName);
 				Cookies.set('userId', resInfo.userId);
 				Cookies.set('editMedia', resInfo.editMedia);
