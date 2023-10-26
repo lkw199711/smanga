@@ -30,7 +30,6 @@ import {
 	ref,
 } from 'vue';
 import { useRoute } from 'vue-router';
-import { get_poster } from '@/api';
 import mangaApi from '@/api/manga';
 import store, { config, userConfig, pageSizeConfig } from '@/store';
 import { global_get } from '@/utils';
@@ -83,15 +82,10 @@ watch(
 );
 
 onMounted(() => {
-	store.commit('switch_await', { running: 'mangaAwait', bool: true });
 	reload();
 	route.params.clear = '';
 
 	touch_page_change();
-});
-
-onBeforeUnmount(() => {
-	store.commit('switch_await', { running: 'mangaAwait', bool: false });
 });
 
 onActivated(() => {
@@ -168,12 +162,10 @@ async function page_change(
 	const res = await mangaApi.get(mediaId.value, page.value, pageSize, userConfig.order);
 	list.value = res.list;
 	count.value = res.count;
-
-	// 为漫画请求海报图片
-	get_poster(list.value, 'mangaAwait');
 }
 
 function reload() {
+	list.value = [];
 	page_change();
 }
 

@@ -36,7 +36,7 @@ export default { name: 'browse-top' };
 import { ref, computed } from 'vue';
 import logo from '@/layout/components/logo.vue';
 import { global_get, global_set_json, global_get_array } from '@/utils';
-import { add_bookmark, delete_bookmark, get_bookmark } from '@/api/bookmark';
+import bookmarkApi from '@/api/bookmark';
 import { cache, config, globalData } from '@/store';
 import i18n from '@/i18n';
 import { useRoute, useRouter } from 'vue-router';
@@ -75,7 +75,7 @@ let chapterName = computed(() => {
 async function handleSelect(key: string) {
 	if (key === 'addBookmark') {
 		if (config.bookmarkShow) {
-			await delete_bookmark(cache.bookmarkId);
+			await bookmarkApi.delete_and_update(cache.bookmarkId);
 			return;
 		}
 		
@@ -89,11 +89,11 @@ async function handleSelect(key: string) {
 			page = Math.ceil(page / 2);
 		}
 
-		await add_bookmark(page);
+		await bookmarkApi.add_bookmark(page);
 
-		const res = await get_bookmark();
+		const res = await bookmarkApi.get_bookmark();
 
-		global_set_json('bookmarkList', res.data.list);
+		global_set_json('bookmarkList', res.list);
 
 		return;
 	}

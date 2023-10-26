@@ -2,7 +2,7 @@
  * @Author: lkw199711 lkw199711@163.com
  * @Date: 2023-07-29 01:17:01
  * @LastEditors: lkw199711 lkw199711@163.com
- * @LastEditTime: 2023-10-22 15:51:58
+ * @LastEditTime: 2023-10-26 04:21:41
  * @FilePath: \smanga\src\views\tag-list\index.vue
 -->
 <template>
@@ -37,7 +37,6 @@
 
 <script lang="ts" setup>
 import { onMounted, ref, computed, watch } from 'vue';
-import { get_poster } from '@/api';
 import store, { config, userConfig, pageSizeConfig } from '@/store';
 import tagApi, { tagItemType } from '@/api/tag';
 import mangaApi from '@/api/manga';
@@ -151,9 +150,6 @@ async function page_change(
     const res = await mangaApi.get_by_tags(tagIds.value, page.value, pageSize, userConfig.order);
     mangaList.value = res.list;
     count.value = res.count;
-
-    // 为漫画请求海报图片
-    get_poster(mangaList.value, 'mangaAwait');
 }
 </script>
 

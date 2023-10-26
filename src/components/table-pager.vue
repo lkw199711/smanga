@@ -1,9 +1,10 @@
 <template>
   <div class="table-pager">
     <!--分页-->
-    <el-pagination class="pagination" v-model:current-page="pagerPage" v-model:page-size="pageSize" :default-current-page="1"
-      :page-sizes="pageSizes" :pager-count="pageCount" :small="pageSmall" :disabled="disabled" :background="background"
-      :layout="pageLayout" :total="props.count" @size-change="size_change" @current-change="page_change" />
+    <el-pagination class="pagination" v-model:current-page="pagerPage" v-model:page-size="pageSize"
+      :default-current-page="1" :page-sizes="pageSizes" :pager-count="pageCount" :small="pageSmall" :disabled="disabled"
+      :background="background" :layout="pageLayout" :total="props.count" @size-change="size_change"
+      @current-change="page_change" />
   </div>
 </template>
 
@@ -21,7 +22,7 @@ const pageSizes = ref([10, 20, 30, 40]);
 // 传值
 const props = defineProps(['page', 'count', 'pageSizeConfig']);
 const emit = defineEmits(['pageChange']);
-defineExpose({ page_change });
+defineExpose({ page_change, reload_page });
 
 let pagerPage = computed(() => {
   return props.page;

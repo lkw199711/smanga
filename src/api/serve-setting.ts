@@ -2,7 +2,7 @@
  * @Author: lkw199711 lkw199711@163.com
  * @Date: 2023-08-26 02:33:27
  * @LastEditors: lkw199711 lkw199711@163.com
- * @LastEditTime: 2023-08-26 04:47:54
+ * @LastEditTime: 2023-10-24 21:24:36
  * @FilePath: /smanga/src/api/serve-setting.ts
  */
 import {ajax} from './index';
@@ -22,7 +22,7 @@ const serveSettingApi = {
 			url: 'serve/get',
 		});
 
-		return (await res).data;
+		return (await res).data.request;
 	},
 
 	/**

@@ -246,7 +246,7 @@ import theme from '@/store/theme';
 import languages from '@/store/language';
 import { pageSizeConfig } from '@/store';
 import { ref } from 'vue';
-import { set_user_config } from '@/api/account'
+import userApi from '@/api/account'
 import { Cookies } from '@/utils';
 import { useRouter } from 'vue-router';
 const router = useRouter();
@@ -285,7 +285,7 @@ function submit() {
 	const userName = Cookies.get('userName');
 	const configValue = JSON.stringify({ userConfig, pageSizeConfig });
 
-	set_user_config(userName, configValue);
+	userApi.set_user_config(userName, configValue);
 
 }
 

@@ -19,9 +19,8 @@
 <script setup lang="ts">
 import { ref, onMounted, onBeforeMount, computed } from 'vue';
 import chapter from '@/components/chapter.vue';
-import { get_poster } from '@/api';
 import store, { config, pageSizeConfig } from '@/store';
-import { get_bookmark } from '@/api/bookmark';
+import bookmarkApi from '@/api/bookmark';
 import chapterApi from '@/api/chapter';
 import { global_set, global_set_json } from '@/utils';
 import MediaPager from '@/components/media-pager.vue';
@@ -30,6 +29,7 @@ import { chapterInfoType } from '@/type/chapter';
 import { useRoute, useRouter } from 'vue-router';
 import { pageSizeConfigType, screenType } from '@/type/store';
 import { chapterPageSize } from '@/store/page-size';
+import imageApi from '@/api/image';
 
 let pageSizes: number[] = [];
 let defaultPageSize = 10;
@@ -125,12 +125,9 @@ async function page_change(pageParams = 1, pageSize: number = defaultPageSize) {
   if (pageParams < 1) return;
   page.value = pageParams;
 
-  const res = await get_bookmark(pageParams, pageSize);
-  list.value = res.data.list.data;
-  count.value = res.data.list.total;
-
-  // 为章节请求海报图片
-  get_poster(list.value, 'bookmarkAwait', 'pageImage');
+  const res = await bookmarkApi.get_bookmark(pageParams, pageSize);
+  list.value = res.list;
+  count.value = res.count;
 }
 
 /**
@@ -191,14 +188,9 @@ function touch_page_change() {
 }
 
 onMounted(() => {
-  store.commit('switch_await', { running: 'bookmarkAwait', bool: true });
   page_change(1);
   touch_page_change();
 
-})
-
-onBeforeMount(() => {
-  store.commit('switch_await', { running: 'bookmarkAwait', bool: false });
 })
 </script>
 

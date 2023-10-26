@@ -19,10 +19,9 @@
 <script setup lang="ts">
 import { ref, onMounted, onBeforeMount } from 'vue';
 import chapter from '@/components/chapter.vue';
-import { get_poster } from '@/api';
 import store, { config } from '@/store';
 import { global_set, global_set_json } from '@/utils';
-import { get_history } from '@/api/history';
+import historyApi from '@/api/history';
 import chapterApi from '@/api/chapter';
 import MediaPager from '@/components/media-pager.vue';
 import RightSidebar from './components/right-sidebar.vue';
@@ -121,13 +120,10 @@ async function page_change(pageParams = 1, pageSize = defaultPageSize) {
   if (pageParams < 1) return;
   page.value = pageParams;
 
-  const res = await get_history(pageParams, pageSize);
+  const res = await historyApi.get_history(pageParams, pageSize);
 
-  list.value = res.data.list.data;
-  count.value = res.data.list.total;
-
-  // 为章节请求海报图片
-  get_poster(list.value, 'chapterAwait', 'chapterCover');
+  list.value = res.list;
+  count.value = res.count;
 }
 
 /**
@@ -188,13 +184,8 @@ function touch_page_change() {
 }
 
 onMounted(() => {
-  store.commit('switch_await', { running: 'chapterAwait', bool: true });
   page_change();
   touch_page_change();
-})
-
-onBeforeMount(() => {
-  store.commit('switch_await', { running: 'chapterAwait', bool: false });
 })
 </script>
 

@@ -20,12 +20,11 @@
 export default { name: 'media-list' };
 </script>
 <script setup lang="ts">
-import { ref,onMounted, onBeforeUnmount } from 'vue';
-import { get_media } from '@/api/media';
+import { ref, onMounted, onBeforeUnmount } from 'vue';
+import mediaApi from '@/api/media';
 import { global_set } from '@/utils';
 import store, { config } from '@/store';
 import lastReadApi from '@/api/last-read';
-import { get_poster } from '@/api';
 import manga from '@/components/manga.vue';
 import { useRoute, useRouter } from 'vue-router';
 import { mediaType } from '@/type/media';
@@ -41,8 +40,8 @@ const lastReadList = ref<lastReadType[]>([]);
  * @return {*}
  */
 async function load_media() {
-	const res = await get_media(1, 10000);
-	mediaList.value = res.data.list.data;
+	const res = await mediaApi.get(1, 10000);
+	mediaList.value = res.list;
 }
 
 /**
@@ -75,16 +74,7 @@ function context_menu() {
 onMounted(async () => {
 	lastReadList.value = await lastReadApi.get();
 
-	// 为漫画请求海报图片
-	get_poster(lastReadList.value, 'mangaAwait');
-
-	store.commit('switch_await', { running: 'mangaAwait', bool: true });
-
 	load_media();
-})
-
-onBeforeUnmount(() => {
-	store.commit('switch_await', { running: 'mangaAwait', bool: false });
 })
 
 </script>

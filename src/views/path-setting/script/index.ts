@@ -1,7 +1,7 @@
 import {Delete, Edit, Refresh, RefreshRight} from '@element-plus/icons-vue';
 import {defineComponent} from 'vue';
 import {ElMessageBox} from 'element-plus';
-import {delete_path, get_path, scan_path, rescan_path} from '@/api/path';
+import pathApi from '@/api/path';
 import tablePager from '@/components/table-pager.vue';
 import i18n from '@/i18n';
 
@@ -41,9 +41,9 @@ export default defineComponent({
 		 * 加载表格数据
 		 */
 		async load_table(page = 1, pageSize = 10) {
-			const res = await get_path(0, page, pageSize);
-			this.count = Number(res.data.list.total);
-			this.tableData = res.data.list.data;
+			const res = await pathApi.get_path(0, page, pageSize);
+			this.count = Number(res.count);
+			this.tableData = res.list;
 		},
 		/**
 		 * 重载数据 页码不变
@@ -59,9 +59,9 @@ export default defineComponent({
 				type: 'warning',
 			})
 				.then(async () => {
-					const res = await delete_path(row.pathId);
+					const res = await pathApi.delete_path(row.pathId);
 
-					if (res.data.code === 0) {
+					if (res.code === 0) {
 						this.reload_table();
 					}
 				})
@@ -78,9 +78,13 @@ export default defineComponent({
 				type: 'warning',
 			})
 				.then(async () => {
-					const res = await rescan_path(row.mediaId, row.path, row.pathId);
+					const res = await pathApi.rescan_path(
+						row.mediaId,
+						row.path,
+						row.pathId
+					);
 
-					if (res.data.code === 0) {
+					if (res.code === 0) {
 						this.reload_table();
 					}
 				})
@@ -93,9 +97,9 @@ export default defineComponent({
 		 * @param row
 		 */
 		async scan_path(index: number, row: any) {
-			const res = await scan_path(row.mediaId, row.path, row.pathId);
+			const res = await pathApi.scan_path(row.mediaId, row.path, row.pathId);
 
-			if (res.data.code === 0) {
+			if (res.code === 0) {
 				this.reload_table();
 			}
 		},

@@ -62,7 +62,7 @@
 import {defineComponent} from 'vue'
 import {ElMessageBox} from "element-plus";
 import {Delete, Edit, Plus} from '@element-plus/icons-vue'
-import {delete_compress, get_compress} from "@/api/compress";
+import compressApi from "@/api/compress";
 import tablePager from "@/components/table-pager.vue";
 import i18n from '@/i18n';
 
@@ -109,9 +109,9 @@ export default defineComponent({
           t('compressManage.confirm.title'), {
             type: 'warning'
           }).then(async () => {
-        const res = await delete_compress(val.compressId);
+        const res = await compressApi.delete_compress(val.compressId);
 
-        if (res.data.code === 0) {
+        if (res.code === 0) {
           this.reload_table();
         }
       }).catch(() => {
@@ -123,9 +123,9 @@ export default defineComponent({
      * @returns {Promise<void>}
      */
     async load_table(page = 1, pageSize = 10) {
-      const res = await get_compress(page, pageSize);
-      this.count = Number(res.data.list.total);
-      this.tableData = res.data.list.data;
+      const res = await compressApi.get_compress(page, pageSize);
+      this.count = Number(res.count);
+      this.tableData = res.list;
     },
     /**
      * 重载数据 页码不变
