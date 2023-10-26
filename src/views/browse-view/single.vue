@@ -2,7 +2,7 @@
  * @Author: lkw199711 lkw199711@163.com
  * @Date: 2023-03-17 20:18:31
  * @LastEditors: lkw199711 lkw199711@163.com
- * @LastEditTime: 2023-10-25 02:04:34
+ * @LastEditTime: 2023-10-26 17:54:43
  * @FilePath: \smanga\src\views\browse-view\single.vue
 -->
 <template>
@@ -37,7 +37,6 @@
 
 <script setup lang='ts'>
 import { ref, reactive, onMounted, watch, computed } from 'vue';
-import { get_image_blob } from '@/api';
 import lastReadApi from '@/api/last-read';
 import { global_get, global_get_array, global_set } from '@/utils';
 import { ElMessage } from 'element-plus';
@@ -53,6 +52,7 @@ import pageNumber from './components/page-number.vue';
 import i18n from '@/i18n';
 import { useRoute, useRouter } from 'vue-router';
 import { chapterInfoType } from '@/type/chapter';
+import imageApi from '@/api/image';
 const { t } = i18n.global;
 
 const route = useRoute();
@@ -127,10 +127,10 @@ async function page_change(pageParams: number) {
     return;
   }
 
-  const res: any = await get_image_blob(pageImage);
-  imgSrc.value = res.data;
+  const res: any = await imageApi.get(pageImage);
+  imgSrc.value = res;
 
-  imgPathFiles.value[pageParams - 1] = res.data;
+  imgPathFiles.value[pageParams - 1] = res;
 }
 
 /**
@@ -151,6 +151,8 @@ function nextPage() {
  * 重载页面
  */
 async function reload_page(page = 1, addHistory = true) {
+  // 清空之前图片内容
+  imgPathFiles.value = [];
   // 初始化chapterInfo
   if (!chapterInfo.chapterId) {
     const chapterId = Number(route.query.chapterId);

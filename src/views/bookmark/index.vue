@@ -19,7 +19,6 @@
 <script setup lang="ts">
 import { ref, onMounted, onBeforeMount, computed } from 'vue';
 import chapter from '@/components/chapter.vue';
-import { get_poster } from '@/api';
 import store, { config, pageSizeConfig } from '@/store';
 import bookmarkApi from '@/api/bookmark';
 import chapterApi from '@/api/chapter';
@@ -30,6 +29,7 @@ import { chapterInfoType } from '@/type/chapter';
 import { useRoute, useRouter } from 'vue-router';
 import { pageSizeConfigType, screenType } from '@/type/store';
 import { chapterPageSize } from '@/store/page-size';
+import imageApi from '@/api/image';
 
 let pageSizes: number[] = [];
 let defaultPageSize = 10;
@@ -128,9 +128,6 @@ async function page_change(pageParams = 1, pageSize: number = defaultPageSize) {
   const res = await bookmarkApi.get_bookmark(pageParams, pageSize);
   list.value = res.list;
   count.value = res.count;
-
-  // 为章节请求海报图片
-  get_poster(list.value, 'bookmarkAwait', 'pageImage');
 }
 
 /**
@@ -191,14 +188,9 @@ function touch_page_change() {
 }
 
 onMounted(() => {
-  store.commit('switch_await', { running: 'bookmarkAwait', bool: true });
   page_change(1);
   touch_page_change();
 
-})
-
-onBeforeMount(() => {
-  store.commit('switch_await', { running: 'bookmarkAwait', bool: false });
 })
 </script>
 

@@ -36,7 +36,6 @@
 
 <script setup lang='ts'>
 import { ref, reactive, onMounted, watch, computed } from 'vue';
-import { get_image_blob } from '@/api';
 import lastReadApi from '@/api/last-read';
 import { global_get, global_get_array, global_set } from '@/utils';
 import { ElMessage } from 'element-plus';
@@ -52,6 +51,7 @@ import chapterApi from '@/api/chapter';
 import i18n from '@/i18n';
 import { useRoute, useRouter } from 'vue-router';
 import { chapterInfoType } from '@/type/chapter';
+import imageApi from '@/api/image';
 const { t } = i18n.global;
 
 const route = useRoute();
@@ -120,6 +120,9 @@ watch(
  * @param page
  */
 async function page_change(pageParams: number) {
+  // 清空之前图片内容
+  imgPathFiles.value = [];
+  
   page.value = pageParams;
   const index = (pageParams - 1) * 2;
   const pageImage = imgPathList.value[index];
@@ -134,15 +137,15 @@ async function page_change(pageParams: number) {
   }
 
   // 加载第一张图片
-  const res1: any = await get_image_blob(imgPathList.value[index]);
-  imgSrc1.value = res1.data;
-  imgPathFiles.value[index] = res1.data;
+  const res1: any = await imageApi.get(imgPathList.value[index]);
+  imgSrc1.value = res1;
+  imgPathFiles.value[index] = res1;
 
   // 加载第二张图片
   if (index + 1 < imgPathList.value.length) {
-    const res2: any = await get_image_blob(imgPathList.value[index + 1]);
-    imgSrc2.value = res2.data;
-    imgPathFiles.value[index + 1] = res2.data;
+    const res2: any = await imageApi.get(imgPathList.value[index + 1]);
+    imgSrc2.value = res2;
+    imgPathFiles.value[index + 1] = res2;
   } else {
     imgSrc2.value = '';
   }

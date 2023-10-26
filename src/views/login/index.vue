@@ -31,7 +31,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { login } from '@/api/account';
+import userApi from '@/api/account';
 import { Cookies } from '@/utils';
 
 import { power, userInfo } from '@/store';
@@ -61,7 +61,7 @@ export default defineComponent({
 	// 方法
 	methods: {
 		async do_login() {
-			const res = await login(this.form);
+			const res = await userApi.login(this.form);
 			if (res.data.code === 0) {
 				// 缓存用户信息
 				const resInfo = res.data.request;

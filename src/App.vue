@@ -134,8 +134,8 @@ async function get_setting() {
 		}
 		return false;
 	}
-
-	const configValue = JSON.parse(res.data.request);
+	
+	const configValue = JSON.parse(res.request);
 
 	// 使用数据库用户设置，覆盖当前设置
 	Object.assign(userConfig, configValue.userConfig);

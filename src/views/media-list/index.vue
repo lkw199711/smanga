@@ -25,7 +25,6 @@ import mediaApi from '@/api/media';
 import { global_set } from '@/utils';
 import store, { config } from '@/store';
 import lastReadApi from '@/api/last-read';
-import { get_poster } from '@/api';
 import manga from '@/components/manga.vue';
 import { useRoute, useRouter } from 'vue-router';
 import { mediaType } from '@/type/media';
@@ -75,16 +74,7 @@ function context_menu() {
 onMounted(async () => {
 	lastReadList.value = await lastReadApi.get();
 
-	// 为漫画请求海报图片
-	get_poster(lastReadList.value, 'mangaAwait');
-
-	store.commit('switch_await', { running: 'mangaAwait', bool: true });
-
 	load_media();
-})
-
-onBeforeUnmount(() => {
-	store.commit('switch_await', { running: 'mangaAwait', bool: false });
 })
 
 </script>

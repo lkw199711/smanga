@@ -38,5 +38,7 @@ module.exports = {
 		'@typescript-eslint/ban-ts-comment': 0,
 		'@typescript-eslint/no-var-requires': 0,
 		'noImplicitThis': 0,
+		// 允许非空断言 (该值一定存在)
+		'@typescript-eslint/no-non-null-assertion':0
 	},
 };

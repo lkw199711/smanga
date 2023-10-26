@@ -2,15 +2,15 @@
  * @Author: lkw199711 lkw199711@163.com
  * @Date: 2023-06-12 22:32:48
  * @LastEditors: lkw199711 lkw199711@163.com
- * @LastEditTime: 2023-10-25 01:18:44
+ * @LastEditTime: 2023-10-26 15:41:23
  * @FilePath: \smanga\src\views\log\index.vue
 -->
 <template>
 	<div class="log">
 		<div class="content-area">
-			<p v-for="i in list" :key="i.logId">
-				<span class="time">{{ i.createTime }}: &nbsp;</span>
-				<span :class="logColor(i.logType)">{{ i.logContent }}</span>
+			<p v-for="item in list" :key="item.logId">
+				<span class="time">{{ item.createTime }}: &nbsp;</span>
+				<span :class="logColor(item.logType)">{{ item.logContent }}</span>
 			</p>
 		</div>
 		<!--分页-->
@@ -20,16 +20,26 @@
 
 <script lang="ts" setup>
 import logApi from '@/api/log';
-import {computed, ref, onMounted} from 'vue';
+import { computed, ref, onMounted } from 'vue';
 import tablePager from '@/components/table-pager.vue';
 
 const count = ref(0);
 
-const list = ref([
+type logItemType = {
+	logId: number;
+	logType: string;
+	logLevel: number;
+	logContent: string;
+	createTime: string;
+}
+
+const list = ref<logItemType[]>([
 	{
+		logId: 1,
 		logType: 'error',
 		logLevel: 1,
 		logContent: '无日志信息',
+		createTime: '',
 	},
 ]);
 
@@ -55,7 +65,7 @@ async function load_table(page: number, pageSize: number) {
 }
 
 onMounted(async () => {
-	load_table(1, 10000);
+	load_table(1, 10);
 });
 </script>
 

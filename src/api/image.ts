@@ -2,7 +2,7 @@
  * @Author: error: error: git config user.name & please set dead value or install git && error: git config user.email & please set dead value or install git & please set dead value or install git
  * @Date: 2023-08-16 03:30:05
  * @LastEditors: lkw199711 lkw199711@163.com
- * @LastEditTime: 2023-10-08 00:26:55
+ * @LastEditTime: 2023-10-26 04:35:56
  * @FilePath: /smanga/src/api/image.ts
  */
 import Axios from 'axios';
@@ -55,9 +55,11 @@ const imageApi = {
 	 * @return {*}
 	 */
 	async get(file: string) {
-		const res = img({data: {file}});
-
-		return (await res).data;
+		const [res, err] = await img({data: {file}}).then(res=>[res,null]).catch(err=>[null,err]);
+		
+		if (res) return res.data;
+		// 有错误 则再次且仅一次请求
+		if (err) return (await img({data: {file}})).data;
 	},
 
 	async chapter_img(

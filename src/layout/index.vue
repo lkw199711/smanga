@@ -8,9 +8,9 @@
 				<top-nav />
 			</div>
 			<div class="layout-right-middle">
-				<router-view v-slot="{Component}">
+				<router-view v-slot="{ Component }">
 					<keep-alive :include="['search', 'manga-list', 'chapter-list']">
-					<component :is="Component" />
+						<component :is="Component" />
 					</keep-alive>
 				</router-view>
 			</div>
@@ -19,7 +19,7 @@
 </template>
 
 <script lang="ts">
-import {defineComponent} from 'vue';
+import { defineComponent } from 'vue';
 import topNav from './components/top-nav.vue';
 import sidebar from './components/sidebar.vue';
 
@@ -37,13 +37,13 @@ export default defineComponent({
 	computed: {},
 
 	// 组件
-	components: {topNav, sidebar},
+	components: { topNav, sidebar },
 
 	// 方法
 	methods: {},
 
 	// 生命周期
-	created() {},
+	created() { },
 });
 </script>
 
@@ -52,8 +52,7 @@ export default defineComponent({
 	display: flex;
 	overflow: hidden;
 
-	&-left {
-	}
+	&-left {}
 
 	&-right {
 		flex: 1;

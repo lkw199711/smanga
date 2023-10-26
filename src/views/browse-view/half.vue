@@ -34,7 +34,6 @@
 
 <script setup lang='ts'>
 import { ref, reactive, onMounted, watch, computed } from 'vue';
-import { get_image_blob } from '@/api';
 import { global_get, global_get_array, global_set } from '@/utils';
 import { ElMessage } from 'element-plus';
 import { config, userConfig } from '@/store';
@@ -50,6 +49,7 @@ import pageNumber from './components/page-number.vue';
 import i18n from '@/i18n';
 import { useRoute, useRouter } from 'vue-router';
 import { chapterInfoType } from '@/type/chapter';
+import imageApi from '@/api/image';
 const { t } = i18n.global;
 
 const route = useRoute();
@@ -113,6 +113,9 @@ watch(
  * @param page
  */
 async function page_change(pageParams: number) {
+  // 清空之前图片内容
+  imgPathFiles.value = [];
+  
   page.value = pageParams;
   const even = pageParams % 2 === 0;
 
@@ -126,10 +129,10 @@ async function page_change(pageParams: number) {
     return;
   }
 
-  const res: any = await get_image_blob(pageImage);
+  const res: any = await imageApi.get(pageImage);
 
   const img = new Image();
-  img.src = res.data;
+  img.src = res;
 
   const canvas: HTMLCanvasElement | null = document.querySelector('canvas');
 
