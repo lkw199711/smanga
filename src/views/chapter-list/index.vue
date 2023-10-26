@@ -185,7 +185,8 @@ async function page_change(
 	if (pageParams !== 1 && pageParams > Math.ceil(count.value / pageSize)) return;
 	if (pageParams < 1) return;
 	page.value = pageParams;
-
+	list.value = [];
+	
 	const res = await chapterApi.get(
 		mangaId.value,
 		page.value,
@@ -205,7 +206,6 @@ async function load_chapter() {
 }
 
 function load() {
-	list.value = [];
 	// 缓存浏览方式
 	const browseType = route.params.browseType;
 	if (browseType) global_set('browseType', browseType);
