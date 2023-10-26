@@ -64,7 +64,7 @@ export default defineComponent({
 			const res = await userApi.login(this.form);
 			if (res.code === 0) {
 				// 缓存用户信息
-				const resInfo = res.data.request;
+				const resInfo = res.request;
 				Object.assign(userInfo, res.data.userInfo);
 				Cookies.set('userName', resInfo.userName);
 				Cookies.set('userId', resInfo.userId);
