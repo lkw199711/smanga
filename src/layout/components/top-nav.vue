@@ -120,6 +120,7 @@ import {Search} from '@element-plus/icons-vue';
 import {useRoute} from 'vue-router';
 import router from '@/router';
 import layoutDic from '@/store/top-layout';
+import routeType from '@/type/route';
 const {locale} = useI18n();
 const route = useRoute();
 
@@ -158,7 +159,7 @@ const screenType = computed(() => {
 
 const layoutLimit = computed(() => (key: string) => {
 	const screen = config.screenType;
-	const view = route.meta.view;
+	const view = route.meta.view as routeType;
 	let layoutArr: string[];
 
 	if (view) {

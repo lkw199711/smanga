@@ -65,7 +65,7 @@ const mangaName = computed(() => {
 })
 
 onMounted(() => {
-	queue.mangaQueue.add(() => get_poster(props.mangaInfo));
+		queue.mangaQueue.add(() => get_poster(props.mangaInfo));
 })
 
 async function get_poster(item: mangaItemType) {
