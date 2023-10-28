@@ -6,9 +6,6 @@ FROM crazymax/alpine-s6-dist:${ALPINE_VERSION} AS S6
 
 FROM alpine:${ALPINE_VERSION}
 
-ARG UNRAR_VERSION=6.2.10
-ARG PHP7_SWOOLE_VERSION=4.6.7
-
 ENV S6_SERVICES_GRACETIME=30000 \
     S6_KILL_GRACETIME=60000 \
     S6_CMD_WAIT_FOR_SERVICES_MAXTIME=0 \
@@ -39,25 +36,6 @@ RUN set -ex && \
         unzip \
         xz \
     && \
-    # Install build packages
-    apk add --no-cache --upgrade --virtual=build-dependencies \
-        build-base \
-        gcc \
-        g++ \
-        make \
-        musl-dev \
-    && \
-    # Build install unrar
-    mkdir /tmp/unrar && \
-    curl -o \
-        /tmp/unrar.tar.gz -L \
-        "https://www.rarlab.com/rar/unrarsrc-${UNRAR_VERSION}.tar.gz" && \  
-    tar xf \
-        /tmp/unrar.tar.gz -C \
-        /tmp/unrar --strip-components=1 && \
-    cd /tmp/unrar && \
-    make && \
-    install -v -m755 unrar /usr/local/bin && \
     # Install nginx php7 composer
     apk add --no-cache \
         composer \
@@ -81,7 +59,6 @@ RUN set -ex && \
         php7-opcache \
         php7-openssl \
         php7-pcntl \
-        php7-pear \
         php7-pecl-imagick \
         php7-pdo \
         php7-pdo_mysql \
@@ -105,10 +82,6 @@ RUN set -ex && \
         php7-zip \
         php7-zlib \
     && \
-    pecl channel-update pecl.php.net && \
-    # Install php7-swoole
-    echo yes | pecl install swoole-${PHP7_SWOOLE_VERSION} && \
-    echo "extension=swoole.so" > /etc/php7/conf.d/00_swoole.ini && \
     # Add user
     addgroup -S smanga -g 911 && \
     adduser -S smanga -G smanga -h /app -u 911 -s /bin/bash && \
@@ -126,12 +99,14 @@ RUN set -ex && \
         /etc/php7/php-fpm.d/www.conf \
         /etc/supervisord.conf && \
     # Clear
-    apk del --purge build-dependencies && \
     rm -rf \
         /var/cache/apk/* \
         /usr/share/man \
         /usr/share/php7 \
         /tmp/*
+
+COPY --from=ddsderek/smanga-base:unrar / /
+COPY --from=ddsderek/smanga-base:swoole / /
 
 COPY --chmod=755 ./docker/rootfs_base /
 
