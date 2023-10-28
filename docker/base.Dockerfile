@@ -1,13 +1,12 @@
 # syntax=docker/dockerfile:1.4
 
-ARG ALPINE_VERSION=3.15
+ARG ALPINE_VERSION=3.14
 
 FROM crazymax/alpine-s6-dist:${ALPINE_VERSION} AS S6
 
 FROM alpine:${ALPINE_VERSION}
 
 ARG UNRAR_VERSION=6.2.10
-ARG COMPOSER_VERSION=2.5.5
 ARG PHP7_SWOOLE_VERSION=4.6.7
 
 ENV S6_SERVICES_GRACETIME=30000 \
@@ -59,8 +58,9 @@ RUN set -ex && \
     cd /tmp/unrar && \
     make && \
     install -v -m755 unrar /usr/local/bin && \
-    # Install nginx php7
+    # Install nginx php7 composer
     apk add --no-cache \
+        composer \
         nginx \
         pcre \
         php7 \
@@ -109,9 +109,6 @@ RUN set -ex && \
     # Install php7-swoole
     echo yes | pecl install swoole-${PHP7_SWOOLE_VERSION} && \
     echo "extension=swoole.so" > /etc/php7/conf.d/00_swoole.ini && \
-    # Install composer
-    curl -o /usr/bin/composer https://getcomposer.org/download/${COMPOSER_VERSION}/composer.phar && \
-    chmod +x /usr/bin/composer && \
     # Add user
     addgroup -S smanga -g 911 && \
     adduser -S smanga -G smanga -h /app -u 911 -s /bin/bash && \
