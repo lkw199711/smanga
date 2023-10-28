@@ -1,12 +1,5 @@
 <template>
 	<div class="index">
-		<div class="manga-list">
-			<div class="title">继续阅读</div>
-			<div :class="['manga-list-box', { block: config.viewType === 'list' }]">
-				<manga v-for="item in lastReadList" :key="item.lastReadId" :viewType="config.viewType" :mangaInfo="item" />
-			</div>
-		</div>
-
 		<div class="media">
 			<div class="media-item" v-for="item in mediaList" :key="item.mediaId" @click="go_manga_list(item.mediaId)"
 				@contextmenu.prevent="context_menu">
@@ -20,20 +13,16 @@
 export default { name: 'media-list' };
 </script>
 <script setup lang="ts">
-import { ref, onMounted, onBeforeUnmount } from 'vue';
+import { ref, onMounted } from 'vue';
 import mediaApi from '@/api/media';
 import { global_set } from '@/utils';
-import store, { config } from '@/store';
-import lastReadApi from '@/api/last-read';
-import manga from '@/components/manga.vue';
+import { config } from '@/store';
 import { useRoute, useRouter } from 'vue-router';
 import { mediaType } from '@/type/media';
-import { lastReadType } from '@/type/last-read';
 const route = useRoute();
 const router = useRouter();
 
 const mediaList = ref<mediaType[]>([]);
-const lastReadList = ref<lastReadType[]>([]);
 
 /**
  * @description: 读取媒体库
@@ -72,8 +61,6 @@ function context_menu() {
 
 // 生命周期
 onMounted(async () => {
-	lastReadList.value = await lastReadApi.get();
-
 	load_media();
 })
 
