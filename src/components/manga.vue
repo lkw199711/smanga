@@ -65,7 +65,7 @@ const mangaName = computed(() => {
 })
 
 onMounted(() => {
-		queue.mangaQueue.add(() => get_poster(props.mangaInfo));
+	queue.mangaQueue.add(() => get_poster(props.mangaInfo));
 })
 
 async function get_poster(item: mangaItemType) {
@@ -117,12 +117,15 @@ async function go_chapter() {
 <style scoped lang="less">
 .manga {
 	cursor: pointer;
-	overflow: hidden;
+
+	.manga-name {
+		width: 100%;
+		overflow: hidden;
+	}
 }
 
 .manga-view-list {
 	display: flex;
-	overflow: hidden;
 	margin-bottom: 1rem;
 
 	.manga-content {
@@ -136,6 +139,7 @@ async function go_chapter() {
 	width: 100%;
 	background-color: #f0f0f0;
 	border-radius: 8px;
+	box-shadow: .4rem .3rem 1rem rgb(128, 108, 108);
 }
 
 .anim {

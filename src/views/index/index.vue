@@ -2,7 +2,7 @@
  * @Author: lkw199711 lkw199711@163.com
  * @Date: 2023-10-27 11:08:16
  * @LastEditors: lkw199711 lkw199711@163.com
- * @LastEditTime: 2023-10-28 03:33:06
+ * @LastEditTime: 2023-10-28 17:06:12
  * @FilePath: /smanga/src/views/index/index.vue
 -->
 <template>
@@ -10,7 +10,7 @@
         <pie ref="pieRef" class="chart charts-pie" v-if="layoutLimit('pie')"></pie>
         <bar ref="barRef" class="chart charts-pie" v-if="layoutLimit('bar')"></bar>
         <line1 ref="lineRef" class="chart charts-pie" v-if="layoutLimit('line')"></line1>
-        <div class="chart chart-seat" v-if="layoutLimit('list')"></div>
+        <list class="chart" v-if="layoutLimit('list')"></list>
     </div>
     <lastRead v-if="layoutLimit('last-read')"></lastRead>
 </template>
@@ -19,6 +19,7 @@
 import pie from '@/components/charts/pie.vue';
 import bar from '@/components/charts/bar.vue';
 import line1 from '@/components/charts/line.vue';
+import list from '@/components/charts/list.vue';
 import lastRead from "@/views/last-read/index.vue";
 import { onMounted, ref, computed } from 'vue';
 import { config, userConfig } from '@/store';
@@ -43,7 +44,7 @@ const layoutLimit = computed(() => (key: string) => {
 });
 
 onMounted(() => {
-    
+
     if (!pieRef.value) return;
     window.addEventListener('resize', pieRef.value.resize());
 })
@@ -58,8 +59,10 @@ onMounted(() => {
     .chart {
         margin-bottom: 1rem;
         background-color: rgba(255, 255, 255, .6);
-        border-radius: 1rem;
+        border-radius: .6rem;
         box-shadow: .4rem .3rem .4rem rgb(139, 130, 130);
+        overflow: hidden;
+        overflow-y: auto;
     }
 
     .chart-seat {

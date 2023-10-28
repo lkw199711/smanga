@@ -2,7 +2,7 @@
  * @Author: lkw199711 lkw199711@163.com
  * @Date: 2023-10-27 11:08:16
  * @LastEditors: lkw199711 lkw199711@163.com
- * @LastEditTime: 2023-10-28 06:45:40
+ * @LastEditTime: 2023-10-28 18:05:49
  * @FilePath: /smanga/src/views/index/index.vue
 -->
 <template>
@@ -98,9 +98,6 @@ onMounted(async () => {
         legendArr.value.push(item.tagName);
         seriesArr.value.push({ name: item.tagName, value: item.num });
     })
-
-    const res1 = await chartsApi.ranking();
-    console.log(res1);
     
 })
 </script>
