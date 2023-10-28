@@ -6,7 +6,7 @@ FROM crazymax/alpine-s6-dist:${ALPINE_VERSION} AS S6
 
 FROM alpine:${ALPINE_VERSION}
 
-ARG UNRAR_VERSION=6.2.8
+ARG UNRAR_VERSION=6.2.10
 ARG COMPOSER_VERSION=2.5.5
 ARG PHP7_SWOOLE_VERSION=4.6.7
 
@@ -26,6 +26,7 @@ RUN set -ex && \
         ca-certificates \
         coreutils \
         curl \
+        grep \
         inotify-tools \
         jq \
         netcat-openbsd \

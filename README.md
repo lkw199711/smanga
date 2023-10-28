@@ -4,6 +4,8 @@
 
 # Smanga
 
+[![Build Smanga Alpha Docker](https://github.com/lkw199711/smanga/actions/workflows/docker_alpha.yml/badge.svg)](https://github.com/lkw199711/smanga/actions/workflows/docker_alpha.yml) [![Build Smanga Base Docker](https://github.com/lkw199711/smanga/actions/workflows/docker_base.yml/badge.svg)](https://github.com/lkw199711/smanga/actions/workflows/docker_base.yml) [![Build Smanga Beta Docker](https://github.com/lkw199711/smanga/actions/workflows/docker_beta.yml/badge.svg)](https://github.com/lkw199711/smanga/actions/workflows/docker_beta.yml) [![Build Smanga Docker](https://github.com/lkw199711/smanga/actions/workflows/docker.yml/badge.svg)](https://github.com/lkw199711/smanga/actions/workflows/docker.yml)
+
 无需配置，docker直装的漫画流媒体阅读工具。
 
 以emby plex为灵感，为解决漫画阅读需求而开发的漫画阅读器。
@@ -12,7 +14,13 @@
   - [简介](#简介)
   - [安装](#安装)
     - [1. 使用docker安装](#1-使用docker安装)
-    - [2. ~~LNMP环境安装~~](#2-lnmp环境安装)
+      - [整合映射](#整合映射)
+      - [推荐映射](#推荐映射)
+      - [全目录映射](#全目录映射)
+    - [2.使用docker-compose进行部署](#2使用docker-compose进行部署)
+      - [以下给出一个compose文件示例](#以下给出一个compose文件示例)
+      - [macvlan部署示例](#macvlan部署示例)
+    - [3. ~~LNMP环境安装~~](#3-lnmp环境安装)
   - [使用](#使用)
     - [默认用户名](#默认用户名)
     - [新增媒体库](#新增媒体库)
