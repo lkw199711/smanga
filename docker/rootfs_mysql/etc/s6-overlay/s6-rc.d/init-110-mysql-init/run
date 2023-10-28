@@ -10,10 +10,7 @@ if [ ! -d /data/db/smanga ]; then
         --datadir=/data/db \
         > /dev/null
 
-    mysql_set_file=/tmp/mysql_set_file
-    if [ ! -f "$mysql_set_file" ]; then
-        touch "$mysql_set_file"
-    fi
+    mysql_set_file=$(mktemp)
 
     # mysql创建设置用户，创建数据库
     echo "flush privileges;" > "$mysql_set_file"
