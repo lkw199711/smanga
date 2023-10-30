@@ -27,9 +27,10 @@
 import { watch, ref, defineProps, defineEmits, computed } from 'vue'
 import { useRoute } from "vue-router";
 import { config } from "@/store";
-import { delete_bookmark } from "@/api/bookmark";
+import bookmarkApi from "@/api/bookmark";
 import { ElMessageBox } from "element-plus";
 import i18n from '@/i18n';
+import { global_set_json } from '@/utils';
 const { t } = i18n.global;
 
 const route = useRoute();
@@ -70,7 +71,7 @@ function menu_select(key: string) {
   switch (key) {
     case 'delete':
       ElMessageBox.confirm(t('bookmarkManage.confirm.text'), { type: 'warning' }).then(async () => {
-        await delete_bookmark(bookmarkId.value);
+        await bookmarkApi.delete_and_update(bookmarkId.value);
         emit('reload');
       });
 

@@ -1,7 +1,6 @@
 import {createRouter, createWebHashHistory, RouteRecordRaw} from 'vue-router';
 import Layout from '@/layout/index.vue';
 import browse from '@/layout/browse.vue';
-import layout from '@/layout/index.vue';
 
 import NProgress from 'nprogress';
 import 'nprogress/nprogress.css';
@@ -28,7 +27,7 @@ const routes: Array<RouteRecordRaw> = [
 	{
 		path: '/',
 		name: 'home',
-		redirect: '/media-list',
+		redirect: '/index',
 		meta: {sidebar: false},
 		component: Layout,
 	},
@@ -37,6 +36,30 @@ const routes: Array<RouteRecordRaw> = [
 		name: 'login',
 		meta: {sidebar: false},
 		component: () => import('../views/login/index.vue'),
+	},
+
+	{
+		path: '/index',
+		meta: {
+			name: 'index',
+			title: 'index',
+			view: 'list',
+		},
+		redirect: '/index/index',
+		component: Layout,
+		children: [
+			{
+				path: '/index/index',
+				name: 'index',
+				meta: {
+					sidebar: false,
+					title: 'index',
+					icon: 'index',
+					view: 'list',
+				},
+				component: () => import('../views/index/index.vue'),
+			},
+		],
 	},
 
 	// 媒体库界面

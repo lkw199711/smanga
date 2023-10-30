@@ -40,7 +40,7 @@
 import { watch, ref, defineProps, defineEmits, computed } from 'vue';
 import { useRoute } from 'vue-router';
 import { config } from '@/store';
-import { delete_chapter } from '@/api/chapter';
+import chapterApi from '@/api/chapter';
 import { ElMessageBox } from 'element-plus';
 import i18n from '@/i18n';
 import { add_collect, is_collect, remove_collect } from '@/api/collect';
@@ -99,7 +99,7 @@ async function menu_select(key: string) {
 			ElMessageBox.confirm(t('chapterManage.confirm.text1'), {
 				type: 'warning',
 			}).then(async () => {
-				await delete_chapter(chapterId.value);
+				await chapterApi.delete_chapter(chapterId.value);
 				emit('reload');
 			});
 
@@ -108,7 +108,7 @@ async function menu_select(key: string) {
 			ElMessageBox.confirm(t('chapterManage.confirm.text2'), {
 				type: 'warning',
 			}).then(async () => {
-				await delete_chapter(chapterId.value, true);
+				await chapterApi.delete_chapter(chapterId.value, true);
 				emit('reload');
 			});
 			break;

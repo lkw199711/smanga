@@ -2,8 +2,8 @@
 	<div class="search">
 		<div class="top">
 			<el-input class="search-input" v-model="searchText" clearable @clear="clear" @keyup.enter="() => {
-					page_change();
-				}
+				page_change();
+			}
 				">
 				<template #append>
 					<el-select v-model="searchType" placeholder="Select" class="search-select">
@@ -13,14 +13,14 @@
 				</template>
 				<template #prepend>
 					<el-button :icon="Search" @click="() => {
-							page_change();
-						}
+						page_change();
+					}
 						" />
 				</template>
 			</el-input>
 			<el-button class="search-btn" type="primary" v-if="config.screenType !== 'small'" @click="() => {
-					page_change();
-				}
+				page_change();
+			}
 				">全局搜索</el-button>
 		</div>
 
@@ -34,7 +34,8 @@
 				</div>
 
 				<!--分页组件-->
-				<media-pager ref="pager" :page="page" :count="count" :page-size-config="pageSizes" @page-change="page_change" />
+				<media-pager ref="pager" :page="page" :count="count" :page-size-config="pageSizes"
+					@page-change="page_change" />
 			</div>
 
 			<div class="chapter-list" v-if="searchType === 'chapter'">
@@ -45,7 +46,8 @@
 				</div>
 
 				<!--分页组件-->
-				<media-pager ref="pager" :page="page" :count="count" :page-size-config="pageSizes" @page-change="page_change" />
+				<media-pager ref="pager" :page="page" :count="count" :page-size-config="pageSizes"
+					@page-change="page_change" />
 			</div>
 		</div>
 	</div>
@@ -69,7 +71,6 @@ import { Search } from '@element-plus/icons-vue';
 import store, { config, userConfig, pageSizeConfig } from '@/store';
 import searchApi from '@/api/search';
 import router from '@/router';
-import { get_poster } from '@/api';
 import chapterApi from '@/api/chapter';
 import { global_set, global_set_json } from '@/utils';
 import manga from '@/components/manga.vue';
@@ -111,13 +112,7 @@ watch(
 	}
 );
 onMounted(() => {
-	store.commit('switch_await', { running: 'searchAwait', bool: true });
-
 	touch_page_change();
-});
-
-onBeforeUnmount(() => {
-	store.commit('switch_await', { running: 'searchAwait', bool: false });
 });
 
 // KeepAlive相关联 生命周期
@@ -202,7 +197,7 @@ async function page_change(
 	pageSize: number = defaultPageSize
 ) {
 	page.value = pageC;
-
+	list.value = [];
 
 	if (!searchText.value) {
 		ElMessage.warning('请输入搜索关键词！');
@@ -218,9 +213,6 @@ async function page_change(
 	);
 	list.value = res.list;
 	count.value = res.count;
-
-	// 为漫画请求海报图片
-	get_poster(list.value, 'mangaAwait');
 }
 
 function reload() {

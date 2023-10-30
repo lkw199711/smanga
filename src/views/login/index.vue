@@ -9,9 +9,7 @@
 			</div>
 			<el-form class="login-form" ref="form" :model="form" label-width="80px">
 				<el-form-item label="用户名:">
-					<el-input
-						v-model="form.userName"
-						placeholder="请输入用户名"></el-input>
+					<el-input v-model="form.userName" placeholder="请输入用户名"></el-input>
 				</el-form-item>
 
 				<el-form-item label="密码:">
@@ -25,20 +23,18 @@
 
 			<!--按钮盒子-->
 			<div class="btn-box">
-				<el-button class="login-btn" type="primary" @click="do_login"
-					>登录</el-button
-				>
+				<el-button class="login-btn" type="primary" @click="do_login">登录</el-button>
 			</div>
 		</div>
 	</div>
 </template>
 
 <script lang="ts">
-import {defineComponent} from 'vue';
-import {login} from '@/api/account';
-import {Cookies} from '@/utils';
+import { defineComponent } from 'vue';
+import userApi from '@/api/account';
+import { Cookies } from '@/utils';
 
-import {power, userInfo} from '@/store';
+import { power, userInfo } from '@/store';
 
 export default defineComponent({
 	name: 'index',
@@ -65,11 +61,11 @@ export default defineComponent({
 	// 方法
 	methods: {
 		async do_login() {
-			const res = await login(this.form);
-			if (res.data.code === 0) {
+			const res = await userApi.login(this.form);
+			if (res.code === 0) {
 				// 缓存用户信息
-				const resInfo = res.data.userInfo;
-				Object.assign(userInfo, res.data.userInfo);
+				const resInfo = res.request;
+				Object.assign(userInfo, resInfo);
 				Cookies.set('userName', resInfo.userName);
 				Cookies.set('userId', resInfo.userId);
 				Cookies.set('editMedia', resInfo.editMedia);

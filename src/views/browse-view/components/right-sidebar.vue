@@ -24,7 +24,7 @@
 import { watch, ref, defineProps, defineEmits, computed } from 'vue';
 import { useRoute } from 'vue-router';
 import { cache, config } from '@/store';
-import { add_bookmark, delete_bookmark, get_bookmark } from '@/api/bookmark';
+import bookmarkApi from '@/api/bookmark';
 import { global_get, global_set_json } from '@/utils';
 import i18n from '@/i18n';
 
@@ -100,7 +100,7 @@ function menu_select(key: string) {
 
 async function bookmark() {
 	if (config.bookmarkShow) {
-		await delete_bookmark(cache.bookmarkId);
+		await bookmarkApi.delete_and_update(cache.bookmarkId);
 	} else {
 		// 区分单双页
 		let page = Number(global_get('page'));
@@ -113,11 +113,11 @@ async function bookmark() {
 			page = Math.ceil(page / 2);
 		}
 
-		await add_bookmark(page);
+		await bookmarkApi.add_bookmark(page);
 	}
-	const res = await get_bookmark();
+	const res = await bookmarkApi.get_bookmark();
 
-	global_set_json('bookmarkList', res.data.list);
+	global_set_json('bookmarkList', res.list);
 }
 </script>
 

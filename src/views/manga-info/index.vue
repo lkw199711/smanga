@@ -2,7 +2,7 @@
  * @Author: error: error: git config user.name & please set dead value or install git && error: git config user.email & please set dead value or install git & please set dead value or install git
  * @Date: 2023-08-15 23:05:47
  * @LastEditors: lkw199711 lkw199711@163.com
- * @LastEditTime: 2023-10-08 05:58:19
+ * @LastEditTime: 2023-10-23 02:01:44
  * @FilePath: /smanga/src/views/manga-info/index.vue
 -->
 <template>
@@ -174,7 +174,7 @@ async function get_first_chapter() {
     if (!mangaId) return;
 
     const infoRes = await chapterApi.get_first(mangaId, userConfig.order);
-    firstChapterInfo.value = infoRes.info;
+    firstChapterInfo.value = infoRes.request;
 }
 
 /**
@@ -240,24 +240,25 @@ function go_chapter_list() {
 async function render_meta() {
     const route = useRoute();
     const mangaId = Number(route.query.mangaId);
-    const info = await mangaApi.get_manga_info(mangaId);
+    const res = await mangaApi.get_manga_info(mangaId);
     let bannerSoft: metaItemType[] = [];
-    mangaInfo = info.info;
-    tags.value = info.tags;
-    title.value = info.info.mangaName;
+    
+    mangaInfo = res.info;
+    tags.value = res.tags;
+    title.value = res.info.mangaName;
 
     // 角色信息
-    character.value = info.character;
+    character.value = res.character;
 
     character.value.forEach(async (item: characterItem) => {
         const blob = await imageApi.get(item.characterPicture);
         item.blob = blob;
     })
 
-    if (info.meta.length > 0) {
+    if (res.meta.length > 0) {
         // banner图
-        for (let i = 0; i < info.meta.length; i++) {
-            const metaItem = info.meta[i];
+        for (let i = 0; i < res.meta.length; i++) {
+            const metaItem = res.meta[i];
             if (metaItem.metaType === 'banner') {
                 metaItem.blob = await imageApi.get(metaItem.metaFile);
                 bannerSoft.push(metaItem);
@@ -266,7 +267,7 @@ async function render_meta() {
     }
 
     // 漫画封面
-    mangaCover.value = await imageApi.get(info.info.mangaCover);
+    mangaCover.value = await imageApi.get(res.info.mangaCover);
 
     // 将图片进行排序
     bannerSoft.sort((a: any, b: any) => { return a.metaFile - b.metaFile });

@@ -62,7 +62,7 @@
 import { watch, ref, defineProps, defineEmits, computed, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 import { config } from '@/store';
-import { delete_manga } from '@/api/manga';
+import mangaApi from '@/api/manga';
 import {
 	get_collect,
 	add_collect,
@@ -194,7 +194,7 @@ async function menu_select(key: string) {
 		case 'remove':
 			ElMessageBox.confirm(t('mangaManage.confirm.text1'), { type: 'warning' })
 				.then(async () => {
-					await delete_manga(mangaId.value);
+					await mangaApi.delete_manga(mangaId.value);
 					emit('reload');
 				})
 				.catch();
@@ -204,7 +204,7 @@ async function menu_select(key: string) {
 			ElMessageBox.confirm(t('mangaManage.confirm.text2'), {
 				type: 'warning',
 			}).then(async () => {
-				await delete_manga(mangaId.value, true);
+				await mangaApi.delete_manga(mangaId.value, true);
 				emit('reload');
 			});
 

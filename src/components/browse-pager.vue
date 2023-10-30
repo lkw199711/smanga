@@ -170,7 +170,6 @@ onMounted(() => {
   if (props.setPageSize) {
     pageSize.value = props.setPageSize;
   }
-console.log(props.count);
 
   window.addEventListener('keydown', direction_key);
 })

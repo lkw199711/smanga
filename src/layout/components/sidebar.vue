@@ -174,8 +174,6 @@ const userLimit = computed(() => (item: any) => {
 
 onMounted(() => {
   config.sidebarCollapse = false;
-  console.log(routes.value);
-
 })
 </script>
 

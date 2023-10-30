@@ -29,7 +29,6 @@ import {
 	ref,
 } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { get_poster } from '@/api';
 import chapterApi from '@/api/chapter';
 import store, { config, pageSizeConfig, userConfig } from '@/store';
 import { global_get, global_set, global_set_json } from '@/utils';
@@ -79,7 +78,7 @@ watch(
 );
 
 onMounted(() => {
-	init();
+	load();
 	route.params.clear = '';
 
 	touch_page_change();
@@ -132,14 +131,10 @@ function touch_page_change() {
 	})
 }
 
-onBeforeUnmount(() => {
-	store.commit('switch_await', { running: 'chapterAwait', bool: false });
-});
-
 onActivated(() => {
 	const clear = route.params.clear;
 	if (clear) {
-		init();
+		load();
 		route.params.clear = '';
 	}
 });
@@ -190,7 +185,8 @@ async function page_change(
 	if (pageParams !== 1 && pageParams > Math.ceil(count.value / pageSize)) return;
 	if (pageParams < 1) return;
 	page.value = pageParams;
-
+	list.value = [];
+	
 	const res = await chapterApi.get(
 		mangaId.value,
 		page.value,
@@ -199,9 +195,6 @@ async function page_change(
 	);
 	list.value = res.list;
 	count.value = res.count;
-
-	// 为章节请求海报图片
-	get_poster(list.value, 'chapterAwait');
 }
 
 /**
@@ -212,12 +205,11 @@ async function load_chapter() {
 	global_set_json('chapterList', res.list);
 }
 
-function init() {
+function load() {
 	// 缓存浏览方式
 	const browseType = route.params.browseType;
 	if (browseType) global_set('browseType', browseType);
 
-	store.commit('switch_await', { running: 'chapterAwait', bool: true });
 	load_chapter();
 	page_change();
 }

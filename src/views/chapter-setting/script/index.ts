@@ -1,7 +1,7 @@
 import {defineComponent} from 'vue'
 import {ElMessage, ElMessageBox} from 'element-plus'
 import {Delete, Edit} from '@element-plus/icons-vue'
-import chapterApi,{delete_chapter, update_chapter} from "@/api/chapter";
+import chapterApi from "@/api/chapter";
 import tablePager from "@/components/table-pager.vue";
 import i18n from '@/i18n';
 
@@ -102,8 +102,8 @@ export default defineComponent({
                 return false;
             }
 
-            const res = await update_chapter(this.form);
-            if (res.data.code === 0) {
+            const res = await chapterApi.update_chapter(this.form);
+            if (res.code === 0) {
                 this.editChapterDialog = false;
                 this.reload_table();
             }
@@ -118,9 +118,9 @@ export default defineComponent({
                 t('chapterManage.confirm.title'), {
                 type: 'warning'
             }).then(async () => {
-                const res = await delete_chapter(row.chapterId);
+                const res = await chapterApi.delete_chapter(row.chapterId);
 
-                if (res.data.code === 0) {
+                if (res.code === 0) {
                     this.reload_table();
                 }
             }).catch(() => {

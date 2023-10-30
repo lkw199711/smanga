@@ -2,7 +2,7 @@
 	<!-- 矩形视图 -->
 	<div class="manga" @click="go_chapter" v-if="props.viewType !== 'list'">
 		<!--封面图片-->
-		<el-image v-if="finish" class="anim cover-img" :src="poster" :fit="fit" :alt="mangaName" />
+		<el-image v-if="blobLink" class="anim cover-img" :src="blobLink" :fit="fit" :alt="mangaName" />
 
 		<!--占位图标-->
 		<el-image v-else class="cover-img" :src="placeholder" fit="fill" />
@@ -14,7 +14,7 @@
 	<!-- 列表视图 -->
 	<div class="manga-view-list" @click="go_chapter" v-else>
 		<!--封面图片-->
-		<el-image v-if="finish" class="anim cover-img" :src="poster" :fit="fit" :alt="mangaName" />
+		<el-image v-if="blobLink" class="anim cover-img" :src="blobLink" :fit="fit" :alt="mangaName" />
 
 		<!--占位图标-->
 		<el-image v-else class="cover-img" :src="placeholder" fit="fill" />
@@ -40,9 +40,15 @@ export default {
 </script>
 <script setup lang="ts">
 import { global_set, global_set_json } from '@/utils';
-import { computed, defineProps, defineEmits } from 'vue';
+import { computed, defineProps, defineEmits, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import chapterApi from '@/api/chapter';
+import { mangaInfoType } from '@/type/manga';
+import imageApi from '@/api/image';
+import { onMounted, onActivated } from 'vue';
+import queue from '@/store/quque';
+
+type mangaItemType = mangaInfoType & { blob: string; mangaCover: string; };
 
 const route = useRoute();
 const router = useRouter();
@@ -51,33 +57,38 @@ const props = defineProps(['mangaInfo', 'viewType']);
 const placeholder = require('@/assets/s-blue.png');
 const fit = 'cover';
 
-const poster = computed(() => {
-	return props.mangaInfo.blob;
-})
-
-const finish = computed(() => {
-	return props.mangaInfo.finish;
-})
+let blobLink = ref('');
 
 const mangaName = computed(() => {
 	if (route.name === 'media-list') return props.mangaInfo.chapterName;
 	return props.mangaInfo.mangaName;
 })
 
+onMounted(() => {
+	queue.mangaQueue.add(() => get_poster(props.mangaInfo));
+})
+
+async function get_poster(item: mangaItemType) {
+	blobLink.value = await imageApi.get(item.mangaCover);
+}
+
 async function go_chapter() {
 	const mangaInfo = props.mangaInfo;
 
 	const mangaId = mangaInfo.mangaId;
 	const mangaCover = mangaInfo.mangaCover;
+	const chapterId = mangaInfo.chapterId;
+	const chapterName = mangaInfo.chapterName;
 	const browseType = mangaInfo.browseType;
 	const removeFirst = mangaInfo.removeFirst;
 	const direction = mangaInfo.direction;
 	const page = mangaInfo.page;
-
 	// 缓存漫画信息
 	global_set('mangaId', mangaId);
 	global_set('mangaName', mangaName);
 	global_set('mangaCover', mangaCover);
+	global_set('chapterId', chapterId);
+	global_set('chapterName', chapterName);
 	global_set('removeFirst', removeFirst);
 	global_set('direction', direction);
 
@@ -106,12 +117,15 @@ async function go_chapter() {
 <style scoped lang="less">
 .manga {
 	cursor: pointer;
-	overflow: hidden;
+
+	.manga-name {
+		width: 100%;
+		overflow: hidden;
+	}
 }
 
 .manga-view-list {
 	display: flex;
-	overflow: hidden;
 	margin-bottom: 1rem;
 
 	.manga-content {
@@ -125,6 +139,7 @@ async function go_chapter() {
 	width: 100%;
 	background-color: #f0f0f0;
 	border-radius: 8px;
+	box-shadow: .4rem .3rem 1rem rgb(128, 108, 108);
 }
 
 .anim {

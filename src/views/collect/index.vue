@@ -51,7 +51,6 @@ import { useRoute } from 'vue-router';
 import store, { config, userConfig, pageSizeConfig } from '@/store';
 import { search } from '@/api/search';
 import router from '@/router';
-import { get_poster } from '@/api';
 import chapterApi from '@/api/chapter';
 import { global_set, global_set_json } from '@/utils';
 import manga from '@/components/manga.vue';
@@ -114,15 +113,10 @@ watch(
 	}
 );
 onMounted(async () => {
-	store.commit('switch_await', { running: 'collectAwait', bool: true });
 
 	page_change();
 
 	touch_page_change();
-});
-
-onBeforeUnmount(() => {
-	store.commit('switch_await', { running: 'collectAwait', bool: false });
 });
 
 // KeepAlive相关联 生命周期
@@ -204,7 +198,8 @@ async function page_change(
 	if (pageParams !== 1 && pageParams > Math.ceil(count.value / pageSize)) return;
 	if (pageParams < 1) return;
 	page.value = pageParams;
-
+	list.value = [];
+	
 	const res: any = await get_collect(
 		collectType.value,
 		page.value,
@@ -213,9 +208,6 @@ async function page_change(
 	);
 	list.value = res.data.list;
 	count.value = res.data.count;
-
-	// 为漫画请求海报图片
-	get_poster(list.value, 'collectAwait', collectType.value + 'Cover');
 }
 
 /**

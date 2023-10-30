@@ -6,18 +6,10 @@ import {
 	FolderOpened,
 } from '@element-plus/icons-vue';
 import {defineComponent} from 'vue';
-import {
-	add_media,
-	delete_media,
-	get_media,
-	get_path,
-	delete_path,
-	update_media,
-} from '@/api/media';
-import {add_path, rescan_path} from '@/api/path';
+import mediaApi from '@/api/media';
+import pathApi from '@/api/path';
 import {ElMessage, ElMessageBox} from 'element-plus';
 import tablePager from '@/components/table-pager.vue';
-import {scan_path} from '@/api/path';
 import i18n from '@/i18n';
 
 const {t} = i18n.global;
@@ -67,7 +59,7 @@ export default defineComponent({
 				path: '',
 				autoScan: 0,
 				include: '',
-				exclude: ''
+				exclude: '',
 			},
 			pathArr: [] as any[],
 		};
@@ -116,21 +108,17 @@ export default defineComponent({
 		 * 加载路径列表
 		 */
 		async load_path(mediaId: any) {
-			const res = await get_path(mediaId);
+			const res = await mediaApi.get_path(mediaId);
 
-			if (res.data) {
-				this.pathArr = res.data.list;
-			} else {
-				this.pathArr = [];
-			}
+			this.pathArr = res.list;
 		},
 		/**
 		 * 加载表格数据
 		 */
 		async load_table(page = 1, pageSize = 10) {
-			const res = await get_media(page, pageSize);
-			this.count = Number(res.data.list.total);
-			this.tableData = res.data.list.data;
+			const res = await mediaApi.get(page, pageSize);
+			this.count = Number(res.count);
+			this.tableData = res.list;
 		},
 		/**
 		 * 重载数据 页码不变
@@ -153,8 +141,8 @@ export default defineComponent({
 				return false;
 			}
 
-			const res = await add_media(this.form);
-			if (res.data.code === 0) {
+			const res = await mediaApi.add_media(this.form);
+			if (res.code === 0) {
 				this.dialog_close();
 				this.reload_table();
 			}
@@ -185,9 +173,9 @@ export default defineComponent({
 				return false;
 			}
 
-			const res = await update_media(this.form);
+			const res = await mediaApi.update_media(this.form);
 
-			if (res.data.code === 0) {
+			if (res.code === 0) {
 				this.editMediaDialog = false;
 				this.reload_table();
 			}
@@ -201,9 +189,9 @@ export default defineComponent({
 				type: 'warning',
 			})
 				.then(async () => {
-					const res = await delete_media(row.mediaId);
+					const res = await mediaApi.delete_media(row.mediaId);
 
-					if (res.data.code === 0) {
+					if (res.code === 0) {
 						this.reload_table();
 					}
 				})
@@ -217,9 +205,9 @@ export default defineComponent({
 				type: 'warning',
 			})
 				.then(async () => {
-					const res = await delete_path(pathInfo.pathId);
+					const res = await mediaApi.delete_path(pathInfo.pathId);
 
-					if (res.data.code === 0) {
+					if (res.code === 0) {
 						this.load_path(pathInfo.mediaId);
 					}
 				})
@@ -234,26 +222,26 @@ export default defineComponent({
 				type: 'warning',
 			})
 				.then(async () => {
-					const res = await rescan_path(
+					const res = await pathApi.rescan_path(
 						pathInfo.mediaId,
 						pathInfo.path,
 						pathInfo.pathId
 					);
 
-					if (res.data.code === 0) {
+					if (res.code === 0) {
 						this.load_path(pathInfo.mediaId);
 					}
 				})
 				.catch(() => {});
 		},
 		async scan_path(pathInfo: any) {
-			const res = await scan_path(
+			const res = await pathApi.scan_path(
 				pathInfo.mediaId,
 				pathInfo.path,
 				pathInfo.pathId
 			);
 
-			if (res.data.code === 0) {
+			if (res.code === 0) {
 				this.load_path(pathInfo.mediaId);
 			}
 		},
@@ -265,15 +253,15 @@ export default defineComponent({
 			const mediaId = this.form.mediaId;
 			if (!path) return;
 
-			const res = await add_path(mediaId, this.pathForm);
+			const res = await pathApi.add_path(mediaId, this.pathForm);
 
-			if (res.data.code === 0) {
+			if (res.code === 0) {
 				// 重置表单
 				Object.assign(this.pathForm, {
 					path: '',
 					autoScan: 0,
 					include: '',
-					exclude: ''
+					exclude: '',
 				});
 				this.load_path(mediaId);
 			}

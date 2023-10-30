@@ -2,7 +2,7 @@
  * @Author: lkw199711 lkw199711@163.com
  * @Date: 2023-08-25 10:45:47
  * @LastEditors: lkw199711 lkw199711@163.com
- * @LastEditTime: 2023-10-18 23:12:21
+ * @LastEditTime: 2023-10-26 17:52:08
  * @FilePath: /smanga/src/views/browse-view/flow.vue
 -->
 <template>
@@ -56,8 +56,7 @@ import {
 } from '@/utils';
 import { ElMessage as msg } from 'element-plus';
 import { config } from '@/store';
-import { add_history } from '@/api/history';
-import { get_chapter_images } from '@/api/browse';
+import historyApi from '@/api/history';
 import i18n from '@/i18n';
 import { onMounted } from 'vue';
 import chapterListMenu from './components/chapter-list-menu.vue';
@@ -66,6 +65,7 @@ import bookmark from './components/bookmark.vue';
 import pageNumber from './components/page-number.vue';
 import { useRoute, useRouter } from 'vue-router';
 import { chapterInfoType } from '@/type/chapter';
+import chapterApi from '@/api/chapter';
 const { t } = i18n.global;
 const route = useRoute();
 const router = useRouter();
@@ -237,12 +237,12 @@ async function reload_page(addHistory = true, clearPage = true, pageParams = 1) 
 	}
 
 	if (addHistory) {
-		add_history();
+		historyApi.add_history();
 	}
 
-	const res = await get_chapter_images(chapterInfo.chapterId);
+	const res = await chapterApi.get_images(chapterInfo.chapterId);
 
-	switch (res.data.status) {
+	switch (res.state) {
 		case 'uncompressed':
 			setTimeout(() => {
 				reload_page(false);
@@ -250,8 +250,8 @@ async function reload_page(addHistory = true, clearPage = true, pageParams = 1) 
 			break;
 		case 'compressing':
 			// 进度有所增加 则更新图片列表
-			if (res.data.list.length > imgFileList.value.length) {
-				imgPathList.value = res.data.list;
+			if (res.list.length > imgFileList.value.length) {
+				imgPathList.value = res.list;
 				finished.value = false;
 				page_change();
 			}
@@ -261,11 +261,11 @@ async function reload_page(addHistory = true, clearPage = true, pageParams = 1) 
 			}, 2000);
 			break;
 		case 'compressed':
-			imgPathList.value = res.data.list;
+			imgPathList.value = res.list;
 			page_change();
 			break;
 		default:
-			imgPathList.value = res.data.list;
+			imgPathList.value = res.list;
 			page_change();
 	}
 

@@ -1,45 +1,11 @@
+/*
+ * @Author: lkw199711 lkw199711@163.com
+ * @Date: 2023-10-26 20:25:18
+ * @LastEditors: lkw199711 lkw199711@163.com
+ * @LastEditTime: 2023-10-26 20:27:28
+ * @FilePath: /smanga/src/api/manga.ts
+ */
 import {ajax} from './index';
-
-/**
- * 获取漫画记录
- * @param mediaId
- * @param page
- * @param pageSize
- */
-export function get_manga(
-	mediaId: number,
-	page: number,
-	pageSize: number,
-	order = ''
-) {
-	return ajax({
-		url: 'manga/get',
-		data: {mediaId, page, pageSize, order},
-	});
-}
-
-/**
- * 更改漫画记录
- * @param data
- */
-export function update_manga(data: any) {
-	return ajax({
-		url: 'manga/update',
-		data,
-	});
-}
-
-/**
- * 删除漫画
- * @param mangaId
- * @param deleteFile
- */
-export function delete_manga(mangaId: number, deleteFile = false) {
-	return ajax({
-		url: 'manga/delete',
-		data: {mangaId, deleteFile},
-	});
-}
 
 const mangaApi = {
 	/**
@@ -83,8 +49,8 @@ const mangaApi = {
 		const data: ResType = (await res).data;
 
 		return {
-			list: data.list.data,
-			count: data.list.total,
+			list: data.list,
+			count: data.count,
 		};
 	},
 
@@ -101,7 +67,34 @@ const mangaApi = {
 
 		const data = (await res).data;
 
-		return data;
+		return data.request;
+	},
+	
+	/**
+	 * 更改漫画记录
+	 * @param data
+	 */
+	async update_manga(data: any) {
+		const res = ajax({
+			url: 'manga/update',
+			data,
+		});
+
+		return (await res).data;
+	},
+
+	/**
+	 * 删除漫画
+	 * @param mangaId
+	 * @param deleteFile
+	 */
+	async delete_manga(mangaId: number, deleteFile = false) {
+		const res = ajax({
+			url: 'manga/delete',
+			data: {mangaId, deleteFile},
+		});
+
+		return (await res).data;
 	},
 };
 
