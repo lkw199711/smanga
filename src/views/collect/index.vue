@@ -198,7 +198,8 @@ async function page_change(
 	if (pageParams !== 1 && pageParams > Math.ceil(count.value / pageSize)) return;
 	if (pageParams < 1) return;
 	page.value = pageParams;
-
+	list.value = [];
+	
 	const res: any = await get_collect(
 		collectType.value,
 		page.value,
