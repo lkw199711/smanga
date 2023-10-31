@@ -1,11 +1,17 @@
 <template>
   <div class="history-list">
-    <!--列表-->
+    <!-- 列表 -->
     <div class="touch-dom">
-      <div :class="['chapter-list-box', { 'block': config.viewType === 'list' }]">
-        <chapter v-for="(i, k) in list" :key="k" :viewType="config.viewType" :chapterInfo="i" :bookmark="true"
-          @click="go_browse(i)" @contextmenu.prevent="context_menu(i, k)" />
-      </div>
+      <!-- 加载骨架屏 -->
+      <template v-if="loading">
+        <list-skeleton />
+      </template>
+      <template v-else>
+        <div :class="['chapter-list-box', { 'block': config.viewType === 'list' }]">
+          <chapter v-for="(i, k) in list" :key="k" :viewType="config.viewType" :chapterInfo="i" :bookmark="true"
+            @click="go_browse(i)" @contextmenu.prevent="context_menu(i, k)" />
+        </div>
+      </template>
     </div>
 
     <!--分页-->
@@ -30,9 +36,12 @@ import { useRoute, useRouter } from 'vue-router';
 import { pageSizeConfigType, screenType } from '@/type/store';
 import { chapterPageSize } from '@/store/page-size';
 import imageApi from '@/api/image';
+import listSkeleton from '@/components/list-skeleton.vue';
+import queue from '@/store/quque';
 
 let pageSizes: number[] = [];
 let defaultPageSize = 10;
+let loading = ref(false);
 
 get_page_size_array();
 
@@ -123,12 +132,22 @@ async function page_change(pageParams = 1, pageSize: number = defaultPageSize) {
 
   if (pageParams !== 1 && pageParams > Math.ceil(count.value / pageSize)) return;
   if (pageParams < 1) return;
+
+  // 获取页码
   page.value = pageParams;
+  // 加载骨架屏
+  loading.value = true;
+  // 取消封面加载任务
+  queue.chapterQueue.clear();
+  // 清空数据 避免缓存
   list.value = [];
 
   const res = await bookmarkApi.get_bookmark(pageParams, pageSize);
   list.value = res.list;
   count.value = res.count;
+
+  // 结束加载
+  loading.value = false;
 }
 
 /**

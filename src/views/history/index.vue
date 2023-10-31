@@ -1,11 +1,17 @@
 <template>
   <div class="history-list">
-    <!--列表-->
+    <!-- 列表 -->
     <div class="touch-dom">
-      <div :class="['chapter-list-box', { 'block': config.viewType === 'list' }]">
-        <chapter v-for="(i, k) in list" :key="k" :viewType="config.viewType" :chapterInfo="i" @click="go_browse(i)"
-          @contextmenu.prevent="context_menu(i, k)" />
-      </div>
+      <!-- 加载骨架屏 -->
+      <template v-if="loading">
+        <list-skeleton />
+      </template>
+      <template v-else>
+        <div :class="['chapter-list-box', { 'block': config.viewType === 'list' }]">
+          <chapter v-for="(i, k) in list" :key="k" :viewType="config.viewType" :chapterInfo="i" @click="go_browse(i)"
+            @contextmenu.prevent="context_menu(i, k)" />
+        </div>
+      </template>
     </div>
 
     <!--分页组件-->
@@ -29,8 +35,10 @@ import { chapterInfoType } from '@/type/chapter';
 import { useRoute, useRouter } from 'vue-router';
 import { chapterPageSize } from '@/store/page-size';
 import { pageSizeConfigType, screenType } from '@/type/store';
+import listSkeleton from '@/components/list-skeleton.vue';
+import queue from '@/store/quque';
 
-let pageSizes:number[] = [];
+let pageSizes: number[] = [];
 let defaultPageSize = 10;
 
 get_page_size_array();
@@ -50,6 +58,7 @@ const page = ref(1);
 const list = ref([]);
 const count = ref(0);
 const menuPoster = ref('');
+let loading = ref(false);
 const chapterInfo = ref<chapterInfoType>({
   browseType: '',
   chapterCover: '',
@@ -116,15 +125,25 @@ async function go_browse(item: any) {
  * @param pageSize
  */
 async function page_change(pageParams = 1, pageSize = defaultPageSize) {
-  if (pageParams !==1 && pageParams > Math.ceil(count.value / pageSize)) return;
+  if (pageParams !== 1 && pageParams > Math.ceil(count.value / pageSize)) return;
   if (pageParams < 1) return;
+
+  // 获取页码
   page.value = pageParams;
+  // 加载骨架屏
+  loading.value = true;
+  // 取消封面加载任务
+  queue.chapterQueue.clear();
+  // 清空数据 避免缓存
   list.value = [];
-  
+
   const res = await historyApi.get_history(pageParams, pageSize);
 
   list.value = res.list;
   count.value = res.count;
+
+  // 结束加载
+  loading.value = false;
 }
 
 /**

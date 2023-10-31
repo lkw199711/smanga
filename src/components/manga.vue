@@ -47,11 +47,13 @@ import { mangaInfoType } from '@/type/manga';
 import imageApi from '@/api/image';
 import { onMounted, onActivated } from 'vue';
 import queue from '@/store/quque';
+import usePosterStore from '@/store/poster';
 
 type mangaItemType = mangaInfoType & { blob: string; mangaCover: string; };
 
 const route = useRoute();
 const router = useRouter();
+const poster: any = usePosterStore();
 // 传值
 const props = defineProps(['mangaInfo', 'viewType']);
 const placeholder = require('@/assets/s-blue.png');
@@ -69,7 +71,13 @@ onMounted(() => {
 })
 
 async function get_poster(item: mangaItemType) {
-	blobLink.value = await imageApi.get(item.mangaCover);
+	const coverName = item.mangaCover;
+	if (poster[coverName]) {
+		blobLink.value = poster[coverName]
+	} else {
+		blobLink.value = await imageApi.get(coverName);
+		poster[coverName] = blobLink.value;
+	}
 }
 
 async function go_chapter() {

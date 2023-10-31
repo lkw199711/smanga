@@ -1,6 +1,6 @@
 {
 	"name": "smanga",
-	"version": "3.5.9",
+	"version": "3.6.0",
 	"private": true,
 	"scripts": {
 		"serve": "vue-cli-service serve",
@@ -24,6 +24,7 @@
 		"lodash": "^4.17.21",
 		"nprogress": "^0.2.0",
 		"nrm": "^1.2.6",
+		"pinia": "^2.1.7",
 		"postcss-pxtorem": "^5.1.1",
 		"qs": "^6.11.0",
 		"register-service-worker": "^1.7.1",

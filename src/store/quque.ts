@@ -38,7 +38,7 @@ class Queue {
 			await requestFunction!();
 		} catch (error) {
 			console.log('队列错误处理');
-			
+
 			requestFunction!();
 			// console.error(error);
 		} finally {
@@ -46,11 +46,24 @@ class Queue {
 			this.run();
 		}
 	}
+
+	clear() {
+		this.queue = [];
+	}
 }
 
 const globalQueue = new Queue();
 const mangaQueue = new Queue();
 const chapterQueue = new Queue();
-const queue = reactive({globalQueue, mangaQueue, chapterQueue});
+const queue = reactive({
+	globalQueue,
+	mangaQueue,
+	chapterQueue,
+	clear() {
+		globalQueue.clear();
+		mangaQueue.clear();
+		chapterQueue.clear();
+	},
+});
 
 export default queue;

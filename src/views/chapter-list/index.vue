@@ -1,11 +1,17 @@
 <template>
 	<div class="chapter-list">
-		<!--章节列表-->
+		<!-- 章节列表 -->
 		<div class="touch-dom">
-			<div :class="['chapter-list-box', { block: config.viewType === 'list' }]">
-				<chapter v-for="(i, k) in list" :key="k" :view-type="config.viewType" :chapterInfo="i" @click="go_browse(i)"
-					@contextmenu.prevent="context_menu(i, k)" />
-			</div>
+			<!-- 加载骨架屏 -->
+			<template v-if="loading">
+				<list-skeleton />
+			</template>
+			<template v-else>
+				<div :class="['chapter-list-box', { block: config.viewType === 'list' }]">
+					<chapter v-for="(i, k) in list" :key="k" :view-type="config.viewType" :chapterInfo="i"
+						@click="go_browse(i)" @contextmenu.prevent="context_menu(i, k)" />
+				</div>
+			</template>
 		</div>
 
 		<!--分页组件-->
@@ -35,9 +41,11 @@ import { global_get, global_set, global_set_json } from '@/utils';
 import chapterListMenu from './components/chapter-list-menu.vue';
 import chapter from '@/components/chapter.vue';
 import mediaPager from '@/components/media-pager.vue';
+import listSkeleton from '@/components/list-skeleton.vue';
 import rightSidebar from './right-sidebar.vue';
 import { screenType } from '@/type/store';
 import { chapterPageSize } from '@/store/page-size';
+import queue from '@/store/quque';
 
 const route = useRoute();
 const router = useRouter();
@@ -47,6 +55,7 @@ let count = ref(0);
 let list = ref([]);
 let chapterInfo = ref({});
 let menuPoster = ref('');
+let loading = ref(false);
 
 let pageSizes: number[] = [];
 let defaultPageSize = 10;
@@ -184,9 +193,16 @@ async function page_change(
 
 	if (pageParams !== 1 && pageParams > Math.ceil(count.value / pageSize)) return;
 	if (pageParams < 1) return;
+
+	// 获取页码
 	page.value = pageParams;
+	// 加载骨架屏
+	loading.value = true;
+	// 取消封面加载任务
+	queue.mangaQueue.clear();
+	// 清空数据 避免缓存
 	list.value = [];
-	
+
 	const res = await chapterApi.get(
 		mangaId.value,
 		page.value,
@@ -195,6 +211,9 @@ async function page_change(
 	);
 	list.value = res.list;
 	count.value = res.count;
+
+	// 结束加载
+	loading.value = false;
 }
 
 /**
