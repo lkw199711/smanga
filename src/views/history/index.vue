@@ -119,7 +119,8 @@ async function page_change(pageParams = 1, pageSize = defaultPageSize) {
   if (pageParams !==1 && pageParams > Math.ceil(count.value / pageSize)) return;
   if (pageParams < 1) return;
   page.value = pageParams;
-
+  list.value = [];
+  
   const res = await historyApi.get_history(pageParams, pageSize);
 
   list.value = res.list;

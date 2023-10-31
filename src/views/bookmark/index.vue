@@ -124,6 +124,7 @@ async function page_change(pageParams = 1, pageSize: number = defaultPageSize) {
   if (pageParams !== 1 && pageParams > Math.ceil(count.value / pageSize)) return;
   if (pageParams < 1) return;
   page.value = pageParams;
+  list.value = [];
 
   const res = await bookmarkApi.get_bookmark(pageParams, pageSize);
   list.value = res.list;
