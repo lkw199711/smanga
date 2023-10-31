@@ -2,10 +2,16 @@
 	<div class="manga-list">
 		<!-- 漫画列表 -->
 		<div class="touch-dom">
-			<div :class="['manga-list-box', { block: config.viewType === 'list' }]">
-				<manga v-for="(i, k) in list" :key="k" :viewType="config.viewType" :mangaInfo="i"
-					@contextmenu.prevent="context_menu(i, k)" />
-			</div>
+			<!-- 加载骨架屏 -->
+			<template v-if="loading">
+				<list-skeleton />
+			</template>
+			<template v-else>
+				<div :class="['manga-list-box', { block: config.viewType === 'list' }]">
+					<manga v-for="(i, k) in list" :key="i.mangaId" :viewType="config.viewType" :mangaInfo="i"
+						@contextmenu.prevent="context_menu(i, k)" />
+				</div>
+			</template>
 		</div>
 
 		<!--分页组件-->
@@ -35,17 +41,20 @@ import store, { config, userConfig, pageSizeConfig } from '@/store';
 import { global_get } from '@/utils';
 import manga from '@/components/manga.vue';
 import mediaPager from '@/components/media-pager.vue';
+import listSkeleton from '@/components/list-skeleton.vue';
 import rightSidebar from './right-sidebar.vue';
 import { screenType } from '@/type/store';
 import { mangaPageSize } from '@/store/page-size';
-
+import { mangaInfoType } from '@/type/manga';
+import queue from '@/store/quque';
 const route = useRoute();
 
 let page = ref(1);
 let count = ref(0);
-let list = ref([]);
+let list = ref<mangaInfoType[]>([]);
 let mangaInfo = ref({});
 let menuPoster = ref('');
+let loading = ref(false);
 
 let pageSizes: number[] = [];
 let defaultPageSize = 10;
@@ -157,12 +166,22 @@ async function page_change(
 
 	if (pageParams !== 1 && pageParams > Math.ceil(count.value / pageSize)) return;
 	if (pageParams < 1) return;
+
+	// 获取页码
 	page.value = pageParams;
+	// 加载骨架屏
+	loading.value = true;
+	// 取消封面加载任务
+	queue.mangaQueue.clear();
+	// 清空数据 避免缓存
 	list.value = [];
-	
+
 	const res = await mangaApi.get(mediaId.value, page.value, pageSize, userConfig.order);
 	list.value = res.list;
 	count.value = res.count;
+
+	// 结束加载
+	loading.value = false;
 }
 
 function reload() {

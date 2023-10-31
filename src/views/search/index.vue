@@ -25,30 +25,36 @@
 		</div>
 
 		<div class="middle">
-			<div class="manga-list" v-if="searchType === 'manga'">
-				<div class="touch-dom">
-					<div :class="['manga-list-box', { block: config.viewType === 'list' }]">
-						<manga v-for="(i, k) in list" :key="k" :viewType="config.viewType" :mangaInfo="i"
-							@contextmenu.prevent="context_menu(i, k)" />
+			<!-- 加载骨架屏 -->
+			<template v-if="loading">
+				<list-skeleton />
+			</template>
+			<template v-else>
+				<div class="manga-list" v-if="searchType === 'manga'">
+					<div class="touch-dom">
+						<div :class="['manga-list-box', { block: config.viewType === 'list' }]">
+							<manga v-for="(i, k) in list" :key="k" :viewType="config.viewType" :mangaInfo="i"
+								@contextmenu.prevent="context_menu(i, k)" />
+						</div>
 					</div>
+
+					<!-- 分页组件 -->
+					<media-pager ref="pager" :page="page" :count="count" :page-size-config="pageSizes"
+						@page-change="page_change" />
 				</div>
 
-				<!--分页组件-->
-				<media-pager ref="pager" :page="page" :count="count" :page-size-config="pageSizes"
-					@page-change="page_change" />
-			</div>
+				<div class="chapter-list" v-if="searchType === 'chapter'">
+					<!-- 章节列表 -->
+					<div :class="['chapter-list-box', { block: config.viewType === 'list' }]">
+						<chapter v-for="(i, k) in list" :key="k" :view-type="config.viewType" :chapterInfo="i"
+							@click="go_browse(i)" @contextmenu.prevent="context_menu(i, k)" />
+					</div>
 
-			<div class="chapter-list" v-if="searchType === 'chapter'">
-				<!--章节列表-->
-				<div :class="['chapter-list-box', { block: config.viewType === 'list' }]">
-					<chapter v-for="(i, k) in list" :key="k" :view-type="config.viewType" :chapterInfo="i"
-						@click="go_browse(i)" @contextmenu.prevent="context_menu(i, k)" />
+					<!-- 分页组件 -->
+					<media-pager ref="pager" :page="page" :count="count" :page-size-config="pageSizes"
+						@page-change="page_change" />
 				</div>
-
-				<!--分页组件-->
-				<media-pager ref="pager" :page="page" :count="count" :page-size-config="pageSizes"
-					@page-change="page_change" />
-			</div>
+			</template>
 		</div>
 	</div>
 </template>
@@ -79,6 +85,10 @@ import mediaPager from '@/components/media-pager.vue';
 import { ElMessage } from 'element-plus';
 import { pageSizeConfigType, screenType } from '@/type/store';
 import { mangaPageSize, chapterPageSize } from '@/store/page-size';
+import listSkeleton from '@/components/list-skeleton.vue';
+import queue from '@/store/quque';
+
+let loading = ref(false);
 const searchText = ref('');
 const searchType = ref('manga');
 
@@ -193,10 +203,16 @@ function touch_page_change() {
  * @param pageSize
  */
 async function page_change(
-	pageC = 1,
+	pageParams = 1,
 	pageSize: number = defaultPageSize
 ) {
-	page.value = pageC;
+	// 获取页码
+	page.value = pageParams;
+	// 加载骨架屏
+	loading.value = true;
+	// 取消封面加载任务
+	queue.clear();
+	// 清空数据 避免缓存
 	list.value = [];
 
 	if (!searchText.value) {
@@ -213,6 +229,9 @@ async function page_change(
 	);
 	list.value = res.list;
 	count.value = res.count;
+
+	// 结束加载
+	loading.value = false;
 }
 
 function reload() {

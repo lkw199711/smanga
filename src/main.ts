@@ -2,7 +2,7 @@
  * @Author: error: error: git config user.name & please set dead value or install git && error: git config user.email & please set dead value or install git & please set dead value or install git
  * @Date: 2023-08-16 15:09:40
  * @LastEditors: lkw199711 lkw199711@163.com
- * @LastEditTime: 2023-10-27 20:35:32
+ * @LastEditTime: 2023-10-31 21:52:16
  * @FilePath: /smanga/src/main.ts
  */
 import {createApp} from 'vue';
@@ -26,6 +26,7 @@ import 'vant/lib/index.css';
 
 import PerfectScrollbar from 'vue3-perfect-scrollbar';
 import 'vue3-perfect-scrollbar/dist/vue3-perfect-scrollbar.css';
+import { createPinia } from 'pinia';
 
 const app = createApp(App);
 
@@ -35,8 +36,9 @@ app
 	.use(i18n)
 	.use(ElementPlus)
 	.use(List)
-	.use(PullRefresh);
-
+	.use(PullRefresh)
+	.use(createPinia());
+	
 // 在这里设置全局配置
 app.use(PerfectScrollbar);
 

@@ -36,9 +36,10 @@ import imageApi from "@/api/image";
 import queue from "@/store/quque";
 import { chapterInfoType } from "@/type/chapter";
 import { ref, onMounted, defineProps } from "vue";
+import usePosterStore from '@/store/poster';
 
 type chapterItemType = chapterInfoType & { blob: string; chapterCover: string; pageImage: string; };
-
+const poster: any = usePosterStore();
 const props = defineProps(['chapterInfo', 'bookmark', 'viewType']);
 const placeholder = require("@/assets/s-blue.png");
 const fit = 'cover';
@@ -51,7 +52,13 @@ onMounted(() => {
 })
 
 async function get_poster(item: chapterItemType) {
-	blobLink.value = await imageApi.get(item.pageImage || item.chapterCover);
+	const coverName = item.pageImage || item.chapterCover;
+	if (poster[coverName]) {
+		blobLink.value = poster[coverName]
+	} else {
+		blobLink.value = await imageApi.get(coverName);
+		poster[coverName] = blobLink.value;
+	}
 }
 
 </script>
