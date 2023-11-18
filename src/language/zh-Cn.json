@@ -22,11 +22,13 @@
     "bookmarkManage": "书签管理",
     "tagManage": "标签管理",
     "compressManage": "转换管理",
+    "jobsManage": "任务管理",
     "wiki": "使用说明",
     "tagList": "标签展示"
   },
   "option": {
     "option": "操作",
+    "check": "查看",
     "add": "新增",
     "delete": "删除",
     "collect": "收藏",
@@ -41,7 +43,8 @@
     "ltr": "左 -> 右",
     "rtl": "右 -> 左",
     "dwonload": "下载图片",
-    "editTags": "编辑标签"
+    "editTags": "编辑标签",
+    "copy": "复制"
   },
   "account": {
     "add": "新增用户",
@@ -250,6 +253,13 @@
       "text": "确认删除此转换记录?"
     }
   },
+  "jobsManage": {
+    "id": "id",
+    "queue": "队列",
+    "details": "任务详情",
+    "deleteTitle": "删除任务",
+    "deleteConfirm": "确认删除此任务吗?"
+  },
   "collect": {
     "manga": "漫画",
     "chapter": "章节"
@@ -331,5 +341,7 @@
     "editTags": "编辑标签",
     "baseTagTitle": "备选标签",
     "ckeckedTagTitle": "当前标签"
-  }
+  },
+  "createTime": "创建时间",
+  "updateTime": "更新时间"
 }

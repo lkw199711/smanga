@@ -22,11 +22,13 @@
     "bookmarkManage": "書簽管理",
     "tagManage": "標簽管理",
     "compressManage": "轉換管理",
+    "jobsManage": "任務管理",
     "wiki": "使用說明",
     "tagList": "標簽展示"
   },
   "option": {
     "option": "操作",
+    "check": "查看",
     "add": "新增",
     "delete": "刪除",
     "collect": "收藏",
@@ -41,7 +43,8 @@
     "ltr": "左 -> 右",
     "rtl": "右 -> 左",
     "dwonload": "下載圖片",
-    "editTags": "編輯標簽"
+    "editTags": "編輯標簽",
+    "copy": "復製"
   },
   "account": {
     "add": "新增用戶",
@@ -250,6 +253,13 @@
       "text": "確認刪除此轉換記錄?"
     }
   },
+  "jobsManage": {
+    "id": "id",
+    "queue": "隊列",
+    "details": "任務詳情",
+    "deleteTitle": "刪除任務",
+    "deleteConfirm": "確認刪除此任務嗎?"
+  },
   "collect": {
     "manga": "漫畫",
     "chapter": "章節"
@@ -331,5 +341,7 @@
     "editTags": "編輯標簽",
     "baseTagTitle": "備選標簽",
     "ckeckedTagTitle": "當前標簽"
-  }
+  },
+  "createTime": "創建時間",
+  "updateTime": "更新時間"
 }
