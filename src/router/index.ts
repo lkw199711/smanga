@@ -255,7 +255,7 @@ const routes: Array<RouteRecordRaw> = [
 				meta: {
 					sidebar: true,
 					title: 'compressManage',
-					icon: 'comporess',
+					icon: 'compress',
 					view: 'setting',
 				},
 				component: () => import('../views/compress-setting/index.vue'),
@@ -267,7 +267,7 @@ const routes: Array<RouteRecordRaw> = [
 				meta: {
 					sidebar: true,
 					title: 'jobsManage',
-					icon: 'comporess',
+					icon: 'job-manage',
 					view: 'setting',
 				},
 				component: () => import('../views/jobs-manage/index.vue'),

@@ -6,6 +6,27 @@
   "description": "漫画流媒体管理-彩色图标",
   "glyphs": [
     {
+      "icon_id": "582603",
+      "name": "失败",
+      "font_class": "failed-job",
+      "unicode": "e64a",
+      "unicode_decimal": 58954
+    },
+    {
+      "icon_id": "12240321",
+      "name": "失败",
+      "font_class": "failed-job1",
+      "unicode": "e6ce",
+      "unicode_decimal": 59086
+    },
+    {
+      "icon_id": "2907203",
+      "name": "任务",
+      "font_class": "job-manage",
+      "unicode": "e6b3",
+      "unicode_decimal": 59059
+    },
+    {
       "icon_id": "2674482",
       "name": "说明",
       "font_class": "wiki5",
@@ -190,14 +211,14 @@
     {
       "icon_id": "7226336",
       "name": "压缩包",
-      "font_class": "comporess",
+      "font_class": "compress",
       "unicode": "e61a",
       "unicode_decimal": 58906
     },
     {
       "icon_id": "22761832",
       "name": "文件类型-压缩包",
-      "font_class": "comporess1",
+      "font_class": "compress1",
       "unicode": "e619",
       "unicode_decimal": 58905
     },
