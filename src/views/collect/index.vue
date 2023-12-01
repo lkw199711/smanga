@@ -5,31 +5,39 @@
 		</div>
 
 		<div class="middle">
-			<div class="manga-list" v-if="collectType === 'manga'">
-				<div class="touch-dom">
-					<div :class="['manga-list-box', { block: config.viewType === 'list' }]">
-						<manga v-for="(i, k) in list" :key="k" :viewType="config.viewType" :mangaInfo="i"
-							@contextmenu.prevent="context_menu(i, k)" />
+			<!-- 加载骨架屏 -->
+			<template v-if="loading">
+				<list-skeleton />
+			</template>
+			<template v-else>
+				<div class="manga-list" v-if="collectType === 'manga'">
+					<div class="touch-dom">
+						<div :class="['manga-list-box', { block: config.viewType === 'list' }]">
+							<manga v-for="(i, k) in list" :key="k" :viewType="config.viewType" :mangaInfo="i"
+								@contextmenu.prevent="context_menu(i, k)" />
+						</div>
 					</div>
+
+
+					<!--分页组件-->
+					<media-pager ref="pager" :page="page" :count="count" :page-size-config="pageSizes"
+						@page-change="page_change" />
 				</div>
 
-
-				<!--分页组件-->
-				<media-pager ref="pager" :page="page" :count="count" :page-size-config="pageSizes" @page-change="page_change" />
-			</div>
-
-			<div class="chapter-list" v-if="collectType === 'chapter'">
-				<div class="touch-dom">
-					<!--章节列表-->
-					<div :class="['chapter-list-box', { block: config.viewType === 'list' }]">
-						<chapter v-for="(i, k) in list" :key="k" :view-type="config.viewType" :chapterInfo="i"
-							@click="go_browse(i)" @contextmenu.prevent="context_menu(i, k)" />
+				<div class="chapter-list" v-if="collectType === 'chapter'">
+					<div class="touch-dom">
+						<!--章节列表-->
+						<div :class="['chapter-list-box', { block: config.viewType === 'list' }]">
+							<chapter v-for="(i, k) in list" :key="k" :view-type="config.viewType" :chapterInfo="i"
+								@click="go_browse(i)" @contextmenu.prevent="context_menu(i, k)" />
+						</div>
 					</div>
-				</div>
 
-				<!--分页组件-->
-				<media-pager ref="pager" :page="page" :count="count" :page-size-config="pageSizes" @page-change="page_change" />
-			</div>
+					<!--分页组件-->
+					<media-pager ref="pager" :page="page" :count="count" :page-size-config="pageSizes"
+						@page-change="page_change" />
+				</div>
+			</template>
 		</div>
 	</div>
 </template>
@@ -62,6 +70,10 @@ import tabs from './tabs.vue';
 import i18n from '@/i18n';
 import { pageSizeConfigType, screenType } from '@/type/store';
 import { mangaPageSize, chapterPageSize } from '@/store/page-size';
+import listSkeleton from '@/components/list-skeleton.vue';
+import queue from '@/store/quque';
+let loading = ref(false);
+
 const { t } = i18n.global;
 
 const items = ref([
@@ -197,9 +209,16 @@ async function page_change(
 
 	if (pageParams !== 1 && pageParams > Math.ceil(count.value / pageSize)) return;
 	if (pageParams < 1) return;
+
+	// 获取页码
 	page.value = pageParams;
+	// 加载骨架屏
+	loading.value = true;
+	// 取消封面加载任务
+	queue.clear();
+	// 清空数据 避免缓存
 	list.value = [];
-	
+
 	const res: any = await get_collect(
 		collectType.value,
 		page.value,
@@ -208,6 +227,9 @@ async function page_change(
 	);
 	list.value = res.data.list;
 	count.value = res.data.count;
+
+	// 结束加载
+	loading.value = false;
 }
 
 /**
