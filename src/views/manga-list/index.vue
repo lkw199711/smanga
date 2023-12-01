@@ -63,15 +63,6 @@ get_page_size_array();
 
 function get_page_size_array() {
 	// 获取默认的页面容量
-	/*
-	const screen: screenType = config.screenType;
-	let pageArr = pageSizeConfig;
-	const pageStoreage = global_get('pageSizeConfig');
-
-	if (pageStoreage && typeof pageStoreage === 'string') pageArr = JSON.parse(pageStoreage);
-*/
-
-	// 获取默认的页面容量
 	const screen: screenType = config.screenType;
 
 	pageSizes = mangaPageSize[screen];

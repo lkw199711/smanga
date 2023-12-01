@@ -2,9 +2,9 @@
   font-family: "colour"; /* Project id 3852929 */
   /* Color fonts */
   src: 
-       url('iconfont.woff2?t=1697639370440') format('woff2'),
-       url('iconfont.woff?t=1697639370440') format('woff'),
-       url('iconfont.ttf?t=1697639370440') format('truetype');
+       url('iconfont.woff2?t=1701445527413') format('woff2'),
+       url('iconfont.woff?t=1701445527413') format('woff'),
+       url('iconfont.ttf?t=1701445527413') format('truetype');
 }
 
 .colour {
@@ -13,6 +13,18 @@
   font-style: normal;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.colour-failed-job:before {
+  content: "\e64a";
+}
+
+.colour-failed-job1:before {
+  content: "\e6ce";
+}
+
+.colour-job-manage:before {
+  content: "\e6b3";
 }
 
 .colour-wiki5:before {
@@ -119,11 +131,11 @@
   content: "\ff03";
 }
 
-.colour-comporess:before {
+.colour-compress:before {
   content: "\e61a";
 }
 
-.colour-comporess1:before {
+.colour-compress1:before {
   content: "\e619";
 }
 

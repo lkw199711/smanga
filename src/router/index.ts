@@ -255,10 +255,22 @@ const routes: Array<RouteRecordRaw> = [
 				meta: {
 					sidebar: true,
 					title: 'compressManage',
-					icon: 'comporess',
+					icon: 'compress',
 					view: 'setting',
 				},
 				component: () => import('../views/compress-setting/index.vue'),
+			},
+			// 任务管理
+			{
+				path: '/jobs-setting',
+				name: 'jobs-setting',
+				meta: {
+					sidebar: true,
+					title: 'jobsManage',
+					icon: 'job-manage',
+					view: 'setting',
+				},
+				component: () => import('../views/jobs-manage/index.vue'),
 			},
 		],
 	},
