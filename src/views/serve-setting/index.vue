@@ -2,7 +2,7 @@
  * @Author: lkw199711 lkw199711@163.com
  * @Date: 2023-07-16 12:02:34
  * @LastEditors: lkw199711 lkw199711@163.com
- * @LastEditTime: 2023-12-03 16:55:56
+ * @LastEditTime: 2023-12-03 20:14:28
  * @FilePath: /smanga/src/views/serve-setting/index.vue
 -->
 <template>
@@ -38,7 +38,7 @@
                 </el-form-item>
 
                 <el-form-item label="key文件">
-                    <el-input v-model="form.pem" class="key" />
+                    <el-input v-model="form.key" class="key" />
                 </el-form-item>
 
                 <el-button type="primary" @click="comfirm_ssl">确定</el-button>
