@@ -47,7 +47,7 @@ fi
 # logs
 chown smanga:smanga -R /data/logs
 # Nginx
-chown smanga:smanga -R /var/lib/nginx /run/nginx /var/log/nginx /etc/nginx/conf.d
+chown smanga:smanga -R /var/lib/nginx /run/nginx /var/log/nginx
 # PHP
 chown smanga:smanga -R /run/php
 # Supervisor
