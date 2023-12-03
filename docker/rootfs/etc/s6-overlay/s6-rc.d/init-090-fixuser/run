@@ -1,13 +1,3 @@
-###
- # @Author: lkw199711 lkw199711@163.com
- # @Date: 2023-12-03 16:46:55
- # @LastEditors: lkw199711 lkw199711@163.com
- # @LastEditTime: 2023-12-03 16:46:56
- # @FilePath: /smanga/docker/rootfs/etc/s6-overlay/s6-rc.d/init-090-fixuser/run
-### 
-#!/usr/bin/with-contenv bash
-# shellcheck shell=bash
-
 echo -e "Change owner to user smanga...\nIt may take a while"
 
 groupmod -o -g "${PGID}" smanga
@@ -47,7 +37,7 @@ fi
 # logs
 chown smanga:smanga -R /data/logs
 # Nginx
-chown smanga:smanga -R /var/lib/nginx /run/nginx /var/log/nginx
+chown smanga:smanga -R /var/lib/nginx /run/nginx /var/log/nginx /var/log/nginx
 # PHP
 chown smanga:smanga -R /run/php
 # Supervisor
