@@ -2,7 +2,7 @@
  * @Author: lkw199711 lkw199711@163.com
  * @Date: 2023-07-16 12:02:34
  * @LastEditors: lkw199711 lkw199711@163.com
- * @LastEditTime: 2023-12-03 20:14:28
+ * @LastEditTime: 2023-12-07 00:04:21
  * @FilePath: /smanga/src/views/serve-setting/index.vue
 -->
 <template>
@@ -43,13 +43,26 @@
 
                 <el-button type="primary" @click="comfirm_ssl">确定</el-button>
                 <el-button type="success" @click="reset_ssl">重置ssl证书设置</el-button>
-                
+
                 <p class="note form-note">
                     ssl证书在默认模式下,以http的方式监听443端口,使用http://smanga_domain:443可以访问.
                     你可以使用宿主机的nginx配置反向代理进行设置.
                     如果你在宿主机没有nginx或者不希望通过反代的方式进行配置,可以在此处填写证书使用的文件,smanga会将这些文件写入到nginx配置之中.
                 </p>
             </div>
+
+
+            <p class="s-form-title">封面设置</p>
+            <!-- 语言设置 -->
+            <div class="scan">
+                <el-form-item label="压缩大小">
+                    <el-input v-model="form.posterSize" class="poster-size"></el-input>
+                    <el-button type="primary" @click="confirm_poster_size">确定</el-button>
+                </el-form-item>
+            </div>
+            <p class="note form-note">
+                扫描周期单位为秒,可使用*表达式.设置周期最短为10
+            </p>
         </el-form>
     </div>
 </template>
@@ -66,6 +79,7 @@ const form = reactive({
     pem: '',
     // 证书key文件
     key: '',
+    posterSize: 100,
 })
 
 /**
@@ -82,6 +96,10 @@ async function comfirm_interval() {
  */
 async function comfirm_auto_compressl() {
     serveSettingApi.set('scan', 'autoCompress', form.autoCompress)
+}
+
+async function confirm_poster_size() {
+    serveSettingApi.set('poster', 'size', form.posterSize)
 }
 
 /**
@@ -101,14 +119,13 @@ async function reset_ssl() {
 }
 onMounted(async () => {
     const res = await serveSettingApi.get();
-    form.interval = res.interval
-    form.autoCompress = res.autoCompress
+    Object.assign(form, res);
 })
 
 </script>
 
 <style scoped lang="less">
-.interval {
+.interval,.poster-size {
     margin-right: 2rem;
     width: 20rem;
 
@@ -148,7 +165,7 @@ onMounted(async () => {
         margin: 3rem 2rem 0;
     }
 
-    .interval {
+    .interval,.poster-size {
         width: 14rem;
     }
 }
