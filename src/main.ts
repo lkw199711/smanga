@@ -52,7 +52,7 @@ for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
 import { createVersionPolling } from 'version-polling';
 
 const env = process.env.NODE_ENV;
-const silent = env === 'development' || env === 'baota';
+const silent = env === 'development' || env === 'baota' || env === 'docker';
 createVersionPolling({
 	appETagKey: '__APP_ETAG__',
 	pollingInterval: 5 * 1000, // 单位为毫秒
