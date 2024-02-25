@@ -6,11 +6,10 @@ import {ElMessage} from 'element-plus';
 import {Cookies} from '@/utils';
 import router from '@/router';
 
-const devUrl = '/php/public/index.php/';
 const prodUrl = process.env.VUE_APP_PATH || '/php/public/index.php/';
 
 // 接口路径的设置
-const url = process.env.NODE_ENV === 'development' ? '/cms' + devUrl : prodUrl;
+const url = '/cms' + prodUrl;
 
 /**
  * 创建默认接口请求设置
