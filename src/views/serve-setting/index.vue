@@ -2,7 +2,7 @@
  * @Author: lkw199711 lkw199711@163.com
  * @Date: 2023-07-16 12:02:34
  * @LastEditors: lkw199711 lkw199711@163.com
- * @LastEditTime: 2023-12-07 00:04:21
+ * @LastEditTime: 2024-02-26 04:05:28
  * @FilePath: /smanga/src/views/serve-setting/index.vue
 -->
 <template>
@@ -13,6 +13,7 @@
             <div class="scan">
                 <el-form-item label="扫描周期">
                     <el-input v-model="form.interval" class="interval"></el-input>
+                    <span class="suffix">ms</span>
                     <el-button type="primary" @click="comfirm_interval">确定</el-button>
                 </el-form-item>
             </div>
@@ -57,11 +58,25 @@
             <div class="scan">
                 <el-form-item label="压缩大小">
                     <el-input v-model="form.posterSize" class="poster-size"></el-input>
+                    <span class="suffix poster-suffix">KB</span>
                     <el-button type="primary" @click="confirm_poster_size">确定</el-button>
                 </el-form-item>
             </div>
             <p class="note form-note">
                 扫描周期单位为秒,可使用*表达式.设置周期最短为10
+            </p>
+
+            <p class="s-form-title">压缩文件设置</p>
+            <!-- 语言设置 -->
+            <div class="scan">
+                <el-form-item label="文件保存时长">
+                    <el-input v-model="form.saveDuration" class="compress-time"></el-input>
+                    <span class="suffix compress-suffix">天</span>
+                    <el-button type="primary" @click="confirm_compress_duration">确定</el-button>
+                </el-form-item>
+            </div>
+            <p class="note form-note">
+                文件保存周期单位为天,填写0不删除文件.
             </p>
         </el-form>
     </div>
@@ -80,6 +95,7 @@ const form = reactive({
     // 证书key文件
     key: '',
     posterSize: 100,
+    saveDuration: 30,
 })
 
 /**
@@ -100,6 +116,10 @@ async function comfirm_auto_compressl() {
 
 async function confirm_poster_size() {
     serveSettingApi.set('poster', 'size', form.posterSize)
+}
+
+async function confirm_compress_duration() {
+    serveSettingApi.set('compress', 'saveDuration', form.saveDuration)
 }
 
 /**
@@ -125,9 +145,9 @@ onMounted(async () => {
 </script>
 
 <style scoped lang="less">
-.interval,.poster-size {
-    margin-right: 2rem;
-    width: 20rem;
+.interval,
+.poster-size {
+    width: 8rem;
 
     :deep(input) {
         text-align: right;
@@ -144,8 +164,19 @@ onMounted(async () => {
     margin-right: 2rem;
 }
 
-@media only screen and (min-width: 1200px) {
+.suffix {
+    margin: 0 1.2rem;
+}
 
+.compress-time {
+    width: 8rem;
+
+    :deep(input) {
+        text-align: right;
+    }
+}
+
+@media only screen and (min-width: 1200px) {
     .serve-setting {
         width: 100rem;
         margin: 3rem 10rem 0;
@@ -165,8 +196,8 @@ onMounted(async () => {
         margin: 3rem 2rem 0;
     }
 
-    .interval,.poster-size {
+    .interval,
+    .poster-size {
         width: 14rem;
     }
-}
-</style>
+}</style>
