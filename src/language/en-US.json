@@ -21,12 +21,14 @@
     "chapterManage": "chapterManage",
     "bookmarkManage": "bookmarkManage",
     "tagManage": "tagManage",
+    "jobsManage": "jobsManage",
     "compressManage": "compressManage",
     "wiki": "wiki",
     "tagList": "tagList"
   },
   "option": {
     "option": "option",
+    "check": "check",
     "add": "add",
     "delete": "delete",
     "collect": "collect",
@@ -44,7 +46,8 @@
     "next": "next",
     "removeCollect": "remove collect",
     "dwonload": "dwonload image",
-    "editTags": "ediaTags"
+    "editTags": "ediaTags",
+    "copy": "copy"
   },
   "account": {
     "add": "addUser",
@@ -250,6 +253,13 @@
       "text": "are you sure to delete this compress record?"
     }
   },
+  "jobsManage": {
+    "id": "id",
+    "queue": "queue",
+    "details": "details",
+    "deleteTitle": "delete job",
+    "deleteConfirm": "Are you sure to delete this job?"
+  },
   "collect": {
     "manga": "manga",
     "chapter": "chapter"
@@ -332,5 +342,7 @@
     "editTags": "editTags",
     "baseTagTitle": "Alternative tags",
     "ckeckedTagTitle": "Current tag"
-  }
+  },
+  "createTime": "createTime",
+  "updateTime": "updateTime"
 }
