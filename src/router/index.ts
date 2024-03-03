@@ -87,6 +87,12 @@ const routes: Array<RouteRecordRaw> = [
 				},
 				component: () => import('../views/media-list/index.vue'),
 			},
+			{
+				path: '/parent-path-list',
+				name: 'parent-path-list',
+				meta: {sidebar: false, view: 'list'},
+				component: () => import('../views/parent-path-list/index.vue'),
+			},
 			// 漫画列表
 			{
 				path: '/manga-list',

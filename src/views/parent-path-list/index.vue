@@ -1,16 +1,16 @@
 <template>
 	<div class="index">
 		<div class="media">
-			<div class="media-item" v-for="item in mediaList" :key="item.mediaId" @click="go_manga_list(item)"
+			<div class="media-item" v-for="item in mediaList" :key="item.mangaId" @click="go_manga_list(item)"
 				@contextmenu.prevent="context_menu">
-				{{ item.mediaName }}
+				{{ get_last_str(item.parentPath) }}
 			</div>
 		</div>
 	</div>
 </template>
 
 <script lang="ts">
-export default { name: 'media-list' };
+export default { name: 'parent-path-list' };
 </script>
 
 <script setup lang="ts">
@@ -19,18 +19,27 @@ import mediaApi from '@/api/media';
 import { global_set } from '@/utils';
 import { config } from '@/store';
 import { useRoute, useRouter } from 'vue-router';
-import { mediaType } from '@/type/media';
+import mangaApi from '@/api/manga';
+import { mangaInfoType } from '@/type/manga';
 const route = useRoute();
 const router = useRouter();
 
-const mediaList = ref<mediaType[]>([]);
+const mediaList = ref<mangaInfoType[]>([]);
 
+function get_last_str(path: string) {
+	if (!path) return '';
+
+	const arr = path.split('/');
+
+	return arr.reverse()[0]
+}
 /**
  * @description: 读取媒体库
  * @return {*}
  */
 async function load_media() {
-	const res = await mediaApi.get(1, 10000);
+	const mediaId = route.query.mediaId;
+	const res = await mangaApi.get_sub_path(Number(mediaId));
 	mediaList.value = res.list;
 }
 
@@ -39,27 +48,14 @@ async function load_media() {
  * @param {*} mediaId
  * @return {*}
  */
-function go_manga_list(mediaInfo: mediaType) {
-	const mediaId = mediaInfo.mediaId;
-
-	if (mediaInfo.directoryFormat == 1) {
-		router.push({
-			name: 'parent-path-list',
-			query: {
-				mediaId,
-			},
-			params: { clear: '1' },
-		});
-		return;
-	}
-
-	// 设置媒体库id
-	global_set('mediaId', mediaId);
+function go_manga_list(mangaInfo: mangaInfoType) {
+	const parentPath = mangaInfo.parentPath;
 
 	router.push({
 		name: 'manga-list',
 		query: {
-			mediaId,
+			byParentPath: 1,
+			parentPath,
 		},
 		params: { clear: '1' },
 	});
