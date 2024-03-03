@@ -23,7 +23,7 @@
 
             <!--自动解压-->
             <el-form-item label="自动解压">
-                <el-switch class="auto-compress" v-model.number="form.autoCompress" :active-value="1" :inactive-value="0" />
+                <el-switch class="auto-compress" v-model="form.autoCompress" :active-value="'1'" :inactive-value="'0'" />
                 <el-button type="primary" @click="comfirm_auto_compressl">确定</el-button>
             </el-form-item>
 

@@ -2,7 +2,7 @@
  * @Author: lkw199711 lkw199711@163.com
  * @Date: 2023-09-25 19:09:52
  * @LastEditors: lkw199711 lkw199711@163.com
- * @LastEditTime: 2023-09-26 12:43:27
+ * @LastEditTime: 2024-02-28 02:40:06
  * @FilePath: /smanga/src/views/browse-view/components/page-number.vue
 -->
 <template>
@@ -22,8 +22,10 @@ const props = defineProps(['page', 'count']);
     left: 50%;
     bottom: 4rem;
 
-    font-size: 1.8rem;
-    color: white;
-    opacity: 0.7;
+    font-size: 2.2rem;
+    color: #fff;
+    // opacity: 0.7;
+    
+    text-shadow: 0 0 10px #000;
 }
 </style>
