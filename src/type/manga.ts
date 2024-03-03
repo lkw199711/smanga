@@ -16,6 +16,7 @@ type mangaInfoType = {
 	describe: string;
 	star?: string;
 	chapterCount: number;
+	parentPath: string;
 };
 
 export {mangaInfoType};

@@ -6,6 +6,7 @@
 			<template v-if="loading">
 				<list-skeleton />
 			</template>
+
 			<template v-else>
 				<div :class="['manga-list-box', { block: config.viewType === 'list' }]">
 					<manga v-for="(i, k) in list" :key="i.mangaId" :viewType="config.viewType" :mangaInfo="i"
@@ -154,6 +155,8 @@ async function page_change(
 	pageParams = 1,
 	pageSize: number = defaultPageSize
 ) {
+	const byParentPath = route.query.byParentPath;
+	const parentPath = route.query.parentPath;
 
 	if (pageParams !== 1 && pageParams > Math.ceil(count.value / pageSize)) return;
 	if (pageParams < 1) return;
@@ -167,7 +170,14 @@ async function page_change(
 	// 清空数据 避免缓存
 	list.value = [];
 
-	const res = await mangaApi.get(mediaId.value, page.value, pageSize, userConfig.order);
+	let res = null;
+	if (byParentPath) {
+		res = await mangaApi.get_by_parent_path(String(parentPath), page.value, pageSize, userConfig.order);
+	} else {
+		res = await mangaApi.get(mediaId.value, page.value, pageSize, userConfig.order);
+	}
+	console.log(parentPath);
+
 	list.value = res.list;
 	count.value = res.count;
 
