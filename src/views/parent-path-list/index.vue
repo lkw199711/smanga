@@ -27,7 +27,7 @@ const router = useRouter();
 const mediaList = ref<mangaInfoType[]>([]);
 
 function get_last_str(path: string) {
-	if (!path) return '';
+	if (!path) return '无次级目录';
 
 	const arr = path.split('/');
 
