@@ -1,5 +1,5 @@
 <template>
-	<div class="login-index">
+	<div :class="['login-index', backClass]">
 		<div class="seat"></div>
 
 		<!-- 登录面板 -->
@@ -46,6 +46,7 @@ export default defineComponent({
 				passWord: '',
 			},
 			showDatabase: false,
+			backClass: 'bg'+1,
 		};
 	},
 
@@ -53,7 +54,9 @@ export default defineComponent({
 	props: [],
 
 	// 计算
-	computed: {},
+	computed: {
+		
+	},
 
 	// 组件
 	components: {},
@@ -76,6 +79,11 @@ export default defineComponent({
 				await this.$router.push('media-list');
 			}
 		},
+		getBackActive() {
+			// 取1-16的一个数据整数
+			let num = Math.floor(Math.random() * 16) + 1;
+			return 'bg' + num;
+		}
 	},
 
 	// 生命周期
@@ -87,6 +95,11 @@ export default defineComponent({
 				return false;
 			}
 		};
+
+		this.backClass = this.getBackActive();
+
+		const val = localStorage.getItem('activeBack');
+		if (val && val !== '0') this.backClass = 'bg'+val;
 	},
 });
 </script>
@@ -103,8 +116,8 @@ export default defineComponent({
 .login-index {
 	width: 100vw;
 	height: 100vh;
-	background: url('../../assets/banner/0.png') no-repeat;
-	background-size: cover;
+	// background: url('../../assets/banner/0.png') no-repeat;
+	// background-size: cover;
 }
 
 .login-box {
@@ -175,3 +188,5 @@ export default defineComponent({
 	}
 }
 </style>
+
+<style scoped lang="less" src="@/style/login-bg.less"></style>
