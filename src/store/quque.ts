@@ -2,7 +2,7 @@
  * @Author: lkw199711 lkw199711@163.com
  * @Date: 2023-10-26 03:47:24
  * @LastEditors: lkw199711 lkw199711@163.com
- * @LastEditTime: 2023-10-26 04:45:53
+ * @LastEditTime: 2023-12-15 20:50:14
  * @FilePath: /smanga/src/store/quque.ts
  */
 
@@ -37,10 +37,7 @@ class Queue {
 		try {
 			await requestFunction!();
 		} catch (error) {
-			console.log('队列错误处理');
-
 			requestFunction!();
-			// console.error(error);
 		} finally {
 			this.running--;
 			this.run();

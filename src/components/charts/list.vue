@@ -24,8 +24,6 @@ let mangaList = ref([]);
 
 onMounted(async () => {
     const res = await chartsApi.ranking(10);
-    console.log(res);
-
     mangaList.value = res.request;
 })
 </script>

@@ -2,7 +2,7 @@
  * @Author: lkw199711 lkw199711@163.com
  * @Date: 2023-07-16 12:02:34
  * @LastEditors: lkw199711 lkw199711@163.com
- * @LastEditTime: 2024-02-26 04:05:28
+ * @LastEditTime: 2024-03-12 19:34:35
  * @FilePath: /smanga/src/views/serve-setting/index.vue
 -->
 <template>
@@ -78,6 +78,19 @@
             <p class="note form-note">
                 文件保存周期单位为天,填写0不删除文件.
             </p>
+
+            <p class="s-form-title">登录封面设置(每个客户端单独设置)</p>
+            <!--自动解压-->
+            <el-form-item label="封面随机">
+                <el-switch class="auto-compress" v-model="backRandom" @change="back_random" />
+                <!-- <el-button type="primary" @click="comfirm_auto_compressl">确定</el-button> -->
+            </el-form-item>
+
+            <div class="back">
+                <div v-for="item in coverArr" :key="item"
+                    :class="['back-item', 'bg' + item, { 'active': activeBack === item }]" @click="back_click(item)" />
+            </div>
+
         </el-form>
     </div>
 </template>
@@ -86,6 +99,11 @@
 import { useI18n } from 'vue-i18n';
 import { ref, onMounted, reactive } from 'vue';
 import serveSettingApi from '@/api/serve-setting'
+import { random } from 'lodash';
+
+const coverArr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16];
+let activeBack = ref(0);
+let backRandom = ref(true);
 
 const form = reactive({
     interval: '',
@@ -97,6 +115,17 @@ const form = reactive({
     posterSize: 100,
     saveDuration: 30,
 })
+
+function back_random(val: boolean) {
+    activeBack.value = 0;
+    localStorage.setItem('activeBack', String(0));
+}
+
+function back_click(item: number) {
+    backRandom.value = false;
+    activeBack.value = item;
+    localStorage.setItem('activeBack', String(item));
+}
 
 /**
  * @description: 设置扫描时间间隔
@@ -137,9 +166,16 @@ async function comfirm_ssl() {
 async function reset_ssl() {
     serveSettingApi.reset_ssl();
 }
+
 onMounted(async () => {
     const res = await serveSettingApi.get();
     Object.assign(form, res);
+
+    const val = localStorage.getItem('activeBack');
+    if (val && val!=='0') {
+        activeBack.value = Number(val);
+        backRandom.value = false;
+    }
 })
 
 </script>
@@ -176,6 +212,24 @@ onMounted(async () => {
     }
 }
 
+.back {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+
+    &-item {
+        height: 16rem;
+        width: 30rem;
+        margin-bottom: 2rem;
+        border: 1rem solid transparent;
+    }
+
+    .active {
+        border: 1rem solid @s-background;
+    }
+}
+
+
 @media only screen and (min-width: 1200px) {
     .serve-setting {
         width: 100rem;
@@ -200,4 +254,7 @@ onMounted(async () => {
     .poster-size {
         width: 14rem;
     }
-}</style>
+}
+</style>
+
+<style scoped lang="less" src="@/style/login-bg.less"></style>
