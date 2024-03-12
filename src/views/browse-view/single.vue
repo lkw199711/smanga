@@ -2,7 +2,7 @@
  * @Author: lkw199711 lkw199711@163.com
  * @Date: 2023-03-17 20:18:31
  * @LastEditors: lkw199711 lkw199711@163.com
- * @LastEditTime: 2023-10-26 17:54:43
+ * @LastEditTime: 2023-12-15 20:50:22
  * @FilePath: \smanga\src\views\browse-view\single.vue
 -->
 <template>
@@ -350,7 +350,6 @@ onMounted(() => {
   const page = route.params.page || global_get('page') || 1;
   const notAddHistory = route.params.notAddHistory || false;
   // 组件被渲染了两遍
-  // console.log('created');
 
   // 加载页面
   reload_page(Number(page), !notAddHistory);
