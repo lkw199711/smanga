@@ -120,9 +120,6 @@ watch(
  * @param page
  */
 async function page_change(pageParams: number) {
-  // 清空之前图片内容
-  imgPathFiles.value = [];
-  
   page.value = pageParams;
   const index = (pageParams - 1) * 2;
   const pageImage = imgPathList.value[index];
@@ -174,6 +171,9 @@ function nextPage() {
  * 重载页面
  */
 async function reload_page(page = 1, addHistory = true) {
+  // 清空之前图片内容
+  imgPathFiles.value = [];
+  
   // 初始化chapterInfo
   if (!chapterInfo.chapterId) {
     const chapterId = Number(route.query.chapterId);

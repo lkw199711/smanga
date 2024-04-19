@@ -16,7 +16,7 @@ import { ref, reactive, computed, watch, defineExpose } from 'vue'
 import { config } from "@/store";
 import { ElMessage } from "element-plus";
 import i18n from '@/i18n';
-import { onMounted, defineProps, defineEmits } from 'vue';
+import { onMounted, onUnmounted, defineProps, defineEmits } from 'vue';
 const { t } = i18n.global;
 
 const pageSize = ref(1);
@@ -122,7 +122,7 @@ function reload_static() {
 /**
  * 上一页
  */
-function before() {
+function before() {  
   if (props.page > 1) {
     page_change(props.page - 1);
   } else {
@@ -172,6 +172,10 @@ onMounted(() => {
   }
 
   window.addEventListener('keydown', direction_key);
+})
+
+onUnmounted(() => {
+  window.removeEventListener('keydown', direction_key);
 })
 
 </script>
