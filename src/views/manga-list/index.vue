@@ -176,7 +176,6 @@ async function page_change(
 	} else {
 		res = await mangaApi.get(mediaId.value, page.value, pageSize, userConfig.order);
 	}
-	console.log(parentPath);
 
 	list.value = res.list;
 	count.value = res.count;
