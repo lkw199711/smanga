@@ -40,7 +40,7 @@ export default {
 </script>
 <script setup lang="ts">
 import { global_set, global_set_json } from '@/utils';
-import { computed, defineProps, defineEmits, ref } from 'vue';
+import { computed, defineProps, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import chapterApi from '@/api/chapter';
 import { mangaInfoType } from '@/type/manga';
