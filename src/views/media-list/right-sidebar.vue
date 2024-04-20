@@ -22,7 +22,7 @@
 </template>
 
 <script lang='ts' setup>
-import { watch, ref, defineProps, defineEmits, computed } from 'vue'
+import { watch, ref, defineProps, computed } from 'vue'
 import { useRoute } from "vue-router";
 import { cache, config } from "@/store";
 import bookmarkApi from "@/api/bookmark";
