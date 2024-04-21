@@ -2,7 +2,7 @@
  * @Author: error: error: git config user.name & please set dead value or install git && error: git config user.email & please set dead value or install git & please set dead value or install git
  * @Date: 2023-08-16 15:09:40
  * @LastEditors: lkw199711 lkw199711@163.com
- * @LastEditTime: 2023-10-31 21:52:16
+ * @LastEditTime: 2024-04-21 12:24:07
  * @FilePath: /smanga/src/main.ts
  */
 import {createApp} from 'vue';
@@ -28,9 +28,9 @@ import PerfectScrollbar from 'vue3-perfect-scrollbar';
 import 'vue3-perfect-scrollbar/dist/vue3-perfect-scrollbar.css';
 import { createPinia } from 'pinia';
 
-const app = createApp(App);
+const appVue = createApp(App);
 
-app
+appVue
 	.use(store)
 	.use(router)
 	.use(i18n)
@@ -40,12 +40,12 @@ app
 	.use(createPinia());
 	
 // 在这里设置全局配置
-app.use(PerfectScrollbar);
+appVue.use(PerfectScrollbar);
 
-app.mount('#app');
+appVue.mount('#app');
 
 for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
-	app.component(key, component);
+	appVue.component(key, component);
 }
 
 // 在应用入口文件中使用: 如 main.js, app.jsx
@@ -69,4 +69,17 @@ createVersionPolling({
 		// alert('有新版本，请刷新页面');
 	},
 	immediate: false,
+});
+
+const {app, BrowserWindow} = require('electron');
+app.on('ready', () => {
+	const win = new BrowserWindow({
+		width: 800,
+		height: 600,
+		titleBarStyle: 'hidden',
+		webPreferences: {
+			nodeIntegration: true,
+		},
+	});
+	win.loadFile('index.html');
 });

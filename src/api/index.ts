@@ -9,7 +9,8 @@ import router from '@/router';
 const prodUrl = process.env.VUE_APP_PATH || '/php/public/index.php/';
 
 // 接口路径的设置
-const url = (process.env.NODE_ENV === 'development' ? '/cms' : '') + prodUrl;
+// const url = (process.env.NODE_ENV === 'development' ? '/cms' : '') + prodUrl;
+const url = prodUrl;
 
 /**
  * 创建默认接口请求设置

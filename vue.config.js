@@ -8,7 +8,8 @@ const devUrl = process.env.VUE_APP_PROXY_HTTP_URL;
 // 生产环境请求地址
 const prodUrl = 'http://127.0.0.1';
 
-const target = process.env.NODE_ENV === 'development' ? devUrl : prodUrl;
+// const target = process.env.NODE_ENV === 'development' ? devUrl : prodUrl;
+const target = process.env.NODE_ENV === 'development' ? prodUrl : prodUrl;
 const wsTarget =
 	process.env.NODE_ENV === 'production'
 		? 'ws://192.168.2.10'
