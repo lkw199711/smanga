@@ -63,11 +63,11 @@
     "passModifyPlace": "请输入新密码(留空则不修改)",
     "confirmBoxTitle": "确认删除",
     "confirmBoxText": "确认删除此用户?",
-    "formWarning": "用户名长3-20位,以字母开头",
+    "formWarning": "用户名长2-20位,以字母开头",
     "before": "上一章",
     "next": "下一章",
     "note": {
-      "name": "\"用户名\": 长3-20位,以字母开头",
+      "name": "\"用户名\": 长2-20位,以字母开头",
       "pass": "\"密码\": 留空为不修改"
     },
     "form": {

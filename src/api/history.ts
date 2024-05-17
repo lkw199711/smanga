@@ -37,7 +37,8 @@ const historyApi = {
 	 */
 	async add_history() {
 		const res = ajax({
-			url: 'history/add',
+			method: 'post',
+			url: 'history',
 			data: {
 				mediaId: global_get('mediaId'),
 				mangaId: global_get('mangaId'),
@@ -63,7 +64,7 @@ const historyApi = {
 		pageSize: number | undefined = undefined
 	) {
 		const res = ajax({
-			url: 'history/get',
+			url: 'history',
 			data: {page, pageSize},
         });
         

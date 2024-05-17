@@ -36,24 +36,18 @@ export default defineComponent({
 			form: {
 				mediaName: '',
 				mediaType: 0,
-				fileType: 0,
-				mediaPath: '',
-				defaultBrowse: '',
+				browseType: '',
 				directoryFormat: 0,
 				removeFirst: 0,
 				direction: 1,
-				autoScan: 0,
 			} as any,
 			formInit: {
 				mediaName: '',
 				mediaType: 0,
-				fileType: 0,
-				mediaPath: '',
-				defaultBrowse: 'flow',
+				browseType: 'flow',
 				directoryFormat: 0,
 				removeFirst: 0,
 				direction: 1,
-				autoScan: 0,
 			},
 			pathForm: {
 				path: '',
@@ -108,7 +102,7 @@ export default defineComponent({
 		 * 加载路径列表
 		 */
 		async load_path(mediaId: any) {
-			const res = await mediaApi.get_path(mediaId);
+			const res = await pathApi.get_path(mediaId, 1, 1000);
 
 			this.pathArr = res.list;
 		},
@@ -205,7 +199,7 @@ export default defineComponent({
 				type: 'warning',
 			})
 				.then(async () => {
-					const res = await mediaApi.delete_path(pathInfo.pathId);
+					const res = await pathApi.delete_path(pathInfo.pathId);
 
 					if (res.code === 0) {
 						this.load_path(pathInfo.mediaId);

@@ -63,11 +63,11 @@
     "passModifyPlace": "請輸入新密碼(留空則不修改)",
     "confirmBoxTitle": "確認刪除",
     "confirmBoxText": "確認刪除此用戶?",
-    "formWarning": "用戶名長3-20位,以字母開頭",
+    "formWarning": "用戶名長2-20位,以字母開頭",
     "before": "上一章",
     "next": "下一章",
     "note": {
-      "name": "\"用戶名\": 長3-20位,以字母開頭",
+      "name": "\"用戶名\": 長2-20位,以字母開頭",
       "pass": "\"密碼\": 留空為不修改"
     },
     "form": {

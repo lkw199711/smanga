@@ -20,13 +20,15 @@ const url = (process.env.NODE_ENV === 'development' ? '/cms' : '') + prodUrl;
 const ajax = Axios.create({
 	baseURL: url,
 	timeout: 10 * 1000,
-	method: 'post',
 	params: {},
 	headers: {
-		'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+		'Content-Type': 'application/json; charset=UTF-8',
 	},
 	transformRequest: [
-		(data) => {
+		(data, headers) => {
+			// 设置请求头
+			headers['token'] =
+				localStorage.getItem('token') || 'ae3a90e4-cb48-4b3a-8860-56e2fd65b390';
 			// 用户标识
 			const userId = Cookies.get('userId');
 			// 获取时间戳
@@ -39,8 +41,17 @@ const ajax = Axios.create({
 				timestamp,
 				keyword: get_key_word(timestamp),
 			});
+
+			// 删除多余参数
+			if (data.data && data.data.createTime) {
+				delete data.data.createTime;
+			}
+			if (data.data && data.data.updateTime) {
+				delete data.data.updateTime;
+			}
+
 			// 返回json
-			return Qs.stringify(data);
+			return JSON.stringify(data);
 		},
 	],
 	transformResponse: [
@@ -82,6 +93,19 @@ const ajax = Axios.create({
 			// 登录信息错误
 			if (data.state === 'user error') {
 				router.push('/login');
+			}
+
+			// 处理时间格式
+			if (data.list) {
+				data.list.forEach((item: any) => {
+					if (item.createTime) {
+						item.createTime = new Date(item.createTime).toLocaleString();
+					}
+
+					if (item.updateTime) {
+						item.updateTime = new Date(item.updateTime).toLocaleString();
+					}
+				});
 			}
 
 			return data;

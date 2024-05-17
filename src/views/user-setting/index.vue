@@ -128,9 +128,9 @@ function sort_order_change(val: string) { }
 
 function submit() {
 	const userName = Cookies.get('userName');
-	const configValue = JSON.stringify({ userConfig, pageSizeConfig });
+	const configValue = { userConfig, pageSizeConfig };
 
-	userApi.set_user_config(userName, configValue);
+	userApi.update_account(+Cookies.get('userId'), {userConfig: configValue});
 
 }
 

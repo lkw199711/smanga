@@ -1,8 +1,8 @@
 /*
  * @Author: lkw199711 lkw199711@163.com
  * @Date: 2023-03-17 20:18:30
- * @LastEditors: lkw199711 lkw199711@163.com
- * @LastEditTime: 2023-10-25 00:48:36
+ * @LastEditors: 梁楷文 lkw199711@163.com
+ * @LastEditTime: 2024-05-17 16:24:50
  * @FilePath: \smanga\src\api\tag.ts
  */
 import {ajax} from './index';
@@ -34,10 +34,7 @@ const tagApi = {
 		page: number | undefined = undefined,
 		pageSize: number | undefined = undefined
 	) {
-		const res = ajax({
-			url: 'tag/get',
-			data: {page, pageSize},
-		});
+		const res = ajax.get('tag', {params: {page, pageSize}});
 
 		const resData: ResType = (await res).data;
 
@@ -53,7 +50,7 @@ const tagApi = {
 	 */
 	get_nopage: async function () {
 		const res = ajax({
-			url: 'tag/get',
+			url: 'tag',
 			data: {nopage: true},
 		});
 
@@ -70,10 +67,7 @@ const tagApi = {
 	 * @return {*}
 	 */
 	add: async function (tagName: string, tagColor: string, description: string) {
-		await ajax({
-			url: 'tag/add',
-			data: {tagName, tagColor, description},
-		});
+		await ajax.post('tag', {data: {tagName, tagColor, description}});
 	},
 
 	/**
@@ -102,10 +96,7 @@ const tagApi = {
 	 * @return {*}
 	 */
 	add_manga_tag: async function (mangaId: number, tagId: number) {
-		await ajax({
-			url: 'tag/manga-tag/add',
-			data: {mangaId, tagId},
-		});
+		await ajax.post('tag/manga-tag/add', {mangaId, tagId});
 	},
 
 	/**
@@ -126,10 +117,7 @@ const tagApi = {
 	 * @return {*}
 	 */
 	update: async function (data: tagParams) {
-		await ajax({
-			url: 'tag/update',
-			data,
-		});
+		await ajax.patch(`tag/${data.tagId}`, {data});
 	},
 
 	/**
@@ -138,10 +126,7 @@ const tagApi = {
 	 * @return {*}
 	 */
 	delete: async function (tagId: number) {
-		await ajax({
-			url: 'tag/delete',
-			data: {tagId},
-		});
+		await ajax.delete(`tag/${tagId}`);
 	},
 };
 

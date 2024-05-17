@@ -65,9 +65,9 @@
     "passPlace": "place enter passWord(Leave blank to not modify)",
     "confirmBoxTitle": "confirm deletion",
     "confirmBoxText": "are you sure to delete this user?",
-    "formWarning": "The user name is 3-20 characters long and starts with a letter",
+    "formWarning": "The user name is 2-20 characters long and starts with a letter",
     "note": {
-      "name": "\"userName\": 3-20 digits long, beginning with a letter",
+      "name": "\"userName\": 2-20 digits long, beginning with a letter",
       "pass": "\"passWord\": Leave blank to not modify"
     },
     "form": {

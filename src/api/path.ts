@@ -1,8 +1,8 @@
 /*
  * @Author: lkw199711 lkw199711@163.com
  * @Date: 2023-03-17 20:18:30
- * @LastEditors: lkw199711 lkw199711@163.com
- * @LastEditTime: 2023-10-24 00:57:01
+ * @LastEditors: 梁楷文 lkw199711@163.com
+ * @LastEditTime: 2024-05-17 11:03:38
  * @FilePath: \smanga\src\api\path.ts
  */
 import {ajax} from './index';
@@ -16,8 +16,8 @@ const pathApi = {
 	 */
 	async get_path(mediaId: number, page: number, pageSize: number) {
 		const res = ajax({
-			url: 'path/get',
-			data: {mediaId, page, pageSize},
+			url: 'path',
+			params: {mediaId, page, pageSize},
 		});
 
 		return (await res).data;
@@ -58,10 +58,7 @@ const pathApi = {
 	 * @param pathId
 	 */
 	async delete_path(pathId: any) {
-		const res = ajax({
-			url: 'path/delete',
-			data: {pathId},
-		});
+		const res = ajax.delete(`path/${pathId}`);
 
 		return (await res).data;
 	},
@@ -72,22 +69,7 @@ const pathApi = {
 	 * @param path
 	 */
 	async add_path(mediaId: any, pathForm: any) {
-		const res = ajax({
-			url: 'path/add',
-			data: Object.assign({mediaId}, pathForm),
-		});
-
-		return (await res).data;
-	},
-	/**
-	 * 删除媒体库
-	 * @param mediaId
-	 */
-	async delete_media(mediaId: any) {
-		const res = ajax({
-			url: 'php/media/delete.php',
-			data: {mediaId},
-		});
+		const res = ajax.post('path', {data: Object.assign({mediaId}, pathForm)});
 
 		return (await res).data;
 	},

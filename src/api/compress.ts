@@ -14,10 +14,7 @@ const compressApi = {
 	 * @param pageSize
 	 */
 	async get_compress(page: number, pageSize: number) {
-		const res = ajax({
-			url: 'compress/get',
-			data: {page, pageSize},
-		});
+		const res = ajax.get('compress', {params: {page, pageSize}});
 
 		return (await res).data;
 	},
@@ -28,12 +25,7 @@ const compressApi = {
 	 * @return {*}
 	 */
 	async delete_compress(compressId: number) {
-		const res = ajax({
-			url: 'compress/delete',
-			data: {
-				compressId,
-			},
-		});
+		const res = ajax.delete(`compress/${compressId}`);
 
 		return (await res).data;
 	},
