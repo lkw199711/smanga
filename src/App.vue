@@ -53,9 +53,9 @@ onBeforeMount(async () => {
 	}
 
 	// 获取用户设置
-	const res = await get_setting();
+	// const res = await get_setting();
 	// 用户信息错误 不继续执行
-	if (!res) return;
+	// if (!res) return;
 
 	// 获取书签列表
 	set_bookmark();

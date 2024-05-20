@@ -23,7 +23,7 @@
         </el-table-column>
 
         <el-table-column
-            prop="registerTime"
+            prop="createTime"
             :label="$t('account.registerTime')"
             width="180">
         </el-table-column>
@@ -90,18 +90,6 @@
           <el-input v-model="form.passWord" :placeholder="$t('account.passModifyPlace')"></el-input>
         </el-form-item>
         <p class="note form-note">{{$t('account.note.pass')}}</p>
-
-        <!--权限-->
-        <p class="s-form-title">{{ $t('account.form.title.power') }}</p>
-        <el-form-item :label="$t('account.form.label.editUser')">
-          <el-switch v-model.number="form.editUser" :active-value="1" :inactive-value="0"/>
-        </el-form-item>
-
-
-        <!--编辑媒体库-->
-        <el-form-item :label="$t('account.form.label.editMedia')">
-          <el-switch v-model.number="form.editMedia" :active-value="1" :inactive-value="0"/>
-        </el-form-item>
 
         <!--媒体库权限-->
         <p class="s-form-title">{{ $t('account.form.title.mediaPower') }}</p>

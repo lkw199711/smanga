@@ -31,15 +31,11 @@ export default defineComponent({
 				userId: 0,
 				userName: '',
 				passWord: '',
-				editUser: true,
-				editMedia: true,
 			},
 			formInit: {
 				userId: 0,
 				userName: '',
 				passWord: '',
-				editUser: true,
-				editMedia: true,
 			},
 			formLabelWidth: '120px',
 			medias: [],
@@ -123,9 +119,7 @@ export default defineComponent({
 				.join('/');
 
 			const targetUserId = this.form.userId;
-			const res = await userApi.update_account(
-				Object.assign(this.form, {targetUserId}, {mediaLimit: limits})
-			);
+			const res = await userApi.update_account(targetUserId, this.form);
 
 			if (res.code === 0) {
 				// 进入子组件调用刷新
@@ -157,7 +151,7 @@ export default defineComponent({
 		async do_register() {
 			const data = this.form;
 
-			if (!/^[a-zA-Z]\w{2,19}$/.test(data.userName)) {
+			if (!/^[a-zA-Z]\w{1,19}$/.test(data.userName)) {
 				ElMessage({
 					message: t('account.formWarning'),
 					type: 'warning',

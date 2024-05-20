@@ -31,10 +31,10 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import userApi from '@/api/account';
 import { Cookies } from '@/utils';
 
 import { power, userInfo } from '@/store';
+import loginApi from '@/api/login';
 
 export default defineComponent({
 	name: 'index',
@@ -64,17 +64,15 @@ export default defineComponent({
 	// 方法
 	methods: {
 		async do_login() {
-			const res = await userApi.login(this.form);
+			const res = await loginApi.login(this.form);
 			if (res.code === 0) {
 				// 缓存用户信息
-				const resInfo = res.request;
+				const resInfo = res.data;
 				Object.assign(userInfo, resInfo);
 				Cookies.set('userName', resInfo.userName);
 				Cookies.set('userId', resInfo.userId);
-				Cookies.set('editMedia', resInfo.editMedia);
-				Cookies.set('editUser', resInfo.editUser);
-				power.editMedia = resInfo.editMedia == 1;
-				power.editUser = resInfo.editUser == 1;
+				Cookies.set('token', resInfo.token);
+				Cookies.set('header', resInfo.header);
 
 				await this.$router.push('media-list');
 			}
