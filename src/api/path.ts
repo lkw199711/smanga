@@ -46,8 +46,8 @@ const pathApi = {
 	 */
 	async scan_path(mediaId: any, path: any, pathId: any) {
 		const res = ajax({
-			url: 'path/scan',
-			data: {mediaId, path, pathId},
+			method: 'PUT',
+			url: `path/scan/${pathId}`
 		});
 
 		return (await res).data;

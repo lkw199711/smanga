@@ -50,7 +50,7 @@ export default defineComponent({
 				direction: 1,
 			},
 			pathForm: {
-				path: '',
+				pathContent: '',
 				autoScan: 0,
 				include: '',
 				exclude: '',
@@ -218,7 +218,7 @@ export default defineComponent({
 				.then(async () => {
 					const res = await pathApi.rescan_path(
 						pathInfo.mediaId,
-						pathInfo.path,
+						pathInfo.pathContent,
 						pathInfo.pathId
 					);
 
@@ -231,7 +231,7 @@ export default defineComponent({
 		async scan_path(pathInfo: any) {
 			const res = await pathApi.scan_path(
 				pathInfo.mediaId,
-				pathInfo.path,
+				pathInfo.pathContent,
 				pathInfo.pathId
 			);
 
@@ -243,16 +243,16 @@ export default defineComponent({
 		 * 添加路径信息到缓存
 		 */
 		async add_path_cache() {
-			const path: any = this.pathForm.path;
+			const pathContent: any = this.pathForm.pathContent;
 			const mediaId = this.form.mediaId;
-			if (!path) return;
+			if (!pathContent) return;
 
 			const res = await pathApi.add_path(mediaId, this.pathForm);
 
 			if (res.code === 0) {
 				// 重置表单
 				Object.assign(this.pathForm, {
-					path: '',
+					pathContent: '',
 					autoScan: 0,
 					include: '',
 					exclude: '',

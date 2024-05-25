@@ -1,8 +1,8 @@
 /*
  * @Author: error: error: git config user.name & please set dead value or install git && error: git config user.email & please set dead value or install git & please set dead value or install git
  * @Date: 2023-08-16 15:09:40
- * @LastEditors: lkw199711 lkw199711@163.com
- * @LastEditTime: 2024-04-21 12:24:07
+ * @LastEditors: 梁楷文 lkw199711@163.com
+ * @LastEditTime: 2024-05-24 20:47:35
  * @FilePath: /smanga/src/main.ts
  */
 import {createApp} from 'vue';
@@ -69,17 +69,4 @@ createVersionPolling({
 		// alert('有新版本，请刷新页面');
 	},
 	immediate: false,
-});
-
-const {app, BrowserWindow} = require('electron');
-app.on('ready', () => {
-	const win = new BrowserWindow({
-		width: 800,
-		height: 600,
-		titleBarStyle: 'hidden',
-		webPreferences: {
-			nodeIntegration: true,
-		},
-	});
-	win.loadFile('index.html');
 });
