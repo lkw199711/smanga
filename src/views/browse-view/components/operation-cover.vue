@@ -1,8 +1,8 @@
 <!--
  * @Author: lkw199711 lkw199711@163.com
  * @Date: 2023-09-25 22:59:45
- * @LastEditors: lkw199711 lkw199711@163.com
- * @LastEditTime: 2023-09-25 23:35:47
+ * @LastEditors: 梁楷文 lkw199711@163.com
+ * @LastEditTime: 2024-05-29 09:46:56
  * @FilePath: /smanga/src/views/browse-view/components/operation-cover.vue
 -->
 <template>
@@ -20,7 +20,7 @@
 export default { name: 'operation-cover' };
 </script>
 <script setup lang="ts">
-import { computed, defineEmits } from 'vue';
+import { computed } from 'vue';
 import { config, userConfig } from '@/store';
 
 /**

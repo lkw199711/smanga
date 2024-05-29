@@ -35,7 +35,7 @@
 </template>
 
 <script lang="ts" setup>
-import {reactive, onMounted, defineProps, defineEmits} from 'vue';
+import {reactive, onMounted } from 'vue';
 import loginApi from '@/api/login';
 import {ElMessage} from 'element-plus';
 

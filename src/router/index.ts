@@ -28,6 +28,7 @@ const routes: Array<RouteRecordRaw> = [
 		path: '/',
 		name: 'home',
 		redirect: '/index',
+		children: [],
 		meta: {sidebar: false},
 		component: Layout,
 	},

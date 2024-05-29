@@ -15,7 +15,7 @@
 export default { name: 'bookmark' };
 </script>
 <script setup lang="ts">
-import { defineProps, computed } from 'vue';
+import { computed } from 'vue';
 import { global_get_array, global_get } from '@/utils';
 import { config, cache } from '@/store';
 import { useRoute, useRouter } from 'vue-router';

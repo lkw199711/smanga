@@ -4,33 +4,7 @@
   </div>
 </template>
 
-<script lang='ts'>
-import {defineComponent} from 'vue'
-
-export default defineComponent({
-  name: 'not-found-index',
-  // 数据
-  data() {
-    return {}
-  },
-
-  // 传值
-  props: [],
-
-  // 引用
-  computed: {},
-
-  // 组件
-  components: {},
-
-  // 方法
-  methods: {},
-
-  // 生命周期
-  created() {
-  },
-})
-</script>
+<script setup lang="ts"></script>
 
 <style scoped lang='less'>
 .not-found-index {

@@ -2,7 +2,7 @@
  * @Author: lkw199711 lkw199711@163.com
  * @Date: 2023-09-26 14:29:14
  * @LastEditors: 梁楷文 lkw199711@163.com
- * @LastEditTime: 2024-04-20 11:42:18
+ * @LastEditTime: 2024-05-29 11:12:09
  * @FilePath: /smanga/src/views/media-list/right-sidebar.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -22,7 +22,7 @@
 </template>
 
 <script lang='ts' setup>
-import { watch, ref, defineProps, computed } from 'vue'
+import { watch, ref, computed } from 'vue'
 import { useRoute } from "vue-router";
 import { cache, config } from "@/store";
 import bookmarkApi from "@/api/bookmark";

@@ -30,7 +30,7 @@
 export default { name: 'chapter-list-menu' };
 </script>
 <script setup lang='ts'>
-import { ref, computed, defineEmits } from 'vue';
+import { ref, computed } from 'vue';
 import { config } from "@/store";
 import { global_get_array, global_set } from "@/utils";
 import Seat from "@/components/seat.vue";

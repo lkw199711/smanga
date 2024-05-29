@@ -111,6 +111,8 @@ export default defineComponent({
 		 */
 		async load_table(page = 1, pageSize = 10) {
 			const res = await mediaApi.get(page, pageSize);
+			console.log(res);
+			
 			this.count = Number(res.count);
 			this.tableData = res.list;
 		},

@@ -1,10 +1,8 @@
 import Axios from 'axios';
-import Qs from 'qs';
-import store from '../store';
-import {Md5} from 'ts-md5/dist/md5';
 import {ElMessage} from 'element-plus';
 import {Cookies} from '@/utils';
 import router from '@/router';
+import Response from '@/type/response';
 
 const prodUrl = process.env.VUE_APP_PATH || '/php/public/index.php/';
 
@@ -40,7 +38,6 @@ const ajax = Axios.create({
 			data = Object.assign(data, {
 				userId,
 				timestamp,
-				keyword: get_key_word(timestamp),
 			});
 
 			// 删除多余参数
@@ -56,14 +53,14 @@ const ajax = Axios.create({
 		},
 	],
 	transformResponse: [
-		function (data) {
-			data = data || {};
+		function (response: Response) {
+			response = response || {};
 
-			if (typeof data === 'string') data = JSON.parse(data);
+			if (typeof response === 'string') response = JSON.parse(response);
 
-			if (data.message) {
+			if (response.message) {
 				let type: string;
-				switch (data.code) {
+				switch (response.code) {
 					case 0:
 						type = 'success';
 						break;
@@ -79,26 +76,26 @@ const ajax = Axios.create({
 				}
 
 				ElMessage({
-					message: data.message,
 					// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 					// @ts-ignore
+					message: response.message,
 					type: type,
 				});
 			}
 
 			// 初次部署
-			if (data.state === 'first deploy') {
+			if (response.data === 'first deploy') {
 				router.push('/init');
 			}
 
 			// 登录信息错误
-			if (data.state === 'user error') {
+			if (response.data === 'user error') {
 				router.push('/login');
 			}
 
 			// 处理时间格式
-			if (data.list) {
-				data.list.forEach((item: any) => {
+			if (response.list) {
+				response.list.forEach((item: any) => {
 					if (item.createTime) {
 						item.createTime = new Date(item.createTime).toLocaleString();
 					}
@@ -109,26 +106,10 @@ const ajax = Axios.create({
 				});
 			}
 
-			return data;
+			return response;
 		},
 	],
 });
-
-/**
- * 生成密钥
- * 时间戳 + 密文,经过md5加密后形成
- * @param time 时间戳 以毫秒为单位
- * @returns {*}
- */
-function get_key_word(time: number) {
-	// 密钥文本使用数组拆分
-	const keyArr = ['s', 'u', 'n', 'l', 'i', 'g', 'h', 't'];
-	const tailArr = ['-', 'm', 'a', 'n', 'g', 'a'];
-
-	// 合并密钥文本与时间戳,使用md5加密
-	// 返回密钥
-	return Md5.hashStr(time + keyArr.join('') + tailArr.join(''));
-}
 
 /**
  * 将加载到的list进行排序

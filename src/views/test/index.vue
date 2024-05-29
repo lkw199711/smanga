@@ -1,10 +1,9 @@
 <!--
  * @Author: lkw199711 lkw199711@163.com
  * @Date: 2023-08-17 20:57:16
- * @LastEditors: lkw199711 lkw199711@163.com
- * @LastEditTime: 2023-09-13 20:19:27
+ * @LastEditors: 梁楷文 lkw199711@163.com
+ * @LastEditTime: 2024-05-29 11:15:21
  * @FilePath: /smanga/src/views/test/index.vue
- * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
 <template>
 	<div class="index">
@@ -60,25 +59,29 @@ const handleClose = (done: () => void) => {
 
 onMounted(() => {
 	var div = document.querySelector('.touch-demo');
+	if(!div) return;
 	// 获取手指初始坐标和盒子的原来位置
 	var startX = 0;
 	var startY = 0;
 	// 获取盒子原来的位置
 	var x = 0;
 	var y = 0;
-	div.addEventListener('touchstart', function (e) {
+	div.addEventListener('touchstart', function (this: HTMLElement, e: Event) {
 		console.log('start事件');
+		// 使用类型断言来告诉 TypeScript 这是 TouchEvent
+		const touchEvent = e as TouchEvent;
 		// 得到初始的手指坐标
-		startX = e.targetTouches[0].pageX;
-		startY = e.targetTouches[0].pageY;
+		startX = touchEvent.targetTouches[0].pageX;
+		startY = touchEvent.targetTouches[0].pageY;
 		// 获取盒子坐标
 		x = this.offsetLeft;
 		y = this.offsetTop;
 	})
-	div.addEventListener('touchmove', function (e) {
+	div.addEventListener('touchmove', function (this: HTMLElement, e) {
+		const touchEvent = e as TouchEvent;
 		// 手指的移动距离= 手指移动之后的坐标 - 手指初始的坐标
-		var moveX = e.targetTouches[0].pageX - startX;
-		var moveY = e.targetTouches[0].pageY - startY;
+		var moveX = touchEvent.targetTouches[0].pageX - startX;
+		var moveY = touchEvent.targetTouches[0].pageY - startY;
 		// 移动盒子，盒子原来的位置+手指移动的距离
 		this.style.left = x + moveX + 'px';
 		this.style.top = y + moveY + 'px';
@@ -86,7 +89,7 @@ onMounted(() => {
 		e.preventDefault();
 	})
 
-	div.addEventListener('touchend', function (e) {
+	div.addEventListener('touchend', function (this: HTMLElement, e) {
 		console.log('end事件');
 		
 		this.style.left = '0';

@@ -8,7 +8,6 @@
 import Axios from 'axios';
 import {url} from '@/api';
 import {Cookies} from '@/utils';
-import Qs from 'qs';
 /**
  * 文件 图片请求
  * @type {Axios}
@@ -36,7 +35,7 @@ const img = Axios.create({
 				timestamp,
 			});
 			// 返回json
-			return Qs.stringify(data);
+			return data;
 		},
 	],
 	transformResponse: [

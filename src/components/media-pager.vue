@@ -12,7 +12,7 @@
 export default { name: 'media-pager' }
 </script>
 <script setup lang="ts">
-import { ref, computed, watch, onMounted, defineProps, defineEmits } from 'vue';
+import { ref, computed, watch, onMounted } from 'vue';
 import { config } from '@/store';
 const pageSize = ref(10);
 const disabled = ref(false);

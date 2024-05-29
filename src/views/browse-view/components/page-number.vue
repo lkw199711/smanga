@@ -10,7 +10,6 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps } from "vue";
 import { userConfig } from "@/store";
 const props = defineProps(['page', 'count']);
 </script>

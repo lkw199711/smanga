@@ -1,8 +1,8 @@
 <!--
  * @Author: lkw199711 lkw199711@163.com
  * @Date: 2023-10-27 11:08:16
- * @LastEditors: lkw199711 lkw199711@163.com
- * @LastEditTime: 2023-10-28 18:05:49
+ * @LastEditors: 梁楷文 lkw199711@163.com
+ * @LastEditTime: 2024-05-29 11:04:37
  * @FilePath: /smanga/src/views/index/index.vue
 -->
 <template>
@@ -19,7 +19,7 @@ import {
     LegendComponent,
 } from 'echarts/components';
 import VChart, { THEME_KEY } from 'vue-echarts';
-import { ref, provide, onMounted, defineExpose } from 'vue';
+import { ref, provide, onMounted } from 'vue';
 import chartsApi from '@/api/charts';
 
 use([

@@ -12,11 +12,11 @@
 export default { name: 'browse-pager' }
 </script>
 <script setup lang='ts'>
-import { ref, reactive, computed, watch, defineExpose } from 'vue'
+import { ref, reactive, computed, watch } from 'vue'
 import { config } from "@/store";
 import { ElMessage } from "element-plus";
 import i18n from '@/i18n';
-import { onMounted, onUnmounted, defineProps, defineEmits } from 'vue';
+import { onMounted, onUnmounted } from 'vue';
 const { t } = i18n.global;
 
 const pageSize = ref(1);

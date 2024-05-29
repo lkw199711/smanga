@@ -5,28 +5,10 @@
  * @LastEditTime: 2023-09-26 05:38:31
  * @FilePath: \smanga\src\store\index.ts
  */
-import {createStore} from 'vuex';
 import {reactive} from 'vue';
 import {GlobalData} from '@/store/type';
 import {get_cookie} from '../utils/index';
 import {screenType} from '@/type/store';
-
-export default createStore({
-	state: {
-		chapterAwait: true,
-		mangaAwait: true,
-		previewAwait: true,
-		collectAwait: true,
-		searchAwait: true,
-	} as any,
-	mutations: {
-		switch_await(state, {bool = true, running = 'chapterAwait'}) {
-			state[running] = bool;
-		},
-	},
-	actions: {},
-	modules: {},
-});
 
 export const globalData: GlobalData = reactive({
 	bookmarkList: [],
@@ -117,3 +99,6 @@ export const pageSizeConfig = reactive({
 	'2k': [27, 36, 45, 54, 63],
 	'4k': [32, 40, 48, 54, 62],
 });
+
+
+export default {};

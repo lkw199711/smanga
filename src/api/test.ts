@@ -1,6 +1,12 @@
+/*
+ * @Author: 梁楷文 lkw199711@163.com
+ * @Date: 2024-04-05 03:53:27
+ * @LastEditors: 梁楷文 lkw199711@163.com
+ * @LastEditTime: 2024-05-29 11:45:48
+ * @FilePath: \smanga\src\api\test.ts
+ */
 import Axios from "axios";
 import {Cookies} from "@/utils";
-import Qs from "qs";
 import {ElMessage} from "element-plus";
 
 /**
@@ -27,7 +33,7 @@ export const testAxios = Axios.create({
             // 加入时间戳与密钥
             data = Object.assign(data, {userId, timestamp});
             // 返回json
-            return Qs.stringify(data);
+            return data;
         },
     ],
     transformResponse: [
@@ -54,6 +60,8 @@ export const testAxios = Axios.create({
                 }
 
                 ElMessage({
+                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+					// @ts-ignore
                     message: data.message,
                     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                     // @ts-ignore

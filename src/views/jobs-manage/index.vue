@@ -61,8 +61,6 @@ import jobsApi from '@/api/jobs';
 import tablePager from '@/components/table-pager.vue';
 import i18n from '@/i18n';
 import { Search } from '@element-plus/icons-vue';
-import hljs from 'highlight.js'
-import 'highlight.js/styles/github.css'
 import ClipboardJS from 'clipboard'
 
 const { t } = i18n.global;

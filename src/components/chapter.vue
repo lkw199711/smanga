@@ -35,7 +35,7 @@ export default { name: 'manga-chapter-item' }
 import imageApi from "@/api/image";
 import queue from "@/store/quque";
 import { chapterInfoType } from "@/type/chapter";
-import { ref, onMounted, defineProps } from "vue";
+import { ref, onMounted } from "vue";
 import usePosterStore from '@/store/poster';
 
 type chapterItemType = chapterInfoType & { blob: string; chapterCover: string; pageImage: string; };

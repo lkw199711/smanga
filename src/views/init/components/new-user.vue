@@ -1,8 +1,8 @@
 <!--
  * @Author: lkw199711 lkw199711@163.com
  * @Date: 2023-05-03 11:35:53
- * @LastEditors: lkw199711 lkw199711@163.com
- * @LastEditTime: 2023-05-20 11:04:16
+ * @LastEditors: 梁楷文 lkw199711@163.com
+ * @LastEditTime: 2024-05-29 11:32:06
  * @FilePath: \smanga\src\views\init\components\new-user.vue
 -->
 <template>
@@ -30,7 +30,7 @@
 </template>
 
 <script lang="ts" setup>
-import {reactive, onMounted, defineProps, defineEmits} from 'vue';
+import {reactive, onMounted} from 'vue';
 import {database_set} from '@/api/login';
 import {ElMessage} from 'element-plus';
 import {register} from '@/api/account';

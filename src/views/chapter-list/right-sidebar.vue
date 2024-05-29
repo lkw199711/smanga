@@ -37,7 +37,7 @@
 </template>
 
 <script lang="ts" setup>
-import { watch, ref, defineProps, computed } from 'vue';
+import { watch, ref, computed } from 'vue';
 import { useRoute } from 'vue-router';
 import { config } from '@/store';
 import chapterApi from '@/api/chapter';

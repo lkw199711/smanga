@@ -85,7 +85,7 @@ export const Cookies = {
      * @param time 过期时间，单位为天
      */
     set: function (key: string, value: string, time = 365) {
-        return localStorage.setItem(key, value);
+        // return localStorage.setItem(key, value);
         const cookiesTime = new Date(Date.now() + time * 365 * 24 * 60 * 60 * 1000).toUTCString();
         document.cookie = key + '=' + value + ';expires=' + cookiesTime;
         return value;
@@ -95,7 +95,7 @@ export const Cookies = {
      * @param key
      */
     get: function (key: string) {
-        return localStorage.getItem(key);
+        // return localStorage.getItem(key);
         const arr = document.cookie.match(new RegExp("\\b" + key + "=([^;]+)(;|$)"));
         return arr ? arr[1] : '';
     },

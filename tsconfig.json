@@ -16,7 +16,11 @@
 		"paths": {
 			"@/*": ["src/*"]
 		},
-		"lib": ["esnext", "dom", "dom.iterable", "scripthost"]
+		"lib": ["esnext", "dom", "dom.iterable", "scripthost"],
+		"allowJs": true,
+		// 其他选项...
+		"noEmit": true,
+		"noEmitOnError": false
 	},
 	"include": [
 		"src/**/*.ts",

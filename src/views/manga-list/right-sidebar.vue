@@ -59,7 +59,7 @@
 </template>
 
 <script lang="ts" setup>
-import { watch, ref, defineProps, computed, onMounted } from 'vue';
+import { watch, ref, computed, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 import { config } from '@/store';
 import mangaApi from '@/api/manga';

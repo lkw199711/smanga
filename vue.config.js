@@ -2,7 +2,6 @@
 // 获取项目版本号
 process.env.VUE_APP_VERSION = require('./package.json').version;
 
-const pxtorem = require('postcss-pxtorem');
 // 开发模式请求地址
 const devUrl = process.env.VUE_APP_PROXY_HTTP_URL;
 // 生产环境请求地址
@@ -37,6 +36,10 @@ module.exports = {
 		hot: true,
 		// 端口号
 		port: 8001,
+		// 请求报错不展示在页面上
+		client: {
+			overlay: false,
+		},
 		// 主机
 		// host: '0.0.0.0',
 		proxy: {
@@ -48,41 +51,6 @@ module.exports = {
 				pathRewrite: {
 					'^/cms': '',
 				},
-			},
-		},
-	},
-	// css配置项
-	css: {
-		// posttocss配置
-		loaderOptions: {
-			postcss: {
-				plugins: [
-					// 各浏览器前缀
-					// autoprefixer(),
-					// px单位转换
-					pxtorem({
-						'postcss-import': {},
-						'postcss-url': {},
-						autoprefixer: {
-							// 筛选浏览器
-							browsers: ['Android >= 4.0', 'iOS >= 8'],
-						},
-						// 根元素,1rem的大小
-						rootValue: 10,
-						// 哪些需要进行px转rem
-						propList: ['*'],
-						// 排除哪些开头的如 .weui-button 等等
-						// 该项仅在使用 Circle 组件时需要
-						// 原因参见 https://github.com/youzan/vant/issues/1948
-						// 不想转换的单位针对类名增加尾缀-nopost
-						selectorBlackList: ['posted'],
-						// 最小转换，如低于 4px的不会进行转成rem
-						minPixelValue: 4,
-						// re单位的小数位数上限
-						unitPrecision: 10,
-						exclude: /node_modules|folder_name/i,
-					}),
-				],
 			},
 		},
 	},
@@ -114,7 +82,6 @@ module.exports = {
 		devtool: 'source-map',
 	},
 };
-
 
 function output_dir() {
 	switch (process.env.NODE_ENV) {

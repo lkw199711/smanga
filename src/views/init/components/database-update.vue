@@ -1,8 +1,8 @@
 <!--
  * @Author: lkw199711 lkw199711@163.com
  * @Date: 2023-05-03 11:35:53
- * @LastEditors: lkw199711 lkw199711@163.com
- * @LastEditTime: 2023-10-26 20:18:57
+ * @LastEditors: 梁楷文 lkw199711@163.com
+ * @LastEditTime: 2024-05-29 11:11:47
  * @FilePath: \smanga\src\views\init\components\database-update.vue
 -->
 <template>
@@ -10,7 +10,7 @@
 </template>
 
 <script setup lang="ts">
-import {ref, onMounted, defineProps, defineEmits} from 'vue';
+import {ref, onMounted } from 'vue';
 import deployApi from '@/api/login';
 
 const props = defineProps(['userName', 'passWord']);

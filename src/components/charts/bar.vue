@@ -20,7 +20,7 @@ import {
     LegendComponent,
 } from 'echarts/components';
 import VChart, { THEME_KEY } from 'vue-echarts';
-import { ref, provide, onMounted, defineExpose } from 'vue';
+import { ref, provide, onMounted } from 'vue';
 import chartsApi from '@/api/charts';
 
 use([

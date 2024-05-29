@@ -23,7 +23,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, defineProps, computed, onMounted } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import { config } from '@/store';
 import { ElMessageBox } from 'element-plus';
 import i18n from '@/i18n';
