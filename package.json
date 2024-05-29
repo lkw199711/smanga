@@ -53,8 +53,5 @@
     "style-resources-loader": "^1.5.0",
     "typescript": "~5.4.5",
     "vue-cli-plugin-style-resources-loader": "^0.1.5"
-  },
-  "gitHooks": {
-    "pre-commit": "lint-staged"
   }
 }
