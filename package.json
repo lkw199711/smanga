@@ -22,6 +22,7 @@
     "nprogress": "^0.2.0",
     "pinia": "^2.1.7",
     "reset-css": "^5.0.1",
+    "smanga": "file:",
     "vant": "^4.2.0",
     "vue": "^3.4.27",
     "vue-echarts": "^6.6.1",

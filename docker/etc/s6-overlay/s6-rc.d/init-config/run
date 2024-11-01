@@ -35,24 +35,6 @@ if [ ! -f /data/db/smanga.db ]; then
     cp /app/adonis/smanga.db /data/db/smanga.db
 fi
 
-echo -e "Change owner to user smanga...\nIt may take a while"
-
-groupmod -o -g "${PGID}" smanga
-usermod -o -u "${PUID}" smanga
-chown smanga:smanga -R /app
-chown smanga:smanga /data
-chown smanga:smanga -R \
-    /data/config \
-    /data/logs \
-    /data/db
-chown smanga:smanga \
-    /data/poster \
-    /data/compress \
-    /data/cache \
-    /data/bookmark
-
-cd /app/adonis || exit
-
 # 读取配置文件
 CONFIG_FILE="/data/config/smanga.json"
 
@@ -94,6 +76,24 @@ else
   # 如果不存在，则添加
   echo "$VAR_NAME=$DB_URL" >> "$ENV_FILE"
 fi
+
+echo -e "Change owner to user smanga...\nIt may take a while"
+
+groupmod -o -g "${PGID}" smanga
+usermod -o -u "${PUID}" smanga
+chown smanga:smanga -R /app
+chown smanga:smanga /data
+chown smanga:smanga -R \
+    /data/config \
+    /data/logs \
+    /data/db
+chown smanga:smanga \
+    /data/poster \
+    /data/compress \
+    /data/cache \
+    /data/bookmark
+
+cd /app/adonis || exit
 
 s6-setuidgid smanga npx prisma generate --schema="$SCHEMA_PATH"
 s6-setuidgid smanga npx prisma migrate deploy --schema="$SCHEMA_PATH"
