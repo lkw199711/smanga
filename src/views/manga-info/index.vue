@@ -2,7 +2,7 @@
  * @Author: error: error: git config user.name & please set dead value or install git && error: git config user.email & please set dead value or install git & please set dead value or install git
  * @Date: 2023-08-15 23:05:47
  * @LastEditors: lkw199711 lkw199711@163.com
- * @LastEditTime: 2025-01-17 14:26:53
+ * @LastEditTime: 2025-02-11 01:46:18
  * @FilePath: /smanga/src/views/manga-info/index.vue
 -->
 <template>
@@ -22,7 +22,7 @@
         <div class="middle">
             <div class="character" @wheel="character_wheel" v-if="character.length">
                 <p class="character-title">角色</p>
-                <perfect-scrollbar class="character-scroll" @wheel="character_wheel"
+                <div class="character-scroll" @wheel="character_wheel"
                     :options="{ suppressScrollX: false, suppressScrollY: true }">
                     <div v-for="item in character" class="character-item" :key="item.characterId">
                         <img :src="item.blob" :alt="item.metaContent">
@@ -30,9 +30,8 @@
                             <p class="name">{{ item.metaContent }}</p>
                             <p class="description">{{ item.description }}</p>
                         </div>
-
                     </div>
-                </perfect-scrollbar>
+                </div>
             </div>
 
             <el-descriptions class="meta-info" title="漫画信息" :column="infoColum">
@@ -352,6 +351,15 @@ function update_tags(tagsParams: tagItemType[]) {
 
 :deep(.el-carousel__mask) {
     background-color: transparent;
+}
+
+.character-scroll{
+    display: flex;
+    overflow-x: auto;
+    overflow-y: hidden;
+    white-space: nowrap;
+    gap: 1rem;
+    padding: 1rem;
 }
 
 .top {

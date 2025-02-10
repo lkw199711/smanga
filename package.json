@@ -26,8 +26,7 @@
     "vue": "^3.4.27",
     "vue-echarts": "^6.6.1",
     "vue-i18n": "^9.3.0-beta.16",
-    "vue-router": "^4.0.0-0",
-    "vue3-perfect-scrollbar": "^2.0.0"
+    "vue-router": "^4.0.0-0"
   },
   "devDependencies": {
     "@types/lodash": "^4.17.4",
