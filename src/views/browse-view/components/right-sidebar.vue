@@ -42,7 +42,7 @@ const emit = defineEmits([
 	'dwonload',
 ]);
 
-const removeFirstTitle = computed(() => {
+const removeFirstTitle = computed(() => {	
 	return props.removeFirst
 		? t('option.recoveryFirst')
 		: t('option.removeFirst');

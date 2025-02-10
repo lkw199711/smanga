@@ -19,7 +19,8 @@
         <img class="double-page-img" :src="imgSrc2" :alt="t('browse.imgLoadError')" v-if="imgSrc2" />
       </template>
 
-      <operation-cover @before="beforePage" @next="nextPage" @switch-menu="switch_menu" @switch-footer="switch_footer" />
+      <operation-cover @before="beforePage" @next="nextPage" @switch-menu="switch_menu"
+        @switch-footer="switch_footer" />
     </div>
 
     <!-- 页码显示 -->
@@ -127,24 +128,25 @@ async function page_change(pageParams: number) {
   // 有缓存则加载缓存的图片
   if (imgPathFiles.value[index]) {
     imgSrc1.value = imgPathFiles.value[index];
-    imgSrc2.value = imgPathFiles.value[index + 1]
-      ? imgPathFiles.value[index + 1]
-      : '';
-    return;
+  } else {
+    // 加载第一张图片
+    const res1: any = await imageApi.get(imgPathList.value[index]);
+    imgSrc1.value = res1;
+    imgPathFiles.value[index] = res1;
+    console.log(index, imgPathList.value);
   }
 
-  // 加载第一张图片
-  const res1: any = await imageApi.get(imgPathList.value[index]);
-  imgSrc1.value = res1;
-  imgPathFiles.value[index] = res1;
-
-  // 加载第二张图片
-  if (index + 1 < imgPathList.value.length) {
-    const res2: any = await imageApi.get(imgPathList.value[index + 1]);
-    imgSrc2.value = res2;
-    imgPathFiles.value[index + 1] = res2;
+  if (imgPathFiles.value[index + 1]) {
+    imgSrc2.value = imgPathFiles.value[index + 1];
   } else {
-    imgSrc2.value = '';
+    // 加载第二张图片
+    if (index + 1 < imgPathList.value.length) {
+      const res2: any = await imageApi.get(imgPathList.value[index + 1]);
+      imgSrc2.value = res2;
+      imgPathFiles.value[index + 1] = res2;
+    } else {
+      imgSrc2.value = '';
+    }
   }
 
   // 缓存书签信息
@@ -173,7 +175,7 @@ function nextPage() {
 async function reload_page(page = 1, addHistory = true) {
   // 清空之前图片内容
   imgPathFiles.value = [];
-  
+
   // 初始化chapterInfo
   if (!chapterInfo.chapterId) {
     const chapterId = Number(route.query.chapterId);
@@ -373,11 +375,12 @@ function touch_page_change() {
 
 function remove_poster() {
   if (removeFirst.value) {
-    imgPathList.value.unshift(firstImage.value);
-    imgPathFiles.value.unshift(firstImageFile.value);
+    imgPathList.value.shift();
+    imgPathFiles.value.shift();
   } else {
-    firstImage.value = imgPathList.value.shift() || '';
-    firstImageFile.value = imgPathFiles.value.shift() || '';
+    // 添加一张图片对其双页
+    imgPathList.value.unshift(imgPathList.value[0]);
+    imgPathFiles.value.unshift(imgPathFiles.value[0]);
   }
 
   removeFirst.value = !removeFirst.value;
@@ -400,8 +403,8 @@ onMounted(async () => {
 
   await reload_page(target, !notAddHistory);
 
-  const removeFirst = global_get('removeFirst');
-  const direction = global_get('direction');
+  const removeFirst = global_get('removeFirst') == 1;
+  const direction = global_get('direction') == 1;
 
   if (removeFirst) remove_poster();
   if (!direction) switch_direction();
