@@ -100,24 +100,26 @@ async function go_chapter() {
 	global_set('direction', direction);
 
 	if (route.name === 'media-list') {
-
 		const chapterListRes = await chapterApi.get(mangaId);
 		const chapterList = chapterListRes.list;
 		global_set_json('chapterList', chapterList);
 
-		router.push({
+		const newUrl = router.resolve({
 			name: browseType,
 			query: { chapterId: mangaInfo.chapterId },
 			params: { page },
-		});
-		return;
+		})
+		window.open(newUrl.href, '_blank');
+	} else {
+		const newUrl = router.resolve({
+			name: 'manga-info',
+			query: { mangaId },
+			params: { browseType, clear: '1' },
+		})
+		window.open(newUrl.href, '_blank');
 	}
-
-	router.push({
-		name: 'manga-info',
-		query: { mangaId },
-		params: { browseType, clear: '1' },
-	});
+	
+	
 }
 </script>
 

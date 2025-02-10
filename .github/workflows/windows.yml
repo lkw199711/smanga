@@ -65,6 +65,11 @@ jobs:
             Copy-Item -Path smanga-adonis-build/node_modules/ -Destination ./ -Recurse
             Copy-Item -Path ../smanga-adonis-build/.env.example -Destination .env -Force
 
+            Set-Location -Path smanga-adonis-build/
+            npx prisma generate --schema=./prisma/sqlite/schema.prisma
+            npx prisma migrate deploy --schema=./prisma/sqlite/schema.prisma
+            Set-Location -Path ..
+
             Get-ChildItem -Force
 
             npm install
