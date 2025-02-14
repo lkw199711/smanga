@@ -117,7 +117,7 @@ watch(
 	() => props.mangaInfo.mangaId,
 	async (val) => {
 		const res = await collectApi.is_collect('manga', val);
-		isCollect.value = res.data.isCollect;
+		isCollect.value = res;
 	}
 );
 

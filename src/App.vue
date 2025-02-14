@@ -111,8 +111,15 @@ async function set_bookmark() {
 
 async function get_setting() {
 	const res = await userApi.get_user_config();
-	
-	const configValue = JSON.parse(res);
+	let configValue = {};
+
+	if (typeof res === 'string') {
+		configValue = JSON.parse(res);
+	} else if (typeof res === 'object') {
+		configValue = res;
+	} else {
+		return false;
+	}
 
 	// 使用数据库用户设置，覆盖当前设置
 	Object.assign(userConfig, configValue.userConfig);

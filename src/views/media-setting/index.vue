@@ -84,10 +84,10 @@
 						<el-radio-group v-model="form.direction" class="ml-4">
 							<el-radio :label="0" size="large">{{
 								$t('mediaManage.select.ltr')
-								}}</el-radio>
+							}}</el-radio>
 							<el-radio :label="1" size="large">{{
 								$t('mediaManage.select.rtl')
-								}}</el-radio>
+							}}</el-radio>
 						</el-radio-group>
 					</el-form-item>
 					<p class="note form-note">{{ $t('mediaManage.note.direction') }}</p>
@@ -99,10 +99,10 @@
 						<div class="btn-box">
 							<el-button type="primary" @click="do_add_media">{{
 								$t('option.confirm')
-								}}</el-button>
+							}}</el-button>
 							<el-button type="warning" @click="addMediaDialog = false">{{
 								$t('option.cancel')
-								}}</el-button>
+							}}</el-button>
 						</div>
 					</div>
 				</template>
@@ -132,6 +132,15 @@
 						</el-select>
 					</el-form-item>
 					<p class="note form-note">{{ $t('mediaManage.note.browse') }}</p>
+					<!-- 封面设置 -->
+					<el-form-item :label="$t('mediaManage.form.cover')">
+						<el-input v-model="form.mediaCover" disabled>
+							<template #append>
+								<el-button @click="create_media_cover">生成封面</el-button>
+							</template>
+						</el-input>
+					</el-form-item>
+					<p class="note form-note">{{ $t('mediaManage.note.cover') }}</p>
 
 					<el-form-item :label="$t('mediaManage.form.directory')">
 						<el-select v-model.number="form.directoryFormat" class="r30">
@@ -140,7 +149,6 @@
 						</el-select>
 					</el-form-item>
 					<p class="note form-note">{{ $t('mediaManage.note.directory') }}</p>
-
 					<!--阅读字段-->
 					<p class="s-form-title">{{ $t('mediaManage.title.read') }}</p>
 					<el-form-item :label="$t('mediaManage.form.removeFirst')">
@@ -152,10 +160,10 @@
 						<el-radio-group v-model="form.direction" class="ml-4">
 							<el-radio :label="0" size="large">{{
 								$t('mediaManage.select.ltr')
-								}}</el-radio>
+							}}</el-radio>
 							<el-radio :label="1" size="large">{{
 								$t('mediaManage.select.rtl')
-								}}</el-radio>
+							}}</el-radio>
 						</el-radio-group>
 					</el-form-item>
 					<p class="note form-note">{{ $t('mediaManage.note.direction') }}</p>
@@ -166,19 +174,18 @@
 						<div class="btn-box">
 							<el-button type="primary" @click="update_media">{{
 								$t('option.confirm')
-								}}</el-button>
+							}}</el-button>
 							<el-button type="warning" @click="editMediaDialog = false">{{
 								$t('option.cancel')
-								}}</el-button>
+							}}</el-button>
 						</div>
 					</div>
 				</template>
 			</el-dialog>
 			<!--编辑媒体库路径弹框-->
-			<el-dialog :title="$t('path.modify')" v-model="addPathDialog" :before-close="
-					() => {
-						addPathDialog = false;
-					}
+			<el-dialog :title="$t('path.modify')" v-model="addPathDialog" :before-close="() => {
+				addPathDialog = false;
+			}
 				">
 				<el-form :model="form" label-width="100px">
 					<el-form-item :label="$t('mediaManage.form.name')">
@@ -233,10 +240,10 @@
 						<div class="btn-box">
 							<el-button type="primary" @click="addPathDialog = false">{{
 								$t('option.confirm')
-								}}</el-button>
+							}}</el-button>
 							<el-button type="warning" @click="addPathDialog = false">{{
 								$t('option.cancel')
-								}}</el-button>
+							}}</el-button>
 						</div>
 					</div>
 				</template>

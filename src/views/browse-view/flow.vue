@@ -1,8 +1,8 @@
 <!--
  * @Author: lkw199711 lkw199711@163.com
  * @Date: 2023-08-25 10:45:47
- * @LastEditors: 梁楷文 lkw199711@163.com
- * @LastEditTime: 2024-08-07 16:27:20
+ * @LastEditors: lkw199711 lkw199711@163.com
+ * @LastEditTime: 2025-02-13 23:51:47
  * @FilePath: /smanga/src/views/browse-view/flow.vue
 -->
 <template>
@@ -31,14 +31,35 @@
 		</div>
 
 		<!-- 页码 -->
-		<page-number :page="currentPage" :count="imgPathList.length" />
+		<page-number :page="currentPage" :count="countPage" />
 
 		<!-- 功能菜单 -->
-		<right-sidebar @dwonload="dwonload_image" />
+		<right-sidebar @dwonload="dwonload_image" @jumpPageNumber="open_jump_dialog" />
 
 		<!-- 安卓端占位符 -->
 		<div class="bottom-seat" v-if="config.android"></div>
 	</div>
+
+	<el-dialog v-model="dialogJumpPage" :title="t('browse.jumpPageTitle')" class="dialog-jump-page">
+		<template v-if="!showSmallJumpPage">
+			<el-slider v-model="targetPage" show-input :min="1" :max="countPage" />
+		</template>
+		<template v-else>
+			<el-slider v-model="targetPage" :min="1" :max="countPage" />
+
+			<el-input-number v-model="targetPage" :min="1" :max="countPage" />
+		</template>
+		<div class="jump-page-tips">{{ targetPage }} / {{ countPage }}</div>
+
+		<template #footer>
+			<div class="dialog-footer">
+				<el-button @click="dialogJumpPage = false">{{ t('option.cancel') }}</el-button>
+				<el-button type="primary" @click="jump_page">
+					{{ t('option.confirm') }}
+				</el-button>
+			</div>
+		</template>
+	</el-dialog>
 </template>
 
 <script lang="ts">
@@ -54,7 +75,7 @@ import {
 	global_set_json,
 	window_go_top,
 } from '@/utils';
-import { ElMessage as msg } from 'element-plus';
+import { ElMessage as msg, ElMessageBox } from 'element-plus';
 import { config } from '@/store';
 import historyApi from '@/api/history';
 import i18n from '@/i18n';
@@ -71,6 +92,25 @@ const { t } = i18n.global;
 const route = useRoute();
 const router = useRouter();
 const browseStore: any = useBrowseStore();
+
+// 跳页弹框
+let dialogJumpPage = ref(false)
+// 跳页目标页码
+let targetPage = ref(1)
+
+const handleClose = (done: () => void) => {
+	ElMessageBox.confirm('Are you sure to close this dialog?')
+		.then(() => {
+			done()
+		})
+		.catch(() => {
+			// catch error
+		})
+}
+
+const showSmallJumpPage = computed(() => {
+	return ['mini', 'small'].includes(config.screenType)
+})
 
 // 图片文件列表
 let imgFileList = ref<string[]>([]);
@@ -122,6 +162,16 @@ let chapterInfo = reactive<chapterInfoType>({
 
 // 正在浏览的页码
 let currentPage = ref(1);
+
+let countPage = ref(0);
+
+watch(
+	() => imgPathList.value.length,
+	() => {
+		if (imgPathList.value.length === 0) return;
+		countPage.value = imgPathList.value.length;
+	}
+)
 
 // 在中途加载 前置没有加载的页面数量
 let beforeBookMark = 0;
@@ -401,6 +451,17 @@ function dwonload_image() {
 	a.href = src;
 	a.download = 'smangaImage.png';
 	a.click();
+}
+
+function open_jump_dialog() {
+	// 初始化目标页码为当前页码
+	targetPage.value = currentPage.value;
+	// 打开跳转对话框
+	dialogJumpPage.value = true;
+}
+function jump_page() {
+	// return
+	reload_page(true, true, targetPage.value);
 }
 
 // 生命周期

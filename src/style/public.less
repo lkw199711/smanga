@@ -274,3 +274,16 @@ body {
 // #nprogress .bar{
 //  background-color: @s-background;
 // }
+
+// 跳页的弹框在不同尺寸 展示不通的ui排列
+@media only screen and (min-width: 1200px) {
+	.dialog-jump-page {
+		max-width: 120rem;
+		min-width: 80rem;
+	}
+}
+@media only screen and (max-width: 1199px) {
+	.dialog-jump-page {
+		width: 80%;
+	}
+}

@@ -2,7 +2,7 @@
  * @Author: lkw199711 lkw199711@163.com
  * @Date: 2023-03-17 20:18:30
  * @LastEditors: lkw199711 lkw199711@163.com
- * @LastEditTime: 2024-08-05 23:44:33
+ * @LastEditTime: 2025-02-14 21:06:08
  * @FilePath: \smanga\src\api\media.ts
  */
 import {ajax} from './index';
@@ -55,6 +55,12 @@ const mediaApi = {
 
 		const resData = (await res).data;
 		return resData;
+	},
+
+	async create_cover(mediaId: number) { 
+		const res = ajax.put(`media-cover/${mediaId}`);
+		const resData = (await res).data;
+		return resData.data;
 	},
 };
 
