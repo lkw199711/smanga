@@ -13,7 +13,7 @@
 				</el-form-item>
 
 				<el-form-item label="密码:">
-					<el-input v-model="form.passWord" placeholder="请输入内容"></el-input>
+					<el-input v-model="form.passWord" placeholder="请输入内容" type="password"></el-input>
 				</el-form-item>
 			</el-form>
 

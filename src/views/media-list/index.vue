@@ -3,7 +3,39 @@
 		<div class="media">
 			<div class="media-item" v-for="item in mediaList" :key="item.mediaId" @click="go_manga_list(item)"
 				@contextmenu.prevent="context_menu">
-				{{ item.mediaName }}
+				<!--封面图片-->
+				<el-image v-if="item.mediaCoverLink" class="anim chapter-cover-img" :src="item.mediaCoverLink" fit="fit"
+					:alt="item.mediaName" />
+
+				<!--占位图标-->
+				<el-image v-else :src="placeholder" class="chapter-cover-img" fit="fill" />
+
+				<!--媒体库名称-->
+				<p class="media-name">{{ item.mediaName }}</p>
+			</div>
+			<div class="media-item" v-for="item in mediaList" :key="item.mediaId" @click="go_manga_list(item)"
+				@contextmenu.prevent="context_menu">
+				<!--封面图片-->
+				<el-image v-if="item.mediaCoverLink" class="anim chapter-cover-img" :src="item.mediaCoverLink" fit="fit"
+					:alt="item.mediaName" />
+
+				<!--占位图标-->
+				<el-image v-else :src="placeholder" class="chapter-cover-img" fit="fill" />
+
+				<!--媒体库名称-->
+				<p class="media-name">{{ item.mediaName }}</p>
+			</div>
+			<div class="media-item" v-for="item in mediaList" :key="item.mediaId" @click="go_manga_list(item)"
+				@contextmenu.prevent="context_menu">
+				<!--封面图片-->
+				<el-image v-if="item.mediaCoverLink" class="anim chapter-cover-img" :src="item.mediaCoverLink" fit="fit"
+					:alt="item.mediaName" />
+
+				<!--占位图标-->
+				<el-image v-else :src="placeholder" class="chapter-cover-img" fit="fill" />
+
+				<!--媒体库名称-->
+				<p class="media-name">{{ item.mediaName }}</p>
 			</div>
 		</div>
 	</div>
@@ -20,6 +52,8 @@ import { global_set } from '@/utils';
 import { config } from '@/store';
 import { useRoute, useRouter } from 'vue-router';
 import { mediaType } from '@/type/media';
+import imageApi from '@/api/image';
+const placeholder = require('@/assets/s-blue.png');
 const route = useRoute();
 const router = useRouter();
 
@@ -31,7 +65,11 @@ const mediaList = ref<mediaType[]>([]);
  */
 async function load_media() {
 	const res = await mediaApi.get(1, 10000);
+
 	mediaList.value = res.list;
+	mediaList.value.forEach(async (item: mediaType) => {
+		item.mediaCoverLink = await imageApi.get(item.mediaCover);
+	});
 }
 
 /**
@@ -97,6 +135,7 @@ onMounted(async () => {
 		color: @s-text;
 		box-shadow: #9a6e3a 1px 2px 4px;
 		cursor: pointer;
+		overflow: hidden;
 	}
 }
 
@@ -104,12 +143,16 @@ onMounted(async () => {
 	.media {
 		margin: 6rem auto;
 		padding: 0 6rem;
-		grid-template-columns: repeat(auto-fill, 20rem);
+		grid-template-columns: repeat(auto-fill, 24.6rem);
 		grid-gap: 3rem 3rem;
 
 		&-item {
-			line-height: 14rem;
+			height: 13.2rem;
 			border-radius: 1.4rem;
+		}
+
+		&-name {
+			margin-top: 1rem;
 			font-size: 2rem;
 		}
 	}
@@ -119,13 +162,17 @@ onMounted(async () => {
 	.media {
 		margin: 4rem auto;
 		padding: 0 4rem;
-		grid-template-columns: repeat(auto-fill, 14rem);
-		grid-gap: 2rem 2rem;
+		grid-template-columns: repeat(auto-fill, 20rem);
+		grid-gap: 3rem 2rem;
 
 		&-item {
-			line-height: 10rem;
+			height: 11.6rem;
 			border-radius: 1.2rem;
-			font-size: 1.6rem;
+		}
+
+		&-name {
+			margin-top: 1rem;
+			font-size: 1.8rem;
 		}
 	}
 }
@@ -134,12 +181,16 @@ onMounted(async () => {
 	.media {
 		margin: 2rem auto;
 		padding: 0 2rem;
-		grid-template-columns: repeat(auto-fill, 10rem);
-		grid-gap: 1.6rem 1rem;
+		grid-template-columns: repeat(auto-fill, 16rem);
+		grid-gap: 2rem 1rem;
 
 		&-item {
-			line-height: 7rem;
+			height: 9.6rem;
 			border-radius: 1rem;
+		}
+
+		&-name {
+			margin-top: 1rem;
 			font-size: 1.4rem;
 		}
 	}

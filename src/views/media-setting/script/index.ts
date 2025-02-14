@@ -5,14 +5,14 @@ import {
 	Plus,
 	FolderOpened,
 } from '@element-plus/icons-vue';
-import {defineComponent} from 'vue';
+import { defineComponent } from 'vue';
 import mediaApi from '@/api/media';
 import pathApi from '@/api/path';
-import {ElMessage, ElMessageBox} from 'element-plus';
+import { ElMessage, ElMessageBox } from 'element-plus';
 import tablePager from '@/components/table-pager.vue';
 import i18n from '@/i18n';
 
-const {t} = i18n.global;
+const { t } = i18n.global;
 
 export default defineComponent({
 	name: 'media-setting-index',
@@ -40,6 +40,7 @@ export default defineComponent({
 				directoryFormat: 0,
 				removeFirst: 0,
 				direction: 1,
+				mediaCover: '',
 			} as any,
 			formInit: {
 				mediaName: '',
@@ -66,7 +67,7 @@ export default defineComponent({
 	computed: {},
 
 	// 组件
-	components: {tablePager},
+	components: { tablePager },
 
 	// 方法
 	methods: {
@@ -191,7 +192,7 @@ export default defineComponent({
 						this.reload_table();
 					}
 				})
-				.catch(() => {});
+				.catch(() => { });
 		},
 		/**
 		 * 删除路径
@@ -207,7 +208,7 @@ export default defineComponent({
 						this.load_path(pathInfo.mediaId);
 					}
 				})
-				.catch(() => {});
+				.catch(() => { });
 		},
 		/**
 		 * 重新扫面路径
@@ -228,7 +229,7 @@ export default defineComponent({
 						this.load_path(pathInfo.mediaId);
 					}
 				})
-				.catch(() => {});
+				.catch(() => { });
 		},
 		async scan_path(pathInfo: any) {
 			const res = await pathApi.scan_path(
@@ -262,6 +263,14 @@ export default defineComponent({
 				this.load_path(mediaId);
 			}
 		},
+		/**
+		 * 生成海报
+		 * @param mediaId
+		 */
+		async create_media_cover() {
+			const coverFile = await mediaApi.create_cover(this.form.mediaId);
+			this.form.mediaCover = coverFile;
+		}
 	},
 
 	// 生命周期

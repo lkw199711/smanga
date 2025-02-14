@@ -96,7 +96,8 @@
       "directory": "directoryType:",
       "removeFirst": "removeFirst:",
       "direction": "direction:",
-      "autoScan": "auto scan"
+      "autoScan": "auto scan",
+      "cover": "meida cover"
     },
     "note": {
       "name": "\"mediaName\": Required, cannot be blank",
@@ -105,7 +106,8 @@
       "directory": "\"directoryType\": This option supports adding one more level of directory to the path. For example, you want to manage comics by year \"example/2022/manga/chapter/...\"",
       "removeFirst": "\"removeFirst\": In the \"double page mode\", by temporarily removing the first page in reading, you can combine the left and right pages of the cartoon into a whole picture by removing the even number of page numbers. Please change this item after getting familiar with the page numbers of the cartoon. You can also change this item temporarily through the function menu in the browsing interface.",
       "direction": "\"direction\": In the \"double page mode\", change the display order of the first and second pictures so that the left and right pages of the cartoon can be combined into a whole picture. You can also change this item temporarily through the function menu in the browsing interface.",
-      "autoScan": "When the folder sending changes, comics and chapters will be automatically added or deleted. Enabling this option will greatly increase the pressure on the server. Please be careful when opening multi-path media libraries"
+      "autoScan": "When the folder sending changes, comics and chapters will be automatically added or deleted. Enabling this option will greatly increase the pressure on the server. Please be careful when opening multi-path media libraries",
+      "cover": "The media library cover will be automatically generated after each scan. You can also upload it manually to manage the cover"
     },
     "place": {
       "name": "please enter mediaName",
@@ -274,7 +276,8 @@
     "double": "double",
     "half": "falf-cut",
     "model": "readModel",
-    "imgLoadError": "Image loading failed, click to reload"
+    "imgLoadError": "Image loading failed, click to reload",
+    "jumpPageTitle": "Please enter target page number"
   },
   "page": {
     "before": "beforeChapter",
@@ -343,7 +346,8 @@
   "rightSidebar": {
     "editTags": "editTags",
     "baseTagTitle": "Alternative tags",
-    "ckeckedTagTitle": "Current tag"
+    "ckeckedTagTitle": "Current tag",
+    "jumpPageText": "Jump page number"
   },
   "createTime": "createTime",
   "updateTime": "updateTime"
