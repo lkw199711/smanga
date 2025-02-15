@@ -2,7 +2,7 @@ FROM node:20.18.0-alpine3.20 AS base
 
 FROM base AS prepare
 
-RUN apk add git
+RUN apk add git python3
 RUN git clone https://github.com/lkw199711/smanga-adonis.git /smanga-adonis
 RUN git clone https://github.com/lkw199711/smanga-express.git /smanga-express
 RUN rm -rf \
