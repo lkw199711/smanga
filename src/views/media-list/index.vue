@@ -13,30 +13,6 @@
 				<!--媒体库名称-->
 				<p class="media-name">{{ item.mediaName }}</p>
 			</div>
-			<div class="media-item" v-for="item in mediaList" :key="item.mediaId" @click="go_manga_list(item)"
-				@contextmenu.prevent="context_menu">
-				<!--封面图片-->
-				<el-image v-if="item.mediaCoverLink" class="anim chapter-cover-img" :src="item.mediaCoverLink" fit="fit"
-					:alt="item.mediaName" />
-
-				<!--占位图标-->
-				<el-image v-else :src="placeholder" class="chapter-cover-img" fit="fill" />
-
-				<!--媒体库名称-->
-				<p class="media-name">{{ item.mediaName }}</p>
-			</div>
-			<div class="media-item" v-for="item in mediaList" :key="item.mediaId" @click="go_manga_list(item)"
-				@contextmenu.prevent="context_menu">
-				<!--封面图片-->
-				<el-image v-if="item.mediaCoverLink" class="anim chapter-cover-img" :src="item.mediaCoverLink" fit="fit"
-					:alt="item.mediaName" />
-
-				<!--占位图标-->
-				<el-image v-else :src="placeholder" class="chapter-cover-img" fit="fill" />
-
-				<!--媒体库名称-->
-				<p class="media-name">{{ item.mediaName }}</p>
-			</div>
 		</div>
 	</div>
 </template>
@@ -136,6 +112,14 @@ onMounted(async () => {
 		box-shadow: #9a6e3a 1px 2px 4px;
 		cursor: pointer;
 		overflow: hidden;
+	}
+
+	&-name {
+		z-index: 50;
+	}
+
+	.chapter-cover-img {
+		max-height: 9rem;
 	}
 }
 
