@@ -87,7 +87,7 @@ lkw199711/smanga;
 
 ##### 新版本目前实现条漫跳页,媒体库封面生成 等功能.
 
-![media poster](https://github.com/lkw199711/smanga/raw/electron/src/assets/readme/media poster.PNG)
+![media poster](https://github.com/lkw199711/smanga/raw/electron/src/assets/readme/media-poster.PNG)
 
 ## 旧版本安装
 
