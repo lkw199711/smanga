@@ -6,7 +6,7 @@
 
 [![Build Smanga Alpha Docker](https://github.com/lkw199711/smanga/actions/workflows/docker_alpha.yml/badge.svg)](https://github.com/lkw199711/smanga/actions/workflows/docker_alpha.yml) [![Build Smanga Base Docker](https://github.com/lkw199711/smanga/actions/workflows/docker_base.yml/badge.svg)](https://github.com/lkw199711/smanga/actions/workflows/docker_base.yml) [![Build Smanga Beta Docker](https://github.com/lkw199711/smanga/actions/workflows/docker_beta.yml/badge.svg)](https://github.com/lkw199711/smanga/actions/workflows/docker_beta.yml) [![Build Smanga Docker](https://github.com/lkw199711/smanga/actions/workflows/docker.yml/badge.svg)](https://github.com/lkw199711/smanga/actions/workflows/docker.yml)
 
-无需配置，docker直装的漫画流媒体阅读工具。
+简单易用，docker直装的漫画流媒体阅读工具。
 
 以emby plex为灵感，为解决漫画阅读需求而开发的漫画阅读器。
 
@@ -66,7 +66,30 @@ docker: https://hub.docker.com/r/lkw199711/smanga
 6. 新增多种阅读模式, 条漫(瀑布流) , 翻页 以及双页, 选择适合的浏览模式可提升阅读体验. 
 
 
-## 安装
+
+## 新版本安装
+
+##### 首先讲一下新版,nodejs版本. 旧版本将不再更新.
+
+```
+docker run -itd --name smanga \
+-p 3333:3306 \
+-p 9797:9797 \
+-v /mnt:/mnt \
+-v /route/smanga:/data \
+lkw199711/smanga;
+```
+
+1. 新版进需要映射/data 一个目录,细分目录映射不再支持
+2. 新版本网页端口改为9797.部署时请注意
+3. 新老版本不想兼容,请大家另外部署
+4. 新版本暂未支持pdf
+
+##### 新版本目前实现条漫跳页,媒体库封面生成 等功能.
+
+![media poster](https://github.com/lkw199711/smanga/raw/electron/src/assets/readme/media poster.PNG)
+
+## 旧版本安装
 
 ### 1. 使用docker安装
 
