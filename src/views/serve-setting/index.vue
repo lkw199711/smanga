@@ -1,8 +1,8 @@
 <!--
  * @Author: lkw199711 lkw199711@163.com
  * @Date: 2023-07-16 12:02:34
- * @LastEditors: 梁楷文 lkw199711@163.com
- * @LastEditTime: 2024-08-08 20:15:11
+ * @LastEditors: lkw199711 lkw199711@163.com
+ * @LastEditTime: 2025-03-13 17:08:51
  * @FilePath: /smanga/src/views/serve-setting/index.vue
 -->
 <template>
@@ -12,13 +12,13 @@
             <!-- 语言设置 -->
             <div class="scan">
                 <el-form-item label="扫描周期">
-                    <el-input v-model="form.scan.interval" class="interval"></el-input>
-                    <span class="suffix">ms</span>
+                    <el-input v-model="form.scan.interval" class="interval" :style="{ width: '15rem' }"></el-input>
+                    <span class="suffix">cron表达式</span>
                     <el-button type="primary" @click="comfirm_interval">确定</el-button>
                 </el-form-item>
             </div>
             <p class="note form-note">
-                扫描周期单位为秒,可使用*表达式.设置周期最短为10
+                扫描周期为cron表达式,默认为一天两次
             </p>
 
             <!--自动解压-->

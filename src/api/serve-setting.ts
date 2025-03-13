@@ -1,11 +1,11 @@
 /*
  * @Author: lkw199711 lkw199711@163.com
  * @Date: 2023-08-26 02:33:27
- * @LastEditors: 梁楷文 lkw199711@163.com
- * @LastEditTime: 2024-08-08 19:00:43
+ * @LastEditors: lkw199711 lkw199711@163.com
+ * @LastEditTime: 2025-03-13 12:15:27
  * @FilePath: /smanga/src/api/serve-setting.ts
  */
-import {ajax} from './index';
+import { ajax } from './index';
 
 /**
  * @description: 服务器设置
@@ -29,7 +29,7 @@ const serveSettingApi = {
 	 * @return {*}
 	 */
 	async set(title: string, key: string, value: string | number) {
-		const http = await ajax.put('serve-config', {key, value});
+		const http = await ajax.put('serve-config', { key: title + '.' + key, value });
 		const response = http.data;
 		return response.data;
 	},
@@ -43,7 +43,7 @@ const serveSettingApi = {
 	async set_ssl(pem: string, key: string) {
 		const res = ajax({
 			url: 'deploy/set_ssl',
-			data: {pem, key},
+			data: { pem, key },
 		});
 
 		return (await res).data;

@@ -145,7 +145,8 @@
       "add": "addPath:",
       "path": "path:",
       "include": "include",
-      "exclude": "exclude"
+      "exclude": "exclude",
+      "name": "PathContent"
     },
     "place": {
       "add": "please enter the path",
@@ -154,7 +155,8 @@
     },
     "button": {
       "re": "reScan",
-      "update": "addScan"
+      "update": "addScan",
+      "edit": "\nedit path"
     },
     "warning": {
       "name": "mediaName cannot be empty!"
@@ -168,7 +170,8 @@
       "text2": "are you sure to reScan this path? The associated manga and chapter also will be cleared and rescanned to add!"
     },
     "note": {
-      "clude": "Include and exclude are the matching and exclusion rules. The scanned comics use the include matching path. If they are matched, they are added; if they are not matched, they are excluded; Exclude is the opposite, matching to exclude and not matching to add. When two values exist simultaneously, include takes precedence<br>\nBoth include and exclude are regular expression values. If you want to match multiple rules, please write them like this {0}"
+      "clude": "Include and exclude are the matching and exclusion rules. The scanned comics use the include matching path. If they are matched, they are added; if they are not matched, they are excluded; Exclude is the opposite, matching to exclude and not matching to add. When two values exist simultaneously, include takes precedence<br>\nBoth include and exclude are regular expression values. If you want to match multiple rules, please write them like this {0}",
+      "disabledContent": "Once the path content is generated, it cannot be changed"
     }
   },
   "mangaManage": {
