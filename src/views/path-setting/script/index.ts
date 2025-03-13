@@ -20,9 +20,17 @@ export default defineComponent({
 	// 数据
 	data() {
 		return {
+			editPathDialogVisible: false,
 			count: 0,
 			tableData: [],
 			pathArr: [] as any[],
+			pathForm: {
+				pathId: 0,
+				pathContent: '',
+				autoScan: 0,
+				include: '',
+				exclude: '',
+			},
 		};
 	},
 
@@ -103,6 +111,30 @@ export default defineComponent({
 				this.reload_table();
 			}
 		},
+
+		async edit_path(index: number, row: any) { 
+			this.editPathDialogVisible = true;
+			this.pathForm = row;
+		},
+
+		async save_path() { 
+			const res = await pathApi.update_path(this.pathForm.pathId, this.pathForm);
+			if (res) {
+				this.editPathDialogVisible = false;
+				this.reload_table();
+			}
+		},
+
+		cancel_edit_path() {
+			this.editPathDialogVisible = false;
+			this.pathForm = {
+				pathId: 0,
+				pathContent: '',
+				autoScan: 0,
+				include: '',
+				exclude: '',
+			}
+		}
 	},
 
 	// 生命周期

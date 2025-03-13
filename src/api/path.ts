@@ -69,6 +69,12 @@ const pathApi = {
 		const response = http.data;
 		return response.data;
 	},
+
+	async update_path(pathId: any, pathForm: any) { 
+		const http = await ajax.put(`path/${pathId}`, pathForm);
+		const response = http.data;
+		return response.data;
+	}
 };
 
 export default pathApi;
