@@ -103,4 +103,4 @@ chown smanga:smanga \
 cd /app/adonis || exit
 
 s6-setuidgid smanga npx prisma generate --schema="$SCHEMA_PATH"
-s6-setuidgid yes | echo -e "\n" | smanga npx prisma migrate dev --schema="$SCHEMA_PATH"
+s6-setuidgid smanga yes | echo -e "\n" | npx prisma migrate dev --schema="$SCHEMA_PATH"
