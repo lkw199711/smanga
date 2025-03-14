@@ -6,6 +6,27 @@
   "description": "漫画流媒体库",
   "glyphs": [
     {
+      "icon_id": "27464601",
+      "name": "对勾",
+      "font_class": "success-fill",
+      "unicode": "e70d",
+      "unicode_decimal": 59149
+    },
+    {
+      "icon_id": "2674480",
+      "name": "对勾",
+      "font_class": "isread",
+      "unicode": "e627",
+      "unicode_decimal": 58919
+    },
+    {
+      "icon_id": "11627452",
+      "name": "标签",
+      "font_class": "biaoqian",
+      "unicode": "e877",
+      "unicode_decimal": 59511
+    },
+    {
       "icon_id": "629357",
       "name": "搜索",
       "font_class": "sousuo",

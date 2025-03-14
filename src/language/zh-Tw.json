@@ -44,7 +44,9 @@
     "rtl": "右 -> 左",
     "dwonload": "下載圖片",
     "editTags": "編輯標簽",
-    "copy": "復製"
+    "copy": "復製",
+    "markAsRead": "標記為已閱讀",
+    "markAsUnRead": "標記為未閱讀"
   },
   "account": {
     "add": "新增用戶",

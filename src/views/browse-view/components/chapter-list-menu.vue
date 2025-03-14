@@ -7,6 +7,8 @@
       <el-menu class="chapter-list" active-text-color="#ee0a24" :default-active="String(chapterIndex)"
         @select="change_chapter">
         <el-menu-item v-for="(k, i) in chapterList" :index="String(i)" :key="k.chapterId">{{ k.chapterName }}
+          <!--已读图标-->
+		      <i class="iconfont icon-success-fill icon-is-read" v-if="k.latest?.finish" />
         </el-menu-item>
         <seat height="4rem" />
       </el-menu>
@@ -133,5 +135,11 @@ function button_click() {
     color: #fff;
     font-size: 2.6rem;
   }
+}
+
+.icon-is-read{
+  margin-left: 2.4rem;
+  transform: translateY(.1rem);
+  color: @s-isread;
 }
 </style>

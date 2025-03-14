@@ -2,7 +2,7 @@
  * @Author: lkw199711 lkw199711@163.com
  * @Date: 2023-03-17 20:18:31
  * @LastEditors: lkw199711 lkw199711@163.com
- * @LastEditTime: 2024-08-04 20:11:02
+ * @LastEditTime: 2025-03-14 19:28:01
  * @FilePath: \smanga\src\views\browse-view\single.vue
 -->
 <template>
@@ -67,7 +67,13 @@ const page = ref(1);
 watch(
   () => page.value,
   () => {
-    latestApi.add(page.value, chapterInfo.chapterId, chapterInfo.mangaId, page.value >= count.value);
+    latestApi.add({
+      page: page.value,
+      count: count.value,
+      chapterId: chapterInfo.chapterId,
+      mangaId: chapterInfo.mangaId,
+      finish: page.value >= count.value
+    });
   }
 )
 
@@ -161,10 +167,16 @@ async function reload_page(page = 1, addHistory = true) {
     chapterInfo = chapterList.value.filter((item: chapterInfoType) => item.chapterId == chapterId)[0]
 
     // 更新阅读记录
-    latestApi.add(page, chapterInfo.chapterId, chapterInfo.mangaId);
+    latestApi.add({
+      page: page,
+      count: count.value,
+      chapterId: chapterInfo.chapterId,
+      mangaId: chapterInfo.mangaId,
+      finish: page >= count.value
+    });
   }
 
-  if (addHistory) historyApi.add_history();
+  if (addHistory) historyApi.add();
   // 加载图片列表
   const res = await chapterApi.get_images(chapterInfo.chapterId);
 

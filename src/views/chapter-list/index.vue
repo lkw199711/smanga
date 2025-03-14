@@ -18,7 +18,8 @@
 		<media-pager ref="pager" :page="page" :count="count" :page-size-config="pageSizes" @page-change="page_change" />
 
 		<!--功能菜单-->
-		<right-sidebar :info="chapterInfo" :menuPoster="menuPoster" @reload="page_change" />
+		<right-sidebar :chapterInfo="chapterInfo" :rightSidebarVisible="rightSidebarVisible" @reload="page_change"
+			@close="() => { rightSidebarVisible = false }" />
 	</div>
 </template>
 
@@ -59,6 +60,7 @@ let loading = ref(false);
 
 let pageSizes: number[] = [];
 let defaultPageSize = 10;
+let rightSidebarVisible = ref(false);
 
 get_page_size_array();
 
@@ -177,9 +179,8 @@ function go_browse(item: any) {
  * 打开右侧菜单
  */
 function context_menu(info: any, key: number) {
-	menuPoster.value = (list.value[key] as any).blob;
 	chapterInfo.value = info;
-	config.rightSidebar = true;
+	rightSidebarVisible.value = true;
 }
 
 /**

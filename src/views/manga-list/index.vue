@@ -19,7 +19,7 @@
 		<media-pager ref="pager" :page="page" :count="count" :page-size-config="pageSizes" @page-change="page_change" />
 
 		<!--功能菜单-->
-		<rightSidebar :mangaInfo="mangaInfo" :menuPoster="menuPoster" @reload="page_change" />
+		<rightSidebar :mangaInfo="mangaInfo" :rightSidebarVisible="rightSidebarVisible" @reload="page_change" @close="() => { rightSidebarVisible = false}" />
 	</div>
 </template>
 
@@ -53,8 +53,8 @@ const route = useRoute();
 let page = ref(1);
 let count = ref(0);
 let list = ref<mangaInfoType[]>([]);
-let mangaInfo = ref({});
-let menuPoster = ref('');
+let mangaInfo = ref<mangaInfoType>();
+let rightSidebarVisible = ref(false);
 let loading = ref(false);
 
 let pageSizes: number[] = [];
@@ -192,10 +192,9 @@ function reload() {
 /**
  * 打开右侧菜单
  */
-function context_menu(mangaInfoProps: any, key: number) {
-	menuPoster.value = (list.value[key] as any).blob;
-	mangaInfo = mangaInfoProps;
-	config.rightSidebar = true;
+function context_menu(mangaInfoProps: mangaInfoType, key: number) {
+	mangaInfo.value = mangaInfoProps;
+	rightSidebarVisible.value = true;
 }
 </script>
 
