@@ -2,7 +2,7 @@
  # @Author: lkw199711 lkw199711@163.com
  # @Date: 2024-10-28 12:52:40
  # @LastEditors: lkw199711 lkw199711@163.com
- # @LastEditTime: 2025-03-14 19:10:41
+ # @LastEditTime: 2025-03-14 22:25:16
  # @FilePath: \smanga\docker\etc\s6-overlay\s6-rc.d\init-config\run
 ### 
 #!/usr/bin/with-contenv bash
@@ -103,4 +103,4 @@ chown smanga:smanga \
 cd /app/adonis || exit
 
 s6-setuidgid smanga npx prisma generate --schema="$SCHEMA_PATH"
-s6-setuidgid smanga yes | echo -e "\n" | npx prisma migrate dev --schema="$SCHEMA_PATH"
+s6-setuidgid smanga npx prisma migrate dev --schema="$SCHEMA_PATH"
