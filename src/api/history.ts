@@ -70,12 +70,11 @@ const historyApi = {
 		page: number | undefined = undefined,
 		pageSize: number | undefined = undefined
 	) {
-		const res = ajax({
-			url: 'history',
-			data: { page, pageSize },
+		const http = await ajax.get('history', {
+			params: { page, pageSize },
 		});
-
-		return (await res).data;
+		const response = http.data;
+		return response
 	},
 
 	/**
