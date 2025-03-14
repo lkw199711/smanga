@@ -1,19 +1,29 @@
 <template>
 	<div class="chapter" v-if="viewType !== 'list'">
-		<!--封面图片-->
-		<el-image v-if="blobLink" class="anim chapter-cover-img" :src="blobLink" :fit="fit" :alt="chapterName" />
+		<!--已读图标-->
+		<i class="iconfont icon-success-fill icon-is-read" v-if="isRead" />
 
-		<!--占位图标-->
-		<el-image v-else :src="placeholder" class="chapter-cover-img" fit="fill" />
+		<div class="chapter-image-box">
+			<!--封面图片-->
+			<el-image v-if="blobLink" class="anim chapter-cover-img" :src="blobLink" :fit="fit" :alt="chapterName" />
+			<!--占位图标-->
+			<el-image v-else :src="placeholder" class="chapter-cover-img" fit="fill" />
+			<!-- 阅读进度 -->
+			<el-progress class="progress" :percentage="percentage" :show-text="false" v-if="percentage"/>
+		</div>
 
 		<!--书签图标-->
 		<i class="iconfont icon-Bookmark- icon-bookmark" v-if="bookmark" />
 
 		<!--章节名称-->
 		<p class="chapter-name single-line-text-overflow">{{ chapterName }}</p>
+
 	</div>
 
 	<div class="chapter-view-list" v-else>
+		<!--已读图标-->
+		<i class="iconfont icon-success-fill icon-is-read" v-if="props.chapterInfo?.isread" />
+
 		<!--封面图片-->
 		<el-image v-if="blobLink" class="anim chapter-cover-img" :src="blobLink" :fit="fit" :alt="chapterName" />
 
@@ -35,11 +45,9 @@ export default { name: 'manga-chapter-item' }
 import imageApi from "@/api/image";
 import queue from "@/store/quque";
 import { chapterInfoType } from "@/type/chapter";
-import { ref, onMounted } from "vue";
-import usePosterStore from '@/store/poster';
+import { ref, onMounted, computed } from "vue";
 
 type chapterItemType = chapterInfoType & { blob: string; chapterCover: string; pageImage: string; };
-const poster: any = usePosterStore();
 const props = defineProps(['chapterInfo', 'bookmark', 'viewType']);
 const placeholder = require("@/assets/s-blue.png");
 const fit = 'cover';
@@ -47,18 +55,36 @@ let blobLink = ref('');
 const chapterName = ref(props.chapterInfo.chapterName);
 let viewType = ref(props.chapterInfo.viewType);
 
+const percentage = computed(() => {
+	const latest = props.chapterInfo?.latest;
+	if (!latest) {
+		return false;
+	}
+
+	if (latest.finish) {
+		return false;
+	}
+
+	if (latest?.page && latest?.count) {
+		return (latest.page / latest.count) * 100;
+	}
+
+	return false;
+});
+
+const isRead = computed(() => {
+	const latest = props.chapterInfo?.latest;
+	return latest?.finish;
+});
+
 onMounted(() => {
 	queue.mangaQueue.add(() => get_poster(props.chapterInfo));
 })
 
 async function get_poster(item: chapterItemType) {
-	const coverName = item.pageImage || item.chapterCover;
-	if (poster[coverName]) {
-		blobLink.value = poster[coverName]
-	} else {
-		blobLink.value = await imageApi.get(coverName);
-		poster[coverName] = blobLink.value;
-	}
+	console.log(item);
+
+	blobLink.value = await imageApi.get(item.pageImage || item.chapterCover);
 }
 
 </script>
@@ -70,10 +96,26 @@ async function get_poster(item: chapterItemType) {
 	cursor: pointer;
 
 	&-cover-img {
+		position: relative;
 		width: 100%;
 		background-color: #f0f0f0;
-		border-radius: 8px;
 	}
+
+	&-image-box {
+		position: relative;
+		border-radius: 8px;
+
+		.progress {
+			position: absolute;
+			bottom: 0;
+			left: 0;
+			width: 100%;
+			height: 0.2rem;
+			background-color: rgba(0, 0, 0, 0.5);
+			z-index: 1;
+		}
+	}
+
 }
 
 .chapter-view-list {
@@ -93,6 +135,17 @@ async function get_poster(item: chapterItemType) {
 	left: 0;
 	color: @s-bookmark;
 	font-size: 2rem;
+}
+
+.icon-is-read {
+	position: absolute;
+	top: 0.6rem;
+	right: 0.6rem;
+	color: @s-isread;
+	font-size: 2rem;
+	background-color: #fff;
+	border-radius: 100%;
+	z-index: 1;
 }
 
 @keyframes mymove {

@@ -44,7 +44,9 @@
     "rtl": "右 -> 左",
     "dwonload": "下载图片",
     "editTags": "编辑标签",
-    "copy": "复制"
+    "copy": "复制",
+    "markAsRead": "标记为已阅读",
+    "markAsUnRead": "标记为未阅读"
   },
   "account": {
     "add": "新增用户",

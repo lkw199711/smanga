@@ -2,7 +2,7 @@
  * @Author: lkw199711 lkw199711@163.com
  * @Date: 2023-08-25 10:45:47
  * @LastEditors: lkw199711 lkw199711@163.com
- * @LastEditTime: 2025-02-13 23:51:47
+ * @LastEditTime: 2025-03-14 21:35:08
  * @FilePath: /smanga/src/views/browse-view/flow.vue
 -->
 <template>
@@ -68,7 +68,7 @@ export default { name: 'browse-views' }
 <script setup lang="ts">
 import { computed, watch, ref, reactive } from 'vue';
 import imageApi from '@/api/image';
-import latest from '@/api/latest';
+import latestApi from '@/api/latest';
 import {
 	global_get_array,
 	global_set,
@@ -97,16 +97,6 @@ const browseStore: any = useBrowseStore();
 let dialogJumpPage = ref(false)
 // 跳页目标页码
 let targetPage = ref(1)
-
-const handleClose = (done: () => void) => {
-	ElMessageBox.confirm('Are you sure to close this dialog?')
-		.then(() => {
-			done()
-		})
-		.catch(() => {
-			// catch error
-		})
-}
 
 const showSmallJumpPage = computed(() => {
 	return ['mini', 'small'].includes(config.screenType)
@@ -180,7 +170,13 @@ let beforeBookMark = 0;
 watch(
 	() => currentPage.value,
 	() => {
-		latest.add(currentPage.value, chapterInfo.chapterId, chapterInfo.mangaId, finished.value);
+		latestApi.add({
+			page: currentPage.value,
+			count: countPage.value,
+			chapterId: chapterInfo.chapterId,
+			mangaId: chapterInfo.mangaId,
+			finish: currentPage.value >= countPage.value
+		});
 	}
 )
 
@@ -279,7 +275,13 @@ async function reload_page(addHistory = true, clearPage = true, pageParams = 1) 
 		chapterInfo = chapterList.value.filter((item: chapterInfoType) => item.chapterId == chapterId)[0]
 
 		// 更新阅读记录
-		latest.add(currentPage.value, chapterInfo.chapterId, chapterInfo.mangaId);
+		latestApi.add({
+			page: currentPage.value,
+			count: countPage.value,
+			chapterId: chapterInfo.chapterId,
+			mangaId: chapterInfo.mangaId,
+			finish: false
+		});
 	}
 
 	// 重置图片数据
@@ -294,7 +296,7 @@ async function reload_page(addHistory = true, clearPage = true, pageParams = 1) 
 	}
 
 	if (addHistory) {
-		historyApi.add_history();
+		historyApi.add();
 	}
 
 	const res = await chapterApi.get_images(chapterInfo.chapterId);
@@ -459,6 +461,7 @@ function open_jump_dialog() {
 	// 打开跳转对话框
 	dialogJumpPage.value = true;
 }
+
 function jump_page() {
 	// return
 	reload_page(true, true, targetPage.value);

@@ -47,7 +47,9 @@
     "removeCollect": "remove collect",
     "dwonload": "dwonload image",
     "editTags": "ediaTags",
-    "copy": "copy"
+    "copy": "copy",
+    "markAsRead": "Mark as read",
+    "markAsUnRead": "Mark as unread"
   },
   "account": {
     "add": "addUser",

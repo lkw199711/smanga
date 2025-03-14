@@ -6,6 +6,13 @@
   "description": "漫画流媒体管理-彩色图标",
   "glyphs": [
     {
+      "icon_id": "1330721",
+      "name": "对勾1",
+      "font_class": "right-green",
+      "unicode": "e744",
+      "unicode_decimal": 59204
+    },
+    {
       "icon_id": "582603",
       "name": "失败",
       "font_class": "failed-job",

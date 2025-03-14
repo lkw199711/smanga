@@ -2,11 +2,11 @@
  * @Author: lkw199711 lkw199711@163.com
  * @Date: 2023-03-17 20:18:30
  * @LastEditors: lkw199711 lkw199711@163.com
- * @LastEditTime: 2023-10-25 02:01:31
+ * @LastEditTime: 2025-03-14 17:00:36
  * @FilePath: \smanga\src\api\history.ts
  */
-import {ajax} from './index';
-import {global_get} from '@/utils';
+import { ajax } from './index';
+import { global_get } from '@/utils';
 
 /**
  * @description: 历史记录接口
@@ -21,7 +21,7 @@ const historyApi = {
 	async get_latest(mangaId: number) {
 		const res = await ajax({
 			url: 'history/get_latest',
-			data: {mangaId},
+			data: { mangaId },
 		});
 
 		if (res.data.code == 1) {
@@ -35,24 +35,31 @@ const historyApi = {
 	 * @description: 添加历史记录
 	 * @return {*}
 	 */
-	async add_history() {
-		const res = ajax({
-			method: 'post',
-			url: 'history',
-			data: {
-				mediaId: global_get('mediaId'),
-				mangaId: global_get('mangaId'),
-				mangaName: global_get('mangaName'),
-				mangaCover: global_get('mangaCover'),
-				chapterId: global_get('chapterId'),
-				chapterName: global_get('chapterName'),
-				chapterPath: global_get('chapterPath'),
-				chapterType: global_get('chapterType'),
-				chapterCover: global_get('chapterCover'),
-			},
-        });
-        
-        return (await res).data;
+	async add({
+		mediaId,
+		mangaId,
+		mangaName,
+		mangaCover,
+		chapterId,
+		chapterName,
+		chapterPath,
+		chapterType,
+		chapterCover,
+	}: any = {}) {
+		const http = await ajax.post('history', {
+			mediaId: mediaId || global_get('mediaId'),
+			mangaId: mangaId || global_get('mangaId'),
+			mangaName: mangaName || global_get('mangaName'),
+			mangaCover: mangaCover || global_get('mangaCover'),
+			chapterId: chapterId || global_get('chapterId'),
+			chapterName: chapterName || global_get('chapterName'),
+			chapterPath: chapterPath || global_get('chapterPath'),
+			chapterType: chapterType || global_get('chapterType'),
+			chapterCover: chapterCover || global_get('chapterCover'),
+		})
+
+		const response = http.data;
+		return response
 	},
 
 	/**
@@ -65,27 +72,44 @@ const historyApi = {
 	) {
 		const res = ajax({
 			url: 'history',
-			data: {page, pageSize},
-        });
-        
-        return (await res).data;
+			data: { page, pageSize },
+		});
+
+		return (await res).data;
 	},
 
 	/**
 	 * @description: 删除历史记录
-	 * @param {number} historyId
+	 * @param {number} chapterId
 	 * @return {*}
 	 */
-	async delete_history(historyId: number) {
-		const res = ajax({
-			url: 'history/delete',
-			data: {
-				historyId,
-			},
-        });
-        
-        return (await res).data;
+	async delete(chapterId: number) {
+		const http = await ajax.delete(`history/${chapterId}`);
+		const response = http.data;
+		return response
 	},
+
+	/**
+	 * @description: 删除所有历史记录
+	 * @return {*}
+	 */
+	async read_all_chapters(mangaId: number) {
+		const http = await ajax.put(`read-all-chapters/${mangaId}`, {});
+		const response = http.data;
+		return response
+	},
+
+	async unread_all_chapters(mangaId: number) {
+		const http = await ajax.put(`unread-all-chapters/${mangaId}`, {});
+		const response = http.data;
+		return response
+	},
+
+	async is_read(chapterId: number) {
+		const http = await ajax.get(`chapter-is-read/${chapterId}`);
+		const response = http.data;
+		return response.data
+	}
 };
 
 export default historyApi;

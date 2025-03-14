@@ -1,6 +1,6 @@
 <template>
 	<div class="right-sidebar">
-		<el-drawer v-model="drawer" size="auto" :with-header="false" :before-close="close_sidebar">
+		<el-drawer v-model="props.rightSidebarVisible" size="auto" :with-header="false" :before-close="close_sidebar">
 			<!-- 安卓端顶部占位 -->
 			<div class="android-seat-top" v-if="config.android" />
 			<el-menu class="right-sidebar-menu" active-text-color="#ffd04b" background-color="#545c64" text-color="#fff"
@@ -8,7 +8,7 @@
 				<!--封面-->
 				<img class="poster" :src="blob" alt="漫画封面" />
 				<!--名称-->
-				<p class="title">{{ mangaName }}</p>
+				<p class="title">{{ props.mangaInfo.mangaName }}</p>
 				<!--操作-->
 				<!--<el-menu-item index="read"><el-icon><Memo /></el-icon>阅读</el-menu-item>-->
 				<!--<el-menu-item index="collection"><el-icon><Collection /></el-icon>收藏</el-menu-item>-->
@@ -30,6 +30,12 @@
 						<Star v-else />
 					</el-icon>
 					{{ isCollect ? $t('option.removeCollect') : $t('option.collect') }}
+				</el-menu-item>
+				<el-menu-item index="alreadyRead">
+					<el-icon>
+						<Notebook />
+					</el-icon>
+					{{ alreadyRead ? $t('option.markAsUnRead') : $t('option.markAsRead') }}
 				</el-menu-item>
 				<el-menu-item index="tags">
 					<el-icon>
@@ -67,14 +73,17 @@ import collectApi from '@/api/collect';
 import { ElMessageBox } from 'element-plus';
 import i18n from '@/i18n';
 import tagApi, { tagItemType } from '@/api/tag';
+import historyApi from '@/api/history';
+import imageApi from '@/api/image';
+const placeholder = require('@/assets/s-blue.png');
 
 const { t } = i18n.global;
 
 const route = useRoute();
 
-const drawer = ref(false);
 const isCollect = ref(false);
 const editTagsDialog = ref(false);
+const blob = ref('');
 
 let tagList = ref<tagItemType[]>([]);
 let checkedTagList = ref<tagItemType[]>([]);
@@ -91,33 +100,27 @@ let noCheckedTagList = computed<tagItemType[]>(() => {
 	return arr;
 });
 
-const props = defineProps(['mangaInfo', 'menuPoster']);
-const emit = defineEmits(['reload']);
-
-const mangaName = computed(() => {
-	return props.mangaInfo.mangaName;
-});
+const props = defineProps(['mangaInfo', 'rightSidebarVisible']);
+const emit = defineEmits(['reload', 'close']);
 
 const mangaId = computed(() => {
 	return props.mangaInfo.mangaId;
 });
 
-const blob = computed(() => {
-	return props.menuPoster;
+const alreadyRead = computed(() => {
+	return props.mangaInfo.unWatched == 0;
 });
 
 watch(
-	() => config.rightSidebar,
-	(val) => {
-		drawer.value = val;
-	}
-);
-
-watch(
-	() => props.mangaInfo.mangaId,
-	async (val) => {
-		const res = await collectApi.is_collect('manga', val);
-		isCollect.value = res;
+	() => props.mangaInfo?.mangaId,
+	async (mangaId) => {
+		isCollect.value = await collectApi.is_collect('manga', mangaId);
+		const mangaCover = props.mangaInfo?.mangaCover;
+		if (mangaCover) {
+			blob.value = await imageApi.get(mangaCover);
+		} else {
+			blob.value = placeholder;
+		}
 	}
 );
 
@@ -130,8 +133,7 @@ onMounted(async () => {
  * @return {*}
  */
 async function update_collect_state() {
-	const res = await collectApi.is_collect('manga', mangaId.value);
-	isCollect.value = res.data.isCollect;
+	isCollect.value = await collectApi.is_collect('manga', mangaId.value);
 }
 
 /**
@@ -147,7 +149,7 @@ async function update_tags_state() {
  * @return {*}
  */
 function close_sidebar() {
-	config.rightSidebar = false;
+	emit('close');
 }
 
 /**
@@ -216,7 +218,15 @@ async function menu_select(key: string) {
 					})
 				);
 			}
-			update_collect_state();
+			await update_collect_state();
+			break;
+		case 'alreadyRead':
+			if (alreadyRead.value) {
+				await historyApi.unread_all_chapters(mangaId.value);
+			} else {
+				await historyApi.read_all_chapters(mangaId.value);
+			}
+			emit('reload');
 			break;
 		case 'tags':
 			editTagsDialog.value = true;

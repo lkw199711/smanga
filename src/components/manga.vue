@@ -1,6 +1,8 @@
 <template>
 	<!-- 矩形视图 -->
 	<div class="manga" @click="go_chapter" v-if="props.viewType !== 'list'">
+		<!-- 未读角标 -->
+		<div class="un-watched" v-show="props.mangaInfo.unWatched">{{ props.mangaInfo.unWatched }}</div>
 		<!--封面图片-->
 		<el-image v-if="blobLink" class="anim cover-img" :src="blobLink" :fit="fit" :alt="mangaName" />
 
@@ -71,13 +73,7 @@ onMounted(() => {
 })
 
 async function get_poster(item: mangaItemType) {
-	const coverName = item.mangaCover;
-	if (poster[coverName]) {
-		blobLink.value = poster[coverName]
-	} else {
-		blobLink.value = await imageApi.get(coverName);
-		poster[coverName] = blobLink.value;
-	}
+	blobLink.value = await imageApi.get(item.mangaCover);
 }
 
 async function go_chapter() {
@@ -118,18 +114,35 @@ async function go_chapter() {
 		})
 		window.open(newUrl.href, '_blank');
 	}
-	
-	
+
+
 }
 </script>
 
 <style scoped lang="less">
 .manga {
+	position: relative;
 	cursor: pointer;
 
 	.manga-name {
 		width: 100%;
 		overflow: hidden;
+	}
+
+	.un-watched {
+		position: absolute;
+		font-size: 1.2rem;
+		width: 2rem;
+		height: 2rem;
+		line-height: 2rem;
+		text-align: center;
+		border-radius: 50%;
+		background-color: @s-unread;
+		color: @s-text;
+		position: absolute;
+		top: 0.5rem;
+		right: 0.5rem;
+		z-index: 1;
 	}
 }
 
