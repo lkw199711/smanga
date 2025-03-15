@@ -26,7 +26,6 @@ export const globalData: GlobalData = reactive({
 	mangaName: '',
 	mangaCover: '',
 	page: 0,
-	doublePage: 0,
 	pageImage: '',
 	removeFirst: '0',
 	direction: '0',
@@ -42,7 +41,6 @@ export const config = reactive({
 	browseTop: true,
 	browseFooter: true,
 	browseType: 'flow',
-	bookmarkShow: false,
 	screenType: 'large' as screenType, // mini | small | middle | large | 2k | 4k
 	rightSidebar: false,
 	android: false,

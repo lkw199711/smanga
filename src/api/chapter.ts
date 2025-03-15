@@ -61,9 +61,9 @@ const chapterApi = {
 
 	async get_images(chapterId: number) {
 		const res = ajax({
-			url: `chapter-images/${chapterId || global_get('chapterId')}`,
+			url: `chapter-images/${chapterId}`,
 			data: {
-				chapterId: chapterId || global_get('chapterId'),
+				chapterId: chapterId,
 			},
 			timeout: 30 * 1000,
 		});

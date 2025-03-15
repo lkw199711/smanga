@@ -5,6 +5,7 @@
  * @LastEditTime: 2025-03-14 17:00:36
  * @FilePath: \smanga\src\api\history.ts
  */
+import { historyCreateParamsType } from '@/type/history';
 import { ajax } from './index';
 import { global_get } from '@/utils';
 
@@ -35,28 +36,8 @@ const historyApi = {
 	 * @description: 添加历史记录
 	 * @return {*}
 	 */
-	async add({
-		mediaId,
-		mangaId,
-		mangaName,
-		mangaCover,
-		chapterId,
-		chapterName,
-		chapterPath,
-		chapterType,
-		chapterCover,
-	}: any = {}) {
-		const http = await ajax.post('history', {
-			mediaId: mediaId || global_get('mediaId'),
-			mangaId: mangaId || global_get('mangaId'),
-			mangaName: mangaName || global_get('mangaName'),
-			mangaCover: mangaCover || global_get('mangaCover'),
-			chapterId: chapterId || global_get('chapterId'),
-			chapterName: chapterName || global_get('chapterName'),
-			chapterPath: chapterPath || global_get('chapterPath'),
-			chapterType: chapterType || global_get('chapterType'),
-			chapterCover: chapterCover || global_get('chapterCover'),
-		})
+	async add(params: historyCreateParamsType) {
+		const http = await ajax.post('history', params)
 
 		const response = http.data;
 		return response

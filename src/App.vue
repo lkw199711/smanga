@@ -22,9 +22,11 @@ import { useI18n } from 'vue-i18n';
 import { set_theme } from '@/style/theme';
 import userApi from './api/account';
 import notice from '@/components/notice.vue';
+import useBrowseStore from './store/browse';
 
 const route = useRoute();
 const router = useRouter();
+const browse = useBrowseStore();
 const { locale } = useI18n();
 
 const elLocale = computed(() => {
@@ -52,9 +54,7 @@ onBeforeMount(async () => {
 	await get_setting();
 
 	// 获取书签列表
-	set_bookmark();
-
-
+	browse.load_bookmark_list();
 });
 
 // 设置屏幕尺寸
@@ -99,14 +99,6 @@ async function check_login() {
 	if ((!name || !id) && route.name !== 'init') {
 		router.push('/login');
 	}
-}
-
-/**
- * 获取书签列表
- */
-async function set_bookmark() {
-	const res = await bookmarkApi.get_bookmark();
-	global_set_json('bookmarkList', res.list);
 }
 
 async function get_setting() {

@@ -87,6 +87,8 @@ import { useRoute } from 'vue-router';
 import router from '@/router';
 import layoutDic from '@/store/top-layout';
 import routeType from '@/type/route';
+import useSearchStore from '@/store/search';
+const searchStore = useSearchStore();
 const { locale } = useI18n();
 const route = useRoute();
 
@@ -145,12 +147,10 @@ function go_search() {
 		return false;
 	}
 
+	searchStore.searchText = searchText.value;
+	searchStore.searchType = searchType.value;
 	router.push({
-		name: 'search',
-		params: {
-			searchText: searchText.value,
-			searchType: searchType.value,
-		},
+		name: 'search'
 	});
 }
 

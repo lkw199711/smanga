@@ -14,6 +14,7 @@ type latestType = {
 	updateTime: string;
 	mangaCover: string;
 	blob: Blob;
+	finish: boolean;
 };
 
 export {latestType};

@@ -8,8 +8,8 @@
       </template>
       <template v-else>
         <div :class="['chapter-list-box', { 'block': config.viewType === 'list' }]">
-          <chapter v-for="(i, k) in list" :key="k" :viewType="config.viewType" :chapterInfo="i" :bookmark="true"
-            @click="go_browse(i)" @contextmenu.prevent="context_menu(i, k)" />
+          <chapter v-for="(chapter, index) in list" :key="chapter" :viewType="config.viewType" :chapterInfo="chapter" :bookmark="true"
+            @click="go_browse(chapter)" @contextmenu.prevent="context_menu(chapter, index)" />
         </div>
       </template>
     </div>
@@ -23,19 +23,16 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onBeforeMount, computed } from 'vue';
+import { ref, onMounted } from 'vue';
 import chapter from '@/components/chapter.vue';
-import store, { config, pageSizeConfig } from '@/store';
+import { config } from '@/store';
 import bookmarkApi from '@/api/bookmark';
-import chapterApi from '@/api/chapter';
-import { global_set, global_set_json } from '@/utils';
 import MediaPager from '@/components/media-pager.vue';
 import rightSidebar from './components/right-sidebar.vue';
-import { chapterInfoType } from '@/type/chapter';
+import { chapterType } from '@/type/chapter';
 import { useRoute, useRouter } from 'vue-router';
-import { pageSizeConfigType, screenType } from '@/type/store';
+import { screenType } from '@/type/store';
 import { chapterPageSize } from '@/store/page-size';
-import imageApi from '@/api/image';
 import listSkeleton from '@/components/list-skeleton.vue';
 import queue from '@/store/quque';
 import useBrowseStore from '@/store/browse';
@@ -61,66 +58,25 @@ const page = ref(1);
 const list = ref([]);
 const count = ref(0);
 const menuPoster = ref('');
-const chapterInfo = ref<chapterInfoType>({
-  browseType: '',
-  chapterCover: '',
-  chapterId: 0,
-  chapterName: '',
-  chapterPath: '',
-  chapterType: '',
-  createTime: '',
-  mangaId: 0,
-  mediaId: 0,
-  pathId: 0,
-  picNum: 0,
-  updateTime: '',
-});
+const chapterInfo = ref<chapterType>();
 
 /**
  * 去往浏览界面
  */
 async function go_browse(item: any) {
   const chapterId = item.chapterId;
-  const chapterName = item.chapterName;
-  const chapterPath = item.chapterPath;
-  const chapterType = item.chapterType;
-  const chapterCover = item.chapterCover;
   const mangaId = item.mangaId;
-  const mangaCover = item.mangaCover;
   const browseType = item.browseType;
-  const removeFirst = item.removeFirst;
-  const direction = item.direction;
-  let page = Number(item.page);
-
-  if (browseType === 'double') {
-    page = Math.ceil((page + 1) / 2);
-  }
-
-  const chapterListRes = await chapterApi.get(mangaId);
-  const chapterList = chapterListRes.list;
 
   // 使用pinia存储页码
-  const browseStore: any = useBrowseStore();
-  browseStore.page = page;
+  const browse = useBrowseStore();
+  browse.page = item.page;
 
-  // 缓存章节信息
-  global_set('mangaId', mangaId);
-  global_set('mangaCover', mangaCover);
-  global_set('chapterId', chapterId);
-  global_set('chapterName', chapterName);
-  global_set('chapterPath', chapterPath);
-  global_set('chapterType', chapterType);
-  global_set('browseType', browseType);
-  global_set('chapterCover', chapterCover);
-  global_set_json('chapterList', chapterList);
-  global_set('removeFirst', removeFirst);
-  global_set('direction', direction);
-
-
-  // 不存储历史记录
   await router.push({
     name: browseType,
     query: {
+      mediaId: item.mediaId,
+      mangaId,
       chapterId,
     }
   });
@@ -145,7 +101,7 @@ async function page_change(pageParams = 1, pageSize: number = defaultPageSize) {
   // 清空数据 避免缓存
   list.value = [];
 
-  const res = await bookmarkApi.get_bookmark(pageParams, pageSize);
+  const res = await bookmarkApi.get(pageParams, pageSize);
   list.value = res.list;
   count.value = res.count;
 

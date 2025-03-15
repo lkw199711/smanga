@@ -64,9 +64,6 @@ function close_sidebar() {
 
 function menu_select(key: string) {
   switch (key) {
-    case 'bookmark':
-      bookmark();
-      break;
     case 'direction':
       emit('direction');
       break;
@@ -75,23 +72,6 @@ function menu_select(key: string) {
       break;
   }
   close_sidebar();
-}
-
-async function bookmark() {
-  if (config.bookmarkShow) {
-    await bookmarkApi.delete_and_update(cache.bookmarkId);
-  } else {
-    // 区分单双页
-    let page = Number(global_get('page'));
-    if (route.name === 'double') {
-      page = page * 2 - 1;
-    }
-
-    await bookmarkApi.add_bookmark(page);
-  }
-  const res = await bookmarkApi.get_bookmark();
-
-  global_set_json('bookmarkList', res.list);
 }
 </script>
 

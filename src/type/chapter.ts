@@ -5,7 +5,8 @@
  * @LastEditTime: 2023-09-24 22:37:58
  * @FilePath: /smanga/src/type/chapter.ts
  */
-type chapterInfoType = {
+import { latestType } from './latest';
+type chapterType = {
 	browseType: string;
 	chapterCover: string;
 	chapterId: number;
@@ -19,6 +20,7 @@ type chapterInfoType = {
 	picNum: number;
 	updateTime: string;
 	page?: number;
+	latest: latestType;
 };
 
-export { chapterInfoType };
+export { chapterType };

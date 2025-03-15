@@ -79,7 +79,7 @@ import { config, userConfig } from '@/store'
 import { tagItemType } from '@/type/tag';
 import { metaItemType } from '@/type/meta';
 import { mangaInfoType } from '@/type/manga';
-import { chapterInfoType } from '@/type/chapter';
+import { chapterType } from '@/type/chapter';
 import chapterApi from '@/api/chapter';
 import { global_set, global_set_json } from '@/utils'
 import lastesApi from '@/api/latest';
@@ -104,7 +104,7 @@ let mangaInfo = reactive<mangaInfoType>({
     metas: [],
 });
 
-let firstChapterInfo = ref<chapterInfoType>({
+let firstChapterInfo = ref<chapterType>({
     browseType: '',
     chapterCover: '',
     chapterId: 0,
@@ -119,7 +119,7 @@ let firstChapterInfo = ref<chapterInfoType>({
     updateTime: '',
 });
 
-let latestChapterInfo = ref<chapterInfoType | false>(false);
+let latestChapterInfo = ref<chapterType | false>(false);
 
 let tags = ref<tagItemType[]>([]);
 let banner = ref<metaItemType[]>([]);
@@ -196,21 +196,10 @@ async function get_latest_reading() {
  */
 async function go_chapter() {
     const chapterInfo = latestChapterInfo.value ? latestChapterInfo.value : firstChapterInfo.value;
-    const res = await chapterApi.get(chapterInfo.mangaId);
-    global_set_json('chapterList', res.list);
-
-    // 缓存章节信息
-    global_set('chapterId', chapterInfo.chapterId);
-    global_set('chapterName', chapterInfo.chapterName);
-    global_set('chapterPath', chapterInfo.chapterPath);
-    global_set('chapterType', chapterInfo.chapterType);
-    global_set('chapterCover', chapterInfo.chapterCover);
 
     // 使用pinia存储页码
     let page = chapterInfo.page || 1;
-    console.log(chapterInfo);
-    // return;
-    
+
     const browseStore: any = useBrowseStore();
     browseStore.page = page;
 
@@ -226,6 +215,8 @@ async function go_chapter() {
     router.push({
         name: mangaInfo.browseType,
         query: {
+            mediaId: chapterInfo.mediaId,
+            mangaId: chapterInfo.mangaId,
             chapterId: chapterInfo.chapterId
         }
     });
@@ -260,7 +251,7 @@ async function render_meta() {
     // 漫画封面
     try {
         mangaCover.value = await imageApi.get(mangaInfo.mangaCover);
-    } catch (e) {
+    } catch (e: any) {
         console.log(e.message);
     }
 
@@ -301,7 +292,7 @@ async function render_meta() {
  * @param {*} event
  * @return {*}
  */
-function character_wheel(event: Event) {
+function character_wheel(event: any) {
     const content = document.querySelector('.character-scroll');
     if (!content) return;
     event.preventDefault();
@@ -353,7 +344,7 @@ function update_tags(tagsParams: tagItemType[]) {
     background-color: transparent;
 }
 
-.character-scroll{
+.character-scroll {
     display: flex;
     overflow-x: auto;
     overflow-y: hidden;

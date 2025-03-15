@@ -8,7 +8,7 @@
 import Axios from 'axios';
 import {url} from '@/api';
 import { Cookies } from '@/utils';
-import usePosterStore from '@/store/poster';
+import useImageStore from '@/store/image';
 
 /**
  * 文件 图片请求
@@ -49,7 +49,7 @@ const img = Axios.create({
 });
 
 const placeholder = require('@/assets/s-blue.png');
-const poster: any = usePosterStore();
+const imageCache: any = useImageStore();
 const imageApi = {
 	/**
 	 * @description: 获取图片文件 blob
@@ -60,7 +60,7 @@ const imageApi = {
 		if (!file) return false;
 
 		// 存在缓存直接加载缓存图片
-		if (poster[file]) return poster[file];
+		if (imageCache[file]) return imageCache[file];
 
 		const [res, err] = await img({data: {file}})
 			.then((res) => [res, null])
@@ -68,7 +68,7 @@ const imageApi = {
 
 		if (res) {			
 			// 存入缓存
-			poster[file] = res.data;
+			imageCache[file] = res.data;
 			// 返回图片
 			return res.data
 		};

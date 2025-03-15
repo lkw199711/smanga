@@ -6,7 +6,7 @@
  * @FilePath: /smanga/src/layout/browse.vue
 -->
 <template>
-	<div class="browse" :class="config.browseType">
+	<div class="browse" :class="browse.browseType">
 		<div class="header" v-if="config.browseTop">
 			<browse-top class="nav-top" />
 			<div class="seat posted"></div>
@@ -25,6 +25,9 @@ export default { name: 'browse' };
 <script setup lang="ts">
 import { config } from '@/store';
 import browseTop from '@/layout/components/browse-top.vue';
+import useBrowseStore from '@/store/browse';
+
+const browse = useBrowseStore();
 
 function context_menu() {
 	config.rightSidebar = true;
