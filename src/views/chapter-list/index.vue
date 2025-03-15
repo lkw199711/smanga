@@ -28,18 +28,15 @@ export default { name: 'chapter-list' };
 </script>
 <script lang="ts" setup>
 import {
-	computed,
 	watch,
 	onMounted,
-	onBeforeUnmount,
 	onActivated,
 	ref,
 } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import chapterApi from '@/api/chapter';
-import store, { config, pageSizeConfig, userConfig } from '@/store';
-import { global_get, global_set, global_set_json } from '@/utils';
-import chapterListMenu from './components/chapter-list-menu.vue';
+import { config, userConfig } from '@/store';
+import { global_set, global_set_json } from '@/utils';
 import chapter from '@/components/chapter.vue';
 import mediaPager from '@/components/media-pager.vue';
 import listSkeleton from '@/components/list-skeleton.vue';
@@ -55,7 +52,6 @@ let page = ref(1);
 let count = ref(0);
 let list = ref([]);
 let chapterInfo = ref({});
-let menuPoster = ref('');
 let loading = ref(false);
 
 let pageSizes: number[] = [];
@@ -72,13 +68,7 @@ function get_page_size_array() {
 	defaultPageSize = chapterPageSize[screen][0];
 }
 
-const mangaId = computed<number>(() => {
-	return Number(route.query.mangaId || global_get('mangaId'));
-});
-
-const browseType = computed<string>(() => {
-	return String(route.params.browseType || global_get('browseType'));
-});
+const mangaId = Number(route.query.mangaId);
 
 // 切换排序规则时 重新加载列表
 watch(
@@ -151,25 +141,12 @@ onActivated(() => {
 });
 
 function go_browse(item: any) {
-	const chapterId = item.chapterId;
-	const chapterName = item.chapterName;
-	const chapterPath = item.chapterPath;
-	const chapterType = item.chapterType;
-	const chapterCover = item.chapterCover;
-
-	// 缓存章节信息
-	global_set('chapterId', chapterId);
-	global_set('chapterName', chapterName);
-	global_set('chapterPath', chapterPath);
-	global_set('chapterType', chapterType);
-	global_set('chapterCover', chapterCover);
-
-	let page = 1;
-
 	const newUrl = router.resolve({
-		name: browseType.value,
+		name: item.browseType,
 		query: {
-			chapterId
+			mediaId: item.mediaId,
+			mangaId: item.mangaId,
+			chapterId: item.chapterId
 		}
 	});
 
@@ -206,7 +183,7 @@ async function page_change(
 	list.value = [];
 
 	const res = await chapterApi.get(
-		mangaId.value,
+		mangaId,
 		page.value,
 		pageSize,
 		userConfig.order
@@ -222,15 +199,11 @@ async function page_change(
  * 获取全部漫画章节
  */
 async function load_chapter() {
-	const res = await chapterApi.get(mangaId.value);
+	const res = await chapterApi.get(mangaId);
 	global_set_json('chapterList', res.list);
 }
 
 function load() {
-	// 缓存浏览方式
-	const browseType = route.params.browseType;
-	if (browseType) global_set('browseType', browseType);
-
 	load_chapter();
 	page_change();
 }

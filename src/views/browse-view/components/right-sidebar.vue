@@ -7,13 +7,13 @@
 				@select="menu_select">
 				<el-menu-item v-if="idDouble" index="remove-first">{{
 					removeFirstTitle
-					}}</el-menu-item>
+				}}</el-menu-item>
 				<el-menu-item index="bookmark">{{ bookmarkTitle }}</el-menu-item>
 				<el-menu-item v-if="idDouble" index="direction">{{ $t('option.direction') }} ({{ directionTitle
-					}})</el-menu-item>
+				}})</el-menu-item>
 				<el-menu-item index="dwonload">{{
 					$t('option.dwonload')
-					}}</el-menu-item>
+				}}</el-menu-item>
 				<el-menu-item index="operation">{{ operationText }}</el-menu-item>
 				<el-menu-item index="jump">{{ $t('rightSidebar.jumpPageText') }}</el-menu-item>
 			</el-menu>
@@ -24,10 +24,11 @@
 <script lang="ts" setup>
 import { watch, ref, computed } from 'vue';
 import { useRoute } from 'vue-router';
-import { cache, config } from '@/store';
-import bookmarkApi from '@/api/bookmark';
-import { global_get, global_set_json } from '@/utils';
+import { config } from '@/store';
 import i18n from '@/i18n';
+import useBrowseStore from '@/store/browse';
+
+const browse = useBrowseStore();
 
 const { t } = i18n.global;
 
@@ -39,7 +40,7 @@ const props = defineProps(['rightSidebar', 'direction', 'removeFirst']);
 const emit = defineEmits([
 	'contextMenu',
 	'direction',
-	'removeFirst',
+	'remove_first',
 	'dwonload',
 	'jumpPageNumber',
 ]);
@@ -51,7 +52,7 @@ const removeFirstTitle = computed(() => {
 });
 
 const bookmarkTitle = computed(() => {
-	return config.bookmarkShow
+	return browse.bookmarkShow
 		? t('bookmarkManage.remove')
 		: t('bookmarkManage.add');
 });
@@ -82,13 +83,13 @@ function close_sidebar() {
 function menu_select(key: string) {
 	switch (key) {
 		case 'bookmark':
-			bookmark();
+			browse.toggle_bookmark();
 			break;
 		case 'direction':
 			emit('direction');
 			break;
 		case 'remove-first':
-			emit('removeFirst');
+			emit('remove_first');
 			break;
 		case 'dwonload':
 			emit('dwonload');
@@ -103,27 +104,6 @@ function menu_select(key: string) {
 	close_sidebar();
 }
 
-async function bookmark() {
-	if (config.bookmarkShow) {
-		await bookmarkApi.delete_and_update(cache.bookmarkId);
-	} else {
-		// 区分单双页
-		let page = Number(global_get('page'));
-
-		if (route.name === 'double') {
-			page = page * 2 - 1;
-		}
-
-		if (route.name === 'half') {
-			page = Math.ceil(page / 2);
-		}
-
-		await bookmarkApi.add_bookmark(page);
-	}
-	const res = await bookmarkApi.get_bookmark();
-
-	global_set_json('bookmarkList', res.list);
-}
 </script>
 
 <style scoped lang="less">

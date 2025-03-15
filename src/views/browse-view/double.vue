@@ -1,15 +1,15 @@
 <template>
   <div class="double-page">
     <!-- 目录列表 -->
-    <chapter-list-menu @before="before" @next="next" @changeChapter="change_chapter" />
+    <chapter-list-menu @before="before_chapter" @next_chapter="next_chapter" @change_chapter="change_chapter" />
 
     <!-- 功能菜单 -->
     <right-sidebar :direction="directionDesc" @direction="switch_direction" @dwonload="dwonload_image"
-      :removeFirst="removeFirst" @removeFirst="remove_poster" />
+      :removeFirst="removeFirst" @remove_first="remove_poster" />
 
     <!-- 图片容器 -->
     <div class="double-page-img-box touch-dom">
-      <bookmark :page="page" :chapterId="chapterInfo.chapterId" />
+      <bookmark />
       <template v-if="directionDesc">
         <img class="double-page-img" :src="imgSrc2" :alt="t('browse.imgLoadError')" v-if="imgSrc2" />
         <img class="double-page-img" :src="imgSrc1" :alt="t('browse.imgLoadError')" />
@@ -24,24 +24,22 @@
     </div>
 
     <!-- 页码显示 -->
-    <page-number :page="page" :count="count" />
+    <page-number :page="page" :count="browse.pageCount" />
 
     <!-- 分页按钮 -->
     <div class="footer" v-show="config.browseFooter">
-      <el-button class="btn" type="warning" plain @click="before">{{ $t('page.before') }}</el-button>
-      <browse-pager ref="pager" @pageChange="page_change" @reloadPage="reload_page" :page="page" :count="count" />
-      <el-button class="btn" type="success" plain @click="next">{{ $t('page.next') }}</el-button>
+      <el-button class="btn" type="warning" plain @click="before_chapter">{{ $t('page.before') }}</el-button>
+      <browse-pager ref="pager" @pageChange="page_change" @reloadPage="reload_page" :page="page"
+        :count="browse.pageCount" />
+      <el-button class="btn" type="success" plain @click="next_chapter">{{ $t('page.next') }}</el-button>
     </div>
   </div>
 </template>
 
 <script setup lang='ts'>
-import { ref, reactive, onMounted, watch, computed } from 'vue';
-import latestApi from '@/api/latest';
-import { global_get, global_get_array, global_set } from '@/utils';
+import { ref, onMounted, onBeforeUnmount } from 'vue';
 import { ElMessage } from 'element-plus';
 import { config, userConfig } from '@/store';
-import historyApi from '@/api/history';
 import operationCover from './components/operation-cover.vue';
 import chapterListMenu from './components/chapter-list-menu.vue';
 import bookmark from './components/bookmark.vue';
@@ -51,8 +49,8 @@ import pageNumber from './components/page-number.vue';
 import chapterApi from '@/api/chapter';
 import i18n from '@/i18n';
 import { useRoute, useRouter } from 'vue-router';
-import { chapterInfoType } from '@/type/chapter';
 import imageApi from '@/api/image';
+import useBrowseStore from '@/store/browse';
 const { t } = i18n.global;
 
 const route = useRoute();
@@ -60,67 +58,13 @@ const router = useRouter();
 
 const imgSrc1 = ref('');
 const imgSrc2 = ref('');
-const imgPathList = ref<string[]>([]);
-const imgPathFiles = ref<string[]>([]);
+
 const page = ref(1);
-const firstImage = ref('');
-const firstImageFile = ref('');
 const removeFirst = ref(false);
 const directionDesc = ref(true);
-
-const chapterList = computed<chapterInfoType[]>(() => {
-  return global_get_array('chapterList');
-})
-
-const index = computed<number>(() => {
-  const list = chapterList.value;
-  const chapterId = Number(route.query.chapterId);
-
-  for (let i = 0; i < list.length; i++) {
-    if (chapterId === list[i].chapterId) {
-      //缓存章节坐标
-      global_set('chapterIndex', i);
-      return i;
-    }
-  }
-
-  return -1;
-})
-
-let chapterInfo = reactive<chapterInfoType>({
-  chapterId: 0,
-  chapterPath: '',
-  chapterType: 'img',
-  browseType: '',
-  chapterCover: '',
-  chapterName: '',
-  createTime: '',
-  mangaId: 0,
-  mediaId: 0,
-  pathId: 0,
-  picNum: 0,
-  updateTime: '',
-})
-
-const count = computed(() => {
-  return Math.ceil(imgPathList.value.length / 2);
-})
+const browse = useBrowseStore();
 
 const pager = ref();
-
-// 存储进度
-watch(
-  () => page.value,
-  () => {
-    latestApi.add({
-      page: page.value,
-      count: count.value,
-      chapterId: chapterInfo.chapterId,
-      mangaId: chapterInfo.mangaId,
-      finish: page.value >= count.value
-    });
-  }
-)
 
 /**
  * 页码变更
@@ -129,36 +73,21 @@ watch(
 async function page_change(pageParams: number) {
   page.value = pageParams;
   const index = (pageParams - 1) * 2;
-  const pageImage = imgPathList.value[index];
+  const pageImage = browse.imagePathList[index];
 
-  // 有缓存则加载缓存的图片
-  if (imgPathFiles.value[index]) {
-    imgSrc1.value = imgPathFiles.value[index];
-  } else {
-    // 加载第一张图片
-    const res1: any = await imageApi.get(imgPathList.value[index]);
-    imgSrc1.value = res1;
-    imgPathFiles.value[index] = res1;
-    console.log(index, imgPathList.value);
-  }
 
-  if (imgPathFiles.value[index + 1]) {
-    imgSrc2.value = imgPathFiles.value[index + 1];
-  } else {
-    // 加载第二张图片
-    if (index + 1 < imgPathList.value.length) {
-      const res2: any = await imageApi.get(imgPathList.value[index + 1]);
-      imgSrc2.value = res2;
-      imgPathFiles.value[index + 1] = res2;
-    } else {
-      imgSrc2.value = '';
-    }
-  }
+  // 加载第一张图片
+  imgSrc1.value = await imageApi.get(browse.imagePathList[index]);
+
+  // 加载第二张图片
+  imgSrc2.value = index + 1 < browse.imagePathList.length
+    ? await imageApi.get(browse.imagePathList[index + 1])
+    : '';
 
   // 缓存书签信息
-  global_set('page', pageParams);
-  global_set('doublePage', pageParams * 2 - 1);
-  global_set('pageImage', pageImage);
+  browse.page = pageParams;
+  browse.pageImage = pageImage;
+  browse.save_latest();
 }
 
 /**
@@ -178,30 +107,18 @@ function nextPage() {
 /**
  * 重载页面
  */
-async function reload_page(page = 1, addHistory = true) {
+async function reload_page(page = 1) {
+  // 加载路由参数
+  browse.load_route_params(route);
+  // 加载章节列表
+  browse.load_chapter_list();
+
   // 清空之前图片内容
-  imgPathFiles.value = [];
+  browse.imageFileList = [];
 
-  // 初始化chapterInfo
-  if (!chapterInfo.chapterId) {
-    const chapterId = Number(route.query.chapterId);
-
-    // 获取章节信息
-    chapterInfo = chapterList.value.filter((item: chapterInfoType) => item.chapterId == chapterId)[0]
-
-    // 更新阅读记录
-    latestApi.add({
-      page: page,
-      count: count.value,
-      chapterId: chapterInfo.chapterId,
-      mangaId: chapterInfo.mangaId,
-      finish: page >= count.value
-    });
-  }
-
-  if (addHistory) historyApi.add();
   // 加载图片列表
-  const res = await chapterApi.get_images(chapterInfo.chapterId);
+  const chapterId = Number(route.query.chapterId);
+  const res = await chapterApi.get_images(chapterId);
 
   switch (res.state) {
     case 'uncompressed':
@@ -210,76 +127,74 @@ async function reload_page(page = 1, addHistory = true) {
       }, 2000);
       break;
     case 'compressing':
-      imgPathList.value = res.list;
+      browse.imagePathList = res.list;
       pager.value.page_change(page);
       setTimeout(() => {
         pager.value.reload();
       }, 2000);
       break;
     case 'compressed':
-      imgPathList.value = res.list;
+      browse.imagePathList = res.list;
       pager.value.page_change(page);
       break;
     default:
-      imgPathList.value = res.list;
+      browse.imagePathList = res.list;
       pager.value.page_change(page);
       break;
   }
+
+  browse.save_history();
 }
 
 /**
- * 上一页
+ * 上一章节
  * */
-async function before() {
-  if (index.value == 0) {
+async function before_chapter() {
+  const index = browse.currentChapterIndex;
+  const chapterList = browse.chapterList;
+
+  if (index == 0) {
     ElMessage.warning(t('page.firstChapter'));
     return false;
   }
 
-  if (!index.value) return;
+  if (!index) return;
 
-  chapterInfo = chapterList.value[index.value - 1];
+  const beforeChapterId = chapterList[index - 1].chapterId;
 
   await router.push({
     name: route.name as string,
     query: {
-      chapterId: chapterInfo.chapterId,
+      ...route.query,
+      chapterId: beforeChapterId,
     },
-    params: { page: 1 },
   });
 
-  update_chapter_info();
-
-  /**
-   * 刷新页面
-   * 自定义重载方法没有重置滚动条,导致vant list不断触发触底事件
-   * 因此暂时采用刷新页面的方式解决
-   */
   reload_page();
 }
 
 /**
- * 下一页
+ * 下一章节
  * */
-async function next() {
-  if (index.value == chapterList.value.length - 1) {
+async function next_chapter() {
+  const index = browse.currentChapterIndex;
+  const chapterList = browse.chapterList;
+
+  if (index == chapterList.length - 1) {
     ElMessage.warning(t('page.lastChapter'));
     return false;
   }
 
-  chapterInfo = chapterList.value[index.value + 1];
+  const nextChapterId = chapterList[index + 1].chapterId;
 
   await router.push({
     name: route.name as string,
     query: {
-      chapterId: chapterInfo.chapterId,
+      ...route.query,
+      chapterId: nextChapterId,
     },
-    params: { page: 1 },
   });
 
-  update_chapter_info();
-
-  // 刷新页面
   reload_page();
 }
 
@@ -287,31 +202,17 @@ async function next() {
  * 选择章节
  * @param index
  */
-async function change_chapter(index: any) {
-  chapterInfo = chapterList.value[index];
-
+async function change_chapter(chapterId: number) {
   await router.push({
     name: route.name as string,
     query: {
-      chapterId: chapterInfo.chapterId,
+      ...route.query,
+      chapterId: chapterId,
     },
-    params: { page: 1 },
   });
-
-  update_chapter_info();
 
   // 重载页面
   reload_page();
-}
-
-/**
- * 更新阅读缓存
- */
-function update_chapter_info() {
-  global_set('chapterId', chapterInfo.chapterId);
-  global_set('chapterName', chapterInfo.chapterName);
-  global_set('chapterPath', chapterInfo.chapterPath);
-  global_set('chapterCover', chapterInfo.chapterCover);
 }
 
 // 阅读状态控制
@@ -340,59 +241,75 @@ function dwonload_image() {
   a.click();
 }
 
+const listDom = document.querySelector('.touch-dom');
+
+// 获取手指初始坐标和盒子的原来位置
+var startX = 0;
+// 获取盒子原来的位置
+var x = 0;
+var moveX = 0;
+
 function touch_page_change() {
 
-  const listDom = document.querySelector('.touch-dom');
+
   if (listDom === null) return;
 
-  // 获取手指初始坐标和盒子的原来位置
-  var startX = 0;
-  // 获取盒子原来的位置
-  var x = 0;
-  var moveX = 0;
 
-  listDom.addEventListener('touchstart', function (this: HTMLDivElement, e: any) {
-    // 得到初始的手指坐标
-    startX = e.targetTouches[0].pageX;
-    // 获取盒子坐标
-    x = this.offsetLeft;
-  })
+  listDom.addEventListener('touchstart', bind1)
 
-  listDom.addEventListener('touchmove', function (this: HTMLDivElement, e: any) {
-    // 手指的移动距离= 手指移动之后的坐标 - 手指初始的坐标
-    moveX = e.targetTouches[0].pageX - startX;
-    // 移动盒子，盒子原来的位置+手指移动的距离
-    this.style.left = x + moveX + 'px';
-    // 阻止屏幕滚动行为
-    e.preventDefault();
-  })
+  listDom.addEventListener('touchmove', bind2)
 
-  listDom.addEventListener('touchend', function (this: HTMLDivElement, e) {
-    this.style.left = '0';
+  listDom.addEventListener('touchend', bind3)
 
-    // 向左滑动,向右翻页
-    if (moveX < -100) {
-      pager.value.next();
-    }
+}
 
-    // 向右滑动,向左翻页
-    if (moveX > 100) {
-      pager.value.before();
-    }
+function unmount_touch() {
+  if (listDom === null) return;
+  listDom.removeEventListener('touchstart', bind1)
+  listDom.removeEventListener('touchmove', bind2)
+  listDom.removeEventListener('touchend', bind3)
+}
 
-    moveX = 0;
-  })
+function bind1(this: HTMLDivElement, e: any) {
+  // 得到初始的手指坐标
+  startX = e.targetTouches[0].pageX;
+  // 获取盒子坐标
+  x = this.offsetLeft;
+}
 
+function bind2(this: HTMLDivElement, e: any) {
+  // 手指的移动距离= 手指移动之后的坐标 - 手指初始的坐标
+  moveX = e.targetTouches[0].pageX - startX;
+  // 移动盒子，盒子原来的位置+手指移动的距离
+  this.style.left = x + moveX + 'px';
+  // 阻止屏幕滚动行为
+  e.preventDefault();
+}
+
+function bind3(this: HTMLDivElement, e: any) {
+  this.style.left = '0';
+
+  // 向左滑动,向右翻页
+  if (moveX < -100) {
+    pager.value.next();
+  }
+
+  // 向右滑动,向左翻页
+  if (moveX > 100) {
+    pager.value.before();
+  }
+
+  moveX = 0;
 }
 
 function remove_poster() {
   if (removeFirst.value) {
-    imgPathList.value.shift();
-    imgPathFiles.value.shift();
+    browse.imagePathList.shift();
+    browse.imageFileList.shift();
   } else {
     // 添加一张图片对其双页
-    imgPathList.value.unshift(imgPathList.value[0]);
-    imgPathFiles.value.unshift(imgPathFiles.value[0]);
+    browse.imagePathList.unshift(browse.imagePathList[0]);
+    browse.imageFileList.unshift(browse.imageFileList[0]);
   }
 
   removeFirst.value = !removeFirst.value;
@@ -409,22 +326,21 @@ function switch_direction() {
 onMounted(async () => {
   // 设置浏览模式
   config.browseType = 'double';
-  const page = route.params.page || global_get('page') || 1;
-  const notAddHistory = route.params.notAddHistory || false;
-  const target = Number(page);
+  const page = browse.page || 1;
 
-  await reload_page(target, !notAddHistory);
+  await reload_page(page);
 
-  const removeFirst = global_get('removeFirst') == 1;
-  const direction = global_get('direction') == 1;
-
-  if (removeFirst) remove_poster();
-  if (!direction) switch_direction();
+  if (removeFirst.value) remove_poster();
+  if (!directionDesc.value) switch_direction();
 
   if (userConfig.enableTouchPageChange) {
     touch_page_change();
   }
 
+})
+
+onBeforeUnmount(() => {
+  unmount_touch();
 })
 </script>
 

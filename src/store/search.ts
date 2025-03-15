@@ -1,10 +1,11 @@
-export default [
-    {
-        label: '漫画',
-        value: 'manga'
-    },
-    {
-        label: '章节',
-        value: 'chapter'
-    },
-]
+import { defineStore } from "pinia"
+const useSearchStore = defineStore('search', {
+    state: () => ({
+        searchText: '',
+        searchType: 'manga',
+    }),
+    getters: {},
+    actions: {},
+})
+
+export default useSearchStore;

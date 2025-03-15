@@ -51,16 +51,12 @@ import {
 	computed,
 	watch,
 	onMounted,
-	onBeforeUnmount,
 	ref,
 	onActivated,
 } from 'vue';
 import { useRoute } from 'vue-router';
-import store, { config, userConfig, pageSizeConfig } from '@/store';
-import { search } from '@/api/search';
+import store, { config, userConfig } from '@/store';
 import router from '@/router';
-import chapterApi from '@/api/chapter';
-import { global_set, global_set_json } from '@/utils';
 import manga from '@/components/manga.vue';
 import chapter from '@/components/chapter.vue';
 import mediaPager from '@/components/media-pager.vue';
@@ -68,10 +64,12 @@ import collectApi from '@/api/collect';
 import type { TabsPaneContext } from 'element-plus';
 import tabs from './tabs.vue';
 import i18n from '@/i18n';
-import { pageSizeConfigType, screenType } from '@/type/store';
+import { screenType } from '@/type/store';
 import { mangaPageSize, chapterPageSize } from '@/store/page-size';
 import listSkeleton from '@/components/list-skeleton.vue';
 import queue from '@/store/quque';
+import useBrowseStore from '@/store/browse';
+const browse = useBrowseStore();
 let loading = ref(false);
 
 const { t } = i18n.global;
@@ -89,8 +87,6 @@ const items = ref([
 
 const collectType = ref('manga');
 
-const handleClick = (tab: TabsPaneContext, event: Event) => { };
-
 const searchText = ref('');
 const searchType = ref('manga');
 
@@ -99,7 +95,6 @@ const route = useRoute();
 let page = ref(1);
 let count = ref(0);
 let list = ref([]);
-let mangaInfo = ref({});
 let menuPoster = '';
 
 let pageSizes: number[] = [];
@@ -243,32 +238,14 @@ function context_menu(mangaInfo: any, key: number) {
 
 // 章节方法
 async function go_browse(item: any) {
-	const chapterId = item.chapterId;
-	const chapterName = item.chapterName;
-	const chapterPath = item.chapterPath;
-	const chapterType = item.chapterType;
-	const chapterCover = item.chapterCover;
-	const browseType = item.browseType;
-
-	// 缓存章节信息
-	global_set('chapterId', chapterId);
-	global_set('chapterName', chapterName);
-	global_set('chapterPath', chapterPath);
-	global_set('chapterType', chapterType);
-	global_set('chapterCover', chapterCover);
-
-	// 加载章节列表
-	const res = await chapterApi.get(item.mangaId);
-	global_set_json('chapterList', res.list);
-
-	let page = 1;
-
+	browse.page = 1;
 	router.push({
-		name: browseType,
+		name: item.browseType,
 		query: {
-			chapterId,
-		},
-		params: { page },
+			mediaId: item.mediaId,
+			mangaId: item.mangaId,
+			chapterId: item.chapterId,
+		}
 	});
 }
 </script>

@@ -8,40 +8,37 @@
 <template>
   <div class="single-page">
     <!--目录列表-->
-    <chapter-list-menu @before="before" @next="next" @changeChapter="change_chapter" />
+    <chapter-list-menu @before_chapter="before_chapter" @next_chapter="next_chapter" @change_chapter="change_chapter" />
 
     <!--功能菜单-->
     <right-sidebar @dwonload="dwonload_image" />
 
     <!--图片容器-->
     <div class="single-page-img-box touch-dom">
-      <bookmark :page="page" :chapterId="chapterInfo.chapterId" />
+      <bookmark />
       <img class="single-page-img" :src="imgSrc" :alt="t('browse.imgLoadError')" @click.stop="switch_menu" />
       <operation-cover @before="beforePage" @next="nextPage" @switch-menu="switch_menu"
         @switch-footer="switch_footer"></operation-cover>
     </div>
 
     <!-- 页码显示 -->
-    <page-number :page="page" :count="imgPathList.length" />
+    <page-number :page="page" :count="browse.pageCount" />
 
     <!--分页按钮-->
     <div class="footer" v-show="config.browseFooter">
-      <el-button class="btn" type="warning" plain @click="before">{{ $t('page.before') }}</el-button>
+      <el-button class="btn" type="warning" plain @click="before_chapter">{{ $t('page.before') }}</el-button>
 
-      <browse-pager ref="pager" @pageChange="page_change" @reloadPage="reload_page" :page="page" :count="count" />
+      <browse-pager ref="pager" @pageChange="page_change" @reloadPage="reload_page" :page="page" :count="browse.pageCount" />
 
-      <el-button class="btn" type="success" plain @click="next">{{ $t('page.next') }}</el-button>
+      <el-button class="btn" type="success" plain @click="next_chapter">{{ $t('page.next') }}</el-button>
     </div>
   </div>
 </template>
 
 <script setup lang='ts'>
-import { ref, reactive, onMounted, watch, computed } from 'vue';
-import latestApi from '@/api/latest';
-import { global_get, global_get_array, global_set } from '@/utils';
+import { ref, onMounted } from 'vue';
 import { ElMessage } from 'element-plus';
 import { config, userConfig } from '@/store';
-import historyApi from '@/api/history';
 import operationCover from './components/operation-cover.vue';
 import chapterListMenu from './components/chapter-list-menu.vue';
 import bookmark from './components/bookmark.vue';
@@ -51,71 +48,17 @@ import rightSidebar from './components/right-sidebar.vue';
 import pageNumber from './components/page-number.vue';
 import i18n from '@/i18n';
 import { useRoute, useRouter } from 'vue-router';
-import { chapterInfoType } from '@/type/chapter';
 import imageApi from '@/api/image';
+import useBrowseStore from '@/store/browse';
 const { t } = i18n.global;
 
 const route = useRoute();
 const router = useRouter();
 
 const imgSrc = ref('');
-const imgPathList = ref<string[]>([]);
-const imgPathFiles = ref<string[]>([]);
 const page = ref(1);
-
-// 存储进度
-watch(
-  () => page.value,
-  () => {
-    latestApi.add({
-      page: page.value,
-      count: count.value,
-      chapterId: chapterInfo.chapterId,
-      mangaId: chapterInfo.mangaId,
-      finish: page.value >= count.value
-    });
-  }
-)
-
-const chapterList = computed<chapterInfoType[]>(() => {
-  return global_get_array('chapterList');
-})
-
-const index = computed<number>(() => {
-  const list = chapterList.value;
-  const chapterId = Number(route.query.chapterId);
-
-  for (let i = 0; i < list.length; i++) {
-    if (chapterId === list[i].chapterId) {
-      //缓存章节坐标
-      global_set('chapterIndex', i);
-      return i;
-    }
-  }
-
-  return -1;
-})
-
-let chapterInfo = reactive<chapterInfoType>({
-  chapterId: 0,
-  chapterPath: '',
-  chapterType: 'img',
-  browseType: '',
-  chapterCover: '',
-  chapterName: '',
-  createTime: '',
-  mangaId: 0,
-  mediaId: 0,
-  pathId: 0,
-  picNum: 0,
-  updateTime: '',
-})
-
-const count = computed(() => {
-  return imgPathList.value.length;
-})
-
 const pager = ref();
+const browse = useBrowseStore();
 
 /**
  * 页码变更
@@ -123,20 +66,12 @@ const pager = ref();
  */
 async function page_change(pageParams: number) {
   page.value = pageParams
-  const pageImage = imgPathList.value[pageParams - 1];
-  global_set('page', pageParams);
-  global_set('pageImage', pageImage);
+  const pageImage = browse.imagePathList[pageParams - 1];
+  imgSrc.value = await imageApi.get(pageImage);
 
-  // 有缓存则加载缓存的图片
-  if (imgPathFiles.value[pageParams - 1]) {
-    imgSrc.value = imgPathFiles.value[pageParams - 1];
-    return;
-  }
-
-  const res: any = await imageApi.get(pageImage);
-  imgSrc.value = res;
-
-  imgPathFiles.value[pageParams - 1] = res;
+  browse.page = pageParams;
+  browse.pageImage = pageImage;
+  browse.save_latest();
 }
 
 /**
@@ -156,29 +91,18 @@ function nextPage() {
 /**
  * 重载页面
  */
-async function reload_page(page = 1, addHistory = true) {
+async function reload_page(page = 1) {
+  // 加载路由参数
+  browse.load_route_params(route);
+  // 加载章节列表
+  browse.load_chapter_list();
   // 清空之前图片内容
-  imgPathFiles.value = [];
-  // 初始化chapterInfo
-  if (!chapterInfo.chapterId) {
-    const chapterId = Number(route.query.chapterId);
+  browse.imageFileList = [];
 
-    // 获取章节信息
-    chapterInfo = chapterList.value.filter((item: chapterInfoType) => item.chapterId == chapterId)[0]
 
-    // 更新阅读记录
-    latestApi.add({
-      page: page,
-      count: count.value,
-      chapterId: chapterInfo.chapterId,
-      mangaId: chapterInfo.mangaId,
-      finish: page >= count.value
-    });
-  }
-
-  if (addHistory) historyApi.add();
   // 加载图片列表
-  const res = await chapterApi.get_images(chapterInfo.chapterId);
+  const chapterId = Number(route.query.chapterId);
+  const res = await chapterApi.get_images(chapterId);
 
   switch (res.state) {
     case 'uncompressed':
@@ -187,74 +111,73 @@ async function reload_page(page = 1, addHistory = true) {
       }, 2000);
       break;
     case 'compressing':
-      imgPathList.value = res.list;
+      browse.imagePathList = res.list;
       pager.value.page_change(page);
       setTimeout(() => {
         pager.value.reload();
       }, 2000);
       break;
     case 'compressed':
-      imgPathList.value = res.list;
+      browse.imagePathList = res.list;
       pager.value.page_change(page);
       break;
     default:
-      imgPathList.value = res.list;
+      browse.imagePathList = res.list;
       pager.value.page_change(page);
       break;
   }
+
+  browse.save_history();
 }
 
 /**
- * 上一页
+ * 上一章
  * */
-async function before() {
-  if (index.value == 0) {
+async function before_chapter() {
+  const index = browse.currentChapterIndex;
+  const chapterList = browse.chapterList;
+
+  if (index == 0) {
     ElMessage.warning(t('page.firstChapter'));
     return false;
   }
 
-  if (!index.value) return;
+  if (!index) return;
 
-  chapterInfo = chapterList.value[index.value - 1];
+  const beforeChapterId = chapterList[index - 1].chapterId;
 
   await router.push({
     name: route.name as string,
     query: {
-      chapterId: chapterInfo.chapterId,
-    },
-    params: { page: 1 },
+      ...route.query,
+      chapterId: beforeChapterId,
+    }
   });
 
-  update_chapter_info();
-
-  /**
-   * 刷新页面
-   * 自定义重载方法没有重置滚动条,导致vant list不断触发触底事件
-   * 因此暂时采用刷新页面的方式解决
-   */
   reload_page();
 }
 
 /**
- * 下一页
+ * 下一章
  * */
-async function next() {
-  if (index.value == chapterList.value.length - 1) {
+async function next_chapter() {
+  const index = browse.currentChapterIndex;
+  const chapterList = browse.chapterList;
+
+  if (index == chapterList.length - 1) {
     ElMessage.warning(t('page.lastChapter'));
     return false;
   }
 
-  chapterInfo = chapterList.value[index.value + 1];
+  const nextChapterId = chapterList[index + 1].chapterId;
 
   await router.push({
     name: route.name as string,
     query: {
-      chapterId: chapterInfo.chapterId,
+      ...route.query,
+      chapterId: nextChapterId,
     },
-    params: { page: 1 },
   });
-
-  update_chapter_info();
 
   // 刷新页面
   reload_page();
@@ -264,31 +187,17 @@ async function next() {
  * 选择章节
  * @param index
  */
-async function change_chapter(index: any) {
-  chapterInfo = chapterList.value[index];
-
+async function change_chapter(chapterId: number) {
   await router.push({
     name: route.name as string,
     query: {
-      chapterId: chapterInfo.chapterId,
+      ...route.query,
+      chapterId: chapterId,
     },
-    params: { page: 1 },
   });
-
-  update_chapter_info();
 
   // 重载页面
   reload_page();
-}
-
-/**
- * 更新阅读缓存
- */
-function update_chapter_info() {
-  global_set('chapterId', chapterInfo.chapterId);
-  global_set('chapterName', chapterInfo.chapterName);
-  global_set('chapterPath', chapterInfo.chapterPath);
-  global_set('chapterCover', chapterInfo.chapterCover);
 }
 
 // 阅读状态控制
@@ -359,12 +268,9 @@ function touch_page_change() {
 onMounted(() => {
   // 设置浏览模式
   config.browseType = 'single';
-  const page = route.params.page || global_get('page') || 1;
-  const notAddHistory = route.params.notAddHistory || false;
-  // 组件被渲染了两遍
+  const page = browse.page || 1;
 
-  // 加载页面
-  reload_page(Number(page), !notAddHistory);
+  reload_page(page);
 
   if (userConfig.enableTouchPageChange) {
     touch_page_change();

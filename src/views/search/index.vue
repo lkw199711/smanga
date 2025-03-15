@@ -65,28 +65,30 @@ export default { name: 'search' };
 
 <script lang="ts" setup name="search">
 import {
-	computed,
 	watch,
 	onMounted,
-	onBeforeUnmount,
 	ref,
 	onActivated,
 } from 'vue';
 import { useRoute } from 'vue-router';
 import { Search } from '@element-plus/icons-vue';
-import store, { config, userConfig, pageSizeConfig } from '@/store';
+import store, { config, userConfig } from '@/store';
 import searchApi from '@/api/search';
 import router from '@/router';
-import chapterApi from '@/api/chapter';
-import { global_set, global_set_json } from '@/utils';
 import manga from '@/components/manga.vue';
 import chapter from '@/components/chapter.vue';
 import mediaPager from '@/components/media-pager.vue';
 import { ElMessage } from 'element-plus';
-import { pageSizeConfigType, screenType } from '@/type/store';
+import { screenType } from '@/type/store';
 import { mangaPageSize, chapterPageSize } from '@/store/page-size';
 import listSkeleton from '@/components/list-skeleton.vue';
 import queue from '@/store/quque';
+import useBrowseStore from '@/store/browse';
+import useSearchStore from '@/store/search';
+const browse = useBrowseStore();
+const searchStore = useSearchStore();
+
+
 
 let loading = ref(false);
 const searchText = ref('');
@@ -123,19 +125,27 @@ watch(
 );
 onMounted(() => {
 	touch_page_change();
+	load_store_search();
 });
 
 // KeepAlive相关联 生命周期
 onActivated(() => {
-	const paramsSearchText = route.params.searchText;
-
-	if (paramsSearchText) {
-		searchText.value = String(paramsSearchText);
-		searchType.value = String(route.params.searchType);
-		page_change();
-		route.params.searchText = '';
-	}
+	console.log('search activated');
+	load_store_search();
 });
+
+function load_store_search() {
+	// 加载store中的搜索关键词
+	if (searchStore.searchText) {
+		searchText.value = searchStore.searchText;
+		searchType.value = searchStore.searchType;
+
+		page_change();
+
+		searchStore.searchText = '';
+		searchStore.searchType = '';
+	}
+}
 
 async function do_search() {
 	const res: any = await searchApi.get(searchText.value, searchType.value, 1, defaultPageSize);
@@ -235,10 +245,6 @@ async function page_change(
 }
 
 function reload() {
-	/*  关于首页首次加载的页面容量 因逻辑bug暂时不处理
-		const screenType = config.screenType;
-		const pageSize = mediaPageSize[screenType];
-	*/
 	page_change(1);
 }
 
@@ -252,33 +258,16 @@ function context_menu(mangaInfo: any, key: number) {
 }
 
 // 章节方法
-async function go_browse(item: any) {
-	const chapterId = item.chapterId;
-	const chapterName = item.chapterName;
-	const chapterPath = item.chapterPath;
-	const chapterType = item.chapterType;
-	const chapterCover = item.chapterCover;
-	const browseType = item.browseType;
-
-	// 缓存章节信息
-	global_set('chapterId', chapterId);
-	global_set('chapterName', chapterName);
-	global_set('chapterPath', chapterPath);
-	global_set('chapterType', chapterType);
-	global_set('chapterCover', chapterCover);
-
-	// 加载章节列表
-	const res = await chapterApi.get(item.mangaId);
-	global_set_json('chapterList', res.list);
-
-	let page = 1;
+async function go_browse(chapter: any) {
+	browse.page = 1;
 
 	router.push({
-		name: browseType,
+		name: chapter.browseType,
 		query: {
-			chapterId,
-		},
-		params: { page },
+			mediaId: chapter.mediaId,
+			mangaId: chapter.mangaId,
+			chapterId: chapter.chapterId,
+		}
 	});
 }
 </script>

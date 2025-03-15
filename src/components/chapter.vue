@@ -44,10 +44,10 @@ export default { name: 'manga-chapter-item' }
 <script lang="ts" setup>
 import imageApi from "@/api/image";
 import queue from "@/store/quque";
-import { chapterInfoType } from "@/type/chapter";
+import { chapterType } from "@/type/chapter";
 import { ref, onMounted, computed } from "vue";
 
-type chapterItemType = chapterInfoType & { blob: string; chapterCover: string; pageImage: string; };
+type chapterItemType = chapterType & { blob: string; chapterCover: string; pageImage: string; };
 const props = defineProps(['chapterInfo', 'bookmark', 'viewType']);
 const placeholder = require("@/assets/s-blue.png");
 const fit = 'cover';
@@ -82,8 +82,6 @@ onMounted(() => {
 })
 
 async function get_poster(item: chapterItemType) {
-	console.log(item);
-
 	blobLink.value = await imageApi.get(item.pageImage || item.chapterCover);
 }
 

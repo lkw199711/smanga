@@ -49,7 +49,7 @@ import { mangaInfoType } from '@/type/manga';
 import imageApi from '@/api/image';
 import { onMounted, onActivated } from 'vue';
 import queue from '@/store/quque';
-import usePosterStore from '@/store/poster';
+import usePosterStore from '@/store/image';
 
 type mangaItemType = mangaInfoType & { blob: string; mangaCover: string; };
 
@@ -77,45 +77,15 @@ async function get_poster(item: mangaItemType) {
 }
 
 async function go_chapter() {
-	const mangaInfo = props.mangaInfo;
-	const mangaId = mangaInfo.mangaId;
-	const mangaCover = mangaInfo.mangaCover;
-	const chapterId = mangaInfo.chapterId;
-	const chapterName = mangaInfo.chapterName;
-	const browseType = mangaInfo.browseType;
-	const removeFirst = mangaInfo.removeFirst;
-	const direction = mangaInfo.direction;
-	const page = mangaInfo.page;
-	// 缓存漫画信息
-	global_set('mangaId', mangaId);
-	global_set('mangaName', mangaName?.value);
-	global_set('mangaCover', mangaCover);
-	global_set('chapterId', chapterId);
-	global_set('chapterName', chapterName);
-	global_set('removeFirst', removeFirst);
-	global_set('direction', direction);
 
-	if (route.name === 'media-list') {
-		const chapterListRes = await chapterApi.get(mangaId);
-		const chapterList = chapterListRes.list;
-		global_set_json('chapterList', chapterList);
-
-		const newUrl = router.resolve({
-			name: browseType,
-			query: { chapterId: mangaInfo.chapterId },
-			params: { page },
-		})
-		window.open(newUrl.href, '_blank');
-	} else {
-		const newUrl = router.resolve({
-			name: 'manga-info',
-			query: { mangaId },
-			params: { browseType, clear: '1' },
-		})
-		window.open(newUrl.href, '_blank');
-	}
-
-
+	const newUrl = router.resolve({
+		name: 'manga-info',
+		query: {
+			mediaId: props.mangaInfo.mediaId,
+			mangaId: props.mangaInfo.mangaId,
+		},
+	})
+	window.open(newUrl.href, '_blank');
 }
 </script>
 

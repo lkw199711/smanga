@@ -71,7 +71,7 @@ function get_page_size_array() {
 }
 
 const mediaId = computed<number>(() => {
-	return Number(route.query.mediaId || global_get('mediaId'));
+	return Number(route.query.mediaId);
 });
 
 // 切换排序规则时 重新加载列表

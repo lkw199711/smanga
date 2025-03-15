@@ -179,8 +179,6 @@ export default defineComponent({
 		},
 
 		switch_change(val: any, activeVal: string, inactiveVal: string) {
-			console.log(val);
-
 			return val ? activeVal : inactiveVal;
 		},
 	},

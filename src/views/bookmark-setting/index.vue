@@ -84,7 +84,7 @@ export default defineComponent({
         t('bookmarkManage.confirm.title'), {
         type: 'warning'
       }).then(async () => {
-        const res = await bookmarkApi.delete_bookmark(val.bookmarkId);
+        const res = await bookmarkApi.delete(val.bookmarkId);
         if (res.code === 0) {
           this.reload_table();
         }
@@ -96,7 +96,7 @@ export default defineComponent({
      * @returns {Promise<void>}
      */
     async load_table(page = 1, pageSize = 10) {
-      const res = await bookmarkApi.get_bookmark(page, pageSize);
+      const res = await bookmarkApi.get(page, pageSize);
       this.tableData = res.list;
       this.count = Number(res.count);
     },

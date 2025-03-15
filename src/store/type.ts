@@ -21,7 +21,6 @@ export interface GlobalData {
 	mangaName: string;
 	mangaCover: string;
 	page: number;
-	doublePage: number;
 	pageImage: string;
 	direction: string;
 	removeFirst: string;

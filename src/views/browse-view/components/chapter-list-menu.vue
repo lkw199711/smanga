@@ -4,11 +4,11 @@
     <el-drawer v-model="popup" size="auto" direction="ltr" :with-header="false">
       <!-- 顶部占位符 -->
       <div class="top-seat" v-if="config.android"></div>
-      <el-menu class="chapter-list" active-text-color="#ee0a24" :default-active="String(chapterIndex)"
+      <el-menu class="chapter-list" active-text-color="#ee0a24" :default-active="String(browse.currentChapterIndex)"
         @select="change_chapter">
-        <el-menu-item v-for="(k, i) in chapterList" :index="String(i)" :key="k.chapterId">{{ k.chapterName }}
+        <el-menu-item v-for="(chapter, index) in browse.chapterList" :index="String(index)" :key="chapter.chapterId">{{ chapter.chapterName }}
           <!--已读图标-->
-		      <i class="iconfont icon-success-fill icon-is-read" v-if="k.latest?.finish" />
+          <i class="iconfont icon-success-fill icon-is-read" v-if="chapter.latest?.finish" />
         </el-menu-item>
         <seat height="4rem" />
       </el-menu>
@@ -32,41 +32,24 @@
 export default { name: 'chapter-list-menu' };
 </script>
 <script setup lang='ts'>
-import { ref, computed } from 'vue';
+import { ref } from 'vue';
 import { config } from "@/store";
-import { global_get_array, global_set } from "@/utils";
 import Seat from "@/components/seat.vue";
-import { useRoute, useRouter } from 'vue-router';
-const route = useRoute();
-const router = useRouter();
+import useBrowseStore from '@/store/browse';
+const browse = useBrowseStore();
 
-const emit = defineEmits(['changeChapter', 'before', 'next']);
+const emit = defineEmits(['change_chapter', 'before_chapter', 'next_chapter']);
 
 let popup = ref(false);
-let chapterList = computed(() => { return global_get_array('chapterList'); })
-let chapterIndex = computed(() => {
-  const chapterId = Number(route.query.chapterId);
-
-  for (let i = 0; i < chapterList.value.length; i++) {
-    if (chapterId === chapterList.value[i].chapterId) {
-      //缓存章节坐标
-      global_set('chapterIndex', i);
-      return i;
-    }
-  }
-
-  return -1;
-})
-
 
 function change_chapter(index: number) {
-  emit('changeChapter', index);
+  emit('change_chapter', browse.chapterList[index].chapterId);
 }
 function before() {
-  emit('before');
+  emit('before_chapter');
 }
 function next() {
-  emit('next');
+  emit('next_chapter');
 }
 function button_click() {
   popup.value = true;
@@ -137,7 +120,7 @@ function button_click() {
   }
 }
 
-.icon-is-read{
+.icon-is-read {
   margin-left: 2.4rem;
   transform: translateY(.1rem);
   color: @s-isread;

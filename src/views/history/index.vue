@@ -23,20 +23,20 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onBeforeMount } from 'vue';
+import { ref, onMounted } from 'vue';
 import chapter from '@/components/chapter.vue';
 import store, { config } from '@/store';
-import { global_set, global_set_json } from '@/utils';
 import historyApi from '@/api/history';
-import chapterApi from '@/api/chapter';
 import MediaPager from '@/components/media-pager.vue';
 import RightSidebar from './components/right-sidebar.vue';
-import { chapterInfoType } from '@/type/chapter';
+import { chapterType } from '@/type/chapter';
 import { useRoute, useRouter } from 'vue-router';
 import { chapterPageSize } from '@/store/page-size';
-import { pageSizeConfigType, screenType } from '@/type/store';
+import { screenType } from '@/type/store';
 import listSkeleton from '@/components/list-skeleton.vue';
 import queue from '@/store/quque';
+import useBrowseStore from '@/store/browse';
+const browse = useBrowseStore();
 
 let pageSizes: number[] = [];
 let defaultPageSize = 10;
@@ -59,63 +59,21 @@ const list = ref([]);
 const count = ref(0);
 const menuPoster = ref('');
 let loading = ref(false);
-const chapterInfo = ref<chapterInfoType>({
-  browseType: '',
-  chapterCover: '',
-  chapterId: 0,
-  chapterName: '',
-  chapterPath: '',
-  chapterType: '',
-  createTime: '',
-  mangaId: 0,
-  mediaId: 0,
-  pathId: 0,
-  picNum: 0,
-  updateTime: '',
-});
+const chapterInfo = ref<chapterType>();
 
 /**
  * 跳转浏览页面
  * @param item
  */
 async function go_browse(item: any) {
-  const chapterId = item.chapterId;
-  const chapterName = item.chapterName;
-  const chapterPath = item.chapterPath;
-  const chapterType = item.chapterType;
-  const chapterCover = item.chapterCover;
-  const mangaId = item.mangaId;
-  const mangaCover = item.mangaCover;
-  const browseType = item.browseType;
-  const removeFirst = item.removeFirst;
-  const direction = item.direction;
-
-  const chapterListRes = await chapterApi.get(mangaId);
-  const chapterList = chapterListRes.list;
-
-  // 缓存章节信息
-  global_set('mangaId', mangaId);
-  global_set('mangaCover', mangaCover);
-  global_set('chapterId', chapterId);
-  global_set('chapterName', chapterName);
-  global_set('chapterPath', chapterPath);
-  global_set('chapterType', chapterType);
-  global_set('browseType', browseType);
-  global_set('chapterCover', chapterCover);
-  global_set_json('chapterList', chapterList);
-  global_set('removeFirst', removeFirst);
-  global_set('direction', direction);
-
-  // 不存储历史记录
+  browse.page = 1;
   await router.push({
-    name: browseType,
+    name: item.browseType,
     query: {
-      chapterId,
-    },
-    params: {
-      notAddHistory: 1,
-      page: 1,
-    },
+      mediaId: item.mediaId,
+      mangaId: item.mangaId,
+      chapterId: item.chapterId,
+    }
   });
 }
 

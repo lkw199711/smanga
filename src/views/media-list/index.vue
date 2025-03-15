@@ -55,27 +55,11 @@ async function load_media() {
  */
 function go_manga_list(mediaInfo: mediaType) {
 	const mediaId = mediaInfo.mediaId;
-
-	if (mediaInfo.directoryFormat == 1) {
-		router.push({
-			name: 'parent-path-list',
-			query: {
-				mediaId,
-			},
-			params: { clear: '1' },
-		});
-		return;
-	}
-
-	// 设置媒体库id
-	global_set('mediaId', mediaId);
-
 	router.push({
 		name: 'manga-list',
 		query: {
 			mediaId,
-		},
-		params: { clear: '1' },
+		}
 	});
 }
 

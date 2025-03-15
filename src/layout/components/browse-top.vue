@@ -35,26 +35,26 @@ export default { name: 'browse-top' };
 <script setup lang="ts">
 import { ref, computed } from 'vue';
 import logo from '@/layout/components/logo.vue';
-import { global_get, global_set_json, global_get_array } from '@/utils';
-import bookmarkApi from '@/api/bookmark';
-import { cache, config, globalData } from '@/store';
+import { config } from '@/store';
 import i18n from '@/i18n';
 import { useRoute, useRouter } from 'vue-router';
+import useBrowseStore from '@/store/browse';
 const route = useRoute();
 const router = useRouter();
+const browse = useBrowseStore();
 
 const { t } = i18n.global;
 
 let activeIndex = ref('');
 
 let bookmarkTitle = computed(() => {
-	return config.bookmarkShow
+	return browse.bookmarkShow
 		? t('bookmarkManage.remove')
 		: t('bookmarkManage.add');
 })
 
 let browseType = computed(() => {
-	switch (config.browseType) {
+	switch (browse.browseType) {
 		case 'flow':
 			return t('browse.flow');
 		case 'single':
@@ -68,52 +68,41 @@ let browseType = computed(() => {
 	}
 })
 
-let chapterName = computed(() => {
-	return global_get('chapterName');
-})
+let chapterName = computed(() => browse.currentChapter?.chapterName)
 
 async function handleSelect(key: string) {
 	if (key === 'addBookmark') {
-		if (config.bookmarkShow) {
-			await bookmarkApi.delete_and_update(cache.bookmarkId);
-			return;
-		}
-		
-		let page = global_get('page');
-
-		if (route.name === 'double') {
-			page = page * 2 - 1;
-		}
-
-		if (route.name === 'half') {
-			page = Math.ceil(page / 2);
-		}
-
-		await bookmarkApi.add_bookmark(page);
-
-		const res = await bookmarkApi.get_bookmark();
-
-		global_set_json('bookmarkList', res.list);
-
+		browse.toggle_bookmark();
 		return;
 	}
 
 	let query = {};
-	let params = {};
 
 	// 切换浏览模式 保持参数
 	if (/(flow|single|double|half)/.test(key)) {
 		query = route.query;
 	}
 
-	// 传参记录浏览模式
-	if (key === 'chapter-list')
-		Object.assign(params, { browseType: route.name });
+	if (key === 'media-list') {
+		query = {};
+	}
+
+	if (key === 'manga-list') {
+		query = {
+			mediaId: route.query.mediaId
+		};
+	}
+
+	if (key === 'chapter-list') {
+		query = {
+			mediaId: route.query.mediaId,
+			mangaId: route.query.mangaId
+		};
+	}
 
 	router.push({
 		name: key,
 		query,
-		params,
 	});
 }
 </script>

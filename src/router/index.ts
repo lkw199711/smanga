@@ -351,12 +351,12 @@ const routes: Array<RouteRecordRaw> = [
 	{
 		path: '/browse-view',
 		name: 'browse-view',
-		redirect: '/browse-view/index',
+		redirect: '/browse-view/flow',
 		component: browse,
 		meta: {sidebar: false},
 		children: [
 			{
-				path: 'index',
+				path: 'flow',
 				name: 'flow',
 				meta: {view: 'browse'},
 				component: () => import('../views/browse-view/flow.vue'),

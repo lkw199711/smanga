@@ -4,11 +4,10 @@
  * @LastEditors: lkw199711 lkw199711@163.com
  * @LastEditTime: 2024-08-04 22:22:34
  * @FilePath: \smanga\src\api\bookmark.ts
- * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
-import {ajax} from './index';
-import {global_get, global_get_array, global_set_json} from '@/utils';
-import {config} from '@/store';
+import { ajax } from './index';
+import { global_get, global_set_json } from '@/utils';
+import { config } from '@/store';
 
 const bookmarkApi = {
 	/**
@@ -16,45 +15,28 @@ const bookmarkApi = {
 	 * @param {number} page
 	 * @return {*}
 	 */
-	async add_bookmark(page: number) {
-		let pageImage = global_get('pageImage');
+	async add(params: {
+		page: number,
+		pageImage: string,
+		browseType: string,
+		mediaId: number,
+		mangaId: number,
+		chapterId: number,
+	 }) {
+		const http = await ajax.post('bookmark', params);
 
-		if (config.browseType == 'flow') {
-			const imgPathList = global_get_array('imgPathList');
-			pageImage = imgPathList[page];
-		}
-
-		const res = ajax({
-			url: 'bookmark',
-			method: 'post',
-			data: {
-				mediaId: global_get('mediaId'),
-				mangaId: global_get('mangaId'),
-				mangaName: global_get('mangaName'),
-				mangaCover: global_get('mangaCover'),
-				chapterId: global_get('chapterId'),
-				chapterName: global_get('chapterName'),
-				chapterPath: global_get('chapterPath'),
-				chapterType: global_get('chapterType'),
-				chapterCover: global_get('chapterCover'),
-				page,
-				pageImage,
-				browseType: config.browseType,
-			},
-		});
-
-		return (await res).data;
+		return http.data;
 	},
 
 	/**
 	 * @description: 获取书签列表
 	 * @return {*}
 	 */
-	async get_bookmark(
+	async get(
 		page: number | undefined = undefined,
 		pageSize: number | undefined = undefined
 	) {
-		const res = ajax.get('bookmark', {params: {page, pageSize}});
+		const res = ajax.get('bookmark', { params: { page, pageSize } });
 
 		return (await res).data;
 	},
@@ -64,14 +46,14 @@ const bookmarkApi = {
 	 * @param {number} bookmarkId
 	 * @return {*}
 	 */
-	async delete_bookmark(bookmarkId: number) {
+	async delete(bookmarkId: number) {
 		const res = await ajax.delete(`bookmark/${bookmarkId}`);
 		return res.data;
 	},
 
 	async delete_and_update(bookmarkId: number) {
 		const res = await ajax.delete(`bookmark/${bookmarkId}`);
-		const res1 = await this.get_bookmark();
+		const res1 = await this.get();
 		global_set_json('bookmarkList', res1.list);
 
 		return res.data;

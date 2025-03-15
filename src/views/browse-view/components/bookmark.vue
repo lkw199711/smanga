@@ -15,71 +15,21 @@
 export default { name: 'bookmark' };
 </script>
 <script setup lang="ts">
-import { computed } from 'vue';
-import { global_get_array, global_get } from '@/utils';
-import { config, cache } from '@/store';
-import { useRoute, useRouter } from 'vue-router';
-const route = useRoute();
-const router = useRouter();
+import { ref, watch } from 'vue';
+import useBrowseStore from '@/store/browse';
 
-const props = defineProps(['page', 'chapterId']);
+const browse = useBrowseStore();
 
-let show = computed(() => {
-	let page = props.page;
+const show = ref(false);
 
-	if (route.name === 'double') {
-		page = page * 2 - 1;
-	}
+// 页码变更时 重新判断书签是否展示
+watch(() => browse.page, () => {
+	show.value = !!browse.is_on_bookmark();
+}, { immediate: true });
 
-	if (route.name === 'half') {
-		page = Math.ceil(page / 2);
-	}
-
-	const bookmarkList = global_get_array('bookmarkList');
-	const chapterId = props.chapterId;
-
-	// 通过章节与页码判断书签展示
-	for (let i = 0; i < bookmarkList.length; i++) {
-		const item = bookmarkList[i];
-
-		if (chapterId != item.chapterId) {
-			continue;
-		}
-		
-		if (item.page == page) {
-			cache.bookmarkId = item.bookmarkId;
-			config.bookmarkShow = true;
-			return true;
-		}
-
-		// switch (config.browseType) {
-		// 	case 'double':
-		// 		if (item.page == page || item.page == page + 1) {
-		// 			cache.bookmarkId = item.bookmarkId;
-		// 			config.bookmarkShow = true;
-		// 			return true;
-		// 		}
-		// 		break;
-		// 	case 'half':
-		// 		if (item.page == page || item.page == page + 1) {
-		// 			cache.bookmarkId = item.bookmarkId;
-		// 			config.bookmarkShow = true;
-		// 			return true;
-		// 		}
-		// 		break;
-		// 	default:
-		// 		if (item.page == page) {
-		// 			cache.bookmarkId = item.bookmarkId;
-		// 			config.bookmarkShow = true;
-		// 			return true;
-		// 		}
-		// 		break;
-		// }
-	}
-
-	config.bookmarkShow = false;
-	return false;
-})
+watch(() => browse.bookmarkList, () => {
+	show.value = !!browse.is_on_bookmark();
+}, { immediate: true });
 </script>
 
 <style scoped lang="less">
