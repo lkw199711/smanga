@@ -67,7 +67,7 @@
 export default { name: 'browse-views' }
 </script>
 <script setup lang="ts">
-import { computed, ref } from 'vue';
+import { computed, ref, watch } from 'vue';
 import imageApi from '@/api/image';
 import { window_go_top } from '@/utils';
 import { ElMessage as msg } from 'element-plus';
@@ -112,6 +112,16 @@ let currentPage = ref(1);
 
 // 在中途加载 前置没有加载的页面数量
 let beforeBookMark = 0;
+
+watch(currentPage, (currentPage) => {
+	const pageImage = browse.imagePathList[currentPage - beforeBookMark - 1];
+	// 记录页码
+	browse.page = currentPage;
+	// 记录当前图片
+	browse.pageImage = pageImage;
+	// 保存阅读记录
+	browse.save_latest();
+})
 
 /**
  * 加载图片
@@ -338,13 +348,6 @@ function scroll_page() {
 	for (let i = 0; i < imgs.length; i++) {
 		if (scrollY <= imgs[i].offsetTop) {
 			currentPage.value = i + beforeBookMark + 1;
-			const pageImage = browse.imagePathList[page - 1];
-			// 记录页码
-			browse.page = currentPage.value;
-			// 记录当前图片
-			browse.pageImage = pageImage;
-			// 保存阅读记录
-			browse.save_latest();
 			return;
 		}
 	}
@@ -355,7 +358,7 @@ function scroll_page() {
  */
 function dwonload_image() {
 	// 获取当前图片
-	const src = browse.imageFileList[currentPage.value - 1];
+	const src = browse.imageFileList[currentPage.value - beforeBookMark - 1];
 
 	const a = document.createElement('a');
 	a.href = src;
