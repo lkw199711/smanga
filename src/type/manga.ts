@@ -9,6 +9,7 @@ import { tagItemType } from "./tag";
  * @FilePath: /smanga/src/type/manga.ts
  */
 type mangaInfoType = {
+	mediaId: number;
 	mangaId?: number;
 	mangaName: string;
 	author: string;

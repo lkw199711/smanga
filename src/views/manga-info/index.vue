@@ -90,6 +90,7 @@ import useBrowseStore from '@/store/browse';
 const router = useRouter();
 
 let mangaInfo = reactive<mangaInfoType>({
+    mediaId: 0,
     mangaId: 0,
     mangaName: '',
     mangaCover: '',
@@ -104,20 +105,7 @@ let mangaInfo = reactive<mangaInfoType>({
     metas: [],
 });
 
-let firstChapterInfo = ref<chapterType>({
-    browseType: '',
-    chapterCover: '',
-    chapterId: 0,
-    chapterName: '',
-    chapterPath: '',
-    chapterType: '',
-    createTime: '',
-    mangaId: 0,
-    mediaId: 0,
-    pathId: 0,
-    picNum: 0,
-    updateTime: '',
-});
+let firstChapterInfo = ref<chapterType>();
 
 let latestChapterInfo = ref<chapterType | false>(false);
 
@@ -198,7 +186,7 @@ async function go_chapter() {
     const chapterInfo = latestChapterInfo.value ? latestChapterInfo.value : firstChapterInfo.value;
 
     // 使用pinia存储页码
-    let page = chapterInfo.page || 1;
+    let page = chapterInfo?.page || 1;
 
     const browseStore: any = useBrowseStore();
     browseStore.page = page;
@@ -215,9 +203,9 @@ async function go_chapter() {
     router.push({
         name: mangaInfo.browseType,
         query: {
-            mediaId: chapterInfo.mediaId,
-            mangaId: chapterInfo.mangaId,
-            chapterId: chapterInfo.chapterId
+            mediaId: mangaInfo.mediaId,
+            mangaId: mangaInfo.mangaId,
+            chapterId: chapterInfo?.chapterId
         }
     });
 }
