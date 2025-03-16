@@ -24,16 +24,18 @@ const useBrowseStore = defineStore('browse', {
 		pageImage: '',
 		// 获取书签列表
 		bookmarkList: <bookmarkType[]>[],
-		// 书签展示状态
-		bookmarkShow: false,
 		// 章节列表
 		chapterList: <chapterType[]>[],
 		// 图片路径列表
 		imagePathList: <string[]>[],
 		// 图片文件列表
 		imageFileList: <string[]>[],
-
-		lastPageCount: 0, // 用于存储上一个有效的 pageCount
+		/**
+		 * 用于存储上一个有效的 pageCount
+		 * 条漫跳页的过程中 pageCount 的变化到导致闪烁
+		 * 如果在跳页的过程中 pageCount 为 0 则使 pageCount 保持上一个有效值
+		 */
+		lastPageCount: 0, 
 	}),
 	getters: {
 		/**
@@ -76,6 +78,37 @@ const useBrowseStore = defineStore('browse', {
 
 			return state.imagePathList.length;
 		},
+
+		/**
+		 * 书签展示状态
+		 * @param state 
+		 */
+		bookmarkShow: (state) => {
+			let page = state.page;
+
+			if (state.browseType === 'double') {
+				page = page * 2 - 1;
+			}
+
+			if (state.browseType === 'half') {
+				page = Math.ceil(page / 2);
+			}
+
+			// 通过章节与页码判断书签展示
+			for (let i = 0; i < state.bookmarkList.length; i++) {
+				const bookmark = state.bookmarkList[i];
+
+				if (state.chapterId != bookmark.chapterId) {
+					continue;
+				}
+
+				if (bookmark.page == page) {
+					return true;
+				}
+			}
+
+			return false
+		},
 	},
 	actions: {
 		/**
@@ -93,12 +126,13 @@ const useBrowseStore = defineStore('browse', {
 				page = Math.ceil(page / 2);
 			}
 
-			// 判断书签是否存在 存在则获取id
-			const bookmarkId = this.is_on_bookmark();
-
-			if (bookmarkId) {
+			if (this.bookmarkShow) {
 				// 已存在书签 删除书签
-				await bookmarkApi.delete(bookmarkId);
+				const bookmark = this.bookmarkList.find((bookmark) => {
+					return bookmark.chapterId === this.chapterId && bookmark.page === page;
+				});
+				if (!bookmark) return;
+				await bookmarkApi.delete(bookmark.bookmarkId);
 			} else {
 				// 添加书签
 				await bookmarkApi.add({
@@ -120,40 +154,6 @@ const useBrowseStore = defineStore('browse', {
 		 */
 		async load_bookmark_list() {
 			this.bookmarkList = (await bookmarkApi.get()).list;
-		},
-
-		/**
-		 * 判断是否在书签上
-		 * @returns 
-		 */
-		is_on_bookmark() {
-			let page = this.page;
-
-			if (this.browseType === 'double') {
-				page = page * 2 - 1;
-			}
-
-			if (this.browseType === 'half') {
-				page = Math.ceil(page / 2);
-			}
-
-
-			// 通过章节与页码判断书签展示
-			for (let i = 0; i < this.bookmarkList.length; i++) {
-				const bookmark = this.bookmarkList[i];
-
-				if (this.chapterId != bookmark.chapterId) {
-					continue;
-				}
-				
-				if (bookmark.page == page) {
-					this.bookmarkShow = true;
-					return bookmark.bookmarkId;
-				}
-			}
-
-			this.bookmarkShow = false;
-			return false
 		},
 
 		/**
