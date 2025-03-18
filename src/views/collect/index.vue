@@ -126,18 +126,6 @@ onMounted(async () => {
 	touch_page_change();
 });
 
-// KeepAlive相关联 生命周期
-onActivated(() => {
-	const paramsSearchText = route.params.searchText;
-
-	if (paramsSearchText) {
-		searchText.value = String(paramsSearchText);
-		searchType.value = String(route.params.searchType);
-		page_change();
-		route.params.searchText = '';
-	}
-});
-
 function touch_page_change() {
 
 	const listDom = document.querySelector('.touch-dom');

@@ -81,12 +81,11 @@ import { metaItemType } from '@/type/meta';
 import { mangaInfoType } from '@/type/manga';
 import { chapterType } from '@/type/chapter';
 import chapterApi from '@/api/chapter';
-import { global_set, global_set_json } from '@/utils'
 import lastesApi from '@/api/latest';
 import collectApi from '@/api/collect';
 import mangaTagBox from '@/components/manga-tag-box.vue';
 import useBrowseStore from '@/store/browse';
-
+const browse: any = useBrowseStore();
 const router = useRouter();
 
 let mangaInfo = reactive<mangaInfoType>({
@@ -188,8 +187,7 @@ async function go_chapter() {
     // 使用pinia存储页码
     let page = chapterInfo?.page || 1;
 
-    const browseStore: any = useBrowseStore();
-    browseStore.page = page;
+    browse.page = page;
 
     // const newUrl = router.resolve({
     //     name: mangaInfo.browseType,
@@ -215,6 +213,7 @@ async function go_chapter() {
  * @return {*}
  */
 function go_chapter_list() {
+    browse.chapterListPage = 1;
     router.push({
         name: 'chapter-list',
         query: {

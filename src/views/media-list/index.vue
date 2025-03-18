@@ -24,11 +24,12 @@ export default { name: 'media-list' };
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
 import mediaApi from '@/api/media';
-import { global_set } from '@/utils';
 import { config } from '@/store';
 import { useRoute, useRouter } from 'vue-router';
 import { mediaType } from '@/type/media';
 import imageApi from '@/api/image';
+import useBrowseStore from '@/store/browse';
+const browse = useBrowseStore();
 const placeholder = require('@/assets/s-blue.png');
 const route = useRoute();
 const router = useRouter();
@@ -54,6 +55,7 @@ async function load_media() {
  * @return {*}
  */
 function go_manga_list(mediaInfo: mediaType) {
+	browse.mangaListPage = 1;
 	const mediaId = mediaInfo.mediaId;
 	router.push({
 		name: 'manga-list',

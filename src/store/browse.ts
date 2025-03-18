@@ -14,6 +14,10 @@ import historyApi from '@/api/history';
 import latestApi from '@/api/latest';
 const useBrowseStore = defineStore('browse', {
 	state: () => ({
+		mangaListPage: 1,
+		mangaListPageSize: 10,
+		chapterListPage: 1,
+		chapterListPageSize: 10,
 		browseType: 'flow',
 		mediaId: -1,
 		mangaId: -1,

@@ -8,8 +8,8 @@
       </template>
       <template v-else>
         <div :class="['chapter-list-box', { 'block': config.viewType === 'list' }]">
-          <chapter v-for="(chapter, index) in list" :key="chapter" :viewType="config.viewType" :chapterInfo="chapter" :bookmark="true"
-            @click="go_browse(chapter)" @contextmenu.prevent="context_menu(chapter, index)" />
+          <chapter v-for="(chapter, index) in list" :key="chapter" :viewType="config.viewType" :chapterInfo="chapter"
+            :bookmark="true" @click="go_browse(chapter)" @contextmenu.prevent="context_menu(chapter, index)" />
         </div>
       </template>
     </div>
@@ -36,7 +36,7 @@ import { chapterPageSize } from '@/store/page-size';
 import listSkeleton from '@/components/list-skeleton.vue';
 import queue from '@/store/quque';
 import useBrowseStore from '@/store/browse';
-
+const browse = useBrowseStore();
 let pageSizes: number[] = [];
 let defaultPageSize = 10;
 let loading = ref(false);
@@ -56,7 +56,7 @@ const router = useRouter();
 
 const page = ref(1);
 const list = ref([]);
-const count = ref(0);
+const count = ref(-1);
 const menuPoster = ref('');
 const chapterInfo = ref<chapterType>();
 
@@ -69,7 +69,6 @@ async function go_browse(item: any) {
   const browseType = item.browseType;
 
   // 使用pinia存储页码
-  const browse = useBrowseStore();
   browse.page = item.page;
 
   await router.push({
@@ -89,7 +88,7 @@ async function go_browse(item: any) {
  */
 async function page_change(pageParams = 1, pageSize: number = defaultPageSize) {
 
-  if (pageParams !== 1 && pageParams > Math.ceil(count.value / pageSize)) return;
+  if (pageParams !== 1 && count.value !== -1 && pageParams > Math.ceil(count.value / pageSize)) return;
   if (pageParams < 1) return;
 
   // 获取页码
@@ -107,6 +106,10 @@ async function page_change(pageParams = 1, pageSize: number = defaultPageSize) {
 
   // 结束加载
   loading.value = false;
+
+  // 缓存页码
+  browse.chapterListPage = pageParams;
+  browse.chapterListPageSize = pageSize;
 }
 
 /**

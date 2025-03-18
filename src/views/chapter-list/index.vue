@@ -30,13 +30,12 @@ export default { name: 'chapter-list' };
 import {
 	watch,
 	onMounted,
-	onActivated,
 	ref,
 } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import chapterApi from '@/api/chapter';
 import { config, userConfig } from '@/store';
-import { global_set, global_set_json } from '@/utils';
+import { global_set_json } from '@/utils';
 import chapter from '@/components/chapter.vue';
 import mediaPager from '@/components/media-pager.vue';
 import listSkeleton from '@/components/list-skeleton.vue';
@@ -44,12 +43,14 @@ import rightSidebar from './right-sidebar.vue';
 import { screenType } from '@/type/store';
 import { chapterPageSize } from '@/store/page-size';
 import queue from '@/store/quque';
+import useBrowseStore from '@/store/browse';
+const browse = useBrowseStore();
 
 const route = useRoute();
 const router = useRouter();
 
 let page = ref(1);
-let count = ref(0);
+let count = ref(-1);
 let list = ref([]);
 let chapterInfo = ref({});
 let loading = ref(false);
@@ -80,8 +81,6 @@ watch(
 
 onMounted(() => {
 	load();
-	route.params.clear = '';
-
 	touch_page_change();
 });
 
@@ -132,14 +131,6 @@ function touch_page_change() {
 	})
 }
 
-onActivated(() => {
-	const clear = route.params.clear;
-	if (clear) {
-		load();
-		route.params.clear = '';
-	}
-});
-
 function go_browse(item: any) {
 	const newUrl = router.resolve({
 		name: item.browseType,
@@ -170,7 +161,7 @@ async function page_change(
 	pageSize: number = defaultPageSize
 ) {
 
-	if (pageParams !== 1 && pageParams > Math.ceil(count.value / pageSize)) return;
+	if (pageParams !== 1 && count.value !== -1 && pageParams > Math.ceil(count.value / pageSize)) return;
 	if (pageParams < 1) return;
 
 	// 获取页码
@@ -193,19 +184,15 @@ async function page_change(
 
 	// 结束加载
 	loading.value = false;
-}
 
-/**
- * 获取全部漫画章节
- */
-async function load_chapter() {
-	const res = await chapterApi.get(mangaId);
-	global_set_json('chapterList', res.list);
+	// 缓存页码信息
+	browse.chapterListPage = page.value;
+	browse.chapterListPageSize = pageSize;
 }
 
 function load() {
-	load_chapter();
-	page_change();
+	list.value = [];
+	page_change(browse.chapterListPage, browse.chapterListPageSize);
 }
 </script>
 

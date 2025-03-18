@@ -43,7 +43,7 @@ const userApi = {
 	},
 
 	async get_user_config() {
-		const http = await ajax.get('user-config');
+		const http = await ajax.get('client-user-config');
 		const response = http.data;
 		return response.data;
 	},

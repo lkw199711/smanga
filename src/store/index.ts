@@ -82,12 +82,6 @@ export const userConfig = reactive({
 	enableTouchPageChange: false,
 });
 
-export const cache = reactive({
-	bookmarkId: 0,
-	chapterKeepAlive: true,
-	mangaKeepAlive: true,
-});
-
 export const pageSizeConfig = reactive({
 	mini: [9, 12, 15, 18, 21],
 	small: [15, 18, 32, 38, 44],

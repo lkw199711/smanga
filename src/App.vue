@@ -12,7 +12,6 @@
 
 <script lang="ts" setup>
 import { Cookies, global_set_json } from '@/utils';
-import bookmarkApi from '@/api/bookmark';
 import { config, pageSizeConfig, userConfig } from '@/store';
 import { useRoute, useRouter } from 'vue-router';
 import { ElConfigProvider, ElMessage, ElMessageBox } from 'element-plus';
@@ -87,18 +86,6 @@ function set_screen_type() {
 
 	// ElMessage(String(window.screen.height));
 	// ElMessage(String(window.screen.width));
-}
-
-/**
- * 检查登录状态
- */
-async function check_login() {
-	const id = Cookies.get('userId');
-	const name = Cookies.get('userName');
-
-	if ((!name || !id) && route.name !== 'init') {
-		router.push('/login');
-	}
 }
 
 async function get_setting() {
