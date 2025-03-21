@@ -46,7 +46,8 @@
     "editTags": "編輯標簽",
     "copy": "復製",
     "markAsRead": "標記為已閱讀",
-    "markAsUnRead": "標記為未閱讀"
+    "markAsUnRead": "標記為未閱讀",
+    "scan": "掃描漫畫"
   },
   "account": {
     "add": "新增用戶",

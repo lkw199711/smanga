@@ -10,7 +10,7 @@
 		<div class="content-area">
 			<p v-for="item in list" :key="item.logId">
 				<span class="time">{{ item.createTime }}: &nbsp;</span>
-				<span :class="logColor(item.logType)">{{ item.logContent }}</span>
+				<span :class="logColor(item.logLevel)">{{ item.message }}</span>
 			</p>
 		</div>
 		<!--分页-->
@@ -29,7 +29,7 @@ type logItemType = {
 	logId: number;
 	logType: string;
 	logLevel: number;
-	logContent: string;
+	message: string;
 	createTime: string;
 }
 
@@ -38,20 +38,22 @@ const list = ref<logItemType[]>([
 		logId: 1,
 		logType: 'error',
 		logLevel: 1,
-		logContent: '无日志信息',
+		message: '无日志信息',
 		createTime: '',
 	},
 ]);
 
 const logColor = computed(() => {
-	return function (logType: string) {
-		switch (logType) {
-			case 'error':
-				return 'red';
-			case 'process':
+	return function (logLevel: number) {		
+		switch (logLevel) {
+			case 1:
 				return 'white';
-			case 'operate':
+			case 2:
 				return 'green';
+			case 3:
+				return 'red';
+			case 4:
+				return 'purple';
 			default:
 				return 'white';
 		}

@@ -7,7 +7,6 @@
  */
 import {defineComponent} from 'vue'
 import operationCover from "../components/operation-cover.vue";
-import { get_version } from '@/api/version';
 
 export default defineComponent({
     name: 'wiki',
@@ -30,7 +29,5 @@ export default defineComponent({
     // 生命周期
     created() {
         this.version = process.env.VUE_APP_VERSION;
-
-        get_version();
     },
 })

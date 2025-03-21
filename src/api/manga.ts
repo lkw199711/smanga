@@ -119,6 +119,17 @@ const mangaApi = {
 
 		return (await res).data;
 	},
+
+	/**
+	 * 扫描漫画
+	 * @param mangaId 漫画id
+	 * @returns 
+	 */
+	async scan(mangaId: number) {
+		const res = ajax.put(`manga/${mangaId}/scan`, {mangaId});
+
+		return (await res).data;
+	}
 };
 
 export default mangaApi;

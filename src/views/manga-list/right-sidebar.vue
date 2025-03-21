@@ -43,6 +43,9 @@
 					</el-icon>
 					{{ $t('option.editTags') }}
 				</el-menu-item>
+				<el-menu-item index="scan">
+					{{ $t('option.scan') }}
+				</el-menu-item>
 			</el-menu>
 		</el-drawer>
 
@@ -231,6 +234,10 @@ async function menu_select(key: string) {
 		case 'tags':
 			editTagsDialog.value = true;
 			update_tags_state();
+			break;
+		case 'scan':
+			await mangaApi.scan(mangaId.value);
+			emit('reload');
 			break;
 
 	}
