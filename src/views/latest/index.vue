@@ -25,7 +25,35 @@ let latestList = ref<latestType[]>([]);
 
 
 onMounted(async () => {
-    latestList.value = await latestApi.get();
+    let pageSize = 10;
+    
+    switch (config.screenType) {
+        case '4k':
+            pageSize = 36;
+            break;
+        case '2k':
+            pageSize = 36;
+            break;
+        case 'large':
+            pageSize = 12;
+            break;
+        case 'middle':
+            pageSize = 6;
+            break;
+        case 'tablet':
+            pageSize = 10;
+            break;
+        case 'small':
+            pageSize = 6;
+            break;
+        case 'mini':
+            pageSize = 6;
+            break;
+        default:
+            pageSize = 10;
+            break;
+    }
+    latestList.value = await latestApi.get(1, pageSize);
 })
 </script>
 

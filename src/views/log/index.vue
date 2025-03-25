@@ -14,7 +14,7 @@
 			</p>
 		</div>
 		<!--分页-->
-		<table-pager ref="pager" @pageChange="load_table" :count="count" />
+		<table-pager ref="pager" @pageChange="load_table" :count="count" :initPageSize="initPageSize"/>
 	</div>
 </template>
 
@@ -24,7 +24,7 @@ import { computed, ref, onMounted } from 'vue';
 import tablePager from '@/components/table-pager.vue';
 
 const count = ref(0);
-
+const initPageSize = 15;
 type logItemType = {
 	logId: number;
 	logType: string;
@@ -67,14 +67,14 @@ async function load_table(page: number, pageSize: number) {
 }
 
 onMounted(async () => {
-	load_table(1, 10);
+	load_table(1, initPageSize);
 });
 </script>
 
 <style lang="less" scoped>
 .content-area {
 	padding: 2rem;
-	height: 50rem;
+	// height: calc(100vh - 20rem);
 	font-size: 1.4rem;
 	line-height: 1.5;
 	color: #fff;

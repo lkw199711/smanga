@@ -76,9 +76,9 @@ function set_screen_type() {
 		config.screenType = 'tablet';
 	} else if (screen < 1920) {
 		config.screenType = 'middle';
-	} else if (screen < 2560) {
+	} else if (screen < 2460) {
 		config.screenType = 'large';
-	} else if (screen < 4096) {
+	} else if (screen < 4000) {
 		config.screenType = '2k';
 	} else {
 		config.screenType = '4k';

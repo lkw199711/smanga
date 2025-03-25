@@ -14,15 +14,15 @@ export default { name: 'table-pager' }
 <script setup lang='ts'>
 import { ref, computed, watch, onMounted } from 'vue';
 import { config } from '@/store';
-const pageSize = ref(10);
-const disabled = ref(false);
-const background = ref(true);
-const pageSizes = ref([10, 20, 30, 40]);
 
 // 传值
-const props = defineProps(['page', 'count', 'pageSizeConfig']);
+const props = defineProps(['page', 'count', 'pageSizeConfig', 'initPageSize']);
 const emit = defineEmits(['pageChange']);
 defineExpose({ page_change, reload_page });
+const pageSize = ref(props.initPageSize || 10);
+const disabled = ref(false);
+const background = ref(true);
+const pageSizes = ref([10, 20, 30, 40, 50, 60, 70]);
 
 let pagerPage = computed(() => {
   return props.page;
