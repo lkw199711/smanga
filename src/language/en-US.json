@@ -283,7 +283,14 @@
     "half": "falf-cut",
     "model": "readModel",
     "imgLoadError": "Image loading failed, click to reload",
-    "jumpPageTitle": "Please enter target page number"
+    "jumpPageTitle": "Please enter target page number",
+    "label": {
+      "useAutoViewWidth": "Display adaptive image size",
+      "setViewWidth": "Set View Width"
+    },
+    "title": {
+      "setViewWidth": "Set View Width"
+    }
   },
   "page": {
     "before": "beforeChapter",

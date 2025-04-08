@@ -283,7 +283,14 @@
     "half": "對半裁剪",
     "model": "閱讀模式",
     "imgLoadError": "圖片加載失敗,點擊重新加載",
-    "jumpPageTitle": "請輸入目標頁碼"
+    "jumpPageTitle": "請輸入目標頁碼",
+    "label": {
+      "useAutoViewWidth": "展示自適應圖片尺寸",
+      "setViewWidth": "設置視圖寬度"
+    },
+    "title": {
+      "setViewWidth": "設置視圖寬度"
+    }
   },
   "page": {
     "before": "上一章",

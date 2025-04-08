@@ -36,11 +36,11 @@
   </div>
 
   <!-- 调整图片宽度 -->
-  <el-dialog v-model="browse.dialogViewWidth" :title="t('browse.jumpPageTitle')" class="dialog-jump-page">
-    <p>展示图片原始宽度</p>
+  <el-dialog v-model="browse.dialogViewWidth" :title="t('browse.title.setViewWidth')" class="dialog-jump-page">
+    <p>{{ t('browse.label.useAutoViewWidth') }}</p>
     <el-switch v-model="browse.useAutoViewWidth" />
     <template v-if="!browse.useAutoViewWidth">
-      <p>设置视图宽度</p>
+      <p>{{ t('browse.label.setViewWidth') }}</p>
       <el-slider v-model="browse.viewWidthValue" :min="0" :max="100" />
     </template>
 
