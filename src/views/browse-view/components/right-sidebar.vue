@@ -16,6 +16,7 @@
 				}}</el-menu-item>
 				<el-menu-item index="operation">{{ operationText }}</el-menu-item>
 				<el-menu-item index="jump">{{ $t('rightSidebar.jumpPageText') }}</el-menu-item>
+				<el-menu-item index="setImageWidth">{{ $t('rightSidebar.setImageWidth') }}</el-menu-item>
 			</el-menu>
 		</el-drawer>
 	</div>
@@ -43,6 +44,7 @@ const emit = defineEmits([
 	'remove_first',
 	'dwonload',
 	'jumpPageNumber',
+	'set_image_width',
 ]);
 
 const removeFirstTitle = computed(() => {
@@ -99,6 +101,9 @@ function menu_select(key: string) {
 			break;
 		case 'jump':
 			emit('jumpPageNumber');
+			break;
+		case 'setImageWidth':
+			emit('set_image_width');
 			break;
 	}
 	close_sidebar();

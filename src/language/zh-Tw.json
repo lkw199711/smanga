@@ -352,7 +352,8 @@
     "editTags": "編輯標簽",
     "baseTagTitle": "備選標簽",
     "ckeckedTagTitle": "當前標簽",
-    "jumpPageText": "頁碼跳轉"
+    "jumpPageText": "頁碼跳轉",
+    "setImageWidth": "設置圖片寬度"
   },
   "createTime": "創建時間",
   "updateTime": "更新時間"

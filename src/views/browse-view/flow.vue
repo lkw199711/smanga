@@ -19,8 +19,9 @@
 			<!-- 列表 -->
 			<div @click="switch_menu" id="flowList" ref="flowList">
 				<van-list v-model:loading="loading" :finished="finished" :immediate-check="false" @load="page_change">
-					<img :ref="'flow-' + index" class="list-img" v-for="(image, index) in browse.imageFileList"
-						:src="image" :key="image" :alt="t('browse.imgLoadError')" @click="load_image(index)" />
+					<img :style="browse.flowViewStyle" :ref="'flow-' + index" class="list-img"
+						v-for="(image, index) in browse.imageFileList" :src="image" :key="image"
+						:alt="t('browse.imgLoadError')" @click="load_image(index)" />
 				</van-list>
 			</div>
 		</van-pull-refresh>
@@ -35,7 +36,8 @@
 		<page-number :page="currentPage" :count="browse.pageCount" />
 
 		<!-- 功能菜单 -->
-		<right-sidebar @dwonload="dwonload_image" @jumpPageNumber="open_jump_dialog" />
+		<right-sidebar @dwonload="dwonload_image" @jumpPageNumber="open_jump_dialog"
+			@set_image_width="browse.dialogViewWidth = true" />
 
 		<!-- 安卓端占位符 -->
 		<div class="bottom-seat" v-if="config.android"></div>
@@ -56,6 +58,25 @@
 			<div class="dialog-footer">
 				<el-button @click="dialogJumpPage = false">{{ t('option.cancel') }}</el-button>
 				<el-button type="primary" @click="jump_page">
+					{{ t('option.confirm') }}
+				</el-button>
+			</div>
+		</template>
+	</el-dialog>
+
+	<!-- 调整图片宽度 -->
+	<el-dialog v-model="browse.dialogViewWidth" :title="t('browse.jumpPageTitle')" class="dialog-jump-page">
+		<p>展示图片原始宽度</p>
+		<el-switch v-model="browse.useAutoViewWidth" />
+		<template v-if="!browse.useAutoViewWidth">
+			<p>设置视图宽度</p>
+			<el-slider v-model="browse.viewWidthValue" :min="0" :max="100" />
+		</template>
+
+		<template #footer>
+			<div class="dialog-footer">
+				<el-button @click="browse.dialogViewWidth = false">{{ t('option.cancel') }}</el-button>
+				<el-button type="primary" @click="() => { browse.set_view_width('flow') }">
 					{{ t('option.confirm') }}
 				</el-button>
 			</div>
@@ -388,6 +409,9 @@ onMounted(() => {
 	if (page < 1) page = 1;
 
 	reload_page(true, page);
+
+	// 加载自定义视图宽度
+	browse.load_view_width('flow');
 
 	window.addEventListener('scroll', scroll_page);
 })

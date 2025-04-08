@@ -353,7 +353,8 @@
     "editTags": "editTags",
     "baseTagTitle": "Alternative tags",
     "ckeckedTagTitle": "Current tag",
-    "jumpPageText": "Jump page number"
+    "jumpPageText": "Jump page number",
+    "setImageWidth": "Set image width"
   },
   "createTime": "createTime",
   "updateTime": "updateTime"

@@ -3,13 +3,14 @@
 	flex-direction: column;
 	height: 100%;
 	user-select: none;
-
+	.scroll{
+		overflow-y: auto;
+	}
 	&-img-box {
+		position: relative;
 		flex: 1;
 		display: flex;
 		justify-content: center;
-		overflow-y: hidden;
-		position: relative;
 	}
 
 	&-img {

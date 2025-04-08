@@ -5,23 +5,27 @@
 
     <!-- 功能菜单 -->
     <right-sidebar :direction="directionDesc" @direction="switch_direction" @dwonload="dwonload_image"
-      :removeFirst="removeFirst" @remove_first="remove_poster" />
+      :removeFirst="removeFirst" @remove_first="remove_poster" @set_image_width="browse.dialogViewWidth = true" />
 
-    <!-- 图片容器 -->
-    <div class="double-page-img-box touch-dom">
-      <bookmark />
-      <template v-if="directionDesc">
-        <img class="double-page-img" :src="imgSrc2" :alt="t('browse.imgLoadError')" v-if="imgSrc2" />
-        <img class="double-page-img" :src="imgSrc1" :alt="t('browse.imgLoadError')" />
-      </template>
-      <template v-else>
-        <img class="double-page-img" :src="imgSrc1" :alt="t('browse.imgLoadError')" />
-        <img class="double-page-img" :src="imgSrc2" :alt="t('browse.imgLoadError')" v-if="imgSrc2" />
-      </template>
+    <div class="scroll" :style="{ display: browse.useAutoViewWidth ? 'flex' : 'block' }">
+      <!-- 图片容器 -->
+      <div class="double-page-img-box touch-dom" :style="{ maxHeight: browse.useAutoViewWidth ? '100%' : 'none' }">
+        <bookmark />
+        <template v-if="directionDesc">
+          <img :style="browse.doubleViewStyle" class="double-page-img" :src="imgSrc2" :alt="t('browse.imgLoadError')"
+            v-if="imgSrc2" />
+          <img :style="browse.doubleViewStyle" class="double-page-img" :src="imgSrc1" :alt="t('browse.imgLoadError')" />
+        </template>
+        <template v-else>
+          <img class="double-page-img" :src="imgSrc1" :alt="t('browse.imgLoadError')" />
+          <img class="double-page-img" :src="imgSrc2" :alt="t('browse.imgLoadError')" v-if="imgSrc2" />
+        </template>
 
-      <operation-cover @before="beforePage" @next="nextPage" @switch-menu="switch_menu"
-        @switch-footer="switch_footer" />
+        <operation-cover @before="beforePage" @next="nextPage" @switch-menu="switch_menu"
+          @switch-footer="switch_footer" />
+      </div>
     </div>
+
 
     <!-- 页码显示 -->
     <page-number :page="page" :count="browse.pageCount" />
@@ -34,6 +38,25 @@
       <el-button class="btn" type="success" plain @click="next_chapter">{{ $t('page.next') }}</el-button>
     </div>
   </div>
+
+  <!-- 调整图片宽度 -->
+  <el-dialog v-model="browse.dialogViewWidth" :title="t('browse.jumpPageTitle')" class="dialog-jump-page">
+    <p>展示图片原始宽度</p>
+    <el-switch v-model="browse.useAutoViewWidth" />
+    <template v-if="!browse.useAutoViewWidth">
+      <p>设置视图宽度</p>
+      <el-slider v-model="browse.viewWidthValue" :min="0" :max="100" />
+    </template>
+
+    <template #footer>
+      <div class="dialog-footer">
+        <el-button @click="browse.dialogViewWidth = false">{{ t('option.cancel') }}</el-button>
+        <el-button type="primary" @click="() => { browse.set_view_width('double') }">
+          {{ t('option.confirm') }}
+        </el-button>
+      </div>
+    </template>
+  </el-dialog>
 </template>
 
 <script setup lang='ts'>
@@ -332,6 +355,8 @@ onMounted(async () => {
 
   if (removeFirst.value) remove_poster();
   if (!directionDesc.value) switch_direction();
+
+  browse.load_view_width('double');
 
   if (userConfig.enableTouchPageChange) {
     touch_page_change();

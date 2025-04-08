@@ -39,7 +39,10 @@ const useBrowseStore = defineStore('browse', {
 		 * 条漫跳页的过程中 pageCount 的变化到导致闪烁
 		 * 如果在跳页的过程中 pageCount 为 0 则使 pageCount 保持上一个有效值
 		 */
-		lastPageCount: 0, 
+		lastPageCount: 0,
+		useAutoViewWidth: true,
+		viewWidthValue: 50,
+		dialogViewWidth: false,
 	}),
 	getters: {
 		/**
@@ -113,6 +116,38 @@ const useBrowseStore = defineStore('browse', {
 
 			return false
 		},
+
+		flowViewStyle: (state) => {
+			if (state.useAutoViewWidth) {
+				return { width: 'auto' };
+			} else {
+				return { width: state.viewWidthValue + '%' };
+			}
+		},
+
+		singleViewStyle: (state) => {
+			if (state.useAutoViewWidth) {
+				return { width: 'auto' };
+			} else {
+				return { width: state.viewWidthValue + '%', maxWidth: 'none', maxHeight: 'none', 'object-fit': 'cover' };
+			}
+		},
+
+		doubleViewStyle: (state) => {
+			if (state.useAutoViewWidth) {
+				return { width: 'auto' };
+			} else {
+				return { width: state.viewWidthValue / 2 + '%', maxWidth: 'none', maxHeight: 'none', 'object-fit': 'cover' };
+			}
+		},
+
+		viewWidth: (state) => {
+			if (state.useAutoViewWidth) {
+				return 'auto';
+			} else {
+				return state.viewWidthValue + '%';
+			}
+		}
 	},
 	actions: {
 		/**
@@ -205,6 +240,29 @@ const useBrowseStore = defineStore('browse', {
 				count: this.pageCount,
 				finish: this.page >= this.pageCount
 			});
+		},
+
+		set_view_width(browseType: string) {
+			const varName = `${browseType}ViewWidthValue`;
+			if (this.useAutoViewWidth) {
+				localStorage.setItem(varName, 'auto');
+			} else {
+				localStorage.setItem(varName, this.viewWidthValue.toString());
+			}
+
+			this.dialogViewWidth = false;
+		},
+
+		load_view_width(browseType: string) {
+			const varName = `${browseType}ViewWidthValue`;
+			const viewWidthValue = localStorage.getItem(varName);
+
+			if (!viewWidthValue || viewWidthValue === 'auto') {
+				this.useAutoViewWidth = true;
+			} else {
+				this.useAutoViewWidth = false;
+				this.viewWidthValue = Number(viewWidthValue);
+			}
 		}
 	},
 });

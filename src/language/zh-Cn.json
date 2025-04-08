@@ -352,7 +352,8 @@
     "editTags": "编辑标签",
     "baseTagTitle": "备选标签",
     "ckeckedTagTitle": "当前标签",
-    "jumpPageText": "跳转页码"
+    "jumpPageText": "跳转页码",
+    "setImageWidth": "设置图片宽度"
   },
   "createTime": "创建时间",
   "updateTime": "更新时间"
