@@ -130,7 +130,7 @@ function submit() {
 	const userName = Cookies.get('userName');
 	const configValue = { userConfig, pageSizeConfig };
 
-	userApi.update_account(+Cookies.get('userId'), {userConfig: configValue});
+	userApi.update_user_config({userConfig: configValue});
 
 }
 
