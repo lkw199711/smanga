@@ -12,12 +12,16 @@ import { chapterType } from '@/type/chapter';
 import chapterApi from '@/api/chapter';
 import historyApi from '@/api/history';
 import latestApi from '@/api/latest';
+import { screenType } from '@/type/store';
+import { config } from '@/store';
+import { mangaPageSize, chapterPageSize } from '@/store/page-size';
+
 const useBrowseStore = defineStore('browse', {
 	state: () => ({
 		mangaListPage: 1,
-		mangaListPageSize: 10,
+		mangaListPageSizeCache: 0,
 		chapterListPage: 1,
-		chapterListPageSize: 10,
+		chapterListPageSizeCache: 0,
 		browseType: 'flow',
 		mediaId: -1,
 		mangaId: -1,
@@ -147,7 +151,33 @@ const useBrowseStore = defineStore('browse', {
 			} else {
 				return state.viewWidthValue + '%';
 			}
-		}
+		},
+		mangaListPageSize: (state) => {
+			// 获取页面尺寸类型
+			const screen: screenType = config.screenType;
+			if (state.mangaListPageSizeCache === 0) {
+				return mangaPageSize[screen][0];
+			} else {
+				return state.mangaListPageSizeCache;
+			}
+		},
+		mangaListPageSizes: (state) => {
+			// 获取页面尺寸类型
+			const screen: screenType = config.screenType;
+			return mangaPageSize[screen];
+		},
+		chapterListPageSize: (state) => {
+			const screen: screenType = config.screenType;
+			if (state.chapterListPageSizeCache === 0) {
+				return chapterPageSize[screen][0];
+			} else {
+				return state.chapterListPageSizeCache;
+			}
+		},
+		chapterListPageSizes: (state) => { 
+			const screen: screenType = config.screenType;
+			return chapterPageSize[screen];
+		},
 	},
 	actions: {
 		/**

@@ -99,7 +99,7 @@
       "directory": "directoryType:",
       "removeFirst": "removeFirst:",
       "direction": "direction:",
-      "autoScan": "auto scan",
+      "autoScan": "scheduled scan",
       "cover": "meida cover"
     },
     "note": {

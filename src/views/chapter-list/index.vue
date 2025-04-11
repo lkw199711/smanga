@@ -15,7 +15,8 @@
 		</div>
 
 		<!--分页组件-->
-		<media-pager ref="pager" :page="page" :count="count" :page-size-config="pageSizes" @page-change="page_change" />
+		<media-pager ref="pager" :page="page" :page-size="browse.chapterListPageSize" :count="count"
+			:page-size-config="browse.chapterListPageSizes" @page-change="page_change" />
 
 		<!--功能菜单-->
 		<right-sidebar :chapterInfo="chapterInfo" :rightSidebarVisible="rightSidebarVisible" @reload="page_change"
@@ -35,13 +36,10 @@ import {
 import { useRoute, useRouter } from 'vue-router';
 import chapterApi from '@/api/chapter';
 import { config, userConfig } from '@/store';
-import { global_set_json } from '@/utils';
 import chapter from '@/components/chapter.vue';
 import mediaPager from '@/components/media-pager.vue';
 import listSkeleton from '@/components/list-skeleton.vue';
 import rightSidebar from './right-sidebar.vue';
-import { screenType } from '@/type/store';
-import { chapterPageSize } from '@/store/page-size';
 import queue from '@/store/quque';
 import useBrowseStore from '@/store/browse';
 const browse = useBrowseStore();
@@ -55,19 +53,8 @@ let list = ref([]);
 let chapterInfo = ref({});
 let loading = ref(false);
 
-let pageSizes: number[] = [];
 let defaultPageSize = 10;
 let rightSidebarVisible = ref(false);
-
-get_page_size_array();
-
-function get_page_size_array() {
-	// 获取默认的页面容量
-	const screen: screenType = config.screenType;
-
-	pageSizes = chapterPageSize[screen];
-	defaultPageSize = chapterPageSize[screen][0];
-}
 
 const mangaId = Number(route.query.mangaId);
 
@@ -131,13 +118,19 @@ function touch_page_change() {
 	})
 }
 
-function go_browse(item: any) {
+function go_browse(chapter: any) {
+	if (chapter?.latest) {	
+		browse.page = chapter.latest.page;
+	} else {
+		browse.page = 1;
+	}
+
 	const newUrl = router.resolve({
-		name: item.browseType,
+		name: chapter.browseType,
 		query: {
-			mediaId: item.mediaId,
-			mangaId: item.mangaId,
-			chapterId: item.chapterId
+			mediaId: chapter.mediaId,
+			mangaId: chapter.mangaId,
+			chapterId: chapter.chapterId
 		}
 	});
 
@@ -187,7 +180,7 @@ async function page_change(
 
 	// 缓存页码信息
 	browse.chapterListPage = page.value;
-	browse.chapterListPageSize = pageSize;
+	browse.chapterListPageSizeCache = pageSize;
 }
 
 function load() {

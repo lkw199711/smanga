@@ -99,7 +99,7 @@
       "directory": "文件夹结构:",
       "removeFirst": "剔除首页:",
       "direction": "翻页方向:",
-      "autoScan": "自动扫描",
+      "autoScan": "定时扫描",
       "cover": "媒体库封面"
     },
     "note": {

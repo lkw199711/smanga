@@ -15,7 +15,8 @@
     </div>
 
     <!--分页-->
-    <media-pager ref="pager" :page="page" :count="count" :page-size-config="pageSizes" @page-change="page_change" />
+    <media-pager ref="pager" :page="page" :page-size="browse.chapterListPageSize" :count="count"
+      :page-size-config="browse.chapterListPageSizes" @page-change="page_change" />
 
     <!--功能菜单-->
     <right-sidebar :info="chapterInfo" :menuPoster="menuPoster" @reload="page_change" />
@@ -31,25 +32,11 @@ import MediaPager from '@/components/media-pager.vue';
 import rightSidebar from './components/right-sidebar.vue';
 import { chapterType } from '@/type/chapter';
 import { useRoute, useRouter } from 'vue-router';
-import { screenType } from '@/type/store';
-import { chapterPageSize } from '@/store/page-size';
 import listSkeleton from '@/components/list-skeleton.vue';
 import queue from '@/store/quque';
 import useBrowseStore from '@/store/browse';
 const browse = useBrowseStore();
-let pageSizes: number[] = [];
-let defaultPageSize = 10;
 let loading = ref(false);
-
-get_page_size_array();
-
-function get_page_size_array() {
-  // 获取默认的页面容量
-  const screen: screenType = config.screenType;
-
-  pageSizes = chapterPageSize[screen];
-  defaultPageSize = chapterPageSize[screen][0];
-}
 
 const route = useRoute();
 const router = useRouter();
@@ -86,7 +73,7 @@ async function go_browse(item: any) {
  * @param page
  * @param pageSize
  */
-async function page_change(pageParams = 1, pageSize: number = defaultPageSize) {
+async function page_change(pageParams = 1, pageSize: number = 10) {
 
   if (pageParams !== 1 && count.value !== -1 && pageParams > Math.ceil(count.value / pageSize)) return;
   if (pageParams < 1) return;
@@ -109,7 +96,7 @@ async function page_change(pageParams = 1, pageSize: number = defaultPageSize) {
 
   // 缓存页码
   browse.chapterListPage = pageParams;
-  browse.chapterListPageSize = pageSize;
+  browse.chapterListPageSizeCache = pageSize;
 }
 
 /**
