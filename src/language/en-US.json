@@ -361,7 +361,9 @@
     "baseTagTitle": "Alternative tags",
     "ckeckedTagTitle": "Current tag",
     "jumpPageText": "Jump page number",
-    "setImageWidth": "Set image width"
+    "setImageWidth": "Set image width",
+    "requestFullscreen": "Full screen page",
+    "exitFullscreen": "Exit Full Screen"
   },
   "createTime": "createTime",
   "updateTime": "updateTime"

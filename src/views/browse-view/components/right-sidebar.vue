@@ -7,16 +7,18 @@
 				@select="menu_select">
 				<el-menu-item v-if="idDouble" index="remove-first">{{
 					removeFirstTitle
-				}}</el-menu-item>
+					}}</el-menu-item>
 				<el-menu-item index="bookmark">{{ bookmarkTitle }}</el-menu-item>
 				<el-menu-item v-if="idDouble" index="direction">{{ $t('option.direction') }} ({{ directionTitle
-				}})</el-menu-item>
+					}})</el-menu-item>
 				<el-menu-item index="dwonload">{{
 					$t('option.dwonload')
-				}}</el-menu-item>
+					}}</el-menu-item>
 				<el-menu-item index="operation">{{ operationText }}</el-menu-item>
 				<el-menu-item index="jump">{{ $t('rightSidebar.jumpPageText') }}</el-menu-item>
 				<el-menu-item index="setImageWidth">{{ $t('rightSidebar.setImageWidth') }}</el-menu-item>
+				<el-menu-item index="requestFullscreen">{{ $t('rightSidebar.requestFullscreen') }}</el-menu-item>
+				<el-menu-item index="exitFullscreen">{{ $t('rightSidebar.exitFullscreen') }}</el-menu-item>
 			</el-menu>
 		</el-drawer>
 	</div>
@@ -104,6 +106,22 @@ function menu_select(key: string) {
 			break;
 		case 'setImageWidth':
 			emit('set_image_width');
+			break;
+		case 'requestFullscreen':
+			if (document.documentElement.requestFullscreen) {
+				document.documentElement.requestFullscreen();
+			} else if (document.documentElement.webkitRequestFullscreen) {
+				document.documentElement.webkitRequestFullscreen();
+			} else if (document.documentElement.mozRequestFullScreen) {
+				document.documentElement.mozRequestFullScreen();
+			} else if (document.documentElement.msRequestFullscreen) {
+				document.documentElement.msRequestFullscreen();
+			}
+			break;
+		case 'exitFullscreen':
+			if (document.fullscreenElement) {
+				document.exitFullscreen();
+			}
 			break;
 	}
 	close_sidebar();
