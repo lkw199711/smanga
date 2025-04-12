@@ -18,7 +18,7 @@
 			</el-form>
 
 			<p class="app-box">
-				<a href="/file/smanga1.1.apk">下载Android应用</a>
+				<a href="/data/file/smanga1.1.apk">下载Android应用</a>
 			</p>
 
 			<!--按钮盒子-->
