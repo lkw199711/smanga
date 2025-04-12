@@ -18,7 +18,7 @@
 			</el-form>
 
 			<p class="app-box">
-				<a href="/data/file/smanga1.1.apk">下载Android应用</a>
+				<a href="#" @click="download_apk">下载Android应用</a>
 			</p>
 
 			<!--按钮盒子-->
@@ -83,7 +83,15 @@ export default defineComponent({
 			// 取1-16的一个数据整数
 			let num = Math.floor(Math.random() * 16) + 1;
 			return 'bg' + num;
-		}
+		},
+		/**
+		 * @param event {MouseEvent} 事件
+		 * @description 下载apk文件
+		 */
+		async download_apk(event: MouseEvent) {
+			event.preventDefault();
+			await loginApi.download_apk();
+		},
 	},
 
 	// 生命周期
