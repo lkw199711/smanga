@@ -108,12 +108,12 @@ function touch_page_change() {
 
 		// 向左滑动,向右翻页
 		if (moveX < -100 && page.value < count.value) {
-			page_change(++page.value);
+			page_change(++page.value, browse.mangaListPageSize);
 		}
 
 		// 向右滑动,向左翻页
 		if (moveX > 100 && page.value > 1) {
-			page_change(--page.value);
+			page_change(--page.value, browse.mangaListPageSize);
 		}
 
 
@@ -128,7 +128,7 @@ function touch_page_change() {
  */
 async function page_change(
 	pageParams = 1,
-	pageSize: number
+	pageSize: number = 10
 ) {
 	const byParentPath = route.query.byParentPath;
 	const parentPath = route.query.parentPath;
