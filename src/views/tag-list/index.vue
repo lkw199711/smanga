@@ -136,10 +136,16 @@ async function page_change(
 ) {
     page.value = pageC;
     mangaList.value = [];
-    const res = await mangaApi.get_by_tags(tagIds.value, page.value, pageSize, userConfig.order);
-    mangaList.value = res.list;
-    count.value = res.count;
 
+    if (tagIds.value === '') {
+        count.value = 0;
+        return;
+    } else {
+        const res = await mangaApi.get_by_tags(tagIds.value, page.value, pageSize, userConfig.order);
+        mangaList.value = res.list;
+        count.value = res.count;
+    }
+    
     browse.mangaListPage = page.value;
     browse.mangaListPageSizeCache = pageSize;
 }
