@@ -90,7 +90,7 @@ function set_screen_type() {
 
 async function get_setting() {
 	const res = await userApi.get_user_config();
-	let configValue = {};
+	let configValue = {} as any;
 
 	if (typeof res === 'string') {
 		configValue = JSON.parse(res);
@@ -103,6 +103,13 @@ async function get_setting() {
 	// 使用数据库用户设置，覆盖当前设置
 	Object.assign(userConfig, configValue.userConfig);
 	Object.assign(pageSizeConfig, configValue.pageSizeConfig);
+
+	if (userConfig?.mangaPageSize != 0) {
+		browse.mangaListPageSizeCache = Number(localStorage.getItem('mangaPageSize')) || 0;
+	}
+	if (userConfig?.chapterPageSize != 0) {
+		browse.chapterListPageSizeCache = Number(localStorage.getItem('chapterPageSize')) || 0;
+	}
 
 	// 对于功能页面 优先从缓存中加载用户配置
 	global_set_json('userConfig', userConfig);

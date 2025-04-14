@@ -165,6 +165,7 @@ const routes: Array<RouteRecordRaw> = [
 		meta: {
 			submenu: true,
 			sidebar: true,
+			onlyAdmin: true,
 			title: 'manage',
 			icon: 'manage',
 			view: 'setting',
@@ -313,6 +314,7 @@ const routes: Array<RouteRecordRaw> = [
 				name: 'serve-setting',
 				meta: {
 					sidebar: true,
+					onlyAdmin: true,
 					title: 'serveSetting',
 					icon: 'shezhi',
 					view: 'default',
@@ -324,6 +326,7 @@ const routes: Array<RouteRecordRaw> = [
 				name: 'log',
 				meta: {
 					sidebar: true,
+					onlyAdmin: true,
 					title: 'log',
 					icon: 'log',
 					view: 'searchOnly',

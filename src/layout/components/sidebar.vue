@@ -12,11 +12,10 @@
       </el-menu-item>
 
       <template v-for="routeItem in routes" :key="routeItem.path">
-        <template v-if="routeItem.meta.sidebar && userLimit(routeItem)">
+        <template v-if="menuVisible(routeItem)">
 
           <el-sub-menu :index="routeItem.path" v-if="routeItem.meta.submenu">
             <template #title>
-              <!-- <i :class="['sidebar-sub-icon', 'colour', 'colour-' + routeItem.meta.icon]"></i> -->
               <i :class="['sidebar-sub-icon', 'colour']">
                 <svg class="icon" aria-hidden="true">
                   <use :xlink:href="'#colour-' + routeItem.meta.icon"></use>
@@ -27,7 +26,7 @@
             </template>
 
             <template v-for="childrenItem in routeItem.children" :key="childrenItem.path">
-              <template v-if="childrenItem.meta.sidebar">
+              <template v-if="menuVisible(childrenItem)">
                 <el-menu-item :index="childrenItem.path">
                   <i :class="['sidebar-icon', 'colour', { 'collapse': config.sidebarCollapse }]">
                     <svg class="icon" aria-hidden="true">
@@ -66,11 +65,10 @@
         </el-menu-item>
 
         <template v-for="routeItem in routes" :key="routeItem.path">
-          <template v-if="routeItem.meta.sidebar && userLimit(routeItem)">
+          <template v-if="menuVisible(routeItem)">
 
             <el-sub-menu :index="routeItem.path" v-if="routeItem.meta.submenu">
               <template #title>
-                <!-- <i :class="['sidebar-sub-icon', 'colour', 'colour-' + routeItem.meta.icon]"></i> -->
                 <i :class="['sidebar-sub-icon', 'colour']">
                   <svg class="icon" aria-hidden="true">
                     <use :xlink:href="'#colour-' + routeItem.meta.icon"></use>
@@ -81,7 +79,7 @@
               </template>
 
               <template v-for="childrenItem in routeItem.children" :key="childrenItem.path">
-                <template v-if="childrenItem.meta.sidebar">
+                <template v-if="menuVisible(childrenItem)">
                   <el-menu-item :index="childrenItem.path">
                     <i :class="['sidebar-icon', 'colour', { 'collapse': config.sidebarCollapse }]">
                       <svg class="icon" aria-hidden="true">
@@ -112,14 +110,11 @@
 <script lang="ts" setup>
 import { ref, onMounted, computed } from 'vue'
 import router from '@/router';
-import { config, power } from '@/store';
+import { config } from '@/store';
 import Logo from "@/layout/components/logo.vue";
-import { useI18n } from "vue-i18n";
-import { useRoute, useRouter } from 'vue-router';
+import { useRoute } from 'vue-router';
 import { Cookies } from '@/utils';
 const route = useRoute();
-const uRouter = useRouter();
-const { t } = useI18n();
 
 type routeItem = {
   meta: {
@@ -131,12 +126,6 @@ type routeItem = {
   path: string;
   name: string;
   children: routeItem[];
-}
-
-const show = ref(true);
-
-const go_home = () => {
-  router.push('/');
 }
 
 const routes = computed<routeItem[]>(() => {
@@ -157,16 +146,21 @@ const menuActive = computed(() => {
 
 })
 
-const userLimit = computed(() => (item: any) => {
-  const isAdmin = Cookies.get('role') === 'admin';
-  const title = item.meta.title;
+const menuVisible = computed(() => (router: any) => {
+  // 路由是否显示在侧边栏
+  const showSidebar = router.meta?.sidebar;
+  if(!showSidebar) {
+    return false;
+  }
 
-  if (title === 'manage' && !isAdmin) {
+  // 是否需要管理员权限
+  const isAdmin = Cookies.get('role') === 'admin';
+  const onlyAdmin = router.meta?.onlyAdmin;
+
+  if (onlyAdmin && !isAdmin) {
     return false;
   }
-  if (title === 'setting' && !isAdmin) {
-    return false;
-  }
+
   return true;
 
 })
