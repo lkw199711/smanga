@@ -90,7 +90,7 @@ export default { name: 'browse-views' }
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue';
 import imageApi from '@/api/image';
-import { window_go_top } from '@/utils';
+import { delay, window_go_top } from '@/utils';
 import { ElMessage as msg } from 'element-plus';
 import { config } from '@/store';
 import i18n from '@/i18n';
@@ -163,10 +163,15 @@ async function page_change() {
 	// 页码递增
 	++page;
 
-	// 是否完成页面初始化加载,未完成则再次加载图片
-	page < initPage && setTimeout(async () => {
+	const screenHeight = window.screen.height;
+
+	const listHeight = flowList.value?.scrollHeight || 0;
+
+	// 当图片列表小于屏幕高度时 继续加载图片
+	if (listHeight < screenHeight) {		
+		// await delay(1000);
 		await page_change()
-	}, 1000);
+	}
 }
 
 /**
