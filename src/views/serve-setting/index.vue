@@ -108,6 +108,7 @@ let backRandom = ref(true);
 
 const form = reactive({
     scan: {
+        autoCompress: 0,
         interval: 60
     },
     ssl: {
@@ -146,7 +147,7 @@ async function comfirm_interval() {
  * @return {*}
  */
 async function comfirm_auto_compressl() {
-    serveSettingApi.set('scan', 'autoCompress', form.autoCompress)
+    serveSettingApi.set('scan', 'autoCompress', form.scan.autoCompress)
 }
 
 async function confirm_poster_size() {

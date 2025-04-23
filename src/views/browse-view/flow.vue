@@ -101,7 +101,9 @@ import bookmark from './components/bookmark.vue';
 import pageNumber from './components/page-number.vue';
 import { useRoute, useRouter } from 'vue-router';
 import chapterApi from '@/api/chapter';
+import queue from '@/store/quque';
 import useBrowseStore from '@/store/browse';
+import _ from 'lodash';
 const { t } = i18n.global;
 const route = useRoute();
 const router = useRouter();
@@ -124,7 +126,7 @@ const initPage = 3;
 const loading = ref(false);
 // 是否加载完全部图片
 let finished = ref(false);
-
+let lastImageShown = ref(false);
 // ref dom
 const flowList = ref();
 
@@ -141,7 +143,7 @@ watch(currentPage, (currentPage) => {
 	// 记录当前图片
 	browse.pageImage = pageImage;
 	// 保存阅读记录
-	browse.save_latest();
+	browse.save_latest(lastImageShown.value);
 })
 
 /**
@@ -151,7 +153,7 @@ async function page_change() {
 	// 无数据 退出
 	if (!browse.imagePathList?.length) {
 		loading.value = false;
-		return false;
+		return;
 	}
 
 	// 是否加载完全部
@@ -163,14 +165,13 @@ async function page_change() {
 	// 页码递增
 	++page;
 
-	const screenHeight = window.screen.height;
-
-	const listHeight = flowList.value?.scrollHeight || 0;
-
 	// 当图片列表小于屏幕高度时 继续加载图片
-	if (listHeight < screenHeight) {		
-		// await delay(1000);
-		await page_change()
+	const screenHeight = window.screen.height;
+	const listHeight = flowList.value?.scrollHeight || 0;
+	if (listHeight < screenHeight) {
+		queue.flowQueue.add(page_change)
+		// await delay(500);
+		// await page_change()
 	}
 }
 
@@ -185,7 +186,7 @@ async function before_page() {
 	}
 
 	// 向前加载一页
-	await load_image(--beforeBookMark, 0, true);
+	await load_image(--beforeBookMark, true);
 
 	// 重新计算当前页码
 	scroll_page();
@@ -201,23 +202,12 @@ async function before_page() {
  * @param {*} unshift
  * @return {*}
  */
-async function load_image(index: number, errNum = 0, unshift = false) {
-	// 重新请教超过三次 取消此图片加载
-	if (errNum > 3) return false;
-
+async function load_image(index: number, unshift = false) {
 	// 无数据 退出
 	if (!browse.imagePathList[index]) return false;
 	const mangaId = Number(route.query.mangaId);
 	const chapterId = Number(route.query.chapterId);
-	const [res, err] = await imageApi.chapter_img(browse.imagePathList[index], index + 1, chapterId, mangaId).then(res => [res, null]).catch(err => [null, err]);
-
-	// 错误处理
-	if (err) {
-		setTimeout(() => {
-			load_image(index, errNum + 1);
-		}, 1000)
-		return;
-	}
+	const res = await imageApi.chapter_img(browse.imagePathList[index], index + 1, chapterId, mangaId)
 
 	if (unshift) {
 		browse.imageFileList.unshift(res);
@@ -277,11 +267,11 @@ async function reload_page(clearPage = true, pageParams = 1) {
 			break;
 		case 'compressed':
 			browse.imagePathList = res.list;
-			page_change();
+			await page_change()
 			break;
 		default:
 			browse.imagePathList = res.list;
-			page_change();
+			await page_change();
 	}
 
 	browse.save_history();
@@ -366,13 +356,17 @@ function switch_menu() {
 function scroll_page() {
 	const flowListDom = flowList.value;
 	const scrollY = window.scrollY;
+	const maxScrollY = document.documentElement.scrollHeight - window.innerHeight;
 
 	if (!flowListDom) return 0;
 
 	let imgs = flowListDom.getElementsByTagName('img');
 
+	// 当滚动到页面底部 记录阅读完成
+	lastImageShown.value = finished.value && scrollY === maxScrollY;
+
 	for (let i = 0; i < imgs.length; i++) {
-		if (scrollY <= imgs[i].offsetTop) {
+		if (scrollY <= imgs[i].offsetTop) {		
 			currentPage.value = i + beforeBookMark + 1;
 			return;
 		}
@@ -418,7 +412,13 @@ onMounted(() => {
 	// 加载自定义视图宽度
 	browse.load_view_width('flow');
 
-	window.addEventListener('scroll', scroll_page);
+	// 原生
+	// window.addEventListener('scroll', scroll_page);
+
+	// 防抖
+	window.addEventListener('scroll', _.debounce(scroll_page, 50), { passive: true });
+	// 节流
+	// window.addEventListener('scroll', _.throttle(scroll_page, 100), { passive: true });
 })
 
 

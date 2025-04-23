@@ -174,7 +174,7 @@ const useBrowseStore = defineStore('browse', {
 				return state.chapterListPageSizeCache;
 			}
 		},
-		chapterListPageSizes: (state) => { 
+		chapterListPageSizes: (state) => {
 			const screen: screenType = config.screenType;
 			return chapterPageSize[screen];
 		},
@@ -260,7 +260,7 @@ const useBrowseStore = defineStore('browse', {
 		/**
 		 * @description: 保存最近阅读
 		 */
-		async save_latest() {
+		async save_latest(lastImageShown: boolean = false) {
 			// 刚开始观看不保留记录
 			if (this.page < 2) return;
 			await latestApi.add({
@@ -268,7 +268,7 @@ const useBrowseStore = defineStore('browse', {
 				chapterId: this.chapterId,
 				page: this.page,
 				count: this.pageCount,
-				finish: this.page >= this.pageCount
+				finish: lastImageShown || this.page >= this.pageCount - 1
 			});
 		},
 
