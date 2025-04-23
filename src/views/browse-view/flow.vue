@@ -18,7 +18,8 @@
 		<van-pull-refresh v-model="loading" @refresh="before_page">
 			<!-- 列表 -->
 			<div @click="switch_menu" id="flowList" ref="flowList">
-				<van-list v-model:loading="loading" :finished="finished" :immediate-check="false" @load="page_change">
+				<van-list v-model:loading="loading" :finished="finished" :immediate-check="false"
+					@load="()=>{queue.flowQueue.add(page_change)}">
 					<img :style="browse.flowViewStyle" :ref="'flow-' + index" class="list-img"
 						v-for="(image, index) in browse.imageFileList" :src="image" :key="image"
 						:alt="t('browse.imgLoadError')" @click="load_image(index)" />
@@ -120,8 +121,6 @@ const showSmallJumpPage = computed(() => {
 
 // 当前真实页码 从零开始
 let page = 1;
-// 初始加载页码数量
-const initPage = 3;
 // 是否正在加载图片
 const loading = ref(false);
 // 是否加载完全部图片
@@ -170,8 +169,6 @@ async function page_change() {
 	const listHeight = flowList.value?.scrollHeight || 0;
 	if (listHeight < screenHeight) {
 		queue.flowQueue.add(page_change)
-		// await delay(500);
-		// await page_change()
 	}
 }
 
@@ -258,7 +255,7 @@ async function reload_page(clearPage = true, pageParams = 1) {
 			if (res.list.length > browse.imageFileList.length) {
 				browse.imagePathList = res.list;
 				finished.value = false;
-				page_change();
+				queue.flowQueue.add(page_change);
 			}
 			// 再次加载解压进度
 			setTimeout(() => {
@@ -267,11 +264,11 @@ async function reload_page(clearPage = true, pageParams = 1) {
 			break;
 		case 'compressed':
 			browse.imagePathList = res.list;
-			await page_change()
+			queue.flowQueue.add(page_change);
 			break;
 		default:
 			browse.imagePathList = res.list;
-			await page_change();
+			queue.flowQueue.add(page_change);
 	}
 
 	browse.save_history();
@@ -366,7 +363,7 @@ function scroll_page() {
 	lastImageShown.value = finished.value && scrollY === maxScrollY;
 
 	for (let i = 0; i < imgs.length; i++) {
-		if (scrollY <= imgs[i].offsetTop) {		
+		if (scrollY <= imgs[i].offsetTop) {
 			currentPage.value = i + beforeBookMark + 1;
 			return;
 		}
