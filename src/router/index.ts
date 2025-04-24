@@ -182,7 +182,7 @@ const routes: Array<RouteRecordRaw> = [
 					icon: 'person',
 					view: 'setting',
 				},
-				component: () => import('../views/account/index.vue'),
+				component: () => import('../views/user-manage/index.vue'),
 			},
 			// 媒体库设置
 			{
@@ -230,7 +230,7 @@ const routes: Array<RouteRecordRaw> = [
 					icon: 'chapter-manage',
 					view: 'setting',
 				},
-				component: () => import('../views/chapter-setting/index.vue'),
+				component: () => import('../views/chapter-manage/index.vue'),
 			},
 			// 书签管理
 			{
@@ -242,7 +242,7 @@ const routes: Array<RouteRecordRaw> = [
 					icon: 'bookmark',
 					view: 'setting',
 				},
-				component: () => import('../views/bookmark-setting/index.vue'),
+				component: () => import('../views/bookmark-manage/index.vue'),
 			},
 			// 标签管理
 			{
@@ -266,7 +266,7 @@ const routes: Array<RouteRecordRaw> = [
 					icon: 'compress',
 					view: 'setting',
 				},
-				component: () => import('../views/compress-setting/index.vue'),
+				component: () => import('../views/compress-manage/index.vue'),
 			},
 			// 任务管理
 			{

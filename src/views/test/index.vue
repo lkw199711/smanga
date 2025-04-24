@@ -36,12 +36,9 @@
 </template>
 
 <script lang="ts" setup>
-import { defineComponent } from 'vue';
-import { testAxios } from '@/api/test';
 import { ref, onMounted, onBeforeUnmount } from 'vue';
 import { ElMessageBox } from 'element-plus';
 import { ajax } from '@/api';
-import { Cookies } from '@/utils';
 
 const drawer = ref(false);
 const drawer2 = ref(false);

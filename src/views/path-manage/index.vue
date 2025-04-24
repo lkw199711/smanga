@@ -139,7 +139,7 @@ async function load_table(page = 1, pageSize = browse.manageListPageSize) {
  */
 function reload_table() {
   tableData.value = [];
-  load_table(browse.manageListPage, browse.manageListPageSizeCache);
+  load_table(browse.manageListPage, browse.manageListPageSize);
 }
 /**
  * 删除漫画
@@ -221,4 +221,25 @@ function cancel_edit_path() {
 
 </script>
 
-<style src='./style/index.less' scoped lang='less'></style>
+<style scoped lang='less'>
+@media only screen and (min-width: 1200px) {
+  .path-setting-box {
+    width: 100rem;
+    margin: 3rem auto;
+  }
+}
+
+@media only screen and (max-width: 1199px) and (min-width: 768px) {
+  .path-setting-box {
+    width: 72rem;
+    margin: 2rem auto;
+  }
+}
+
+@media only screen and (max-width: 767px) {
+  .path-setting-box {
+    width: 72rem;
+    margin: 1rem auto;
+  }
+}
+</style>

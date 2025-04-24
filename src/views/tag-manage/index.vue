@@ -48,7 +48,7 @@
       </el-table>
 
       <!--分页-->
-      <table-pager ref="pager" @pageChange="load_table" :count="count" />
+      <table-pager ref="pager" @pageChange="load_table" :page-size="browse.manageListPageSize" :count="count" />
 
       <!-- 新增标签弹框 -->
       <el-dialog :title="$t('tagSetting.dialog.addTitle')" v-model="addTagDialog">
@@ -119,6 +119,9 @@ import { ElMessage, ElMessageBox } from 'element-plus';
 import tagApi, { tagParams } from '@/api/tag';
 import tablePager from '@/components/table-pager.vue';
 import i18n from '@/i18n';
+import useBrowseStore from '@/store/browse';
+
+const browse = useBrowseStore();
 
 const { t } = i18n.global;
 const pager = ref();
@@ -186,9 +189,11 @@ async function add_tag() {
  */
 async function load_table(page = 1, pageSize = 10) {
   const res = await tagApi.get(page, pageSize);
-
   count.value = res.count;
   tableData.value = res.list;
+
+  browse.manageListPage = page;
+  browse.manageListPageSizeCache = pageSize;
 }
 
 
@@ -197,7 +202,8 @@ async function load_table(page = 1, pageSize = 10) {
  * @return {*}
  */
 function reload_table() {
-  pager.value.reload_page();
+  tableData.value = [];
+  load_table(browse.manageListPage, browse.manageListPageSize);
 }
 
 /**

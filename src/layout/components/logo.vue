@@ -4,33 +4,8 @@
   </div>
 </template>
 
-<script lang='ts'>
-import {defineComponent} from 'vue'
-
-export default defineComponent({
-  name: 'logo',
-  // 数据
-  data() {
-    return {}
-  },
-
-  // 传值
-  props: [],
-
-  // 引用
-  computed: {},
-
-  // 组件
-  components: {},
-
-  // 方法
-  methods: {},
-
-  // 生命周期
-  created() {
-  },
-})
-</script>
+<script lang='ts'>export default {name:'logo'}</script>
+<script lang='ts' setup></script>
 
 <style scoped lang='less'>
 .logo.posted {

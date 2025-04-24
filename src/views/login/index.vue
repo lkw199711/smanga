@@ -30,86 +30,74 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+export default {
+	name: 'login',
+};
+</script>
+<script lang="ts" setup>
+import { ref, reactive, onMounted } from 'vue';
+import { useRouter } from 'vue-router';
 import { Cookies } from '@/utils';
-
-import { power, userInfo } from '@/store';
+import { userInfo } from '@/store';
 import loginApi from '@/api/login';
 
-export default defineComponent({
-	name: 'index',
-	// 数据
-	data() {
-		return {
-			form: {
-				userName: '',
-				passWord: '',
-			},
-			showDatabase: false,
-			backClass: 'bg' + 1,
-		};
-	},
+const router = useRouter();
 
-	// 传值
-	props: [],
-
-	// 计算
-	computed: {
-
-	},
-
-	// 组件
-	components: {},
-
-	// 方法
-	methods: {
-		async do_login() {
-			const loginResponse = await loginApi.login(this.form);
-
-			if (!loginResponse) return;
-			// 缓存用户信息
-			Object.assign(userInfo, loginResponse);
-			Cookies.set('userName', loginResponse.userName);
-			Cookies.set('userId', loginResponse.userId);
-			Cookies.set('token', loginResponse.token);
-			Cookies.set('header', loginResponse.header);
-			Cookies.set('token', loginResponse.token)
-			Cookies.set('role', loginResponse.userRole)
-
-			await this.$router.push('media-list');
-
-		},
-		getBackActive() {
-			// 取1-16的一个数据整数
-			let num = Math.floor(Math.random() * 16) + 1;
-			return 'bg' + num;
-		},
-		/**
-		 * @param event {MouseEvent} 事件
-		 * @description 下载apk文件
-		 */
-		async download_apk(event: MouseEvent) {
-			event.preventDefault();
-			await loginApi.download_apk();
-		},
-	},
-
-	// 生命周期
-	created() {
-		document.onkeypress = (e) => {
-			const keycode = document.all ? e.keyCode : e.which;
-			if (keycode === 13) {
-				this.do_login();
-				return false;
-			}
-		};
-
-		this.backClass = this.getBackActive();
-
-		const val = localStorage.getItem('activeBack');
-		if (val && val !== '0') this.backClass = 'bg' + val;
-	},
+const form = reactive({
+	userName: '',
+	passWord: '',
 });
+const showDatabase = ref(false);
+const backClass = ref('bg' + 1);
+
+onMounted(() => {
+	document.onkeypress = (e) => {
+		const keycode = document.all ? e.keyCode : e.which;
+		if (keycode === 13) {
+			do_login();
+			return false;
+		}
+	};
+
+	backClass.value = getBackActive();
+
+	const val = localStorage.getItem('activeBack');
+	if (val && val !== '0') backClass.value = 'bg' + val;
+})
+
+
+async function do_login() {
+	const loginResponse = await loginApi.login(form);
+
+	if (!loginResponse) return;
+	// 缓存用户信息
+	Object.assign(userInfo, loginResponse);
+	Cookies.set('userName', loginResponse.userName);
+	Cookies.set('userId', loginResponse.userId);
+	Cookies.set('token', loginResponse.token);
+	Cookies.set('header', loginResponse.header);
+	Cookies.set('token', loginResponse.token)
+	Cookies.set('role', loginResponse.userRole)
+
+	await router.push('media-list');
+
+}
+
+function getBackActive() {
+	// 取1-16的一个数据整数
+	let num = Math.floor(Math.random() * 16) + 1;
+	return 'bg' + num;
+}
+
+/**
+ * @param event {MouseEvent} 事件
+ * @description 下载apk文件
+ */
+async function download_apk(event: MouseEvent) {
+	event.preventDefault();
+	await loginApi.download_apk();
+}
+
 </script>
 
 <style scoped lang="less">

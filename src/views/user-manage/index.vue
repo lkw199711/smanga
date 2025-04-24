@@ -37,7 +37,7 @@
         </el-table-column>
       </el-table>
       <!--分页-->
-      <table-pager ref="pager" @pageChange="load_table" :count="count" />
+      <table-pager ref="pager" @pageChange="load_table" :page-size="browse.manageListPageSize" :count="count" />
     </div>
 
     <el-dialog :title="$t('account.add')" v-model="addDialog" :before-close="add_dialog_close">
@@ -124,7 +124,183 @@
   </div>
 </template>
 
-<script lang='ts' src="./script/index.ts"></script>
+<script lang="ts">export default { name: 'user-manage' }</script>
+<script lang='ts' setup>
+import { ref, reactive, onMounted } from 'vue';
+import userApi from '@/api/account';
+import { Plus, Edit, Delete } from '@element-plus/icons-vue';
+import { ElMessage, ElMessageBox } from 'element-plus';
+import tablePager from '@/components/table-pager.vue';
+import i18n from '@/i18n';
+import mediaApi from '@/api/media';
+import useBrowseStore from '@/store/browse';
+import type { mediaType } from '@/type/media';
+type mediaType1 = mediaType & { permit: boolean };
+const browse = useBrowseStore();
+
+const { t } = i18n.global;
+
+const count = ref(0);
+const addDialog = ref(false);
+const dialogFormVisible = ref(false);
+const dialogPower = ref(false);
+const tableData = ref([]);
+const form = reactive({
+  userId: 0,
+  userName: '',
+  passWord: '',
+  role: 'admin',
+  mediaPermit: 'all',
+});
+const formInit = reactive({
+  userId: 0,
+  userName: '',
+  passWord: '',
+});
+const medias = ref<mediaType1[]>([]);
+
+onMounted(async () => {
+  const res = await mediaApi.get(1, 10000);
+  const medias = res.list;
+  medias.value = medias;
+  load_table();
+})
+
+
+/**
+ * 编辑用户
+ * @param index
+ * @param val
+ */
+function handleEdit(index: number, val: any) {
+  dialogFormVisible.value = true;
+  Object.assign(form, val);
+  form.passWord = '';
+
+  // 加载媒体库许可列表
+  medias.value.map((i: any) => {
+    i.permit = val.mediaPermissons.includes(i.mediaId);
+  });
+}
+
+/**
+ * 删除用户
+ * @param index
+ * @param val
+ * @returns {Promise<void>}
+ */
+async function handleDelete(index: number, val: any) {
+  ElMessageBox.confirm(
+    t('account.confirmBoxTitle'),
+    t('account.confirmBoxText'),
+    {
+      type: 'warning',
+    }
+  )
+    .then(async () => {
+      const res = await userApi.delete_account(val.userId);
+
+      if (res.code === 0) {
+        reload_table();
+      }
+    })
+    .catch(() => { });
+}
+
+function reload_table() {
+  tableData.value = [];
+  load_table(browse.manageListPage, browse.manageListPageSize);
+}
+/**
+ * 加载表格
+ * @returns {Promise<void>}
+ */
+async function load_table(page = 1, pageSize = browse.manageListPageSize) {
+  const res = await userApi.get_account(page, pageSize);
+  count.value = Number(res.count);
+  tableData.value = res.list;
+
+  browse.manageListPage = page;
+  browse.manageListPageSizeCache = pageSize;
+}
+/**
+ * 更改用户请求
+ * @returns {Promise<void>}
+ */
+async function do_update() {
+  const targetUserId = form.userId;
+  const res = await userApi.update_account(
+    targetUserId,
+    Object.assign(form, { mediaLimit: medias })
+  );
+
+  if (res.code === 0) {
+    reload_table()
+    dialogFormVisible.value = false;
+  }
+}
+/**
+ * 关闭弹框
+ */
+function dialog_close() {
+  dialogFormVisible.value = false;
+}
+function dialog_close_power() {
+  dialogPower.value = false;
+}
+function add_dialog_open() {
+  Object.assign(form, formInit);
+  addDialog.value = true;
+}
+function add_dialog_close() {
+  addDialog.value = false;
+  reset();
+}
+    /**
+     * 注册行为
+     * @returns {Promise<void>}
+     */
+    async function do_register() {
+  const data = form;
+
+  if (!/^[a-zA-Z]\w{1,19}$/.test(data.userName)) {
+    ElMessage({
+      message: t('account.formWarning'),
+      type: 'warning',
+    });
+    return;
+  }
+  if (!data.passWord) {
+    ElMessage({
+      message: '密码不能为空',
+      type: 'warning',
+    });
+  }
+  const res = await userApi.register(
+    Object.assign(form, { mediaLimit: medias })
+  );
+
+  if (res.code === 0) {
+    add_dialog_close();
+    load_table();
+  }
+}
+
+/**
+ * 清空表单
+ */
+function reset() {
+  Object.assign(form, {
+    userName: '',
+    passWord: '',
+  });
+}
+
+function switch_change(val: any, activeVal: string, inactiveVal: string) {
+  return val ? activeVal : inactiveVal;
+}
+
+</script>
 
 <style scoped lang='less'>
 .btn-box {

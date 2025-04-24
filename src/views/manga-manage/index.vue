@@ -170,7 +170,7 @@ async function load_table(page = 1, pageSize = browse.manageListPageSize) {
 
 function reload_table() {
   tableData.value = [];
-  load_table(browse.manageListPage, browse.manageListPageSizeCache);
+  load_table(browse.manageListPage, browse.manageListPageSize);
 }
 
 /**
