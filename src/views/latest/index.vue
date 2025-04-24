@@ -56,5 +56,13 @@ onMounted(async () => {
     latestList.value = await latestApi.get(1, pageSize);
 })
 </script>
-
+<style lang="less" scoped>
+.title{
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin: 0.5rem 0;
+    padding-left: 1rem;
+    color: #333;
+}
+</style>
 <style src="@/style/manga-list.less" scoped lang="less"></style>

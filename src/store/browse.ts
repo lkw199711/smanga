@@ -14,7 +14,7 @@ import historyApi from '@/api/history';
 import latestApi from '@/api/latest';
 import { screenType } from '@/type/store';
 import { config } from '@/store';
-import { mangaPageSize, chapterPageSize } from '@/store/page-size';
+import { mangaPageSize, chapterPageSize, manageListPageSizes } from '@/store/page-size';
 
 const useBrowseStore = defineStore('browse', {
 	state: () => ({
@@ -22,6 +22,8 @@ const useBrowseStore = defineStore('browse', {
 		mangaListPageSizeCache: 0,
 		chapterListPage: 1,
 		chapterListPageSizeCache: 0,
+		manageListPage: 1,
+		manageListPageSizeCache: 0,
 		browseType: 'flow',
 		mediaId: -1,
 		mangaId: -1,
@@ -178,6 +180,13 @@ const useBrowseStore = defineStore('browse', {
 			const screen: screenType = config.screenType;
 			return chapterPageSize[screen];
 		},
+		manageListPageSize: (state) => {
+			if (state.manageListPageSizeCache === 0) {
+				return manageListPageSizes[0];
+			} else {
+				return state.manageListPageSizeCache;
+			}
+		}
 	},
 	actions: {
 		/**

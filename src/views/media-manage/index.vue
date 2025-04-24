@@ -36,7 +36,7 @@
 			</el-table>
 
 			<!--分页-->
-			<table-pager ref="pager" @pageChange="load_table" :count="count" />
+			<table-pager ref="pager" @pageChange="load_table" :page-size="browse.manageListPageSize" :count="count" />
 
 			<!--新增媒体库弹框-->
 			<el-dialog :title="$t('mediaManage.add')" v-model="addMediaDialog" :before-close="dialog_close">
@@ -217,7 +217,7 @@
 					</p>
 
 					<el-form-item :label="$t('path.form.path')">
-						<div v-for="i in pathArr" :key="i" class="path-item">
+						<div v-for="i in pathArr" :key="i.pathId" class="path-item">
 							{{ i.pathContent }}
 							<div class="path-btn-box">
 								<el-button class="path-item-btn" size="small" type="success" @click="scan_path(i)">
@@ -252,7 +252,281 @@
 	</div>
 </template>
 
-<script lang="js" src="./script/index.ts"></script>
+<script lang="ts">
+export default {
+	name: 'media-setting-index',
+};
+</script>
+
+<script lang="ts" setup>
+import {
+	Delete,
+	Edit,
+	Upload,
+	Plus,
+	FolderOpened,
+} from '@element-plus/icons-vue';
+import { ref, reactive, onMounted } from 'vue';
+import mediaApi from '@/api/media';
+import pathApi from '@/api/path';
+import { ElMessage, ElMessageBox } from 'element-plus';
+import tablePager from '@/components/table-pager.vue';
+import i18n from '@/i18n';
+import useBrowseStore from '@/store/browse';
+import type { pathType } from '@/type/path';
+const pager = ref();
+const browse = useBrowseStore();
+
+const count = ref(0);
+const tableData = ref([]);
+const addMediaDialog = ref(false);
+const addPathDialog = ref(false);
+const editMediaDialog = ref(false);
+const form = reactive({
+	mediaId: 0,
+	mediaName: '',
+	mediaType: 0,
+	browseType: 'flow',
+	directoryFormat: 0,
+	removeFirst: 0,
+	direction: 1,
+	mediaCover: '',
+});
+const formInit = {
+	mediaId: 0,
+	mediaName: '',
+	mediaType: 0,
+	browseType: 'flow',
+	directoryFormat: 0,
+	removeFirst: 0,
+	direction: 1,
+};
+
+const pathForm = reactive({
+	pathContent: '',
+	autoScan: 0,
+	include: '',
+	exclude: '',
+});
+const pathArr = ref<pathType[]>([]);
+
+const { t } = i18n.global;
+
+onMounted(() => {
+	// 初始化表格数据
+	load_table();
+})
+/***
+ * 关闭弹窗
+ */
+function dialog_close() {
+	addMediaDialog.value = false;
+	editMediaDialog.value = false;
+}
+/**
+ * 开启弹窗
+ */
+function dialog_open() {
+	Object.assign(form, formInit);
+
+	addMediaDialog.value = true;
+}
+
+/**
+ * 打开路径编辑弹框
+ * @param index
+ * @param row
+ */
+async function path_dialog_open(index: any, row: any) {
+	Object.assign(form, row);
+	addPathDialog.value = true;
+
+	pathArr.value = [];
+
+	load_path(row.mediaId);
+}
+
+/**
+ * 加载路径列表
+ */
+async function load_path(mediaId: any) {
+	const res = await pathApi.get_path(mediaId, 1, 1000);
+
+	pathArr.value = res.list;
+}
+
+/**
+ * 加载表格数据
+ */
+async function load_table(page = 1, pageSize = browse.manageListPageSize) {
+	const res = await mediaApi.get(page, pageSize);
+	count.value = Number(res.count);
+	tableData.value = res.list;
+
+	browse.manageListPage = page;
+	browse.manageListPageSizeCache = pageSize;
+}
+
+/**
+ * 重载数据 页码不变
+ */
+function reload_table() {
+	tableData.value = [];
+	load_table(browse.manageListPage, browse.manageListPageSizeCache);
+}
+
+/**
+ * 新增媒体库
+ * @returns {Promise<void>}
+ */
+async function do_add_media() {
+	// 表单验证
+	if (!form.mediaName) {
+		ElMessage({
+			message: t('path.warning.name'),
+			type: 'warning',
+		});
+
+		return false;
+	}
+
+	const res = await mediaApi.add_media(form);
+	if (res.code === 0) {
+		dialog_close();
+		reload_table();
+	}
+}
+
+/**
+ * 编辑媒体库
+ * @param index
+ * @param row
+ */
+function edit_media(index: any, row: any) {
+	Object.assign(form, row);
+
+	editMediaDialog.value = true;
+}
+
+/**
+ * 编辑媒体库请求
+ */
+async function update_media() {
+	// 表单验证
+	if (!form.mediaName) {
+		ElMessage({
+			message: t('path.warning.name'),
+			type: 'warning',
+		});
+
+		return false;
+	}
+
+	const res = await mediaApi.update_media(form);
+
+	if (res.code === 0) {
+		editMediaDialog.value = false;
+		reload_table();
+	}
+}
+
+/**
+ * 删除媒体库
+ * */
+async function do_delete_media(index: any, row: any) {
+	ElMessageBox.confirm(t('path.confirm.text'), t('path.confirm.title'), {
+		type: 'warning',
+	})
+		.then(async () => {
+			const res = await mediaApi.delete_media(row.mediaId);
+
+			if (res.code === 0) {
+				reload_table();
+			}
+		})
+		.catch(() => { });
+}
+/**
+ * 删除路径
+ * */
+async function delete_path(pathInfo: any) {
+	ElMessageBox.confirm(t('path.confirm.text1'), t('path.confirm.title'), {
+		type: 'warning',
+	})
+		.then(async () => {
+			const res = await pathApi.delete_path(pathInfo.pathId);
+
+			if (res.code === 0) {
+				load_path(pathInfo.mediaId);
+			}
+		})
+		.catch(() => { });
+}
+/**
+ * 重新扫面路径
+ * @param pathInfo
+ */
+async function rescan_path(pathInfo: any) {
+	ElMessageBox.confirm(t('path.confirm.text2'), t('path.confirm.title2'), {
+		type: 'warning',
+	})
+		.then(async () => {
+			const res = await pathApi.rescan_path(
+				pathInfo.mediaId,
+				pathInfo.pathContent,
+				pathInfo.pathId
+			);
+
+			if (res.code === 0) {
+				load_path(pathInfo.mediaId);
+			}
+		})
+		.catch(() => { });
+}
+async function scan_path(pathInfo: any) {
+	const res = await pathApi.scan_path(
+		pathInfo.mediaId,
+		pathInfo.pathContent,
+		pathInfo.pathId
+	);
+
+	if (res.code === 0) {
+		load_path(pathInfo.mediaId);
+	}
+}
+
+/**
+ * 添加路径信息到缓存
+ */
+async function add_path_cache() {
+	const pathContent: any = pathForm.pathContent;
+	const mediaId = form.mediaId;
+	if (!pathContent) return;
+
+	const res = await pathApi.add_path(mediaId, pathForm);
+
+	if (res) {
+		// 重置表单
+		Object.assign(pathForm, {
+			pathContent: '',
+			autoScan: 0,
+			include: '',
+			exclude: '',
+		});
+		load_path(mediaId);
+	}
+}
+
+/**
+ * 生成海报
+ * @param mediaId
+ */
+async function create_media_cover() {
+	const coverFile = await mediaApi.create_cover(form.mediaId);
+	form.mediaCover = coverFile;
+}
+
+</script>
 
 <style scoped lang="less">
 .btn-box {

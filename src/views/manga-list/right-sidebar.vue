@@ -78,6 +78,8 @@ import i18n from '@/i18n';
 import tagApi, { tagItemType } from '@/api/tag';
 import historyApi from '@/api/history';
 import imageApi from '@/api/image';
+import useBrowseStore from '@/store/browse';
+const browse = useBrowseStore();
 const placeholder = require('@/assets/s-blue.png');
 
 const { t } = i18n.global;
@@ -195,7 +197,7 @@ async function menu_select(key: string) {
 			ElMessageBox.confirm(t('mangaManage.confirm.text1'), { type: 'warning' })
 				.then(async () => {
 					await mangaApi.delete_manga(mangaId.value);
-					emit('reload');
+					emit('reload', browse.mangaListPage, browse.mangaListPageSize);
 				})
 				.catch();
 
@@ -205,7 +207,7 @@ async function menu_select(key: string) {
 				type: 'warning',
 			}).then(async () => {
 				await mangaApi.delete_manga(mangaId.value, true);
-				emit('reload');
+				emit('reload', browse.mangaListPage, browse.mangaListPageSize);
 			});
 
 			break;
@@ -229,7 +231,7 @@ async function menu_select(key: string) {
 			} else {
 				await historyApi.read_all_chapters(mangaId.value);
 			}
-			emit('reload');
+			emit('reload', browse.mangaListPage, browse.mangaListPageSize);
 			break;
 		case 'tags':
 			editTagsDialog.value = true;
@@ -237,7 +239,7 @@ async function menu_select(key: string) {
 			break;
 		case 'scan':
 			await mangaApi.scan(mangaId.value);
-			emit('reload');
+			emit('reload', browse.mangaListPage, browse.mangaListPageSize);
 			break;
 
 	}

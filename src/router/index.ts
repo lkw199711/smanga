@@ -194,7 +194,7 @@ const routes: Array<RouteRecordRaw> = [
 					icon: 'media-manage',
 					view: 'setting',
 				},
-				component: () => import('../views/media-setting/index.vue'),
+				component: () => import('../views/media-manage/index.vue'),
 			},
 			// 漫画设置
 			{
@@ -206,7 +206,7 @@ const routes: Array<RouteRecordRaw> = [
 					icon: 'manga-manage',
 					view: 'setting',
 				},
-				component: () => import('../views/manga-setting/index.vue'),
+				component: () => import('../views/manga-manage/index.vue'),
 			},
 			// 路径管理
 			{
@@ -218,7 +218,7 @@ const routes: Array<RouteRecordRaw> = [
 					icon: 'folder',
 					view: 'setting',
 				},
-				component: () => import('../views/path-setting/index.vue'),
+				component: () => import('../views/path-manage/index.vue'),
 			},
 			// 章节管理
 			{
@@ -254,7 +254,7 @@ const routes: Array<RouteRecordRaw> = [
 					icon: 'tag',
 					view: 'setting',
 				},
-				component: () => import('../views/tag-setting/index.vue'),
+				component: () => import('../views/tag-manage/index.vue'),
 			},
 			// 解压管理
 			{

@@ -53,13 +53,10 @@ import collectApi from '@/api/collect';
 import imageApi from '@/api/image';
 import historyApi from '@/api/history';
 import latestApi from '@/api/latest';
+import useBrowseStore from '@/store/browse';
+const browse = useBrowseStore();
 const placeholder = require('@/assets/s-blue.png');
-
 const { t } = i18n.global;
-
-const route = useRoute();
-
-const drawer = ref(false);
 const isCollect = ref(false);
 const blob = ref('');
 const props = defineProps(['chapterInfo', 'rightSidebarVisible']);
@@ -98,7 +95,7 @@ async function menu_select(key: string) {
 				type: 'warning',
 			}).then(async () => {
 				await chapterApi.delete_chapter(chapterId.value);
-				emit('reload');
+				emit('reload', browse.chapterListPage, browse.chapterListPageSize);
 			});
 
 			break;
@@ -107,7 +104,7 @@ async function menu_select(key: string) {
 				type: 'warning',
 			}).then(async () => {
 				await chapterApi.delete_chapter(chapterId.value, true);
-				emit('reload');
+				emit('reload', browse.chapterListPage, browse.chapterListPageSize);
 			});
 			break;
 		case 'collect':
@@ -137,7 +134,7 @@ async function menu_select(key: string) {
 					count: 0,
 				});
 			}
-			emit('reload');
+			emit('reload', browse.chapterListPage, browse.chapterListPageSize);
 			break;
 	}
 	close_sidebar();
