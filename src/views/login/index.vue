@@ -7,13 +7,13 @@
 			<div class="logo">
 				<img src="../../assets/smanga-logo.png" alt="logo" />
 			</div>
-			<el-form class="login-form" ref="form" :model="form" label-width="80px">
+			<el-form class="login-form" ref="form" label-width="80px">
 				<el-form-item label="用户名:">
-					<el-input v-model="form.userName" placeholder="请输入用户名"></el-input>
+					<el-input v-model="userName" placeholder="请输入用户名" type="text"></el-input>
 				</el-form-item>
 
 				<el-form-item label="密码:">
-					<el-input v-model="form.passWord" placeholder="请输入内容" type="password"></el-input>
+					<el-input v-model="passWord" placeholder="请输入内容" type="password"></el-input>
 				</el-form-item>
 			</el-form>
 
@@ -42,12 +42,8 @@ import { userInfo } from '@/store';
 import loginApi from '@/api/login';
 
 const router = useRouter();
-
-const form = reactive({
-	userName: '',
-	passWord: '',
-});
-const showDatabase = ref(false);
+const userName = ref('');
+const passWord = ref('');
 const backClass = ref('bg' + 1);
 
 onMounted(() => {
@@ -67,7 +63,7 @@ onMounted(() => {
 
 
 async function do_login() {
-	const loginResponse = await loginApi.login(form);
+	const loginResponse = await loginApi.login({ userName: userName.value, passWord: passWord.value });
 
 	if (!loginResponse) return;
 	// 缓存用户信息
