@@ -47,7 +47,8 @@
     "copy": "复制",
     "markAsRead": "标记为已阅读",
     "markAsUnRead": "标记为未阅读",
-    "scan": "扫描漫画"
+    "scan": "扫描漫画",
+    "meta": "刷新元数据"
   },
   "account": {
     "add": "新增用户",

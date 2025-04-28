@@ -46,6 +46,9 @@
 				<el-menu-item index="scan">
 					{{ $t('option.scan') }}
 				</el-menu-item>
+				<el-menu-item index="meta">
+					{{ $t('option.meta') }}
+				</el-menu-item>
 			</el-menu>
 		</el-drawer>
 
@@ -239,6 +242,10 @@ async function menu_select(key: string) {
 			break;
 		case 'scan':
 			await mangaApi.scan(mangaId.value);
+			emit('reload', browse.mangaListPage, browse.mangaListPageSize);
+			break;
+		case 'meta':
+			await mangaApi.reload_meta(mangaId.value);
 			emit('reload', browse.mangaListPage, browse.mangaListPageSize);
 			break;
 

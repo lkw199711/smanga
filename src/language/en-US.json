@@ -50,7 +50,8 @@
     "copy": "copy",
     "markAsRead": "Mark as read",
     "markAsUnRead": "Mark as unread",
-    "scan": "Scan manga"
+    "scan": "Scan manga",
+    "meta": "Reload manga meta"
   },
   "account": {
     "add": "addUser",
