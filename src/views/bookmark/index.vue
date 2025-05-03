@@ -8,14 +8,15 @@
       </template>
       <template v-else>
         <div :class="['chapter-list-box', { 'block': config.viewType === 'list' }]">
-          <chapter v-for="(chapter, index) in list" :key="chapter" :viewType="config.viewType" :chapterInfo="chapter" :bookmark="true"
-            @click="go_browse(chapter)" @contextmenu.prevent="context_menu(chapter, index)" />
+          <chapter v-for="(chapter, index) in list" :key="chapter" :viewType="config.viewType" :chapterInfo="chapter"
+            :bookmark="true" @click="go_browse(chapter)" @contextmenu.prevent="context_menu(chapter, index)" />
         </div>
       </template>
     </div>
 
     <!--分页-->
-    <media-pager ref="pager" :page="page" :count="count" :page-size-config="pageSizes" @page-change="page_change" />
+    <media-pager ref="pager" :page="page" :page-size="browse.chapterListPageSize" :count="count"
+      :page-size-config="browse.chapterListPageSizes" @page-change="page_change" />
 
     <!--功能菜单-->
     <right-sidebar :info="chapterInfo" :menuPoster="menuPoster" @reload="page_change" />
@@ -31,32 +32,18 @@ import MediaPager from '@/components/media-pager.vue';
 import rightSidebar from './components/right-sidebar.vue';
 import { chapterType } from '@/type/chapter';
 import { useRoute, useRouter } from 'vue-router';
-import { screenType } from '@/type/store';
-import { chapterPageSize } from '@/store/page-size';
 import listSkeleton from '@/components/list-skeleton.vue';
 import queue from '@/store/quque';
 import useBrowseStore from '@/store/browse';
-
-let pageSizes: number[] = [];
-let defaultPageSize = 10;
+const browse = useBrowseStore();
 let loading = ref(false);
-
-get_page_size_array();
-
-function get_page_size_array() {
-  // 获取默认的页面容量
-  const screen: screenType = config.screenType;
-
-  pageSizes = chapterPageSize[screen];
-  defaultPageSize = chapterPageSize[screen][0];
-}
 
 const route = useRoute();
 const router = useRouter();
 
 const page = ref(1);
 const list = ref([]);
-const count = ref(0);
+const count = ref(-1);
 const menuPoster = ref('');
 const chapterInfo = ref<chapterType>();
 
@@ -69,7 +56,6 @@ async function go_browse(item: any) {
   const browseType = item.browseType;
 
   // 使用pinia存储页码
-  const browse = useBrowseStore();
   browse.page = item.page;
 
   await router.push({
@@ -87,9 +73,9 @@ async function go_browse(item: any) {
  * @param page
  * @param pageSize
  */
-async function page_change(pageParams = 1, pageSize: number = defaultPageSize) {
+async function page_change(pageParams = 1, pageSize: number = 10) {
 
-  if (pageParams !== 1 && pageParams > Math.ceil(count.value / pageSize)) return;
+  if (pageParams !== 1 && count.value !== -1 && pageParams > Math.ceil(count.value / pageSize)) return;
   if (pageParams < 1) return;
 
   // 获取页码
@@ -107,6 +93,10 @@ async function page_change(pageParams = 1, pageSize: number = defaultPageSize) {
 
   // 结束加载
   loading.value = false;
+
+  // 缓存页码
+  browse.chapterListPage = pageParams;
+  browse.chapterListPageSizeCache = pageSize;
 }
 
 /**
@@ -153,12 +143,12 @@ function touch_page_change() {
 
     // 向左滑动,向右翻页
     if (moveX < -100 && page.value < count.value) {
-      page_change(++page.value);
+      page_change(++page.value, browse.chapterListPageSize);
     }
 
     // 向右滑动,向左翻页
     if (moveX > 100 && page.value > 1) {
-      page_change(--page.value);
+      page_change(--page.value, browse.chapterListPageSize);
     }
 
 

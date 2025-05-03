@@ -5,10 +5,10 @@
  * @LastEditTime: 2024-08-04 14:31:13
  * @FilePath: \smanga\src\store\index.ts
  */
-import {reactive} from 'vue';
-import {GlobalData} from '@/store/type';
-import {get_cookie} from '../utils/index';
-import {screenType} from '@/type/store';
+import { reactive } from 'vue';
+import { GlobalData } from '@/store/type';
+import { get_cookie } from '../utils/index';
+import { screenType } from '@/type/store';
 
 export const globalData: GlobalData = reactive({
 	bookmarkList: [],
@@ -80,12 +80,8 @@ export const userConfig = reactive({
 	showPageNumber: true,
 	// 开启滑动翻页
 	enableTouchPageChange: false,
-});
-
-export const cache = reactive({
-	bookmarkId: 0,
-	chapterKeepAlive: true,
-	mangaKeepAlive: true,
+	mangaPageSize: 0,
+	chapterPageSize: 0,
 });
 
 export const pageSizeConfig = reactive({

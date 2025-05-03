@@ -11,7 +11,8 @@
 				<el-form-item label="语言设置">
 					<el-select v-model="userConfig.language" class="language-select" size="default"
 						@change="language_change">
-						<el-option v-for="item in languages" :key="item.value" :label="item.label" :value="item.value" />
+						<el-option v-for="item in languages" :key="item.value" :label="item.label"
+							:value="item.value" />
 					</el-select>
 				</el-form-item>
 			</div>
@@ -34,15 +35,32 @@
 			<!-- 排序方式 -->
 			<div class="sort">
 				<el-form-item label="默认排序规则">
-					<el-select v-model="userConfig.order" class="sort-select" size="default" @change="sort_order_change">
+					<el-select v-model="userConfig.order" class="sort-select" size="default"
+						@change="sort_order_change">
 						<el-option v-for="item in sortOrder" :key="item" :label="$t(`sortOrder.${item}`)" :value="item">
 							<span class="op-text">{{ $t(`sortOrder.${item}`) }}</span>
 						</el-option>
 					</el-select>
 				</el-form-item>
 			</div>
-			<p class="s-form-title">页面容量设置</p>
+			<p class="s-form-title">自定义页面容量设置</p>
 			<!-- 页面容量设置 -->
+			<el-form-item label="漫画页面容量" class="op-range">
+				<el-col :span="4">
+					<el-input v-model="mangaPageSize" type="number" />
+				</el-col>
+			</el-form-item>
+			<el-form-item label="章节页面容量" class="op-range">
+				<el-col :span="4">
+					<el-input v-model="chapterPageSize" type="number" />
+				</el-col>
+			</el-form-item>
+			<p class="note form-note">
+				自定义页面容量设置，漫画与章节的页面容量已根据不通尺寸设备调试配置好,
+				如果还是未能很好的适配您的设备,例如条目内容过多遮挡住分页器与页码.可以对页面容量进行自定义,
+				设置为0使用默认值。
+				(该设置仅在客户端生效,不影响其他设备)
+			</p>
 
 			<p class="s-form-title">阅读设置</p>
 			<el-form-item label="翻页按钮反向">
@@ -94,13 +112,25 @@ import { ref } from 'vue';
 import userApi from '@/api/account'
 import { Cookies } from '@/utils';
 import { useRouter } from 'vue-router';
+import { onMounted } from 'vue';
+import useBrowseStore from '@/store/browse';
+const browse = useBrowseStore();
 const router = useRouter();
 const { locale } = useI18n();
 
 const form = ref({ removeFirst: 0, range1: 30 });
 
+const mangaPageSize = ref(0);
+const chapterPageSize = ref(0);
+
 // 排序方式
-const sortOrder = ['id', 'idDesc', 'name', 'nameDesc', 'time', 'timeDesc'];
+const sortOrder = ['id', 'idDesc', 'number', 'numberDesc', 'name', 'nameDesc', 'time', 'timeDesc'];
+
+onMounted(() => {
+	// 设置页面容量
+	mangaPageSize.value = Number(localStorage.getItem('mangaPageSize')) || 0;
+	chapterPageSize.value = Number(localStorage.getItem('chapterPageSize')) || 0;
+});
 
 function language_change(val: string) {
 	locale.value = val;
@@ -126,12 +156,15 @@ function switch_change(val: string) {
 
 function sort_order_change(val: string) { }
 
-function submit() {
-	const userName = Cookies.get('userName');
+async function submit() {
+	// 设置页面容量
+	browse.mangaListPageSizeCache = mangaPageSize.value;
+	browse.chapterListPageSizeCache = chapterPageSize.value;
+	localStorage.setItem('mangaPageSize', mangaPageSize.value.toString());
+	localStorage.setItem('chapterPageSize', chapterPageSize.value.toString());
+	// 设置主题
 	const configValue = { userConfig, pageSizeConfig };
-
-	userApi.update_account(+Cookies.get('userId'), {userConfig: configValue});
-
+	await userApi.update_user_config({ userConfig: configValue });
 }
 
 function user_logout() {

@@ -46,7 +46,9 @@
     "editTags": "編輯標簽",
     "copy": "復製",
     "markAsRead": "標記為已閱讀",
-    "markAsUnRead": "標記為未閱讀"
+    "markAsUnRead": "標記為未閱讀",
+    "scan": "掃描漫畫",
+    "meta": "刷新元數據"
   },
   "account": {
     "add": "新增用戶",
@@ -98,7 +100,7 @@
       "directory": "文件夾結構:",
       "removeFirst": "剔除首頁:",
       "direction": "翻頁方向:",
-      "autoScan": "自動掃描",
+      "autoScan": "定時掃描",
       "cover": "媒體庫封面"
     },
     "note": {
@@ -282,7 +284,14 @@
     "half": "對半裁剪",
     "model": "閱讀模式",
     "imgLoadError": "圖片加載失敗,點擊重新加載",
-    "jumpPageTitle": "請輸入目標頁碼"
+    "jumpPageTitle": "請輸入目標頁碼",
+    "label": {
+      "useAutoViewWidth": "展示自適應圖片尺寸",
+      "setViewWidth": "設置視圖寬度"
+    },
+    "title": {
+      "setViewWidth": "設置視圖寬度"
+    }
   },
   "page": {
     "before": "上一章",
@@ -351,7 +360,10 @@
     "editTags": "編輯標簽",
     "baseTagTitle": "備選標簽",
     "ckeckedTagTitle": "當前標簽",
-    "jumpPageText": "頁碼跳轉"
+    "jumpPageText": "頁碼跳轉",
+    "setImageWidth": "設置圖片寬度",
+    "requestFullscreen": "頁面全屏",
+    "exitFullscreen": "退出全屏"
   },
   "createTime": "創建時間",
   "updateTime": "更新時間"

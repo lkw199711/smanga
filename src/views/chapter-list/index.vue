@@ -15,7 +15,8 @@
 		</div>
 
 		<!--分页组件-->
-		<media-pager ref="pager" :page="page" :count="count" :page-size-config="pageSizes" @page-change="page_change" />
+		<media-pager ref="pager" :page="page" :page-size="browse.chapterListPageSize" :count="count"
+			:page-size-config="browse.chapterListPageSizes" @page-change="page_change" />
 
 		<!--功能菜单-->
 		<right-sidebar :chapterInfo="chapterInfo" :rightSidebarVisible="rightSidebarVisible" @reload="page_change"
@@ -30,43 +31,30 @@ export default { name: 'chapter-list' };
 import {
 	watch,
 	onMounted,
-	onActivated,
 	ref,
 } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import chapterApi from '@/api/chapter';
 import { config, userConfig } from '@/store';
-import { global_set, global_set_json } from '@/utils';
 import chapter from '@/components/chapter.vue';
 import mediaPager from '@/components/media-pager.vue';
 import listSkeleton from '@/components/list-skeleton.vue';
 import rightSidebar from './right-sidebar.vue';
-import { screenType } from '@/type/store';
-import { chapterPageSize } from '@/store/page-size';
 import queue from '@/store/quque';
+import useBrowseStore from '@/store/browse';
+const browse = useBrowseStore();
 
 const route = useRoute();
 const router = useRouter();
 
 let page = ref(1);
-let count = ref(0);
+let count = ref(-1);
 let list = ref([]);
 let chapterInfo = ref({});
 let loading = ref(false);
 
-let pageSizes: number[] = [];
 let defaultPageSize = 10;
 let rightSidebarVisible = ref(false);
-
-get_page_size_array();
-
-function get_page_size_array() {
-	// 获取默认的页面容量
-	const screen: screenType = config.screenType;
-
-	pageSizes = chapterPageSize[screen];
-	defaultPageSize = chapterPageSize[screen][0];
-}
 
 const mangaId = Number(route.query.mangaId);
 
@@ -80,8 +68,6 @@ watch(
 
 onMounted(() => {
 	load();
-	route.params.clear = '';
-
 	touch_page_change();
 });
 
@@ -120,33 +106,31 @@ function touch_page_change() {
 
 		// 向左滑动,向右翻页
 		if (moveX < -100 && page.value < count.value) {
-			page_change(++page.value);
+			page_change(++page.value, browse.chapterListPageSize);
 		}
 
 		// 向右滑动,向左翻页
 		if (moveX > 100 && page.value > 1) {
-			page_change(--page.value);
+			page_change(--page.value, browse.chapterListPageSize);
 		}
 
 		moveX = 0;
 	})
 }
 
-onActivated(() => {
-	const clear = route.params.clear;
-	if (clear) {
-		load();
-		route.params.clear = '';
+function go_browse(chapter: any) {
+	if (chapter?.latest) {
+		browse.page = chapter.latest.page;
+	} else {
+		browse.page = 1;
 	}
-});
 
-function go_browse(item: any) {
 	const newUrl = router.resolve({
-		name: item.browseType,
+		name: chapter.browseType,
 		query: {
-			mediaId: item.mediaId,
-			mangaId: item.mangaId,
-			chapterId: item.chapterId
+			mediaId: chapter.mediaId,
+			mangaId: chapter.mangaId,
+			chapterId: chapter.chapterId
 		}
 	});
 
@@ -170,7 +154,7 @@ async function page_change(
 	pageSize: number = defaultPageSize
 ) {
 
-	if (pageParams !== 1 && pageParams > Math.ceil(count.value / pageSize)) return;
+	if (pageParams !== 1 && count.value !== -1 && pageParams > Math.ceil(count.value / pageSize)) return;
 	if (pageParams < 1) return;
 
 	// 获取页码
@@ -193,19 +177,15 @@ async function page_change(
 
 	// 结束加载
 	loading.value = false;
-}
 
-/**
- * 获取全部漫画章节
- */
-async function load_chapter() {
-	const res = await chapterApi.get(mangaId);
-	global_set_json('chapterList', res.list);
+	// 缓存页码信息
+	browse.chapterListPage = page.value;
+	browse.chapterListPageSizeCache = pageSize;
 }
 
 function load() {
-	load_chapter();
-	page_change();
+	list.value = [];
+	page_change(browse.chapterListPage, browse.chapterListPageSize);
 }
 </script>
 

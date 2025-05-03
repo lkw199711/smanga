@@ -46,7 +46,9 @@
     "editTags": "编辑标签",
     "copy": "复制",
     "markAsRead": "标记为已阅读",
-    "markAsUnRead": "标记为未阅读"
+    "markAsUnRead": "标记为未阅读",
+    "scan": "扫描漫画",
+    "meta": "刷新元数据"
   },
   "account": {
     "add": "新增用户",
@@ -98,7 +100,7 @@
       "directory": "文件夹结构:",
       "removeFirst": "剔除首页:",
       "direction": "翻页方向:",
-      "autoScan": "自动扫描",
+      "autoScan": "定时扫描",
       "cover": "媒体库封面"
     },
     "note": {
@@ -282,7 +284,14 @@
     "half": "对半裁剪",
     "model": "阅读模式",
     "imgLoadError": "图片加载失败,点击重新加载",
-    "jumpPageTitle": "请输入目标页码"
+    "jumpPageTitle": "请输入目标页码",
+    "label": {
+      "useAutoViewWidth": "展示自适应图片尺寸",
+      "setViewWidth": "设置视图宽度"
+    },
+    "title": {
+      "setViewWidth": "设置视图宽度"
+    }
   },
   "page": {
     "before": "上一章",
@@ -351,7 +360,10 @@
     "editTags": "编辑标签",
     "baseTagTitle": "备选标签",
     "ckeckedTagTitle": "当前标签",
-    "jumpPageText": "跳转页码"
+    "jumpPageText": "跳转页码",
+    "setImageWidth": "设置图片宽度",
+    "requestFullscreen": "页面全屏",
+    "exitFullscreen": "退出全屏"
   },
   "createTime": "创建时间",
   "updateTime": "更新时间"

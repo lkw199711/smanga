@@ -14,6 +14,7 @@
     </div>
     <latest v-if="layoutLimit('latest')">
     </latest>
+    <el-button class="logout-btn" type="primary" @click="user_logout">登出用户</el-button>
 </template>
 
 <script setup lang="ts">
@@ -24,7 +25,9 @@ import list from '@/components/charts/list.vue';
 import latest from "@/views/latest/index.vue";
 import { onMounted, ref, computed } from 'vue';
 import { config, userConfig } from '@/store';
-
+import { useRouter } from 'vue-router';
+import { Cookies } from '@/utils';
+const router = useRouter();
 const pieRef = ref();
 
 const indexViewDic = {
@@ -49,6 +52,12 @@ onMounted(() => {
     if (!pieRef.value) return;
     window.addEventListener('resize', pieRef.value.resize());
 })
+
+function user_logout() {
+    Cookies.remove('userName');
+    Cookies.remove('userId');
+    router.push('/login')
+}
 </script>
 
 <style scoped lang="less">
@@ -69,6 +78,17 @@ onMounted(() => {
     .chart-seat {
         height: 0;
     }
+}
+
+.logout-btn{
+    position: fixed;
+    bottom: 1rem;
+    right: 1rem;
+    z-index: 1000;
+    width: 10rem;
+    height: 3rem;
+    border-radius: .6rem;
+    box-shadow: .4rem .3rem .4rem rgb(139, 130, 130);
 }
 
 

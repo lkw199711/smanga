@@ -45,7 +45,7 @@ const latestApi = {
 		});
 	},
 
-	async delete(chapterId: number) { 
+	async delete(chapterId: number) {
 		const http = await ajax.delete(`latest/${chapterId}`);
 		return http.data;
 	},
@@ -57,10 +57,7 @@ const latestApi = {
 	 * @return {*}
 	 */
 	async get(page = 1, pageSize = 10) {
-		const res = ajax({
-			url: 'latest',
-			data: { page, pageSize },
-		});
+		const res = ajax.get('latest', { params: { page, pageSize } });
 
 		return (await res).data.list;
 	},

@@ -43,10 +43,16 @@ const userApi = {
 	},
 
 	async get_user_config() {
-		const http = await ajax.get('user-config');
+		const http = await ajax.get('client-user-config');
 		const response = http.data;
 		return response.data;
 	},
+
+	async update_user_config(data: any) {
+		const http = await ajax.put('user-config', data);
+		const response = http.data;
+		return response.data;
+	}
 };
 
 export default userApi;

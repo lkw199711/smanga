@@ -12,8 +12,18 @@ import { chapterType } from '@/type/chapter';
 import chapterApi from '@/api/chapter';
 import historyApi from '@/api/history';
 import latestApi from '@/api/latest';
+import { screenType } from '@/type/store';
+import { config } from '@/store';
+import { mangaPageSize, chapterPageSize, manageListPageSizes } from '@/store/page-size';
+
 const useBrowseStore = defineStore('browse', {
 	state: () => ({
+		mangaListPage: 1,
+		mangaListPageSizeCache: 0,
+		chapterListPage: 1,
+		chapterListPageSizeCache: 0,
+		manageListPage: 1,
+		manageListPageSizeCache: 0,
 		browseType: 'flow',
 		mediaId: -1,
 		mangaId: -1,
@@ -24,16 +34,21 @@ const useBrowseStore = defineStore('browse', {
 		pageImage: '',
 		// 获取书签列表
 		bookmarkList: <bookmarkType[]>[],
-		// 书签展示状态
-		bookmarkShow: false,
 		// 章节列表
 		chapterList: <chapterType[]>[],
 		// 图片路径列表
 		imagePathList: <string[]>[],
 		// 图片文件列表
 		imageFileList: <string[]>[],
-
-		lastPageCount: 0, // 用于存储上一个有效的 pageCount
+		/**
+		 * 用于存储上一个有效的 pageCount
+		 * 条漫跳页的过程中 pageCount 的变化到导致闪烁
+		 * 如果在跳页的过程中 pageCount 为 0 则使 pageCount 保持上一个有效值
+		 */
+		lastPageCount: 0,
+		useAutoViewWidth: true,
+		viewWidthValue: 50,
+		dialogViewWidth: false,
 	}),
 	getters: {
 		/**
@@ -76,6 +91,102 @@ const useBrowseStore = defineStore('browse', {
 
 			return state.imagePathList.length;
 		},
+
+		/**
+		 * 书签展示状态
+		 * @param state 
+		 */
+		bookmarkShow: (state) => {
+			let page = state.page;
+
+			if (state.browseType === 'double') {
+				page = page * 2 - 1;
+			}
+
+			if (state.browseType === 'half') {
+				page = Math.ceil(page / 2);
+			}
+
+			// 通过章节与页码判断书签展示
+			for (let i = 0; i < state.bookmarkList.length; i++) {
+				const bookmark = state.bookmarkList[i];
+
+				if (state.chapterId != bookmark.chapterId) {
+					continue;
+				}
+
+				if (bookmark.page == page) {
+					return true;
+				}
+			}
+
+			return false
+		},
+
+		flowViewStyle: (state) => {
+			if (state.useAutoViewWidth) {
+				return { width: 'auto' };
+			} else {
+				return { width: state.viewWidthValue + '%' };
+			}
+		},
+
+		singleViewStyle: (state) => {
+			if (state.useAutoViewWidth) {
+				return { width: 'auto' };
+			} else {
+				return { width: state.viewWidthValue + '%', maxWidth: 'none', maxHeight: 'none', 'object-fit': 'cover' };
+			}
+		},
+
+		doubleViewStyle: (state) => {
+			if (state.useAutoViewWidth) {
+				return { width: 'auto' };
+			} else {
+				return { width: state.viewWidthValue / 2 + '%', maxWidth: 'none', maxHeight: 'none', 'object-fit': 'cover' };
+			}
+		},
+
+		viewWidth: (state) => {
+			if (state.useAutoViewWidth) {
+				return 'auto';
+			} else {
+				return state.viewWidthValue + '%';
+			}
+		},
+		mangaListPageSize: (state) => {
+			// 获取页面尺寸类型
+			const screen: screenType = config.screenType;
+			if (state.mangaListPageSizeCache === 0) {
+				return mangaPageSize[screen][0];
+			} else {
+				return state.mangaListPageSizeCache;
+			}
+		},
+		mangaListPageSizes: (state) => {
+			// 获取页面尺寸类型
+			const screen: screenType = config.screenType;
+			return mangaPageSize[screen];
+		},
+		chapterListPageSize: (state) => {
+			const screen: screenType = config.screenType;
+			if (state.chapterListPageSizeCache === 0) {
+				return chapterPageSize[screen][0];
+			} else {
+				return state.chapterListPageSizeCache;
+			}
+		},
+		chapterListPageSizes: (state) => {
+			const screen: screenType = config.screenType;
+			return chapterPageSize[screen];
+		},
+		manageListPageSize: (state) => {
+			if (state.manageListPageSizeCache === 0) {
+				return manageListPageSizes[0];
+			} else {
+				return state.manageListPageSizeCache;
+			}
+		}
 	},
 	actions: {
 		/**
@@ -93,12 +204,13 @@ const useBrowseStore = defineStore('browse', {
 				page = Math.ceil(page / 2);
 			}
 
-			// 判断书签是否存在 存在则获取id
-			const bookmarkId = this.is_on_bookmark();
-
-			if (bookmarkId) {
+			if (this.bookmarkShow) {
 				// 已存在书签 删除书签
-				await bookmarkApi.delete(bookmarkId);
+				const bookmark = this.bookmarkList.find((bookmark) => {
+					return bookmark.chapterId === this.chapterId && bookmark.page === page;
+				});
+				if (!bookmark) return;
+				await bookmarkApi.delete(bookmark.bookmarkId);
 			} else {
 				// 添加书签
 				await bookmarkApi.add({
@@ -120,40 +232,6 @@ const useBrowseStore = defineStore('browse', {
 		 */
 		async load_bookmark_list() {
 			this.bookmarkList = (await bookmarkApi.get()).list;
-		},
-
-		/**
-		 * 判断是否在书签上
-		 * @returns 
-		 */
-		is_on_bookmark() {
-			let page = this.page;
-
-			if (this.browseType === 'double') {
-				page = page * 2 - 1;
-			}
-
-			if (this.browseType === 'half') {
-				page = Math.ceil(page / 2);
-			}
-
-
-			// 通过章节与页码判断书签展示
-			for (let i = 0; i < this.bookmarkList.length; i++) {
-				const bookmark = this.bookmarkList[i];
-
-				if (this.chapterId != bookmark.chapterId) {
-					continue;
-				}
-				
-				if (bookmark.page == page) {
-					this.bookmarkShow = true;
-					return bookmark.bookmarkId;
-				}
-			}
-
-			this.bookmarkShow = false;
-			return false
 		},
 
 		/**
@@ -191,7 +269,7 @@ const useBrowseStore = defineStore('browse', {
 		/**
 		 * @description: 保存最近阅读
 		 */
-		async save_latest() {
+		async save_latest(lastImageShown: boolean = false) {
 			// 刚开始观看不保留记录
 			if (this.page < 2) return;
 			await latestApi.add({
@@ -199,8 +277,31 @@ const useBrowseStore = defineStore('browse', {
 				chapterId: this.chapterId,
 				page: this.page,
 				count: this.pageCount,
-				finish: this.page >= this.pageCount
+				finish: lastImageShown || this.page >= this.pageCount - 1
 			});
+		},
+
+		set_view_width(browseType: string) {
+			const varName = `${browseType}ViewWidthValue`;
+			if (this.useAutoViewWidth) {
+				localStorage.setItem(varName, 'auto');
+			} else {
+				localStorage.setItem(varName, this.viewWidthValue.toString());
+			}
+
+			this.dialogViewWidth = false;
+		},
+
+		load_view_width(browseType: string) {
+			const varName = `${browseType}ViewWidthValue`;
+			const viewWidthValue = localStorage.getItem(varName);
+
+			if (!viewWidthValue || viewWidthValue === 'auto') {
+				this.useAutoViewWidth = true;
+			} else {
+				this.useAutoViewWidth = false;
+				this.viewWidthValue = Number(viewWidthValue);
+			}
 		}
 	},
 });

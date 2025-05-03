@@ -128,12 +128,6 @@ onMounted(() => {
 	load_store_search();
 });
 
-// KeepAlive相关联 生命周期
-onActivated(() => {
-	console.log('search activated');
-	load_store_search();
-});
-
 function load_store_search() {
 	// 加载store中的搜索关键词
 	if (searchStore.searchText) {

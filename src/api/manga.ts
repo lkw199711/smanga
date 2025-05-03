@@ -5,7 +5,7 @@
  * @LastEditTime: 2024-08-08 10:07:00
  * @FilePath: /smanga/src/api/manga.ts
  */
-import {ajax} from './index';
+import { ajax } from './index';
 
 const mangaApi = {
 	/**
@@ -23,7 +23,7 @@ const mangaApi = {
 		order = '',
 		keyWord = ''
 	) {
-		const res = ajax.get('manga', {params: {mediaId, page, pageSize, order, keyWord}});
+		const res = ajax.get('manga', { params: { mediaId, page, pageSize, order, keyWord } });
 
 		return (await res).data;
 	},
@@ -55,7 +55,7 @@ const mangaApi = {
 	) {
 		const res = ajax({
 			url: 'manga',
-			data: {parentPath, page, pageSize, order},
+			data: { parentPath, page, pageSize, order },
 		});
 
 		const data: ResType = (await res).data;
@@ -73,7 +73,7 @@ const mangaApi = {
 	async get_sub_path(mediaId: number) {
 		const res = ajax({
 			url: 'manga',
-			data: {mediaId},
+			data: { mediaId },
 		});
 
 		const data: ResType = (await res).data;
@@ -115,10 +115,25 @@ const mangaApi = {
 	 * @param deleteFile
 	 */
 	async delete_manga(mangaId: number, deleteFile = false) {
-		const res = ajax.delete(`manga/${mangaId}`, {data: {deleteFile}});
+		const res = ajax.delete(`manga/${mangaId}`, { data: { deleteFile } });
 
 		return (await res).data;
 	},
+
+	/**
+	 * 扫描漫画
+	 * @param mangaId 漫画id
+	 * @returns 
+	 */
+	async scan(mangaId: number) {
+		const res = ajax.put(`manga/${mangaId}/scan`, { mangaId });
+		return (await res).data;
+	},
+
+	async reload_meta(mangaId: number) {
+		const res = ajax.put(`manga/${mangaId}/reload-meta`, { mangaId });
+		return (await res).data;
+	}
 };
 
 export default mangaApi;

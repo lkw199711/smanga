@@ -22,32 +22,11 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+export default {name: 'layout'};
+</script>
+<script lang="ts" setup>
 import topNav from './components/top-nav.vue';
 import sidebar from './components/sidebar.vue';
-
-export default defineComponent({
-	name: 'layout',
-	// 数据
-	data() {
-		return {};
-	},
-
-	// 传值
-	props: [],
-
-	// 引用
-	computed: {},
-
-	// 组件
-	components: { topNav, sidebar },
-
-	// 方法
-	methods: {},
-
-	// 生命周期
-	created() { },
-});
 </script>
 
 <style scoped lang="less">

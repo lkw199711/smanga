@@ -18,9 +18,11 @@
 		<van-pull-refresh v-model="loading" @refresh="before_page">
 			<!-- 列表 -->
 			<div @click="switch_menu" id="flowList" ref="flowList">
-				<van-list v-model:loading="loading" :finished="finished" :immediate-check="false" @load="page_change">
-					<img :ref="'flow-' + index" class="list-img" v-for="(image, index) in browse.imageFileList"
-						:src="image" :key="image" :alt="t('browse.imgLoadError')" @click="load_image(index)" />
+				<van-list v-model:loading="loading" :finished="finished" :immediate-check="false"
+					@load="()=>{queue.flowQueue.add(page_change)}">
+					<img :style="browse.flowViewStyle" :ref="'flow-' + index" class="list-img"
+						v-for="(image, index) in browse.imageFileList" :src="image" :key="image"
+						:alt="t('browse.imgLoadError')" @click="load_image(index)" />
 				</van-list>
 			</div>
 		</van-pull-refresh>
@@ -35,7 +37,8 @@
 		<page-number :page="currentPage" :count="browse.pageCount" />
 
 		<!-- 功能菜单 -->
-		<right-sidebar @dwonload="dwonload_image" @jumpPageNumber="open_jump_dialog" />
+		<right-sidebar @dwonload="dwonload_image" @jumpPageNumber="open_jump_dialog"
+			@set_image_width="browse.dialogViewWidth = true" />
 
 		<!-- 安卓端占位符 -->
 		<div class="bottom-seat" v-if="config.android"></div>
@@ -61,15 +64,34 @@
 			</div>
 		</template>
 	</el-dialog>
+
+	<!-- 调整图片宽度 -->
+	<el-dialog v-model="browse.dialogViewWidth" :title="t('browse.title.setViewWidth')" class="dialog-jump-page">
+		<p>{{ t('browse.label.useAutoViewWidth') }}</p>
+		<el-switch v-model="browse.useAutoViewWidth" />
+		<template v-if="!browse.useAutoViewWidth">
+			<p>{{ t('browse.label.setViewWidth') }}</p>
+			<el-slider v-model="browse.viewWidthValue" :min="0" :max="100" />
+		</template>
+
+		<template #footer>
+			<div class="dialog-footer">
+				<el-button @click="browse.dialogViewWidth = false">{{ t('option.cancel') }}</el-button>
+				<el-button type="primary" @click="() => { browse.set_view_width('flow') }">
+					{{ t('option.confirm') }}
+				</el-button>
+			</div>
+		</template>
+	</el-dialog>
 </template>
 
 <script lang="ts">
 export default { name: 'browse-views' }
 </script>
 <script setup lang="ts">
-import { computed, ref } from 'vue';
+import { computed, ref, watch } from 'vue';
 import imageApi from '@/api/image';
-import { window_go_top } from '@/utils';
+import { delay, window_go_top } from '@/utils';
 import { ElMessage as msg } from 'element-plus';
 import { config } from '@/store';
 import i18n from '@/i18n';
@@ -80,7 +102,9 @@ import bookmark from './components/bookmark.vue';
 import pageNumber from './components/page-number.vue';
 import { useRoute, useRouter } from 'vue-router';
 import chapterApi from '@/api/chapter';
+import queue from '@/store/quque';
 import useBrowseStore from '@/store/browse';
+import _ from 'lodash';
 const { t } = i18n.global;
 const route = useRoute();
 const router = useRouter();
@@ -97,13 +121,11 @@ const showSmallJumpPage = computed(() => {
 
 // 当前真实页码 从零开始
 let page = 1;
-// 初始加载页码数量
-const initPage = 3;
 // 是否正在加载图片
 const loading = ref(false);
 // 是否加载完全部图片
 let finished = ref(false);
-
+let lastImageShown = ref(false);
 // ref dom
 const flowList = ref();
 
@@ -113,6 +135,16 @@ let currentPage = ref(1);
 // 在中途加载 前置没有加载的页面数量
 let beforeBookMark = 0;
 
+watch(currentPage, (currentPage) => {
+	const pageImage = browse.imagePathList[currentPage - beforeBookMark - 1];
+	// 记录页码
+	browse.page = currentPage;
+	// 记录当前图片
+	browse.pageImage = pageImage;
+	// 保存阅读记录
+	browse.save_latest(lastImageShown.value);
+})
+
 /**
  * 加载图片
  */
@@ -120,7 +152,7 @@ async function page_change() {
 	// 无数据 退出
 	if (!browse.imagePathList?.length) {
 		loading.value = false;
-		return false;
+		return;
 	}
 
 	// 是否加载完全部
@@ -132,10 +164,12 @@ async function page_change() {
 	// 页码递增
 	++page;
 
-	// 是否完成页面初始化加载,未完成则再次加载图片
-	page < initPage && setTimeout(async () => {
-		await page_change()
-	}, 1000);
+	// 当图片列表小于屏幕高度时 继续加载图片
+	const screenHeight = window.screen.height;
+	const listHeight = flowList.value?.scrollHeight || 0;
+	if (listHeight < screenHeight) {
+		queue.flowQueue.add(page_change)
+	}
 }
 
 /**
@@ -149,7 +183,7 @@ async function before_page() {
 	}
 
 	// 向前加载一页
-	await load_image(--beforeBookMark, 0, true);
+	await load_image(--beforeBookMark, true);
 
 	// 重新计算当前页码
 	scroll_page();
@@ -165,23 +199,12 @@ async function before_page() {
  * @param {*} unshift
  * @return {*}
  */
-async function load_image(index: number, errNum = 0, unshift = false) {
-	// 重新请教超过三次 取消此图片加载
-	if (errNum > 3) return false;
-
+async function load_image(index: number, unshift = false) {
 	// 无数据 退出
 	if (!browse.imagePathList[index]) return false;
 	const mangaId = Number(route.query.mangaId);
 	const chapterId = Number(route.query.chapterId);
-	const [res, err] = await imageApi.chapter_img(browse.imagePathList[index], index + 1, chapterId, mangaId).then(res => [res, null]).catch(err => [null, err]);
-
-	// 错误处理
-	if (err) {
-		setTimeout(() => {
-			load_image(index, errNum + 1);
-		}, 1000)
-		return;
-	}
+	const res = await imageApi.chapter_img(browse.imagePathList[index], index + 1, chapterId, mangaId)
 
 	if (unshift) {
 		browse.imageFileList.unshift(res);
@@ -232,7 +255,7 @@ async function reload_page(clearPage = true, pageParams = 1) {
 			if (res.list.length > browse.imageFileList.length) {
 				browse.imagePathList = res.list;
 				finished.value = false;
-				page_change();
+				queue.flowQueue.add(page_change);
 			}
 			// 再次加载解压进度
 			setTimeout(() => {
@@ -241,11 +264,11 @@ async function reload_page(clearPage = true, pageParams = 1) {
 			break;
 		case 'compressed':
 			browse.imagePathList = res.list;
-			page_change();
+			queue.flowQueue.add(page_change);
 			break;
 		default:
 			browse.imagePathList = res.list;
-			page_change();
+			queue.flowQueue.add(page_change);
 	}
 
 	browse.save_history();
@@ -330,21 +353,18 @@ function switch_menu() {
 function scroll_page() {
 	const flowListDom = flowList.value;
 	const scrollY = window.scrollY;
+	const maxScrollY = document.documentElement.scrollHeight - window.innerHeight;
 
 	if (!flowListDom) return 0;
 
 	let imgs = flowListDom.getElementsByTagName('img');
 
+	// 当滚动到页面底部 记录阅读完成
+	lastImageShown.value = finished.value && scrollY === maxScrollY;
+
 	for (let i = 0; i < imgs.length; i++) {
 		if (scrollY <= imgs[i].offsetTop) {
 			currentPage.value = i + beforeBookMark + 1;
-			const pageImage = browse.imagePathList[page - 1];
-			// 记录页码
-			browse.page = currentPage.value;
-			// 记录当前图片
-			browse.pageImage = pageImage;
-			// 保存阅读记录
-			browse.save_latest();
 			return;
 		}
 	}
@@ -355,7 +375,7 @@ function scroll_page() {
  */
 function dwonload_image() {
 	// 获取当前图片
-	const src = browse.imageFileList[currentPage.value - 1];
+	const src = browse.imageFileList[currentPage.value - beforeBookMark - 1];
 
 	const a = document.createElement('a');
 	a.href = src;
@@ -386,7 +406,16 @@ onMounted(() => {
 
 	reload_page(true, page);
 
-	window.addEventListener('scroll', scroll_page);
+	// 加载自定义视图宽度
+	browse.load_view_width('flow');
+
+	// 原生
+	// window.addEventListener('scroll', scroll_page);
+
+	// 防抖
+	window.addEventListener('scroll', _.debounce(scroll_page, 50), { passive: true });
+	// 节流
+	// window.addEventListener('scroll', _.throttle(scroll_page, 100), { passive: true });
 })
 
 

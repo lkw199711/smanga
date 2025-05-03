@@ -49,7 +49,9 @@
     "editTags": "ediaTags",
     "copy": "copy",
     "markAsRead": "Mark as read",
-    "markAsUnRead": "Mark as unread"
+    "markAsUnRead": "Mark as unread",
+    "scan": "Scan manga",
+    "meta": "Reload manga meta"
   },
   "account": {
     "add": "addUser",
@@ -98,7 +100,7 @@
       "directory": "directoryType:",
       "removeFirst": "removeFirst:",
       "direction": "direction:",
-      "autoScan": "auto scan",
+      "autoScan": "scheduled scan",
       "cover": "meida cover"
     },
     "note": {
@@ -282,7 +284,14 @@
     "half": "falf-cut",
     "model": "readModel",
     "imgLoadError": "Image loading failed, click to reload",
-    "jumpPageTitle": "Please enter target page number"
+    "jumpPageTitle": "Please enter target page number",
+    "label": {
+      "useAutoViewWidth": "Display adaptive image size",
+      "setViewWidth": "Set View Width"
+    },
+    "title": {
+      "setViewWidth": "Set View Width"
+    }
   },
   "page": {
     "before": "beforeChapter",
@@ -352,7 +361,10 @@
     "editTags": "editTags",
     "baseTagTitle": "Alternative tags",
     "ckeckedTagTitle": "Current tag",
-    "jumpPageText": "Jump page number"
+    "jumpPageText": "Jump page number",
+    "setImageWidth": "Set image width",
+    "requestFullscreen": "Full screen page",
+    "exitFullscreen": "Exit Full Screen"
   },
   "createTime": "createTime",
   "updateTime": "updateTime"

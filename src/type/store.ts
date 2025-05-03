@@ -16,14 +16,6 @@ type pageSizeConfigType = {
 	'4k': number[];
 };
 
-enum screenType {
-	mini = 'mini',
-	small = 'small',
-	tablet = 'tablet',
-	middle = 'middle',
-	large = 'large',
-	'2k' = '2k',
-	'4k' = '4k',
-}
+type screenType = 'mini' | 'small' | 'tablet' | 'middle' | 'large' | '2k' | '4k';
 
-export {pageSizeConfigType, screenType};
+export { pageSizeConfigType, screenType };

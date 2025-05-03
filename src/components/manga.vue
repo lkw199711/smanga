@@ -77,7 +77,7 @@ async function get_poster(item: mangaItemType) {
 }
 
 async function go_chapter() {
-
+/*
 	const newUrl = router.resolve({
 		name: 'manga-info',
 		query: {
@@ -86,6 +86,14 @@ async function go_chapter() {
 		},
 	})
 	window.open(newUrl.href, '_blank');
+*/
+	router.push({
+		name: 'manga-info',
+		query: {
+			mediaId: props.mangaInfo.mediaId,
+			mangaId: props.mangaInfo.mangaId,
+		},
+	});
 }
 </script>
 

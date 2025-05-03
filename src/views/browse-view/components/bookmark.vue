@@ -6,7 +6,7 @@
  * @FilePath: /smanga/src/views/browse-view/components/bookmark.vue
 -->
 <template>
-	<div class="bookmark" v-if="show">
+	<div class="bookmark" v-if="browse.bookmarkShow">
 		<i class="iconfont icon-bookmark" />
 	</div>
 </template>
@@ -15,21 +15,10 @@
 export default { name: 'bookmark' };
 </script>
 <script setup lang="ts">
-import { ref, watch } from 'vue';
 import useBrowseStore from '@/store/browse';
 
 const browse = useBrowseStore();
-
-const show = ref(false);
-
-// 页码变更时 重新判断书签是否展示
-watch(() => browse.page, () => {
-	show.value = !!browse.is_on_bookmark();
-}, { immediate: true });
-
-watch(() => browse.bookmarkList, () => {
-	show.value = !!browse.is_on_bookmark();
-}, { immediate: true });
+;
 </script>
 
 <style scoped lang="less">

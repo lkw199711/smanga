@@ -37,6 +37,11 @@
 	</div>
 </template>
 
-<script src="./script/index.ts" lang="ts"></script>
+<script lang="ts">export default {name:'wiki'}</script>
+<script lang="ts" setup>
+import operationCover from "./components/operation-cover.vue";
+const version = process.env.VUE_APP_VERSION;
+</script>
+
 
 <style src="./style/index.less" scoped lang="less"></style>

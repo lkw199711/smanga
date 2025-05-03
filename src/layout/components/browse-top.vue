@@ -1,7 +1,7 @@
 <template>
-	<div>
-		<el-menu :default-active="activeIndex" :class="['browse-top', { android: config.android }]" mode="horizontal"
-			@select="handleSelect" popper-effect="light">
+	<div :class="['browse-top', { android: config.android }]">
+		<!-- 顶部菜单 -->
+		<el-menu :default-active="activeIndex" mode="horizontal" @select="handleSelect" popper-effect="light">
 			<!--<logo/>-->
 			<el-menu-item class="padding logo-box" index="home">
 				<logo />
@@ -24,8 +24,8 @@
 			</el-sub-menu>
 			<el-menu-item index="addBookmark">{{ bookmarkTitle }}</el-menu-item>
 		</el-menu>
-
-		<div :class="['chapter-name', { android: config.android }]">{{ chapterName }}</div>
+		<!-- 章节名称 -->
+		<div class="chapter-name">{{ chapterName }}</div>
 	</div>
 </template>
 
@@ -111,6 +111,7 @@ async function handleSelect(key: string) {
 .browse-top {
 	position: fixed;
 	width: 100%;
+	background-color: @s-background;
 	z-index: 1;
 }
 
@@ -124,18 +125,14 @@ async function handleSelect(key: string) {
 
 .chapter-name {
 	display: block;
-	position: absolute;
-	top: 6.2rem;
 	width: 100vw;
 	color: @s-text;
 	background-color: @s-background;
 	font-size: 1.8rem;
 	text-align: center;
 	line-height: 2;
-}
-
-.chapter-name.android {
-	top: 9.4rem;
+	// 覆盖住el-menu的border-bottom
+	transform: translateY(-1px);
 }
 
 @media only screen and (min-width: 1200px) {}

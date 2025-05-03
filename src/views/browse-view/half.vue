@@ -4,15 +4,18 @@
     <chapter-list-menu @before_chapter="before_chapter" @next_chapter="next_chapter" @change_chapter="change_chapter" />
 
     <!--功能菜单-->
-    <right-sidebar @dwonload="dwonload_image" />
+    <right-sidebar @dwonload="dwonload_image" @set_image_width="browse.dialogViewWidth = true" />
 
-    <!--图片容器-->
-    <div class="single-page-img-box touch-dom">
-      <bookmark />
-      <img class="single-page-img" :src="imgSrc" :alt="t('browse.imgLoadError')" @click.stop="switch_menu" />
+    <div class="scroll">
+      <!--图片容器-->
+      <div class="single-page-img-box touch-dom" :style="{ maxHeight: browse.useAutoViewWidth ? '100%' : 'none' }">
+        <bookmark />
+        <img :style="browse.singleViewStyle" class="single-page-img" :src="imgSrc" :alt="t('browse.imgLoadError')"
+          @click.stop="switch_menu" />
 
-      <operation-cover @before="beforePage" @next="nextPage" @switch-menu="switch_menu"
-        @switch-footer="switch_footer"></operation-cover>
+        <operation-cover @before="beforePage" @next="nextPage" @switch-menu="switch_menu"
+          @switch-footer="switch_footer"></operation-cover>
+      </div>
     </div>
 
     <!-- 隐藏的canvas容器 -->
@@ -31,6 +34,25 @@
       <el-button class="btn" type="success" plain @click="next_chapter">{{ $t('page.next') }}</el-button>
     </div>
   </div>
+
+  <!-- 调整图片宽度 -->
+  <el-dialog v-model="browse.dialogViewWidth" :title="t('browse.title.setViewWidth')" class="dialog-jump-page">
+    <p>{{ t('browse.label.useAutoViewWidth') }}</p>
+    <el-switch v-model="browse.useAutoViewWidth" />
+    <template v-if="!browse.useAutoViewWidth">
+      <p>{{ t('browse.label.setViewWidth') }}</p>
+      <el-slider v-model="browse.viewWidthValue" :min="0" :max="100" />
+    </template>
+
+    <template #footer>
+      <div class="dialog-footer">
+        <el-button @click="browse.dialogViewWidth = false">{{ t('option.cancel') }}</el-button>
+        <el-button type="primary" @click="() => { browse.set_view_width('half') }">
+          {{ t('option.confirm') }}
+        </el-button>
+      </div>
+    </template>
+  </el-dialog>
 </template>
 
 <script setup lang='ts'>
@@ -67,7 +89,7 @@ const pager = ref();
 async function page_change(pageParams: number) {
   // 清空之前图片内容
   browse.imageFileList = [];
-  
+
   page.value = pageParams;
   const even = pageParams % 2 === 0;
 
@@ -310,6 +332,9 @@ onMounted(() => {
 
   // 加载页面
   reload_page(page);
+
+  // 加载自定义视图宽度
+  browse.load_view_width('half');
 
   if (userConfig.enableTouchPageChange) {
     touch_page_change();

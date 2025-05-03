@@ -28,7 +28,7 @@
       </el-table>
 
       <!--分页-->
-      <table-pager ref="pager" @pageChange="load_table" :count="count" />
+      <table-pager ref="pager" :page-size="browse.manageListPageSize" @pageChange="load_table" :count="count" />
 
       <el-dialog :title="t('jobsManage.details')" v-model="editMangaDialog" :before-close="dialog_close">
 
@@ -48,6 +48,7 @@
     </div>
   </div>
 </template>
+
 <script lang="ts">
 export default {
   name: 'jobs-manage',
@@ -55,46 +56,26 @@ export default {
 </script>
 <script setup lang="ts">
 import { Delete, Edit } from '@element-plus/icons-vue';
-import { onMounted, reactive, ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import { ElMessage, ElMessageBox } from 'element-plus';
 import jobsApi from '@/api/jobs';
 import tablePager from '@/components/table-pager.vue';
 import i18n from '@/i18n';
-import { Search } from '@element-plus/icons-vue';
 import ClipboardJS from 'clipboard'
+import useBrowseStore from '@/store/browse';
 
+const browse = useBrowseStore();
 const { t } = i18n.global;
 
 const pager = ref();
 let count = ref(0);
 let tableData = ref([]);
 let editMangaDialog = ref(false);
-let keyWord = ref('');
 let payload = ref('');
-let form = reactive({
-  mangaId: '',
-  mangaName: '',
-  mangaPath: '',
-  mangaCover: '',
-  browseType: '',
-  removeFirst: '',
-  direction: 0,
-});
-
-const formInit = {
-  mangaId: '',
-  mangaName: '',
-  mangaPath: '',
-  mangaCover: '',
-  browseType: 'flow',
-  removeFirst: 0,
-  direction: 1,
-};
 
 onMounted(() => {
   load_table();
 })
-
 
 /***
  * 关闭弹窗
@@ -107,15 +88,19 @@ function dialog_close() {
  * 加载表格数据
  */
 async function load_table(page = 1, pageSize = 10) {
-  const res = await jobsApi.get(page, pageSize, '', keyWord.value);
+  const res = await jobsApi.get(page, pageSize);
   count.value = res.count;
   tableData.value = res.list;
+
+  browse.manageListPage = page;
+  browse.manageListPageSizeCache = pageSize;
 }
 /**
  * 重载数据 页码不变
  */
 function reload_table() {
-  pager.value.reload_page();
+  tableData.value = [];
+  load_table(browse.manageListPage, browse.manageListPageSize);
 }
 /**
  * 编辑漫画
@@ -165,6 +150,7 @@ async function delete_manga(index: number, row: any) {
     .catch(() => { });
 }
 </script>
+
 <style scope>
 #payload {
   white-space: pre-wrap;
@@ -172,4 +158,53 @@ async function delete_manga(index: number, row: any) {
   font-size: 1.6rem;
 }
 </style>
-<style src='./style/index.less' scoped lang='less'></style>
+<style scoped lang='less'>
+.manga-setting-index {
+  margin: 1rem auto;
+}
+
+@media only screen and (min-width: 1200px) {
+  .top {
+    width: 100rem;
+  }
+
+  .search-input {
+    max-width: 100vw;
+  }
+
+  .manga-setting-box {
+    width: 100rem;
+    margin: 0rem auto;
+  }
+}
+
+@media only screen and (max-width: 1199px) and (min-width: 768px) {
+  .top {
+    width: 91rem;
+  }
+
+  .search-input {
+    max-width: 100vw;
+  }
+
+  .manga-setting-box {
+    width: 91rem;
+    margin: 0rem auto;
+  }
+}
+
+@media only screen and (max-width: 767px) {
+  .top {
+    width: 91rem;
+  }
+
+  .search-input {
+    max-width: 100vw;
+  }
+
+  .manga-setting-box {
+    width: 91rem;
+    margin: 0 auto;
+  }
+}
+</style>

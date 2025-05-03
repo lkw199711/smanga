@@ -52,14 +52,17 @@ class Queue {
 const globalQueue = new Queue();
 const mangaQueue = new Queue();
 const chapterQueue = new Queue();
+const flowQueue = new Queue();
 const queue = reactive({
 	globalQueue,
 	mangaQueue,
 	chapterQueue,
+	flowQueue,
 	clear() {
 		globalQueue.clear();
 		mangaQueue.clear();
 		chapterQueue.clear();
+		flowQueue.clear();
 	},
 });
 

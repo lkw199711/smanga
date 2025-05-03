@@ -81,15 +81,15 @@ import { metaItemType } from '@/type/meta';
 import { mangaInfoType } from '@/type/manga';
 import { chapterType } from '@/type/chapter';
 import chapterApi from '@/api/chapter';
-import { global_set, global_set_json } from '@/utils'
 import lastesApi from '@/api/latest';
 import collectApi from '@/api/collect';
 import mangaTagBox from '@/components/manga-tag-box.vue';
 import useBrowseStore from '@/store/browse';
-
+const browse: any = useBrowseStore();
 const router = useRouter();
 
 let mangaInfo = reactive<mangaInfoType>({
+    mediaId: 0,
     mangaId: 0,
     mangaName: '',
     mangaCover: '',
@@ -104,20 +104,7 @@ let mangaInfo = reactive<mangaInfoType>({
     metas: [],
 });
 
-let firstChapterInfo = ref<chapterType>({
-    browseType: '',
-    chapterCover: '',
-    chapterId: 0,
-    chapterName: '',
-    chapterPath: '',
-    chapterType: '',
-    createTime: '',
-    mangaId: 0,
-    mediaId: 0,
-    pathId: 0,
-    picNum: 0,
-    updateTime: '',
-});
+let firstChapterInfo = ref<chapterType>();
 
 let latestChapterInfo = ref<chapterType | false>(false);
 
@@ -198,10 +185,9 @@ async function go_chapter() {
     const chapterInfo = latestChapterInfo.value ? latestChapterInfo.value : firstChapterInfo.value;
 
     // 使用pinia存储页码
-    let page = chapterInfo.page || 1;
+    let page = chapterInfo?.page || 1;
 
-    const browseStore: any = useBrowseStore();
-    browseStore.page = page;
+    browse.page = page;
 
     // const newUrl = router.resolve({
     //     name: mangaInfo.browseType,
@@ -215,9 +201,9 @@ async function go_chapter() {
     router.push({
         name: mangaInfo.browseType,
         query: {
-            mediaId: chapterInfo.mediaId,
-            mangaId: chapterInfo.mangaId,
-            chapterId: chapterInfo.chapterId
+            mediaId: mangaInfo.mediaId,
+            mangaId: mangaInfo.mangaId,
+            chapterId: chapterInfo?.chapterId
         }
     });
 }
@@ -227,6 +213,7 @@ async function go_chapter() {
  * @return {*}
  */
 function go_chapter_list() {
+    browse.chapterListPage = 1;
     router.push({
         name: 'chapter-list',
         query: {

@@ -12,7 +12,6 @@
 
 <script lang="ts" setup>
 import { Cookies, global_set_json } from '@/utils';
-import bookmarkApi from '@/api/bookmark';
 import { config, pageSizeConfig, userConfig } from '@/store';
 import { useRoute, useRouter } from 'vue-router';
 import { ElConfigProvider, ElMessage, ElMessageBox } from 'element-plus';
@@ -77,9 +76,9 @@ function set_screen_type() {
 		config.screenType = 'tablet';
 	} else if (screen < 1920) {
 		config.screenType = 'middle';
-	} else if (screen < 2560) {
+	} else if (screen < 2460) {
 		config.screenType = 'large';
-	} else if (screen < 4096) {
+	} else if (screen < 4000) {
 		config.screenType = '2k';
 	} else {
 		config.screenType = '4k';
@@ -89,21 +88,9 @@ function set_screen_type() {
 	// ElMessage(String(window.screen.width));
 }
 
-/**
- * 检查登录状态
- */
-async function check_login() {
-	const id = Cookies.get('userId');
-	const name = Cookies.get('userName');
-
-	if ((!name || !id) && route.name !== 'init') {
-		router.push('/login');
-	}
-}
-
 async function get_setting() {
 	const res = await userApi.get_user_config();
-	let configValue = {};
+	let configValue = {} as any;
 
 	if (typeof res === 'string') {
 		configValue = JSON.parse(res);
@@ -116,6 +103,13 @@ async function get_setting() {
 	// 使用数据库用户设置，覆盖当前设置
 	Object.assign(userConfig, configValue.userConfig);
 	Object.assign(pageSizeConfig, configValue.pageSizeConfig);
+
+	if (userConfig?.mangaPageSize != 0) {
+		browse.mangaListPageSizeCache = Number(localStorage.getItem('mangaPageSize')) || 0;
+	}
+	if (userConfig?.chapterPageSize != 0) {
+		browse.chapterListPageSizeCache = Number(localStorage.getItem('chapterPageSize')) || 0;
+	}
 
 	// 对于功能页面 优先从缓存中加载用户配置
 	global_set_json('userConfig', userConfig);

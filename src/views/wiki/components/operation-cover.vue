@@ -13,34 +13,8 @@
     <div class="bottom">呼出/隐藏分页器</div>
   </div>
 </template>
-
-<script lang='ts'>
-import {defineComponent} from 'vue'
-
-export default defineComponent({
-  name: 'operation-cover',
-  // 数据
-  data() {
-    return {}
-  },
-
-  // 传值
-  props: [],
-
-  // 引用
-  computed: {},
-
-  // 组件
-  components: {},
-
-  // 方法
-  methods: {},
-
-  // 生命周期
-  created() {
-  },
-})
-</script>
+<script lang="ts">export default {name:'operation-cover'}</script>
+<script lang="ts" setup></script>
 
 <style scoped lang='less'>
 .show-menu-btn {

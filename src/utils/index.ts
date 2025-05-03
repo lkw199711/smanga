@@ -114,3 +114,23 @@ export function get_cookie(key: string) {
     const arr = document.cookie.match(new RegExp("\\b" + key + "=([^;]+)(;|$)"));
     return arr ? arr[1] : '';
 }
+
+
+/**
+ * 
+ * @param ms 延迟的时间，单位为毫秒
+ * @description: 延迟函数，使用Promise实现
+ * @returns 
+ */
+export async function delay(ms: number) {
+    return new Promise(resolve => {
+        const now = new Date().getTime();
+        const target = now + ms;
+
+        while (new Date().getTime() < target) {
+            continue;
+        }
+
+        resolve(true); // 延时结束，返回结果
+    });
+};

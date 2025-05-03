@@ -43,7 +43,7 @@
         </el-table-column>
       </el-table>
       <!--分页-->
-      <table-pager ref="pager" @pageChange="load_table" :count="count" />
+      <table-pager ref="pager" @pageChange="load_table" :page-size="browse.manageListPageSize" :count="count" />
 
       <!--编辑路径弹框-->
       <el-dialog :title="$t('path.modify')" v-model="editPathDialogVisible" :before-close="() => {
@@ -82,10 +82,10 @@
             <div class="btn-box">
               <el-button type="primary" @click="save_path">{{
                 $t('option.confirm')
-                }}</el-button>
+              }}</el-button>
               <el-button type="warning" @click="cancel_edit_path">{{
                 $t('option.cancel')
-                }}</el-button>
+              }}</el-button>
             </div>
           </div>
         </template>
@@ -94,6 +94,152 @@
   </div>
 </template>
 
-<script src='./script/index.ts' lang='ts'></script>
+<script lang='ts'>export default { name: 'path-manage' }</script>
 
-<style src='./style/index.less' scoped lang='less'></style>
+<script setup lang='ts'>
+import { Delete, Edit, Refresh, RefreshRight } from '@element-plus/icons-vue';
+import { ref, reactive, onMounted } from 'vue';
+import { ElMessageBox } from 'element-plus';
+import pathApi from '@/api/path';
+import tablePager from '@/components/table-pager.vue';
+import i18n from '@/i18n';
+import useBrowseStore from '@/store/browse';
+
+const browse = useBrowseStore();
+
+const { t } = i18n.global;
+
+const editPathDialogVisible = ref(false);
+const count = ref(0);
+const tableData = ref([]);
+const pathForm = reactive({
+  pathId: 0,
+  pathContent: '',
+  autoScan: 0,
+  include: '',
+  exclude: '',
+});
+
+onMounted(() => {
+  load_table();
+})
+/**
+ * 加载表格数据
+ */
+async function load_table(page = 1, pageSize = browse.manageListPageSize) {
+  const res = await pathApi.get_path(0, page, pageSize);
+  count.value = Number(res.count);
+  tableData.value = res.list;
+
+  browse.manageListPage = page;
+  browse.manageListPageSizeCache = pageSize;
+}
+/**
+ * 重载数据 页码不变
+ */
+function reload_table() {
+  tableData.value = [];
+  load_table(browse.manageListPage, browse.manageListPageSize);
+}
+/**
+ * 删除漫画
+ * */
+async function delete_path(index: number, row: any) {
+  ElMessageBox.confirm(t('path.confirm.text1'), t('path.confirm.title'), {
+    type: 'warning',
+  })
+    .then(async () => {
+      const res = await pathApi.delete_path(row.pathId);
+
+      if (res.code === 0) {
+        reload_table();
+      }
+    })
+    .catch(() => { });
+}
+
+/**
+ * 重新扫描路径
+ * @param index
+ * @param row
+ */
+async function rescan_path(index: number, row: any) {
+  ElMessageBox.confirm(t('path.confirm.text2'), t('path.confirm.title2'), {
+    type: 'warning',
+  })
+    .then(async () => {
+      const res = await pathApi.rescan_path(
+        row.mediaId,
+        row.path,
+        row.pathId
+      );
+
+      if (res.code === 0) {
+        reload_table();
+      }
+    })
+    .catch(() => { });
+}
+
+/**
+ * 增量扫描路径
+ * @param index
+ * @param row
+ */
+async function scan_path(index: number, row: any) {
+  const res = await pathApi.scan_path(row.mediaId, row.path, row.pathId);
+
+  if (res.code === 0) {
+    reload_table();
+  }
+}
+
+async function edit_path(index: number, row: any) {
+  editPathDialogVisible.value = true;
+  Object.assign(pathForm, row);
+}
+
+async function save_path() {
+  const res = await pathApi.update_path(pathForm.pathId, pathForm);
+  if (res) {
+    editPathDialogVisible.value = false;
+    reload_table();
+  }
+}
+
+function cancel_edit_path() {
+  editPathDialogVisible.value = false;
+  Object.assign(pathForm, {
+    pathId: 0,
+    pathContent: '',
+    autoScan: 0,
+    include: '',
+    exclude: '',
+  });
+}
+
+
+</script>
+
+<style scoped lang='less'>
+@media only screen and (min-width: 1200px) {
+  .path-setting-box {
+    width: 100rem;
+    margin: 3rem auto;
+  }
+}
+
+@media only screen and (max-width: 1199px) and (min-width: 768px) {
+  .path-setting-box {
+    width: 72rem;
+    margin: 2rem auto;
+  }
+}
+
+@media only screen and (max-width: 767px) {
+  .path-setting-box {
+    width: 72rem;
+    margin: 1rem auto;
+  }
+}
+</style>

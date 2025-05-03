@@ -26,3 +26,5 @@ export const chapterPageSize = reactive({
 	'2k': [44, 48, 50, 62, 74],
 	'4k': [44, 48, 50, 62, 74],
 });
+
+export const manageListPageSizes = [10, 20, 30, 40, 50, 60, 70];

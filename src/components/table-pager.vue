@@ -12,17 +12,18 @@
 export default { name: 'table-pager' }
 </script>
 <script setup lang='ts'>
-import { ref, computed, watch, onMounted } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import { config } from '@/store';
+import { manageListPageSizes } from '@/store/page-size';
+
+// 传值
+const props = defineProps(['page', 'pageSize', 'count', 'pageSizeConfig']);
+const emit = defineEmits(['pageChange']);
+defineExpose({ page_change, reload_page });
 const pageSize = ref(10);
 const disabled = ref(false);
 const background = ref(true);
-const pageSizes = ref([10, 20, 30, 40]);
-
-// 传值
-const props = defineProps(['page', 'count', 'pageSizeConfig']);
-const emit = defineEmits(['pageChange']);
-defineExpose({ page_change, reload_page });
+const pageSizes = ref(manageListPageSizes);
 
 let pagerPage = computed(() => {
   return props.page;
@@ -33,7 +34,7 @@ const pageCount = computed(() => {
   const screenType = config.screenType;
   switch (screenType) {
     case '2k':
-      return 46;
+      return 18;
     case 'large':
       return 17;
     case 'middle':
@@ -77,6 +78,10 @@ let pageLayout = computed(() => {
     default:
       return 'total, sizes, prev, pager, next, jumper';
   }
+})
+
+onMounted(() => {
+  pageSize.value = props.pageSize || pageSizes.value[0];
 })
 
 /**

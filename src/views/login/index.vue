@@ -7,18 +7,18 @@
 			<div class="logo">
 				<img src="../../assets/smanga-logo.png" alt="logo" />
 			</div>
-			<el-form class="login-form" ref="form" :model="form" label-width="80px">
+			<el-form class="login-form" ref="form" label-width="80px">
 				<el-form-item label="用户名:">
-					<el-input v-model="form.userName" placeholder="请输入用户名"></el-input>
+					<el-input v-model="userName" placeholder="请输入用户名" type="text"></el-input>
 				</el-form-item>
 
 				<el-form-item label="密码:">
-					<el-input v-model="form.passWord" placeholder="请输入内容" type="password"></el-input>
+					<el-input v-model="passWord" placeholder="请输入内容" type="password"></el-input>
 				</el-form-item>
 			</el-form>
 
 			<p class="app-box">
-				<a href="/file/smanga1.1.apk">下载Android应用</a>
+				<a href="#" @click="download_apk">下载Android应用</a>
 			</p>
 
 			<!--按钮盒子-->
@@ -30,78 +30,70 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+export default {
+	name: 'login',
+};
+</script>
+<script lang="ts" setup>
+import { ref, reactive, onMounted } from 'vue';
+import { useRouter } from 'vue-router';
 import { Cookies } from '@/utils';
-
-import { power, userInfo } from '@/store';
+import { userInfo } from '@/store';
 import loginApi from '@/api/login';
 
-export default defineComponent({
-	name: 'index',
-	// 数据
-	data() {
-		return {
-			form: {
-				userName: '',
-				passWord: '',
-			},
-			showDatabase: false,
-			backClass: 'bg' + 1,
-		};
-	},
+const router = useRouter();
+const userName = ref('');
+const passWord = ref('');
+const backClass = ref('bg' + 1);
 
-	// 传值
-	props: [],
-
-	// 计算
-	computed: {
-
-	},
-
-	// 组件
-	components: {},
-
-	// 方法
-	methods: {
-		async do_login() {
-			const loginResponse = await loginApi.login(this.form);
-
-			if (!loginResponse) return;
-			// 缓存用户信息
-			Object.assign(userInfo, loginResponse);
-			Cookies.set('userName', loginResponse.userName);
-			Cookies.set('userId', loginResponse.userId);
-			Cookies.set('token', loginResponse.token);
-			Cookies.set('header', loginResponse.header);
-			Cookies.set('token', loginResponse.token)
-			Cookies.set('role', loginResponse.userRole)
-
-			await this.$router.push('media-list');
-
-		},
-		getBackActive() {
-			// 取1-16的一个数据整数
-			let num = Math.floor(Math.random() * 16) + 1;
-			return 'bg' + num;
+onMounted(() => {
+	document.onkeypress = (e) => {
+		const keycode = document.all ? e.keyCode : e.which;
+		if (keycode === 13) {
+			do_login();
+			return false;
 		}
-	},
+	};
 
-	// 生命周期
-	created() {
-		document.onkeypress = (e) => {
-			const keycode = document.all ? e.keyCode : e.which;
-			if (keycode === 13) {
-				this.do_login();
-				return false;
-			}
-		};
+	backClass.value = getBackActive();
 
-		this.backClass = this.getBackActive();
+	const val = localStorage.getItem('activeBack');
+	if (val && val !== '0') backClass.value = 'bg' + val;
+})
 
-		const val = localStorage.getItem('activeBack');
-		if (val && val !== '0') this.backClass = 'bg' + val;
-	},
-});
+
+async function do_login() {
+	const loginResponse = await loginApi.login({ userName: userName.value, passWord: passWord.value });
+
+	if (!loginResponse) return;
+	// 缓存用户信息
+	Object.assign(userInfo, loginResponse);
+	Cookies.set('userName', loginResponse.userName);
+	Cookies.set('userId', loginResponse.userId);
+	Cookies.set('token', loginResponse.token);
+	Cookies.set('header', loginResponse.header);
+	Cookies.set('token', loginResponse.token)
+	Cookies.set('role', loginResponse.userRole)
+
+	await router.push('media-list');
+
+}
+
+function getBackActive() {
+	// 取1-16的一个数据整数
+	let num = Math.floor(Math.random() * 16) + 1;
+	return 'bg' + num;
+}
+
+/**
+ * @param event {MouseEvent} 事件
+ * @description 下载apk文件
+ */
+async function download_apk(event: MouseEvent) {
+	event.preventDefault();
+	await loginApi.download_apk();
+}
+
 </script>
 
 <style scoped lang="less">

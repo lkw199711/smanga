@@ -5,7 +5,7 @@
  * @LastEditTime: 2024-08-06 18:49:54
  * @FilePath: \smanga\src\api\login.ts
  */
-import {ajax} from './index';
+import { ajax } from './index';
 
 const loginApi = {
 	async login(data: any) {
@@ -17,7 +17,7 @@ const loginApi = {
 		const res = ajax({
 			timeout: 3 * 60 * 1000,
 			url: 'deploy/database-init',
-			data: {userName, passWord},
+			data: { userName, passWord },
 		});
 
 		return (await res).data;
@@ -61,6 +61,25 @@ const loginApi = {
 		});
 
 		return (await res).data;
+	},
+
+	async download_apk() {
+		// const response = await ajax.get('file/apk');
+
+		await ajax.get('file/apk', { responseType: 'blob' })
+			.then((response) => {
+				const url = window.URL.createObjectURL(new Blob([response.data]));
+				const a = document.createElement('a');
+				a.href = url;
+				a.download = 'smanga.apk'; // 指定下载文件名
+				document.body.appendChild(a);
+				a.click();
+				a.remove();
+				window.URL.revokeObjectURL(url); // 释放内存
+			})
+			.catch((error) => {
+				console.error('下载失败:', error);
+			});
 	},
 };
 

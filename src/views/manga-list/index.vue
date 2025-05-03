@@ -16,10 +16,12 @@
 		</div>
 
 		<!--分页组件-->
-		<media-pager ref="pager" :page="page" :count="count" :page-size-config="pageSizes" @page-change="page_change" />
+		<media-pager ref="pager" :page="page" :page-size="browse.mangaListPageSize" :count="count"
+			:page-size-config="browse.mangaListPageSizes" @page-change="page_change" />
 
 		<!--功能菜单-->
-		<rightSidebar :mangaInfo="mangaInfo" :rightSidebarVisible="rightSidebarVisible" @reload="page_change" @close="() => { rightSidebarVisible = false}" />
+		<rightSidebar :mangaInfo="mangaInfo" :rightSidebarVisible="rightSidebarVisible" @reload="page_change"
+			@close="() => { rightSidebarVisible = false }" />
 	</div>
 </template>
 
@@ -32,43 +34,27 @@ import {
 	computed,
 	watch,
 	onMounted,
-	onBeforeUnmount,
-	onActivated,
 	ref,
 } from 'vue';
 import { useRoute } from 'vue-router';
 import mangaApi from '@/api/manga';
-import store, { config, userConfig, pageSizeConfig } from '@/store';
-import { global_get } from '@/utils';
+import { config, userConfig } from '@/store';
 import manga from '@/components/manga.vue';
 import mediaPager from '@/components/media-pager.vue';
 import listSkeleton from '@/components/list-skeleton.vue';
 import rightSidebar from './right-sidebar.vue';
-import { screenType } from '@/type/store';
-import { mangaPageSize } from '@/store/page-size';
 import { mangaInfoType } from '@/type/manga';
 import queue from '@/store/quque';
+import useBrowseStore from '@/store/browse';
+const browse = useBrowseStore();
 const route = useRoute();
 
 let page = ref(1);
-let count = ref(0);
+let count = ref(-1);
 let list = ref<mangaInfoType[]>([]);
 let mangaInfo = ref<mangaInfoType>();
 let rightSidebarVisible = ref(false);
 let loading = ref(false);
-
-let pageSizes: number[] = [];
-let defaultPageSize = 10;
-
-get_page_size_array();
-
-function get_page_size_array() {
-	// 获取默认的页面容量
-	const screen: screenType = config.screenType;
-
-	pageSizes = mangaPageSize[screen];
-	defaultPageSize = mangaPageSize[screen][0];
-}
 
 const mediaId = computed<number>(() => {
 	return Number(route.query.mediaId);
@@ -84,18 +70,7 @@ watch(
 
 onMounted(() => {
 	reload();
-	route.params.clear = '';
-
 	touch_page_change();
-});
-
-onActivated(() => {
-	const clear = route.params.clear;
-
-	if (clear) {
-		reload();
-		route.params.clear = '';
-	}
 });
 
 function touch_page_change() {
@@ -133,12 +108,12 @@ function touch_page_change() {
 
 		// 向左滑动,向右翻页
 		if (moveX < -100 && page.value < count.value) {
-			page_change(++page.value);
+			page_change(++page.value, browse.mangaListPageSize);
 		}
 
 		// 向右滑动,向左翻页
 		if (moveX > 100 && page.value > 1) {
-			page_change(--page.value);
+			page_change(--page.value, browse.mangaListPageSize);
 		}
 
 
@@ -153,12 +128,12 @@ function touch_page_change() {
  */
 async function page_change(
 	pageParams = 1,
-	pageSize: number = defaultPageSize
+	pageSize: number = 10
 ) {
 	const byParentPath = route.query.byParentPath;
 	const parentPath = route.query.parentPath;
 
-	if (pageParams !== 1 && pageParams > Math.ceil(count.value / pageSize)) return;
+	if (pageParams !== 1 && count.value !== -1 && pageParams > Math.ceil(count.value / pageSize)) return;
 	if (pageParams < 1) return;
 
 	// 获取页码
@@ -182,11 +157,15 @@ async function page_change(
 
 	// 结束加载
 	loading.value = false;
+
+	// 缓存页码信息
+	browse.mangaListPage = page.value;
+	browse.mangaListPageSizeCache = pageSize;
 }
 
 function reload() {
 	list.value = [];
-	page_change();
+	page_change(browse.mangaListPage, browse.mangaListPageSize);
 }
 
 /**

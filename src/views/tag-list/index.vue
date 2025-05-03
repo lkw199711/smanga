@@ -8,8 +8,8 @@
 <template>
     <div class="tag-list">
         <div class="top">
-            <el-check-tag v-for="tagItem in tagList" class="check-tag" :color="tagItem.tagColor" :checked="tagItem.checked" :key="tagItem.tagId"
-                :style="tagStyle(tagItem.checked, tagItem.tagColor)"
+            <el-check-tag v-for="tagItem in tagList" class="check-tag" :color="tagItem.tagColor"
+                :checked="tagItem.checked" :key="tagItem.tagId" :style="tagStyle(tagItem.checked, tagItem.tagColor)"
                 @change="(status: boolean) => { onChange(tagItem, status) }" effect="dark" size="large">
                 {{ tagItem.tagName }}
             </el-check-tag>
@@ -32,20 +32,22 @@
     </div>
 
     <!--分页组件-->
-    <media-pager ref="pager" :page="page" :count="count" :page-size-config="pageSizes" @page-change="page_change" />
+    <media-pager ref="pager" :page="page" :page-size="browse.mangaListPageSize" :count="count"
+        :page-size-config="browse.mangaListPageSizes" @page-change="page_change" />
 </template>
 
 <script lang="ts" setup>
 import { onMounted, ref, computed, watch } from 'vue';
-import store, { config, userConfig, pageSizeConfig } from '@/store';
+import { config, userConfig } from '@/store';
 import tagApi, { tagItemType } from '@/api/tag';
 import mangaApi from '@/api/manga';
 import manga from '@/components/manga.vue';
 import mediaPager from '@/components/media-pager.vue';
 import i18n from '@/i18n';
-import { mangaPageSize } from '@/store/page-size';
-import { screenType } from '@/type/store';
 const { t } = i18n.global;
+
+import useBrowseStore from '@/store/browse';
+const browse = useBrowseStore();
 
 type mangaItemType = {
     browseType: string;
@@ -64,20 +66,7 @@ type mangaItemType = {
     blob: string;
 }
 
-let pageSizes: number[] = [];
-let defaultPageSize = 10;
-
-get_page_size_array();
-
-function get_page_size_array() {
-    const screen: screenType = config.screenType;
-
-    pageSizes = mangaPageSize[screen];
-    defaultPageSize = mangaPageSize[screen][0];
-}
-
 const page = ref(1);
-const pageSize = ref(10);
 // 漫画列表
 let mangaList = ref<mangaItemType[]>([]);
 const count = ref(0);
@@ -123,13 +112,13 @@ function context_menu(mangaItem: mangaItemType) {
 watch(
     () => userConfig.order,
     () => {
-        page_change(1);
+        page_change(1, browse.mangaListPageSize);
     }
 );
 
 async function onChange(tagItem: tagItemType, status: boolean) {
     tagItem.checked = status;
-    page_change(page.value);
+    page_change(page.value, browse.mangaListPageSize);
 }
 
 onMounted(async () => {
@@ -143,13 +132,22 @@ onMounted(async () => {
  */
 async function page_change(
     pageC = 1,
-    pageSize: number = defaultPageSize
+    pageSize: number = 10
 ) {
     page.value = pageC;
     mangaList.value = [];
-    const res = await mangaApi.get_by_tags(tagIds.value, page.value, pageSize, userConfig.order);
-    mangaList.value = res.list;
-    count.value = res.count;
+
+    if (tagIds.value === '') {
+        count.value = 0;
+        return;
+    } else {
+        const res = await mangaApi.get_by_tags(tagIds.value, page.value, pageSize, userConfig.order);
+        mangaList.value = res.list;
+        count.value = res.count;
+    }
+    
+    browse.mangaListPage = page.value;
+    browse.mangaListPageSizeCache = pageSize;
 }
 </script>
 

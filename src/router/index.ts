@@ -165,6 +165,7 @@ const routes: Array<RouteRecordRaw> = [
 		meta: {
 			submenu: true,
 			sidebar: true,
+			onlyAdmin: true,
 			title: 'manage',
 			icon: 'manage',
 			view: 'setting',
@@ -181,7 +182,7 @@ const routes: Array<RouteRecordRaw> = [
 					icon: 'person',
 					view: 'setting',
 				},
-				component: () => import('../views/account/index.vue'),
+				component: () => import('../views/user-manage/index.vue'),
 			},
 			// 媒体库设置
 			{
@@ -193,7 +194,7 @@ const routes: Array<RouteRecordRaw> = [
 					icon: 'media-manage',
 					view: 'setting',
 				},
-				component: () => import('../views/media-setting/index.vue'),
+				component: () => import('../views/media-manage/index.vue'),
 			},
 			// 漫画设置
 			{
@@ -205,7 +206,7 @@ const routes: Array<RouteRecordRaw> = [
 					icon: 'manga-manage',
 					view: 'setting',
 				},
-				component: () => import('../views/manga-setting/index.vue'),
+				component: () => import('../views/manga-manage/index.vue'),
 			},
 			// 路径管理
 			{
@@ -217,7 +218,7 @@ const routes: Array<RouteRecordRaw> = [
 					icon: 'folder',
 					view: 'setting',
 				},
-				component: () => import('../views/path-setting/index.vue'),
+				component: () => import('../views/path-manage/index.vue'),
 			},
 			// 章节管理
 			{
@@ -229,7 +230,7 @@ const routes: Array<RouteRecordRaw> = [
 					icon: 'chapter-manage',
 					view: 'setting',
 				},
-				component: () => import('../views/chapter-setting/index.vue'),
+				component: () => import('../views/chapter-manage/index.vue'),
 			},
 			// 书签管理
 			{
@@ -241,7 +242,7 @@ const routes: Array<RouteRecordRaw> = [
 					icon: 'bookmark',
 					view: 'setting',
 				},
-				component: () => import('../views/bookmark-setting/index.vue'),
+				component: () => import('../views/bookmark-manage/index.vue'),
 			},
 			// 标签管理
 			{
@@ -253,7 +254,7 @@ const routes: Array<RouteRecordRaw> = [
 					icon: 'tag',
 					view: 'setting',
 				},
-				component: () => import('../views/tag-setting/index.vue'),
+				component: () => import('../views/tag-manage/index.vue'),
 			},
 			// 解压管理
 			{
@@ -265,7 +266,7 @@ const routes: Array<RouteRecordRaw> = [
 					icon: 'compress',
 					view: 'setting',
 				},
-				component: () => import('../views/compress-setting/index.vue'),
+				component: () => import('../views/compress-manage/index.vue'),
 			},
 			// 任务管理
 			{
@@ -313,6 +314,7 @@ const routes: Array<RouteRecordRaw> = [
 				name: 'serve-setting',
 				meta: {
 					sidebar: true,
+					onlyAdmin: true,
 					title: 'serveSetting',
 					icon: 'shezhi',
 					view: 'default',
@@ -324,6 +326,7 @@ const routes: Array<RouteRecordRaw> = [
 				name: 'log',
 				meta: {
 					sidebar: true,
+					onlyAdmin: true,
 					title: 'log',
 					icon: 'log',
 					view: 'searchOnly',

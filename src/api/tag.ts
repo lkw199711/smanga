@@ -68,7 +68,7 @@ const tagApi = {
 	 * @return {*}
 	 */
 	add: async function (tagName: string, tagColor: string, description: string) {
-		await ajax.post('tag', {data: {tagName, tagColor, description}});
+		await ajax.post('tag', {tagName, tagColor, description});
 	},
 
 	/**
