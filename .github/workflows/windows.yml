@@ -34,6 +34,7 @@ jobs:
             npm run build
 
             Set-Location -Path build/
+            Remove-Item -Path "../data/db/smanga.db" -Force -ErrorAction Ignore
             Copy-Item -Path ../prisma/ -Destination ./ -Recurse
             Copy-Item -Path ../data/ -Destination ./ -Recurse
             Copy-Item -Path ../node_modules/ -Destination ./ -Recurse
