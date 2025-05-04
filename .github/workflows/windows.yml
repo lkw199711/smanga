@@ -33,10 +33,9 @@ jobs:
             
             npm run build
 
-            Remove-Item -Path "data/db/smanga.db" -Force -ErrorAction Ignore
             Set-Location -Path build/
             Copy-Item -Path ../prisma/ -Destination ./ -Recurse
-            Copy-Item -Path ../data/ -Destination ./ -Recurse
+            Copy-Item -Path ../data-example/ -Destination ./data -Recurse
             Copy-Item -Path ../node_modules/ -Destination ./ -Recurse
             Copy-Item -Path ../.env.example-win -Destination .env -Force
             npm ci
@@ -65,6 +64,11 @@ jobs:
             Copy-Item -Path smanga-adonis-build/data/ -Destination ./ -Recurse
             Copy-Item -Path smanga-adonis-build/node_modules/ -Destination ./ -Recurse
             Copy-Item -Path ../smanga-adonis-build/.env.example-win -Destination .env -Force
+
+            Set-Location -Path smanga-adonis-build/
+            npx prisma generate --schema=./prisma/sqlite/schema.prisma
+            npx prisma migrate deploy --schema=./prisma/sqlite/schema.prisma
+            Set-Location -Path ..
 
             Get-ChildItem -Force
 
