@@ -76,7 +76,6 @@ jobs:
             npm run make
 
             Copy-Item -Path .\smanga-adonis-build\node_modules\* -Destination .\out\smanga-electron-win32-x64\resources\app.asar.unpacked\smanga-adonis-build\node_modules -Recurse -Force
-            Copy-Item -Path .\smanga-adonis-build\data -Destination .\out\smanga-electron-win32-x64\ -Recurse -Force
             Copy-Item -Path .\smanga-adonis-build\prisma -Destination .\out\smanga-electron-win32-x64\ -Recurse -Force
             Copy-Item -Path ..\smanga-adonis-build\.env.example-win -Destination .\out\smanga-electron-win32-x64\.env -Force
             Get-ChildItem .\out\smanga-electron-win32-x64 -Force
