@@ -24,7 +24,7 @@ jobs:
         run: |
             git clone -b main https://github.com/lkw199711/smanga-adonis.git smanga-adonis-build
             Set-Location -Path smanga-adonis-build/
-            Copy-Item -Path .env.example -Destination .env -Force
+            Copy-Item -Path .env.example-win -Destination .env -Force
             
             npm install
 
@@ -37,7 +37,7 @@ jobs:
             Copy-Item -Path ../prisma/ -Destination ./ -Recurse
             Copy-Item -Path ../data/ -Destination ./ -Recurse
             Copy-Item -Path ../node_modules/ -Destination ./ -Recurse
-            Copy-Item -Path ../.env.example -Destination .env -Force
+            Copy-Item -Path ../.env.example-win -Destination .env -Force
             npm ci
 
       -
@@ -63,7 +63,7 @@ jobs:
             Copy-Item -Path smanga-adonis-build/prisma/ -Destination ./ -Recurse
             Copy-Item -Path smanga-adonis-build/data/ -Destination ./ -Recurse
             Copy-Item -Path smanga-adonis-build/node_modules/ -Destination ./ -Recurse
-            Copy-Item -Path ../smanga-adonis-build/.env.example -Destination .env -Force
+            Copy-Item -Path ../smanga-adonis-build/.env.example-win -Destination .env -Force
 
             Set-Location -Path smanga-adonis-build/
             npx prisma generate --schema=./prisma/sqlite/schema.prisma
@@ -75,20 +75,17 @@ jobs:
             npm install
             npm run make
 
-            Invoke-WebRequest -Uri "https://github.com/tporadowski/redis/releases/download/v5.0.14.1/Redis-x64-5.0.14.1.zip" -OutFile ".\Redis.zip"
-
             Copy-Item -Path .\smanga-adonis-build\node_modules\* -Destination .\out\smanga-electron-win32-x64\resources\app.asar.unpacked\smanga-adonis-build\node_modules -Recurse -Force
             Copy-Item -Path .\smanga-adonis-build\data -Destination .\out\smanga-electron-win32-x64\ -Recurse -Force
             Copy-Item -Path .\smanga-adonis-build\prisma -Destination .\out\smanga-electron-win32-x64\ -Recurse -Force
-            Copy-Item -Path ..\smanga-adonis-build\.env.example -Destination .\out\smanga-electron-win32-x64\.env -Force
-            Expand-Archive -Path ".\Redis.zip" -DestinationPath ".\out\smanga-electron-win32-x64\redis"
+            Copy-Item -Path ..\smanga-adonis-build\.env.example-win -Destination .\out\smanga-electron-win32-x64\.env -Force
             Get-ChildItem .\out\smanga-electron-win32-x64 -Force
             Compress-Archive -Path .\out\smanga-electron-win32-x64 -DestinationPath .\smanga-electron-win32-x64.zip
         shell: pwsh
 
       - 
         name: Upload Windows File
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v3
         with:
           name: windows
           path: windows/smanga-electron-win32-x64.zip
@@ -110,7 +107,7 @@ jobs:
 
       - 
         name: Download Artifact
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v3
 
       - 
         name: Delete Release
