@@ -22,6 +22,9 @@
 				<el-menu-item index="double">{{ $t('browse.double') }}</el-menu-item>
 				<el-menu-item index="half">{{ $t('browse.half') }}</el-menu-item>
 			</el-sub-menu>
+			<el-menu-item index="right-menu">
+				{{ $t('sidebar.rightMenu') }}
+			</el-menu-item>
 			<el-menu-item index="addBookmark">{{ bookmarkTitle }}</el-menu-item>
 		</el-menu>
 		<!-- 章节名称 -->
@@ -73,6 +76,11 @@ let chapterName = computed(() => browse.currentChapter?.chapterName)
 async function handleSelect(key: string) {
 	if (key === 'addBookmark') {
 		browse.toggle_bookmark();
+		return;
+	}
+
+	if (key === 'right-menu') {
+		config.rightSidebar = true;
 		return;
 	}
 

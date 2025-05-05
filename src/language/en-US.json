@@ -24,7 +24,8 @@
     "jobsManage": "jobsManage",
     "compressManage": "compressManage",
     "wiki": "wiki",
-    "tagList": "tagList"
+    "tagList": "tagList",
+    "rightMenu": "Function menu"
   },
   "option": {
     "option": "option",

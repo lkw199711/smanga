@@ -24,7 +24,8 @@
     "compressManage": "轉換管理",
     "jobsManage": "任務管理",
     "wiki": "使用說明",
-    "tagList": "標簽展示"
+    "tagList": "標簽展示",
+    "rightMenu": "功能菜单"
   },
   "option": {
     "option": "操作",
