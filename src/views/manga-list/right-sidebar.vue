@@ -1,8 +1,8 @@
 <template>
 	<div class="right-sidebar">
 		<el-drawer v-model="props.rightSidebarVisible" size="auto" :with-header="false" :before-close="close_sidebar">
-			<!-- 安卓端顶部占位 -->
-			<div class="android-seat-top" v-if="config.android" />
+			<!-- 安卓端占位 -->
+			<android-seat />
 			<el-menu class="right-sidebar-menu" active-text-color="#ffd04b" background-color="#545c64" text-color="#fff"
 				@select="menu_select">
 				<!--封面-->
@@ -57,14 +57,14 @@
 				<p class="tag-title">{{ $t('rightSidebar.baseTagTitle') }}</p>
 				<el-tag v-for="tagItem in noCheckedTagList" class="tag base-tag" :color="tagItem.tagColor"
 					:key="tagItem.tagId" @click="add_manga_tag(tagItem)">{{
-						tagItem.tagName }}</el-tag>
+					tagItem.tagName }}</el-tag>
 			</div>
 
 			<div class="ckecked-tag-box">
 				<p class="tag-title">{{ $t('rightSidebar.ckeckedTagTitle') }}</p>
 				<el-tag v-for="tagItem in checkedTagList" class="tag ckecked-tag" :color="tagItem.tagColor"
 					:key="tagItem.tagId" closable @close="remove_tag(tagItem.mangaTagId)">{{
-						tagItem.tagName }}</el-tag>
+					tagItem.tagName }}</el-tag>
 			</div>
 		</el-dialog>
 	</div>
@@ -82,6 +82,7 @@ import tagApi, { tagItemType } from '@/api/tag';
 import historyApi from '@/api/history';
 import imageApi from '@/api/image';
 import useBrowseStore from '@/store/browse';
+import androidSeat from '@/layout/components/android-seat.vue';
 const browse = useBrowseStore();
 const placeholder = require('@/assets/s-blue.png');
 

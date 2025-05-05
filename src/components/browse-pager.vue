@@ -49,7 +49,7 @@ const pageCount = computed(() => {
     case 'middle':
       return 11;
     case 'tablet':
-      return 8;
+      return 5;
     case 'small':
       return 6;
     case 'mini':

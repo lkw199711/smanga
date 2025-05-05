@@ -1,6 +1,6 @@
 <template>
 	<!-- 安卓端占位 -->
-	<div class="android-seat" v-if="config.android"></div>
+	<android-seat />
 
 	<div class="top-nav posted">
 		<div class="menu_collapse" @click="handleSelect('switch_sidebar')">
@@ -88,6 +88,7 @@ import router from '@/router';
 import layoutDic from '@/store/top-layout';
 import routeType from '@/type/route';
 import useSearchStore from '@/store/search';
+import androidSeat from './android-seat.vue';
 const searchStore = useSearchStore();
 const { locale } = useI18n();
 const route = useRoute();
@@ -200,10 +201,6 @@ function switch_view_type() {
 </script>
 
 <style scoped lang="less">
-.android-seat {
-	height: 4rem;
-}
-
 .top-nav.posted {
 	display: flex;
 	justify-content: space-between;

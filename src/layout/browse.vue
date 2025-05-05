@@ -9,6 +9,8 @@
 	<div class="browse" :class="browse.browseType">
 		<div class="header" v-if="config.browseTop">
 			<browse-top class="nav-top" />
+			<!-- 安卓端占位 -->
+			<android-seat />
 			<div class="seat posted"></div>
 		</div>
 
@@ -26,6 +28,7 @@ export default { name: 'browse' };
 import { config } from '@/store';
 import browseTop from '@/layout/components/browse-top.vue';
 import useBrowseStore from '@/store/browse';
+import androidSeat from '@/layout/components/android-seat.vue';
 
 const browse = useBrowseStore();
 

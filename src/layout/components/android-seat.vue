@@ -1,6 +1,11 @@
 <template>
-<div class="android-seat">安卓端占位专用文字</div>
+<div class="android-seat" v-if="config.android"></div>
 </template>
 <script lang="ts" setup>
+import { config } from '@/store';
 </script>
-<style lang="less"></style>
+<style lang="less">
+.android-seat {
+    height: 3.2rem;
+}
+</style>

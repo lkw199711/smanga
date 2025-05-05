@@ -1,8 +1,8 @@
 <template>
   <div class="right-sidebar">
     <el-drawer v-model="drawer" size="auto" :with-header="false" :before-close="close_sidebar">
-      <!-- 安卓端顶部占位 -->
-      <div class="android-seat-top" v-if="config.android" />
+      <!-- 安卓端占位 -->
+      <android-seat />
       <el-menu class="right-sidebar-menu" active-text-color="#ffd04b" background-color="#545c64" text-color="#fff"
         @select="menu_select">
         <!--封面-->
@@ -30,6 +30,7 @@ import { config } from "@/store";
 import historyApi from "@/api/history";
 import { ElMessageBox } from "element-plus";
 import i18n from '@/i18n';
+import androidSeat from '@/layout/components/android-seat.vue';
 const { t } = i18n.global;
 
 const route = useRoute();
