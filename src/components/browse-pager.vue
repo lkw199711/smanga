@@ -48,8 +48,10 @@ const pageCount = computed(() => {
       return 17;
     case 'middle':
       return 11;
+    case 'tablet':
+      return 8;
     case 'small':
-      return 7;
+      return 6;
     case 'mini':
       return 5;
     default:
@@ -63,6 +65,8 @@ let pageSmall = computed(() => {
     case 'large':
       return false;
     case 'middle':
+      return false;
+    case 'tablet':
       return false;
     case 'small':
       return true;
@@ -122,7 +126,7 @@ function reload_static() {
 /**
  * 上一页
  */
-function before() {  
+function before() {
   if (props.page > 1) {
     page_change(props.page - 1);
   } else {

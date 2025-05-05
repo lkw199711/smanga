@@ -52,7 +52,7 @@ function context_menu() {
 }
 
 .seat.posted {
-	height: 60px;
+	height: 9.6rem;
 }
 
 .nav-top {

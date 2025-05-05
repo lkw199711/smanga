@@ -117,14 +117,24 @@ async function page_change(pageParams: number) {
  * 上一页
  */
 function beforePage() {
-  pager.value.before();
+  if (page.value > 1) {
+    page_change(page.value - 1);
+  } else {
+    ElMessage.warning(t('page.firstPage'));
+    before_chapter();
+  }
 }
 
 /**
  * 下一页
  */
 function nextPage() {
-  pager.value.next();
+  if (page.value < browse.pageCount) {
+    page_change(page.value + 1);
+  } else {
+    ElMessage.warning(t('page.lastPage'));
+    next_chapter();
+  }
 }
 
 /**

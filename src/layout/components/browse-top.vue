@@ -126,6 +126,7 @@ async function handleSelect(key: string) {
 .chapter-name {
 	display: block;
 	width: 100vw;
+	height: 3.6rem;
 	color: @s-text;
 	background-color: @s-background;
 	font-size: 1.8rem;

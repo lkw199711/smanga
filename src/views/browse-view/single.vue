@@ -15,7 +15,7 @@
 
     <!--图片容器-->
     <div class="scroll">
-      <div class="single-page-img-box touch-dom" :style="{maxHeight: browse.useAutoViewWidth ? '100%' : 'none'}">
+      <div class="single-page-img-box touch-dom" :style="{ maxHeight: browse.useAutoViewWidth ? '100%' : 'none' }">
         <bookmark />
         <img :style="browse.singleViewStyle" class="single-page-img" :src="imgSrc" :alt="t('browse.imgLoadError')"
           @click.stop="switch_menu" />
@@ -101,14 +101,24 @@ async function page_change(pageParams: number) {
  * 上一页
  */
 function beforePage() {
-  pager.value.before();
+  if (page.value > 1) {
+    page_change(page.value - 1);
+  } else {
+    ElMessage.warning(t('page.firstPage'));
+    before_chapter();
+  }
 }
 
 /**
  * 下一页
  */
 function nextPage() {
-  pager.value.next();
+  if (page.value < browse.pageCount) {
+    page_change(page.value + 1);
+  } else {
+    ElMessage.warning(t('page.lastPage'));
+    next_chapter();
+  }
 }
 
 /**
