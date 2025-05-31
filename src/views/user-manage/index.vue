@@ -161,8 +161,7 @@ const medias = ref<mediaType1[]>([]);
 
 onMounted(async () => {
   const res = await mediaApi.get(1, 10000);
-  const medias = res.list;
-  medias.value = medias;
+  medias.value = res.list;
   load_table();
 })
 
