@@ -19,7 +19,7 @@
 			<!-- 列表 -->
 			<div @click="switch_menu" id="flowList" ref="flowList">
 				<van-list v-model:loading="loading" :finished="finished" :immediate-check="false"
-					@load="()=>{queue.flowQueue.add(page_change)}">
+					@load="() => { queue.flowQueue.add(page_change) }">
 					<img :style="browse.flowViewStyle" :ref="'flow-' + index" class="list-img"
 						v-for="(image, index) in browse.imageFileList" :src="image" :key="image"
 						:alt="t('browse.imgLoadError')" @click="load_image(index)" />
@@ -167,7 +167,7 @@ async function page_change() {
 	// 当图片列表小于屏幕高度时 继续加载图片
 	const screenHeight = window.screen.height;
 	const listHeight = flowList.value?.scrollHeight || 0;
-	if (listHeight < screenHeight) {
+	if (listHeight < screenHeight && page < browse.imagePathList.length) {
 		queue.flowQueue.add(page_change)
 	}
 }
@@ -360,7 +360,7 @@ function scroll_page() {
 	let imgs = flowListDom.getElementsByTagName('img');
 
 	// 当滚动到页面底部 记录阅读完成
-	lastImageShown.value = finished.value && scrollY === maxScrollY;
+	lastImageShown.value = finished.value && scrollY > maxScrollY - 200;
 
 	for (let i = 0; i < imgs.length; i++) {
 		if (scrollY <= imgs[i].offsetTop) {

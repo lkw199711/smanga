@@ -151,7 +151,7 @@ async function comfirm_auto_compressl() {
 }
 
 async function confirm_poster_size() {
-    serveSettingApi.set('poster', 'size', form.compress.poster)
+    serveSettingApi.set('compress', 'poster', form.compress.poster)
 }
 
 async function confirm_compress_duration() {
