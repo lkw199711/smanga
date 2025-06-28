@@ -365,7 +365,8 @@
     "jumpPageText": "Jump page number",
     "setImageWidth": "Set image width",
     "requestFullscreen": "Full screen page",
-    "exitFullscreen": "Exit Full Screen"
+    "exitFullscreen": "Exit Full Screen",
+    "editCover": "editCover"
   },
   "createTime": "createTime",
   "updateTime": "updateTime"

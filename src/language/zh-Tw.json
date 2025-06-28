@@ -364,7 +364,8 @@
     "jumpPageText": "頁碼跳轉",
     "setImageWidth": "設置圖片寬度",
     "requestFullscreen": "頁面全屏",
-    "exitFullscreen": "退出全屏"
+    "exitFullscreen": "退出全屏",
+    "editCover": "編輯封面"
   },
   "createTime": "創建時間",
   "updateTime": "更新時間"

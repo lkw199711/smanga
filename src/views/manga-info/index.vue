@@ -1,22 +1,24 @@
-<!--
- * @Author: error: error: git config user.name & please set dead value or install git && error: git config user.email & please set dead value or install git & please set dead value or install git
- * @Date: 2023-08-15 23:05:47
- * @LastEditors: lkw199711 lkw199711@163.com
- * @LastEditTime: 2025-02-11 01:46:18
- * @FilePath: /smanga/src/views/manga-info/index.vue
--->
 <template>
     <div class="manga-info">
-        <div class="top">
-            <el-carousel class="carousel" :interval="interval" :type="carouselType" v-if="banner.length">
-                <el-carousel-item class="banner-box" v-for="item in banner" :key="item">
-                    <img class="banner" :src="item.blob" alt="banner">
-                </el-carousel-item>
-                <!-- 使用一张图片撑开容器的高度 -->
-                <img class="banner seat" :src="banner.length ? banner[0].blob : ''" alt="banner">
-            </el-carousel>
+        <div class="top" :style="[bannerModel === 'toomics' && { marginTop: 0 }]">
+            <template v-if="banner.length">
+                <el-carousel class="carousel" :interval="interval" :type="carouselType"
+                    v-if="bannerModel === 'toptoon'">
+                    <el-carousel-item class="banner-box" v-for="item in banner" :key="item">
+                        <img class="banner" :src="item.blob" alt="banner">
+                    </el-carousel-item>
+                    <!-- 使用一张图片撑开容器的高度 -->
+                    <img class="banner seat" :src="banner.length ? banner[0].blob : ''" alt="banner">
+                </el-carousel>
+
+                <div class="banner-toomics" v-if="bannerModel === 'toomics'">
+                    <img class="banner-toomics-fore" :src="banner[0]?.blob" alt="banner">
+                    <img class="banner-toomics-back" :src="banner[1]?.blob" alt="bannerBg">
+                </div>
+            </template>
 
             <el-image class="anim cover-img" :src="mangaCover" v-else></el-image>
+
         </div>
 
         <div class="middle">
@@ -62,10 +64,19 @@
             <el-button class="btn" type="success" @click="collect_manga" v-else>收藏漫画</el-button>
 
             <el-button class="btn" type="primary" @click="open_tag_box">编辑标签</el-button>
+            <el-button class="btn" type="primary" @click="open_covers_edit" v-if="hasManyCover">编辑封面</el-button>
         </div>
 
         <el-dialog :title="$t('rightSidebar.editTags')" v-model="editTagsDialog">
             <mangaTagBox :mangaId="mangaInfo.mangaId" :tags="tags" @update_tags="update_tags" />
+        </el-dialog>
+
+        <el-dialog :title="$t('rightSidebar.editCover')" v-model="editCover">
+            <div class="cover-setting">
+                <div :class="['cover-setting-box', { 'active': item.active }]" v-for="item in covers" :key="item.metaId">
+                    <img :src="item.blob" alt="cover" @click="choose_cover(item.metaFile)">
+                </div>
+            </div>
         </el-dialog>
     </div>
 </template>
@@ -110,10 +121,14 @@ let latestChapterInfo = ref<chapterType | false>(false);
 
 let tags = ref<tagItemType[]>([]);
 let banner = ref<metaItemType[]>([]);
+let covers = ref<metaItemType[]>([]);
 let character = ref<metaItemType[]>([]);
 let mangaCover = ref<string>('');
 let isCollect = ref(false);
 let editTagsDialog = ref(false);
+let editCover = ref(false);
+let bannerModel = ref<string>('toptoon');
+let hasManyCover = ref(false);
 
 // 轮播自动滚动时间间隔 默认为6秒钟
 const interval = ref(6 * 1000);
@@ -257,8 +272,15 @@ async function render_meta() {
     const star = mangaInfo.metas.find((item: metaItemType) => item.metaName === 'star')?.metaContent;
     if (star) mangaInfo.star = star;
 
+    // 封面
+    covers.value = mangaInfo.metas.filter((item: metaItemType) => item.metaName === 'cover');
+    hasManyCover.value = covers.value.length > 0;
+    console.log(covers.value);
+    
+
     // 广告图
     banner.value = mangaInfo.metas.filter((item: metaItemType) => item.metaName === 'banner');
+    banner.value.length === 2 && banner.value.some((item: metaItemType) => /bannerBackground/.test(item.metaFile)) && (bannerModel.value = 'toomics');
     banner.value.forEach(async (item: metaItemType) => {
         item.blob = await imageApi.get(item.metaFile);
     });
@@ -312,6 +334,30 @@ function open_tag_box() {
     // update_tags_state();
 }
 
+function open_covers_edit() {
+    editCover.value = true;
+    covers.value.forEach(async (item: metaItemType) => {
+        item.active = item.metaFile === mangaInfo.mangaCover;
+        const blob = await imageApi.get(item.metaFile);
+        item.blob = blob;
+    });
+}
+
+function choose_cover(metaFile: string) {
+    if (!metaFile) return;
+    covers.value.forEach((item: metaItemType) => {
+        item.active = item.metaFile === metaFile;
+    });
+    mangaApi.update_manga({
+        mangaId: mangaInfo.mangaId,
+        mangaCover: metaFile
+    }).then(() => {
+        mangaInfo.mangaCover = metaFile;
+        editCover.value = false;
+    }).catch((err: any) => {
+        console.error('更新封面失败:', err);
+    });
+}
 /**
  * @description: 更新详情页的tag列表
  * @param {*} tagsParams
@@ -329,6 +375,66 @@ function update_tags(tagsParams: tagItemType[]) {
 
 :deep(.el-carousel__mask) {
     background-color: transparent;
+}
+
+.banner-toomics {
+    position: relative;
+    width: 100%;
+    height: 32rem;
+
+    img {
+        position: absolute;
+        bottom: 0;
+        display: block;
+        margin: 0 auto;
+        object-fit: cover;
+    }
+
+    &-fore {
+        height: 100%;
+        max-width: 100%;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 1;
+    }
+
+    &-back {
+        width: 100%;
+        height: 100%;
+        z-index: 0;
+        filter: blur(2px);
+    }
+}
+
+.cover-setting {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1rem;
+
+    .cover-setting-box {
+        width: 20rem;
+        height: 30rem;
+        border-radius: 1rem;
+        overflow: hidden;
+        position: relative;
+        border: .8rem solid var(--el-border-color);
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        &:hover {
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        }
+
+        &.active {
+            border-color: var(--el-color-primary);
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.8);
+        }
+    }
 }
 
 .character-scroll {
@@ -466,6 +572,10 @@ function update_tags(tagsParams: tagItemType[]) {
     .banner {
         width: 50rem;
     }
+
+    .banner-toomics {
+        height: 20rem;
+    }
 }
 
 @media only screen and (max-width: 1199px) and (min-width: 768px) {
@@ -491,6 +601,10 @@ function update_tags(tagsParams: tagItemType[]) {
 
     .banner {
         width: 40rem;
+    }
+
+    .banner-toomics {
+        height: 20rem;
     }
 }
 
@@ -519,6 +633,10 @@ function update_tags(tagsParams: tagItemType[]) {
 
     .btn-box .btn {
         width: 48%;
+    }
+
+    .banner-toomics {
+        height: 10rem;
     }
 }
 </style>

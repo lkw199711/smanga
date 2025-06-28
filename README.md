@@ -77,7 +77,7 @@ docker run -itd --name smanga \
 -p 9797:9797 \
 -v /mnt:/mnt \
 -v /route/smanga:/data \
-lkw199711/smanga;
+lkw199711/smanga-nodejs;
 ```
 
 1. 新版进需要映射/data 一个目录,细分目录映射不再支持
@@ -88,6 +88,31 @@ lkw199711/smanga;
 ##### 新版本目前实现条漫跳页,媒体库封面生成 等功能.
 
 ![media poster](https://github.com/lkw199711/smanga/raw/electron/src/assets/readme/media-poster.PNG)
+
+### 部署帮助
+
+请参考正常状态下的docker logs
+
+![media poster](https://github.com/lkw199711/smanga/raw/electron/src/assets/readme/normal-log.PNG)
+
+汇报出
+
+```
+'/app/adonis/smanga.db': No such file or directory
+```
+
+时请不要慌张,初次部署没有db文件以及几个缓存目录是正常的,程序会自动生成.
+
+刚刚部署需要走完初始化流程,然后才能启动服务,所以请不要立即访问页面
+
+```
+Server is running on port 9797
+[16:35:57.537] INFO (188): started HTTP server on 0.0.0.0:9798
+```
+
+当你看到这两行的时候,说明服务启动成功,9797的前端服务与3798的后端服务
+
+就可以访问页面了.
 
 ## 旧版本安装
 

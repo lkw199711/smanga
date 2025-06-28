@@ -14,11 +14,13 @@ type characterItem = {
 };
 
 type metaItemType = {
+	metaId: string;
 	metaFile: string;
 	metaName: string;
 	metaContent: string;
 	description: string;
 	blob?: string;
+	active?: boolean; // 是否为当前漫画封面
 };
 
-export {characterItem, metaItemType};
+export { characterItem, metaItemType };
