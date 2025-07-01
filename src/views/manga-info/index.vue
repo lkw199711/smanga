@@ -144,6 +144,7 @@ let mangaInfo = reactive<mangaInfoType>({
     mangaId: 0,
     mangaName: '',
     mangaCover: '',
+    title: '',
     author: '',
     browseType: '',
     publishDate: '',
@@ -299,6 +300,9 @@ async function render_meta() {
 
 
     if (!mangaInfo.metas) return;
+
+    const title = mangaInfo.metas.find((item: metaItemType) => item.metaName === 'title')?.metaContent;
+    if (title) mangaInfo.title = title;
 
     const author = mangaInfo.metas.find((item: metaItemType) => item.metaName === 'author')?.metaContent;
     if (author) mangaInfo.author = author;
