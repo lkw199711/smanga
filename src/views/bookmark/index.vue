@@ -157,7 +157,7 @@ function touch_page_change() {
 }
 
 onMounted(() => {
-  page_change(1);
+  page_change(browse.chapterListPage, browse.chapterListPageSize);
   touch_page_change();
 
 })

@@ -1,7 +1,7 @@
 <template>
   <div class="sidebar-pc">
     <el-menu router :default-active="menuActive" :class="['sidebar', 'sidebar-pc', { close: config.sidebarCollapse }]"
-      :collapse="config.sidebarCollapse" :collapse-transition="true">
+      @select="handle_select" :collapse="config.sidebarCollapse" :collapse-transition="true">
       <!-- 顶部占位符 -->
       <div class="top-seat" v-if="config.android"></div>
       <el-menu-item index="/" class="no-padding">
@@ -56,7 +56,7 @@
     <el-drawer v-model="config.sidebarCollapse" size="auto" direction="ltr" :with-header="false">
       <!-- 顶部占位符 -->
       <div class="top-seat" v-if="config.android"></div>
-      <el-menu router class="sidebar sidebar-phone" :default-active="menuActive">
+      <el-menu router class="sidebar sidebar-phone" :default-active="menuActive" @select="handle_select">
         <!--<logo/>-->
         <el-menu-item index="/" class="no-padding">
           <div :class="['logo', 'posted']">
@@ -114,6 +114,8 @@ import { config } from '@/store';
 import Logo from "@/layout/components/logo.vue";
 import { useRoute } from 'vue-router';
 import { Cookies } from '@/utils';
+import useBrowseStore from '@/store/browse';
+const browse = useBrowseStore();
 const route = useRoute();
 
 type routeItem = {
@@ -164,6 +166,14 @@ const menuVisible = computed(() => (router: any) => {
   return true;
 
 })
+
+function handle_select() {
+  // 清空页码缓存
+  browse.mangaListPage = 1;
+  browse.mangaListPageSizeCache = 0;
+  browse.chapterListPage = 1;
+  browse.chapterListPageSizeCache = 0;
+}
 
 onMounted(() => {
   config.sidebarCollapse = false;
