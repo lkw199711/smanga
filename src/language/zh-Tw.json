@@ -365,8 +365,14 @@
     "setImageWidth": "設置圖片寬度",
     "requestFullscreen": "頁面全屏",
     "exitFullscreen": "退出全屏",
-    "editCover": "編輯封面"
+    "editCover": "編輯封面",
+    "editMetas": "編輯元數據"
   },
   "createTime": "創建時間",
-  "updateTime": "更新時間"
+  "updateTime": "更新時間",
+  "manga": {
+    "info": {
+      "tagAlreadyExists": "標籤已存在,不能重復添加!"
+    }
+  }
 }

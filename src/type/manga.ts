@@ -12,6 +12,7 @@ type mangaInfoType = {
 	mediaId: number;
 	mangaId?: number;
 	mangaName: string;
+	title?: string;
 	author: string;
 	browseType?: string;
 	publishDate: string;

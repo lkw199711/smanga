@@ -65,18 +65,49 @@
 
             <el-button class="btn" type="primary" @click="open_tag_box">编辑标签</el-button>
             <el-button class="btn" type="primary" @click="open_covers_edit" v-if="hasManyCover">编辑封面</el-button>
+            <el-button class="btn" type="primary" @click="open_metas_edit" v-if="hasManyCover">编辑元数据</el-button>
         </div>
 
         <el-dialog :title="$t('rightSidebar.editTags')" v-model="editTagsDialog">
-            <mangaTagBox :mangaId="mangaInfo.mangaId" :tags="tags" @update_tags="update_tags" />
+            <mangaTagBox :mangaId="mangaInfo.mangaId" :tags="mangaInfo.tags" @update_tags="update_tags"
+                @close_dialog="editTagsDialog = false" />
         </el-dialog>
 
         <el-dialog :title="$t('rightSidebar.editCover')" v-model="editCover">
             <div class="cover-setting">
-                <div :class="['cover-setting-box', { 'active': item.active }]" v-for="item in covers" :key="item.metaId">
+                <div :class="['cover-setting-box', { 'active': item.active }]" v-for="item in covers"
+                    :key="item.metaId">
                     <img :src="item.blob" alt="cover" @click="choose_cover(item.metaFile)">
                 </div>
             </div>
+        </el-dialog>
+
+        <el-dialog :title="$t('rightSidebar.editMetas')" v-model="editMetasDialog">
+            <el-form :model="metaForm" label-width="auto" style="max-width: 600px">
+                <el-form-item label="漫画名称">
+                    <el-input v-model="metaForm.title" placeholder="请输入漫画名称"></el-input>
+                </el-form-item>
+                <el-form-item label="作者">
+                    <el-input v-model="metaForm.author" placeholder="请输入作者名"></el-input>
+                </el-form-item>
+                <el-form-item label="发布时间">
+                    <el-date-picker v-model="metaForm.publishDate" type="date" placeholder="请选择发布时间" />
+                </el-form-item>
+                <el-form-item label="评分">
+                    <el-input v-model="metaForm.star" placeholder="请输入评分"></el-input>
+                </el-form-item>
+                <el-form-item label="简介">
+                    <el-input type="textarea" v-model="metaForm.describe" placeholder="请输入漫画简介"></el-input>
+                </el-form-item>
+                <!-- 是否写入json -->
+                <el-form-item label="存为JSON">
+                    <el-switch v-model="metaWriteJson"></el-switch>
+                </el-form-item>
+                <el-form-item>
+                    <el-button type="primary" @click="update_metas">保存</el-button>
+                    <el-button @click="editMetasDialog = false">取消</el-button>
+                </el-form-item>
+            </el-form>
         </el-dialog>
     </div>
 </template>
@@ -98,12 +129,22 @@ import mangaTagBox from '@/components/manga-tag-box.vue';
 import useBrowseStore from '@/store/browse';
 const browse: any = useBrowseStore();
 const router = useRouter();
+const route = useRoute();
+
+const metaForm = reactive({
+    title: '',
+    author: '',
+    publishDate: '',
+    star: '',
+    describe: '',
+});
 
 let mangaInfo = reactive<mangaInfoType>({
     mediaId: 0,
     mangaId: 0,
     mangaName: '',
     mangaCover: '',
+    title: '',
     author: '',
     browseType: '',
     publishDate: '',
@@ -119,7 +160,6 @@ let firstChapterInfo = ref<chapterType>();
 
 let latestChapterInfo = ref<chapterType | false>(false);
 
-let tags = ref<tagItemType[]>([]);
 let banner = ref<metaItemType[]>([]);
 let covers = ref<metaItemType[]>([]);
 let character = ref<metaItemType[]>([]);
@@ -127,8 +167,10 @@ let mangaCover = ref<string>('');
 let isCollect = ref(false);
 let editTagsDialog = ref(false);
 let editCover = ref(false);
+let editMetasDialog = ref(false);
 let bannerModel = ref<string>('toptoon');
 let hasManyCover = ref(false);
+let metaWriteJson = ref(true);
 
 // 轮播自动滚动时间间隔 默认为6秒钟
 const interval = ref(6 * 1000);
@@ -246,7 +288,6 @@ function go_chapter_list() {
  * @return {*}
  */
 async function render_meta() {
-    const route = useRoute();
     const mangaId = Number(route.query.mangaId);
     Object.assign(mangaInfo, await mangaApi.get_manga_info(mangaId));
 
@@ -259,6 +300,9 @@ async function render_meta() {
 
 
     if (!mangaInfo.metas) return;
+
+    const title = mangaInfo.metas.find((item: metaItemType) => item.metaName === 'title')?.metaContent;
+    if (title) mangaInfo.title = title;
 
     const author = mangaInfo.metas.find((item: metaItemType) => item.metaName === 'author')?.metaContent;
     if (author) mangaInfo.author = author;
@@ -275,8 +319,6 @@ async function render_meta() {
     // 封面
     covers.value = mangaInfo.metas.filter((item: metaItemType) => item.metaName === 'cover');
     hasManyCover.value = covers.value.length > 0;
-    console.log(covers.value);
-    
 
     // 广告图
     banner.value = mangaInfo.metas.filter((item: metaItemType) => item.metaName === 'banner');
@@ -343,6 +385,11 @@ function open_covers_edit() {
     });
 }
 
+function open_metas_edit() {
+    editMetasDialog.value = true;
+    Object.assign(metaForm, mangaInfo);
+}
+
 function choose_cover(metaFile: string) {
     if (!metaFile) return;
     covers.value.forEach((item: metaItemType) => {
@@ -358,13 +405,20 @@ function choose_cover(metaFile: string) {
         console.error('更新封面失败:', err);
     });
 }
+
+async function update_metas() {
+    if (!mangaInfo.mangaId) return;
+    await mangaApi.update_manga_meta(metaForm, metaWriteJson.value)
+    editMetasDialog.value = false;
+    await render_meta();
+}
 /**
  * @description: 更新详情页的tag列表
  * @param {*} tagsParams
  * @return {*}
  */
 function update_tags(tagsParams: tagItemType[]) {
-    tags.value = tagsParams;
+    mangaInfo.tags = tagsParams;
 }
 </script>
 
@@ -419,6 +473,7 @@ function update_tags(tagsParams: tagItemType[]) {
         overflow: hidden;
         position: relative;
         border: .8rem solid var(--el-border-color);
+
         img {
             width: 100%;
             height: 100%;

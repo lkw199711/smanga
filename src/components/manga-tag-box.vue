@@ -1,31 +1,32 @@
-<!--
- * @Author: lkw199711 lkw199711@163.com
- * @Date: 2023-09-23 14:12:32
- * @LastEditors: lkw199711 lkw199711@163.com
- * @LastEditTime: 2023-12-15 20:50:03
- * @FilePath: /smanga/src/components/manga-tag-box.vue
- * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AEplate
--->
 <template>
     <div class="base-tag-box">
         <p class="tag-title">{{ $t('rightSidebar.baseTagTitle') }}</p>
-        <el-tag v-for="tagItem in noCheckedTagList" class="tag base-tag" :color="tagItem.tagColor" :key="tagItem.tagId"
-            @click="add_manga_tag(tagItem)">{{
+        <el-tag v-for="(tagItem,index) in noCheckedTagList" class="tag base-tag" :color="tagItem.tagColor" :key="tagItem.tagId"
+            @click="add_tag(tagItem,index)">{{
                 tagItem.tagName }}</el-tag>
     </div>
 
     <div class="ckecked-tag-box">
         <p class="tag-title">{{ $t('rightSidebar.ckeckedTagTitle') }}</p>
-        <el-tag v-for="tagItem in checkedTagList" class="tag ckecked-tag" :color="tagItem.tagColor" :key="tagItem.tagId"
-            closable @close="remove_tag(tagItem.mangaTagId)">{{
+        <el-tag v-for="(tagItem,index) in checkedTagList" class="tag ckecked-tag" :color="tagItem.tagColor" :key="tagItem.tagId"
+            closable @close="remove_tag(tagItem,index)">{{
                 tagItem.tagName }}</el-tag>
+    </div>
+
+    <el-form-item label="存为JSON">
+        <el-switch v-model="metaWriteJson"></el-switch>
+    </el-form-item>
+
+    <div class="btn-box">
+        <el-button @click="emit('close_dialog')">{{ $t('option.cancel') }}</el-button>
+        <el-button type="primary" @click="update_tags_state">{{ $t('option.confirm') }}</el-button>
     </div>
 </template>
 
 <script lang="ts" setup>
 import { ref, computed, onMounted } from 'vue';
 import { config } from '@/store';
-import { ElMessageBox } from 'element-plus';
+import { ElMessageBox,ElMessage } from 'element-plus';
 import i18n from '@/i18n';
 import tagApi, { tagItemType } from '@/api/tag';
 
@@ -34,28 +35,27 @@ const { t } = i18n.global;
 const drawer = ref(false);
 const isCollect = ref(false);
 const editTagsDialog = ref(false);
-
+let metaWriteJson = ref(true);
 let tagList = ref<tagItemType[]>([]);
 let checkedTagList = ref<tagItemType[]>([]);
+let noCheckedTagList = ref<tagItemType[]>([]);
 
-let noCheckedTagList = computed<tagItemType[]>(() => {
-    let arr: tagItemType[] = [];
+async function render_list(){
+    checkedTagList.value = props.tags;
+
+    tagList.value = await tagApi.get_nopage();
     const checkedTagListNames = checkedTagList.value.map((i) => i.tagId);
 
     tagList.value.forEach(element => {
-
-        if (!checkedTagListNames.includes(element.tagId)) arr.push(element);
+        if (!checkedTagListNames.includes(element.tagId)) noCheckedTagList.value.push(element);
     });
-
-    return arr;
-});
+}
 
 const props = defineProps(['mangaId', 'tags']);
-const emit = defineEmits(['update_tags']);
+const emit = defineEmits(['update_tags','close_dialog']);
 
-onMounted(async () => {
-    tagList.value = await tagApi.get_nopage();
-    checkedTagList.value = props.tags;
+onMounted(() => {
+    render_list();
 });
 
 /**
@@ -63,10 +63,10 @@ onMounted(async () => {
  * @return {*}
  */
 async function update_tags_state() {
-    const tags = await tagApi.get_manga_tag(props.mangaId);
-    checkedTagList.value = tags;
+    await tagApi.add_manga_tag(props.mangaId, checkedTagList.value, metaWriteJson.value);
     // 向上更新详情页的tags列表
-    emit('update_tags', tags);
+    emit('update_tags', checkedTagList.value);
+    emit('close_dialog')
 }
 
 /**
@@ -74,9 +74,10 @@ async function update_tags_state() {
  * @param {*} tagItem
  * @return {*}
  */
-async function add_manga_tag(tagItem: tagItemType) {
-    await tagApi.add_manga_tag(props.mangaId, tagItem.tagId);
-    update_tags_state();
+async function add_tag(tagItem: tagItemType,noCheckedListIndex: number) {
+    // 在绑定队列添加标签 在预备队列移除标签
+    checkedTagList.value.push(tagItem);
+    noCheckedTagList.value.splice(noCheckedListIndex, 1);
 }
 
 /**
@@ -84,9 +85,9 @@ async function add_manga_tag(tagItem: tagItemType) {
  * @param {*} mangaTagId
  * @return {*}
  */
-async function remove_tag(mangaTagId: number) {
-    await tagApi.remove_manga_tag(mangaTagId);
-    update_tags_state();
+async function remove_tag(tagItem: tagItemType, index: number) {
+    checkedTagList.value.splice(index, 1);
+    noCheckedTagList.value.push(tagItem);
 }
 </script>
 
