@@ -366,8 +366,14 @@
     "setImageWidth": "Set image width",
     "requestFullscreen": "Full screen page",
     "exitFullscreen": "Exit Full Screen",
-    "editCover": "editCover"
+    "editCover": "editCover",
+    "editMetas": "editMetas"
   },
   "createTime": "createTime",
-  "updateTime": "updateTime"
+  "updateTime": "updateTime",
+  "manga": {
+    "info": {
+      "tagAlreadyExists": "The tag already exists and cannot be added again!"
+    }
+  }
 }

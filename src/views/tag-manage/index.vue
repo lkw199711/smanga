@@ -170,7 +170,7 @@ function update_dialog(bool = true, row?: tagParams) {
      */
 async function add_tag() {
   const tagName = form.tagName;
-  const tagColor = form.tagColor;
+  const tagColor = form.tagColor || '#a0d911'; // 默认颜色
   const description = form.description;
 
   await tagApi.add(tagName, tagColor, description);

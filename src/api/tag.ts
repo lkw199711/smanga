@@ -1,12 +1,4 @@
-/*
- * @Author: lkw199711 lkw199711@163.com
- * @Date: 2023-03-17 20:18:30
- * @LastEditors: lkw199711 lkw199711@163.com
- * @LastEditTime: 2024-08-05 22:33:30
- * @FilePath: \smanga\src\api\tag.ts
- */
-import axios from 'axios';
-import {ajax} from './index';
+import { ajax } from './index';
 
 type tagParams = {
 	tagId?: number;
@@ -24,7 +16,7 @@ type tagItemType = {
 	checked: boolean;
 };
 
-export {tagParams, tagItemType};
+export { tagParams, tagItemType };
 
 const tagApi = {
 	/**
@@ -35,7 +27,7 @@ const tagApi = {
 		page: number | undefined = undefined,
 		pageSize: number | undefined = undefined
 	) {
-		const res = ajax.get('tag', {params: {page, pageSize}});
+		const res = ajax.get('tag', { params: { page, pageSize } });
 
 		const resData: ResType = (await res).data;
 
@@ -52,7 +44,7 @@ const tagApi = {
 	get_nopage: async function () {
 		const res = ajax({
 			url: 'tag',
-			data: {nopage: true},
+			data: { nopage: true },
 		});
 
 		const resData: ResType = (await res).data;
@@ -68,7 +60,7 @@ const tagApi = {
 	 * @return {*}
 	 */
 	add: async function (tagName: string, tagColor: string, description: string) {
-		await ajax.post('tag', {tagName, tagColor, description});
+		await ajax.post('tag', { tagName, tagColor, description });
 	},
 
 	/**
@@ -90,8 +82,8 @@ const tagApi = {
 	 * @param {*} tagIds
 	 * @return {*}
 	 */
-	add_manga_tag: async function (mangaId: number, tagId: number) {
-		await ajax.post('manga-tag', {mangaId, tagId});
+	add_manga_tag: async function (mangaId: number, tags: tagItemType[], metaWriteJson: boolean = true) {
+		await ajax.put(`manga/${mangaId}/tags`, { mangaId, tags, metaWriteJson });
 	},
 
 	/**
@@ -109,7 +101,7 @@ const tagApi = {
 	 * @return {*}
 	 */
 	update: async function (data: tagParams) {
-		await ajax.put(`tag/${data.tagId}`, {...data});
+		await ajax.put(`tag/${data.tagId}`, { ...data });
 	},
 
 	/**

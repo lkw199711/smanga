@@ -109,6 +109,12 @@ const mangaApi = {
 		return (await res).data;
 	},
 
+	async update_manga_meta(data: any, wirteMetaJson: boolean = true) {
+		const res = ajax.put(`manga/${data.mangaId}/meta`, { ...data, wirteMetaJson });
+
+		return (await res).data;
+	},
+
 	/**
 	 * 删除漫画
 	 * @param mangaId
