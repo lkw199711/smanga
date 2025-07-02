@@ -65,6 +65,33 @@ docker: https://hub.docker.com/r/lkw199711/smanga
 5. 对各尺寸设备的兼容, 现在您在手机、平板、pc等各种设备上使用smanga都可以获得良好的体验.
 6. 新增多种阅读模式, 条漫(瀑布流) , 翻页 以及双页, 选择适合的浏览模式可提升阅读体验. 
 
+## windows版本
+
+smanga作为一块服务端专用软件,推荐您使用docker进行部署,如果您没有linux服务器. 可以下载windows版本.
+
+https://github.com/lkw199711/smanga/releases
+
+解压即可使用
+
+### exe如何更新
+
+请下载最新的安装包,并将原目录下的data目录,复制并覆盖到新的smanga路径下即可
+
+### data目录说明
+
+data目录为smanga使用的缓存目录
+
+```
+bookmark	书签封面存储目录
+cache		封面压缩缓存目录
+compress	压缩包解压目录
+config		配置文件目录
+db			数据库目录(sqlite)
+file		apk等文件存放目录
+logs		nginx等服务日志目录
+poster		媒体库,漫画,章节 封面存放目录
+```
+
 
 
 ## 新版本安装
