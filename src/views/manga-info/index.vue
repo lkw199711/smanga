@@ -64,8 +64,8 @@
             <el-button class="btn" type="success" @click="collect_manga" v-else>收藏漫画</el-button>
 
             <el-button class="btn" type="primary" @click="open_tag_box">编辑标签</el-button>
-            <el-button class="btn" type="primary" @click="open_covers_edit">编辑封面</el-button>
-            <el-button class="btn" type="primary" @click="open_metas_edit" v-if="hasManyCover">编辑元数据</el-button>
+            <el-button class="btn" type="primary" @click="open_covers_edit" v-if="hasManyCover">编辑封面</el-button>
+            <el-button class="btn" type="primary" @click="open_metas_edit">编辑元数据</el-button>
         </div>
 
         <el-dialog :title="$t('rightSidebar.editTags')" v-model="editTagsDialog">
