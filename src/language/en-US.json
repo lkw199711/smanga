@@ -220,12 +220,14 @@
     "form": {
       "name": "chapterName:",
       "path": "chapterPath:",
-      "poster": "chapterPoster:"
+      "poster": "chapterPoster:",
+      "chapterNumber": "chapterNumber"
     },
     "place": {
       "name": "please enter chapterName",
       "path": "please enter chapterPath",
-      "poster": "please enter chapterPoster path"
+      "poster": "please enter chapterPoster path",
+      "chapterNumber": "Please enter the chapter number"
     },
     "warning": {
       "name": "chapterName cannot be empty!",
