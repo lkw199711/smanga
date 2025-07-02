@@ -51,6 +51,10 @@
             <el-form-item :label="$t('chapterManage.form.poster')">
               <el-input v-model="form.chapterCover" :placeholder="$t('chapterManage.place.poster')"></el-input>
             </el-form-item>
+
+            <el-form-item :label="$t('chapterManage.form.chapterNumber')">
+              <el-input v-model="form.chapterNumber" :placeholder="$t('chapterManage.place.chapterNumber')"></el-input>
+            </el-form-item>
           </el-form>
 
           <template v-slot:footer>
@@ -95,6 +99,7 @@ const form = reactive({
   chapterName: '',
   chapterPath: '',
   chapterCover: '',
+  chapterNumber: '',
 })
 
 const formInit = {
@@ -102,6 +107,7 @@ const formInit = {
   chapterName: '',
   chapterPath: '',
   chapterCover: '',
+  chapterNumber: '',
 }
 
 const pager = ref();

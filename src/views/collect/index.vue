@@ -5,39 +5,34 @@
 		</div>
 
 		<div class="middle">
-			<!-- 加载骨架屏 -->
-			<template v-if="loading">
-				<list-skeleton />
-			</template>
-			<template v-else>
-				<div class="manga-list" v-if="collectType === 'manga'">
-					<div class="touch-dom">
+			<div class="touch-dom">
+				<!-- 加载骨架屏 -->
+				<template v-if="loading">
+					<list-skeleton />
+				</template>
+				<template v-else>
+					<div class="manga-list" v-if="collectType === 'manga'">
 						<div :class="['manga-list-box', { block: config.viewType === 'list' }]">
 							<manga v-for="(i, k) in list" :key="k" :viewType="config.viewType" :mangaInfo="i"
 								@contextmenu.prevent="context_menu(i, k)" />
 						</div>
+						<!--分页组件-->
+						<media-pager ref="pager" :page="page" :count="count" :page-size="browse.mangaListPageSize"
+							:page-size-config="browse.mangaListPageSizes" @page-change="page_change" />
 					</div>
 
-
-					<!--分页组件-->
-					<media-pager ref="pager" :page="page" :count="count" :page-size-config="pageSizes"
-						@page-change="page_change" />
-				</div>
-
-				<div class="chapter-list" v-if="collectType === 'chapter'">
-					<div class="touch-dom">
+					<div class="chapter-list" v-if="collectType === 'chapter'">
 						<!--章节列表-->
 						<div :class="['chapter-list-box', { block: config.viewType === 'list' }]">
 							<chapter v-for="(i, k) in list" :key="k" :view-type="config.viewType" :chapterInfo="i"
 								@click="go_browse(i)" @contextmenu.prevent="context_menu(i, k)" />
 						</div>
+						<!--分页组件-->
+						<media-pager ref="pager" :page="page" :count="count" :page-size="browse.chapterListPageSize"
+							:page-size-config="browse.chapterListPageSizes" @page-change="page_change" />
 					</div>
-
-					<!--分页组件-->
-					<media-pager ref="pager" :page="page" :count="count" :page-size-config="pageSizes"
-						@page-change="page_change" />
-				</div>
-			</template>
+				</template>
+			</div>
 		</div>
 	</div>
 </template>
@@ -93,7 +88,7 @@ const searchType = ref('manga');
 const route = useRoute();
 
 let page = ref(1);
-let count = ref(0);
+let count = ref(-1);
 let list = ref([]);
 let menuPoster = '';
 
@@ -120,8 +115,7 @@ watch(
 	}
 );
 onMounted(async () => {
-
-	page_change();
+	page_change(browse.mangaListPage, browse.mangaListPageSize);
 
 	touch_page_change();
 });
@@ -187,10 +181,9 @@ function tabs_change(val: string) {
  */
 async function page_change(
 	pageParams = 1,
-	pageSize: number = defaultPageSize
+	pageSize: number = 10
 ) {
-
-	if (pageParams !== 1 && pageParams > Math.ceil(count.value / pageSize)) return;
+	if (pageParams !== 1 && count.value !== -1 && pageParams > Math.ceil(count.value / pageSize)) return;
 	if (pageParams < 1) return;
 
 	// 获取页码
@@ -213,6 +206,16 @@ async function page_change(
 
 	// 结束加载
 	loading.value = false;
+
+	// 缓存页码
+	if (collectType.value === 'manga') {
+		browse.mangaListPage = pageParams;
+		browse.mangaListPageSizeCache = pageSize;
+	} else {
+		browse.chapterListPage = pageParams;
+		browse.chapterListPageSizeCache = pageSize;
+	}
+
 }
 
 /**

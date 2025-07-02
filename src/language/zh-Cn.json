@@ -220,12 +220,14 @@
     "form": {
       "name": "章节名称:",
       "path": "章节路径:",
-      "poster": "章节封面:"
+      "poster": "章节封面:",
+      "chapterNumber": "章节序号"
     },
     "place": {
       "name": "请输入章节名称",
       "path": "请输入章节路径",
-      "poster": "请输入章节封面路径"
+      "poster": "请输入章节封面路径",
+      "chapterNumber": "请输入章节序号"
     },
     "warning": {
       "name": "章节名称不能为空!",
