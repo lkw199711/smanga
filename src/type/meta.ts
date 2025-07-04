@@ -21,6 +21,7 @@ type metaItemType = {
 	description: string;
 	blob?: string;
 	active?: boolean; // 是否为当前漫画封面
+	characterId?: string; // 关联的角色ID
 };
 
 export { characterItem, metaItemType };

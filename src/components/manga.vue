@@ -50,6 +50,7 @@ import imageApi from '@/api/image';
 import { onMounted, onActivated } from 'vue';
 import queue from '@/store/quque';
 import usePosterStore from '@/store/image';
+import { userConfig } from '@/store';
 
 type mangaItemType = mangaInfoType & { blob: string; mangaCover: string; };
 
@@ -77,23 +78,20 @@ async function get_poster(item: mangaItemType) {
 }
 
 async function go_chapter() {
-/*
-	const newUrl = router.resolve({
+	const mangaInfoPageRoute = {
 		name: 'manga-info',
 		query: {
 			mediaId: props.mangaInfo.mediaId,
 			mangaId: props.mangaInfo.mangaId,
 		},
-	})
-	window.open(newUrl.href, '_blank');
-*/
-	router.push({
-		name: 'manga-info',
-		query: {
-			mediaId: props.mangaInfo.mediaId,
-			mangaId: props.mangaInfo.mangaId,
-		},
-	});
+	}
+
+	if (userConfig.openNewTab) {
+		const newUrl = router.resolve(mangaInfoPageRoute);
+		window.open(newUrl.href, '_blank');
+	} else {
+		router.push(mangaInfoPageRoute);
+	}
 }
 </script>
 

@@ -24,7 +24,7 @@ export default { name: 'media-list' };
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
 import mediaApi from '@/api/media';
-import { config } from '@/store';
+import { config, userConfig } from '@/store';
 import { useRoute, useRouter } from 'vue-router';
 import { mediaType } from '@/type/media';
 import imageApi from '@/api/image';
@@ -55,14 +55,33 @@ async function load_media() {
  * @return {*}
  */
 function go_manga_list(mediaInfo: mediaType) {
-	browse.mangaListPage = 1;
-	const mediaId = mediaInfo.mediaId;
-	router.push({
-		name: 'manga-list',
-		query: {
-			mediaId,
-		}
-	});
+	let newPageRoute = {};
+	if (mediaInfo.mediaType === 1 && userConfig.singleMediadirectChapterPage) {
+		browse.chapterListPage = 1;
+		newPageRoute = {
+			name: 'chapter-list',
+			query: {
+				mediaId: mediaInfo.mediaId,
+			}
+		};
+	} else {
+		browse.mangaListPage = 1;
+		const mediaId = mediaInfo.mediaId;
+		newPageRoute = {
+			name: 'manga-list',
+			query: {
+				mediaId,
+			}
+		};
+	}
+
+	if (userConfig.openNewTab) {
+		// 使用新标签页打开
+		window.open(router.resolve(newPageRoute).href, '_blank');
+	} else {
+		// 在当前标签页打开
+		router.push(newPageRoute);
+	}
 }
 
 /**

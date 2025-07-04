@@ -1,10 +1,3 @@
-/*
- * @Author: lkw199711 lkw199711@163.com
- * @Date: 2024-08-04 23:30:51
- * @LastEditors: 梁楷文 lkw199711@163.com
- * @LastEditTime: 2024-08-05 10:48:52
- * @FilePath: \smanga\src\store\browse.ts
- */
 import bookmarkApi from '@/api/bookmark';
 import { bookmarkType } from '@/type/bookmark';
 import { defineStore } from 'pinia';
@@ -15,6 +8,16 @@ import latestApi from '@/api/latest';
 import { screenType } from '@/type/store';
 import { config } from '@/store';
 import { mangaPageSize, chapterPageSize, manageListPageSizes } from '@/store/page-size';
+
+function page_cahce() {
+	const pageJump = localStorage.getItem('pageJump');
+	if (pageJump && (Number(pageJump) > 1)) {
+		localStorage.removeItem('pageJump');
+		return Number(pageJump);
+	}
+
+	return 1;
+}
 
 const useBrowseStore = defineStore('browse', {
 	state: () => ({
@@ -29,7 +32,7 @@ const useBrowseStore = defineStore('browse', {
 		mangaId: -1,
 		chapterId: -1,
 		// 当前页码
-		page: 1,
+		page: page_cahce(),
 		// 当前图片路径 用于书签 与 下载图片
 		pageImage: '',
 		// 获取书签列表

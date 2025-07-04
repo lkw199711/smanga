@@ -57,7 +57,10 @@
         <div class="btn-box bottom">
             <el-button class="btn" type="primary" @click="go_chapter_list">章节列表</el-button>
 
-            <el-button class="btn" type="warning" @click="go_chapter" v-if="latestChapterInfo">继续阅读</el-button>
+            <el-button class="btn" type="warning" @click="go_chapter" v-if="latestChapterInfo">
+                {{ latestChapterInfo.chapter.chapterName }}
+                第{{ latestChapterInfo.page }}页
+            </el-button>
             <el-button class="btn" type="success" @click="go_chapter" v-else>开始阅读</el-button>
 
             <el-button class="btn" type="warning" @click="remove_collect" v-if="isCollect">取消收藏</el-button>
@@ -240,29 +243,30 @@ async function get_latest_reading() {
  */
 async function go_chapter() {
     const chapterInfo = latestChapterInfo.value ? latestChapterInfo.value : firstChapterInfo.value;
-
+    if (!chapterInfo) return;
     // 使用pinia存储页码
-    let page = chapterInfo?.page || 1;
+    if (chapterInfo.page && chapterInfo.page > 1) {
+        browse.page = chapterInfo.page;
+        localStorage.setItem('pageJump', chapterInfo.page.toString());
+    } else {
+        browse.page = 1;
+    }
 
-    browse.page = page;
-
-    // const newUrl = router.resolve({
-    //     name: mangaInfo.browseType,
-    //     query: {
-    //         chapterId: chapterInfo.chapterId
-    //     }
-    // });
-
-    // window.open(newUrl.href, '_blank');
-
-    router.push({
+    const browsePageRoute = {
         name: mangaInfo.browseType,
         query: {
             mediaId: mangaInfo.mediaId,
             mangaId: mangaInfo.mangaId,
             chapterId: chapterInfo?.chapterId
         }
-    });
+    }
+
+    if (userConfig.openNewTab) {
+        const newUrl = router.resolve(browsePageRoute);
+        window.open(newUrl.href, '_blank');
+    } else {
+        router.push(browsePageRoute);
+    }
 }
 
 /**

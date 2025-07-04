@@ -56,7 +56,8 @@ let loading = ref(false);
 let defaultPageSize = 10;
 let rightSidebarVisible = ref(false);
 
-const mangaId = Number(route.query.mangaId);
+const mangaId = route.query.mangaId;
+const mediaId = route.query.mediaId;
 
 // 切换排序规则时 重新加载列表
 watch(
@@ -121,20 +122,26 @@ function touch_page_change() {
 function go_browse(chapter: any) {
 	if (chapter?.latest) {
 		browse.page = chapter.latest.page;
+		localStorage.setItem('pageJump', chapter.latest.page)
 	} else {
 		browse.page = 1;
 	}
 
-	const newUrl = router.resolve({
+	const browsePageRoute = {
 		name: chapter.browseType,
 		query: {
 			mediaId: chapter.mediaId,
 			mangaId: chapter.mangaId,
 			chapterId: chapter.chapterId
 		}
-	});
+	}
 
-	window.open(newUrl.href, '_blank');
+	if (userConfig.openNewTab) {
+		const newUrl = router.resolve(browsePageRoute);
+		window.open(newUrl.href, '_blank');
+	} else {
+		router.push(browsePageRoute);
+	}
 }
 /**
  * 打开右侧菜单
@@ -165,13 +172,15 @@ async function page_change(
 	queue.mangaQueue.clear();
 	// 清空数据 避免缓存
 	list.value = [];
-
-	const res = await chapterApi.get(
+	let res;
+	res = await chapterApi.get(
 		mangaId,
+		mediaId,
 		page.value,
 		pageSize,
 		userConfig.order
 	);
+
 	list.value = res.list;
 	count.value = res.count;
 

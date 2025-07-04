@@ -21,6 +21,7 @@ type chapterType = {
 	updateTime: string;
 	page?: number;
 	latest: latestType;
+	chapter: any;
 };
 
 export { chapterType };

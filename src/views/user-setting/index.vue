@@ -4,7 +4,7 @@
 		<p class="note form-note">
 			请注意，设置调配完成后，需要点击保存按钮才能够提交保存。否则有些配置项不能够生效。
 		</p>
-		<el-form :model="form" label-width="10rem">
+		<el-form :model="form">
 			<p class="s-form-title">界面设置</p>
 			<!-- 语言设置 -->
 			<div class="language">
@@ -56,9 +56,9 @@
 				</el-col>
 			</el-form-item>
 			<p class="note form-note">
-				自定义页面容量设置，漫画与章节的页面容量已根据不通尺寸设备调试配置好,
-				如果还是未能很好的适配您的设备,例如条目内容过多遮挡住分页器与页码.可以对页面容量进行自定义,
-				设置为0使用默认值。
+				自定义页面容量设置，漫画与章节的页面容量已根据不通尺寸设备调试配置好,<br>
+				如果还是未能很好的适配您的设备,例如条目内容过多遮挡住分页器与页码.可以对页面容量进行自定义,<br>
+				设置为0使用默认值。<br>
 				(该设置仅在客户端生效,不影响其他设备)
 			</p>
 
@@ -91,6 +91,22 @@
 			</el-form-item>
 			<p class="note form-note">
 				有朋友反馈，阅读界面操作面板默认的30%-40%-30%尺寸与他的习惯不符，因此开放设置选项用以调整“顶部操作栏”与“页码器”的切换范围。
+			</p>
+
+			<el-form-item label="打开漫画,章节,阅读界面时使用新标签页">
+				<el-switch v-model="userConfig.openNewTab" @change="switch_change" />
+			</el-form-item>
+			<p class="note form-note">
+				使用新标签页可以保留漫画与章节列表页信息,但会使浏览器界面过于臃肿,并且可能导继续阅读功能失效.
+			</p>
+
+			<el-form-item label="单本漫画,由媒体库直接浏览章节页">
+				<el-switch v-model="userConfig.singleMediadirectChapterPage" @change="switch_change" />
+			</el-form-item>
+			<p class="note form-note">
+				开启此选项后,点击媒体库时会直接进入章节列表页,而不是漫画详情页. <br>
+				此改动可以减少一次点击操作,可以看到阅读进度条. <br>
+				但会使漫画详情页的功能失效,例如:收藏,元数据浏览/编辑等.
 			</p>
 		</el-form>
 
