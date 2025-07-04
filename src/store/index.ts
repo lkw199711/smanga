@@ -82,6 +82,8 @@ export const userConfig = reactive({
 	enableTouchPageChange: false,
 	mangaPageSize: 0,
 	chapterPageSize: 0,
+	openNewTab: true, // 打开新标签页
+	singleMediadirectChapterPage: true, // 单本漫画,由媒体库直接浏览章节页
 });
 
 export const pageSizeConfig = reactive({

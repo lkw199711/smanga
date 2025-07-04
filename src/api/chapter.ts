@@ -5,9 +5,9 @@
  * @LastEditTime: 2024-08-08 22:47:49
  * @FilePath: \smanga\src\api\chapter.ts
  */
-import {userConfig} from '@/store';
-import {ajax} from './index';
-import {global_get} from '@/utils';
+import { userConfig } from '@/store';
+import { ajax } from './index';
+import { global_get } from '@/utils';
 
 interface chapterGetRes extends ResType {
 	list: [];
@@ -16,14 +16,15 @@ interface chapterGetRes extends ResType {
 
 const chapterApi = {
 	get: async function (
-		mangaId: number,
+		mangaId: any = undefined,
+		mediaId: any = undefined,
 		page: number | undefined = undefined,
 		pageSize: number | undefined = undefined,
 		order = userConfig.order,
 		keyWord = ''
 	) {
 		const res = await ajax.get('chapter', {
-			params: {mangaId, page, pageSize, order, keyWord},
+			params: { mangaId, mediaId, page, pageSize, order, keyWord },
 		});
 		const resData: chapterGetRes = res.data;
 
@@ -52,7 +53,7 @@ const chapterApi = {
 	async get_first(mangaId: number, order: string) {
 		const res = await ajax({
 			url: `chapter-first`,
-			params: {mangaId, order},
+			params: { mangaId, order },
 		});
 
 		const response = res.data;
@@ -93,7 +94,7 @@ const chapterApi = {
 	 * @param deleteFile
 	 */
 	async delete_chapter(chapterId: any, deleteFile = false) {
-		const res = ajax.delete(`chapter/${chapterId}`, {params: {deleteFile}});
+		const res = ajax.delete(`chapter/${chapterId}`, { params: { deleteFile } });
 
 		return (await res).data;
 	},
