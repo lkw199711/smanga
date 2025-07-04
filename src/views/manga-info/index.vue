@@ -326,7 +326,7 @@ async function render_meta() {
 
     // 广告图
     banner.value = mangaInfo.metas.filter((item: metaItemType) => item.metaName === 'banner');
-    banner.value.length === 2 && banner.value.some((item: metaItemType) => /bannerBackground/.test(item.metaFile)) && (bannerModel.value = 'toomics');
+    banner.value.some((item: metaItemType) => /bannerBackground/.test(item.metaFile)) && (bannerModel.value = 'toomics');
     banner.value.forEach(async (item: metaItemType) => {
         item.blob = await imageApi.get(item.metaFile);
     });
