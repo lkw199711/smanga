@@ -129,7 +129,7 @@ function dialog_open() {
  * 加载表格数据
  */
 async function load_table(page = 1, pageSize = browse.manageListPageSize) {
-  const res = await chapterApi.get(0, page, pageSize, userConfig.order, keyWord.value);
+  const res = await chapterApi.get(0, 0, page, pageSize, userConfig.order, keyWord.value);
   count.value = Number(res.count);
   tableData.value = res.list;
 
