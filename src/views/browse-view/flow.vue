@@ -93,7 +93,7 @@ import { computed, ref, watch } from 'vue';
 import imageApi from '@/api/image';
 import { delay, window_go_top } from '@/utils';
 import { ElMessage as msg } from 'element-plus';
-import { config } from '@/store';
+import { config, userConfig } from '@/store';
 import i18n from '@/i18n';
 import { onMounted } from 'vue';
 import chapterListMenu from './components/chapter-list-menu.vue';
@@ -164,10 +164,13 @@ async function page_change() {
 	// 页码递增
 	++page;
 
-	// 当图片列表小于屏幕高度时 继续加载图片
 	const screenHeight = window.screen.height;
 	const listHeight = flowList.value?.scrollHeight || 0;
-	if (listHeight < screenHeight && page < browse.imagePathList.length) {
+	if (userConfig.loadAllFlowIamge && page < browse.imagePathList.length) {
+		// 如果开启了自动加载所有图片 则继续加载下一页
+		queue.flowQueue.add(page_change);
+	} else if (listHeight < screenHeight && page < browse.imagePathList.length) {
+		// 当图片列表小于屏幕高度时 继续加载图片
 		queue.flowQueue.add(page_change)
 	}
 }
