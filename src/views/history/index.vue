@@ -25,7 +25,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
 import chapter from '@/components/chapter.vue';
-import store, { config } from '@/store';
+import store, { config, userConfig } from '@/store';
 import historyApi from '@/api/history';
 import MediaPager from '@/components/media-pager.vue';
 import RightSidebar from './components/right-sidebar.vue';
@@ -67,14 +67,22 @@ const chapterInfo = ref<chapterType>();
  */
 async function go_browse(item: any) {
   browse.page = 1;
-  await router.push({
+  const browsePageRoute = {
     name: item.browseType,
     query: {
       mediaId: item.mediaId,
       mangaId: item.mangaId,
       chapterId: item.chapterId,
     }
-  });
+  }
+
+  if (userConfig.openNewTab) {
+    // 如果开启了新标签页,则直接跳转
+    window.open(router.resolve(browsePageRoute).href, '_blank');
+  } else {
+    await router.push(browsePageRoute);
+  }
+
 }
 
 /**

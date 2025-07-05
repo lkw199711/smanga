@@ -26,7 +26,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
 import chapter from '@/components/chapter.vue';
-import { config } from '@/store';
+import { config, userConfig } from '@/store';
 import bookmarkApi from '@/api/bookmark';
 import MediaPager from '@/components/media-pager.vue';
 import rightSidebar from './components/right-sidebar.vue';
@@ -57,15 +57,23 @@ async function go_browse(item: any) {
 
   // 使用pinia存储页码
   browse.page = item.page;
+  localStorage.setItem('pageJump', item.page.toString());
 
-  await router.push({
+  const browsePageRoute = {
     name: browseType,
     query: {
       mediaId: item.mediaId,
       mangaId,
       chapterId,
     }
-  });
+  }
+  if (userConfig.openNewTab) {
+    // 如果开启了新标签页,则直接跳转
+    window.open(router.resolve(browsePageRoute).href, '_blank');
+    return;
+  } else {
+    await router.push(browsePageRoute);
+  }
 }
 
 /**

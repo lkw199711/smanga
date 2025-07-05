@@ -57,7 +57,7 @@
         <div class="btn-box bottom">
             <el-button class="btn" type="primary" @click="go_chapter_list">章节列表</el-button>
 
-            <el-button class="btn" type="warning" @click="go_chapter" v-if="latestChapterInfo">
+            <el-button class="btn continue-read" type="warning" @click="go_chapter" v-if="latestChapterInfo">
                 {{ latestChapterInfo.chapter.chapterName }}
                 第{{ latestChapterInfo.page }}页
             </el-button>
@@ -326,7 +326,7 @@ async function render_meta() {
 
     // 广告图
     banner.value = mangaInfo.metas.filter((item: metaItemType) => item.metaName === 'banner');
-    banner.value.length === 2 && banner.value.some((item: metaItemType) => /bannerBackground/.test(item.metaFile)) && (bannerModel.value = 'toomics');
+    banner.value.some((item: metaItemType) => /bannerBackground/.test(item.metaFile)) && (bannerModel.value = 'toomics');
     banner.value.forEach(async (item: metaItemType) => {
         item.blob = await imageApi.get(item.metaFile);
     });
@@ -462,6 +462,10 @@ function update_tags(tagsParams: tagItemType[]) {
         z-index: 0;
         filter: blur(2px);
     }
+}
+// 自动换行
+.continue-read{
+    white-space: normal;
 }
 
 .cover-setting {
