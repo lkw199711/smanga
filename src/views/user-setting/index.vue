@@ -108,6 +108,14 @@
 				此改动可以减少一次点击操作,可以看到阅读进度条. <br>
 				但会使漫画详情页的功能失效,例如:收藏,元数据浏览/编辑等.
 			</p>
+
+			<el-form-item label="条漫模式下,自动加载所有图片">
+				<el-switch v-model="userConfig.loadAllFlowIamge" @change="switch_change" />
+			</el-form-item>
+			<p class="note form-note">
+				开启此选项后,条漫模式下会自动加载所有图片,而不是只加载当前屏幕可见的图片. <br>
+				此改动可以减少翻页时的加载时间,但会增加内存占用与网络开销.
+			</p>
 		</el-form>
 
 		<div class="btn-box">
