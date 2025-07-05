@@ -1,6 +1,7 @@
 <template>
 	<div class="user-setting">
 		<el-button type="primary" @click="user_logout">登出用户</el-button>
+		<el-button type="primary" @click="full_screen">网页全屏</el-button>
 		<p class="note form-note">
 			请注意，设置调配完成后，需要点击保存按钮才能够提交保存。否则有些配置项不能够生效。
 		</p>
@@ -195,6 +196,14 @@ function user_logout() {
 	Cookies.remove('userName');
 	Cookies.remove('userId');
 	router.push('/login')
+}
+
+function full_screen() {
+	if (document.fullscreenElement) {
+		document.exitFullscreen();
+	} else {
+		document.documentElement.requestFullscreen();
+	}
 }
 </script>
 
