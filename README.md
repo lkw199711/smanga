@@ -120,7 +120,7 @@ lkw199711/smanga-nodejs;
 
 请参考正常状态下的docker logs
 
-![media poster](https://github.com/lkw199711/smanga/raw/electron/src/assets/readme/normal-log.PNG)
+![normal log](https://github.com/lkw199711/smanga/raw/electron/src/assets/readme/normal-log.JPG)
 
 汇报出
 
