@@ -128,7 +128,7 @@ function touch_page_change() {
  */
 async function page_change(
 	pageParams = 1,
-	pageSize: number = 10
+	pageSize: number = browse.mangaListPageSize
 ) {
 	const byParentPath = route.query.byParentPath;
 	const parentPath = route.query.parentPath;

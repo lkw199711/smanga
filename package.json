@@ -1,9 +1,9 @@
 {
   "name": "smanga",
-  "version": "4.0.5",
+  "version": "4.0.6",
   "private": true,
   "scripts": {
-    "serve": "vue-cli-service serve --no-eslint",
+    "dev": "vue-cli-service serve --no-eslint",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
     "build-baota": "vue-cli-service build --mode baota",

@@ -53,7 +53,6 @@ let list = ref([]);
 let chapterInfo = ref({});
 let loading = ref(false);
 
-let defaultPageSize = 10;
 let rightSidebarVisible = ref(false);
 
 const mangaId = route.query.mangaId;
@@ -158,7 +157,7 @@ function context_menu(info: any, key: number) {
  */
 async function page_change(
 	pageParams = 1,
-	pageSize: number = defaultPageSize
+	pageSize: number = browse.chapterListPageSize
 ) {
 
 	if (pageParams !== 1 && count.value !== -1 && pageParams > Math.ceil(count.value / pageSize)) return;
@@ -172,14 +171,13 @@ async function page_change(
 	queue.mangaQueue.clear();
 	// 清空数据 避免缓存
 	list.value = [];
-	let res;
-	res = await chapterApi.get(
-		mangaId,
-		mediaId,
-		page.value,
+	let res = await chapterApi.get({
+		mangaId: mangaId ? Number(mangaId) : 0,
+		mediaId: mediaId ? Number(mediaId) : 0,
+		page: page.value,
 		pageSize,
-		userConfig.order
-	);
+		order: userConfig.order
+	});
 
 	list.value = res.list;
 	count.value = res.count;

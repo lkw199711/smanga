@@ -1,5 +1,5 @@
-import {globalData} from "@/store";
-import {GlobalData} from "@/store/type";
+import { globalData } from "@/store";
+import { GlobalData } from "@/store/type";
 
 /**
  * 回到顶部
@@ -14,7 +14,7 @@ export function window_go_top() {
  * @param value
  */
 export function global_set<T extends keyof GlobalData>
-(key: T, value: GlobalData[T] & any) {
+    (key: T, value: GlobalData[T] & any) {
 
     globalData[key] = value;
     localStorage.setItem(key, value);
@@ -32,7 +32,7 @@ export function global_set<T extends keyof GlobalData>
  * @param value
  */
 export function global_set_json<T extends keyof GlobalData>
-(key: T, value: GlobalData[T]) {
+    (key: T, value: GlobalData[T]) {
     globalData[key] = value;
     localStorage.setItem(key, JSON.stringify(value));
 }
@@ -134,3 +134,20 @@ export async function delay(ms: number) {
         resolve(true); // 延时结束，返回结果
     });
 };
+
+/**
+ * 
+ * @param filename 文件名
+ * @description: 获取文件名不带扩展名的部分
+ * @returns 
+ */
+export function getFileNameWithoutExtension(filename: string): string {
+    // 方法1：使用lastIndexOf和substring
+    return filename.substring(0, filename.lastIndexOf('.')) || filename;
+
+    // 方法2：使用split和pop
+    // return filename.split('.').slice(0, -1).join('.') || filename;
+
+    // 方法3：使用正则表达式
+    // return filename.replace(/\.[^/.]+$/, "");
+}

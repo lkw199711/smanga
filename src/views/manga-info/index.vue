@@ -17,7 +17,7 @@
                 </div>
             </template>
 
-            <el-image class="anim cover-img" :src="mangaCover" v-else></el-image>
+            <el-image class="anim cover-img" :src="mangaCover" fit="contain" v-else></el-image>
 
         </div>
 
@@ -52,24 +52,41 @@
                 </el-descriptions-item>
                 <el-descriptions-item label="简介">{{ mangaInfo.describe }}</el-descriptions-item>
             </el-descriptions>
+
+            <div class="btn-box">
+                <el-button class="btn" type="primary" @click="go_chapter_list">章节列表</el-button>
+
+                <el-button class="btn continue-read" type="warning" @click="go_chapter" v-if="latestChapterInfo">
+                    {{ latestChapterInfo.chapter.chapterName }}
+                    第{{ latestChapterInfo.page }}页
+                </el-button>
+                <el-button class="btn" type="success" @click="go_chapter" v-else>开始阅读</el-button>
+
+                <el-button class="btn" type="warning" @click="remove_collect" v-if="isCollect">取消收藏</el-button>
+                <el-button class="btn" type="success" @click="collect_manga" v-else>收藏漫画</el-button>
+
+                <el-button class="btn" type="success" @click="mangaShareDialog = true">分享漫画</el-button>
+
+                <el-button class="btn" type="primary" @click="open_tag_box">编辑标签</el-button>
+                <el-button class="btn" type="primary" @click="open_covers_edit" v-if="hasManyCover">编辑封面</el-button>
+                <el-button class="btn" type="primary" @click="open_metas_edit">编辑元数据</el-button>
+            </div>
+
+            <el-form-item :label="$t('mangaInfo.reverseOrder')" class="op-range">
+                <el-switch v-model="chapterListDesc" @change="render_chapter_list" />
+            </el-form-item>
+
+            <div class="chapter-list" v-if="userConfig.simpleChapterView">
+                <chapterSimple v-for="(i, k) in chapterList" :key="k" :chapterInfo="i" :sourceWebsite="sourceWebsite"
+                    @click="go_browse(i)" @contextmenu.prevent="context_menu(i, k)" />
+            </div>
+            <div class="chapter-list" v-else>
+                <chapter v-for="(i, k) in chapterList" :key="k" :chapterInfo="i" :sourceWebsite="sourceWebsite"
+                    @click="go_browse(i)" @contextmenu.prevent="context_menu(i, k)" />
+            </div>
         </div>
 
-        <div class="btn-box bottom">
-            <el-button class="btn" type="primary" @click="go_chapter_list">章节列表</el-button>
-
-            <el-button class="btn continue-read" type="warning" @click="go_chapter" v-if="latestChapterInfo">
-                {{ latestChapterInfo.chapter.chapterName }}
-                第{{ latestChapterInfo.page }}页
-            </el-button>
-            <el-button class="btn" type="success" @click="go_chapter" v-else>开始阅读</el-button>
-
-            <el-button class="btn" type="warning" @click="remove_collect" v-if="isCollect">取消收藏</el-button>
-            <el-button class="btn" type="success" @click="collect_manga" v-else>收藏漫画</el-button>
-
-            <el-button class="btn" type="primary" @click="open_tag_box">编辑标签</el-button>
-            <el-button class="btn" type="primary" @click="open_covers_edit" v-if="hasManyCover">编辑封面</el-button>
-            <el-button class="btn" type="primary" @click="open_metas_edit">编辑元数据</el-button>
-        </div>
+        <div class="bottom"></div>
 
         <el-dialog :title="$t('rightSidebar.editTags')" v-model="editTagsDialog">
             <mangaTagBox :mangaId="mangaInfo.mangaId" :tags="mangaInfo.tags" @update_tags="update_tags"
@@ -112,6 +129,10 @@
                 </el-form-item>
             </el-form>
         </el-dialog>
+
+        <el-dialog :title="$t('mangaInfo.mangaShareDialogTitle')" v-model="mangaShareDialog">
+            <mangaShare :mangaInfo="mangaInfo" @close_dialog="mangaShareDialog = false" />
+        </el-dialog>
     </div>
 </template>
 
@@ -128,8 +149,11 @@ import { chapterType } from '@/type/chapter';
 import chapterApi from '@/api/chapter';
 import lastesApi from '@/api/latest';
 import collectApi from '@/api/collect';
-import mangaTagBox from '@/components/manga-tag-box.vue';
+import mangaTagBox from '@/views/manga-info/components/manga-tag-box.vue';
+import mangaShare from './components/manga-share.vue';
 import useBrowseStore from '@/store/browse';
+import chapter from './components/chapter.vue';
+import chapterSimple from './components/chapter-simple.vue';
 const browse: any = useBrowseStore();
 const router = useRouter();
 const route = useRoute();
@@ -142,6 +166,7 @@ const metaForm = reactive({
     describe: '',
 });
 
+const chapterList = ref<chapterType[]>([]);
 let mangaInfo = reactive<mangaInfoType>({
     mediaId: 0,
     mangaId: 0,
@@ -171,9 +196,17 @@ let isCollect = ref(false);
 let editTagsDialog = ref(false);
 let editCover = ref(false);
 let editMetasDialog = ref(false);
+let mangaShareDialog = ref(false);
 let bannerModel = ref<string>('toptoon');
 let hasManyCover = ref(false);
 let metaWriteJson = ref(true);
+
+let chapterInfo = ref({});
+let chapterListDesc = ref(false);
+
+let rightSidebarVisible = ref(false);
+
+let sourceWebsite = ref('')
 
 // 轮播自动滚动时间间隔 默认为6秒钟
 const interval = ref(6 * 1000);
@@ -211,6 +244,7 @@ onMounted(async () => {
     await render_meta();
     await get_first_chapter();
     await get_latest_reading();
+    await render_chapter_list()
 
     get_collect_status();
 })
@@ -294,6 +328,9 @@ function go_chapter_list() {
 async function render_meta() {
     const mangaId = Number(route.query.mangaId);
     Object.assign(mangaInfo, await mangaApi.get_manga_info(mangaId));
+    if (mangaInfo?.media?.sourceWebsite) {
+        sourceWebsite.value = mangaInfo?.media?.sourceWebsite
+    }
 
     // 漫画封面
     try {
@@ -340,6 +377,48 @@ async function render_meta() {
         const blob = await imageApi.get(item.metaFile);
         item.blob = blob;
     })
+}
+
+async function render_chapter_list() {
+    chapterList.value = [];
+    const mangaId = mangaInfo.mangaId;
+    if (!mangaId) return;
+
+    const chapterListResponse = await chapterApi.get({ mangaId, order: chapterListDesc.value ? 'numberDesc' : 'number' });
+    chapterList.value = chapterListResponse.list;
+}
+
+function go_browse(chapter: any) {
+    if (chapter?.latest) {
+        browse.page = chapter.latest.page;
+        localStorage.setItem('pageJump', chapter.latest.page)
+    } else {
+        browse.page = 1;
+    }
+
+    const browsePageRoute = {
+        name: chapter.browseType,
+        query: {
+            mediaId: chapter.mediaId,
+            mangaId: chapter.mangaId,
+            chapterId: chapter.chapterId
+        }
+    }
+
+    if (userConfig.openNewTab) {
+        const newUrl = router.resolve(browsePageRoute);
+        window.open(newUrl.href, '_blank');
+    } else {
+        router.push(browsePageRoute);
+    }
+}
+
+/**
+ * 打开右侧菜单
+ */
+function context_menu(info: any, key: number) {
+    chapterInfo.value = info;
+    rightSidebarVisible.value = true;
 }
 
 /**
@@ -416,6 +495,7 @@ async function update_metas() {
     editMetasDialog.value = false;
     await render_meta();
 }
+
 /**
  * @description: 更新详情页的tag列表
  * @param {*} tagsParams
@@ -433,6 +513,14 @@ function update_tags(tagsParams: tagItemType[]) {
 
 :deep(.el-carousel__mask) {
     background-color: transparent;
+}
+
+.chapter-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin: 1rem 2rem 0;
+    // justify-content: space-between;
 }
 
 .banner-toomics {
@@ -463,8 +551,9 @@ function update_tags(tagsParams: tagItemType[]) {
         filter: blur(2px);
     }
 }
+
 // 自动换行
-.continue-read{
+.continue-read {
     white-space: normal;
 }
 
@@ -505,7 +594,7 @@ function update_tags(tagsParams: tagItemType[]) {
     overflow-x: auto;
     overflow-y: hidden;
     white-space: nowrap;
-    gap: 1rem;
+    gap: .6rem;
     padding: 1rem;
 }
 
@@ -587,7 +676,7 @@ function update_tags(tagsParams: tagItemType[]) {
     display: flex;
     margin: 0 2rem;
     flex-wrap: wrap;
-    justify-content: space-between;
+    gap: 1rem;
 
     .el-button+.el-button {
         margin-left: 0;
@@ -604,11 +693,14 @@ function update_tags(tagsParams: tagItemType[]) {
     margin-bottom: 6rem;
 }
 
+.op-range {
+    margin-left: 2rem;
+}
+
 // 封面
 .cover-img {
     display: block;
     margin: 0 auto;
-    width: 28rem;
     min-width: 14rem;
     height: 40rem;
 }
@@ -646,6 +738,10 @@ function update_tags(tagsParams: tagItemType[]) {
         margin-top: 0;
     }
 
+    .chapter-list {
+        gap: 0.6rem;
+    }
+
     .character {
         img {
             width: 8rem;
@@ -674,6 +770,10 @@ function update_tags(tagsParams: tagItemType[]) {
 @media only screen and (max-width: 767px) {
     .top {
         margin-top: 0;
+    }
+
+    .chapter-list {
+        gap: 0.4rem;
     }
 
     .character {

@@ -1,11 +1,4 @@
-/*
- * @Author: lkw199711 lkw199711@163.com
- * @Date: 2023-03-17 20:18:30
- * @LastEditors: lkw199711 lkw199711@163.com
- * @LastEditTime: 2025-02-14 21:06:08
- * @FilePath: \smanga\src\api\media.ts
- */
-import {ajax} from './index';
+import { ajax } from './index';
 
 const mediaApi = {
 	/**
@@ -14,8 +7,8 @@ const mediaApi = {
 	 * @param {number} pageSize
 	 * @return {*}
 	 */
-	async get(page: number, pageSize: number) {
-		const res = ajax.get('media', {params: {page, pageSize}});
+	async get(page: number = 1, pageSize: number = 999) {
+		const res = ajax.get('media', { params: { page, pageSize } });
 
 		const resData = (await res).data;
 
@@ -57,7 +50,7 @@ const mediaApi = {
 		return resData;
 	},
 
-	async create_cover(mediaId: number) { 
+	async create_cover(mediaId: number) {
 		const res = ajax.put(`media-cover/${mediaId}`);
 		const resData = (await res).data;
 		return resData.data;

@@ -1,11 +1,5 @@
-/*
- * @Author: lkw199711 lkw199711@163.com
- * @Date: 2023-10-26 20:25:18
- * @LastEditors: 梁楷文 lkw199711@163.com
- * @LastEditTime: 2024-08-08 10:07:00
- * @FilePath: /smanga/src/api/manga.ts
- */
 import { ajax } from './index';
+import type { ResType } from '@/type/api';
 
 const mangaApi = {
 	/**

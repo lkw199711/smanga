@@ -25,7 +25,9 @@
     "compressManage": "compressManage",
     "wiki": "wiki",
     "tagList": "tagList",
-    "rightMenu": "Function menu"
+    "rightMenu": "Function menu",
+    "mangaSync": "mangaSync",
+    "mangaShare": "mangaShare"
   },
   "option": {
     "option": "option",
@@ -52,7 +54,9 @@
     "markAsRead": "Mark as read",
     "markAsUnRead": "Mark as unread",
     "scan": "Scan manga",
-    "meta": "Reload manga meta"
+    "meta": "Reload manga meta",
+    "warning": "warning",
+    "deleteConfirm": "Are you sure to delete this record?"
   },
   "account": {
     "add": "addUser",
@@ -102,7 +106,8 @@
       "removeFirst": "removeFirst:",
       "direction": "direction:",
       "autoScan": "scheduled scan",
-      "cover": "meida cover"
+      "cover": "meida cover",
+      "sourceWebsite": "Source website"
     },
     "note": {
       "name": "\"mediaName\": Required, cannot be blank",
@@ -112,7 +117,8 @@
       "removeFirst": "\"removeFirst\": In the \"double page mode\", by temporarily removing the first page in reading, you can combine the left and right pages of the cartoon into a whole picture by removing the even number of page numbers. Please change this item after getting familiar with the page numbers of the cartoon. You can also change this item temporarily through the function menu in the browsing interface.",
       "direction": "\"direction\": In the \"double page mode\", change the display order of the first and second pictures so that the left and right pages of the cartoon can be combined into a whole picture. You can also change this item temporarily through the function menu in the browsing interface.",
       "autoScan": "When the folder sending changes, comics and chapters will be automatically added or deleted. Enabling this option will greatly increase the pressure on the server. Please be careful when opening multi-path media libraries",
-      "cover": "The media library cover will be automatically generated after each scan. You can also upload it manually to manage the cover"
+      "cover": "The media library cover will be automatically generated after each scan. You can also upload it manually to manage the cover",
+      "sourceWebsite": "Based on the different source websites, some specific metadata will be loaded"
     },
     "place": {
       "name": "please enter mediaName",
@@ -270,7 +276,12 @@
     "queue": "queue",
     "details": "details",
     "deleteTitle": "delete job",
-    "deleteConfirm": "Are you sure to delete this job?"
+    "deleteConfirm": "Are you sure to delete this job?",
+    "status": "task status",
+    "waiting": "waiting",
+    "active": "active",
+    "completed": "completed",
+    "failed": "failed"
   },
   "collect": {
     "manga": "manga",
@@ -328,8 +339,10 @@
     "numberDesc": "number-desc",
     "name": "name",
     "nameDesc": "name-desc",
-    "time": "time",
-    "timeDesc": "time-desc"
+    "createTime": "createTime",
+    "createTimeDesc": "createTime-desc",
+    "updateTime": "updateTime",
+    "updateTimeDesc": "updateTime-desc"
   },
   "readModel": "readModel",
   "history": {
@@ -377,5 +390,28 @@
     "info": {
       "tagAlreadyExists": "The tag already exists and cannot be added again!"
     }
+  },
+  "mangaSync": {
+    "addMediaSync": "addMediaSync",
+    "addMangaSync": "singleMangaSync",
+    "getShare": "getShare",
+    "analysis": "analysisShareLink",
+    "shareLinkEmpty": "Share link can not be empty",
+    "analysisSuccess": "Share link analysis success.",
+    "add": "add",
+    "selectMedia": "Target media can not be empty",
+    "shareIdEmpty": "Please analysis link by first",
+    "link": "share link",
+    "syncInfoTitle": "aync details"
+  },
+  "mangaInfo": {
+    "mangaShareDialogTitle": "mangaShare",
+    "shareExpires": "expires",
+    "share": "share",
+    "reverseOrder": "Reverse order"
+  },
+  "mangaShare": {
+    "link": "shareLink",
+    "expires": "expires"
   }
 }

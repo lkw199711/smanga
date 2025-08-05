@@ -41,13 +41,11 @@ export default {
 }
 </script>
 <script setup lang="ts">
-import { global_set, global_set_json } from '@/utils';
 import { computed, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import chapterApi from '@/api/chapter';
 import { mangaInfoType } from '@/type/manga';
 import imageApi from '@/api/image';
-import { onMounted, onActivated } from 'vue';
+import { onMounted } from 'vue';
 import queue from '@/store/quque';
 import usePosterStore from '@/store/image';
 import { userConfig } from '@/store';

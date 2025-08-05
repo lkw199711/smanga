@@ -2,9 +2,9 @@
   font-family: "colour"; /* Project id 3852929 */
   /* Color fonts */
   src: 
-       url('iconfont.woff2?t=1741946007086') format('woff2'),
-       url('iconfont.woff?t=1741946007086') format('woff'),
-       url('iconfont.ttf?t=1741946007086') format('truetype');
+       url('iconfont.woff2?t=1752040727892') format('woff2'),
+       url('iconfont.woff?t=1752040727892') format('woff'),
+       url('iconfont.ttf?t=1752040727892') format('truetype');
 }
 
 .colour {
@@ -13,6 +13,18 @@
   font-style: normal;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.colour-share:before {
+  content: "\e63c";
+}
+
+.colour-shangpintongbu:before {
+  content: "\e621";
+}
+
+.colour-sync:before {
+  content: "\e72e";
 }
 
 .colour-right-green:before {

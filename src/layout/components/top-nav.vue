@@ -11,7 +11,6 @@
 			</template>
 			<!--小屏幕-->
 			<Operation v-else class="icon-operation"></Operation>
-			<!--<expand v-else class="icon-operation"/>-->
 		</div>
 
 		<!-- 搜索框 -->
@@ -76,7 +75,7 @@
 </template>
 
 <script lang="ts" setup>
-import { config, userConfig } from '@/store';
+import { config, userConfig, sortOrder } from '@/store';
 import languages from '@/store/language';
 import theme from '@/store/theme';
 import { computed, ref } from 'vue';
@@ -95,9 +94,6 @@ const route = useRoute();
 
 const searchText = ref('');
 const searchType = ref('manga');
-
-// 排序方式
-const sortOrder = ['id', 'idDesc', 'number', 'numberDesc', 'name', 'nameDesc', 'time', 'timeDesc'];
 
 // 视图类型
 const viewClass = computed(() => {
@@ -268,7 +264,7 @@ function switch_view_type() {
 	}
 
 	&-select {
-		width: 12rem;
+		width: 14rem;
 		margin-right: 2rem;
 	}
 }

@@ -242,7 +242,7 @@ const useBrowseStore = defineStore('browse', {
 		 * @return {*}
 		 */
 		async load_chapter_list() {
-			this.chapterList = (await chapterApi.get(this.mangaId)).list;
+			this.chapterList = (await chapterApi.get({ mangaId: this.mangaId })).list;
 		},
 
 		/**

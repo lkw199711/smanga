@@ -73,6 +73,15 @@
 					</el-form-item>
 					<p class="note form-note">{{ $t('mediaManage.note.directory') }}</p>
 
+					<el-form-item :label="$t('mediaManage.form.sourceWebsite')">
+						<el-select v-model.number="form.sourceWebsite" class="r30">
+							<el-option label="无" value="" />
+							<el-option label="toptoon" value="toptoon" />
+							<el-option label="toomics" value="toomics" />
+						</el-select>
+					</el-form-item>
+					<p class="note form-note">{{ $t('mediaManage.note.sourceWebsite') }}</p>
+
 					<!--阅读字段-->
 					<p class="s-form-title">{{ $t('mediaManage.title.read') }}</p>
 					<el-form-item :label="$t('mediaManage.form.removeFirst')">
@@ -84,10 +93,10 @@
 						<el-radio-group v-model="form.direction" class="ml-4">
 							<el-radio :label="0" size="large">{{
 								$t('mediaManage.select.ltr')
-							}}</el-radio>
+								}}</el-radio>
 							<el-radio :label="1" size="large">{{
 								$t('mediaManage.select.rtl')
-							}}</el-radio>
+								}}</el-radio>
 						</el-radio-group>
 					</el-form-item>
 					<p class="note form-note">{{ $t('mediaManage.note.direction') }}</p>
@@ -99,10 +108,10 @@
 						<div class="btn-box">
 							<el-button type="primary" @click="do_add_media">{{
 								$t('option.confirm')
-							}}</el-button>
+								}}</el-button>
 							<el-button type="warning" @click="addMediaDialog = false">{{
 								$t('option.cancel')
-							}}</el-button>
+								}}</el-button>
 						</div>
 					</div>
 				</template>
@@ -149,6 +158,15 @@
 						</el-select>
 					</el-form-item>
 					<p class="note form-note">{{ $t('mediaManage.note.directory') }}</p>
+
+					<el-form-item :label="$t('mediaManage.form.sourceWebsite')">
+						<el-select v-model.number="form.sourceWebsite" class="r30">
+							<el-option label="无" value="" />
+							<el-option label="toptoon" value="toptoon" />
+							<el-option label="toomics" value="toomics" />
+						</el-select>
+					</el-form-item>
+					<p class="note form-note">{{ $t('mediaManage.note.sourceWebsite') }}</p>
 					<!--阅读字段-->
 					<p class="s-form-title">{{ $t('mediaManage.title.read') }}</p>
 					<el-form-item :label="$t('mediaManage.form.removeFirst')">
@@ -160,10 +178,10 @@
 						<el-radio-group v-model="form.direction" class="ml-4">
 							<el-radio :label="0" size="large">{{
 								$t('mediaManage.select.ltr')
-							}}</el-radio>
+								}}</el-radio>
 							<el-radio :label="1" size="large">{{
 								$t('mediaManage.select.rtl')
-							}}</el-radio>
+								}}</el-radio>
 						</el-radio-group>
 					</el-form-item>
 					<p class="note form-note">{{ $t('mediaManage.note.direction') }}</p>
@@ -174,10 +192,10 @@
 						<div class="btn-box">
 							<el-button type="primary" @click="update_media">{{
 								$t('option.confirm')
-							}}</el-button>
+								}}</el-button>
 							<el-button type="warning" @click="editMediaDialog = false">{{
 								$t('option.cancel')
-							}}</el-button>
+								}}</el-button>
 						</div>
 					</div>
 				</template>
@@ -240,10 +258,10 @@
 						<div class="btn-box">
 							<el-button type="primary" @click="addPathDialog = false">{{
 								$t('option.confirm')
-							}}</el-button>
+								}}</el-button>
 							<el-button type="warning" @click="addPathDialog = false">{{
 								$t('option.cancel')
-							}}</el-button>
+								}}</el-button>
 						</div>
 					</div>
 				</template>
@@ -288,6 +306,7 @@ const form = reactive({
 	mediaType: 0,
 	browseType: 'flow',
 	directoryFormat: 0,
+	sourceWebsite: '无',
 	removeFirst: 0,
 	direction: 1,
 	mediaCover: '',
@@ -298,6 +317,7 @@ const formInit = {
 	mediaType: 0,
 	browseType: 'flow',
 	directoryFormat: 0,
+	sourceWebsite: '无',
 	removeFirst: 0,
 	direction: 1,
 };

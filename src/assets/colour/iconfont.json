@@ -6,6 +6,27 @@
   "description": "漫画流媒体管理-彩色图标",
   "glyphs": [
     {
+      "icon_id": "11479785",
+      "name": "share",
+      "font_class": "share",
+      "unicode": "e63c",
+      "unicode_decimal": 58940
+    },
+    {
+      "icon_id": "22325372",
+      "name": "商品同步",
+      "font_class": "shangpintongbu",
+      "unicode": "e621",
+      "unicode_decimal": 58913
+    },
+    {
+      "icon_id": "36100275",
+      "name": "同步工具",
+      "font_class": "sync",
+      "unicode": "e72e",
+      "unicode_decimal": 59182
+    },
+    {
       "icon_id": "1330721",
       "name": "对勾1",
       "font_class": "right-green",

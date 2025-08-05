@@ -15,3 +15,10 @@ interface ResType {
 	eMsg: string;
 	request: string;
 }
+
+type listParamsType = {
+	page: number;
+	pageSize: number;
+}
+
+export { ResType, listParamsType };

@@ -25,7 +25,9 @@
     "jobsManage": "任务管理",
     "wiki": "使用说明",
     "tagList": "标签展示",
-    "rightMenu": "功能菜单"
+    "rightMenu": "功能菜单",
+    "mangaSync": "漫画迁移",
+    "mangaShare": "漫画分享"
   },
   "option": {
     "option": "操作",
@@ -49,7 +51,9 @@
     "markAsRead": "标记为已阅读",
     "markAsUnRead": "标记为未阅读",
     "scan": "扫描漫画",
-    "meta": "刷新元数据"
+    "meta": "刷新元数据",
+    "warning": "警报",
+    "deleteConfirm": "确认删除这条记录?"
   },
   "account": {
     "add": "新增用户",
@@ -102,7 +106,8 @@
       "removeFirst": "剔除首页:",
       "direction": "翻页方向:",
       "autoScan": "定时扫描",
-      "cover": "媒体库封面"
+      "cover": "媒体库封面",
+      "sourceWebsite": "来源网站"
     },
     "note": {
       "name": "\"媒体库名称\": 必填,不能为空",
@@ -112,7 +117,8 @@
       "removeFirst": "\"剔除首页\": 在\"双页模式\"下,通过在阅读中暂时剔除首页,可对其偶数页码,使漫画左右两页合成一张整图,请熟悉漫画页码后更改此项.您也可以在浏览界面通过功能菜单来临时更改此项.",
       "direction": "\"翻页方向\": 在\"双页模式\"下,更改第一与第二张图的展示顺序,使得漫画左右两页合成一张整图.您也可以在浏览界面通过功能菜单来临时更改此项.",
       "autoScan": "当文件夹发送变化时,自动新增或删除漫画与章节.开启此选项会极大程度增加服务器压力,在多路径媒体库请谨慎开启.",
-      "cover": "媒体库封面将会在每次扫描后自动生成,您也可以手动上传,管理封面."
+      "cover": "媒体库封面将会在每次扫描后自动生成,您也可以手动上传,管理封面.",
+      "sourceWebsite": "根据来源网站的不同,会加载一些特定的元数据"
     },
     "place": {
       "name": "请输入媒体库名称",
@@ -270,7 +276,12 @@
     "queue": "队列",
     "details": "任务详情",
     "deleteTitle": "删除任务",
-    "deleteConfirm": "确认删除此任务吗?"
+    "deleteConfirm": "确认删除此任务吗?",
+    "status": "任务状态",
+    "waiting": "等待中",
+    "active": "正在执行",
+    "completed": "已完成",
+    "failed": "失败"
   },
   "collect": {
     "manga": "漫画",
@@ -328,8 +339,10 @@
     "numberDesc": "章节号-倒序",
     "name": "名称",
     "nameDesc": "名称-倒序",
-    "time": "入库时间",
-    "timeDesc": "入库时间-倒序"
+    "createTime": "入库时间",
+    "createTimeDesc": "入库时间-倒序",
+    "updateTime": "更新时间",
+    "updateTimeDesc": "更新时间-倒序"
   },
   "history": {
     "confirm": {
@@ -376,5 +389,28 @@
     "info": {
       "tagAlreadyExists": "标签已存在,不能重复添加!"
     }
+  },
+  "mangaSync": {
+    "addMediaSync": "新增媒体库同步",
+    "addMangaSync": "单个漫画同步",
+    "getShare": "获取分享",
+    "analysis": "解析链接",
+    "shareLinkEmpty": "分享链接不能为空",
+    "analysisSuccess": "分享解析成功",
+    "add": "添加",
+    "selectMedia": "目标媒体库不能为空",
+    "shareIdEmpty": "清先分析分析链接",
+    "link": "分享链接",
+    "syncInfoTitle": "同步详情"
+  },
+  "mangaInfo": {
+    "mangaShareDialogTitle": "漫画分享",
+    "shareExpires": "过期时间",
+    "share": "分享",
+    "reverseOrder": "倒序"
+  },
+  "mangaShare": {
+    "link": "分享链接",
+    "expires": "过期时间"
   }
 }
