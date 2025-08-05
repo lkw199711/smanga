@@ -1,3 +1,4 @@
+import { ResType } from '@/type/api';
 import { ajax } from './index';
 
 type tagParams = {

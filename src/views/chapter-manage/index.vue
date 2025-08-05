@@ -129,7 +129,14 @@ function dialog_open() {
  * 加载表格数据
  */
 async function load_table(page = 1, pageSize = browse.manageListPageSize) {
-  const res = await chapterApi.get(0, 0, page, pageSize, userConfig.order, keyWord.value);
+  const res = await chapterApi.get({
+    mangaId: 0,
+    mediaId: 0,
+    page,
+    pageSize,
+    order: userConfig.order,
+    keyWord: keyWord.value
+  });
   count.value = Number(res.count);
   tableData.value = res.list;
 

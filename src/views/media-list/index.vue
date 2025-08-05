@@ -124,7 +124,7 @@ onMounted(async () => {
 	}
 
 	.chapter-cover-img {
-		max-height: 9rem;
+		overflow: hidden;
 	}
 }
 
@@ -145,6 +145,10 @@ onMounted(async () => {
 			font-size: 2rem;
 		}
 	}
+
+	.chapter-cover-img {
+		max-height: 9rem;
+	}
 }
 
 @media only screen and (max-width: 1199px) and (min-width: 768px) {
@@ -163,6 +167,10 @@ onMounted(async () => {
 			margin-top: 1rem;
 			font-size: 1.8rem;
 		}
+	}
+
+	.chapter-cover-img {
+		max-height: 7.4rem;
 	}
 }
 
@@ -183,7 +191,9 @@ onMounted(async () => {
 			font-size: 1.4rem;
 		}
 	}
+
+	.chapter-cover-img {
+		max-height: 6rem;
+	}
 }
 </style>
-
-<style src="@/style/manga-list.less" scoped lang="less"></style>

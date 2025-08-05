@@ -70,7 +70,7 @@ export const userConfig = reactive({
 	// 主题皮肤
 	theme: 'grey',
 	// 默认排序规则
-	order: 'number',
+	order: 'updateTimeDesc',
 	// 翻页按钮调转
 	pageTurningReverse: false,
 	// 阅读操作面板 顶部与底部尺寸
@@ -86,6 +86,8 @@ export const userConfig = reactive({
 	singleMediadirectChapterPage: true, // 单本漫画,由媒体库直接浏览章节页
 	// 条漫模式下,自动加载所有图片
 	loadAllFlowIamge: false,
+	orderChapterByNumber: true, // 按章节数字顺序加载章节图片
+	simpleChapterView: false, // 章节列表简洁模式
 });
 
 export const pageSizeConfig = reactive({
@@ -97,6 +99,9 @@ export const pageSizeConfig = reactive({
 	'2k': [27, 36, 45, 54, 63],
 	'4k': [32, 40, 48, 54, 62],
 });
+
+// 排序方式
+export const sortOrder = ['id', 'idDesc', 'name', 'nameDesc', 'createTime', 'createTimeDesc', 'updateTime', 'updateTimeDesc'];
 
 
 export default {};

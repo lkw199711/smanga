@@ -1,3 +1,4 @@
+import { mediaType } from "./media";
 import { metaItemType } from "./meta";
 import { tagItemType } from "./tag";
 
@@ -25,6 +26,7 @@ type mangaInfoType = {
 	mangaCover: string;
 	metas?: metaItemType[];
 	tags?: tagItemType[];
+	media?: mediaType;
 };
 
 export {mangaInfoType};

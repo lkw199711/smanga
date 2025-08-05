@@ -25,7 +25,9 @@
     "jobsManage": "任務管理",
     "wiki": "使用說明",
     "tagList": "標簽展示",
-    "rightMenu": "功能菜单"
+    "rightMenu": "功能菜单",
+    "mangaSync": "漫畫遷移",
+    "mangaShare": "漫畫分享"
   },
   "option": {
     "option": "操作",
@@ -49,7 +51,9 @@
     "markAsRead": "標記為已閱讀",
     "markAsUnRead": "標記為未閱讀",
     "scan": "掃描漫畫",
-    "meta": "刷新元數據"
+    "meta": "刷新元數據",
+    "warning": "警報",
+    "deleteConfirm": "確認刪除這條記錄?"
   },
   "account": {
     "add": "新增用戶",
@@ -102,7 +106,8 @@
       "removeFirst": "剔除首頁:",
       "direction": "翻頁方向:",
       "autoScan": "定時掃描",
-      "cover": "媒體庫封面"
+      "cover": "媒體庫封面",
+      "sourceWebsite": "來源網站"
     },
     "note": {
       "name": "\"媒體庫名稱\": 必填,不能為空",
@@ -112,7 +117,8 @@
       "removeFirst": "\"剔除首頁\": 在\"雙頁模式\"下,通過在閱讀中暫時剔除首頁,可對其偶數頁碼,使漫畫左右兩頁合成一張整圖,請熟悉漫畫頁碼後更改此項.您也可以在瀏覽界面通過功能菜單來臨時更改此項.",
       "direction": "\"翻頁方向\": 在\"雙頁模式\"下,更改第一與第二張圖的展示順序,使得漫畫左右兩頁合成一張整圖.您也可以在瀏覽界面通過功能菜單來臨時更改此項.",
       "autoScan": "當文件夾發送變化時,自動新增或刪除漫畫與章節.開啟此選項會極大程度增加服務器壓力,在多路徑媒體庫請謹慎開啟.",
-      "cover": "媒體庫封面將會在每次掃描後自動生成,您也可以手動上傳,管理封面."
+      "cover": "媒體庫封面將會在每次掃描後自動生成,您也可以手動上傳,管理封面.",
+      "sourceWebsite": "根據來源網站的不同,會加載一些特定的元數據"
     },
     "place": {
       "name": "請輸入媒體庫名稱",
@@ -270,7 +276,12 @@
     "queue": "隊列",
     "details": "任務詳情",
     "deleteTitle": "刪除任務",
-    "deleteConfirm": "確認刪除此任務嗎?"
+    "deleteConfirm": "確認刪除此任務嗎?",
+    "status": "任務狀態",
+    "waiting": "等待中",
+    "active": "正在執行",
+    "completed": "已完成",
+    "failed": "失敗"
   },
   "collect": {
     "manga": "漫畫",
@@ -328,8 +339,10 @@
     "numberDesc": "章節號-倒序",
     "name": "名稱",
     "nameDesc": "名稱-倒序",
-    "time": "入庫時間",
-    "timeDesc": "入庫時間-倒序"
+    "createTime": "入庫時間",
+    "createTimeDesc": "入庫時間-倒序",
+    "updateTime": "更新時間",
+    "updateTimeDesc": "更新時間-倒序"
   },
   "history": {
     "confirm": {
@@ -376,5 +389,28 @@
     "info": {
       "tagAlreadyExists": "標籤已存在,不能重復添加!"
     }
+  },
+  "mangaSync": {
+    "addMediaSync": "新增媒體庫同步",
+    "addMangaSync": "單個漫畫同步",
+    "getShare": "獲取分享",
+    "analysis": "解析鏈接",
+    "shareLinkEmpty": "分享鏈接不能爲空",
+    "analysisSuccess": "分享解析成功",
+    "add": "添加",
+    "selectMedia": "目標媒體庫不能爲空",
+    "shareIdEmpty": "清先分析分析鏈接",
+    "link": "分享鏈接",
+    "syncInfoTitle": "同步詳情"
+  },
+  "mangaInfo": {
+    "mangaShareDialogTitle": "漫畫分享",
+    "shareExpires": "過期時間",
+    "share": "分享",
+    "reverseOrder": "倒序"
+  },
+  "mangaShare": {
+    "link": "分享鏈接",
+    "expires": "過期時間"
   }
 }

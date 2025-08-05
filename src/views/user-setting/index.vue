@@ -117,6 +117,22 @@
 				开启此选项后,条漫模式下会自动加载所有图片,而不是只加载当前屏幕可见的图片. <br>
 				此改动可以减少翻页时的加载时间,但会增加内存占用与网络开销.
 			</p>
+
+			<el-form-item label="使用数字排序方式加载章节图片">
+				<el-switch v-model="userConfig.orderChapterByNumber" @change="switch_change" />
+			</el-form-item>
+			<p class="note form-note">
+				开启此选项后,smanga加载章节时会将所有的图片裁剪文件名中的数字部分拼接在一起,按照大小升序排序 <br>
+				不开启此选项时,smanga会按照图片文件名以ASCII进行排序 <br>
+			</p>
+
+			<el-form-item label="以极简模式展示章节列表">
+				<el-switch v-model="userConfig.simpleChapterView" @change="switch_change" />
+			</el-form-item>
+			<p class="note form-note">
+				开启此选项后,章节列表将只显示章节名称,不再显示阅读进度与章节封面等信息. <br>
+				此改动可以减少视觉干扰,在界面中展示更多的章节. <br>
+			</p>
 		</el-form>
 
 		<div class="btn-box">
@@ -127,7 +143,7 @@
 </template>
 
 <script setup lang="ts">
-import { userConfig } from '@/store';
+import { userConfig, sortOrder } from '@/store';
 import { useI18n } from 'vue-i18n';
 import { set_theme, themes } from '@/style/theme';
 import theme from '@/store/theme';
@@ -147,9 +163,6 @@ const form = ref({ removeFirst: 0, range1: 30 });
 
 const mangaPageSize = ref(0);
 const chapterPageSize = ref(0);
-
-// 排序方式
-const sortOrder = ['id', 'idDesc', 'number', 'numberDesc', 'name', 'nameDesc', 'time', 'timeDesc'];
 
 onMounted(() => {
 	// 设置页面容量

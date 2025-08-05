@@ -9,10 +9,22 @@
         <el-table-column prop="id" :label="t('jobsManage.id')" width="100">
         </el-table-column>
 
-        <el-table-column prop="queue" :label="t('jobsManage.queue')" width="86">
+        <el-table-column prop="name" :label="t('jobsManage.queue')" width="86">
         </el-table-column>
 
-        <el-table-column prop="created_at" :label="t('createTime')" width="160">
+        <el-table-column prop="status" :label="t('jobsManage.status')" width="100">
+          <template v-slot="scope">
+            <span v-if="scope.row.failedReason">{{ t('jobsManage.failed') }}</span>
+            <span v-else-if="scope.row.finishedOn">{{ t('jobsManage.completed') }}</span>
+            <span v-else-if="scope.row.processedOn">{{ t('jobsManage.active') }}</span>
+            <span v-else>{{ t('jobsManage.waiting') }}</span>
+          </template>
+        </el-table-column>
+
+        <el-table-column prop="timestamp" :label="t('createTime')" width="160">
+          <template v-slot="scope">
+            {{ new Date(scope.row.timestamp).toLocaleString() }}
+          </template>
         </el-table-column>
 
         <el-table-column :label="t('account.option')">
@@ -68,13 +80,16 @@ const browse = useBrowseStore();
 const { t } = i18n.global;
 
 const pager = ref();
+let tasks: any = [];
 let count = ref(0);
 let tableData = ref([]);
 let editMangaDialog = ref(false);
 let payload = ref('');
 
 onMounted(() => {
-  load_table();
+  browse.manageListPage = 1;
+  browse.manageListPageSizeCache = 10;
+  reload_table();
 })
 
 /***
@@ -88,9 +103,7 @@ function dialog_close() {
  * 加载表格数据
  */
 async function load_table(page = 1, pageSize = 10) {
-  const res = await jobsApi.get(page, pageSize);
-  count.value = res.count;
-  tableData.value = res.list;
+  tableData.value = tasks.slice((page - 1) * pageSize, page * pageSize);;
 
   browse.manageListPage = page;
   browse.manageListPageSizeCache = pageSize;
@@ -98,8 +111,10 @@ async function load_table(page = 1, pageSize = 10) {
 /**
  * 重载数据 页码不变
  */
-function reload_table() {
-  tableData.value = [];
+async function reload_table() {
+  const tasksResponse = await jobsApi.get();
+  tasks = tasksResponse.list;
+  count.value = tasksResponse.count;
   load_table(browse.manageListPage, browse.manageListPageSize);
 }
 /**
@@ -109,7 +124,8 @@ function reload_table() {
  */
 function edit_manga(index: number, row: any) {
   editMangaDialog.value = true;
-  payload.value = JSON.stringify(JSON.parse(row.payload), null, 2);
+  payload.value = JSON.stringify(row, null, 2);
+  console.log('payload', payload.value);
 }
 
 /**

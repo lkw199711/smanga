@@ -1,28 +1,30 @@
-/*
- * @Author: lkw199711 lkw199711@163.com
- * @Date: 2023-03-17 20:18:30
- * @LastEditors: lkw199711 lkw199711@163.com
- * @LastEditTime: 2024-08-08 22:47:49
- * @FilePath: \smanga\src\api\chapter.ts
- */
 import { userConfig } from '@/store';
 import { ajax } from './index';
-import { global_get } from '@/utils';
+import type { ResType } from '@/type/api';
 
 interface chapterGetRes extends ResType {
 	list: [];
 	count: number;
 }
 
+type chapterGetParamsType = {
+	mangaId: number;
+	mediaId?: number;
+	page?: number;
+	pageSize?: number;
+	order?: string;
+	keyWord?: string;
+}
+
 const chapterApi = {
-	get: async function (
-		mangaId: any = undefined,
-		mediaId: any = undefined,
-		page: number | undefined = undefined,
-		pageSize: number | undefined = undefined,
-		order = userConfig.order,
-		keyWord = ''
-	) {
+	get: async function ({
+		mangaId,
+		mediaId = 0,
+		page = 0,
+		pageSize = 0,
+		order = 'number',
+		keyWord = '',
+	}: chapterGetParamsType) {
 		const res = await ajax.get('chapter', {
 			params: { mangaId, mediaId, page, pageSize, order, keyWord },
 		});
@@ -65,6 +67,7 @@ const chapterApi = {
 			url: `chapter-images/${chapterId}`,
 			data: {
 				chapterId: chapterId,
+				orderChapterByNumber: userConfig.orderChapterByNumber,
 			},
 			timeout: 30 * 1000,
 		});

@@ -1,4 +1,4 @@
-import {createRouter, createWebHashHistory, RouteRecordRaw} from 'vue-router';
+import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router';
 import Layout from '@/layout/index.vue';
 import browse from '@/layout/browse.vue';
 
@@ -29,13 +29,13 @@ const routes: Array<RouteRecordRaw> = [
 		name: 'home',
 		redirect: '/index',
 		children: [],
-		meta: {sidebar: false},
+		meta: { sidebar: false },
 		component: Layout,
 	},
 	{
 		path: '/login',
 		name: 'login',
-		meta: {sidebar: false},
+		meta: { sidebar: false },
 		component: () => import('../views/login/index.vue'),
 	},
 
@@ -91,28 +91,28 @@ const routes: Array<RouteRecordRaw> = [
 			{
 				path: '/parent-path-list',
 				name: 'parent-path-list',
-				meta: {sidebar: false, view: 'list'},
+				meta: { sidebar: false, view: 'list' },
 				component: () => import('../views/parent-path-list/index.vue'),
 			},
 			// 漫画列表
 			{
 				path: '/manga-list',
 				name: 'manga-list',
-				meta: {sidebar: false, view: 'list'},
+				meta: { sidebar: false, view: 'list' },
 				component: () => import('../views/manga-list/index.vue'),
 			},
 			// 章节列表
 			{
 				path: '/chapter-list',
 				name: 'chapter-list',
-				meta: {sidebar: false, view: 'list'},
+				meta: { sidebar: false, view: 'list' },
 				component: () => import('../views/chapter-list/index.vue'),
 			},
 			// 历史记录
 			{
 				path: '/history',
 				name: 'history',
-				meta: {sidebar: true, title: 'history', icon: 'time2', view: 'list'},
+				meta: { sidebar: true, title: 'history', icon: 'time2', view: 'list' },
 				component: () => import('../views/history/index.vue'),
 			},
 			// 书签列表
@@ -131,28 +131,28 @@ const routes: Array<RouteRecordRaw> = [
 			{
 				path: '/collect',
 				name: 'collect',
-				meta: {sidebar: true, title: 'collect', icon: 'star', view: 'list'},
+				meta: { sidebar: true, title: 'collect', icon: 'star', view: 'list' },
 				component: () => import('../views/collect/index.vue'),
 			},
 			// 标签列表
 			{
 				path: '/tag-list',
 				name: 'tag-list',
-				meta: {sidebar: true, title: 'tagList', icon: 'tag', view: 'list'},
+				meta: { sidebar: true, title: 'tagList', icon: 'tag', view: 'list' },
 				component: () => import('../views/tag-list/index.vue'),
 			},
 			// 搜索界面
 			{
 				path: '/search',
 				name: 'search',
-				meta: {sidebar: true, title: 'search', icon: 'search', view: 'search'},
+				meta: { sidebar: true, title: 'search', icon: 'search', view: 'search' },
 				component: () => import('../views/search/index.vue'),
 			},
 			// 漫画信息
 			{
 				path: '/manga-info',
 				name: 'manga-info',
-				meta: {sidebar: false, title: 'manga-info', view: 'list'},
+				meta: { sidebar: false, title: 'manga-info', view: 'list' },
 				component: () => import('../views/manga-info/index.vue'),
 			},
 		],
@@ -280,6 +280,30 @@ const routes: Array<RouteRecordRaw> = [
 				},
 				component: () => import('../views/jobs-manage/index.vue'),
 			},
+			// 漫画同步
+			{
+				path: '/manga-sync',
+				name: 'manga-sync',
+				meta: {
+					sidebar: false,
+					title: 'mangaSync',
+					icon: 'sync',
+					view: 'setting',
+				},
+				component: () => import('../views/manga-sync/index.vue'),
+			},
+			// 漫画分享
+			{
+				path: '/manga-share',
+				name: 'manga-share',
+				meta: {
+					sidebar: false,
+					title: 'mangaShare',
+					icon: 'share',
+					view: 'setting',
+				},
+				component: () => import('../views/manga-share/index.vue'),
+			},
 		],
 	},
 
@@ -338,7 +362,7 @@ const routes: Array<RouteRecordRaw> = [
 				path: '/wiki',
 				name: 'wiki',
 				component: () => import('../views/wiki/index.vue'),
-				meta: {sidebar: true, title: 'wiki', icon: 'wiki'},
+				meta: { sidebar: true, title: 'wiki', icon: 'wiki' },
 			},
 		],
 	},
@@ -346,7 +370,7 @@ const routes: Array<RouteRecordRaw> = [
 	{
 		path: '/init',
 		name: 'init',
-		meta: {sidebar: false, title: 'userSetting'},
+		meta: { sidebar: false, title: 'userSetting' },
 		component: () => import('../views/init/index.vue'),
 	},
 
@@ -356,30 +380,30 @@ const routes: Array<RouteRecordRaw> = [
 		name: 'browse-view',
 		redirect: '/browse-view/flow',
 		component: browse,
-		meta: {sidebar: false},
+		meta: { sidebar: false },
 		children: [
 			{
 				path: 'flow',
 				name: 'flow',
-				meta: {view: 'browse'},
+				meta: { view: 'browse' },
 				component: () => import('../views/browse-view/flow.vue'),
 			},
 			{
 				path: 'single',
 				name: 'single',
-				meta: {view: 'browse'},
+				meta: { view: 'browse' },
 				component: () => import('../views/browse-view/single.vue'),
 			},
 			{
 				path: 'double',
 				name: 'double',
-				meta: {view: 'browse'},
+				meta: { view: 'browse' },
 				component: () => import('../views/browse-view/double.vue'),
 			},
 			{
 				path: 'half',
 				name: 'half',
-				meta: {view: 'browse'},
+				meta: { view: 'browse' },
 				component: () => import('../views/browse-view/half.vue'),
 			},
 		],
@@ -389,7 +413,7 @@ const routes: Array<RouteRecordRaw> = [
 	{
 		path: '/test',
 		name: 'test',
-		meta: {sidebar: false},
+		meta: { sidebar: false },
 		component: () => import('../views/test/index.vue'),
 	},
 
@@ -397,13 +421,13 @@ const routes: Array<RouteRecordRaw> = [
 	{
 		path: '/404',
 		name: '404',
-		meta: {sidebar: false},
+		meta: { sidebar: false },
 		component: () => import('../views/404/index.vue'),
 	},
 	{
 		path: '/:pathMatch(.*)',
 		redirect: '/404',
-		meta: {sidebar: false},
+		meta: { sidebar: false },
 	},
 ];
 
