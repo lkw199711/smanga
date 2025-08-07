@@ -4,7 +4,7 @@
 			<el-input class="search-input" v-model="searchText" clearable @clear="clear" @keyup.enter="() => {
 				page_change();
 			}
-				">
+			">
 				<template #append>
 					<el-select v-model="searchType" placeholder="Select" class="search-select">
 						<el-option :label="$t('search.manga')" value="manga" />
@@ -15,13 +15,13 @@
 					<el-button :icon="Search" @click="() => {
 						page_change();
 					}
-						" />
+					" />
 				</template>
 			</el-input>
 			<el-button class="search-btn" type="primary" v-if="config.screenType !== 'small'" @click="() => {
 				page_change();
 			}
-				">全局搜索</el-button>
+			">全局搜索</el-button>
 		</div>
 
 		<div class="middle">
@@ -188,12 +188,12 @@ function touch_page_change() {
 
 		// 向左滑动,向右翻页
 		if (moveX < -100 && page.value < count.value) {
-			page_change(++page.value);
+			page_change(page.value + 1);
 		}
 
 		// 向右滑动,向左翻页
 		if (moveX > 100 && page.value > 1) {
-			page_change(--page.value);
+			page_change(page.value - 1);
 		}
 
 

@@ -106,12 +106,12 @@ function touch_page_change() {
 
 		// 向左滑动,向右翻页
 		if (moveX < -100 && page.value < count.value) {
-			page_change(++page.value, browse.chapterListPageSize);
+			page_change(page.value + 1, browse.chapterListPageSize);
 		}
 
 		// 向右滑动,向左翻页
 		if (moveX > 100 && page.value > 1) {
-			page_change(--page.value, browse.chapterListPageSize);
+			page_change(page.value - 1, browse.chapterListPageSize);
 		}
 
 		moveX = 0;

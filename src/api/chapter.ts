@@ -65,7 +65,7 @@ const chapterApi = {
 	async get_images(chapterId: number) {
 		const res = ajax({
 			url: `chapter-images/${chapterId}`,
-			data: {
+			params: {
 				chapterId: chapterId,
 				orderChapterByNumber: userConfig.orderChapterByNumber,
 			},
