@@ -121,8 +121,17 @@ async function get_poster(item: chapterItemType) {
 
 	.chapter-index,
 	.chapter-name {
-		line-height: 9.6rem;
+		margin-top: .6rem;
+		line-height: 1.6;
+		font-size: 1.6rem;
 		max-width: 42%;
+		white-space: normal;
+	}
+}
+
+.chapter.toptoon {
+	.chapter-image-box {
+		min-width: 21.2rem;
 	}
 }
 
@@ -232,7 +241,9 @@ async function get_poster(item: chapterItemType) {
 
 		.chapter-index,
 		.chapter-name {
-			font-size: 1.4rem;
+			margin-top: .6rem;
+			line-height: 1.6;
+			font-size: 1.6rem;
 		}
 	}
 
@@ -248,6 +259,10 @@ async function get_poster(item: chapterItemType) {
 
 	.chapter.toptoon {
 		height: 11rem;
+
+		.chapter-image-box {
+			min-width: 17rem;
+		}
 	}
 
 	.chapter {
@@ -256,7 +271,8 @@ async function get_poster(item: chapterItemType) {
 
 		.chapter-index,
 		.chapter-name {
-			line-height: 6rem;
+			margin-top: .4rem;
+			line-height: 1.4;
 			font-size: 1.4rem;
 		}
 	}

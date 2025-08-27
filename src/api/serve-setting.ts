@@ -1,10 +1,3 @@
-/*
- * @Author: lkw199711 lkw199711@163.com
- * @Date: 2023-08-26 02:33:27
- * @LastEditors: lkw199711 lkw199711@163.com
- * @LastEditTime: 2025-03-13 12:15:27
- * @FilePath: /smanga/src/api/serve-setting.ts
- */
 import { ajax } from './index';
 
 /**

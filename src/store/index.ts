@@ -88,6 +88,7 @@ export const userConfig = reactive({
 	loadAllFlowIamge: false,
 	orderChapterByNumber: true, // 按章节数字顺序加载章节图片
 	simpleChapterView: false, // 章节列表简洁模式
+	userSlider: true, // 章节阅读进度条
 });
 
 export const pageSizeConfig = reactive({

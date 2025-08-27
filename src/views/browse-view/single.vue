@@ -1,10 +1,3 @@
-<!--
- * @Author: lkw199711 lkw199711@163.com
- * @Date: 2023-03-17 20:18:31
- * @LastEditors: lkw199711 lkw199711@163.com
- * @LastEditTime: 2025-03-14 19:28:01
- * @FilePath: \smanga\src\views\browse-view\single.vue
--->
 <template>
   <div class="single-page">
     <!--目录列表-->
@@ -31,8 +24,11 @@
     <div class="footer" v-show="config.browseFooter">
       <el-button class="btn" type="warning" plain @click="before_chapter">{{ $t('page.before') }}</el-button>
 
+      <el-slider class="bottom-slider" v-model="page" :min="1" :max="browse.pageCount" @change="page_change(page)"
+        v-if="browse.pageCount > 0 && userConfig.userSlider" />
+
       <browse-pager ref="pager" @pageChange="page_change" @reloadPage="reload_page" :page="page"
-        :count="browse.pageCount" />
+        :count="browse.pageCount" v-show="!userConfig.userSlider" />
 
       <el-button class="btn" type="success" plain @click="next_chapter">{{ $t('page.next') }}</el-button>
     </div>

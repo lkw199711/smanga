@@ -75,6 +75,15 @@
 				<el-switch v-model="userConfig.showPageNumber" />
 			</el-form-item>
 
+			<el-form-item label="使用阅读进度条">
+				<el-switch v-model="userConfig.userSlider" />
+			</el-form-item>
+			<p class="note form-note">
+				开启此选项后,章节阅读界面将显示一个进度条用以切换页码,而不是传统的页码器. <br>
+				此改动可以减少视觉干扰,并且可以更快的切换到目标页码. <br>
+				但会使部分用户不适应,并且失去传统页码器的一些功能.
+			</p>
+
 			<el-form-item label="开启滑动翻页">
 				<el-switch v-model="userConfig.enableTouchPageChange" />
 			</el-form-item>

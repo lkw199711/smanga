@@ -67,7 +67,7 @@ const chapterApi = {
 			url: `chapter-images/${chapterId}`,
 			params: {
 				chapterId: chapterId,
-				orderChapterByNumber: userConfig.orderChapterByNumber,
+				orderChapterByNumber: userConfig.orderChapterByNumber ? 1 : undefined,
 			},
 			timeout: 30 * 1000,
 		});

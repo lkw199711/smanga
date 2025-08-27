@@ -1,10 +1,3 @@
-/*
- * @Author: lkw199711 lkw199711@163.com
- * @Date: 2023-03-17 20:18:30
- * @LastEditors: 梁楷文 lkw199711@163.com
- * @LastEditTime: 2024-08-06 11:25:34
- * @FilePath: \smanga\src\api\account.ts
- */
 import {ajax} from './index';
 
 const userApi = {

@@ -176,7 +176,7 @@ async function page_change(
 		mediaId: mediaId ? Number(mediaId) : 0,
 		page: page.value,
 		pageSize,
-		order: userConfig.order
+		order: mediaId ? userConfig.order : 'chapterNumber'
 	});
 
 	list.value = res.list;

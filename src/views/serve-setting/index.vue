@@ -1,13 +1,6 @@
-<!--
- * @Author: lkw199711 lkw199711@163.com
- * @Date: 2023-07-16 12:02:34
- * @LastEditors: lkw199711 lkw199711@163.com
- * @LastEditTime: 2025-03-13 17:08:51
- * @FilePath: /smanga/src/views/serve-setting/index.vue
--->
 <template>
     <div class="serve-setting">
-        <el-form :model="form" label-width="10rem">
+        <el-form :model="form">
             <p class="s-form-title">扫描设置</p>
             <!-- 语言设置 -->
             <div class="scan">
@@ -22,15 +15,15 @@
             </p>
 
             <!--自动解压-->
-            <el-form-item label="自动解压">
-                <el-switch class="auto-compress" v-model="form.compress.auto" :active-value="'1'"
-                    :inactive-value="'0'" />
-                <el-button type="primary" @click="comfirm_auto_compressl">确定</el-button>
+            <el-form-item label="更新漫画与章节封面">
+                <el-switch class="auto-compress" v-model="form.scan.reloadCover" :active-value="1"
+                    :inactive-value="0" />
+                <el-button type="primary" @click="comfirm_update_cover">确定</el-button>
             </el-form-item>
 
             <p class="note form-note">
-                在扫描漫画的时候,自动解压缩zip,cbz,rar,pdf等压缩文件,当您需要获取封面的时候可考虑开启此选项.
-                无论何时请谨慎开启此项,他会大量占用cpu与内存资源,甚至会使任务队列卡死,尤其是您拥有大量pdf文件的时候.
+                再次扫描媒体库时,是否对已有封面的漫画再次加载封面.开启会增加扫描时间.<br />
+                不建议纯压缩包库开启.
             </p>
 
             <p class="s-form-title">ssl证书设置 </p>
@@ -97,10 +90,8 @@
 </template>
 
 <script setup lang="ts">
-import { useI18n } from 'vue-i18n';
 import { ref, onMounted, reactive } from 'vue';
 import serveSettingApi from '@/api/serve-setting'
-import { random } from 'lodash';
 
 const coverArr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16];
 let activeBack = ref(0);
@@ -109,7 +100,8 @@ let backRandom = ref(true);
 const form = reactive({
     scan: {
         autoCompress: 0,
-        interval: 60
+        interval: 60,
+        reloadCover: 0
     },
     ssl: {
         pem: '',
@@ -146,8 +138,8 @@ async function comfirm_interval() {
  * @description: 设置自动解压开关
  * @return {*}
  */
-async function comfirm_auto_compressl() {
-    serveSettingApi.set('scan', 'autoCompress', form.scan.autoCompress)
+async function comfirm_update_cover() {
+    serveSettingApi.set('scan', 'reloadCover', form.scan.reloadCover)
 }
 
 async function confirm_poster_size() {
