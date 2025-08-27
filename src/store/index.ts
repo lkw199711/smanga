@@ -1,10 +1,3 @@
-/*
- * @Author: lkw199711 lkw199711@163.com
- * @Date: 2023-03-17 20:18:30
- * @LastEditors: lkw199711 lkw199711@163.com
- * @LastEditTime: 2024-08-04 14:31:13
- * @FilePath: \smanga\src\store\index.ts
- */
 import { reactive } from 'vue';
 import { GlobalData } from '@/store/type';
 import { get_cookie } from '../utils/index';

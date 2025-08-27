@@ -37,14 +37,20 @@ export default {
 <script lang="ts" setup>
 import { ref, reactive, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
-import { Cookies } from '@/utils';
-import { userInfo } from '@/store';
+import { Cookies, global_set_json } from '@/utils';
+import { userInfo, userConfig, pageSizeConfig } from '@/store';
+import { set_theme } from '@/style/theme';
+import { useI18n } from 'vue-i18n';
 import loginApi from '@/api/login';
+import userApi from '@/api/account';
+import useBrowseStore from '@/store/browse';
 
 const router = useRouter();
 const userName = ref('');
 const passWord = ref('');
 const backClass = ref('bg' + 1);
+const browse = useBrowseStore();
+const { locale } = useI18n();
 
 onMounted(() => {
 	document.onkeypress = (e) => {
@@ -75,8 +81,43 @@ async function do_login() {
 	Cookies.set('token', loginResponse.token)
 	Cookies.set('role', loginResponse.userRole)
 
-	await router.push('media-list');
+	await router.push('/');
 
+	await load_user_config();
+}
+
+async function load_user_config() {
+	const res = await userApi.get_user_config();
+	let configValue = {} as any;
+
+	if (typeof res === 'string') {
+		configValue = JSON.parse(res);
+	} else if (typeof res === 'object') {
+		configValue = res;
+	} else {
+		return false;
+	}
+
+	// 使用数据库用户设置，覆盖当前设置
+	Object.assign(userConfig, configValue.userConfig);
+	Object.assign(pageSizeConfig, configValue.pageSizeConfig);
+
+	if (userConfig?.mangaPageSize != 0) {
+		browse.mangaListPageSizeCache = Number(localStorage.getItem('mangaPageSize')) || 0;
+	}
+	if (userConfig?.chapterPageSize != 0) {
+		browse.chapterListPageSizeCache = Number(localStorage.getItem('chapterPageSize')) || 0;
+	}
+
+	// 对于功能页面 优先从缓存中加载用户配置
+	global_set_json('userConfig', userConfig);
+	global_set_json('pageSizeConfig', pageSizeConfig);
+
+	// 设置语言
+	locale.value = userConfig.language;
+
+	// 设置主题
+	set_theme(userConfig.theme);
 }
 
 function getBackActive() {

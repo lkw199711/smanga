@@ -1,13 +1,5 @@
-/*
- * @Author: lkw199711 lkw199711@163.com
- * @Date: 2023-03-17 20:18:30
- * @LastEditors: lkw199711 lkw199711@163.com
- * @LastEditTime: 2024-08-04 22:22:34
- * @FilePath: \smanga\src\api\bookmark.ts
- */
 import { ajax } from './index';
-import { global_get, global_set_json } from '@/utils';
-import { config } from '@/store';
+import { global_set_json } from '@/utils';
 
 const bookmarkApi = {
 	/**

@@ -1,13 +1,5 @@
-/*
- * @Author: lkw199711 lkw199711@163.com
- * @Date: 2023-03-17 20:18:30
- * @LastEditors: lkw199711 lkw199711@163.com
- * @LastEditTime: 2025-03-14 17:00:36
- * @FilePath: \smanga\src\api\history.ts
- */
 import { historyCreateParamsType } from '@/type/history';
 import { ajax } from './index';
-import { global_get } from '@/utils';
 
 /**
  * @description: 历史记录接口
