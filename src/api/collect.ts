@@ -1,11 +1,3 @@
-/*
- * @Author: lkw199711 lkw199711@163.com
- * @Date: 2023-05-03 11:35:44
- * @LastEditors: lkw199711 lkw199711@163.com
- * @LastEditTime: 2024-08-07 23:36:18
- * @FilePath: \smanga\src\api\collect.ts
- */
-import {global_get} from '@/utils';
 import {ajax} from './index';
 
 const collectApi = {
