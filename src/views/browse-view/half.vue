@@ -27,10 +27,10 @@
     <!--分页按钮-->
     <div class="footer" v-show="config.browseFooter">
       <el-button class="btn" type="warning" plain @click="before_chapter">{{ $t('page.before') }}</el-button>
-
+      <el-slider class="bottom-slider" v-model="page" :min="1" :max="browse.pageCount" @change="page_change(page)"
+        v-if="browse.pageCount > 0 && userConfig.userSlider" />
       <browse-pager ref="pager" @pageChange="page_change" @reloadPage="reload_page" :page="page"
-        :count="browse.pageCount" />
-
+        :count="browse.pageCount" v-show="!userConfig.userSlider" />
       <el-button class="btn" type="success" plain @click="next_chapter">{{ $t('page.next') }}</el-button>
     </div>
   </div>

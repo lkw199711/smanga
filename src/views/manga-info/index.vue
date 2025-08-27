@@ -257,7 +257,7 @@ async function get_first_chapter() {
     const mangaId = mangaInfo.mangaId;
     if (!mangaId) return;
 
-    firstChapterInfo.value = await chapterApi.get_first(mangaId, userConfig.order);
+    firstChapterInfo.value = await chapterApi.get_first(mangaId, 'number');
 }
 
 /**

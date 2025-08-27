@@ -36,6 +36,10 @@
 		<!-- 页码 -->
 		<page-number :page="currentPage" :count="browse.pageCount" />
 
+		<div class="bottom" v-if="browse.pageCount > 0" v-show="config.browseTop">
+			<el-slider class="bottom-slider" v-model="currentPage" :min="1" :max="browse.pageCount" @change="jump_page(currentPage)"/>
+		</div>
+
 		<!-- 功能菜单 -->
 		<right-sidebar @dwonload="dwonload_image" @jumpPageNumber="open_jump_dialog"
 			@set_image_width="browse.dialogViewWidth = true" />
@@ -393,7 +397,10 @@ function open_jump_dialog() {
 	dialogJumpPage.value = true;
 }
 
-function jump_page() {
+function jump_page(pageNum?: number) {
+	if (pageNum) {
+		targetPage.value = pageNum;
+	}
 	// return
 	reload_page(true, targetPage.value);
 }

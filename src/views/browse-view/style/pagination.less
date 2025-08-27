@@ -1,36 +1,57 @@
-@media only screen and (min-width: 1200px) {
-    .single-page .footer {
-        .btn {
-            padding: 0;
-            width: 8rem;
-        }
-    }
+.footer {
+	position: fixed;
+	bottom: 0.4rem;
+	width: 98%;
+	display: flex;
+	justify-content: space-around;
+	box-sizing: border-box;
+	max-width: 100%;
+	margin: 0 1%;
+	padding: 0.4rem 1rem;
+	background: rgba(255, 255, 255, 0.8);
+	border-radius: 2rem;
 
-    :deep(.el-pagination__jump) {
-        margin-left: .4rem;
-    }
+	.btn {
+		width: 10rem;
+	}
+
+	.bottom-slider {
+		margin: 0 1rem;
+	}
+}
+
+@media only screen and (min-width: 1200px) {
+	.single-page .footer {
+		.btn {
+			padding: 0;
+			width: 8rem;
+		}
+	}
+
+	:deep(.el-pagination__jump) {
+		margin-left: 0.4rem;
+	}
 }
 
 @media only screen and (max-width: 1199px) and (min-width: 768px) {
-    :deep(.el-pagination__jump) {
-        margin-left: .8rem;
-    }
+	:deep(.el-pagination__jump) {
+		margin-left: 0.8rem;
+	}
 }
 
 @media only screen and (max-width: 767px) {
-    .footer {
-        .btn {
-            display: none;
-        }
-    }
+	.footer {
+		.btn {
+			display: none;
+		}
+	}
 
-    :deep(.el-pagination__jump) {
-        margin-left: .4rem;
-    }
+	:deep(.el-pagination__jump) {
+		margin-left: 0.4rem;
+	}
 }
 
 .footer {
-    .btn{
-
-    }
+	.btn {
+	}
 }
