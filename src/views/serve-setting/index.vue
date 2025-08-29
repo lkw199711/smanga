@@ -9,6 +9,23 @@
                     <span class="suffix">cron表达式</span>
                     <el-button type="primary" @click="comfirm_interval">确定</el-button>
                 </el-form-item>
+
+                <el-form-item label="媒体库封面生成周期">
+                    <el-input v-model="form.scan.mediaPosterInterval" class="interval" :style="{ width: '15rem' }"></el-input>
+                    <span class="suffix">cron表达式</span>
+                    <el-button type="primary" @click="comfirm_poster_interval">确定</el-button>
+                </el-form-item>
+            </div>
+            <p class="note form-note">
+                扫描周期为cron表达式,默认为一天两次
+            </p>
+
+            <div class="scan">
+                <el-form-item label="同步周期">
+                    <el-input v-model="form.sync.interval" class="interval" :style="{ width: '15rem' }"></el-input>
+                    <span class="suffix">cron表达式</span>
+                    <el-button type="primary" @click="comfirm_sync_interval">确定</el-button>
+                </el-form-item>
             </div>
             <p class="note form-note">
                 扫描周期为cron表达式,默认为一天两次
@@ -101,7 +118,11 @@ const form = reactive({
     scan: {
         autoCompress: 0,
         interval: 60,
-        reloadCover: 0
+        reloadCover: 0,
+        mediaPosterInterval: 0
+    },
+    sync: {
+        interval: 60
     },
     ssl: {
         pem: '',
@@ -134,6 +155,10 @@ async function comfirm_interval() {
     serveSettingApi.set('scan', 'interval', form.scan.interval)
 }
 
+async function comfirm_poster_interval() {
+    serveSettingApi.set('scan', 'mediaPosterInterval', form.scan.mediaPosterInterval)
+}
+
 /**
  * @description: 设置自动解压开关
  * @return {*}
@@ -144,6 +169,10 @@ async function comfirm_update_cover() {
 
 async function confirm_poster_size() {
     serveSettingApi.set('compress', 'poster', form.compress.poster)
+}
+
+async function comfirm_sync_interval() {
+    serveSettingApi.set('sync', 'interval', form.sync.interval)
 }
 
 async function confirm_compress_duration() {

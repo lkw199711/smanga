@@ -1,10 +1,3 @@
-/*
- * @Author: error: error: git config user.name & please set dead value or install git && error: git config user.email & please set dead value or install git & please set dead value or install git
- * @Date: 2023-08-16 03:30:05
- * @LastEditors: lkw199711 lkw199711@163.com
- * @LastEditTime: 2025-03-14 16:26:11
- * @FilePath: /smanga/src/api/image.ts
- */
 import Axios from 'axios';
 import {url} from '@/api';
 import { Cookies } from '@/utils';

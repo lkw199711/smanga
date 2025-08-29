@@ -56,7 +56,9 @@
     "scan": "Scan manga",
     "meta": "Reload manga meta",
     "warning": "warning",
-    "deleteConfirm": "Are you sure to delete this record?"
+    "deleteConfirm": "Are you sure to delete this record?",
+    "share": "Sahre manga",
+    "sync": "Sync"
   },
   "account": {
     "add": "addUser",
@@ -281,7 +283,9 @@
     "waiting": "waiting",
     "active": "active",
     "completed": "completed",
-    "failed": "failed"
+    "failed": "failed",
+    "type": "Sync type",
+    "name": "Media/manga name"
   },
   "collect": {
     "manga": "manga",
@@ -402,7 +406,9 @@
     "selectMedia": "Target media can not be empty",
     "shareIdEmpty": "Please analysis link by first",
     "link": "share link",
-    "syncInfoTitle": "aync details"
+    "syncInfoTitle": "aync details",
+    "selectPath": "The target path cannot be empty",
+    "addSync": "Add sync"
   },
   "mangaInfo": {
     "mangaShareDialogTitle": "mangaShare",
@@ -413,5 +419,9 @@
   "mangaShare": {
     "link": "shareLink",
     "expires": "expires"
+  },
+  "mediaList": {
+    "scanMedia": "Scan media",
+    "shareMedia": "Share media"
   }
 }

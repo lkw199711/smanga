@@ -1,10 +1,3 @@
-/*
- * @Author: lkw199711 lkw199711@163.com
- * @Date: 2023-03-17 20:18:30
- * @LastEditors: 梁楷文 lkw199711@163.com
- * @LastEditTime: 2024-08-09 16:12:39
- * @FilePath: \smanga\src\api\path.ts
- */
 import { ajax } from './index';
 
 const pathApi = {
@@ -21,6 +14,11 @@ const pathApi = {
 		});
 
 		return (await res).data;
+	},
+
+	async get(mediaId: number) {
+		const httpResponse = await ajax.get('path', { params: { mediaId } });
+		return httpResponse.data;
 	},
 
 	/**
@@ -70,7 +68,7 @@ const pathApi = {
 		return response.data;
 	},
 
-	async update_path(pathId: any, pathForm: any) { 
+	async update_path(pathId: any, pathForm: any) {
 		const http = await ajax.put(`path/${pathId}`, pathForm);
 		const response = http.data;
 		return response.data;

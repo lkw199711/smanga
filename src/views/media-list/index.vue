@@ -1,20 +1,23 @@
 <template>
-	<div class="index">
-		<div class="media">
-			<div class="media-item" v-for="item in mediaList" :key="item.mediaId" @click="go_manga_list(item)"
-				@contextmenu.prevent="context_menu">
-				<!--封面图片-->
-				<el-image v-if="item.mediaCoverLink" class="anim chapter-cover-img" :src="item.mediaCoverLink" fit="fit"
-					:alt="item.mediaName" />
 
-				<!--占位图标-->
-				<el-image v-else :src="placeholder" class="chapter-cover-img" fit="fill" />
+	<div class="media">
+		<div class="media-item" v-for="item in mediaList" :key="item.mediaId" @click="go_manga_list(item)"
+			@contextmenu.prevent="context_menu(item)">
+			<!--封面图片-->
+			<el-image v-if="item.mediaCoverLink" class="anim chapter-cover-img" :src="item.mediaCoverLink" fit="contain"
+				:alt="item.mediaName" />
 
-				<!--媒体库名称-->
-				<p class="media-name">{{ item.mediaName }}</p>
-			</div>
+			<!--占位图标-->
+			<el-image v-else :src="placeholder" class="chapter-cover-img" fit="fill" />
+
+			<!--媒体库名称-->
+			<p class="media-name">{{ item.mediaName }}</p>
 		</div>
 	</div>
+
+	<!--功能菜单-->
+	<rightSidebar :mediaInfo="mediaInfo" :rightSidebarVisible="rightSidebarVisible"
+		@close="() => { rightSidebarVisible = false }" />
 </template>
 
 <script lang="ts">
@@ -29,12 +32,15 @@ import { useRoute, useRouter } from 'vue-router';
 import { mediaType } from '@/type/media';
 import imageApi from '@/api/image';
 import useBrowseStore from '@/store/browse';
+import rightSidebar from './right-sidebar.vue';
 const browse = useBrowseStore();
 const placeholder = require('@/assets/s-blue.png');
 const route = useRoute();
 const router = useRouter();
 
+const rightSidebarVisible = ref(false);
 const mediaList = ref<mediaType[]>([]);
+const mediaInfo = ref<mediaType | null>(null);
 
 /**
  * @description: 读取媒体库
@@ -88,8 +94,9 @@ function go_manga_list(mediaInfo: mediaType) {
  * @description: 上下文菜单
  * @return {*}
  */
-function context_menu() {
-	config.rightSidebar = true;
+function context_menu(mangaInfo: mediaType) {
+	mediaInfo.value = mangaInfo;
+	rightSidebarVisible.value = true;
 }
 
 // 生命周期

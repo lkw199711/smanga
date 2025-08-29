@@ -1,4 +1,6 @@
 // eslint-disable-next-line @typescript-eslint/no-var-requires
+const webpack = require('webpack');
+const { VueLoaderPlugin } = require('vue-loader');
 // 获取项目版本号
 process.env.VUE_APP_VERSION = require('./package.json').version;
 
@@ -79,6 +81,12 @@ module.exports = {
 	},
 	configureWebpack: {
 		devtool: 'source-map',
+		plugins: [
+			new webpack.DefinePlugin({
+				__VUE_PROD_HYDRATION_MISMATCH_DETAILS__: 'false'
+			}),
+			new VueLoaderPlugin()
+		]
 	},
 };
 

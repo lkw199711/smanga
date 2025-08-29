@@ -2,9 +2,10 @@ import { ajax } from './index';
 import type { listParamsType } from '@/type/api';
 
 type ShareCreateParams = {
-    mangaId: number;
-    mediaId?: number;
-    expires?: number;
+    shareName?: string;
+    mangaId?: number;
+    mediaId: number;
+    expires: number;
     source?: string;
     domain: string;
 }
@@ -12,7 +13,6 @@ type ShareCreateParams = {
 const shareApi = {
     async delete(shareId: number) {
         const res = ajax.delete(`share/${shareId}`);
-
         return (await res).data;
     },
 
@@ -22,8 +22,9 @@ const shareApi = {
         return (await res).data;
     },
 
-    async create({ mangaId, mediaId, expires, domain, source }: ShareCreateParams) {
+    async create({ shareName, mangaId, mediaId, expires, domain, source }: ShareCreateParams) {
         const res = ajax.post('share', {
+            shareName,
             mangaId,
             mediaId,
             expires,

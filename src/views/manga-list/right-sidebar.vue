@@ -44,10 +44,22 @@
 					{{ $t('option.editTags') }}
 				</el-menu-item>
 				<el-menu-item index="scan">
+					<el-icon>
+						<Files />
+					</el-icon>
 					{{ $t('option.scan') }}
 				</el-menu-item>
 				<el-menu-item index="meta">
+					<el-icon>
+						<RefreshLeft />
+					</el-icon>
 					{{ $t('option.meta') }}
+				</el-menu-item>
+				<el-menu-item index="share">
+					<el-icon>
+						<Share />
+					</el-icon>
+					{{ $t('option.share') }}
 				</el-menu-item>
 			</el-menu>
 		</el-drawer>
@@ -57,15 +69,20 @@
 				<p class="tag-title">{{ $t('rightSidebar.baseTagTitle') }}</p>
 				<el-tag v-for="tagItem in noCheckedTagList" class="tag base-tag" :color="tagItem.tagColor"
 					:key="tagItem.tagId" @click="add_manga_tag(tagItem)">{{
-					tagItem.tagName }}</el-tag>
+						tagItem.tagName }}</el-tag>
 			</div>
 
 			<div class="ckecked-tag-box">
 				<p class="tag-title">{{ $t('rightSidebar.ckeckedTagTitle') }}</p>
 				<el-tag v-for="tagItem in checkedTagList" class="tag ckecked-tag" :color="tagItem.tagColor"
 					:key="tagItem.tagId" closable @close="remove_tag(tagItem.mangaTagId)">{{
-					tagItem.tagName }}</el-tag>
+						tagItem.tagName }}</el-tag>
 			</div>
+		</el-dialog>
+
+
+		<el-dialog :title="$t('mangaInfo.mangaShareDialogTitle')" v-model="mangaShareDialog">
+			<mangaShare :mangaInfo="mangaInfo" @close_dialog="mangaShareDialog = false" />
 		</el-dialog>
 	</div>
 </template>
@@ -83,6 +100,7 @@ import historyApi from '@/api/history';
 import imageApi from '@/api/image';
 import useBrowseStore from '@/store/browse';
 import androidSeat from '@/layout/components/android-seat.vue';
+import mangaShare from '@/components/share.vue';
 const browse = useBrowseStore();
 const placeholder = require('@/assets/s-blue.png');
 
@@ -92,6 +110,7 @@ const route = useRoute();
 
 const isCollect = ref(false);
 const editTagsDialog = ref(false);
+const mangaShareDialog = ref(false);
 const blob = ref('');
 
 let tagList = ref<tagItemType[]>([]);
@@ -249,44 +268,13 @@ async function menu_select(key: string) {
 			await mangaApi.reload_meta(mangaId.value);
 			emit('reload', browse.mangaListPage, browse.mangaListPageSize);
 			break;
+		case 'share':
+			mangaShareDialog.value = true;
+			break;
 
 	}
 	close_sidebar();
 }
 </script>
 
-<style scoped lang="less">
-.right-sidebar-menu {
-	width: 32rem;
-	max-width: 70vw;
-	height: 100%;
-	background-color: #545c64;
-}
-
-.poster {
-	width: 100%;
-	max-height: 50%;
-	object-fit: cover;
-}
-
-.title {
-	padding: 1rem 1rem 2rem;
-	color: @button-back;
-	font-size: 1.6rem;
-}
-
-.tag-title {
-	margin-bottom: 1rem;
-	font-size: 1.4rem;
-}
-
-.base-tag-box {
-	margin-bottom: 2rem;
-
-	.base-tag {
-		cursor: pointer;
-	}
-}
-
-.ckecked-tag-box {}
-</style>
+<style scoped lang="less" src="@/style/right-sidebar.less"></style>

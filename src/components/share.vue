@@ -1,6 +1,6 @@
 <template>
     <el-form-item>
-        <el-input v-model="input1" style="max-width: 600px" placeholder="example.smanga.com">
+        <el-input v-model="input1" style="max-width: 600px" placeholder="example.smanga.com:9797">
             <template #prepend>
                 <el-select v-model="select" placeholder="" style="width: 115px">
                     <el-option label="http://" value="http://" />
@@ -35,7 +35,7 @@ import shareApi from '@/api/share';
 import { ElMessageBox } from 'element-plus';
 import { ref } from 'vue'
 
-const props = defineProps(['mangaInfo']);
+const props = defineProps(['mangaInfo', 'mediaInfo']);
 const emit = defineEmits(['update_tags', 'close_dialog']);
 const select = ref('http://');
 const radio2 = ref('1')
@@ -54,13 +54,22 @@ async function create_share() {
 
     const source = select.value + input1.value.trim();
 
-    const shareResponse = await shareApi.create({
-        mangaId: props.mangaInfo.mangaId,
-        mediaId: props.mangaInfo.mediaId,
-        expires: radio2.value ? parseInt(radio2.value) : undefined,
+    const paramsData: any = {
+        mediaId: props.mediaInfo?.mediaId,
+        shareName: props.mediaInfo?.mediaName,
+        expires: parseInt(radio2.value),
         source,
         domain: input1.value
-    });
+    };
+
+    if (props.mangaInfo) {
+        paramsData.mangaId = props.mangaInfo.mangaId;
+        paramsData.mediaId = props.mangaInfo.mediaId;
+        paramsData.shareName = props.mangaInfo.mangaName;
+    }
+
+    const shareResponse = await shareApi.create(paramsData);
+    
     const link = shareResponse.data.link;
     // 这里可以调用API来创建分享链接
     emit('close_dialog');

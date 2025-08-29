@@ -53,7 +53,9 @@
     "scan": "掃描漫畫",
     "meta": "刷新元數據",
     "warning": "警報",
-    "deleteConfirm": "確認刪除這條記錄?"
+    "deleteConfirm": "確認刪除這條記錄?",
+    "share": "分享漫畫",
+    "sync": "同步"
   },
   "account": {
     "add": "新增用戶",
@@ -281,7 +283,9 @@
     "waiting": "等待中",
     "active": "正在執行",
     "completed": "已完成",
-    "failed": "失敗"
+    "failed": "失敗",
+    "type": "同步類型",
+    "name": "媒體庫/漫畫 名稱"
   },
   "collect": {
     "manga": "漫畫",
@@ -401,7 +405,9 @@
     "selectMedia": "目標媒體庫不能爲空",
     "shareIdEmpty": "清先分析分析鏈接",
     "link": "分享鏈接",
-    "syncInfoTitle": "同步詳情"
+    "syncInfoTitle": "同步詳情",
+    "selectPath": "目標路徑不能爲空",
+    "addSync": "新增同步"
   },
   "mangaInfo": {
     "mangaShareDialogTitle": "漫畫分享",
@@ -412,5 +418,9 @@
   "mangaShare": {
     "link": "分享鏈接",
     "expires": "過期時間"
+  },
+  "mediaList": {
+    "scanMedia": "掃描媒體庫",
+    "shareMedia": "分享媒體庫"
   }
 }

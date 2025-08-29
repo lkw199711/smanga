@@ -3,8 +3,9 @@ import type { listParamsType } from '@/type/api';
 
 type SyncCreateParams = {
     syncType: string; // e.g., 'manga', 'media'
-    source: string; // e.g., 'sourceName'
-    mediaId?: number; // Optional, for media sync
+    syncName: string; // e.g., 'My Sync'
+    origin: string; // e.g., 'sourceName'
+    receivedPath: string; // Optional, for path sync
     shareId?: number; // Optional, for share sync
     link?: string; // Optional, for analysis
     secret?: string; // Optional, for analysis
@@ -15,19 +16,17 @@ type SyncCreateParams = {
 const syncApi = {
     async delete(syncId: number) {
         const res = ajax.delete(`sync/${syncId}`);
-
         return (await res).data;
     },
 
     async get({ page, pageSize }: listParamsType) {
         const res = ajax.get('sync', { data: { page, pageSize } });
-
         return (await res).data;
     },
 
-    async create({ syncType, source, mediaId, shareId, link, secret, auto, token }: SyncCreateParams) {
+    async create({ syncType, syncName, origin, receivedPath, shareId, link, secret, auto, token }: SyncCreateParams) {
         const res = ajax.post('sync', {
-            syncType, source, mediaId, shareId, link, secret, auto, token
+            syncType, syncName, origin, receivedPath, shareId, link, secret, auto, token
         });
 
         return (await res).data;
@@ -36,6 +35,11 @@ const syncApi = {
     async analysis(shareLink: string) {
         const res = ajax.get(shareLink);
 
+        return (await res).data;
+    },
+
+    async execute(syncId: number) {
+        const res = ajax.post(`sync/execute/${syncId}`);
         return (await res).data;
     }
 };
