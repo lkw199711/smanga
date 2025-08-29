@@ -285,7 +285,7 @@ const routes: Array<RouteRecordRaw> = [
 				path: '/manga-sync',
 				name: 'manga-sync',
 				meta: {
-					sidebar: false,
+					sidebar: true,
 					title: 'mangaSync',
 					icon: 'sync',
 					view: 'setting',
@@ -297,7 +297,7 @@ const routes: Array<RouteRecordRaw> = [
 				path: '/manga-share',
 				name: 'manga-share',
 				meta: {
-					sidebar: false,
+					sidebar: true,
 					title: 'mangaShare',
 					icon: 'share',
 					view: 'setting',

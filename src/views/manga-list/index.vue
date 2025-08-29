@@ -90,7 +90,7 @@ function touch_page_change() {
 		startX = e.targetTouches[0].pageX;
 		// 获取盒子坐标
 		x = this.offsetLeft;
-	})
+	}, { passive: true })
 
 	listDom.addEventListener('touchmove', function (this: HTMLDivElement, e: any) {
 		if (config.viewType === 'list') return;
@@ -100,7 +100,7 @@ function touch_page_change() {
 		this.style.left = x + moveX + 'px';
 		// 阻止屏幕滚动行为
 		e.preventDefault();
-	})
+	}, { passive: true })
 
 	listDom.addEventListener('touchend', function (this: HTMLDivElement, e) {
 		if (config.viewType === 'list') return;
@@ -118,7 +118,7 @@ function touch_page_change() {
 
 
 		moveX = 0;
-	})
+	}, { passive: true })
 }
 
 /**

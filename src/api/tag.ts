@@ -83,7 +83,7 @@ const tagApi = {
 	 * @param {*} tagIds
 	 * @return {*}
 	 */
-	add_manga_tag: async function (mangaId: number, tags: tagItemType[], metaWriteJson: boolean = true) {
+	add_manga_tag: async function (mangaId: number, tags: tagItemType[] | number, metaWriteJson: boolean = true) {
 		await ajax.put(`manga/${mangaId}/tags`, { mangaId, tags, metaWriteJson });
 	},
 

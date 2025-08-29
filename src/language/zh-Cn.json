@@ -53,7 +53,9 @@
     "scan": "扫描漫画",
     "meta": "刷新元数据",
     "warning": "警报",
-    "deleteConfirm": "确认删除这条记录?"
+    "deleteConfirm": "确认删除这条记录?",
+    "share": "分享漫画",
+    "sync": "同步"
   },
   "account": {
     "add": "新增用户",
@@ -281,7 +283,9 @@
     "waiting": "等待中",
     "active": "正在执行",
     "completed": "已完成",
-    "failed": "失败"
+    "failed": "失败",
+    "type": "同步类型",
+    "name": "媒体库/漫画 名称"
   },
   "collect": {
     "manga": "漫画",
@@ -401,7 +405,9 @@
     "selectMedia": "目标媒体库不能为空",
     "shareIdEmpty": "清先分析分析链接",
     "link": "分享链接",
-    "syncInfoTitle": "同步详情"
+    "syncInfoTitle": "同步详情",
+    "selectPath": "目标路径不能为空",
+    "addSync": "新增同步"
   },
   "mangaInfo": {
     "mangaShareDialogTitle": "漫画分享",
@@ -412,5 +418,9 @@
   "mangaShare": {
     "link": "分享链接",
     "expires": "过期时间"
+  },
+  "mediaList": {
+    "scanMedia": "扫描媒体库",
+    "shareMedia": "分享媒体库"
   }
 }

@@ -3,14 +3,6 @@
         <div class="manga-setting-box">
             <!-- 表头按钮 -->
             <div class="btn-box">
-                <el-button class="add-btn" type="primary" :icon="Plus" @click="dialog_open">{{
-                    $t('mangaSync.addMediaSync')
-                    }}
-                </el-button>
-                <el-button class="add-btn" type="primary" :icon="Plus" @click="dialog_open">{{
-                    $t('mangaSync.addMangaSync')
-                    }}
-                </el-button>
             </div>
             <!--表格-->
             <el-table :data="tableData" stripe border>
@@ -19,6 +11,10 @@
 
                 <el-table-column prop="shareId" :label="t('jobsManage.id')" width="100">
                 </el-table-column>
+
+                <el-table-column prop="shareType" :label="t('jobsManage.type')" width="100"></el-table-column>
+
+                <el-table-column prop="shareName" :label="t('jobsManage.name')" width="160"></el-table-column>
 
                 <el-table-column prop="link" :label="t('mangaShare.link')">
                 </el-table-column>
@@ -35,11 +31,11 @@
                     <template v-slot="scope">
                         <el-button size="small" type="primary" :icon="Edit"
                             @click="edit_manga(scope.$index, scope.row)">{{
-                            t('option.check') }}
+                                t('option.check') }}
                         </el-button>
                         <el-button size="small" type="danger" :icon="Delete"
                             @click="delete_manga(scope.$index, scope.row)">{{
-                            t('option.delete') }}
+                                t('option.delete') }}
                         </el-button>
                     </template>
                 </el-table-column>

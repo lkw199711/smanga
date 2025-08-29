@@ -131,7 +131,7 @@
         </el-dialog>
 
         <el-dialog :title="$t('mangaInfo.mangaShareDialogTitle')" v-model="mangaShareDialog">
-            <mangaShare :mangaInfo="mangaInfo" @close_dialog="mangaShareDialog = false" />
+            <share :mangaInfo="mangaInfo" @close_dialog="mangaShareDialog = false" />
         </el-dialog>
     </div>
 </template>
@@ -150,7 +150,7 @@ import chapterApi from '@/api/chapter';
 import lastesApi from '@/api/latest';
 import collectApi from '@/api/collect';
 import mangaTagBox from '@/views/manga-info/components/manga-tag-box.vue';
-import mangaShare from './components/manga-share.vue';
+import share from '@/components/share.vue';
 import useBrowseStore from '@/store/browse';
 import chapter from './components/chapter.vue';
 import chapterSimple from './components/chapter-simple.vue';
