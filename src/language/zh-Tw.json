@@ -417,7 +417,8 @@
   },
   "mangaShare": {
     "link": "分享鏈接",
-    "expires": "過期時間"
+    "expires": "過期時間",
+    "sahreDetail": "分享信息"
   },
   "mediaList": {
     "scanMedia": "掃描媒體庫",
