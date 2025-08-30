@@ -6,7 +6,7 @@
             <div class="btn-box">
                 <el-button class="add-btn" type="primary" :icon="Plus" @click="dialog_open">{{
                     $t('mangaSync.addSync')
-                }}
+                    }}
                 </el-button>
             </div>
 
@@ -52,7 +52,7 @@
             <el-dialog v-model="shareLinkDialog" :title="$t('mangaSync.addSync')" :close-on-click-modal="false">
                 <p class="title" v-if="shareData.share?.shareType">{{ shareData.share.sahreType === 'manga' ? '漫画'
                     : '媒体库'
-                }}同步</p>
+                    }}同步</p>
 
                 <el-input v-model="shareLink" type="text" :rows="10" id="payload"
                     placeholder="请输入smanga分享链接"></el-input>
@@ -105,10 +105,10 @@
                             {{ $t('mangaSync.analysis') }}</el-button>
                         <el-button type="primary" @click="sync_create">{{
                             $t('mangaSync.add')
-                        }}</el-button>
+                            }}</el-button>
                         <el-button @click="shareLinkDialog = false">{{
                             $t('option.cancel')
-                        }}</el-button>
+                            }}</el-button>
                     </div>
                 </div>
             </el-dialog>
@@ -116,7 +116,7 @@
             <el-dialog v-model="syncDetailDialog" :title="$t('mangaSync.addSync')" :close-on-click-modal="false">
                 <p class="title" v-if="shareData.share?.shareType">{{ shareData.share.sahreType === 'manga' ? '漫画'
                     : '媒体库'
-                }}同步</p>
+                    }}同步</p>
 
                 <div class="manga-box" v-if="shareData.share.shareType === 'manga'">
                     <div class="manga-box-poster">
@@ -261,14 +261,19 @@ async function analysis_link() {
     }
 
     const analysisResponse = await syncApi.analysis(shareLink.value);
-
     shareData.value = analysisResponse.data;
+
+    const share = shareData.value.share;
+    if (!share.origin) {
+        ElMessage.error('错误源地址');
+        return;
+    }
 
     if (shareData.value.share.shareType === 'manga') {
         const manga = shareData.value.manga;
         // 加载封面
         if (manga.mangaCover) {
-            posterBlob.value = await imageApi.get(manga.mangaCover);
+            posterBlob.value = await imageApi.get_from({ file: manga.mangaCover, origin: shareData.value.share.origin });
         }
 
         if (manga.metas) {
@@ -281,7 +286,7 @@ async function analysis_link() {
         const media = shareData.value.media;
         // 加载封面
         if (media.mediaCover) {
-            posterBlob.value = await imageApi.get(media.mediaCover);
+            posterBlob.value = await imageApi.get_from({ file: media.mediaCover, origin: shareData.value.share.origin });
         }
     }
 }
@@ -321,11 +326,17 @@ async function edit_manga(index: number, row: any) {
     shareData.value = shareResponse.data;
     syncDetailDialog.value = true;
 
+    const share = shareData.value.share;
+    if (!share.origin) {
+        ElMessage.error('错误源地址');
+        return;
+    }
+
     if (shareData.value.share.shareType === 'manga') {
         const manga = shareData.value.manga;
         // 加载封面
         if (manga.mangaCover) {
-            posterBlob.value = await imageApi.get(manga.mangaCover);
+            posterBlob.value = await imageApi.get_from({ file: manga.mangaCover, origin: shareData.value.share.origin });
         }
 
         if (manga.metas) {
@@ -338,7 +349,7 @@ async function edit_manga(index: number, row: any) {
         const media = shareData.value.media;
         // 加载封面
         if (media.mediaCover) {
-            posterBlob.value = await imageApi.get(media.mediaCover);
+            posterBlob.value = await imageApi.get_from({ file: media.mediaCover, origin: shareData.value.share.origin });
         }
     }
 

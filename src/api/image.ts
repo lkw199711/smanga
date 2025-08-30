@@ -1,5 +1,5 @@
 import Axios from 'axios';
-import {url} from '@/api';
+import { url } from '@/api';
 import { Cookies } from '@/utils';
 import useImageStore from '@/store/image';
 
@@ -55,17 +55,45 @@ const imageApi = {
 		// 存在缓存直接加载缓存图片
 		if (imageCache[file]) return imageCache[file];
 
-		const [res, err] = await img({data: {file}})
+		const [res, err] = await img({ data: { file } })
 			.then((res) => [res, null])
 			.catch((err) => [null, err]);
 
-		if (res) {			
+		if (res) {
 			// 存入缓存
 			imageCache[file] = res.data;
 			// 返回图片
 			return res.data
 		};
-		
+
+		if (err) {
+			// 有错误 则再次且仅一次请求
+			if (again) {
+				return this.get(file, false);
+			}
+
+			// 返回占位图
+			return placeholder;
+		}
+	},
+
+	async get_from({ file, origin, again = true }: any): Promise<any> {
+		if (!file) return false;
+
+		// 存在缓存直接加载缓存图片
+		if (imageCache[file]) return imageCache[file];
+
+		const [res, err] = await img({ url: `${origin}/image`, data: { file } })
+			.then((res) => [res, null])
+			.catch((err) => [null, err]);
+
+		if (res) {
+			// 存入缓存
+			imageCache[file] = res.data;
+			// 返回图片
+			return res.data
+		};
+
 		if (err) {
 			// 有错误 则再次且仅一次请求
 			if (again) {
@@ -84,7 +112,7 @@ const imageApi = {
 		mangaId: number
 	) {
 		if (!file) return false;
-		const res = await img({data: {file, page, chapterId, mangaId}});
+		const res = await img({ data: { file, page, chapterId, mangaId } });
 		return res.data;
 	},
 };
