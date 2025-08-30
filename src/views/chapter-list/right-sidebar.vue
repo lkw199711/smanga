@@ -12,13 +12,13 @@
 				<!--操作-->
 				<!--<el-menu-item index="read"><el-icon><Memo /></el-icon>阅读</el-menu-item>-->
 				<!--<el-menu-item index="collection"><el-icon><Collection /></el-icon>收藏</el-menu-item>-->
-				<el-menu-item index="remove">
+				<el-menu-item index="remove" v-if="isAdmin">
 					<el-icon>
 						<TopRight />
 					</el-icon>
 					{{ $t('option.remove') }}
 				</el-menu-item>
-				<el-menu-item index="delete">
+				<el-menu-item index="delete" v-if="isAdmin">
 					<el-icon>
 						<Delete />
 					</el-icon>
@@ -44,8 +44,6 @@
 
 <script lang="ts" setup>
 import { watch, ref, computed } from 'vue';
-import { useRoute } from 'vue-router';
-import { config } from '@/store';
 import chapterApi from '@/api/chapter';
 import { ElMessageBox } from 'element-plus';
 import i18n from '@/i18n';
@@ -55,6 +53,7 @@ import historyApi from '@/api/history';
 import latestApi from '@/api/latest';
 import useBrowseStore from '@/store/browse';
 import androidSeat from '@/layout/components/android-seat.vue';
+import { Cookies } from '@/utils';
 const browse = useBrowseStore();
 const placeholder = require('@/assets/s-blue.png');
 const { t } = i18n.global;
@@ -68,6 +67,10 @@ const alreadyRead = computed(() => {
 
 const chapterId = computed(() => {
 	return props.chapterInfo.chapterId;
+});
+
+const isAdmin = computed(() => {
+	return Cookies.get('isAdmin') === 'true';
 });
 
 watch(

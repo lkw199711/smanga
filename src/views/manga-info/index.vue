@@ -456,7 +456,6 @@ async function remove_collect() {
 
 function open_tag_box() {
     editTagsDialog.value = true;
-    // update_tags_state();
 }
 
 function open_covers_edit() {

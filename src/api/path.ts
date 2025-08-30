@@ -27,8 +27,8 @@ const pathApi = {
 	 * @param path
 	 * @param pathId
 	 */
-	async rescan_path(mediaId: any, path: any, pathId: any) {
-		const res = ajax.put(`path/scan/${pathId}`)
+	async rescan_path(pathId: any) {
+		const res = ajax.put(`path/${pathId}/rescan`);
 		return (await res).data;
 	},
 
@@ -38,7 +38,7 @@ const pathApi = {
 	 * @param path
 	 * @param pathId
 	 */
-	async scan_path(mediaId: any, path: any, pathId: any) {
+	async scan_path(pathId: any) {
 		const res = ajax({
 			method: 'PUT',
 			url: `path/scan/${pathId}`,

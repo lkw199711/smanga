@@ -10,27 +10,27 @@
         <!--名称-->
         <p class="title">{{ props.mediaInfo.mediaName }}</p>
         <!--操作-->
-        <el-menu-item index="remove">
+        <el-menu-item index="remove" v-if="isAdmin">
           <el-icon>
             <TopRight />
           </el-icon>
           {{ $t('option.remove') }}
         </el-menu-item>
-        <el-menu-item index="delete">
+        <el-menu-item index="delete" v-if="isAdmin">
           <el-icon>
             <Delete />
           </el-icon>
           {{ $t('option.delete') }}
         </el-menu-item>
 
-        <el-menu-item index="scan">
+        <el-menu-item index="scan" v-if="isAdmin">
           <el-icon>
             <Files />
           </el-icon>
           {{ $t('mediaList.scanMedia') }}
         </el-menu-item>
 
-        <el-menu-item index="share">
+        <el-menu-item index="share" v-if="isAdmin">
           <el-icon>
             <Share />
           </el-icon>
@@ -56,6 +56,7 @@ import useBrowseStore from '@/store/browse';
 import androidSeat from '@/layout/components/android-seat.vue';
 import mangaShare from '@/components/share.vue';
 import mediaApi from '@/api/media';
+import { Cookies } from '@/utils';
 const browse = useBrowseStore();
 const placeholder = require('@/assets/s-blue.png');
 
@@ -70,6 +71,10 @@ const emit = defineEmits(['reload', 'close']);
 
 const mediaId = computed(() => {
   return props.mediaInfo.mediaId;
+});
+
+const isAdmin = computed(() => {
+  return Cookies.get('role') === 'admin';
 });
 
 watch(
