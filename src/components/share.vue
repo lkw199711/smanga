@@ -52,13 +52,13 @@ async function create_share() {
         return;
     }
 
-    const source = select.value + input1.value.trim();
+    const origin = select.value + input1.value.trim();
 
     const paramsData: any = {
         mediaId: props.mediaInfo?.mediaId,
         shareName: props.mediaInfo?.mediaName,
         expires: parseInt(radio2.value),
-        source,
+        origin,
         domain: input1.value
     };
 

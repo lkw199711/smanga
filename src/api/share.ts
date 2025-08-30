@@ -6,7 +6,7 @@ type ShareCreateParams = {
     mangaId?: number;
     mediaId: number;
     expires: number;
-    source?: string;
+    origin: string;
     domain: string;
 }
 
@@ -22,14 +22,14 @@ const shareApi = {
         return (await res).data;
     },
 
-    async create({ shareName, mangaId, mediaId, expires, domain, source }: ShareCreateParams) {
+    async create({ shareName, mangaId, mediaId, expires, domain, origin }: ShareCreateParams) {
         const res = ajax.post('share', {
             shareName,
             mangaId,
             mediaId,
             expires,
             domain,
-            source
+            origin
         });
 
         return (await res).data;
