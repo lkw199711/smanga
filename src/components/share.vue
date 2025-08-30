@@ -33,7 +33,7 @@
 <script setup lang="ts">
 import shareApi from '@/api/share';
 import { ElMessageBox } from 'element-plus';
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 
 const props = defineProps(['mangaInfo', 'mediaInfo']);
 const emit = defineEmits(['update_tags', 'close_dialog']);
@@ -41,6 +41,10 @@ const select = ref('http://');
 const radio2 = ref('1')
 const input1 = ref('');
 
+onMounted(() => {
+    input1.value = window.location.hostname + (window.location.port ? `:${window.location.port}` : '');
+})
+ 
 async function create_share() {
     if (!input1.value) {
         ElMessageBox.alert('请输入域名或IP地址', '错误', {
@@ -69,7 +73,7 @@ async function create_share() {
     }
 
     const shareResponse = await shareApi.create(paramsData);
-    
+
     const link = shareResponse.data.link;
     // 这里可以调用API来创建分享链接
     emit('close_dialog');
