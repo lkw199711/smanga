@@ -55,6 +55,7 @@ import imageApi from '@/api/image';
 import useBrowseStore from '@/store/browse';
 import androidSeat from '@/layout/components/android-seat.vue';
 import mangaShare from '@/components/share.vue';
+import mediaApi from '@/api/media';
 const browse = useBrowseStore();
 const placeholder = require('@/assets/s-blue.png');
 
@@ -99,29 +100,25 @@ function close_sidebar() {
 async function menu_select(key: string) {
   switch (key) {
     case 'remove':
-      ElMessageBox.confirm(t('mangaManage.confirm.text1'), { type: 'warning' })
+      ElMessageBox.confirm(t('mediaList.remove'), { type: 'warning' })
         .then(async () => {
-          await mangaApi.delete_manga(mediaId.value);
+          await mediaApi.delete_media(mediaId.value);
           emit('reload', browse.mangaListPage, browse.mangaListPageSize);
         })
         .catch();
 
       break;
     case 'delete':
-      ElMessageBox.confirm(t('mangaManage.confirm.text2'), {
+      ElMessageBox.confirm(t('mediaList.delete'), {
         type: 'warning',
       }).then(async () => {
-        await mangaApi.delete_manga(mediaId.value, true);
+        await mediaApi.delete_media(mediaId.value, true);
         emit('reload', browse.mangaListPage, browse.mangaListPageSize);
       });
 
       break;
     case 'scan':
-      await mangaApi.scan(mediaId.value);
-      emit('reload', browse.mangaListPage, browse.mangaListPageSize);
-      break;
-    case 'meta':
-      await mangaApi.reload_meta(mediaId.value);
+      await mediaApi.scan(mediaId.value);
       emit('reload', browse.mangaListPage, browse.mangaListPageSize);
       break;
     case 'share':

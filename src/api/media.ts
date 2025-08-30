@@ -43,8 +43,8 @@ const mediaApi = {
 	 * @param {any} mediaId
 	 * @return {*}
 	 */
-	async delete_media(mediaId: any) {
-		const res = ajax.delete(`media/${mediaId}`);
+	async delete_media(mediaId: any, deleteFile = false) {
+		const res = ajax.delete(`media/${mediaId}`, { data: { deleteFile } });
 
 		const resData = (await res).data;
 		return resData;
@@ -55,6 +55,12 @@ const mediaApi = {
 		const resData = (await res).data;
 		return resData.data;
 	},
+
+	async scan(mediaId: number) {
+		const res = ajax.post(`media/${mediaId}/scan`);
+		const resData = (await res).data;
+		return resData;
+	}
 };
 
 export default mediaApi;

@@ -421,6 +421,8 @@
   },
   "mediaList": {
     "scanMedia": "扫描媒体库",
-    "shareMedia": "分享媒体库"
+    "shareMedia": "分享媒体库",
+    "remove": "确认移除此媒体?",
+    "delete": "确认删除此媒体?"
   }
 }
