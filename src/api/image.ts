@@ -83,7 +83,7 @@ const imageApi = {
 		// 存在缓存直接加载缓存图片
 		if (imageCache[file]) return imageCache[file];
 
-		const [res, err] = await img({ url: `${origin}/image`, data: { file } })
+		const [res, err] = await img({ url: `${origin}/file`, data: { file }, method: 'get', params: { file } })
 			.then((res) => [res, null])
 			.catch((err) => [null, err]);
 
@@ -97,7 +97,7 @@ const imageApi = {
 		if (err) {
 			// 有错误 则再次且仅一次请求
 			if (again) {
-				return this.get(file, false);
+				return this.get_from({ file, origin, again: false });
 			}
 
 			// 返回占位图
