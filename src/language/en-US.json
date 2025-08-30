@@ -418,7 +418,8 @@
   },
   "mangaShare": {
     "link": "shareLink",
-    "expires": "expires"
+    "expires": "expires",
+    "sahreDetail": "Share information"
   },
   "mediaList": {
     "scanMedia": "Scan media",
