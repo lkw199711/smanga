@@ -12,13 +12,13 @@
 				<!--操作-->
 				<!--<el-menu-item index="read"><el-icon><Memo /></el-icon>阅读</el-menu-item>-->
 				<!--<el-menu-item index="collection"><el-icon><Collection /></el-icon>收藏</el-menu-item>-->
-				<el-menu-item index="remove">
+				<el-menu-item index="remove" v-if="isAdmin">
 					<el-icon>
 						<TopRight />
 					</el-icon>
 					{{ $t('option.remove') }}
 				</el-menu-item>
-				<el-menu-item index="delete">
+				<el-menu-item index="delete" v-if="isAdmin">
 					<el-icon>
 						<Delete />
 					</el-icon>
@@ -37,25 +37,25 @@
 					</el-icon>
 					{{ alreadyRead ? $t('option.markAsUnRead') : $t('option.markAsRead') }}
 				</el-menu-item>
-				<el-menu-item index="tags">
+				<el-menu-item index="tags" v-if="isAdmin">
 					<el-icon>
 						<Ticket />
 					</el-icon>
 					{{ $t('option.editTags') }}
 				</el-menu-item>
-				<el-menu-item index="scan">
+				<el-menu-item index="scan" v-if="isAdmin">
 					<el-icon>
 						<Files />
 					</el-icon>
 					{{ $t('option.scan') }}
 				</el-menu-item>
-				<el-menu-item index="meta">
+				<el-menu-item index="meta" v-if="isAdmin">
 					<el-icon>
 						<RefreshLeft />
 					</el-icon>
 					{{ $t('option.meta') }}
 				</el-menu-item>
-				<el-menu-item index="share">
+				<el-menu-item index="share" v-if="isAdmin">
 					<el-icon>
 						<Share />
 					</el-icon>
@@ -65,19 +65,8 @@
 		</el-drawer>
 
 		<el-dialog :title="$t('rightSidebar.editTags')" v-model="editTagsDialog">
-			<div class="base-tag-box">
-				<p class="tag-title">{{ $t('rightSidebar.baseTagTitle') }}</p>
-				<el-tag v-for="tagItem in noCheckedTagList" class="tag base-tag" :color="tagItem.tagColor"
-					:key="tagItem.tagId" @click="add_manga_tag(tagItem)">{{
-						tagItem.tagName }}</el-tag>
-			</div>
-
-			<div class="ckecked-tag-box">
-				<p class="tag-title">{{ $t('rightSidebar.ckeckedTagTitle') }}</p>
-				<el-tag v-for="tagItem in checkedTagList" class="tag ckecked-tag" :color="tagItem.tagColor"
-					:key="tagItem.tagId" closable @close="remove_tag(tagItem.mangaTagId)">{{
-						tagItem.tagName }}</el-tag>
-			</div>
+			<mangaTagBox :mangaId="mangaInfo.mangaId" :tags="mangaInfo.tags" @update_tags="update_tags"
+				@close_dialog="editTagsDialog = false" />
 		</el-dialog>
 
 
@@ -88,9 +77,7 @@
 </template>
 
 <script lang="ts" setup>
-import { watch, ref, computed, onMounted } from 'vue';
-import { useRoute } from 'vue-router';
-import { config } from '@/store';
+import { watch, ref, computed, onMounted, reactive } from 'vue';
 import mangaApi from '@/api/manga';
 import collectApi from '@/api/collect';
 import { ElMessageBox } from 'element-plus';
@@ -101,31 +88,32 @@ import imageApi from '@/api/image';
 import useBrowseStore from '@/store/browse';
 import androidSeat from '@/layout/components/android-seat.vue';
 import mangaShare from '@/components/share.vue';
+import { Cookies } from '@/utils';
+import mangaTagBox from '../manga-info/components/manga-tag-box.vue';
+import { mangaInfoType } from '@/type/manga';
 const browse = useBrowseStore();
 const placeholder = require('@/assets/s-blue.png');
-
 const { t } = i18n.global;
-
-const route = useRoute();
-
 const isCollect = ref(false);
 const editTagsDialog = ref(false);
 const mangaShareDialog = ref(false);
 const blob = ref('');
 
-let tagList = ref<tagItemType[]>([]);
-let checkedTagList = ref<tagItemType[]>([]);
-
-let noCheckedTagList = computed<tagItemType[]>(() => {
-	let arr: tagItemType[] = [];
-	const checkedTagListNames = checkedTagList.value.map((i) => i.tagId);
-
-	tagList.value.forEach(element => {
-
-		if (!checkedTagListNames.includes(element.tagId)) arr.push(element);
-	});
-
-	return arr;
+let mangaInfo = reactive<mangaInfoType>({
+	mediaId: 0,
+	mangaId: 0,
+	mangaName: '',
+	mangaCover: '',
+	title: '',
+	author: '',
+	browseType: '',
+	publishDate: '',
+	createTime: '',
+	updateTime: '',
+	describe: '',
+	chapterCount: 0,
+	tags: [],
+	metas: [],
 });
 
 const props = defineProps(['mangaInfo', 'rightSidebarVisible']);
@@ -139,9 +127,14 @@ const alreadyRead = computed(() => {
 	return props.mangaInfo.unWatched == 0;
 });
 
+const isAdmin = computed(() => {
+	return Cookies.get('role') === 'admin';
+});
+
 watch(
 	() => props.mangaInfo?.mangaId,
 	async (mangaId) => {
+		Object.assign(mangaInfo, props.mangaInfo);
 		isCollect.value = await collectApi.is_collect('manga', mangaId);
 		const mangaCover = props.mangaInfo?.mangaCover;
 		if (mangaCover) {
@@ -153,7 +146,6 @@ watch(
 );
 
 onMounted(async () => {
-	tagList.value = await tagApi.get_nopage();
 });
 
 /**
@@ -162,14 +154,6 @@ onMounted(async () => {
  */
 async function update_collect_state() {
 	isCollect.value = await collectApi.is_collect('manga', mangaId.value);
-}
-
-/**
- * @description: 更新标签状态
- * @return {*}
- */
-async function update_tags_state() {
-	checkedTagList.value = await tagApi.get_manga_tag(mangaId.value);
 }
 
 /**
@@ -184,28 +168,8 @@ function close_sidebar() {
  * @description: 更新标签状态
  * @return {*}
  */
-function update_tags() {
-	ElMessageBox.alert('我正在编辑标签');
-}
-
-/**
- * @description: 增加漫画标签
- * @param {*} tagItem
- * @return {*}
- */
-async function add_manga_tag(tagItem: tagItemType) {
-	await tagApi.add_manga_tag(mangaId.value, tagItem.tagId);
-	update_tags_state();
-}
-
-/**
- * @description: 移除漫画标签
- * @param {*} mangaTagId
- * @return {*}
- */
-async function remove_tag(mangaTagId: number) {
-	await tagApi.remove_manga_tag(mangaTagId);
-	update_tags_state();
+function update_tags(tagsParams: tagItemType[]) {
+	mangaInfo.tags = tagsParams;
 }
 
 /**
@@ -258,7 +222,6 @@ async function menu_select(key: string) {
 			break;
 		case 'tags':
 			editTagsDialog.value = true;
-			update_tags_state();
 			break;
 		case 'scan':
 			await mangaApi.scan(mangaId.value);

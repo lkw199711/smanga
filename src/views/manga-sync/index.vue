@@ -6,7 +6,7 @@
             <div class="btn-box">
                 <el-button class="add-btn" type="primary" :icon="Plus" @click="dialog_open">{{
                     $t('mangaSync.addSync')
-                    }}
+                }}
                 </el-button>
             </div>
 
@@ -52,7 +52,7 @@
             <el-dialog v-model="shareLinkDialog" :title="$t('mangaSync.addSync')" :close-on-click-modal="false">
                 <p class="title" v-if="shareData.share?.shareType">{{ shareData.share.sahreType === 'manga' ? '漫画'
                     : '媒体库'
-                    }}同步</p>
+                }}同步</p>
 
                 <el-input v-model="shareLink" type="text" :rows="10" id="payload"
                     placeholder="请输入smanga分享链接"></el-input>
@@ -105,10 +105,10 @@
                             {{ $t('mangaSync.analysis') }}</el-button>
                         <el-button type="primary" @click="sync_create">{{
                             $t('mangaSync.add')
-                            }}</el-button>
+                        }}</el-button>
                         <el-button @click="shareLinkDialog = false">{{
                             $t('option.cancel')
-                            }}</el-button>
+                        }}</el-button>
                     </div>
                 </div>
             </el-dialog>
@@ -116,7 +116,7 @@
             <el-dialog v-model="syncDetailDialog" :title="$t('mangaSync.addSync')" :close-on-click-modal="false">
                 <p class="title" v-if="shareData.share?.shareType">{{ shareData.share.sahreType === 'manga' ? '漫画'
                     : '媒体库'
-                    }}同步</p>
+                }}同步</p>
 
                 <div class="manga-box" v-if="shareData.share.shareType === 'manga'">
                     <div class="manga-box-poster">
@@ -468,9 +468,9 @@ async function delete_manga(index: number, row: any) {
             overflow: hidden;
             text-overflow: ellipsis;
             display: -webkit-box;
-            -webkit-line-clamp: 4;
+            line-clamp: 4;
             /* 显示的行数 */
-            -webkit-box-orient: vertical;
+            box-orient: vertical;
         }
     }
 }
@@ -526,9 +526,9 @@ async function delete_manga(index: number, row: any) {
             overflow: hidden;
             text-overflow: ellipsis;
             display: -webkit-box;
-            -webkit-line-clamp: 4;
+            line-clamp: 4;
             /* 显示的行数 */
-            -webkit-box-orient: vertical;
+            box-orient: vertical;
         }
     }
 }

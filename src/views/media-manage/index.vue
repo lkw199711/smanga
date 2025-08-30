@@ -93,10 +93,10 @@
 						<el-radio-group v-model="form.direction" class="ml-4">
 							<el-radio :label="0" size="large">{{
 								$t('mediaManage.select.ltr')
-								}}</el-radio>
+							}}</el-radio>
 							<el-radio :label="1" size="large">{{
 								$t('mediaManage.select.rtl')
-								}}</el-radio>
+							}}</el-radio>
 						</el-radio-group>
 					</el-form-item>
 					<p class="note form-note">{{ $t('mediaManage.note.direction') }}</p>
@@ -108,10 +108,10 @@
 						<div class="btn-box">
 							<el-button type="primary" @click="do_add_media">{{
 								$t('option.confirm')
-								}}</el-button>
+							}}</el-button>
 							<el-button type="warning" @click="addMediaDialog = false">{{
 								$t('option.cancel')
-								}}</el-button>
+							}}</el-button>
 						</div>
 					</div>
 				</template>
@@ -178,10 +178,10 @@
 						<el-radio-group v-model="form.direction" class="ml-4">
 							<el-radio :label="0" size="large">{{
 								$t('mediaManage.select.ltr')
-								}}</el-radio>
+							}}</el-radio>
 							<el-radio :label="1" size="large">{{
 								$t('mediaManage.select.rtl')
-								}}</el-radio>
+							}}</el-radio>
 						</el-radio-group>
 					</el-form-item>
 					<p class="note form-note">{{ $t('mediaManage.note.direction') }}</p>
@@ -192,10 +192,10 @@
 						<div class="btn-box">
 							<el-button type="primary" @click="update_media">{{
 								$t('option.confirm')
-								}}</el-button>
+							}}</el-button>
 							<el-button type="warning" @click="editMediaDialog = false">{{
 								$t('option.cancel')
-								}}</el-button>
+							}}</el-button>
 						</div>
 					</div>
 				</template>
@@ -258,10 +258,10 @@
 						<div class="btn-box">
 							<el-button type="primary" @click="addPathDialog = false">{{
 								$t('option.confirm')
-								}}</el-button>
+							}}</el-button>
 							<el-button type="warning" @click="addPathDialog = false">{{
 								$t('option.cancel')
-								}}</el-button>
+							}}</el-button>
 						</div>
 					</div>
 				</template>
@@ -491,11 +491,7 @@ async function rescan_path(pathInfo: any) {
 		type: 'warning',
 	})
 		.then(async () => {
-			const res = await pathApi.rescan_path(
-				pathInfo.mediaId,
-				pathInfo.pathContent,
-				pathInfo.pathId
-			);
+			const res = await pathApi.rescan_path(pathInfo.pathId);
 
 			if (res.code === 0) {
 				load_path(pathInfo.mediaId);
@@ -504,11 +500,7 @@ async function rescan_path(pathInfo: any) {
 		.catch(() => { });
 }
 async function scan_path(pathInfo: any) {
-	const res = await pathApi.scan_path(
-		pathInfo.mediaId,
-		pathInfo.pathContent,
-		pathInfo.pathId
-	);
+	const res = await pathApi.scan_path(pathInfo.pathId);
 
 	if (res.code === 0) {
 		load_path(pathInfo.mediaId);

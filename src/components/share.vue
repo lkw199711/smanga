@@ -44,7 +44,7 @@ const input1 = ref('');
 onMounted(() => {
     input1.value = window.location.hostname + (window.location.port ? `:${window.location.port}` : '');
 })
- 
+
 async function create_share() {
     if (!input1.value) {
         ElMessageBox.alert('请输入域名或IP地址', '错误', {
@@ -94,3 +94,9 @@ async function create_share() {
     });
 }
 </script>
+
+<style lang="less">
+.el-message-box {
+    --el-messagebox-width: 500px;
+}
+</style>
