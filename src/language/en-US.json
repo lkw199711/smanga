@@ -422,6 +422,8 @@
   },
   "mediaList": {
     "scanMedia": "Scan media",
-    "shareMedia": "Share media"
+    "shareMedia": "Share media",
+    "remove": "Are you sure to remove this media?",
+    "delete": "Are you sure to delete this media?"
   }
 }
