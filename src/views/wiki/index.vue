@@ -1,47 +1,615 @@
-<!--
- * @Author: lkw199711 lkw199711@163.com
- * @Date: 2023-10-01 01:40:03
- * @LastEditors: lkw199711 lkw199711@163.com
- * @LastEditTime: 2023-10-08 20:45:19
- * @FilePath: /smanga/src/views/wiki/index.vue
- * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
--->
 <template>
-	<div class="wiki">
-		<div class="version">
-			当前版本
-			<span class="version-text">{{ version }}</span>
-		</div>
-		<div class="content">
-			<p>
-				github:
-				<a href="https://github.com/lkw199711/smanga" target="_blank"
-					>https://github.com/lkw199711/smanga</a
-				>
-			</p>
-			<p>
-				docker:
-				<a href="https://hub.docker.com/r/lkw199711/smanga" target="_blank"
-					>https://hub.docker.com/r/lkw199711/smanga</a
-				>
-			</p>
+  <div class="wiki-container">
+    <!-- 顶部导航 -->
+    <header class="wiki-header">
+      <div class="logo-container">
+        <img :src="logoUrl" alt="Smanga Logo" class="logo">
+        <h1 class="title">Smanga 漫画流媒体阅读工具</h1>
+      </div>
+      <div class="version-badge">
+        当前版本: <span class="version-text">{{ version }}</span>
+      </div>
+    </header>
 
-			<p>qq: <a href="https://jq.qq.com/?_wv=1027&k=CaeWd6im" target="_blank">534086782</a></p>
-			<p>tg: <a href="https://t.me/+FFgQ7AMIdrg2M2Y1" target="_blank">https://t.me/+FFgQ7AMIdrg2M2Y1</a></p>
-			<p>版本发布频道(tg): <a href="https://t.me/smangachannel" target="_blank">https://t.me/smangachannel</a></p>
-		</div>
-		<div class="content">媒体库名称</div>
-		<div class="content op-demo">
-			<operationCover />
-		</div>
-	</div>
+    <!-- 优化导航菜单 -->
+    <nav class="wiki-nav">
+      <el-tabs v-model="activeTab" type="card" :stretch="true" @tab-click="handleTabChange">
+        <el-tab-pane label="项目简介" name="intro"></el-tab-pane>
+        <el-tab-pane label="功能特点" name="features"></el-tab-pane>
+        <el-tab-pane label="安装指南" name="install"></el-tab-pane>
+        <el-tab-pane label="使用说明" name="usage"></el-tab-pane>
+        <el-tab-pane label="注意事项" name="notes"></el-tab-pane>
+        <el-tab-pane label="发布信息" name="links"></el-tab-pane>
+      </el-tabs>
+    </nav>
+
+    <!-- 主要内容区 -->
+    <main class="wiki-main">
+      <!-- 项目简介 -->
+      <div v-if="activeTab === 'intro'" class="content-section">
+        <h2 class="section-title">项目简介</h2>
+        <div class="section-content">
+          <p>Smanga 是一个简单易用、Docker直装的漫画流媒体阅读工具。以Emby、Plex为灵感，专为解决漫画阅读需求而开发。</p>
+          <p>Smanga 帮助您管理海量漫画资源，支持多种格式，并提供舒适的阅读体验。</p>
+
+          <div class="screenshot-container">
+            <img src="https://github.com/lkw199711/smanga/raw/master/src/assets/readme/smanga-media-list.PNG" alt="Smanga 截图" class="screenshot">
+          </div>
+        </div>
+      </div>
+
+      <!-- 功能特点 -->
+      <div v-if="activeTab === 'features'" class="content-section">
+        <h2 class="section-title">功能特点</h2>
+        <div class="section-content">
+          <el-row :gutter="20">
+            <el-col :span="12" class="feature-card">
+              <div class="feature-icon"><i class="el-icon-folder-opened"></i></div>
+              <h3 class="feature-title">媒体库管理</h3>
+              <p class="feature-desc">创建和管理多个媒体库，支持不同的文件夹结构，轻松组织您的漫画资源。</p>
+            </el-col>
+            <el-col :span="12" class="feature-card">
+              <div class="feature-icon"><i class="el-icon-file-image"></i></div>
+              <h3 class="feature-title">多格式支持</h3>
+              <p class="feature-desc">支持 ZIP、CBZ、CBR、7Z、RAR 和 PDF 等多种漫画格式，无需手动解压。</p>
+            </el-col>
+            <el-col :span="12" class="feature-card">
+              <div class="feature-icon"><i class="el-icon-bookmark"></i></div>
+              <h3 class="feature-title">书签功能</h3>
+              <p class="feature-desc">添加书签记录阅读进度，随时返回上次阅读的位置。</p>
+            </el-col>
+            <el-col :span="12" class="feature-card">
+              <div class="feature-icon"><i class="el-icon-history"></i></div>
+              <h3 class="feature-title">阅读历史</h3>
+              <p class="feature-desc">记录您的阅读历史，方便追踪和回顾已阅读的内容。</p>
+            </el-col>
+            <el-col :span="12" class="feature-card">
+              <div class="feature-icon"><i class="el-icon-monitor"></i></div>
+              <h3 class="feature-title">多设备兼容</h3>
+              <p class="feature-desc">适配手机、平板和桌面设备，在各种屏幕尺寸上提供良好体验。</p>
+            </el-col>
+            <el-col :span="12" class="feature-card">
+              <div class="feature-icon"><i class="el-icon-swap"></i></div>
+              <h3 class="feature-title">多种阅读模式</h3>
+              <p class="feature-desc">支持条漫(瀑布流)、单页和双页阅读模式，满足不同的阅读习惯。</p>
+            </el-col>
+          </el-row>
+        </div>
+      </div>
+
+      <!-- 安装指南 -->
+      <div v-if="activeTab === 'install'" class="content-section">
+        <h2 class="section-title">安装指南</h2>
+        <div class="section-content">
+          <h3 class="subsection-title">Docker 安装 (推荐)</h3>
+          <div class="code-block">
+            <pre><code>docker run -itd --name smanga \
+-p 3333:3306 \
+-p 9797:9797 \
+-v /mnt:/mnt \
+-v /route/smanga:/data \
+lkw199711/smanga-nodejs;</code></pre>
+          </div>
+
+          <h3 class="subsection-title">Docker Compose 部署</h3>
+          <div class="code-block">
+            <pre><code>version: "3"
+services:
+  smanga:
+    image: lkw199711/smanga:alpha
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 1G
+        reservations:
+          memory: 16M
+    ports:
+      - 9798:80
+    volumes:
+      - /route/smanga:/data
+      - /route/compress:/compress
+      - /mnt:/mnt
+    environment:
+      PUID: 1000
+      PGID: 1000
+      UMASK: 022
+      TZ: Asia/Shanghai
+    restart: unless-stopped
+    hostname: smanga-alpha
+    container_name: smanga-alpha</code></pre>
+          </div>
+
+          <h3 class="subsection-title">Windows 版本</h3>
+          <p>如果您没有 Linux 服务器，可以下载 Windows 版本：</p>
+          <a href="https://github.com/lkw199711/smanga/releases" target="_blank" class="link-button">下载 Windows 版本</a>
+          <p class="note-text">解压即可使用，更新时请将原目录下的 data 目录复制到新版本目录。</p>
+        </div>
+      </div>
+
+      <!-- 使用说明 -->
+      <div v-if="activeTab === 'usage'" class="content-section">
+        <h2 class="section-title">使用说明</h2>
+        <div class="section-content">
+          <h3 class="subsection-title">默认用户名</h3>
+          <p>用户名: <code>smanga</code> | 密码: <code>smanga</code></p>
+
+          <h3 class="subsection-title">新增媒体库</h3>
+          <ol class="steps-list">
+            <li>进入媒体库管理页面，点击"新增媒体库"</li>
+            <li>选择媒体类型（普通或单本）</li>
+            <li>添加媒体路径，单个媒体库可以添加多条路径</li>
+            <li>等待扫描完成，点击logo即可前往媒体库列表</li>
+          </ol>
+
+          <h3 class="subsection-title">添加书签</h3>
+          <p>阅读时，点击屏幕靠上30%的区域呼出顶栏，最右侧为添加书签按钮。</p>
+
+          <h3 class="subsection-title">切换浏览模式</h3>
+          <p>顶栏有切换模式的选择框，可切换单页、双页与条漫模式。</p>
+
+          <div class="screenshot-container">
+            <img src="https://github.com/lkw199711/smanga/raw/master/src/assets/readme/smanga-operation.PNG" alt="阅读界面操作" class="screenshot">
+            <p class="screenshot-caption">阅读界面操作示意图</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 注意事项 -->
+      <div v-if="activeTab === 'notes'" class="content-section">
+        <h2 class="section-title">注意事项</h2>
+        <div class="section-content">
+          <div class="note-card warning">
+            <div class="note-icon"><i class="el-icon-warning"></i></div>
+            <div class="note-content">
+              <h3 class="note-title">不支持长图条漫</h3>
+              <p>由于网络请求限制，不支持长图条漫（需裁切）。内网环境可能可以加载，但外网环境下会出现问题。</p>
+            </div>
+          </div>
+
+          <div class="note-card info">
+            <div class="note-icon"><i class="el-icon-info"></i></div>
+            <div class="note-content">
+              <h3 class="note-title">版本兼容性</h3>
+              <p>新版本与旧版本不兼容，请分开部署。新版本网页端口为9797，部署时请注意。</p>
+            </div>
+          </div>
+
+          <div class="note-card info">
+            <div class="note-icon"><i class="el-icon-info"></i></div>
+            <div class="note-content">
+              <h3 class="note-title">初始化流程</h3>
+              <p>初次部署需要走完初始化流程才能访问页面。当看到日志中出现"Server is running on port 9797"时，表示服务启动成功。</p>
+            </div>
+          </div>
+
+          <div class="note-card info">
+            <div class="note-icon"><i class="el-icon-info"></i></div>
+            <div class="note-content">
+              <h3 class="note-title">开发注意事项</h3>
+              <p>此项目使用Node.js 16运行，请确保开发环境满足版本要求。</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 发布信息 -->
+      <div v-if="activeTab === 'links'" class="content-section">
+        <h2 class="section-title">发布信息</h2>
+        <div class="section-content">
+          <div class="links-container">
+            <a href="https://github.com/lkw199711/smanga" target="_blank" class="link-item">
+              <i class="el-icon-github"></i>
+              <span>GitHub 仓库</span>
+            </a>
+            <a href="https://hub.docker.com/r/lkw199711/smanga" target="_blank" class="link-item">
+              <i class="el-icon-docker"></i>
+              <span>Docker 镜像</span>
+            </a>
+            <a href="https://jq.qq.com/?_wv=1027&k=CaeWd6im" target="_blank" class="link-item">
+              <i class="el-icon-chat-line-square"></i>
+              <span>QQ 交流群: 534086782</span>
+            </a>
+            <a href="https://t.me/+FFgQ7AMIdrg2M2Y1" target="_blank" class="link-item">
+              <i class="el-icon-message"></i>
+              <span>Telegram 交流群</span>
+            </a>
+            <a href="https://t.me/smangachannel" target="_blank" class="link-item">
+              <i class="el-icon-bell"></i>
+              <span>Telegram 版本发布频道</span>
+            </a>
+          </div>
+
+          <h3 class="subsection-title">版本更新记录</h3>
+          <div class="version-history">
+            <div class="version-item">
+              <div class="version-number">3.7.0</div>
+              <div class="version-desc">产出exe文件，后端改用nodejs</div>
+            </div>
+            <div class="version-item">
+              <div class="version-number">3.6.0</div>
+              <div class="version-desc">封面图片缓存，添加骨架屏动画</div>
+            </div>
+            <div class="version-item">
+              <div class="version-number">3.5.0</div>
+              <div class="version-desc">菜单分类并修改图表</div>
+            </div>
+            <div class="version-item">
+              <div class="version-number">3.4.0</div>
+              <div class="version-desc">扫描时自动解压章节</div>
+            </div>
+            <div class="version-item">
+              <div class="version-number">3.3.0</div>
+              <div class="version-desc">使用laravel重构项目，并优化排序功能</div>
+            </div>
+            <div class="version-item">
+              <div class="version-number">3.0.0</div>
+              <div class="version-desc">新增数据库、多格式支持以及多项新功能</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- 页脚 -->
+    <footer class="wiki-footer">
+      <p>© {{ currentYear }} Smanga. 励志做最好的流媒体漫画阅读平台!</p>
+      <p>如果产品有帮助到您，请给一颗star以示鼓励。</p>
+    </footer>
+  </div>
 </template>
 
-<script lang="ts">export default {name:'wiki'}</script>
 <script lang="ts" setup>
-import operationCover from "./components/operation-cover.vue";
-const version = process.env.VUE_APP_VERSION;
+import { ref } from 'vue';
+import { ElTabs, ElTabPane } from 'element-plus';
+import 'element-plus/es/components/tabs/style/css';
+import 'element-plus/es/components/tab-pane/style/css';
+import 'element-plus/es/components/icon/style/css';
+
+// 恢复logo引入
+import logoUrl from '@/assets/logo.png';
+
+// 状态管理
+const activeTab = ref('intro');
+const version = process.env.VUE_APP_VERSION || '4.1.4';
+const currentYear = new Date().getFullYear();
+
+// 处理标签切换
+const handleTabChange = (tab: any) => {
+  activeTab.value = tab.props.name;
+};
 </script>
 
+<style scoped lang="less">
+.wiki-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: #f5f5f5;
+}
 
-<style src="./style/index.less" scoped lang="less"></style>
+// 优化后的顶栏样式
+.wiki-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.8rem 2rem;
+  background-color: #fff;
+  color: #333;
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.05);
+  border-bottom: 1px solid #eee;
+
+  .logo-container {
+    display: flex;
+    align-items: center;
+
+    .logo {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+    }
+
+    .title {
+      font-size: 1.5rem;
+      font-weight: bold;
+    }
+  }
+
+  .version-badge {
+    background-color: #f0f7ff;
+    padding: 0.3rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    color: #1890ff;
+
+    .version-text {
+      font-weight: bold;
+    }
+  }
+}
+
+.wiki-nav {
+  background-color: white;
+  padding: 0 2rem;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+  margin-bottom: 1.5rem;
+}
+
+.wiki-main {
+  flex: 1;
+  padding: 0 2rem 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.content-section {
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  padding: 2rem;
+  margin-bottom: 2rem;
+
+  .section-title {
+    font-size: 1.8rem;
+    color: #2c3e50;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid #3498db;
+  }
+
+  .section-content {
+    color: #333;
+    line-height: 1.6;
+
+    .subsection-title {
+      font-size: 1.3rem;
+      color: #2c3e50;
+      margin: 1.5rem 0 1rem;
+    }
+
+    .code-block {
+      background-color: #f8f9fa;
+      border-radius: 5px;
+      padding: 1rem;
+      margin: 1rem 0;
+      overflow-x: auto;
+
+      pre {
+        margin: 0;
+      }
+
+      code {
+        font-family: 'Fira Code', monospace;
+        font-size: 0.9rem;
+      }
+    }
+
+    .link-button {
+      display: inline-block;
+      background-color: #3498db;
+      color: white;
+      padding: 0.5rem 1rem;
+      border-radius: 5px;
+      text-decoration: none;
+      margin: 1rem 0;
+      transition: background-color 0.3s;
+
+      &:hover {
+        background-color: #2980b9;
+      }
+    }
+
+    .steps-list {
+      padding-left: 1.5rem;
+      margin: 1rem 0;
+
+      li {
+        margin-bottom: 0.5rem;
+      }
+    }
+
+    .note-text {
+      color: #7f8c8d;
+      font-style: italic;
+    }
+
+    .screenshot-container {
+      margin: 1.5rem 0;
+      text-align: center;
+
+      .screenshot {
+        max-width: 100%;
+        border-radius: 5px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+
+      .screenshot-caption {
+        margin-top: 0.5rem;
+        color: #7f8c8d;
+        font-style: italic;
+      }
+    }
+
+    .feature-card {
+      background-color: #f8f9fa;
+      border-radius: 5px;
+      padding: 1.5rem;
+      margin-bottom: 1rem;
+      transition: transform 0.3s, box-shadow 0.3s;
+
+      &:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      }
+
+      .feature-icon {
+        font-size: 2rem;
+        color: #3498db;
+        margin-bottom: 1rem;
+      }
+
+      .feature-title {
+        font-size: 1.2rem;
+        margin-bottom: 0.5rem;
+        color: #2c3e50;
+      }
+
+      .feature-desc {
+        color: #7f8c8d;
+      }
+    }
+
+    .note-card {
+      display: flex;
+      padding: 1rem;
+      border-radius: 5px;
+      margin-bottom: 1rem;
+
+      &.warning {
+        background-color: #fff5f5;
+        border-left: 4px solid #ff4d4f;
+      }
+
+      &.info {
+        background-color: #f0f7ff;
+        border-left: 4px solid #1890ff;
+      }
+
+      .note-icon {
+        font-size: 1.5rem;
+        margin-right: 1rem;
+        align-self: flex-start;
+
+        &.el-icon-warning {
+          color: #ff4d4f;
+        }
+
+        &.el-icon-info {
+          color: #1890ff;
+        }
+      }
+
+      .note-content {
+        flex: 1;
+
+        .note-title {
+          font-size: 1.1rem;
+          margin-bottom: 0.5rem;
+        }
+      }
+    }
+
+    .links-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin: 1.5rem 0;
+
+      .link-item {
+        display: flex;
+        align-items: center;
+        background-color: #f8f9fa;
+        padding: 1rem;
+        border-radius: 5px;
+        text-decoration: none;
+        color: #333;
+        transition: background-color 0.3s;
+
+        &:hover {
+          background-color: #e9ecef;
+        }
+
+        i {
+          font-size: 1.5rem;
+          margin-right: 0.8rem;
+          color: #3498db;
+        }
+      }
+    }
+
+    .version-history {
+      margin: 1.5rem 0;
+
+      .version-item {
+        padding: 0.8rem 0;
+        border-bottom: 1px solid #eee;
+
+        &:last-child {
+          border-bottom: none;
+        }
+
+        .version-number {
+          font-weight: bold;
+          color: #3498db;
+          margin-bottom: 0.3rem;
+        }
+
+        .version-desc {
+          color: #7f8c8d;
+        }
+      }
+    }
+  }
+}
+
+.wiki-footer {
+  background-color: #2c3e50;
+  color: white;
+  text-align: center;
+  padding: 1.5rem;
+
+  p {
+    margin: 0.5rem 0;
+  }
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .wiki-header {
+    flex-direction: column;
+    padding: 1rem;
+
+    .logo-container {
+      margin-bottom: 1rem;
+    }
+  }
+
+  .wiki-main {
+    padding: 1rem;
+  }
+
+  .content-section {
+    padding: 1.5rem;
+  }
+
+  .feature-card {
+    width: 100% !important;
+  }
+}
+
+// 优化标签页样式
+::v-deep(.el-tabs__nav-wrap) {
+  padding: 0.5rem 0;
+}
+
+::v-deep(.el-tabs__tab) {
+  font-size: 1rem;
+  padding: 0.7rem 1.5rem;
+  transition: all 0.3s;
+}
+
+::v-deep(.el-tabs__tab.is-active) {
+  color: #3498db;
+  font-weight: bold;
+}
+
+::v-deep(.el-tabs__tab-bar) {
+  border-bottom: 1px solid #e0e0e0;
+}
+
+::v-deep(.el-tabs__active-bar) {
+  background-color: #3498db;
+  height: 3px;
+}
+</style>
