@@ -127,7 +127,6 @@ async function get_setting() {
 
 <style lang="less">
 .main {
-	background-color: #d9d9d9;
 	min-height: 100vh;
 }
 </style>

@@ -6,10 +6,80 @@
         <img :src="logoUrl" alt="Smanga Logo" class="logo">
         <h1 class="title">Smanga 漫画流媒体阅读工具</h1>
       </div>
-      <div class="version-badge">
+      <div class="version-badge" @click="openVersionDialog">
         当前版本: <span class="version-text">{{ version }}</span>
+        <i class="el-icon-arrow-down version-arrow"></i>
       </div>
     </header>
+
+    <!-- 版本信息弹窗 -->
+    <el-dialog
+      v-model="isVersionDialogOpen"
+      title="版本信息"
+      width="500px"
+      :before-close="handleClose"
+    >
+      <div class="version-dialog-content">
+        <div class="current-version">
+          <p>当前版本: <span class="version-number">{{ version }}</span></p>
+        </div>
+
+        <div v-if="isCheckingUpdate" class="update-checking">
+          <el-loading-spinner size="small"></el-loading-spinner>
+          <span>正在检查更新...</span>
+        </div>
+
+        <div v-else-if="hasUpdate" class="update-available">
+          <div class="update-icon"><i class="el-icon-success"></i></div>
+          <div class="update-info">
+            <p>发现新版本: <span class="version-number">{{ latestVersion }}</span></p>
+            <p class="update-desc">建议立即更新到最新版本以获得更好的体验。</p>
+          </div>
+        </div>
+
+        <div v-else-if="errorCheckingUpdate" class="update-error">
+          <div class="error-icon"><i class="el-icon-error"></i></div>
+          <p>检查更新失败，请稍后重试。</p>
+        </div>
+
+        <div v-else class="up-to-date">
+          <div class="up-to-date-icon"><i class="el-icon-info"></i></div>
+          <p>当前已是最新版本。</p>
+        </div>
+
+        <div class="version-history-section">
+          <h3>最近更新</h3>
+          <div class="version-history">
+            <div class="version-item">
+              <div class="version-number">3.7.0</div>
+              <div class="version-desc">产出exe文件，后端改用nodejs</div>
+            </div>
+            <div class="version-item">
+              <div class="version-number">3.6.0</div>
+              <div class="version-desc">封面图片缓存，添加骨架屏动画</div>
+            </div>
+            <div class="version-item">
+              <div class="version-number">3.5.0</div>
+              <div class="version-desc">菜单分类并修改图表</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="download-links">
+          <h3>下载链接</h3>
+          <div class="links-container">
+            <a href="https://github.com/lkw199711/smanga" target="_blank" class="link-item">
+              <i class="el-icon-github"></i>
+              <span>GitHub 仓库</span>
+            </a>
+            <a href="https://hub.docker.com/r/lkw199711/smanga" target="_blank" class="link-item">
+              <i class="el-icon-docker"></i>
+              <span>Docker 镜像</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </el-dialog>
 
     <!-- 优化导航菜单 -->
     <nav class="wiki-nav">
@@ -260,11 +330,14 @@ services:
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue';
-import { ElTabs, ElTabPane } from 'element-plus';
+import { ref, onMounted } from 'vue';
+import { ElTabs, ElTabPane, ElDialog, ElLoadingSpinner } from 'element-plus';
 import 'element-plus/es/components/tabs/style/css';
 import 'element-plus/es/components/tab-pane/style/css';
 import 'element-plus/es/components/icon/style/css';
+import 'element-plus/es/components/dialog/style/css';
+import 'element-plus/es/components/loading/style/css';
+import axios from 'axios';
 
 // 恢复logo引入
 import logoUrl from '@/assets/logo.png';
@@ -274,9 +347,71 @@ const activeTab = ref('intro');
 const version = process.env.VUE_APP_VERSION || '4.1.4';
 const currentYear = new Date().getFullYear();
 
+// 版本弹窗状态
+const isVersionDialogOpen = ref(false);
+const isCheckingUpdate = ref(false);
+const hasUpdate = ref(false);
+const latestVersion = ref('');
+const errorCheckingUpdate = ref(false);
+
 // 处理标签切换
 const handleTabChange = (tab: any) => {
   activeTab.value = tab.props.name;
+};
+
+// 打开版本弹窗
+const openVersionDialog = () => {
+  isVersionDialogOpen.value = true;
+  checkForUpdates();
+};
+
+// 关闭版本弹窗
+const handleClose = () => {
+  isVersionDialogOpen.value = false;
+};
+
+// 检查更新
+const checkForUpdates = () => {
+  isCheckingUpdate.value = true;
+  hasUpdate.value = false;
+  errorCheckingUpdate.value = false;
+  latestVersion.value = '';
+
+  // 从GitHub获取最新版本信息
+  axios.get('https://raw.githubusercontent.com/lkw199711/smanga/electron/package.json')
+    .then(response => {
+      isCheckingUpdate.value = false;
+      const githubVersion = response.data.version;
+      latestVersion.value = githubVersion;
+
+      // 比较版本号
+      if (compareVersions(githubVersion, version) > 0) {
+        hasUpdate.value = true;
+      } else {
+        hasUpdate.value = false;
+      }
+    })
+    .catch(error => {
+      isCheckingUpdate.value = false;
+      errorCheckingUpdate.value = true;
+      console.error('检查更新失败:', error);
+    });
+};
+
+// 版本号比较函数
+const compareVersions = (version1: string, version2: string) => {
+  const v1 = version1.split('.').map(Number);
+  const v2 = version2.split('.').map(Number);
+
+  for (let i = 0; i < Math.max(v1.length, v2.length); i++) {
+    const num1 = i < v1.length ? v1[i] : 0;
+    const num2 = i < v2.length ? v2[i] : 0;
+
+    if (num1 > num2) return 1;
+    if (num1 < num2) return -1;
+  }
+
+  return 0;
 };
 </script>
 
@@ -285,7 +420,6 @@ const handleTabChange = (tab: any) => {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  background-color: #f5f5f5;
 }
 
 // 优化后的顶栏样式
@@ -312,6 +446,7 @@ const handleTabChange = (tab: any) => {
     .title {
       font-size: 1.5rem;
       font-weight: bold;
+      margin-left: 0.5rem;
     }
   }
 
@@ -321,13 +456,183 @@ const handleTabChange = (tab: any) => {
     border-radius: 20px;
     font-size: 0.9rem;
     color: #1890ff;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    transition: all 0.3s;
+
+    &:hover {
+      background-color: #e6f4ff;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
 
     .version-text {
       font-weight: bold;
+      margin-right: 0.3rem;
+    }
+
+    .version-arrow {
+      font-size: 0.7rem;
+      transition: transform 0.3s;
+    }
+
+    &:hover .version-arrow {
+      transform: translateY(2px);
     }
   }
 }
 
+// 版本弹窗样式
+.version-dialog-content {
+  padding: 10px 0;
+
+  .current-version {
+    padding: 10px 0;
+    border-bottom: 1px solid #eee;
+
+    .version-number {
+      font-weight: bold;
+      color: #1890ff;
+    }
+  }
+
+  .update-checking,
+  .update-available,
+  .update-error,
+  .up-to-date {
+    padding: 20px 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .update-checking {
+    color: #666;
+
+    .el-loading-spinner {
+      margin-right: 10px;
+    }
+  }
+
+  .update-available {
+    color: #52c41a;
+
+    .update-icon {
+      font-size: 2rem;
+      margin-bottom: 10px;
+    }
+
+    .update-info {
+      text-align: center;
+    }
+
+    .version-number {
+      font-weight: bold;
+    }
+
+    .update-desc {
+      color: #666;
+      margin-top: 5px;
+    }
+  }
+
+  .update-error {
+    color: #ff4d4f;
+
+    .error-icon {
+      font-size: 2rem;
+      margin-bottom: 10px;
+    }
+  }
+
+  .up-to-date {
+    color: #1890ff;
+
+    .up-to-date-icon {
+      font-size: 2rem;
+      margin-bottom: 10px;
+    }
+  }
+
+  .version-history-section {
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid #eee;
+
+    h3 {
+      font-size: 1.1rem;
+      margin-bottom: 15px;
+      color: #333;
+    }
+
+    .version-history {
+      max-height: 150px;
+      overflow-y: auto;
+
+      .version-item {
+        padding: 10px 0;
+        border-bottom: 1px dashed #eee;
+
+        &:last-child {
+          border-bottom: none;
+        }
+
+        .version-number {
+          font-weight: bold;
+          color: #1890ff;
+          margin-bottom: 5px;
+        }
+
+        .version-desc {
+          color: #666;
+          font-size: 0.9rem;
+        }
+      }
+    }
+  }
+
+  .download-links {
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid #eee;
+
+    h3 {
+      font-size: 1.1rem;
+      margin-bottom: 15px;
+      color: #333;
+    }
+
+    .links-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+
+      .link-item {
+        display: flex;
+        align-items: center;
+        padding: 8px 15px;
+        background-color: #f0f7ff;
+        color: #1890ff;
+        border-radius: 5px;
+        text-decoration: none;
+        transition: all 0.3s;
+
+        &:hover {
+          background-color: #e6f4ff;
+          box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        i {
+          margin-right: 8px;
+        }
+      }
+    }
+  }
+}
+
+// 其他样式保持不变
 .wiki-nav {
   background-color: white;
   padding: 0 2rem;

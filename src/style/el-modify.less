@@ -1,20 +1,59 @@
 .el-drawer {
-    --el-drawer-bg-color: var(--el-dialog-bg-color, var(--el-color-white));
-    --el-drawer-padding-primary: 0;
+	--el-drawer-bg-color: var(--el-dialog-bg-color, var(--el-color-white));
+	--el-drawer-padding-primary: 0;
 }
 
 .el-menu {
-    --el-menu-bg-color: @s-background;
-    --el-menu-text-color: @s-text;
-    --el-menu-active-color: @s-active;
-    --el-menu-hover-bg-color: @s-hover-back;
-    --el-bg-color-overlay: @s-hover-back;
+	--el-menu-bg-color: @s-menu;
+	--el-menu-text-color: @s-text;
+	--el-menu-active-color: @s-active;
+	--el-menu-hover-bg-color: @s-hover-back;
+	--el-bg-color-overlay: @s-hover-back;
 }
 
-.el-menu-item.is-active{
+.el-menu-item.is-active {
+}
+
+.el-pagination {
+	--el-color-primary: @s-primary;
+}
+
+.body {
+	--el-color-primary: @s-background;
+}
+.el-descriptions__title{
+	--el-text-color-primary: @s-back-text;
+}
+
+.el-descriptions__label{
+	--el-text-color-primary: @s-back-text-secondary;
 
 }
 
-.body{
-    --el-color-primary: @s-background;
+.el-descriptions__content{
+	--el-text-color-regular: @s-back-text-tertiary;
+}
+
+.el-button--primary {
+	--el-button-bg-color: @s-button;
+	--el-button-outline-color: @s-border;
+
+    &:active {
+		background-color: @s-active;
+	}
+	&:hover {
+		background-color: @s-hover-back;
+	}
+}
+
+.el-switch {
+	--el-color-primary: @s-primary;
+}
+
+.el-slider__button {
+	--el-slider-main-bg-color: @s-primary;
+}
+// 对话框有更长的宽度 (否则设置左侧图标后会隐藏部分文字)
+.el-message-box {
+	--el-messagebox-width: 500px;
 }

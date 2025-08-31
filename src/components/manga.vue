@@ -101,6 +101,7 @@ async function go_chapter() {
 	.manga-name {
 		width: 100%;
 		overflow: hidden;
+		color: @s-back-text;
 	}
 
 	.un-watched {
@@ -112,7 +113,7 @@ async function go_chapter() {
 		text-align: center;
 		border-radius: 50%;
 		background-color: @s-unread;
-		color: @s-text;
+		color: #f0f0f0;
 		position: absolute;
 		top: 0.5rem;
 		right: 0.5rem;

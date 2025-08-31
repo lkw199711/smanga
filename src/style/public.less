@@ -3,10 +3,16 @@
 @import 'table.less';
 @import 'scrollbar.less';
 
+.main {
+	// background-color: @app-back;
+	// background-color: #f5f7fa;
+	background-color: @s-back-soft;
+}
+
 .example {
 	width: 3rem;
 	height: 3rem;
-	background-color: @s-background;
+	background-color: @s-back;
 }
 
 html {
@@ -18,11 +24,12 @@ body {
 }
 
 .note {
-	padding: 0.6rem 2rem;
+	padding: 1rem 1.5rem;
 	// transform: translateY(-1.6rem);
 	font-size: 1.2rem;
 	// text-indent: 1em;
 	line-height: 1.6;
+	border-radius: .4rem;
 	&.form-note {
 		color: @note-form-text;
 		background-color: @note-form-back;
@@ -157,13 +164,13 @@ body {
 
 .primary {
 	color: @s-text;
-	background-color: @s-background;
+	background-color: @s-back;
 }
 
 .primary-btn {
 	color: @s-text;
-	background-color: @s-background;
-	border: @s-background;
+	background-color: @s-back;
+	border: 1px solid @s-back;
 }
 
 .custom-block .custom-block-title {
@@ -245,8 +252,8 @@ body {
 	--el-component-size: 32px;
 	--el-component-size-small: 24px;
 }
-.el-drawer{
-	background-color: @s-background;
+.el-drawer {
+	background-color: @s-back;
 }
 // 标签
 .tag {

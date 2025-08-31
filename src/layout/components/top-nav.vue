@@ -242,7 +242,8 @@ function switch_view_type() {
 
 	i {
 		font-size: 2.6rem;
-		color: @s-background;
+		color: @s-primary;
+
 	}
 }
 
@@ -251,7 +252,8 @@ function switch_view_type() {
 
 	i {
 		font-size: 3.2rem;
-		color: @s-background;
+		color: @s-primary;
+
 	}
 }
 
@@ -260,7 +262,8 @@ function switch_view_type() {
 		margin-right: 1rem;
 		vertical-align: middle;
 		font-size: 2.6rem;
-		color: @s-background;
+		color: @s-primary;
+
 	}
 
 	&-select {
@@ -279,7 +282,8 @@ function switch_view_type() {
 		height: 3rem;
 		line-height: 3rem;
 		vertical-align: middle;
-		background-color: @s-background;
+		background-color: @s-menu;
+
 	}
 
 	&-select {
@@ -308,7 +312,7 @@ function switch_view_type() {
 	width: 1.4rem;
 	height: 1.4rem;
 	margin-right: 1rem;
-	background-color: @s-background;
+	background-color: @s-primary;
 	transform: translateY(0.1rem);
 }
 

@@ -1,13 +1,61 @@
-//@button-back: #f4ea2a;
-@button-back: #fadb14;
+@app-back: #d9d9d9;
 
-@s-background: var(--s-back, #545c64);
-@s-text: var(--s-text, #fff);
-@s-active: var(--s-active, #ffd04b);
-@s-hover-back: var(--s-hover-back);
-@s-bookmark: @s-active;
-@s-isread: @s-active;
-@s-unread: @s-background;
+// 主题颜色变量 - 与theme.ts保持一致
+// 基础颜色
+@s-back: var(--s-back, #f5f5f5);
+@s-back-soft: var(--s-back-soft, #ffffff);
+@s-back-text: var(--s-back-text, #333333);
+@s-back-text-secondary: var(--s-back-text-secondary, #666666);
+@s-back-text-tertiary: var(--s-back-text-tertiary, #999999);
 
-@note-form-back: #f0f0f0;
-@note-form-text: #40a9ff;
+
+
+
+@s-background: @s-back;           // 页面背景色;
+@s-primary: var(--s-primary, #409eff);
+@s-primary-hover: var(--s-hover-back, #66b1ff);
+@s-primary-color-hover: @s-primary-hover;
+
+@s-primary-active: var(--s-active, #3a8ee6);
+@s-primary-text: var(--s-primary-text, #ffffff);
+@s-primary-color: @s-primary;
+
+@s-text: var(--s-text, #333333);             // 主要文本色
+@s-text-secondary: var(--s-text-secondary, #666666); // 次要文本色
+@s-text-tertiary: var(--s-text-tertiary, #999999);   // 第三文本色
+@s-border: var(--s-border, #e5e5e5);         // 边框颜色
+@s-hover-back: var(--s-hover-back, #f0f0f0); // 悬停背景色
+@s-active: var(--s-active, #409eff);         // 激活状态颜色
+@s-active-back: var(--s-active-back, #ecf5ff); // 激活背景色
+@s-card: var(--s-card, #ffffff);             // 卡片背景色
+@s-header: var(--s-header, #f0f0f0);         // 头部背景色
+@s-menu: var(--s-menu, #f0f0f0);             // 菜单背景色
+
+// 按钮颜色
+@s-button: var(--s-button, #409eff);         // 按钮颜色
+@s-button-hover: var(--s-button-hover, #66b1ff); // 按钮悬停颜色
+@s-button-active: var(--s-button-active, #3a8ee6); // 按钮激活颜色
+@s-button-disabled: var(--s-button-disabled, #a0cfff); // 按钮禁用颜色
+
+// 输入框颜色
+@s-input: var(--s-input, #ffffff);           // 输入框背景色
+@s-input-border: var(--s-input-border, #dcdfe6); // 输入框边框色
+
+// 提示颜色
+@s-success: var(--s-success, #67c23a);       // 成功提示色
+@s-warning: var(--s-warning, #e6a23c);       // 警告提示色
+@s-error: var(--s-error, #f56c6c);           // 错误提示色
+@s-info: var(--s-info, #909399);             // 信息提示色
+
+// 自定义颜色
+@button-back: #fadb14;                       // 按钮背景色
+@s-bookmark: @s-active;                      // 书签颜色
+@s-isread: @s-active;                        // 已读标记颜色
+@s-unread: @s-primary;                          // 未读标记颜色
+@note-form-back: #f4f4f5;                    // 笔记表单背景色
+@note-form-text: #909399;                    // 笔记表单文本色
+
+// 自定义颜色
+@s-media-back: @s-primary;
+
+

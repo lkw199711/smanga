@@ -320,21 +320,13 @@
     "firstChapter": "It's the first chapter"
   },
   "theme": {
-    "grey": "grey",
-    "white": "white",
-    "black": "black",
-    "red": "red",
-    "redLight": "volcano",
-    "orange": "orange",
-    "gold": "gold",
-    "yellow": "yellow",
-    "greenLight": "lime",
+    "light": "light",
+    "dark": "dark",
+    "blue": "blue",
     "green": "green",
-    "cyan": "cyan",
-    "blueLight": "blue",
-    "blueDraw": "drawBlue",
     "purple": "purple",
-    "magenta": "magenta"
+    "red": "red",
+    "grey": "grey"
   },
   "sortOrder": {
     "id": "id",

@@ -15,7 +15,7 @@
 </template>
 
 <script lang="ts">
-export default {name: 'layout'};
+export default { name: 'layout' };
 </script>
 <script lang="ts" setup>
 import topNav from './components/top-nav.vue';

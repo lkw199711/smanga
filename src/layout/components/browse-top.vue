@@ -136,7 +136,7 @@ async function handleSelect(key: string) {
 	width: 100vw;
 	height: 3.6rem;
 	color: @s-text;
-	background-color: @s-background;
+	background-color: @s-border;
 	font-size: 1.8rem;
 	text-align: center;
 	line-height: 2;
