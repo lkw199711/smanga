@@ -363,7 +363,7 @@
       "nameWarning": "标签名不能为空",
       "confirmText": "确认删除此标签?",
       "confirmTitle": "删除标签",
-      "tagColorNote": "请输入一个十六进制格式的颜色,如果留空,默认为\"#a0d911\"(绿色)"
+      "tagColorNote": "标签颜色: 请输入一个十六进制格式的颜色,如果留空,默认为\"#a0d911\"(绿色)"
     },
     "addButton": "新增标签",
     "table": {

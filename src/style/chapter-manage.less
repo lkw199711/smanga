@@ -1,0 +1,211 @@
+@import 'color.less';
+
+// 章节管理页面容器样式
+.chapter-setting-index {
+  padding: 1.5rem;
+  background-color: @s-background;
+  min-height: 100vh;
+}
+
+// 顶部搜索框容器
+.top {
+  display: flex;
+  justify-content: center;
+  margin: 1rem auto 2rem;
+  padding: 0 1rem;
+  width: 100%;
+  max-width: 1200px;
+}
+
+// 搜索框样式
+.search-input {
+  width: 100%;
+  max-width: 1200px;
+  transition: all 0.3s ease;
+
+  &:focus-within {
+    width: 100%;
+    box-shadow: 0 0 10px rgba(0, 123, 255, 0.2);
+  }
+}
+
+// 章节设置盒子
+.chapter-setting-box {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1.5rem;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+
+  &:hover {
+    box-shadow: 0 4px 20px 0 rgba(0, 0, 0, 0.15);
+  }
+}
+
+// 表格样式
+.el-table {
+  width: 100%;
+  margin-bottom: 1.5rem;
+  border-radius: 8px;
+  overflow: hidden;
+
+  // 表格行悬停效果
+  .el-table__row {
+    transition: all 0.2s ease;
+
+    &:hover {
+      background-color: @s-hover-back !important;
+    }
+  }
+
+  // 表格条纹行样式
+  .el-table__row--striped {
+    background-color: #fafafa !important;
+  }
+
+  // 表格头部样式
+  .el-table__header-wrapper th {
+    background-color: @s-header !important;
+    color: @s-text !important;
+    font-weight: bold;
+  }
+}
+
+// 按钮样式
+.el-button {
+  margin-right: 0.5rem;
+  transition: all 0.3s ease;
+  border-radius: 6px;
+
+  &.el-button--primary {
+    background-color: @s-primary;
+    border-color: @s-primary;
+
+    &:hover {
+      background-color: @s-primary-hover;
+      border-color: @s-primary-hover;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+  }
+
+  &.el-button--danger {
+    background-color: @s-error;
+    border-color: @s-error;
+
+    &:hover {
+      background-color: #f78989;
+      border-color: #f78989;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+  }
+
+  &.el-button--warning {
+    background-color: @s-warning;
+    border-color: @s-warning;
+
+    &:hover {
+      background-color: #ebb563;
+      border-color: #ebb563;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+  }
+
+  // 响应式按钮尺寸
+  @media only screen and (max-width: 767px) {
+    padding: 6px 12px;
+    font-size: 12px;
+  }
+}
+
+// 表单样式
+.el-form {
+  padding: 1rem;
+
+  .el-form-item {
+    margin-bottom: 1.2rem;
+
+    .el-input {
+      width: 100%;
+      max-width: 500px;
+    }
+  }
+}
+
+// 对话框样式
+.el-dialog {
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+
+  .el-dialog__header {
+    background-color: @s-header;
+    padding: 1rem 1.5rem;
+  }
+
+  .el-dialog__title {
+    color: @s-text;
+    font-weight: bold;
+  }
+
+  .el-dialog__body {
+    padding: 1.5rem;
+    max-height: 60vh;
+    overflow-y: auto;
+  }
+
+  .el-dialog__footer {
+    padding: 1rem 1.5rem;
+    background-color: #fafafa;
+    border-top: 1px solid @s-border;
+  }
+}
+
+// 对话框底部按钮盒子
+.dialog-footer {
+  .btn-box {
+    display: flex;
+    justify-content: flex-end;
+  }
+}
+
+// 分页组件样式
+.table-pager {
+  margin-top: 1.5rem;
+  display: flex;
+  justify-content: center;
+}
+
+// 响应式设计
+@media only screen and (min-width: 1200px) {
+  .chapter-setting-box {
+    width: 100%;
+  }
+}
+
+@media only screen and (max-width: 1199px) and (min-width: 768px) {
+  .chapter-setting-box {
+    width: 100%;
+  }
+}
+
+@media only screen and (max-width: 767px) {
+  .chapter-setting-box {
+    width: 100%;
+    padding: 1rem;
+  }
+
+  .el-form .el-input {
+    max-width: 100%;
+  }
+
+  .el-table {
+    display: block;
+    overflow-x: auto;
+  }
+}

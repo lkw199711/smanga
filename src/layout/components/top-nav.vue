@@ -75,7 +75,7 @@
 </template>
 
 <script lang="ts" setup>
-import { config, userConfig, sortOrder } from '@/store';
+import { config, userConfig, sortOrder, pageSizeConfig } from '@/store';
 import languages from '@/store/language';
 import theme from '@/store/theme';
 import { computed, ref } from 'vue';
@@ -88,6 +88,7 @@ import layoutDic from '@/store/top-layout';
 import routeType from '@/type/route';
 import useSearchStore from '@/store/search';
 import androidSeat from './android-seat.vue';
+import userApi from '@/api/account';
 const searchStore = useSearchStore();
 const { locale } = useI18n();
 const route = useRoute();
@@ -172,11 +173,13 @@ function sort_order_change(val: string) { }
 function language_change(val: string) {
 	locale.value = val;
 	localStorage.setItem('language', val);
+	userApi.update_user_config({ userConfig, pageSizeConfig })
 }
 
 function theme_change(val: string) {
 	set_theme(val);
 	localStorage.setItem('theme', val);
+	userApi.update_user_config({ userConfig, pageSizeConfig })
 }
 
 function theme_color(theme: string) {

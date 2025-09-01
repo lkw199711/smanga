@@ -1,35 +1,15 @@
 @import '@/style/color.less';
 
-.manga-setting-index {
+.compress-setting {
   padding: 20px;
 }
 
-.manga-setting-box {
+.compress-table-box {
   background-color: #fff;
   border-radius: 12px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
   padding: 24px;
   transition: all 0.3s ease;
-}
-
-.btn-box {
-  margin-bottom: 20px;
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-}
-
-.add-btn {
-  background-color: @s-primary-color;
-  border-color: @s-primary-color;
-  transition: all 0.3s ease;
-
-  &:hover {
-    background-color: @s-primary-color-hover;
-    border-color: @s-primary-color-hover;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  }
 }
 
 // 表格样式
@@ -64,18 +44,6 @@
   transition: all 0.3s ease;
   border-radius: 6px;
 
-  &.el-button--primary {
-    background-color: @s-primary-color;
-    border-color: @s-primary-color;
-
-    &:hover {
-      background-color: @s-primary-color-hover;
-      border-color: @s-primary-color-hover;
-      transform: translateY(-2px);
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    }
-  }
-
   &.el-button--danger {
     background-color: #ff4d4f;
     border-color: #ff4d4f;
@@ -89,40 +57,6 @@
   }
 }
 
-// 表单样式
-.el-form-item {
-  margin-bottom: 16px;
-}
-
-.form-note {
-  padding: 10px 15px;
-  background-color: #f4f4f5;
-  border-radius: 4px;
-  margin-top: 10px;
-  margin-bottom: 20px;
-  line-height: 1.6;
-}
-
-// 对话框样式
-.el-dialog {
-  border-radius: 12px;
-  overflow: hidden;
-}
-
-.el-dialog__header {
-  background-color: #f5f7fa;
-  padding: 16px 24px;
-}
-
-.el-dialog__title {
-  font-size: 16px;
-  font-weight: 500;
-}
-
-.el-dialog__body {
-  padding: 24px;
-}
-
 // 分页样式
 .table-pager {
   margin-top: 20px;
@@ -133,15 +67,15 @@
 
 // 响应式设计
 @media only screen and (min-width: 1200px) {
-  .manga-setting-box {
+  .compress-table-box {
     width: 100%;
-    max-width: 1200px;
+    max-width: 1250px;
     margin: 30px auto;
   }
 }
 
 @media only screen and (max-width: 1199px) and (min-width: 768px) {
-  .manga-setting-box {
+  .compress-table-box {
     width: 100%;
     max-width: 900px;
     margin: 20px auto;
@@ -149,7 +83,7 @@
 }
 
 @media only screen and (max-width: 767px) {
-  .manga-setting-box {
+  .compress-table-box {
     width: 100%;
     margin: 10px auto;
     padding: 16px;

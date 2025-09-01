@@ -311,7 +311,6 @@ function switch_change(val: any, activeVal: string, inactiveVal: string) {
 
 .account {
   padding: 20px;
-  min-height: 100vh;
 }
 
 .account-table-box {

@@ -6,9 +6,12 @@
         <img :src="logoUrl" alt="Smanga Logo" class="logo">
         <h1 class="title">Smanga 漫画流媒体阅读工具</h1>
       </div>
-      <div class="version-badge" @click="openVersionDialog">
-        当前版本: <span class="version-text">{{ version }}</span>
-        <i class="el-icon-arrow-down version-arrow"></i>
+      <div class="version-badge" :class="{ 'has-update': hasUpdate, 'update-error': errorCheckingUpdate }" @click="openVersionDialog">
+        <span v-if="isCheckingUpdate" class="update-status"><i class="el-icon-loading"></i> 检查更新中...</span>
+        <span v-else-if="hasUpdate" class="update-status"><i class="el-icon-warning-outline"></i> 有新版本: {{ latestVersion }}</span>
+        <span v-else-if="errorCheckingUpdate" class="update-status"><i class="el-icon-error"></i> 检查失败</span>
+        <span v-else class="update-status"><i class="el-icon-check"></i> 当前已是最新版本</span>
+        <span class="version-text">{{ version }}</span>
       </div>
     </header>
 
@@ -347,7 +350,7 @@ const activeTab = ref('intro');
 const version = process.env.VUE_APP_VERSION || '4.1.4';
 const currentYear = new Date().getFullYear();
 
-// 版本弹窗状态
+// 版本更新状态
 const isVersionDialogOpen = ref(false);
 const isCheckingUpdate = ref(false);
 const hasUpdate = ref(false);
@@ -362,7 +365,6 @@ const handleTabChange = (tab: any) => {
 // 打开版本弹窗
 const openVersionDialog = () => {
   isVersionDialogOpen.value = true;
-  checkForUpdates();
 };
 
 // 关闭版本弹窗
@@ -413,6 +415,11 @@ const compareVersions = (version1: string, version2: string) => {
 
   return 0;
 };
+
+// 页面加载时检查更新
+onMounted(() => {
+  checkForUpdates();
+});
 </script>
 
 <style scoped lang="less">
@@ -451,33 +458,40 @@ const compareVersions = (version1: string, version2: string) => {
   }
 
   .version-badge {
-    background-color: #f0f7ff;
     padding: 0.3rem 0.8rem;
     border-radius: 20px;
     font-size: 0.9rem;
-    color: #1890ff;
     cursor: pointer;
     display: flex;
     align-items: center;
     transition: all 0.3s;
+    background-color: #f0f7ff;
+    color: #1890ff;
 
     &:hover {
-      background-color: #e6f4ff;
       box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    &.has-update {
+      background-color: #fff7e6;
+      color: #fa8c16;
+    }
+
+    &.update-error {
+      background-color: #fff1f0;
+      color: #f5222d;
+    }
+
+    .update-status {
+      margin-right: 0.5rem;
+      display: flex;
+      align-items: center;
     }
 
     .version-text {
       font-weight: bold;
-      margin-right: 0.3rem;
-    }
-
-    .version-arrow {
-      font-size: 0.7rem;
-      transition: transform 0.3s;
-    }
-
-    &:hover .version-arrow {
-      transform: translateY(2px);
+      padding-left: 0.3rem;
+      border-left: 1px solid rgba(0, 0, 0, 0.1);
     }
   }
 }

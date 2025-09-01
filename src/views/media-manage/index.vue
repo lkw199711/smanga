@@ -7,7 +7,7 @@
 			</div>
 
 			<!--表格-->
-			<el-table :data="tableData" stripe border>
+			<el-table :data="tableData" class="custom-table" stripe border>
 				<el-table-column type="index" :label="$t('account.serial')" width="54">
 				</el-table-column>
 
@@ -44,7 +44,6 @@
 					<el-form-item :label="$t('mediaManage.form.name')">
 						<el-input v-model="form.mediaName" :placeholder="$t('mediaManage.place.name')"></el-input>
 					</el-form-item>
-					<p class="note form-note">{{ $t('mediaManage.note.name') }}</p>
 
 					<el-form-item :label="$t('mediaManage.form.type')">
 						<el-select v-model.number="form.mediaType">
@@ -52,8 +51,6 @@
 							<el-option :label="$t('mediaManage.select.mediaType1')" :value="1" />
 						</el-select>
 					</el-form-item>
-
-					<p class="note form-note">{{ $t('mediaManage.note.type') }}</p>
 
 					<el-form-item :label="$t('mediaManage.form.browse')">
 						<el-select v-model="form.browseType">
@@ -63,7 +60,6 @@
 							<el-option :label="$t('mediaManage.select.browse3')" value="half" />
 						</el-select>
 					</el-form-item>
-					<p class="note form-note">{{ $t('mediaManage.note.browse') }}</p>
 
 					<el-form-item :label="$t('mediaManage.form.directory')">
 						<el-select v-model.number="form.directoryFormat" class="r30">
@@ -71,7 +67,6 @@
 							<el-option :label="$t('mediaManage.select.directory1')" :value="1" />
 						</el-select>
 					</el-form-item>
-					<p class="note form-note">{{ $t('mediaManage.note.directory') }}</p>
 
 					<el-form-item :label="$t('mediaManage.form.sourceWebsite')">
 						<el-select v-model.number="form.sourceWebsite" class="r30">
@@ -80,14 +75,12 @@
 							<el-option label="toomics" value="toomics" />
 						</el-select>
 					</el-form-item>
-					<p class="note form-note">{{ $t('mediaManage.note.sourceWebsite') }}</p>
 
 					<!--阅读字段-->
 					<p class="s-form-title">{{ $t('mediaManage.title.read') }}</p>
 					<el-form-item :label="$t('mediaManage.form.removeFirst')">
 						<el-switch v-model.number="form.removeFirst" :active-value="1" :inactive-value="0" />
 					</el-form-item>
-					<p class="note form-note">{{ $t('mediaManage.note.removeFirst') }}</p>
 
 					<el-form-item :label="$t('mediaManage.form.direction')">
 						<el-radio-group v-model="form.direction" class="ml-4">
@@ -99,8 +92,17 @@
 							}}</el-radio>
 						</el-radio-group>
 					</el-form-item>
-					<p class="note form-note">{{ $t('mediaManage.note.direction') }}</p>
 				</el-form>
+
+				<div class="form-note mt-4">
+					<p>• {{ $t('mediaManage.note.name') }}</p>
+					<p>• {{ $t('mediaManage.note.type') }}</p>
+					<p>• {{ $t('mediaManage.note.browse') }}</p>
+					<p>• {{ $t('mediaManage.note.directory') }}</p>
+					<p>• {{ $t('mediaManage.note.sourceWebsite') }}</p>
+					<p>• {{ $t('mediaManage.note.removeFirst') }}</p>
+					<p>• {{ $t('mediaManage.note.direction') }}</p>
+				</div>
 
 				<template v-slot:footer>
 					<div class="dialog-footer">
@@ -119,73 +121,77 @@
 			<!--编辑媒体库弹框-->
 			<el-dialog :title="$t('mediaManage.modify')" v-model="editMediaDialog" :before-close="dialog_close">
 				<el-form :model="form" label-width="11rem">
-					<el-form-item :label="$t('mediaManage.form.name')">
-						<el-input v-model="form.mediaName" :placeholder="$t('mediaManage.place.name')"></el-input>
-					</el-form-item>
-					<p class="note form-note">{{ $t('mediaManage.note.name') }}</p>
+				<el-form-item :label="$t('mediaManage.form.name')">
+					<el-input v-model="form.mediaName" :placeholder="$t('mediaManage.place.name')"></el-input>
+				</el-form-item>
 
-					<el-form-item :label="$t('mediaManage.form.type')">
-						<el-select v-model.number="form.mediaType">
-							<el-option :label="$t('mediaManage.select.mediaType0')" :value="0" />
-							<el-option :label="$t('mediaManage.select.mediaType1')" :value="1" />
-						</el-select>
-					</el-form-item>
-					<p class="note form-note">{{ $t('mediaManage.note.type') }}</p>
+				<el-form-item :label="$t('mediaManage.form.type')">
+					<el-select v-model.number="form.mediaType">
+						<el-option :label="$t('mediaManage.select.mediaType0')" :value="0" />
+						<el-option :label="$t('mediaManage.select.mediaType1')" :value="1" />
+					</el-select>
+				</el-form-item>
 
-					<el-form-item :label="$t('mediaManage.form.browse')">
-						<el-select v-model="form.browseType">
-							<el-option :label="$t('mediaManage.select.browse0')" value="flow" />
-							<el-option :label="$t('mediaManage.select.browse1')" value="single" />
-							<el-option :label="$t('mediaManage.select.browse2')" value="double" />
-							<el-option :label="$t('mediaManage.select.browse3')" value="half" />
-						</el-select>
-					</el-form-item>
-					<p class="note form-note">{{ $t('mediaManage.note.browse') }}</p>
-					<!-- 封面设置 -->
-					<el-form-item :label="$t('mediaManage.form.cover')">
-						<el-input v-model="form.mediaCover" disabled>
-							<template #append>
-								<el-button @click="create_media_cover">生成封面</el-button>
-							</template>
-						</el-input>
-					</el-form-item>
-					<p class="note form-note">{{ $t('mediaManage.note.cover') }}</p>
+				<el-form-item :label="$t('mediaManage.form.browse')">
+					<el-select v-model="form.browseType">
+						<el-option :label="$t('mediaManage.select.browse0')" value="flow" />
+						<el-option :label="$t('mediaManage.select.browse1')" value="single" />
+						<el-option :label="$t('mediaManage.select.browse2')" value="double" />
+						<el-option :label="$t('mediaManage.select.browse3')" value="half" />
+					</el-select>
+				</el-form-item>
+				<!-- 封面设置 -->
+				<el-form-item :label="$t('mediaManage.form.cover')">
+					<el-input v-model="form.mediaCover" disabled>
+						<template #append>
+							<el-button @click="create_media_cover">生成封面</el-button>
+						</template>
+					</el-input>
+				</el-form-item>
 
-					<el-form-item :label="$t('mediaManage.form.directory')">
-						<el-select v-model.number="form.directoryFormat" class="r30">
-							<el-option :label="$t('mediaManage.select.directory0')" :value="0" />
-							<el-option :label="$t('mediaManage.select.directory1')" :value="1" />
-						</el-select>
-					</el-form-item>
-					<p class="note form-note">{{ $t('mediaManage.note.directory') }}</p>
+				<el-form-item :label="$t('mediaManage.form.directory')">
+					<el-select v-model.number="form.directoryFormat" class="r30">
+						<el-option :label="$t('mediaManage.select.directory0')" :value="0" />
+						<el-option :label="$t('mediaManage.select.directory1')" :value="1" />
+					</el-select>
+				</el-form-item>
 
-					<el-form-item :label="$t('mediaManage.form.sourceWebsite')">
-						<el-select v-model.number="form.sourceWebsite" class="r30">
-							<el-option label="无" value="" />
-							<el-option label="toptoon" value="toptoon" />
-							<el-option label="toomics" value="toomics" />
-						</el-select>
-					</el-form-item>
-					<p class="note form-note">{{ $t('mediaManage.note.sourceWebsite') }}</p>
-					<!--阅读字段-->
-					<p class="s-form-title">{{ $t('mediaManage.title.read') }}</p>
-					<el-form-item :label="$t('mediaManage.form.removeFirst')">
-						<el-switch v-model.number="form.removeFirst" :active-value="1" :inactive-value="0" />
-					</el-form-item>
-					<p class="note form-note">{{ $t('mediaManage.note.removeFirst') }}</p>
+				<el-form-item :label="$t('mediaManage.form.sourceWebsite')">
+					<el-select v-model.number="form.sourceWebsite" class="r30">
+						<el-option label="无" value="" />
+						<el-option label="toptoon" value="toptoon" />
+						<el-option label="toomics" value="toomics" />
+					</el-select>
+				</el-form-item>
 
-					<el-form-item :label="$t('mediaManage.form.direction')">
-						<el-radio-group v-model="form.direction" class="ml-4">
-							<el-radio :label="0" size="large">{{
-								$t('mediaManage.select.ltr')
-							}}</el-radio>
-							<el-radio :label="1" size="large">{{
-								$t('mediaManage.select.rtl')
-							}}</el-radio>
-						</el-radio-group>
-					</el-form-item>
-					<p class="note form-note">{{ $t('mediaManage.note.direction') }}</p>
-				</el-form>
+				<!--阅读字段-->
+				<p class="s-form-title">{{ $t('mediaManage.title.read') }}</p>
+				<el-form-item :label="$t('mediaManage.form.removeFirst')">
+					<el-switch v-model.number="form.removeFirst" :active-value="1" :inactive-value="0" />
+				</el-form-item>
+
+				<el-form-item :label="$t('mediaManage.form.direction')">
+					<el-radio-group v-model="form.direction" class="ml-4">
+						<el-radio :label="0" size="large">{{
+							$t('mediaManage.select.ltr')
+						}}</el-radio>
+						<el-radio :label="1" size="large">{{
+							$t('mediaManage.select.rtl')
+						}}</el-radio>
+					</el-radio-group>
+				</el-form-item>
+			</el-form>
+
+			<div class="form-note mt-4">
+				<p>• {{ $t('mediaManage.note.name') }}</p>
+				<p>• {{ $t('mediaManage.note.type') }}</p>
+				<p>• {{ $t('mediaManage.note.browse') }}</p>
+				<p>• {{ $t('mediaManage.note.cover') }}</p>
+				<p>• {{ $t('mediaManage.note.directory') }}</p>
+				<p>• {{ $t('mediaManage.note.sourceWebsite') }}</p>
+				<p>• {{ $t('mediaManage.note.removeFirst') }}</p>
+				<p>• {{ $t('mediaManage.note.direction') }}</p>
+			</div>
 				<template v-slot:footer>
 					<div class="dialog-footer">
 						<!--按钮盒子-->
@@ -223,16 +229,13 @@
 					<el-form-item :label="$t('mediaManage.form.autoScan')">
 						<el-switch v-model.number="pathForm.autoScan" :active-value="1" :inactive-value="0" />
 					</el-form-item>
-					<p class="note form-note">{{ $t('mediaManage.note.autoScan') }}</p>
+
 					<el-form-item :label="$t('path.form.include')">
 						<el-input v-model="pathForm.include" :placeholder="$t('path.place.include')" />
 					</el-form-item>
 					<el-form-item :label="$t('path.form.exclude')">
 						<el-input v-model="pathForm.exclude" :placeholder="$t('path.place.exclude')" />
 					</el-form-item>
-					<p class="note form-note">
-						{{ $t('path.note.clude', ['(aaa|bbb|ccc)']) }}
-					</p>
 
 					<el-form-item :label="$t('path.form.path')">
 						<div v-for="i in pathArr" :key="i.pathId" class="path-item">
@@ -251,6 +254,11 @@
 						</div>
 					</el-form-item>
 				</el-form>
+
+				<div class="form-note mt-4">
+					<p>• {{ $t('mediaManage.note.autoScan') }}</p>
+					<p>• {{ $t('path.note.clude', ['(aaa|bbb|ccc)']) }}</p>
+				</div>
 
 				<template v-slot:footer>
 					<div class="dialog-footer">
@@ -540,46 +548,18 @@ async function create_media_cover() {
 
 </script>
 
-<style scoped lang="less">
-.btn-box {
-	margin-bottom: 1.4rem;
-}
+<style lang="less" scoped>
+@import '@/style/media-manage.less';
 
-.dialog-footer {
-	.btn-box {
-		display: flex;
-		justify-content: flex-end;
-	}
-}
+// 自定义组件内样式
+.media-index {
+  .el-button + .el-button {
+    margin-left: 10px;
+  }
 
-.path-item {
-	display: flex;
-	justify-content: space-between;
-	line-height: 3.4rem;
-
-	.path-item-btn {
-		height: 2rem;
-	}
-}
-
-@media only screen and (min-width: 1200px) {
-	.media-box {
-		width: 100rem;
-		margin: 3rem auto;
-	}
-}
-
-@media only screen and (max-width: 1199px) and (min-width: 768px) {
-	.media-box {
-		width: 74rem;
-		margin: 2rem auto;
-	}
-}
-
-@media only screen and (max-width: 767px) {
-	.media-box {
-		width: 72rem;
-		margin: 1rem auto;
-	}
+  // 优化表格按钮间距
+  .el-table .el-button {
+    margin-right: 5px;
+  }
 }
 </style>

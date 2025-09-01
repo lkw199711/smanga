@@ -167,60 +167,150 @@ async function delete_manga(index: number, row: any) {
 }
 </script>
 
-<style scope>
+<style scoped lang='less'>
+@import '@/style/color.less';
+
+.manga-setting-index {
+  padding: 20px;
+}
+
+.manga-setting-box {
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  padding: 24px;
+  transition: all 0.3s ease;
+}
+
+.btn-box {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+// 表格样式
+.el-table {
+  border-radius: 8px;
+  overflow: hidden;
+
+  .el-table__header-wrapper {
+    background-color: #f5f7fa;
+  }
+
+  .el-table__body tr {
+    transition: all 0.2s ease;
+
+    &:hover {
+      background-color: #f9fafc;
+      transform: scale(1.003);
+    }
+  }
+
+  .el-table__body tr.el-table__row--striped {
+    background-color: #fafafa;
+  }
+
+  .el-table__body tr.el-table__row--striped:hover {
+    background-color: #f5f7fa;
+  }
+}
+
+// 按钮样式
+.el-button {
+  transition: all 0.3s ease;
+  border-radius: 6px;
+
+  &.el-button--primary {
+    background-color: @s-primary-color;
+    border-color: @s-primary-color;
+
+    &:hover {
+      background-color: @s-primary-color-hover;
+      border-color: @s-primary-color-hover;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+  }
+
+  &.el-button--danger {
+    background-color: #ff4d4f;
+    border-color: #ff4d4f;
+
+    &:hover {
+      background-color: #ff7875;
+      border-color: #ff7875;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+  }
+}
+
+// 对话框样式
+.el-dialog {
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.el-dialog__header {
+  background-color: #f5f7fa;
+  padding: 16px 24px;
+}
+
+.el-dialog__title {
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.el-dialog__body {
+  padding: 24px;
+}
+
 #payload {
   white-space: pre-wrap;
   word-wrap: break-word;
-  font-size: 1.6rem;
-}
-</style>
-<style scoped lang='less'>
-.manga-setting-index {
-  margin: 1rem auto;
+  font-size: 14px;
+  padding: 10px;
+  background-color: #f5f7fa;
+  border-radius: 6px;
+  max-height: 400px;
+  overflow-y: auto;
 }
 
+// 响应式设计
 @media only screen and (min-width: 1200px) {
-  .top {
-    width: 100rem;
-  }
-
-  .search-input {
-    max-width: 100vw;
-  }
-
   .manga-setting-box {
-    width: 100rem;
-    margin: 0rem auto;
+    width: 100%;
+    max-width: 1200px;
+    margin: 30px auto;
   }
 }
 
 @media only screen and (max-width: 1199px) and (min-width: 768px) {
-  .top {
-    width: 91rem;
-  }
-
-  .search-input {
-    max-width: 100vw;
-  }
-
   .manga-setting-box {
-    width: 91rem;
-    margin: 0rem auto;
+    width: 100%;
+    max-width: 900px;
+    margin: 20px auto;
   }
 }
 
 @media only screen and (max-width: 767px) {
-  .top {
-    width: 91rem;
-  }
-
-  .search-input {
-    max-width: 100vw;
-  }
-
   .manga-setting-box {
-    width: 91rem;
-    margin: 0 auto;
+    width: 100%;
+    margin: 10px auto;
+    padding: 16px;
+  }
+
+  .el-table {
+    font-size: 12px;
+  }
+
+  .el-button {
+    padding: 6px 12px;
+    font-size: 12px;
+  }
+
+  #payload {
+    font-size: 12px;
   }
 }
 </style>

@@ -54,9 +54,6 @@
           <el-form-item :label="$t('path.form.name')">
             <el-input disabled v-model="pathForm.pathContent" />
           </el-form-item>
-          <p class="note form-note">
-            {{ $t('path.note.disabledContent') }}
-          </p>
 
           <!--扫描字段-->
           <p class="s-form-title">{{ $t('mediaManage.title.scan') }}</p>
@@ -64,16 +61,18 @@
           <el-form-item :label="$t('mediaManage.form.autoScan')">
             <el-switch v-model.number="pathForm.autoScan" :active-value="1" :inactive-value="0" />
           </el-form-item>
-          <p class="note form-note">{{ $t('mediaManage.note.autoScan') }}</p>
           <el-form-item :label="$t('path.form.include')">
             <el-input v-model="pathForm.include" :placeholder="$t('path.place.include')" />
           </el-form-item>
           <el-form-item :label="$t('path.form.exclude')">
             <el-input v-model="pathForm.exclude" :placeholder="$t('path.place.exclude')" />
           </el-form-item>
-          <p class="note form-note">
-            {{ $t('path.note.clude', ['(aaa|bbb|ccc)']) }}
-          </p>
+
+          <div class="form-note mt-4 text-gray-500 text-sm">
+            <p>• {{ $t('path.note.disabledContent') }}</p>
+            <p>• {{ $t('mediaManage.note.autoScan') }}</p>
+            <p>• {{ $t('path.note.clude', ['(aaa|bbb|ccc)']) }}</p>
+          </div>
         </el-form>
 
         <template v-slot:footer>
@@ -222,24 +221,5 @@ function cancel_edit_path() {
 </script>
 
 <style scoped lang='less'>
-@media only screen and (min-width: 1200px) {
-  .path-setting-box {
-    width: 100rem;
-    margin: 3rem auto;
-  }
-}
-
-@media only screen and (max-width: 1199px) and (min-width: 768px) {
-  .path-setting-box {
-    width: 72rem;
-    margin: 2rem auto;
-  }
-}
-
-@media only screen and (max-width: 767px) {
-  .path-setting-box {
-    width: 72rem;
-    margin: 1rem auto;
-  }
-}
+@import '@/style/path-manage.less';
 </style>

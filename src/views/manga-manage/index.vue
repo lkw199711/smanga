@@ -68,12 +68,10 @@
               <el-option :label="$t('mediaManage.select.browse3')" value="half" />
             </el-select>
           </el-form-item>
-          <p class="note form-note">{{ $t('mediaManage.note.browse') }}</p>
 
           <el-form-item :label="$t('mediaManage.form.removeFirst')">
             <el-switch v-model.number="form.removeFirst" :active-value="1" :inactive-value="0" />
           </el-form-item>
-          <p class="note form-note">{{ $t('mediaManage.note.removeFirst') }}</p>
 
           <el-form-item :label="$t('mediaManage.form.direction')">
             <el-radio-group v-model="form.direction" class="ml-4">
@@ -81,7 +79,12 @@
               <el-radio :label="1" size="large">{{ $t('mediaManage.select.rtl') }}</el-radio>
             </el-radio-group>
           </el-form-item>
-          <p class="note form-note">{{ $t('mediaManage.note.direction') }}</p>
+
+          <div class="form-note mt-4 text-gray-500 text-sm">
+            <p>• {{ $t('mediaManage.note.browse') }}</p>
+            <p>• {{ $t('mediaManage.note.removeFirst') }}</p>
+            <p>• {{ $t('mediaManage.note.direction') }}</p>
+          </div>
 
         </el-form>
 
@@ -224,45 +227,5 @@ async function delete_manga(index: number, row: any) {
 </script>
 
 <style lang="less" scoped>
-  .top {
-    margin: 1rem auto;
-  }
-  @media only screen and (min-width: 1200px) {
-    .top {
-      width: 100rem;
-    }
-    .search-input {
-      max-width: 100vw;
-    }
-    .manga-setting-box {
-      width: 100rem;
-      margin: 0rem auto;
-    }
-  }
-
-  @media only screen and (max-width: 1199px) and (min-width: 768px) {
-    .top {
-      width: 91rem;
-    }
-    .search-input {
-      max-width: 100vw;
-    }
-    .manga-setting-box {
-      width: 91rem;
-      margin: 0rem auto;
-    }
-  }
-
-  @media only screen and (max-width: 767px) {
-    .top {
-      width: 91rem;
-    }
-    .search-input {
-      max-width: 100vw;
-    }
-    .manga-setting-box {
-      width: 91rem;
-      margin: 0 auto;
-    }
-  }
+@import '@/style/manga-manage.less';
 </style>

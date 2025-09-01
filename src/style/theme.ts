@@ -16,7 +16,7 @@ export const themes = {
         's-active-back': '#ecf5ff',   // 激活背景色
         's-card': '#ffffff',          // 卡片背景色
         's-header': '#f0f0f0',        // 头部背景色(柔和版)
-        's-menu': '#f0f0f0',          // 菜单背景色(柔和版)
+        's-menu': '#e8e8e8',          // 菜单背景色(柔和版) - 比s-back-soft稍浅
         's-primary': '#409eff',       // 主色调
         's-button': '#409eff',        // 按钮颜色
         's-button-hover': '#66b1ff',  // 按钮悬停颜色
@@ -71,15 +71,15 @@ export const themes = {
         's-text-secondary': '#e6f7ff', // 次要文本色
         's-border': '#60a5fa',        // 边框颜色(柔和版)
         's-hover-back': '#60a5fa',    // 悬停背景色(比主色浅)
-        's-active': '#1e40af',        // 激活状态颜色(比主色深)
-        's-active-back': '#2563eb',   // 激活背景色(柔和版)
+        's-active': '#f97316',        // 激活状态颜色(橙色，蓝色的互补色)
+        's-active-back': '#1d4ed8',   // 激活背景色(主色调)
         's-card': '#2563eb',          // 卡片背景色(柔和版)
         's-header': '#2563eb',        // 头部背景色(柔和版)
         's-menu': '#2563eb',          // 菜单背景色(柔和版)
         's-primary': '#1d4ed8',       // 主色调(更深的蓝色)
         's-button': '#1d4ed8',        // 按钮颜色(与主色一致)
         's-button-hover': '#2563eb',  // 按钮悬停颜色(柔和版主色)
-        's-button-active': '#1e40af', // 按钮激活颜色(更深的蓝色)
+        's-button-active': '#f97316', // 按钮激活颜色(橙色，蓝色的互补色)
         's-input': '#0958d9',         // 输入框背景色
         's-input-border': '#4080ff',  // 输入框边框色
         's-success': '#67c23a',       // 成功提示色
@@ -98,15 +98,15 @@ export const themes = {
         's-text-secondary': '#e6fff0', // 次要文本色
         's-border': '#4ade80',        // 边框颜色(柔和版)
         's-hover-back': '#4ade80',    // 悬停背景色(比主色浅)
-        's-active': '#166534',        // 激活状态颜色(比主色深)
-        's-active-back': '#16a34a',   // 激活背景色(柔和版)
+        's-active': '#e11d48',        // 激活状态颜色(玫瑰红，绿色的互补色)
+        's-active-back': '#15803d',   // 激活背景色(主色调)
         's-card': '#16a34a',          // 卡片背景色(柔和版)
         's-header': '#16a34a',        // 头部背景色(柔和版)
         's-menu': '#16a34a',          // 菜单背景色(柔和版)
         's-primary': '#15803d',       // 主色调(更深的绿色)
         's-button': '#15803d',        // 按钮颜色(与主色一致)
         's-button-hover': '#16a34a',  // 按钮悬停颜色(柔和版主色)
-        's-button-active': '#166534', // 按钮激活颜色(更深的绿色)
+        's-button-active': '#e11d48', // 按钮激活颜色(玫瑰红，绿色的互补色)
         's-input': '#00a329',         // 输入框背景色
         's-input-border': '#36cf81',  // 输入框边框色
         's-success': '#67c23a',       // 成功提示色
@@ -125,15 +125,15 @@ export const themes = {
         's-text-secondary': '#f9f0ff', // 次要文本色
         's-border': '#a78bfa',        // 边框颜色(柔和版)
         's-hover-back': '#a78bfa',    // 悬停背景色(比主色浅)
-        's-active': '#5b21b6',        // 激活状态颜色(比主色深)
-        's-active-back': '#7c3aed',   // 激活背景色(柔和版)
+        's-active': '#eab308',        // 激活状态颜色(黄色，紫色的互补色)
+        's-active-back': '#6d28d9',   // 激活背景色(主色调)
         's-card': '#7c3aed',          // 卡片背景色(柔和版)
         's-header': '#7c3aed',        // 头部背景色(柔和版)
         's-menu': '#7c3aed',          // 菜单背景色(柔和版)
         's-primary': '#6d28d9',       // 主色调(更深的紫色)
         's-button': '#6d28d9',        // 按钮颜色(与主色一致)
         's-button-hover': '#7c3aed',  // 按钮悬停颜色(柔和版主色)
-        's-button-active': '#5b21b6', // 按钮激活颜色(更深的紫色)
+        's-button-active': '#eab308', // 按钮激活颜色(黄色，紫色的互补色)
         's-input': '#621bc9',         // 输入框背景色
         's-input-border': '#9370db',  // 输入框边框色
         's-success': '#67c23a',       // 成功提示色
@@ -152,15 +152,15 @@ export const themes = {
         's-text-secondary': '#fff2f0', // 次要文本色
         's-border': '#f87171',        // 边框颜色(柔和版)
         's-hover-back': '#f87171',    // 悬停背景色(比主色浅)
-        's-active': '#991b1b',        // 激活状态颜色(比主色深)
-        's-active-back': '#dc2626',   // 激活背景色(柔和版)
+        's-active': '#0d9488',        // 激活状态颜色(青色，红色的互补色)
+        's-active-back': '#b91c1c',   // 激活背景色(主色调)
         's-card': '#dc2626',          // 卡片背景色(柔和版)
         's-header': '#dc2626',        // 头部背景色(柔和版)
         's-menu': '#dc2626',          // 菜单背景色(柔和版)
         's-primary': '#b91c1c',       // 主色调(更深的红色)
         's-button': '#b91c1c',        // 按钮颜色(与主色一致)
         's-button-hover': '#dc2626',  // 按钮悬停颜色(柔和版主色)
-        's-button-active': '#991b1b', // 按钮激活颜色(更深的红色)
+        's-button-active': '#0d9488', // 按钮激活颜色(青色，红色的互补色)
         's-input': '#e81123',         // 输入框背景色
         's-input-border': '#ff8080',  // 输入框边框色
         's-success': '#67c23a',       // 成功提示色
@@ -180,15 +180,15 @@ export const themes = {
         's-text-secondary': '#f3f4f6', // 次要文本色
         's-border': '#9ca3af',        // 边框颜色(柔和灰色)
         's-hover-back': '#9ca3af',    // 悬停背景色(比主色浅)
-        's-active': '#6b7280',        // 激活状态颜色(比主色深)
-        's-active-back': '#4b5563',   // 激活背景色(柔和灰色)
+        's-active': '#10b981',        // 激活状态颜色(翡翠绿，灰色的互补色)
+        's-active-back': '#374151',   // 激活背景色(深灰色)
         's-card': '#4b5563',          // 卡片背景色(柔和灰色)
         's-header': '#4b5563',        // 头部背景色(柔和灰色)
         's-menu': '#4b5563',          // 菜单背景色(柔和灰色)
         's-primary': '#8b939c',       // 主色调(稍亮的灰色)
         's-button': '#8b939c',        // 按钮颜色(与主色一致)
         's-button-hover': '#9ca3af',  // 按钮悬停颜色(柔和版主色)
-        's-button-active': '#6b7280', // 按钮激活颜色(更深的灰色)
+        's-button-active': '#10b981', // 按钮激活颜色(翡翠绿，灰色的互补色)
         's-input': '#374151',         // 输入框背景色
         's-input-border': '#6b7280',  // 输入框边框色
         's-success': '#67c23a',       // 成功提示色

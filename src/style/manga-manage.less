@@ -1,4 +1,4 @@
-@import '@/style/color.less';
+@import './color.less';
 
 .manga-setting-index {
   padding: 20px;
@@ -12,23 +12,20 @@
   transition: all 0.3s ease;
 }
 
-.btn-box {
+.top {
   margin-bottom: 20px;
   display: flex;
-  justify-content: flex-start;
+  justify-content: center;
   align-items: center;
 }
 
-.add-btn {
-  background-color: @s-primary-color;
-  border-color: @s-primary-color;
+.search-input {
+  width: 100%;
+  max-width: 1200px;
   transition: all 0.3s ease;
 
-  &:hover {
-    background-color: @s-primary-color-hover;
-    border-color: @s-primary-color-hover;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  &:focus-within {
+    width: 100%;
   }
 }
 
@@ -94,13 +91,11 @@
   margin-bottom: 16px;
 }
 
-.form-note {
-  padding: 10px 15px;
-  background-color: #f4f4f5;
-  border-radius: 4px;
-  margin-top: 10px;
-  margin-bottom: 20px;
-  line-height: 1.6;
+.s-form-title {
+  font-size: 14px;
+  font-weight: 500;
+  margin: 16px 0 8px;
+  color: #303133;
 }
 
 // 对话框样式
@@ -123,12 +118,19 @@
   padding: 24px;
 }
 
-// 分页样式
-.table-pager {
-  margin-top: 20px;
+.btn-box {
   display: flex;
-  justify-content: flex-start;
-  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.form-note {
+  padding: 10px 15px;
+  background-color: #f4f4f5;
+  border-radius: 4px;
+  margin-top: 10px;
+  margin-bottom: 20px;
+  line-height: 1.6;
 }
 
 // 响应式设计
@@ -136,7 +138,7 @@
   .manga-setting-box {
     width: 100%;
     max-width: 1200px;
-    margin: 30px auto;
+    margin: 0 auto;
   }
 }
 
@@ -144,14 +146,14 @@
   .manga-setting-box {
     width: 100%;
     max-width: 900px;
-    margin: 20px auto;
+    margin: 0 auto;
   }
 }
 
 @media only screen and (max-width: 767px) {
   .manga-setting-box {
     width: 100%;
-    margin: 10px auto;
+    margin: 0 auto;
     padding: 16px;
   }
 
@@ -162,5 +164,10 @@
   .el-button {
     padding: 6px 12px;
     font-size: 12px;
+  }
+
+  .search-input {
+    width: 100%;
+    max-width: 300px;
   }
 }

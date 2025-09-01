@@ -1,35 +1,15 @@
-@import '@/style/color.less';
+@import './color.less';
 
-.manga-setting-index {
+.path-setting-index {
   padding: 20px;
 }
 
-.manga-setting-box {
+.path-setting-box {
   background-color: #fff;
   border-radius: 12px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
   padding: 24px;
   transition: all 0.3s ease;
-}
-
-.btn-box {
-  margin-bottom: 20px;
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-}
-
-.add-btn {
-  background-color: @s-primary-color;
-  border-color: @s-primary-color;
-  transition: all 0.3s ease;
-
-  &:hover {
-    background-color: @s-primary-color-hover;
-    border-color: @s-primary-color-hover;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  }
 }
 
 // 表格样式
@@ -63,6 +43,7 @@
 .el-button {
   transition: all 0.3s ease;
   border-radius: 6px;
+  margin-right: 6px;
 
   &.el-button--primary {
     background-color: @s-primary-color;
@@ -71,6 +52,30 @@
     &:hover {
       background-color: @s-primary-color-hover;
       border-color: @s-primary-color-hover;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+  }
+
+  &.el-button--success {
+    background-color: #52c41a;
+    border-color: #52c41a;
+
+    &:hover {
+      background-color: #73d13d;
+      border-color: #73d13d;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+  }
+
+  &.el-button--warning {
+    background-color: #faad14;
+    border-color: #faad14;
+
+    &:hover {
+      background-color: #ffc53d;
+      border-color: #ffc53d;
       transform: translateY(-2px);
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     }
@@ -94,13 +99,11 @@
   margin-bottom: 16px;
 }
 
-.form-note {
-  padding: 10px 15px;
-  background-color: #f4f4f5;
-  border-radius: 4px;
-  margin-top: 10px;
-  margin-bottom: 20px;
-  line-height: 1.6;
+.s-form-title {
+  font-size: 14px;
+  font-weight: 500;
+  margin: 16px 0 8px;
+  color: #303133;
 }
 
 // 对话框样式
@@ -123,17 +126,24 @@
   padding: 24px;
 }
 
-// 分页样式
-.table-pager {
-  margin-top: 20px;
+.btn-box {
   display: flex;
-  justify-content: flex-start;
-  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.form-note {
+  padding: 10px 15px;
+  background-color: #f4f4f5;
+  border-radius: 4px;
+  margin-top: 10px;
+  margin-bottom: 20px;
+  line-height: 1.6;
 }
 
 // 响应式设计
 @media only screen and (min-width: 1200px) {
-  .manga-setting-box {
+  .path-setting-box {
     width: 100%;
     max-width: 1200px;
     margin: 30px auto;
@@ -141,7 +151,7 @@
 }
 
 @media only screen and (max-width: 1199px) and (min-width: 768px) {
-  .manga-setting-box {
+  .path-setting-box {
     width: 100%;
     max-width: 900px;
     margin: 20px auto;
@@ -149,7 +159,7 @@
 }
 
 @media only screen and (max-width: 767px) {
-  .manga-setting-box {
+  .path-setting-box {
     width: 100%;
     margin: 10px auto;
     padding: 16px;
@@ -160,7 +170,8 @@
   }
 
   .el-button {
-    padding: 6px 12px;
+    padding: 6px 10px;
     font-size: 12px;
+    margin-right: 4px;
   }
 }

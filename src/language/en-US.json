@@ -359,7 +359,7 @@
       "nameWarning": "The tag name cannot be empty",
       "confirmText": "Are you sure to delete this tag?",
       "confirmTitle": "delete tag",
-      "tagColorNote": "Please enter a color in hexadecimal format. If left blank, the default is \"#a0d911\" (green)"
+      "tagColorNote": "Tag color: Please enter a color in hexadecimal format. If left blank, the default is \"#a0d911\" (green)"
     },
     "addButton": "Add tag",
     "table": {

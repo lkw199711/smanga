@@ -358,7 +358,7 @@
       "nameWarning": "標簽名不能為空",
       "confirmText": "確認刪除此標簽?",
       "confirmTitle": "刪除標簽",
-      "tagColorNote": "請輸入一個十六進製格式的顏色,如果留空,默認為\"#a0d911\"(綠色)"
+      "tagColorNote": "標籤顏色: 請輸入一個十六進製格式的顏色,如果留空,默認為\"#a0d911\"(綠色)"
     },
     "addButton": "新增標簽",
     "table": {
