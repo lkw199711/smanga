@@ -506,6 +506,9 @@ function update_tags(tagsParams: tagItemType[]) {
 </script>
 
 <style lang="less" scoped>
+.manga-info{
+    color: @s-back-text;
+}
 :deep(.el-carousel__container) {
     height: auto !important;
 }
@@ -641,7 +644,7 @@ function update_tags(tagsParams: tagItemType[]) {
         display: flex;
         padding: 1rem;
         margin: 0 1rem;
-        border: .4rem @s-background solid;
+        border: .4rem @s-border solid;
         border-radius: 2rem;
 
         img {
@@ -664,6 +667,7 @@ function update_tags(tagsParams: tagItemType[]) {
 
 .meta-info {
     margin: 2rem 2rem 0 2rem;
+    color: @s-back-text;
 }
 
 :deep(.el-descriptions__body) {

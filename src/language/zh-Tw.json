@@ -320,21 +320,13 @@
     "firstChapter": "已經位於第一章"
   },
   "theme": {
-    "grey": "灰色",
-    "white": "白色",
-    "black": "黑色",
-    "red": "紅色",
-    "redLight": "淺紅",
-    "orange": "橘色",
-    "gold": "金色",
-    "yellow": "黃色",
-    "greenLight": "青檸",
+    "light": "亮色",
+    "dark": "暗色",
+    "blue": "藍色",
     "green": "綠色",
-    "cyan": "青色",
-    "blueLight": "藍色",
-    "blueDraw": "深藍",
-    "purple": "醬紫",
-    "magenta": "洋紅"
+    "purple": "紫色",
+    "red": "紅色",
+    "grey": "灰色"
   },
   "sortOrder": {
     "id": "id",
@@ -366,7 +358,7 @@
       "nameWarning": "標簽名不能為空",
       "confirmText": "確認刪除此標簽?",
       "confirmTitle": "刪除標簽",
-      "tagColorNote": "請輸入一個十六進製格式的顏色,如果留空,默認為\"#a0d911\"(綠色)"
+      "tagColorNote": "標籤顏色: 請輸入一個十六進製格式的顏色,如果留空,默認為\"#a0d911\"(綠色)"
     },
     "addButton": "新增標簽",
     "table": {

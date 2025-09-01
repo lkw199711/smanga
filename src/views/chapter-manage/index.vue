@@ -1,8 +1,12 @@
 <template>
   <div class="chapter-setting-index">
     <div class="top">
-      <el-input v-model="keyWord" class="search-input" placeholder="请输入章节名称" :suffix-icon="Search"
-        @change="() => { load_table() }" />
+      <el-input v-model="keyWord" class="search-input" placeholder="请输入章节名称" @keyup.enter="() => { load_table() }"
+        @clear="() => { load_table() }" @change="() => { load_table() }">
+        <template #append>
+          <el-button :icon="Search" @click="()=>{load_table()}" />
+        </template>
+      </el-input>
     </div>
     <div class="chapter-setting-box">
       <div class="manga-setting-box">
@@ -32,7 +36,7 @@
               </el-button>
               <el-button size="small" type="danger" :icon="Delete"
                 @click="do_delete_chapter(scope.$index, scope.row)">{{
-                  $t('option.delete') }}
+                $t('option.delete') }}
               </el-button>
             </template>
           </el-table-column>
@@ -206,51 +210,5 @@ onMounted(() => {
 </script>
 
 <style scoped lang='less'>
-.dialog-footer {
-  .btn-box {
-    display: flex;
-    justify-content: flex-end;
-  }
-}
-
-.top {
-  margin: 1rem auto;
-}
-
-.search-input {
-  max-width: 100vw;
-}
-
-@media only screen and (min-width: 1200px) {
-  .top {
-    width: 100rem;
-  }
-
-  .chapter-setting-box {
-    width: 100rem;
-    margin: 0rem auto;
-  }
-}
-
-@media only screen and (max-width: 1199px) and (min-width: 768px) {
-  .top {
-    width: 90rem;
-  }
-
-  .chapter-setting-box {
-    width: 90rem;
-    margin: 0rem auto;
-  }
-}
-
-@media only screen and (max-width: 767px) {
-  .top {
-    width: 90rem;
-  }
-
-  .chapter-setting-box {
-    width: 90rem;
-    margin: 0rem auto;
-  }
-}
+@import '@/style/chapter-manage.less';
 </style>

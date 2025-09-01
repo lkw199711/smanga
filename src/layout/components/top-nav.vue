@@ -75,7 +75,7 @@
 </template>
 
 <script lang="ts" setup>
-import { config, userConfig, sortOrder } from '@/store';
+import { config, userConfig, sortOrder, pageSizeConfig } from '@/store';
 import languages from '@/store/language';
 import theme from '@/store/theme';
 import { computed, ref } from 'vue';
@@ -88,6 +88,7 @@ import layoutDic from '@/store/top-layout';
 import routeType from '@/type/route';
 import useSearchStore from '@/store/search';
 import androidSeat from './android-seat.vue';
+import userApi from '@/api/account';
 const searchStore = useSearchStore();
 const { locale } = useI18n();
 const route = useRoute();
@@ -172,11 +173,13 @@ function sort_order_change(val: string) { }
 function language_change(val: string) {
 	locale.value = val;
 	localStorage.setItem('language', val);
+	userApi.update_user_config({ userConfig, pageSizeConfig })
 }
 
 function theme_change(val: string) {
 	set_theme(val);
 	localStorage.setItem('theme', val);
+	userApi.update_user_config({ userConfig, pageSizeConfig })
 }
 
 function theme_color(theme: string) {
@@ -242,7 +245,8 @@ function switch_view_type() {
 
 	i {
 		font-size: 2.6rem;
-		color: @s-background;
+		color: @s-primary;
+
 	}
 }
 
@@ -251,7 +255,8 @@ function switch_view_type() {
 
 	i {
 		font-size: 3.2rem;
-		color: @s-background;
+		color: @s-primary;
+
 	}
 }
 
@@ -260,7 +265,8 @@ function switch_view_type() {
 		margin-right: 1rem;
 		vertical-align: middle;
 		font-size: 2.6rem;
-		color: @s-background;
+		color: @s-primary;
+
 	}
 
 	&-select {
@@ -279,7 +285,8 @@ function switch_view_type() {
 		height: 3rem;
 		line-height: 3rem;
 		vertical-align: middle;
-		background-color: @s-background;
+		background-color: @s-menu;
+
 	}
 
 	&-select {
@@ -308,7 +315,7 @@ function switch_view_type() {
 	width: 1.4rem;
 	height: 1.4rem;
 	margin-right: 1rem;
-	background-color: @s-background;
+	background-color: @s-primary;
 	transform: translateY(0.1rem);
 }
 

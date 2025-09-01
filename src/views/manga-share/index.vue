@@ -2,8 +2,10 @@
     <div class="manga-setting-index">
         <div class="manga-setting-box">
             <!-- 表头按钮 -->
-            <div class="btn-box">
-            </div>
+            <!-- <div class="btn-box">
+                <el-button class="add-btn" type="primary" :icon="Plus" @click="dialog_open">{{ $t('mangaShare.create') }}
+                </el-button>
+            </div> -->
             <!--表格-->
             <el-table :data="tableData" stripe border>
                 <el-table-column type="index" :label="t('account.serial')" width="54">
@@ -205,48 +207,144 @@ async function delete_manga(index: number, row: any) {
 }
 </script>
 
-<style lang="less" scoped>
+<style scoped lang='less'>
+@import '@/style/color.less';
+
+.manga-setting-index {
+    padding: 20px;
+}
+
+.manga-setting-box {
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    padding: 24px;
+    transition: all 0.3s ease;
+}
+
 .btn-box {
-    margin-bottom: 1.4rem;
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+// 表格样式
+.el-table {
+    border-radius: 8px;
+    overflow: hidden;
+
+    .el-table__header-wrapper {
+        background-color: #f5f7fa;
+    }
+
+    .el-table__body tr {
+        transition: all 0.2s ease;
+
+        &:hover {
+            background-color: #f9fafc;
+            transform: scale(1.003);
+        }
+    }
+
+    .el-table__body tr.el-table__row--striped {
+        background-color: #fafafa;
+    }
+
+    .el-table__body tr.el-table__row--striped:hover {
+        background-color: #f5f7fa;
+    }
+}
+
+// 按钮样式
+.el-button {
+    transition: all 0.3s ease;
+    border-radius: 6px;
+
+    &.el-button--primary {
+        background-color: @s-primary-color;
+        border-color: @s-primary-color;
+
+        &:hover {
+            background-color: @s-primary-color-hover;
+            border-color: @s-primary-color-hover;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+    }
+
+    &.el-button--danger {
+        background-color: #ff4d4f;
+        border-color: #ff4d4f;
+
+        &:hover {
+            background-color: #ff7875;
+            border-color: #ff7875;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+    }
+}
+
+// 对话框样式
+.el-dialog {
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.el-dialog__header {
+    background-color: #f5f7fa;
+    padding: 16px 24px;
+}
+
+.el-dialog__title {
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.el-dialog__body {
+    padding: 24px;
 }
 
 .dialog-footer {
     .btn-box {
         display: flex;
         justify-content: flex-end;
+        gap: 10px;
     }
 }
 
 #payload {
     white-space: pre-wrap;
     word-wrap: break-word;
-    font-size: 1.6rem;
-}
-</style>
-<style scoped lang='less'>
-.manga-setting-index {
-    margin: 1rem auto;
+    font-size: 14px;
+    padding: 10px;
+    background-color: #f5f7fa;
+    border-radius: 6px;
 }
 
-.manga-box {
+// 漫画和媒体库信息卡片
+.manga-box,
+.media-box {
     display: flex;
-    margin-bottom: 1rem;
+    margin-bottom: 16px;
     border: 1px solid #eee;
-    padding: 1rem;
-    border-radius: 0.5rem;
+    padding: 16px;
+    border-radius: 8px;
     background-color: #fff;
+    transition: all 0.3s ease;
+
+    &:hover {
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    }
 
     .manga-box-poster {
-        width: 10rem;
-        height: 14rem;
         flex-shrink: 0;
-        margin-right: 1rem;
+        margin-right: 16px;
 
         img {
-            width: 100%;
-            height: 100%;
+            border-radius: 6px;
             object-fit: cover;
-            border-radius: 0.5rem;
         }
     }
 
@@ -256,137 +354,111 @@ async function delete_manga(index: number, row: any) {
         flex-direction: column;
 
         .manga-box-title {
-            font-size: 1.8rem;
-            font-weight: bold;
-            margin-bottom: 0.5rem;
+            font-size: 16px;
+            font-weight: 500;
+            margin-bottom: 8px;
+            color: #303133;
         }
 
         .manga-box-author {
-            font-size: 1.4rem;
-            color: #666;
-            margin-bottom: 0.5rem;
+            font-size: 14px;
+            color: #606266;
+            margin-bottom: 8px;
         }
 
         .manga-box-count {
-            font-size: 1.4rem;
-            color: #999;
-            margin-bottom: 0.5rem;
+            font-size: 14px;
+            color: #909399;
+            margin-bottom: 8px;
         }
 
         .manga-box-intro {
-            font-size: 1.4rem;
-            color: #333;
+            font-size: 14px;
+            color: #303133;
             flex-grow: 1;
             overflow: hidden;
             text-overflow: ellipsis;
             display: -webkit-box;
             -webkit-line-clamp: 4;
-            /* 显示的行数 */
             -webkit-box-orient: vertical;
+        }
+    }
+}
+
+.manga-box {
+    .manga-box-poster {
+        width: 100px;
+        height: 140px;
+
+        img {
+            width: 100%;
+            height: 100%;
         }
     }
 }
 
 .media-box {
-    display: flex;
-    margin-bottom: 1rem;
-    border: 1px solid #eee;
-    padding: 1rem;
-    border-radius: 0.5rem;
-    background-color: #fff;
-
     .manga-box-poster {
-        width: 24.6rem;
-        height: 9rem;
-        flex-shrink: 0;
-        margin-right: 1rem;
+        width: 246px;
+        height: 90px;
 
         img {
             height: 100%;
-            object-fit: cover;
-            border-radius: 0.5rem;
-        }
-    }
-
-    .manga-box-content {
-        flex: 1;
-        display: flex;
-        flex-direction: column;
-
-        .manga-box-title {
-            font-size: 1.8rem;
-            font-weight: bold;
-            margin-bottom: 0.5rem;
-        }
-
-        .manga-box-author {
-            font-size: 1.4rem;
-            color: #666;
-            margin-bottom: 0.5rem;
-        }
-
-        .manga-box-count {
-            font-size: 1.4rem;
-            color: #999;
-            margin-bottom: 0.5rem;
-        }
-
-        .manga-box-intro {
-            font-size: 1.4rem;
-            color: #333;
-            flex-grow: 1;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            display: -webkit-box;
-            -webkit-line-clamp: 4;
-            /* 显示的行数 */
-            -webkit-box-orient: vertical;
+            width: auto;
         }
     }
 }
 
+.title {
+    font-size: 16px;
+    font-weight: 500;
+    margin-bottom: 16px;
+    color: #303133;
+}
+
+// 响应式设计
 @media only screen and (min-width: 1200px) {
-    .top {
-        width: 100rem;
-    }
-
-    .search-input {
-        max-width: 100vw;
-    }
-
     .manga-setting-box {
-        width: 100rem;
-        margin: 0rem auto;
+        width: 100%;
+        max-width: 1200px;
+        margin: 30px auto;
     }
 }
 
 @media only screen and (max-width: 1199px) and (min-width: 768px) {
-    .top {
-        width: 91rem;
-    }
-
-    .search-input {
-        max-width: 100vw;
-    }
-
     .manga-setting-box {
-        width: 91rem;
-        margin: 0rem auto;
+        width: 100%;
+        max-width: 900px;
+        margin: 20px auto;
     }
 }
 
 @media only screen and (max-width: 767px) {
-    .top {
-        width: 91rem;
-    }
-
-    .search-input {
-        max-width: 100vw;
-    }
-
     .manga-setting-box {
-        width: 91rem;
-        margin: 0 auto;
+        width: 100%;
+        margin: 10px auto;
+        padding: 16px;
+    }
+
+    .el-table {
+        font-size: 12px;
+    }
+
+    .el-button {
+        padding: 6px 12px;
+        font-size: 12px;
+    }
+
+    .manga-box,
+    .media-box {
+        flex-direction: column;
+
+        .manga-box-poster {
+            margin-right: 0;
+            margin-bottom: 16px;
+            width: 100%;
+            height: auto;
+        }
     }
 }
 </style>

@@ -320,21 +320,13 @@
     "firstChapter": "It's the first chapter"
   },
   "theme": {
-    "grey": "grey",
-    "white": "white",
-    "black": "black",
-    "red": "red",
-    "redLight": "volcano",
-    "orange": "orange",
-    "gold": "gold",
-    "yellow": "yellow",
-    "greenLight": "lime",
+    "light": "light",
+    "dark": "dark",
+    "blue": "blue",
     "green": "green",
-    "cyan": "cyan",
-    "blueLight": "blue",
-    "blueDraw": "drawBlue",
     "purple": "purple",
-    "magenta": "magenta"
+    "red": "red",
+    "grey": "grey"
   },
   "sortOrder": {
     "id": "id",
@@ -367,7 +359,7 @@
       "nameWarning": "The tag name cannot be empty",
       "confirmText": "Are you sure to delete this tag?",
       "confirmTitle": "delete tag",
-      "tagColorNote": "Please enter a color in hexadecimal format. If left blank, the default is \"#a0d911\" (green)"
+      "tagColorNote": "Tag color: Please enter a color in hexadecimal format. If left blank, the default is \"#a0d911\" (green)"
     },
     "addButton": "Add tag",
     "table": {

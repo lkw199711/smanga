@@ -18,8 +18,12 @@ import 'vant/lib/index.css';
 import 'default-passive-events';
 
 import { createPinia } from 'pinia';
+import { initTheme } from '@/style/theme';
 
 import '@/style/public.less';
+
+// 初始化主题
+initTheme();
 
 const appVue = createApp(App);
 

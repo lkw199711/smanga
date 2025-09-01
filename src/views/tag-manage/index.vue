@@ -53,13 +53,15 @@
           <el-form-item :label="$t('tagSetting.dialog.tagColor')">
             <el-input v-model="form.tagColor" :placeholder="$t('tagSetting.dialog.tagColorPlaceholder')"></el-input>
           </el-form-item>
-          <p class="note form-note">{{ $t('tagSetting.dialog.tagColorNote') }}</p>
 
           <el-form-item :label="$t('tagSetting.dialog.description')">
-            <el-input v-model="form.description" :placeholder="$t('tagSetting.dialog.descriptionPlaceholder')"></el-input>
+            <el-input v-model="form.description"
+              :placeholder="$t('tagSetting.dialog.descriptionPlaceholder')"></el-input>
           </el-form-item>
         </el-form>
 
+        <p class="note form-note">{{ $t('tagSetting.dialog.tagColorNote') }}</p>
+        
         <template v-slot:footer>
           <div class="dialog-footer">
             <!--按钮盒子-->
@@ -83,7 +85,8 @@
           </el-form-item>
 
           <el-form-item :label="$t('tagSetting.dialog.description')">
-            <el-input v-model="form.description" :placeholder="$t('tagSetting.dialog.descriptionPlaceholder')"></el-input>
+            <el-input v-model="form.description"
+              :placeholder="$t('tagSetting.dialog.descriptionPlaceholder')"></el-input>
           </el-form-item>
         </el-form>
 

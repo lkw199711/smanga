@@ -94,9 +94,3 @@ async function create_share() {
     });
 }
 </script>
-
-<style lang="less">
-.el-message-box {
-    --el-messagebox-width: 500px;
-}
-</style>

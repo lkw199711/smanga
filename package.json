@@ -1,6 +1,6 @@
 {
   "name": "smanga",
-  "version": "4.1.4",
+  "version": "4.1.5",
   "private": true,
   "scripts": {
     "dev": "vue-cli-service serve --no-eslint",

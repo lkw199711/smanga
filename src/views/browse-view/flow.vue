@@ -1,10 +1,3 @@
-<!--
- * @Author: lkw199711 lkw199711@163.com
- * @Date: 2023-08-25 10:45:47
- * @LastEditors: lkw199711 lkw199711@163.com
- * @LastEditTime: 2025-03-14 21:35:08
- * @FilePath: /smanga/src/views/browse-view/flow.vue
--->
 <template>
 	<div class="browse-view">
 		<!--目录列表-->
@@ -423,9 +416,9 @@ onMounted(() => {
 	// window.addEventListener('scroll', scroll_page);
 
 	// 防抖
-	window.addEventListener('scroll', _.debounce(scroll_page, 50), { passive: true });
+	// window.addEventListener('scroll', _.debounce(scroll_page, 50), { passive: true });
 	// 节流
-	// window.addEventListener('scroll', _.throttle(scroll_page, 100), { passive: true });
+	window.addEventListener('scroll', _.throttle(scroll_page, 200), { passive: true });
 })
 
 

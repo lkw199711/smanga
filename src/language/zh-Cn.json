@@ -320,20 +320,17 @@
     "firstChapter": "已经位于第一章"
   },
   "theme": {
-    "grey": "灰色",
-    "white": "白色",
-    "black": "黑色",
-    "red": "红色",
-    "redLight": "浅红",
-    "orange": "橘色",
-    "gold": "金色",
-    "yellow": "黄色",
-    "greenLight": "青柠",
+    "light": "亮色",
+    "dark": "暗色",
+    "blue": "蓝色",
     "green": "绿色",
+    "purple": "紫色",
+    "red": "红色",
+    "grey": "灰色",
+    "greenLight": "青柠",
     "cyan": "青色",
     "blueLight": "蓝色",
     "blueDraw": "深蓝",
-    "purple": "酱紫",
     "magenta": "洋红"
   },
   "sortOrder": {
@@ -366,7 +363,7 @@
       "nameWarning": "标签名不能为空",
       "confirmText": "确认删除此标签?",
       "confirmTitle": "删除标签",
-      "tagColorNote": "请输入一个十六进制格式的颜色,如果留空,默认为\"#a0d911\"(绿色)"
+      "tagColorNote": "标签颜色: 请输入一个十六进制格式的颜色,如果留空,默认为\"#a0d911\"(绿色)"
     },
     "addButton": "新增标签",
     "table": {

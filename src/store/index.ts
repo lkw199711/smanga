@@ -61,7 +61,7 @@ export const userConfig = reactive({
 	// 语言
 	language: 'zhCn',
 	// 主题皮肤
-	theme: 'grey',
+	theme: 'light',
 	// 默认排序规则
 	order: 'updateTimeDesc',
 	// 翻页按钮调转

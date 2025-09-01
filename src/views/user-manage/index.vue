@@ -45,29 +45,32 @@
         <el-form-item :label="$t('account.nameLabel')">
           <el-input v-model="form.userName" :placeholder="$t('account.namePlace')"></el-input>
         </el-form-item>
-        <p class="note form-note">{{ $t('account.note.name') }}</p>
 
         <el-form-item :label="$t('account.passLabel')">
           <el-input v-model="form.passWord" :placeholder="$t('account.passPlace')"></el-input>
         </el-form-item>
-        <p class="note form-note">{{ $t('account.note.pass') }}</p>
       </el-form>
 
       <el-form-item :label="'设置为管理员'">
         <el-switch class="auto-compress" v-model="form.role" active-value="admin" inactive-value="user" />
       </el-form-item>
-      <p class="note form-note">开放设置界面</p>
 
       <el-form-item :label="'开放全媒体库'">
         <el-switch class="auto-compress" v-model="form.mediaPermit" active-value="all" inactive-value="limit" />
       </el-form-item>
-      <p class="note form-note">可浏览全部媒体库</p>
 
       <!--媒体库权限-->
       <template v-if="form.mediaPermit !== 'all'">
         <p class="s-form-title">{{ $t('account.form.title.mediaPower') }}</p>
         <el-checkbox v-for="i in medias" v-model="i.permit" :label="i.mediaName" :key="i.mediaId" size="large" />
       </template>
+
+      <div class="form-note mt-4 text-gray-500 text-sm">
+        <p>• 用户名: {{ $t('account.note.name') }}</p>
+        <p>• 密码: {{ $t('account.note.pass') }}</p>
+        <p>• 设置为管理员: 开放设置界面.</p>
+        <p>• 开放全媒体库: 可浏览全部媒体库.</p>
+      </div>
 
       <template v-slot:footer>
         <div class="dialog-footer">
@@ -85,22 +88,18 @@
         <el-form-item :label="$t('account.nameLabel')">
           <el-input v-model="form.userName" :placeholder="$t('account.namePlace')"></el-input>
         </el-form-item>
-        <p class="note form-note">{{ $t('account.note.name') }}</p>
 
         <el-form-item :label="$t('account.passLabel')">
           <el-input v-model="form.passWord" :placeholder="$t('account.passModifyPlace')"></el-input>
         </el-form-item>
-        <p class="note form-note">{{ $t('account.note.pass') }}</p>
 
         <el-form-item :label="'设置为管理员'">
           <el-switch class="auto-compress" v-model="form.role" active-value="admin" inactive-value="user" />
         </el-form-item>
-        <p class="note form-note">开放设置界面</p>
 
         <el-form-item :label="'开放全媒体库'">
           <el-switch class="auto-compress" v-model="form.mediaPermit" active-value="all" inactive-value="limit" />
         </el-form-item>
-        <p class="note form-note">可浏览全部媒体库</p>
 
         <!--媒体库权限-->
         <template v-if="form.mediaPermit !== 'all'">
@@ -108,6 +107,12 @@
           <el-checkbox v-for="i in medias" v-model="i.permit" :label="i.mediaName" :key="i.mediaId" size="large" />
         </template>
 
+        <div class="form-note mt-4 text-gray-500 text-sm">
+          <p>• 用户名: {{ $t('account.note.name') }}</p>
+          <p>• 密码: {{ $t('account.note.pass') }}</p>
+          <p>• 设置为管理员: 开放设置界面.</p>
+          <p>• 开放全媒体库: 可浏览全部媒体库.</p>
+        </div>
       </el-form>
 
       <template v-slot:footer>
@@ -302,33 +307,180 @@ function switch_change(val: any, activeVal: string, inactiveVal: string) {
 </script>
 
 <style scoped lang='less'>
-.btn-box {
-  display: flex;
-  justify-content: flex-end;
+@import '@/style/color.less';
+
+.account {
+  padding: 20px;
+}
+
+.account-table-box {
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  padding: 24px;
+  transition: all 0.3s ease;
 }
 
 .add-btn-box {
-  margin-bottom: 1.4rem;
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
+.add-btn {
+  background-color: @s-primary-color;
+  border-color: @s-primary-color;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background-color: @s-primary-color-hover;
+    border-color: @s-primary-color-hover;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+}
+
+.btn-box {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+// 表格样式
+.el-table {
+  border-radius: 8px;
+  overflow: hidden;
+
+  .el-table__header-wrapper {
+    background-color: #f5f7fa;
+  }
+
+  .el-table__body tr {
+    transition: all 0.2s ease;
+
+    &:hover {
+      background-color: #f9fafc;
+      transform: scale(1.003);
+    }
+  }
+
+  .el-table__body tr.el-table__row--striped {
+    background-color: #fafafa;
+  }
+
+  .el-table__body tr.el-table__row--striped:hover {
+    background-color: #f5f7fa;
+  }
+}
+
+// 按钮样式
+.el-button {
+  transition: all 0.3s ease;
+  border-radius: 6px;
+
+  &.el-button--primary {
+    background-color: @s-primary-color;
+    border-color: @s-primary-color;
+
+    &:hover {
+      background-color: @s-primary-color-hover;
+      border-color: @s-primary-color-hover;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+  }
+
+  &.el-button--danger {
+    background-color: #ff4d4f;
+    border-color: #ff4d4f;
+
+    &:hover {
+      background-color: #ff7875;
+      border-color: #ff7875;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+  }
+}
+
+// 表单样式
+.el-form-item {
+  margin-bottom: 16px;
+}
+
+.s-form-title {
+  font-size: 14px;
+  font-weight: 500;
+  margin: 16px 0 8px;
+  color: #303133;
+}
+
+// 对话框样式
+.el-dialog {
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.el-dialog__header {
+  background-color: #f5f7fa;
+  padding: 16px 24px;
+}
+
+.el-dialog__title {
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.el-dialog__body {
+  padding: 24px;
+}
+
+// 开关样式
+.auto-compress {
+  margin-left: 10px;
+}
+
+.form-note {
+  padding: 10px 15px;
+  background-color: #f4f4f5;
+  border-radius: 4px;
+  margin-top: 10px;
+  margin-bottom: 20px;
+  line-height: 1.6;
+}
+
+// 响应式设计
 @media only screen and (min-width: 1200px) {
   .account-table-box {
-    width: 100rem;
-    margin: 3rem auto;
+    width: 100%;
+    max-width: 1200px;
+    margin: 30px auto;
   }
 }
 
 @media only screen and (max-width: 1199px) and (min-width: 768px) {
   .account-table-box {
-    width: 70rem;
-    margin: 2rem auto;
+    width: 100%;
+    max-width: 900px;
+    margin: 20px auto;
   }
 }
 
 @media only screen and (max-width: 767px) {
   .account-table-box {
-    width: 70rem;
-    margin: 1rem auto;
+    width: 100%;
+    margin: 10px auto;
+    padding: 16px;
+  }
+
+  .el-table {
+    font-size: 12px;
+  }
+
+  .el-button {
+    padding: 6px 12px;
+    font-size: 12px;
   }
 }
 </style>

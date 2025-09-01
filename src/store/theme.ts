@@ -1,65 +1,32 @@
 export const theme = [
     {
-        label: 'grey',
-        value: 'grey',
+        label: '亮色',
+        value: 'light',
     },
     {
-        label: '黑色',
-        value: 'black',
+        label: '暗色',
+        value: 'dark',
     },
     {
-        label: '白色',
-        value: 'white',
+        label: '蓝色',
+        value: 'blue',
+    },
+    {
+        label: '绿色',
+        value: 'green'
+    },
+    {
+        label: '紫色',
+        value: 'purple'
     },
     {
         label: '红色',
         value: 'red'
     },
     {
-        label: '火山红',
-        value: 'redLight'
+        label: '灰色',
+        value: 'grey'
     },
-    {
-        label: '橘色',
-        value: 'orange'
-    },
-    {
-        label: '金色',
-        value: 'gold'
-    },
-    {
-        label: '黄色',
-        value: 'yellow'
-    },
-    {
-        label: '青柠',
-        value: 'greenLight'
-    },
-    {
-        label: '极光绿',
-        value: 'green'
-    },
-    {
-        label: '明青',
-        value: 'cyan'
-    },
-    {
-        label: '拂晓蓝',
-        value: 'blueLight'
-    },
-    {
-        label: '极客蓝',
-        value: 'blueDraw'
-    },
-    {
-        label: '酱紫',
-        value: 'purple'
-    },
-    {
-        label: '洋红',
-        value: 'magenta'
-    },
-
 ];
 
 export default theme;

@@ -92,6 +92,7 @@ async function get_poster(item: chapterItemType) {
 	position: relative;
 	overflow: hidden;
 	cursor: pointer;
+	color: @s-back-text;
 
 	&-cover-img {
 		position: relative;

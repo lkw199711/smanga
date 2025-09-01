@@ -1,0 +1,107 @@
+@import 'color.less';
+
+// 书签管理页面容器样式
+.bookmark-setting {
+  padding: 20px;
+}
+
+// 卡片容器样式
+.bookmark-table-box {
+  background-color: #fff;  // 确保卡片背景色为白色
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  padding: 24px;
+  transition: all 0.3s ease;
+}
+
+// 表格样式
+.el-table {
+  width: 100%;
+  margin-bottom: 20px;
+  border-radius: 8px;
+  overflow: hidden;
+
+  // 表格头部样式
+  .el-table__header-wrapper {
+    background-color: #f5f7fa;
+  }
+
+  // 表格行样式
+  .el-table__body tr {
+    transition: all 0.2s ease;
+
+    &:hover {
+      background-color: #f9fafc !important;
+      transform: scale(1.003);
+    }
+  }
+
+  // 表格条纹行样式
+  .el-table__body tr.el-table__row--striped {
+    background-color: #fafafa !important;
+
+    &:hover {
+      background-color: #f5f7fa !important;
+    }
+  }
+}
+
+// 按钮样式
+.el-button {
+  transition: all 0.3s ease;
+  border-radius: 6px;
+  margin-right: 10px;
+
+  &.el-button--danger {
+    background-color: #ff4d4f;
+    border-color: #ff4d4f;
+
+    &:hover {
+      background-color: #ff7875;
+      border-color: #ff7875;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+  }
+}
+
+// 分页组件样式
+.table-pager {
+  margin-top: 20px;
+  display: flex;
+  justify-content: flex-start;
+}
+
+// 响应式设计
+@media only screen and (min-width: 1200px) {
+  .bookmark-table-box {
+    width: 100%;
+    max-width: 1200px;
+    margin: 30px auto;
+  }
+}
+
+@media only screen and (max-width: 1199px) and (min-width: 768px) {
+  .bookmark-table-box {
+    width: 100%;
+    max-width: 900px;
+    margin: 20px auto;
+  }
+}
+
+@media only screen and (max-width: 767px) {
+  .bookmark-table-box {
+    width: 100%;
+    margin: 10px auto;
+    padding: 16px;
+  }
+
+  .el-table {
+    font-size: 12px;
+  }
+
+  .el-button {
+    padding: 6px 12px;
+    font-size: 12px;
+  }
+}
