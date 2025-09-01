@@ -12,8 +12,8 @@
 			<el-menu-item index="manga-list">{{
 				$t('sidebar.mangaList')
 			}}</el-menu-item>
-			<el-menu-item index="chapter-list">{{
-				$t('sidebar.chapterList')
+			<el-menu-item index="manga-info">{{
+				$t('sidebar.mangaInfo')
 			}}</el-menu-item>
 			<el-sub-menu index="browse">
 				<template #title>{{ browseType }}</template>
@@ -99,6 +99,13 @@ async function handleSelect(key: string) {
 		query = {
 			mediaId: route.query.mediaId
 		};
+	}
+
+	if (key === 'manga-info') {
+		query = {
+			mediaId: route.query.mediaId,
+			mangaId: route.query.mangaId
+		}
 	}
 
 	if (key === 'chapter-list') {
