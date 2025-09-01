@@ -173,13 +173,13 @@ function sort_order_change(val: string) { }
 function language_change(val: string) {
 	locale.value = val;
 	localStorage.setItem('language', val);
-	userApi.update_user_config({ userConfig, pageSizeConfig })
+	userApi.update_user_config({ userConfig: { userConfig, pageSizeConfig } })
 }
 
 function theme_change(val: string) {
 	set_theme(val);
 	localStorage.setItem('theme', val);
-	userApi.update_user_config({ userConfig, pageSizeConfig })
+	userApi.update_user_config({ userConfig: { userConfig, pageSizeConfig } })
 }
 
 function theme_color(theme: string) {

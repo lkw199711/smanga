@@ -3,6 +3,29 @@
 	max-width: 70vw;
 	height: 100%;
 	background-color: @s-menu;
+	color: @s-text;
+
+	--el-menu-bg-color: @s-menu;
+	--el-menu-text-color: @s-text;
+	--el-menu-active-color: @s-active;
+	--el-menu-hover-bg-color: @s-hover-back;
+	--el-bg-color-overlay: @s-hover-back;
+}
+
+.el-menu {
+	--el-menu-bg-color: @s-menu;
+	--el-menu-text-color: @s-text;
+	--el-menu-active-color: @s-active;
+	--el-menu-hover-bg-color: @s-hover-back;
+	--el-bg-color-overlay: @s-hover-back;
+}
+
+.el-menu-item {
+	--el-menu-text-color: @s-text;
+	&:hover {
+		background-color: @s-hover-back;
+		--el-menu-text-color: @s-active;
+	}
 }
 
 .poster {
