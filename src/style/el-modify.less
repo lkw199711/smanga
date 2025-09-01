@@ -11,6 +11,14 @@
 	--el-bg-color-overlay: @s-hover-back;
 }
 
+.el-progress-bar__inner {
+	--el-color-primary: @s-primary;
+}
+
+.el-slider__bar{
+	--el-slider-main-bg-color: @s-primary;
+}
+
 .el-menu-item.is-active {
 }
 
@@ -21,16 +29,15 @@
 .body {
 	--el-color-primary: @s-background;
 }
-.el-descriptions__title{
+.el-descriptions__title {
 	--el-text-color-primary: @s-back-text;
 }
 
-.el-descriptions__label{
+.el-descriptions__label {
 	--el-text-color-primary: @s-back-text-secondary;
-
 }
 
-.el-descriptions__content{
+.el-descriptions__content {
 	--el-text-color-regular: @s-back-text-tertiary;
 }
 
@@ -38,7 +45,7 @@
 	--el-button-bg-color: @s-button;
 	--el-button-outline-color: @s-border;
 
-    &:active {
+	&:active {
 		background-color: @s-active;
 	}
 	&:hover {

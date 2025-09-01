@@ -13,7 +13,7 @@ const props = defineProps(['page', 'count']);
     position: fixed;
     left: 50%;
     transform: translateX(-50%);
-    bottom: 4.4rem;
+    bottom: 7rem;
 
     font-size: 2.2rem;
     color: #fff;
