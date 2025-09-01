@@ -152,11 +152,6 @@ async function page_change(
 </script>
 
 <style lang="less" scoped>
-// .tag-list{
-//     padding: 1rem 2rem;
-//     border: .2rem solid @s-background;
-//     border-radius: 1rem;
-// }
 .check-tag {
     cursor: pointer;
 }
