@@ -24,17 +24,18 @@
 </template>
 
 <script lang='ts' setup>
-import { watch, ref, computed } from 'vue'
+import { watch, ref, computed, onMounted } from 'vue'
 import { useRoute } from "vue-router";
 import { config } from "@/store";
 import historyApi from "@/api/history";
 import { ElMessageBox } from "element-plus";
 import i18n from '@/i18n';
 import androidSeat from '@/layout/components/android-seat.vue';
+import imageApi from '@/api/image';
 const { t } = i18n.global;
 
 const route = useRoute();
-
+const blob = ref('')
 const drawer = ref(false)
 
 const props = defineProps(['info', 'menuPoster']);
@@ -52,8 +53,8 @@ const historyId = computed(() => {
   return props.info.historyId
 })
 
-const blob = computed(() => {
-  return props.menuPoster
+watch(() => props.info, async (val) => {
+  blob.value = await imageApi.get(val.chapterCover)
 })
 
 watch(
@@ -71,7 +72,7 @@ function menu_select(key: string) {
   switch (key) {
     case 'delete':
       ElMessageBox.confirm(t('history.confirm.text'), { type: 'warning' }).then(async () => {
-        await historyApi.delete_history(historyId.value);
+        await historyApi.delete(props.info?.chapterId);
         emit('reload');
       });
 
@@ -81,23 +82,4 @@ function menu_select(key: string) {
 }
 </script>
 
-<style scoped lang='less'>
-.right-sidebar-menu {
-  width: 32rem;
-  max-width: 70vw;
-  height: 100%;
-  background-color: #545c64;
-}
-
-.poster {
-  width: 100%;
-  max-height: 50%;
-  object-fit: cover;
-}
-
-.title {
-  padding: 1rem 1rem 2rem;
-  color: @button-back;
-  font-size: 1.6rem;
-}
-</style>
+<style scoped lang="less" src="@/style/right-sidebar.less"></style>
