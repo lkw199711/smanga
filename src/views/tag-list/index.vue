@@ -1,10 +1,3 @@
-<!--
- * @Author: lkw199711 lkw199711@163.com
- * @Date: 2023-07-29 01:17:01
- * @LastEditors: lkw199711 lkw199711@163.com
- * @LastEditTime: 2023-10-28 06:16:46
- * @FilePath: \smanga\src\views\tag-list\index.vue
--->
 <template>
     <div class="tag-list">
         <div class="top">

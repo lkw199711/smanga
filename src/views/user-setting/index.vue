@@ -9,7 +9,7 @@
 		<div class="form-note mt-4 text-gray-500 text-sm mb-6">
 			请注意，设置调配完成后，需要点击保存按钮才能够提交保存。否则有些配置项不能够生效。
 		</div>
-		<el-form :model="form" label-width="180px" class="setting-form">
+		<el-form :model="form" label-width="140px" class="setting-form">
 			<el-card class="setting-card mt-6" shadow="hover">
 				<template #header>
 					<div class="card-header">
@@ -24,7 +24,8 @@
 					</el-select>
 				</el-form-item>
 
-				<el-form-item label="主题设置" class="setting-item">
+				<el-form-item label="主题设置" class="setting-item theme-setting">
+					<span class="theme-color"></span>
 					<el-select v-model="userConfig.theme" class="setting-select" size="default" @change="theme_change">
 						<el-option v-for="item in theme" :key="item.value" :label="$t(`theme.${item.value}`)"
 							:value="item.value">
@@ -52,7 +53,8 @@
 				<el-form-item label="章节默认排序" class="setting-item">
 					<el-select v-model="userConfig.chapterOrder" class="setting-select" size="default"
 						@change="sort_order_change">
-						<el-option v-for="item in chapterSortOrder" :key="item" :label="$t(`sortOrder.${item}`)" :value="item">
+						<el-option v-for="item in chapterSortOrder" :key="item" :label="$t(`sortOrder.${item}`)"
+							:value="item">
 							<span class="op-text">{{ $t(`sortOrder.${item}`) }}</span>
 						</el-option>
 					</el-select>
@@ -136,7 +138,7 @@
 					但会使漫画详情页的功能失效，例如：收藏、元数据浏览/编辑等。
 				</div>
 
-				<el-form-item label="条漫自动加载所有图片" class="setting-item">
+				<el-form-item label="条漫加载全部" class="setting-item">
 					<el-switch v-model="userConfig.loadAllFlowIamge" @change="switch_change" />
 				</el-form-item>
 				<div class="form-note mt-4 text-gray-500 text-sm mb-4">
@@ -144,7 +146,7 @@
 					此改动可以减少翻页时的加载时间，但会增加内存占用与网络开销。
 				</div>
 
-				<el-form-item label="浏览图片以数字排序" class="setting-item">
+				<el-form-item label="数字排序漫画图" class="setting-item">
 					<el-switch v-model="userConfig.orderChapterByNumber" @change="switch_change" />
 				</el-form-item>
 				<div class="form-note mt-4 text-gray-500 text-sm mb-4">
@@ -152,7 +154,7 @@
 					不开启此选项时，smanga会按照图片文件名以ASCII进行排序。<br>
 				</div>
 
-				<el-form-item label="以极简模式展示章节列表" class="setting-item">
+				<el-form-item label="极简章节列表" class="setting-item">
 					<el-switch v-model="userConfig.simpleChapterView" @change="switch_change" />
 				</el-form-item>
 				<div class="form-note mt-4 text-gray-500 text-sm mb-4">
@@ -209,9 +211,16 @@ function theme_change(val: string) {
 
 function theme_color(theme: string) {
 	// @ts-ignore
-	const color = themes[theme]['s-back'];
+	const color = themes[theme]['s-menu'];
 	return {
 		backgroundColor: color,
+		width: '16px',
+		height: '16px',
+		borderRadius: '4px',
+		border: '1px solid #eee',
+		display: 'inline-block',
+		marginRight: '8px',
+		verticalAlign: 'middle'
 	};
 }
 
@@ -276,7 +285,7 @@ function full_screen() {
 	overflow: hidden;
 }
 
-.mt-6{
+.mt-6 {
 	margin-top: 24px;
 }
 
@@ -301,6 +310,22 @@ function full_screen() {
 
 .setting-select {
 	min-width: 200px;
+}
+
+.theme-setting {
+	position: relative;
+	.theme-color {
+		display: inline-block;
+		position: absolute;
+		left: -9rem;
+		width: 16px;
+		height: 16px;
+		border-radius: 4px;
+		border: 1px solid #eee;
+		margin-right: 8px;
+		vertical-align: middle;
+		background-color: @s-menu;
+	}
 }
 
 .form-note {
@@ -337,6 +362,7 @@ function full_screen() {
 	.user-setting {
 		padding: 15px;
 	}
+
 	.setting-form {
 		label-width: 140px;
 	}

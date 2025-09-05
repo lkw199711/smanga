@@ -27,6 +27,10 @@ export const theme = [
         label: '灰色',
         value: 'grey'
     },
+    {
+        label: '粉色',
+        value: 'pink'
+    },
 ];
 
 export default theme;

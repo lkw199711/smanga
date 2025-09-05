@@ -18,7 +18,7 @@
     <media-pager ref="pager" :page="page" :count="count" :page-size-config="pageSizes" @page-change="page_change" />
 
     <!--功能菜单-->
-    <right-sidebar :info="chapterInfo" :menuPoster="menuPoster" @reload="page_change" />
+    <right-sidebar :info="chapterInfo" @reload="page_change" />
   </div>
 </template>
 
@@ -57,7 +57,6 @@ const router = useRouter();
 const page = ref(1);
 const list = ref([]);
 const count = ref(0);
-const menuPoster = ref('');
 let loading = ref(false);
 const chapterInfo = ref<chapterType>();
 
@@ -116,7 +115,6 @@ async function page_change(pageParams = 1, pageSize = defaultPageSize) {
  * 打开右侧菜单
  */
 function context_menu(info: any, key: number) {
-  menuPoster.value = (list.value[key] as any).blob;
   chapterInfo.value = info;
   config.rightSidebar = true;
 }

@@ -332,7 +332,8 @@
     "cyan": "青色",
     "blueLight": "蓝色",
     "blueDraw": "深蓝",
-    "magenta": "洋红"
+    "magenta": "洋红",
+    "pink": "粉色"
   },
   "sortOrder": {
     "id": "id",
