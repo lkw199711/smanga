@@ -147,7 +147,6 @@ onMounted(async () => {
   height: 100%;
   display: flex;
   flex-direction: column;
-  background-color: #f5f7fa;
 }
 
 .log-header {
@@ -162,7 +161,7 @@ onMounted(async () => {
 .log-title {
   font-size: 18px;
   font-weight: 600;
-  color: #1f2d3d;
+  color: @s-back-text;
   margin: 0;
 }
 

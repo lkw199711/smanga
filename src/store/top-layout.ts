@@ -1,10 +1,3 @@
-/*
- * @Author: lkw199711 lkw199711@163.com
- * @Date: 2023-09-23 23:57:36
- * @LastEditors: lkw199711 lkw199711@163.com
- * @LastEditTime: 2023-09-23 23:57:37
- * @FilePath: /smanga/src/store/top-layout.ts
- */
 export default {
 	list: {
 		'4k': ['search', 'view', 'sort', 'theme', 'language'],

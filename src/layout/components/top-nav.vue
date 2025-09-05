@@ -41,7 +41,17 @@
 			</div>
 
 			<!-- 排序方式 -->
-			<div class="sort" v-show="layoutLimit('sort')">
+			<div class="sort" v-show="layoutLimit('sort')" v-if="orderType === 'chapter'">
+				<i :class="['sort-label', 'iconfont', 'icon-paixu']" @click="switch_view_type" />
+				<el-select v-model="userConfig.chapterOrder" class="sort-select" size="default"
+					@change="sort_order_change">
+					<el-option v-for="item in chapterSortOrder" :key="item" :label="$t(`sortOrder.${item}`)"
+						:value="item">
+						<span class="op-text">{{ $t(`sortOrder.${item}`) }}</span>
+					</el-option>
+				</el-select>
+			</div>
+			<div class="sort" v-show="layoutLimit('sort')" v-else>
 				<i :class="['sort-label', 'iconfont', 'icon-paixu']" @click="switch_view_type" />
 				<el-select v-model="userConfig.order" class="sort-select" size="default" @change="sort_order_change">
 					<el-option v-for="item in sortOrder" :key="item" :label="$t(`sortOrder.${item}`)" :value="item">
@@ -75,7 +85,7 @@
 </template>
 
 <script lang="ts" setup>
-import { config, userConfig, sortOrder, pageSizeConfig } from '@/store';
+import { config, userConfig, sortOrder, chapterSortOrder, pageSizeConfig } from '@/store';
 import languages from '@/store/language';
 import theme from '@/store/theme';
 import { computed, ref } from 'vue';
@@ -95,6 +105,20 @@ const route = useRoute();
 
 const searchText = ref('');
 const searchType = ref('manga');
+
+const orderType = computed(() => {
+	switch (route.name) {
+		case 'manga-info':
+			return 'chapter';
+		case 'chapter-list':
+			const mediaId = route.params.mediaId;
+			return mediaId ? 'manga' : 'chapter';
+		case 'bookmark':
+			return 'chapter';
+		default:
+			return 'manga';
+	}
+});
 
 // 视图类型
 const viewClass = computed(() => {

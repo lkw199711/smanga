@@ -43,6 +43,13 @@
               <el-button type="primary" @click="comfirm_update_cover" class="ml-4">确定</el-button>
             </el-form-item>
           </el-col>
+
+          <el-col :span="24">
+            <el-form-item label="忽略隐藏文件夹和文件">
+              <el-switch v-model="form.scan.ignoreHiddenFiles" :active-value="1" :inactive-value="0" />
+              <el-button type="primary" @click="comfirm_scan_ignore_hidden" class="ml-4">确定</el-button>
+            </el-form-item>
+          </el-col>
         </el-row>
       </el-form>
 
@@ -51,6 +58,7 @@
         <p>• cron表达式格式:秒 分 时 日 月 周,为六位表达式,位数错误将不能启动定时任务.</p>
         <p>• 再次扫描媒体库时,是否对已有封面的漫画再次加载封面.开启会增加扫描时间.</p>
         <p>• 不建议纯压缩包库开启更新封面功能.</p>
+        <p>• 忽略隐藏文件夹和文件,开启后扫描时会忽略以.开头的文件夹和文件.对于群辉,威联通成品nas机器有用,可规避其系统自动生成的隐藏目录.</p>
       </div>
     </el-card>
 
@@ -148,7 +156,7 @@
             <div class="cover-grid">
               <div v-for="item in coverArr" :key="item"
                 :class="['cover-item', 'back-item', 'bg' + item, { 'active': !backRandom && activeBack === item }]"
-                @click="back_click(item)" >
+                @click="back_click(item)">
                 <div v-if="!backRandom && activeBack === item" class="cover-select-indicator">
                   <el-icon size="20">
                     <Check />
@@ -187,6 +195,7 @@ const form = reactive({
     autoCompress: 0,
     interval: 60,
     reloadCover: 0,
+    ignoreHiddenFiles: 0,
     mediaPosterInterval: 0
   },
   sync: {
@@ -230,9 +239,7 @@ function back_click(item: number) {
 async function comfirm_interval() {
   try {
     await serveSettingApi.set('scan', 'interval', form.scan.interval);
-    ElMessage.success('扫描周期设置成功');
   } catch (error) {
-    ElMessage.error('设置失败，请重试');
     console.error('Failed to set scan interval:', error);
   }
 }
@@ -240,9 +247,7 @@ async function comfirm_interval() {
 async function comfirm_poster_interval() {
   try {
     await serveSettingApi.set('scan', 'mediaPosterInterval', form.scan.mediaPosterInterval);
-    ElMessage.success('封面生成周期设置成功');
   } catch (error) {
-    ElMessage.error('设置失败，请重试');
     console.error('Failed to set poster interval:', error);
   }
 }
@@ -254,19 +259,23 @@ async function comfirm_poster_interval() {
 async function comfirm_update_cover() {
   try {
     await serveSettingApi.set('scan', 'reloadCover', form.scan.reloadCover);
-    ElMessage.success('封面更新设置成功');
   } catch (error) {
-    ElMessage.error('设置失败，请重试');
     console.error('Failed to set reload cover:', error);
+  }
+}
+
+async function comfirm_scan_ignore_hidden() {
+  try {
+    await serveSettingApi.set('scan', 'ignoreHiddenFiles', form.scan.ignoreHiddenFiles);
+  } catch (error) {
+    console.error('Failed to set ignore hidden files:', error);
   }
 }
 
 async function confirm_poster_size() {
   try {
     await serveSettingApi.set('compress', 'poster', form.compress.poster);
-    ElMessage.success('封面压缩大小设置成功');
   } catch (error) {
-    ElMessage.error('设置失败，请重试');
     console.error('Failed to set poster size:', error);
   }
 }
@@ -274,9 +283,7 @@ async function confirm_poster_size() {
 async function comfirm_sync_interval() {
   try {
     await serveSettingApi.set('sync', 'interval', form.sync.interval);
-    ElMessage.success('同步周期设置成功');
   } catch (error) {
-    ElMessage.error('设置失败，请重试');
     console.error('Failed to set sync interval:', error);
   }
 }
@@ -284,9 +291,7 @@ async function comfirm_sync_interval() {
 async function confirm_compress_duration() {
   try {
     await serveSettingApi.set('compress', 'saveDuration', form.compress.saveDuration);
-    ElMessage.success('压缩文件保存时长设置成功');
   } catch (error) {
-    ElMessage.error('设置失败，请重试');
     console.error('Failed to set compress duration:', error);
   }
 }
@@ -298,9 +303,7 @@ async function confirm_compress_duration() {
 async function comfirm_ssl() {
   try {
     await serveSettingApi.set_ssl(form.ssl.pem, form.ssl.key);
-    ElMessage.success('SSL证书设置成功');
   } catch (error) {
-    ElMessage.error('证书设置失败，请重试');
     console.error('Failed to set SSL:', error);
   }
 }
@@ -314,9 +317,7 @@ async function reset_ssl() {
     await serveSettingApi.reset_ssl();
     form.ssl.pem = '';
     form.ssl.key = '';
-    ElMessage.success('SSL证书已重置');
   } catch (error) {
-    ElMessage.error('重置失败，请重试');
     console.error('Failed to reset SSL:', error);
   }
 }
@@ -346,9 +347,9 @@ onMounted(async () => {
 }
 
 .page-title {
-  font-size: 24px;
+  font-size: 18px;
   font-weight: 600;
-  color: #1f2d3d;
+  color: @s-back-text;
   margin-bottom: 24px;
   padding-bottom: 10px;
   border-bottom: 1px solid #e4e7ed;
