@@ -60,6 +60,13 @@ const mediaId = route.query.mediaId;
 
 // 切换排序规则时 重新加载列表
 watch(
+	() => userConfig.chapterOrder,
+	() => {
+		page_change();
+	}
+);
+
+watch(
 	() => userConfig.order,
 	() => {
 		page_change();
@@ -176,7 +183,7 @@ async function page_change(
 		mediaId: mediaId ? Number(mediaId) : 0,
 		page: page.value,
 		pageSize,
-		order: mediaId ? userConfig.order : 'chapterNumber'
+		order: mediaId ? userConfig.order : userConfig.chapterOrder,
 	});
 
 	list.value = res.list;

@@ -506,9 +506,14 @@ function update_tags(tagsParams: tagItemType[]) {
 </script>
 
 <style lang="less" scoped>
-.manga-info{
+.manga-info {
     color: @s-back-text;
 }
+
+:deep(.el-form-item__label) {
+    --el-text-color-regular: @s-back-text;
+}
+
 :deep(.el-carousel__container) {
     height: auto !important;
 }
