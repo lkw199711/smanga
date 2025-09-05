@@ -8,8 +8,16 @@ export const theme = [
         value: 'dark',
     },
     {
+        label: '灰色',
+        value: 'grey'
+    },
+    {
         label: '蓝色',
         value: 'blue',
+    },
+    {
+        label: '青色',
+        value: 'cyan'
     },
     {
         label: '绿色',
@@ -22,10 +30,6 @@ export const theme = [
     {
         label: '红色',
         value: 'red'
-    },
-    {
-        label: '灰色',
-        value: 'grey'
     },
     {
         label: '粉色',

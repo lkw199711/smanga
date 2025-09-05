@@ -16,7 +16,7 @@
         <el-table-column prop="tagName" :label="$t('tagSetting.table.tagName')" width="120">
         </el-table-column>
 
-        <el-table-column :label="$t('theme.pink')" width="120">
+        <el-table-column :label="$t('tagSetting.table.tagColor')" width="120">
           <template v-slot="scope">
             <div class="color-preview-container">
               <div class="color-preview" :style="{ backgroundColor: scope.row.tagColor }"></div>

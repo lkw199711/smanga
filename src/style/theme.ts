@@ -224,6 +224,34 @@ export const themes = {
         's-error': '#f56c6c',         // 错误提示色
         's-info': '#909399',          // 信息提示色
     },
+    // 青色主题
+    cyan: {
+        's-back': '#06b6d4',          // 页面背景色
+        's-back-soft': '#a5f3fc',     // 柔和版页面背景色(加深)
+        's-back-soft-original': '#ecfeff', // 原始柔和版页面背景色
+        's-back-text': '#222222',     // 背景文本色(深灰，非纯黑)
+        's-back-text-secondary': '#555555', // 次要背景文本色
+        's-back-text-tertiary': '#888888',  // 第三背景文本色
+        's-text': '#ffffff',          // 主要文本色
+        's-text-secondary': '#e6fffa', // 次要文本色
+        's-border': '#22d3ee',        // 边框颜色(柔和版)
+        's-hover-back': '#22d3ee',    // 悬停背景色(比主色浅)
+        's-active': '#ec4899',        // 激活状态颜色(粉色，青色的互补色)
+        's-active-back': '#0891b2',   // 激活背景色(主色调)
+        's-card': '#0891b2',          // 卡片背景色(柔和版)
+        's-header': '#0891b2',        // 头部背景色(柔和版)
+        's-menu': '#0891b2',          // 菜单背景色(柔和版)
+        's-primary': '#06b6d4',       // 主色调(降低饱和度的青色)
+        's-button': '#06b6d4',        // 按钮颜色(与主色一致)
+        's-button-hover': '#0891b2',  // 按钮悬停颜色(柔和版主色)
+        's-button-active': '#ec4899', // 按钮激活颜色(粉色，青色的互补色)
+        's-input': '#0e7490',         // 输入框背景色
+        's-input-border': '#06b6d4',  // 输入框边框色
+        's-success': '#67c23a',       // 成功提示色
+        's-warning': '#e6a23c',       // 警告提示色
+        's-error': '#f56c6c',         // 错误提示色
+        's-info': '#909399',          // 信息提示色
+    },
 };
 
 
