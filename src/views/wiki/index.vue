@@ -359,7 +359,7 @@ type versionDataType = {
 // 状态管理
 const activeTab = ref('intro');
 const versionDataRef = ref<versionDataType[]>([]);
-const version = ref('4.1.4');
+const version = process.env.VUE_APP_VERSION || '4.1.4';
 const currentYear = new Date().getFullYear();
 
 // 版本更新状态
@@ -396,7 +396,6 @@ const fetchVersionData = () => {
     .then(response => {
       isLoadingVersionData.value = false;
       versionDataRef.value = response.data;
-      version.value = response.data[0]?.version || '4.1.4';
     })
     .catch(error => {
       isLoadingVersionData.value = false;
@@ -420,7 +419,7 @@ const checkForUpdates = () => {
       latestVersion.value = githubVersion;
 
       // 比较版本号
-      if (compareVersions(githubVersion, version.value) > 0) {
+      if (compareVersions(githubVersion, version) > 0) {
         hasUpdate.value = true;
       } else {
         hasUpdate.value = false;
