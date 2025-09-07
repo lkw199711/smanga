@@ -85,17 +85,6 @@ echo -e "Change owner to user smanga...\nIt may take a while"
 
 groupmod -o -g "${PGID}" smanga
 usermod -o -u "${PUID}" smanga
-chown smanga:smanga -R /app
-chown smanga:smanga /data
-chown smanga:smanga -R \
-    /data/config \
-    /data/logs \
-    /data/db
-chown smanga:smanga \
-    /data/poster \
-    /data/compress \
-    /data/cache \
-    /data/bookmark
 
 cd /app/adonis || exit
 
