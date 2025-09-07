@@ -65,9 +65,9 @@
               </div>
 
               <div class="version-desc">
-                <ul>
+                <ol>
                   <li v-for="(content, index) in item.content" :key="index">{{ content }}</li>
-                </ul>
+                </ol>
               </div>
             </div>
           </div>
@@ -661,8 +661,15 @@ onMounted(() => {
         }
 
         .version-desc {
-          color: #666;
-          font-size: 0.9rem;
+          color: #333;
+          font-size: 1.2rem;
+          padding-left: 20px;
+
+          ul,
+          ol {
+            list-style: auto;
+            list-style-type: disc;
+          }
         }
       }
     }
