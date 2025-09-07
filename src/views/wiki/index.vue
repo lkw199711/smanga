@@ -341,7 +341,7 @@ services:
 
 <script lang="ts" setup>
 import { ref, onMounted } from 'vue';
-import { ElTabs, ElTabPane, ElDialog, ElLoadingSpinner } from 'element-plus';
+import { ElTabs, ElTabPane, ElDialog } from 'element-plus';
 import 'element-plus/es/components/tabs/style/css';
 import 'element-plus/es/components/tab-pane/style/css';
 import 'element-plus/es/components/icon/style/css';
@@ -351,11 +351,15 @@ import axios from 'axios';
 
 // 恢复logo引入
 import logoUrl from '@/assets/logo.png';
-
+type versionDataType = {
+  version: string;
+  date: string;
+  content: string[];
+}
 // 状态管理
 const activeTab = ref('intro');
-const versionDataRef = ref([]);
-const version = ref('4.1.4');
+const versionDataRef = ref<versionDataType[]>([]);
+const version = process.env.VUE_APP_VERSION || '4.1.4';
 const currentYear = new Date().getFullYear();
 
 // 版本更新状态
@@ -392,7 +396,6 @@ const fetchVersionData = () => {
     .then(response => {
       isLoadingVersionData.value = false;
       versionDataRef.value = response.data;
-      version.value = response.data[0]?.version || '4.1.4';
     })
     .catch(error => {
       isLoadingVersionData.value = false;
@@ -555,7 +558,7 @@ onMounted(() => {
       font-size: 18px;
     }
   }
-  
+
 
 
   .update-checking,
@@ -630,8 +633,8 @@ onMounted(() => {
     }
 
     .version-history {
-            max-height: 150px;
-            overflow-y: auto;
+      max-height: 150px;
+      overflow-y: auto;
 
       .version-item {
         padding: 10px 0;
