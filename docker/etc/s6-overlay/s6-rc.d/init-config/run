@@ -85,6 +85,7 @@ echo -e "Change owner to user smanga...\nIt may take a while"
 
 groupmod -o -g "${PGID}" smanga
 usermod -o -u "${PUID}" smanga
+chown smanga:smanga -R /app/adonis/node_modules/prisma
 
 cd /app/adonis || exit
 
