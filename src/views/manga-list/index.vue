@@ -56,7 +56,7 @@ let mangaInfo = ref<mangaInfoType>();
 let rightSidebarVisible = ref(false);
 let loading = ref(false);
 
-const mediaId = ref<number>(0);
+const mediaId = ref<number>(Number(route.query.mediaId));
 
 // mediaId 监听
 watch(() => route.query.mediaId, (newVal, oldVal) => {
