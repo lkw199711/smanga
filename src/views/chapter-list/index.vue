@@ -55,8 +55,23 @@ let loading = ref(false);
 
 let rightSidebarVisible = ref(false);
 
-const mangaId = route.query.mangaId;
-const mediaId = route.query.mediaId;
+let mangaId = route.query.mangaId;
+let mediaId = route.query.mediaId;
+
+// 监听路由变化
+watch(() => route.query.mangaId, (newVal, oldVal) => {
+	if (newVal && newVal !== oldVal) {
+		mangaId = newVal;
+		load();
+	}
+})
+
+watch(() => route.query.mediaId, (newVal, oldVal) => {
+	if (newVal && newVal !== oldVal) {
+		mediaId = newVal;
+		load();
+	}
+})
 
 // 切换排序规则时 重新加载列表
 watch(

@@ -147,7 +147,8 @@
     "title": {
       "read": "阅读选项",
       "scan": "扫描选项"
-    }
+    },
+    "showSidebar": "在侧边栏展示"
   },
   "path": {
     "id": "路径id",

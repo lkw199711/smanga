@@ -147,7 +147,8 @@
     "title": {
       "read": "read option",
       "scan": "Scan Options"
-    }
+    },
+    "showSidebar": "Show media in sidebar"
   },
   "path": {
     "id": "pathId",

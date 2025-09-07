@@ -147,7 +147,8 @@
     "title": {
       "read": "閱讀選項",
       "scan": "掃描選項"
-    }
+    },
+    "showSidebar": "在側邊欄展示"
   },
   "path": {
     "id": "路徑id",

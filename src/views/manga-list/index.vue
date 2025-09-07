@@ -56,9 +56,15 @@ let mangaInfo = ref<mangaInfoType>();
 let rightSidebarVisible = ref(false);
 let loading = ref(false);
 
-const mediaId = computed<number>(() => {
-	return Number(route.query.mediaId);
-});
+const mediaId = ref<number>(0);
+
+// mediaId 监听
+watch(() => route.query.mediaId, (newVal, oldVal) => {
+	if (newVal !== oldVal) {
+		mediaId.value = Number(newVal);
+		reload();
+	}
+})
 
 // 切换排序规则时 重新加载列表
 watch(

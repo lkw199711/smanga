@@ -34,6 +34,10 @@
 						</el-option>
 					</el-select>
 				</el-form-item>
+
+				<el-form-item label="侧边栏媒体库" class="setting-item">
+					<el-switch v-model="userConfig.showSidebarMediaList" />
+				</el-form-item>
 			</el-card>
 
 			<el-card class="setting-card mt-6" shadow="hover">
