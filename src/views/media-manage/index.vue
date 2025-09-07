@@ -318,6 +318,7 @@ const form = reactive({
 	removeFirst: 0,
 	direction: 1,
 	mediaCover: '',
+	sidebar: 0,
 });
 const formInit = {
 	mediaId: 0,
@@ -328,6 +329,8 @@ const formInit = {
 	sourceWebsite: '无',
 	removeFirst: 0,
 	direction: 1,
+	mediaCover: '',
+	sidebar: 0,
 };
 
 const pathForm = reactive({

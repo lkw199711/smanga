@@ -11,6 +11,29 @@
         </div>
       </el-menu-item>
 
+      <!-- 媒体库列表 -->
+      <el-sub-menu v-if="userConfig.showSidebarMediaList">
+        <template #title>
+          <i :class="['sidebar-sub-icon', 'colour']">
+            <svg class="icon" aria-hidden="true">
+              <use :xlink:href="'#colour-media-list'"></use>
+            </svg>
+          </i>
+
+          <span>{{ $t('sidebar.mediaList') }}</span>
+        </template>
+
+        <template v-for="media in mediaList" :key="media.mediaId">
+          <template v-if="media">
+            <el-menu-item :index="media_route_index(media)">
+              {{ media.mediaName }}
+            </el-menu-item>
+          </template>
+
+        </template>
+      </el-sub-menu>
+
+      <!-- 设置列表 -->
       <template v-for="routeItem in routes" :key="routeItem.path">
         <template v-if="menuVisible(routeItem)">
 
@@ -64,6 +87,28 @@
           </div>
         </el-menu-item>
 
+        <!-- 媒体库列表 -->
+        <el-sub-menu v-if="userConfig.showSidebarMediaList">
+          <template #title>
+            <i :class="['sidebar-sub-icon', 'colour']">
+              <svg class="icon" aria-hidden="true">
+                <use :xlink:href="'#colour-media-list'"></use>
+              </svg>
+            </i>
+
+            <span>{{ $t('sidebar.mediaList') }}</span>
+          </template>
+
+          <template v-for="media in mediaList" :key="media.mediaId">
+            <template v-if="media">
+              <el-menu-item :index="media_route_index(media)">
+                {{ media.mediaName }}
+              </el-menu-item>
+            </template>
+
+          </template>
+        </el-sub-menu>
+
         <template v-for="routeItem in routes" :key="routeItem.path">
           <template v-if="menuVisible(routeItem)">
 
@@ -110,11 +155,13 @@
 <script lang="ts" setup>
 import { ref, onMounted, computed } from 'vue'
 import router from '@/router';
-import { config } from '@/store';
+import { config, userConfig } from '@/store';
 import Logo from "@/layout/components/logo.vue";
 import { useRoute } from 'vue-router';
 import { Cookies } from '@/utils';
 import useBrowseStore from '@/store/browse';
+import mediaApi from '@/api/media';
+import { mediaType } from '@/type/media';
 const browse = useBrowseStore();
 const route = useRoute();
 
@@ -148,10 +195,12 @@ const menuActive = computed(() => {
 
 })
 
+const mediaList = ref<mediaType[]>([])
+
 const menuVisible = computed(() => (router: any) => {
   // 路由是否显示在侧边栏
   const showSidebar = router.meta?.sidebar;
-  if(!showSidebar) {
+  if (!showSidebar) {
     return false;
   }
 
@@ -167,6 +216,14 @@ const menuVisible = computed(() => (router: any) => {
 
 })
 
+function media_route_index(media: mediaType) {
+  if (media.mediaType === 1) {
+    return '/chapter-list?mediaId=' + media.mediaId;
+  } else {
+    return '/manga-list?mediaId=' + media.mediaId;
+  }
+}
+
 function handle_select() {
   // 清空页码缓存
   browse.mangaListPage = 1;
@@ -175,7 +232,9 @@ function handle_select() {
   browse.chapterListPageSizeCache = 0;
 }
 
-onMounted(() => {
+onMounted(async () => {
+  const mediaReponse = await mediaApi.get()
+  mediaList.value = mediaReponse.list;
   config.sidebarCollapse = false;
 })
 </script>

@@ -6,9 +6,11 @@
         <img :src="logoUrl" alt="Smanga Logo" class="logo">
         <h1 class="title">Smanga 漫画流媒体阅读工具</h1>
       </div>
-      <div class="version-badge" :class="{ 'has-update': hasUpdate, 'update-error': errorCheckingUpdate }" @click="openVersionDialog">
+      <div class="version-badge" :class="{ 'has-update': hasUpdate, 'update-error': errorCheckingUpdate }"
+        @click="openVersionDialog">
         <span v-if="isCheckingUpdate" class="update-status"><i class="el-icon-loading"></i> 检查更新中...</span>
-        <span v-else-if="hasUpdate" class="update-status"><i class="el-icon-warning-outline"></i> 有新版本: {{ latestVersion }}</span>
+        <span v-else-if="hasUpdate" class="update-status"><i class="el-icon-warning-outline"></i> 有新版本: {{ latestVersion
+        }}</span>
         <span v-else-if="errorCheckingUpdate" class="update-status"><i class="el-icon-error"></i> 检查失败</span>
         <span v-else class="update-status"><i class="el-icon-check"></i> 当前已是最新版本</span>
         <span class="version-text">{{ version }}</span>
@@ -16,12 +18,7 @@
     </header>
 
     <!-- 版本信息弹窗 -->
-    <el-dialog
-      v-model="isVersionDialogOpen"
-      title="版本信息"
-      width="500px"
-      :before-close="handleClose"
-    >
+    <el-dialog v-model="isVersionDialogOpen" title="版本信息" width="500px" :before-close="handleClose">
       <div class="version-dialog-content">
         <div class="current-version">
           <p>当前版本: <span class="version-number">{{ version }}</span></p>
@@ -52,18 +49,26 @@
 
         <div class="version-history-section">
           <h3>最近更新</h3>
-          <div class="version-history">
-            <div class="version-item">
-              <div class="version-number">3.7.0</div>
-              <div class="version-desc">产出exe文件，后端改用nodejs</div>
-            </div>
-            <div class="version-item">
-              <div class="version-number">3.6.0</div>
-              <div class="version-desc">封面图片缓存，添加骨架屏动画</div>
-            </div>
-            <div class="version-item">
-              <div class="version-number">3.5.0</div>
-              <div class="version-desc">菜单分类并修改图表</div>
+          <div v-if="isLoadingVersionData" class="loading-container">
+            <el-loading-spinner size="small"></el-loading-spinner>
+            <span>加载版本数据中...</span>
+          </div>
+          <div v-else-if="versionDataError" class="error-container">
+            <i class="el-icon-error"></i>
+            <span>加载版本数据失败</span>
+          </div>
+          <div v-else class="version-history">
+            <div v-for="item in versionDataRef" :key="item.version" class="version-item">
+              <div class="version-title">
+                <div class="version-number">{{ item.version }}</div>
+                <div class="version-date">{{ item.date }}</div>
+              </div>
+
+              <div class="version-desc">
+                <ul>
+                  <li v-for="(content, index) in item.content" :key="index">{{ content }}</li>
+                </ul>
+              </div>
             </div>
           </div>
         </div>
@@ -106,7 +111,8 @@
           <p>Smanga 帮助您管理海量漫画资源，支持多种格式，并提供舒适的阅读体验。</p>
 
           <div class="screenshot-container">
-            <img src="https://github.com/lkw199711/smanga/raw/master/src/assets/readme/smanga-media-list.PNG" alt="Smanga 截图" class="screenshot">
+            <img src="https://github.com/lkw199711/smanga/raw/master/src/assets/readme/smanga-media-list.PNG"
+              alt="Smanga 截图" class="screenshot">
           </div>
         </div>
       </div>
@@ -222,7 +228,8 @@ services:
           <p>顶栏有切换模式的选择框，可切换单页、双页与条漫模式。</p>
 
           <div class="screenshot-container">
-            <img src="https://github.com/lkw199711/smanga/raw/master/src/assets/readme/smanga-operation.PNG" alt="阅读界面操作" class="screenshot">
+            <img src="https://github.com/lkw199711/smanga/raw/master/src/assets/readme/smanga-operation.PNG"
+              alt="阅读界面操作" class="screenshot">
             <p class="screenshot-caption">阅读界面操作示意图</p>
           </div>
         </div>
@@ -347,7 +354,8 @@ import logoUrl from '@/assets/logo.png';
 
 // 状态管理
 const activeTab = ref('intro');
-const version = process.env.VUE_APP_VERSION || '4.1.4';
+const versionDataRef = ref([]);
+const version = ref('4.1.4');
 const currentYear = new Date().getFullYear();
 
 // 版本更新状态
@@ -356,6 +364,8 @@ const isCheckingUpdate = ref(false);
 const hasUpdate = ref(false);
 const latestVersion = ref('');
 const errorCheckingUpdate = ref(false);
+const isLoadingVersionData = ref(true);
+const versionDataError = ref(false);
 
 // 处理标签切换
 const handleTabChange = (tab: any) => {
@@ -370,6 +380,25 @@ const openVersionDialog = () => {
 // 关闭版本弹窗
 const handleClose = () => {
   isVersionDialogOpen.value = false;
+};
+
+// 获取版本数据
+const fetchVersionData = () => {
+  isLoadingVersionData.value = true;
+  versionDataError.value = false;
+
+  // 从GitHub获取版本数据
+  axios.get('https://raw.githubusercontent.com/lkw199711/smanga/electron/version.json')
+    .then(response => {
+      isLoadingVersionData.value = false;
+      versionDataRef.value = response.data;
+      version.value = response.data[0]?.version || '4.1.4';
+    })
+    .catch(error => {
+      isLoadingVersionData.value = false;
+      versionDataError.value = true;
+      console.error('获取版本数据失败:', error);
+    });
 };
 
 // 检查更新
@@ -416,9 +445,10 @@ const compareVersions = (version1: string, version2: string) => {
   return 0;
 };
 
-// 页面加载时检查更新
+// 页面加载时检查更新和获取版本数据
 onMounted(() => {
   checkForUpdates();
+  fetchVersionData();
 });
 </script>
 
@@ -498,9 +528,10 @@ onMounted(() => {
 
 // 版本弹窗样式
 .version-dialog-content {
-  padding: 10px 0;
+  padding: 20px;
 
   .current-version {
+    margin-bottom: 15px;
     padding: 10px 0;
     border-bottom: 1px solid #eee;
 
@@ -509,6 +540,23 @@ onMounted(() => {
       color: #1890ff;
     }
   }
+
+  .loading-container,
+  .error-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px 0;
+    color: #666;
+
+    .el-icon-error {
+      color: #f5222d;
+      margin-right: 8px;
+      font-size: 18px;
+    }
+  }
+  
+
 
   .update-checking,
   .update-available,
@@ -582,12 +630,22 @@ onMounted(() => {
     }
 
     .version-history {
-      max-height: 150px;
-      overflow-y: auto;
+            max-height: 150px;
+            overflow-y: auto;
 
       .version-item {
         padding: 10px 0;
         border-bottom: 1px dashed #eee;
+
+        .version-title {
+          display: flex;
+          justify-content: space-between;
+
+          .version-date {
+            font-size: 0.9rem;
+            color: #666;
+          }
+        }
 
         &:last-child {
           border-bottom: none;
