@@ -31,13 +31,14 @@ import bookmarkApi from "@/api/bookmark";
 import { ElMessageBox } from "element-plus";
 import i18n from '@/i18n';
 import androidSeat from '@/layout/components/android-seat.vue';
+import imageApi from '@/api/image';
 const { t } = i18n.global;
 
 const route = useRoute();
 
 const drawer = ref(false)
 
-const props = defineProps(['info', 'menuPoster']);
+const props = defineProps(['info']);
 const emit = defineEmits(['reload'])
 
 const chapterName = computed(() => {
@@ -52,8 +53,11 @@ const bookmarkId = computed(() => {
   return props.info.bookmarkId
 })
 
-const blob = computed(() => {
-  return props.menuPoster
+const blob = ref('')
+
+watch(() => props.info, async (val) => {
+  blob.value = await imageApi.get(val.pageImage)
+  console.log(val);
 })
 
 watch(
@@ -81,23 +85,4 @@ function menu_select(key: string) {
 }
 </script>
 
-<style scoped lang='less'>
-.right-sidebar-menu {
-  width: 32rem;
-  max-width: 70vw;
-  height: 100%;
-  background-color: #545c64;
-}
-
-.poster {
-  width: 100%;
-  max-height: 50%;
-  object-fit: cover;
-}
-
-.title {
-  padding: 1rem 1rem 2rem;
-  color: @button-back;
-  font-size: 1.6rem;
-}
-</style>
+<style scoped lang="less" src="@/style/right-sidebar.less"></style>
