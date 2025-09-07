@@ -341,7 +341,7 @@ services:
 
 <script lang="ts" setup>
 import { ref, onMounted } from 'vue';
-import { ElTabs, ElTabPane, ElDialog, ElLoadingSpinner } from 'element-plus';
+import { ElTabs, ElTabPane, ElDialog } from 'element-plus';
 import 'element-plus/es/components/tabs/style/css';
 import 'element-plus/es/components/tab-pane/style/css';
 import 'element-plus/es/components/icon/style/css';
@@ -351,10 +351,14 @@ import axios from 'axios';
 
 // 恢复logo引入
 import logoUrl from '@/assets/logo.png';
-
+type versionDataType = {
+  version: string;
+  date: string;
+  content: string[];
+}
 // 状态管理
 const activeTab = ref('intro');
-const versionDataRef = ref([]);
+const versionDataRef = ref<versionDataType[]>([]);
 const version = ref('4.1.4');
 const currentYear = new Date().getFullYear();
 
@@ -416,7 +420,7 @@ const checkForUpdates = () => {
       latestVersion.value = githubVersion;
 
       // 比较版本号
-      if (compareVersions(githubVersion, version) > 0) {
+      if (compareVersions(githubVersion, version.value) > 0) {
         hasUpdate.value = true;
       } else {
         hasUpdate.value = false;
@@ -555,7 +559,7 @@ onMounted(() => {
       font-size: 18px;
     }
   }
-  
+
 
 
   .update-checking,
@@ -630,8 +634,8 @@ onMounted(() => {
     }
 
     .version-history {
-            max-height: 150px;
-            overflow-y: auto;
+      max-height: 150px;
+      overflow-y: auto;
 
       .version-item {
         padding: 10px 0;
