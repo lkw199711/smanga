@@ -24,7 +24,7 @@ const outputDir = output_dir();
 module.exports = {
 	outputDir,
 	// 公共路径的配置 生产环境下,可能是子目录 要使用相对路径
-	publicPath: process.env.NODE_ENV === 'development' ? '/' : './',
+	publicPath: '/',
 
 	lintOnSave: false,
 	// 开发环境代理
