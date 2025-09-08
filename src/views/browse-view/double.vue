@@ -9,23 +9,27 @@
 
     <div class="scroll" :style="{ display: browse.useAutoViewWidth ? 'flex' : 'block' }">
       <!-- 图片容器 -->
-      <div class="double-page-img-box touch-dom" :style="{ maxHeight: browse.useAutoViewWidth ? '100%' : 'none' }">
-        <bookmark />
-        <template v-if="directionDesc">
-          <img :style="browse.doubleViewStyle" class="double-page-img" :src="imgSrc2" :alt="t('browse.imgLoadError')"
-            v-if="imgSrc2" />
-          <img :style="browse.doubleViewStyle" class="double-page-img" :src="imgSrc1" :alt="t('browse.imgLoadError')" />
-        </template>
-        <template v-else>
-          <img class="double-page-img" :src="imgSrc1" :alt="t('browse.imgLoadError')" />
-          <img class="double-page-img" :src="imgSrc2" :alt="t('browse.imgLoadError')" v-if="imgSrc2" />
-        </template>
-
-        <operation-cover @before="beforePage" @next="nextPage" @switch-menu="switch_menu"
-          @switch-footer="switch_footer" />
-      </div>
+      <transition :name="animationType" :duration="animationSpeed" mode="out-in" :css="userConfig.enablePageAnimation">
+        <div class="double-page-img-box" :style="{ maxHeight: browse.useAutoViewWidth ? '100%' : 'none' }"
+          :key="pageKey">
+          <bookmark />
+          <template v-if="directionDesc">
+            <img :style="browse.doubleViewStyle" class="double-page-img" :src="imgSrc2" :alt="t('browse.imgLoadError')"
+              v-if="imgSrc2" />
+            <img :style="browse.doubleViewStyle" class="double-page-img" :src="imgSrc1"
+              :alt="t('browse.imgLoadError')" />
+          </template>
+          <template v-else>
+            <img :style="browse.doubleViewStyle" class="double-page-img" :src="imgSrc1"
+              :alt="t('browse.imgLoadError')" />
+            <img :style="browse.doubleViewStyle" class="double-page-img" :src="imgSrc2" :alt="t('browse.imgLoadError')"
+              v-if="imgSrc2" />
+          </template>
+        </div>
+      </transition>
+      <operation-cover @before="beforePage" @next="nextPage" @switch-menu="switch_menu"
+        @switch-footer="switch_footer" />
     </div>
-
 
     <!-- 页码显示 -->
     <page-number :page="page" :count="browse.pageCount" />
@@ -62,7 +66,7 @@
 </template>
 
 <script setup lang='ts'>
-import { ref, onMounted, onBeforeUnmount } from 'vue';
+import { ref, onMounted, onBeforeUnmount, computed, watch } from 'vue';
 import { ElMessage } from 'element-plus';
 import { config, userConfig } from '@/store';
 import operationCover from './components/operation-cover.vue';
@@ -88,14 +92,54 @@ const page = ref(1);
 const removeFirst = ref(false);
 const directionDesc = ref(true);
 const browse = useBrowseStore();
-
 const pager = ref();
+const pageKey = ref(1); // 用于触发过渡动画
+const direction = ref('forward'); // 翻页方向: forward(前进), backward(后退)
+
+// 计算属性：根据动画类型和方向返回正确的动画名称
+const animationType = computed(() => {
+  if (!userConfig.enablePageAnimation) return '';
+
+  // 淡入淡出动画不需要方向
+  if (userConfig.pageAnimationType === 'fade') {
+    return 'fade';
+  }
+
+  // 滑动动画需要根据方向返回不同的动画名称
+  if (userConfig.pageAnimationType === 'slide') {
+    return direction.value === 'forward' ? 'slide-left' : 'slide-right';
+  }
+
+  // 实体书翻页动画需要根据方向返回不同的动画名称
+  if (userConfig.pageAnimationType === 'page') {
+    return direction.value === 'forward' ? 'page-forward' : 'page-backward';
+  }
+
+  return '';
+});
+
+// 计算属性：返回动画速度
+const animationSpeed = computed(() => {
+  return userConfig.pageAnimationSpeed || 300;
+});
+
+// 更新动画速度CSS变量
+function updateAnimationSpeed() {
+  document.documentElement.style.setProperty('--animation-speed', `${userConfig.pageAnimationSpeed}ms`);
+}
 
 /**
  * 页码变更
  * @param page
  */
 async function page_change(pageParams: number) {
+
+  // 记录翻页方向
+  if (pageParams > page.value) {
+    direction.value = 'forward';
+  } else {
+    direction.value = 'backward';
+  }
   page.value = pageParams;
   const index = (pageParams - 1) * 2;
   const pageImage = browse.imagePathList[index];
@@ -108,6 +152,11 @@ async function page_change(pageParams: number) {
   imgSrc2.value = index + 1 < browse.imagePathList.length
     ? await imageApi.get(browse.imagePathList[index + 1])
     : '';
+
+  // 只有启用动画才需要更新pageKey来触发过渡
+  if (userConfig.enablePageAnimation) {
+    pageKey.value++;
+  }
 
   // 缓存书签信息
   browse.page = pageParams;
@@ -276,67 +325,6 @@ function dwonload_image() {
   a.click();
 }
 
-const listDom = document.querySelector('.touch-dom');
-
-// 获取手指初始坐标和盒子的原来位置
-var startX = 0;
-// 获取盒子原来的位置
-var x = 0;
-var moveX = 0;
-
-function touch_page_change() {
-
-
-  if (listDom === null) return;
-
-
-  listDom.addEventListener('touchstart', bind1)
-
-  listDom.addEventListener('touchmove', bind2)
-
-  listDom.addEventListener('touchend', bind3)
-
-}
-
-function unmount_touch() {
-  if (listDom === null) return;
-  listDom.removeEventListener('touchstart', bind1)
-  listDom.removeEventListener('touchmove', bind2)
-  listDom.removeEventListener('touchend', bind3)
-}
-
-function bind1(this: HTMLDivElement, e: any) {
-  // 得到初始的手指坐标
-  startX = e.targetTouches[0].pageX;
-  // 获取盒子坐标
-  x = this.offsetLeft;
-}
-
-function bind2(this: HTMLDivElement, e: any) {
-  // 手指的移动距离= 手指移动之后的坐标 - 手指初始的坐标
-  moveX = e.targetTouches[0].pageX - startX;
-  // 移动盒子，盒子原来的位置+手指移动的距离
-  this.style.left = x + moveX + 'px';
-  // 阻止屏幕滚动行为
-  e.preventDefault();
-}
-
-function bind3(this: HTMLDivElement, e: any) {
-  this.style.left = '0';
-
-  // 向左滑动,向右翻页
-  if (moveX < -100) {
-    pager.value.next();
-  }
-
-  // 向右滑动,向左翻页
-  if (moveX > 100) {
-    pager.value.before();
-  }
-
-  moveX = 0;
-}
-
 function remove_poster() {
   if (removeFirst.value) {
     browse.imagePathList.shift();
@@ -370,15 +358,19 @@ onMounted(async () => {
 
   browse.load_view_width('double');
 
-  if (userConfig.enableTouchPageChange) {
-    touch_page_change();
-  }
+  // 初始设置动画速度
+  updateAnimationSpeed();
 
-})
+  // 监听动画速度变化
+  watch(
+    () => userConfig.pageAnimationSpeed,
+    () => {
+      updateAnimationSpeed();
+    }
+  );
 
-onBeforeUnmount(() => {
-  unmount_touch();
 })
 </script>
 
 <style src='./style/double-page.less' scoped lang='less'></style>
+<style src="./style/pagination.less" scoped lang="less"></style>

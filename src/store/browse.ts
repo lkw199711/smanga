@@ -8,6 +8,7 @@ import latestApi from '@/api/latest';
 import { screenType } from '@/type/store';
 import { config } from '@/store';
 import { mangaPageSize, chapterPageSize, manageListPageSizes } from '@/store/page-size';
+import { ObjectFit } from '@/type/store';
 
 function page_cahce() {
 	const pageJump = localStorage.getItem('pageJump');
@@ -138,7 +139,7 @@ const useBrowseStore = defineStore('browse', {
 			if (state.useAutoViewWidth) {
 				return { width: 'auto' };
 			} else {
-				return { width: state.viewWidthValue + '%', maxWidth: 'none', maxHeight: 'none', 'object-fit': 'cover' };
+				return { width: state.viewWidthValue + '%', maxWidth: 'none', maxHeight: 'none', 'object-fit': 'cover' as ObjectFit };
 			}
 		},
 
@@ -146,7 +147,7 @@ const useBrowseStore = defineStore('browse', {
 			if (state.useAutoViewWidth) {
 				return { width: 'auto' };
 			} else {
-				return { width: state.viewWidthValue / 2 + '%', maxWidth: 'none', maxHeight: 'none', 'object-fit': 'cover' };
+				return { width: state.viewWidthValue / 2 + '%', maxWidth: 'none', maxHeight: 'none', 'object-fit': 'cover' as ObjectFit };
 			}
 		},
 

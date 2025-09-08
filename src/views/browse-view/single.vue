@@ -7,14 +7,17 @@
     <right-sidebar @dwonload="dwonload_image" @set_image_width="browse.dialogViewWidth = true" />
 
     <!--图片容器-->
-    <div class="scroll">
-      <div class="single-page-img-box touch-dom" :style="{ maxHeight: browse.useAutoViewWidth ? '100%' : 'none' }">
+    <div class="scroll" :style="{ display: browse.useAutoViewWidth ? 'flex' : 'block' }">
+      <div class="single-page-img-box" :style="{ maxHeight: browse.useAutoViewWidth ? '100%' : 'none' }">
         <bookmark />
-        <img :style="browse.singleViewStyle" class="single-page-img" :src="imgSrc" :alt="t('browse.imgLoadError')"
-          @click.stop="switch_menu" />
-        <operation-cover @before="beforePage" @next="nextPage" @switch-menu="switch_menu"
-          @switch-footer="switch_footer"></operation-cover>
+        <transition :name="animationType" :duration="animationSpeed" mode="out-in"
+          :css="userConfig.enablePageAnimation">
+          <img :key="pageKey" :style="browse.singleViewStyle" class="single-page-img" :src="imgSrc"
+            :alt="t('browse.imgLoadError')" @click.stop="switch_menu" />
+        </transition>
       </div>
+      <operation-cover @before="beforePage" @next="nextPage" @switch-menu="switch_menu"
+        @switch-footer="switch_footer"></operation-cover>
     </div>
 
     <!-- 页码显示 -->
@@ -55,7 +58,7 @@
 </template>
 
 <script setup lang='ts'>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, computed, watch } from 'vue';
 import { ElMessage } from 'element-plus';
 import { config, userConfig } from '@/store';
 import operationCover from './components/operation-cover.vue';
@@ -76,17 +79,61 @@ const router = useRouter();
 
 const imgSrc = ref('');
 const page = ref(1);
+const pageKey = ref(1); // 用于触发过渡动画
 const pager = ref();
 const browse = useBrowseStore();
+const direction = ref('forward'); // 翻页方向: forward(前进), backward(后退)
+
+// 计算属性：根据动画类型和方向返回正确的动画名称
+const animationType = computed(() => {
+  if (!userConfig.enablePageAnimation) return '';
+
+  // 淡入淡出动画不需要方向
+  if (userConfig.pageAnimationType === 'fade') {
+    return 'fade';
+  }
+
+  // 滑动动画需要根据方向返回不同的动画名称
+  if (userConfig.pageAnimationType === 'slide') {
+    return direction.value === 'forward' ? 'slide-left' : 'slide-right';
+  }
+
+  // 实体书翻页动画需要根据方向返回不同的动画名称
+  if (userConfig.pageAnimationType === 'page') {
+    return direction.value === 'forward' ? 'page-forward' : 'page-backward';
+  }
+
+  return '';
+});
+
+// 计算属性：返回动画速度
+const animationSpeed = computed(() => {
+  return userConfig.pageAnimationSpeed || 300;
+});
 
 /**
  * 页码变更
  * @param page
  */
+/**
+ * 页码变更
+ * @param page
+ */
 async function page_change(pageParams: number) {
+  // 记录翻页方向
+  if (pageParams > page.value) {
+    direction.value = 'forward';
+  } else {
+    direction.value = 'backward';
+  }
   page.value = pageParams
   const pageImage = browse.imagePathList[pageParams - 1];
   imgSrc.value = await imageApi.get(pageImage);
+
+  // 只有启用动画才需要更新pageKey来触发过渡
+  if (userConfig.enablePageAnimation) {
+    pageKey.value++;
+  }
 
   browse.page = pageParams;
   browse.pageImage = pageImage;
@@ -250,48 +297,9 @@ function dwonload_image() {
   a.click();
 }
 
-function touch_page_change() {
-
-  const listDom = document.querySelector('.touch-dom');
-  if (listDom === null) return;
-
-  // 获取手指初始坐标和盒子的原来位置
-  var startX = 0;
-  // 获取盒子原来的位置
-  var x = 0;
-  var moveX = 0;
-
-  listDom.addEventListener('touchstart', function (this: HTMLDivElement, e: any) {
-    // 得到初始的手指坐标
-    startX = e.targetTouches[0].pageX;
-    // 获取盒子坐标
-    x = this.offsetLeft;
-  })
-
-  listDom.addEventListener('touchmove', function (this: HTMLDivElement, e: any) {
-    // 手指的移动距离= 手指移动之后的坐标 - 手指初始的坐标
-    moveX = e.targetTouches[0].pageX - startX;
-    // 移动盒子，盒子原来的位置+手指移动的距离
-    this.style.left = x + moveX + 'px';
-    // 阻止屏幕滚动行为
-    e.preventDefault();
-  })
-
-  listDom.addEventListener('touchend', function (this: HTMLDivElement, e) {
-    this.style.left = x + '0';
-
-    // 向左滑动,向右翻页
-    if (moveX < -100) {
-      pager.value.next();
-    }
-
-    // 向右滑动,向左翻页
-    if (moveX > 100) {
-      pager.value.before();
-    }
-
-    moveX = 0;
-  })
+// 更新动画速度CSS变量
+function updateAnimationSpeed() {
+  document.documentElement.style.setProperty('--animation-speed', `${userConfig.pageAnimationSpeed}ms`);
 }
 
 onMounted(() => {
@@ -304,9 +312,16 @@ onMounted(() => {
   // 加载自定义视图宽度
   browse.load_view_width('single');
 
-  if (userConfig.enableTouchPageChange) {
-    touch_page_change();
-  }
+  // 初始设置动画速度
+  updateAnimationSpeed();
+
+  // 监听动画速度变化
+  watch(
+    () => userConfig.pageAnimationSpeed,
+    () => {
+      updateAnimationSpeed();
+    }
+  );
 
 })
 </script>
