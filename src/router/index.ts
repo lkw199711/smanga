@@ -27,7 +27,7 @@ const routes: Array<RouteRecordRaw> = [
 	{
 		path: '/',
 		name: 'home',
-		redirect: '/index',
+		redirect: '/start',
 		children: [],
 		meta: { sidebar: false },
 		component: Layout,
@@ -40,17 +40,17 @@ const routes: Array<RouteRecordRaw> = [
 	},
 
 	{
-		path: '/index',
+		path: '/start',
 		meta: {
-			name: 'index',
-			title: 'index',
+			name: 'start',
+			title: 'start',
 			view: 'list',
 		},
-		redirect: '/index/index',
+		redirect: '/index',
 		component: Layout,
 		children: [
 			{
-				path: '/index/index',
+				path: '/index',
 				name: 'index',
 				meta: {
 					sidebar: false,
