@@ -1,10 +1,3 @@
-<!--
- * @Author: lkw199711 lkw199711@163.com
- * @Date: 2023-09-25 22:59:45
- * @LastEditors: 梁楷文 lkw199711@163.com
- * @LastEditTime: 2024-05-29 09:46:56
- * @FilePath: /smanga/src/views/browse-view/components/operation-cover.vue
--->
 <template>
 	<div class="operation-cover" v-show="config.enableOperation">
 		<div class="top" @click="switch_menu" :style="topStyle"></div>
@@ -79,6 +72,8 @@ function context_menu() {
 	top: 0;
 	right: 0;
 	bottom: 0;
+	// 为滚动条留出位置
+	margin: 0 3rem;
 
 	.top {
 		height: 30%;

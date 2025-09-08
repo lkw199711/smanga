@@ -84,6 +84,10 @@ export const userConfig = reactive({
 	simpleChapterView: false, // 章节列表简洁模式
 	userSlider: true, // 章节阅读进度条
 	showSidebarMediaList: true, // 显示侧边栏媒体库列表
+	// 翻页动画
+	enablePageAnimation: true, // 启用翻页动画
+	pageAnimationType: 'fade', // 翻页动画类型: fade(淡入淡出), slide(滑动), page(实体书翻页)
+	pageAnimationSpeed: 300, // 翻页动画速度(毫秒)
 });
 
 export const pageSizeConfig = reactive({

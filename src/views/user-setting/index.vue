@@ -165,6 +165,27 @@
 					开启此选项后，章节列表将只显示章节名称，不再显示阅读进度与章节封面等信息。<br>
 					此改动可以减少视觉干扰，在界面中展示更多的章节。<br>
 				</div>
+
+				<el-form-item label="启用翻页动画" class="setting-item">
+					<el-switch v-model="userConfig.enablePageAnimation" @change="switch_change" />
+				</el-form-item>
+				<div class="form-note mt-4 text-gray-500 text-sm mb-4">
+					开启此选项后，阅读翻页时会显示动画效果，提升阅读体验。<br>
+					在性能较差的设备上，可能会影响阅读流畅度。<br>
+				</div>
+
+				<el-form-item label="翻页动画类型" class="setting-item">
+					<el-select v-model="userConfig.pageAnimationType" class="setting-select" size="default" :disabled="!userConfig.enablePageAnimation">
+						<el-option label="淡入淡出" value="fade" />
+						<el-option label="左右滑动" value="slide" />
+						<el-option label="实体书翻页" value="page" />
+					</el-select>
+				</el-form-item>
+
+				<el-form-item label="动画速度" class="setting-item">
+					<el-slider v-model="userConfig.pageAnimationSpeed" :min="100" :max="1000" :step="50" :disabled="!userConfig.enablePageAnimation" />
+					<span class="ml-2">{{ userConfig.pageAnimationSpeed }}ms</span>
+				</el-form-item>
 			</el-card>
 		</el-form>
 
