@@ -85,6 +85,8 @@ import listSkeleton from '@/components/list-skeleton.vue';
 import queue from '@/store/quque';
 import useBrowseStore from '@/store/browse';
 import useSearchStore from '@/store/search';
+import { mangaInfoType } from '@/type/manga';
+import { chapterType } from '@/type/chapter';
 const browse = useBrowseStore();
 const searchStore = useSearchStore();
 
@@ -112,7 +114,10 @@ function get_page_size_array() {
 }
 let page = ref(1);
 let count = ref(0);
-let list = ref([]);
+type listType = mangaInfoType | chapterType | {
+	blob: string;
+};
+let list = ref<listType[]>([]);
 let mangaInfo = ref({});
 let menuPoster = '';
 
@@ -124,7 +129,7 @@ watch(
 	}
 );
 onMounted(() => {
-	touch_page_change();
+	userConfig.enableTouchPageChange && touch_page_change();
 	load_store_search();
 });
 
@@ -246,8 +251,7 @@ function reload() {
  * 打开右侧菜单
  */
 function context_menu(mangaInfo: any, key: number) {
-	menuPoster = (list[key] as any).blob;
-	mangaInfo = mangaInfo;
+	menuPoster = (list.value[key] as { blob: string }).blob;
 	config.rightSidebar = true;
 }
 

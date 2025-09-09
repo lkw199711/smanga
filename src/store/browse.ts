@@ -159,6 +159,11 @@ const useBrowseStore = defineStore('browse', {
 			}
 		},
 		mangaListPageSize: (state) => {
+			const storageMangaPageSize = localStorage.getItem('mangaPageSize');
+			if (storageMangaPageSize && storageMangaPageSize !== '0') {
+				return Number(storageMangaPageSize);
+			}
+
 			// 获取页面尺寸类型
 			const screen: screenType = config.screenType;
 			if (state.mangaListPageSizeCache === 0) {
@@ -168,11 +173,21 @@ const useBrowseStore = defineStore('browse', {
 			}
 		},
 		mangaListPageSizes: (state) => {
+			const storageMangaPageSize = localStorage.getItem('mangaPageSize');
+			if (storageMangaPageSize && storageMangaPageSize !== '0') {
+				return [Number(storageMangaPageSize)];
+			}
+
 			// 获取页面尺寸类型
 			const screen: screenType = config.screenType;
 			return mangaPageSize[screen];
 		},
 		chapterListPageSize: (state) => {
+			const storageChapterPageSize = localStorage.getItem('chapterPageSize');
+			if (storageChapterPageSize && storageChapterPageSize !== '0') {
+				return Number(storageChapterPageSize);
+			}
+
 			const screen: screenType = config.screenType;
 			if (state.chapterListPageSizeCache === 0) {
 				return chapterPageSize[screen][0];
@@ -181,6 +196,11 @@ const useBrowseStore = defineStore('browse', {
 			}
 		},
 		chapterListPageSizes: (state) => {
+			const storageChapterPageSize = localStorage.getItem('chapterPageSize');
+			if (storageChapterPageSize && storageChapterPageSize !== '0') {
+				return [Number(storageChapterPageSize)];
+			}
+
 			const screen: screenType = config.screenType;
 			return chapterPageSize[screen];
 		},

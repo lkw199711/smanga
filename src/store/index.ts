@@ -73,7 +73,7 @@ export const userConfig = reactive({
 	// 显示页码
 	showPageNumber: true,
 	// 开启滑动翻页
-	enableTouchPageChange: false,
+	enableTouchPageChange: true,
 	mangaPageSize: 0,
 	chapterPageSize: 0,
 	openNewTab: true, // 打开新标签页

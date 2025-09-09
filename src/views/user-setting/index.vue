@@ -63,6 +63,9 @@
 						</el-option>
 					</el-select>
 				</el-form-item>
+				<el-form-item label="开启滑动翻页" class="setting-item">
+					<el-switch v-model="userConfig.enableTouchPageChange" />
+				</el-form-item>
 			</el-card>
 
 			<el-card class="setting-card mt-6 mb-6" shadow="hover">
@@ -111,9 +114,6 @@
 					但会使部分用户不适应，并且失去传统页码器的一些功能。
 				</div>
 
-				<el-form-item label="开启滑动翻页" class="setting-item">
-					<el-switch v-model="userConfig.enableTouchPageChange" />
-				</el-form-item>
 				<el-form-item label="顶栏切换范围" class="setting-item">
 					<el-input v-model="userConfig.browseOperationTop" type="number" style="width: 120px;" />
 					<span class="ml-2">%</span>
@@ -175,7 +175,8 @@
 				</div>
 
 				<el-form-item label="翻页动画类型" class="setting-item">
-					<el-select v-model="userConfig.pageAnimationType" class="setting-select" size="default" :disabled="!userConfig.enablePageAnimation">
+					<el-select v-model="userConfig.pageAnimationType" class="setting-select" size="default"
+						:disabled="!userConfig.enablePageAnimation">
 						<el-option label="淡入淡出" value="fade" />
 						<el-option label="左右滑动" value="slide" />
 						<el-option label="实体书翻页" value="page" />
@@ -183,7 +184,8 @@
 				</el-form-item>
 
 				<el-form-item label="动画速度" class="setting-item">
-					<el-slider v-model="userConfig.pageAnimationSpeed" :min="100" :max="1000" :step="50" :disabled="!userConfig.enablePageAnimation" />
+					<el-slider v-model="userConfig.pageAnimationSpeed" :min="100" :max="1000" :step="50"
+						:disabled="!userConfig.enablePageAnimation" />
 					<span class="ml-2">{{ userConfig.pageAnimationSpeed }}ms</span>
 				</el-form-item>
 			</el-card>
