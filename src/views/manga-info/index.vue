@@ -56,9 +56,9 @@
             <div class="btn-box">
                 <el-button class="btn" type="primary" @click="go_chapter_list">章节列表</el-button>
 
-                <el-button class="btn continue-read" type="warning" @click="go_chapter" v-if="latestChapterInfo">
-                    {{ latestChapterInfo.chapter.chapterName }}
-                    第{{ latestChapterInfo.page }}页
+                <el-button class="btn continue-read" type="warning" @click="go_chapter" v-if="hasLatest">
+                    {{ continueRead.chapterName }}
+                    第{{ continueRead.page }}页
                 </el-button>
                 <el-button class="btn" type="success" @click="go_chapter" v-else>开始阅读</el-button>
 
@@ -166,6 +166,12 @@ const metaForm = reactive({
     describe: '',
 });
 
+const continueRead = ref({
+    chapterId: 0,
+    chapterName: '',
+    page: 0,
+})
+
 const chapterList = ref<chapterType[]>([]);
 let mangaInfo = reactive<mangaInfoType>({
     mediaId: 0,
@@ -184,9 +190,7 @@ let mangaInfo = reactive<mangaInfoType>({
     metas: [],
 });
 
-let firstChapterInfo = ref<chapterType>();
-
-let latestChapterInfo = ref<chapterType | false>(false);
+let hasLatest = ref(false);
 
 let banner = ref<metaItemType[]>([]);
 let covers = ref<metaItemType[]>([]);
@@ -257,7 +261,7 @@ async function get_first_chapter() {
     const mangaId = mangaInfo.mangaId;
     if (!mangaId) return;
 
-    firstChapterInfo.value = await chapterApi.get_first(mangaId, 'number');
+    continueRead.value = await chapterApi.get_first(mangaId, 'number');
 }
 
 /**
@@ -268,7 +272,22 @@ async function get_latest_reading() {
     const mangaId = mangaInfo.mangaId;
     if (!mangaId) return;
 
-    latestChapterInfo.value = await lastesApi.get_latest(mangaId);
+    const latest = await lastesApi.get_latest(mangaId);
+    if (!latest) return;
+
+    if (latest.finish && latest.nextChapter) {
+        continueRead.value = latest.nextChapter;
+        continueRead.value.page = 1;
+    } else if (latest.finish) {
+        // 已读完全部漫画
+        hasLatest.value = false;
+        return;
+    } else {
+        continueRead.value = latest.chapter;
+        continueRead.value.page = latest.page;
+    }
+
+    hasLatest.value = true;
 }
 
 /**
@@ -276,7 +295,7 @@ async function get_latest_reading() {
  * @return {*}
  */
 async function go_chapter() {
-    const chapterInfo = latestChapterInfo.value ? latestChapterInfo.value : firstChapterInfo.value;
+    const chapterInfo = continueRead.value
     if (!chapterInfo) return;
     // 使用pinia存储页码
     if (chapterInfo.page && chapterInfo.page > 1) {
