@@ -40,6 +40,7 @@
 				</el-form-item>
 			</el-card>
 
+			<!-- 列表设置 -->
 			<el-card class="setting-card mt-6" shadow="hover">
 				<template #header>
 					<div class="card-header">
@@ -66,14 +67,6 @@
 				<el-form-item label="开启滑动翻页" class="setting-item">
 					<el-switch v-model="userConfig.enableTouchPageChange" />
 				</el-form-item>
-			</el-card>
-
-			<el-card class="setting-card mt-6 mb-6" shadow="hover">
-				<template #header>
-					<div class="card-header">
-						<span class="card-title">自定义页面容量设置</span>
-					</div>
-				</template>
 				<el-form-item label="漫画页面容量" class="setting-item">
 					<el-input v-model="mangaPageSize" type="number" style="width: 120px;" />
 				</el-form-item>
@@ -88,6 +81,7 @@
 				</div>
 			</el-card>
 
+			<!-- 阅读设置 -->
 			<el-card class="setting-card mt-6 mb-6" shadow="hover">
 				<template #header>
 					<div class="card-header">
@@ -164,6 +158,13 @@
 				<div class="form-note mt-4 text-gray-500 text-sm mb-4">
 					开启此选项后，章节列表将只显示章节名称，不再显示阅读进度与章节封面等信息。<br>
 					此改动可以减少视觉干扰，在界面中展示更多的章节。<br>
+				</div>
+
+				<el-form-item label="极简章节名" class="setting-item">
+					<el-switch v-model="userConfig.continueReadButtonShowChapterNumberOnly" @change="switch_change" />
+				</el-form-item>
+				<div class="form-note mt-4 text-gray-500 text-sm mb-4">
+					开启此选项后，继续阅读按钮将只显示章节序号，不再显示章节名称。
 				</div>
 
 				<el-form-item label="启用翻页动画" class="setting-item">

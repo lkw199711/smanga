@@ -57,7 +57,7 @@
                 <el-button class="btn" type="primary" @click="go_chapter_list">章节列表</el-button>
 
                 <el-button class="btn continue-read" type="warning" @click="go_chapter" v-if="hasLatest">
-                    {{ continueRead.chapterName }}
+                    {{ userConfig.continueReadButtonShowChapterNumberOnly ? continueRead.chapterNumber : continueRead.chapterName }}
                     第{{ continueRead.page }}页
                 </el-button>
                 <el-button class="btn" type="success" @click="go_chapter" v-else>开始阅读</el-button>
@@ -169,6 +169,7 @@ const metaForm = reactive({
 const continueRead = ref({
     chapterId: 0,
     chapterName: '',
+    chapterNumber: 0,
     page: 0,
 })
 
