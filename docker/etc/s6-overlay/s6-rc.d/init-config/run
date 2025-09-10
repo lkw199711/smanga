@@ -35,9 +35,7 @@ if [ ! -f /data/db/smanga.db ]; then
     cp /app/adonis/smanga.db /data/db/smanga.db
 fi
 
-if [ ! -d /data/file ]; then
-    cp -r /app/adonis/file /data/file
-fi
+cp -rf /app/adonis/file /data/file
 
 # 读取配置文件
 CONFIG_FILE="/data/config/smanga.json"
