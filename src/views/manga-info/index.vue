@@ -283,9 +283,10 @@ async function get_latest_reading() {
         // 已读完全部漫画
         hasLatest.value = false;
         return;
-    } else {
+    } else {        
         continueRead.value = latest.chapter;
         continueRead.value.page = latest.page;
+        continueRead.value.chapterId = latest.chapterId;
     }
 
     hasLatest.value = true;

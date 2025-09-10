@@ -74,15 +74,18 @@ import imageApi from '@/api/image';
 import useBrowseStore from '@/store/browse';
 const { t } = i18n.global;
 
+const sBlue = require('@/assets/s-blue-high.png');
+
 const route = useRoute();
 const router = useRouter();
 
-const imgSrc = ref('');
+const imgSrc = ref(sBlue);
 const page = ref(1);
 const pageKey = ref(1); // 用于触发过渡动画
 const pager = ref();
 const browse = useBrowseStore();
 const direction = ref('forward'); // 翻页方向: forward(前进), backward(后退)
+const loading = ref(false);
 
 // 计算属性：根据动画类型和方向返回正确的动画名称
 const animationType = computed(() => {
@@ -126,14 +129,20 @@ async function page_change(pageParams: number) {
   } else {
     direction.value = 'backward';
   }
+
   page.value = pageParams
   const pageImage = browse.imagePathList[pageParams - 1];
-  imgSrc.value = await imageApi.get(pageImage);
 
   // 只有启用动画才需要更新pageKey来触发过渡
   if (userConfig.enablePageAnimation) {
     pageKey.value++;
   }
+
+  loading.value = true;
+  imgSrc.value = sBlue;
+  imgSrc.value = await imageApi.get(pageImage);
+  loading.value = false;
+
 
   browse.page = pageParams;
   browse.pageImage = pageImage;

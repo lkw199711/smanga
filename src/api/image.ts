@@ -41,7 +41,7 @@ const img = Axios.create({
 	],
 });
 
-const placeholder = require('@/assets/s-blue.png');
+const placeholder = require('@/assets/s-blue-high.png');
 const imageCache: any = useImageStore();
 const imageApi = {
 	/**
