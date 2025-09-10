@@ -32,6 +32,7 @@ ENV S6_SERVICES_GRACETIME=30000 \
 COPY --from=builder /smanga-adonis/build /app/adonis
 COPY --from=builder /smanga-adonis/prisma /app/adonis/prisma
 COPY --from=builder /smanga-adonis/data-example/config/smanga.json /app/adonis/smanga.json
+RUN rm -rf /app/adonis/file
 COPY --from=builder /smanga-adonis/data-example/file /app/adonis/file
 COPY --from=prepare /smanga-express /app/express
 COPY ./dist/docker /app/smanga-website

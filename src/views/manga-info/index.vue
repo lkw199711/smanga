@@ -562,6 +562,7 @@ function update_tags(tagsParams: tagItemType[]) {
 // 自动换行
 .continue-read {
     white-space: normal;
+    overflow: hidden;
 }
 
 .cover-setting {
