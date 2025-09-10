@@ -57,7 +57,7 @@ const mediaApi = {
 	},
 
 	async scan(mediaId: number) {
-		const res = ajax.post(`media/${mediaId}/scan`);
+		const res = ajax.put(`media/${mediaId}/scan`);
 		const resData = (await res).data;
 		return resData;
 	}

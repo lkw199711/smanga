@@ -1,10 +1,3 @@
-/*
- * @Author: lkw199711 lkw199711@163.com
- * @Date: 2023-09-23 21:05:36
- * @LastEditors: lkw199711 lkw199711@163.com
- * @LastEditTime: 2023-09-24 00:39:15
- * @FilePath: /smanga/src/store/page-size.ts
- */
 import { reactive } from 'vue';
 
 export const mangaPageSize = reactive({

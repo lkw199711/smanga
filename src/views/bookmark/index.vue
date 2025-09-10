@@ -164,8 +164,7 @@ function touch_page_change() {
 
 onMounted(() => {
   page_change(browse.chapterListPage, browse.chapterListPageSize);
-  touch_page_change();
-
+  userConfig.enableTouchPageChange && touch_page_change();
 })
 </script>
 
