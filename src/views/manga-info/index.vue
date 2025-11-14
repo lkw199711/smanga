@@ -410,7 +410,9 @@ async function render_chapter_list() {
 }
 
 function go_browse(chapter: any) {
-    if (chapter?.latest) {
+    if (chapter?.latest?.finish) {
+        browse.page = 1;
+    } else if (chapter?.latest) {
         browse.page = chapter.latest.page;
         localStorage.setItem('pageJump', chapter.latest.page)
     } else {

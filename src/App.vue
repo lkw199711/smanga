@@ -2,7 +2,7 @@
 	<div class="main" id="app">
 		<div class="view">
 			<!-- 消息通知 -->
-			<notice />
+			<!-- <notice /> -->
 			<el-config-provider :locale="elLocale">
 				<router-view />
 			</el-config-provider>
