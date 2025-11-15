@@ -42,6 +42,7 @@
                 <el-descriptions-item label="发布时间">{{ mangaInfo.publishDate }}</el-descriptions-item>
                 <el-descriptions-item label="章节总数">{{ mangaInfo.chapterCount }}</el-descriptions-item>
                 <el-descriptions-item label="阅读方式">{{ mangaInfo.browseType }}</el-descriptions-item>
+                <el-descriptions-item label="所属媒体库">{{ mangaInfo.media?.mediaName }}</el-descriptions-item>
                 <el-descriptions-item label="入库时间">{{ mangaInfo.createTime }}</el-descriptions-item>
                 <el-descriptions-item label="更新时间">{{ mangaInfo.updateTime }}</el-descriptions-item>
                 <el-descriptions-item label="评分">{{ mangaInfo.star }}</el-descriptions-item>
@@ -133,6 +134,9 @@
         <el-dialog :title="$t('mangaInfo.mangaShareDialogTitle')" v-model="mangaShareDialog">
             <share :mangaInfo="mangaInfo" @close_dialog="mangaShareDialog = false" />
         </el-dialog>
+
+        <right-sidebar :chapter-info="chapterInfo" :rightSidebarVisible="rightSidebarVisible" @reload="render_chapter_list"
+			@close="() => { rightSidebarVisible = false }" />
     </div>
 </template>
 
@@ -154,6 +158,7 @@ import share from '@/components/share.vue';
 import useBrowseStore from '@/store/browse';
 import chapter from './components/chapter.vue';
 import chapterSimple from './components/chapter-simple.vue';
+import rightSidebar from '../chapter-list/right-sidebar.vue';
 const browse: any = useBrowseStore();
 const router = useRouter();
 const route = useRoute();
