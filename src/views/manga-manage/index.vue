@@ -58,14 +58,12 @@
           <el-form-item :label="$t('mangaManage.form.poster')">
             <!-- 服务器路径输入 -->
             <el-input v-model="form.mangaCover" :placeholder="$t('mangaManage.place.poster')" class="mb-3"></el-input>
+          </el-form-item>
 
+          <el-form-item :label="$t('mangaManage.form.directory')">
             <!-- 使用全局封面上传组件 -->
-            <cover-upload 
-              cover-type="manga"
-              :manga-cover="form.mangaCover"
-              :bind-id="form.mangaId" 
-              @update:value="(value) => form.mangaCover = value"
-            />
+            <cover-upload cover-type="manga" :init-cover="form.mangaCover" :bind-id="form.mangaId"
+              @update:value="(value) => form.mangaCover = value" />
           </el-form-item>
 
           <!--阅读字段-->

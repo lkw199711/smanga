@@ -10,6 +10,7 @@
     </div>
     <div class="chapter-setting-box">
       <div class="manga-setting-box">
+        <!--表格-->
         <el-table :data="tableData" stripe border>
           <el-table-column type="index" :label="$t('account.serial')" width="54">
           </el-table-column>
@@ -41,7 +42,7 @@
             </template>
           </el-table-column>
         </el-table>
-        <!--表格-->
+
         <el-dialog :title="$t('chapterManage.modify')" v-model="editChapterDialog" :before-close="dialog_close">
           <el-form :model="form" label-width="11rem">
             <el-form-item :label="$t('chapterManage.form.name')">
@@ -54,6 +55,10 @@
 
             <el-form-item :label="$t('chapterManage.form.poster')">
               <el-input v-model="form.chapterCover" :placeholder="$t('chapterManage.place.poster')"></el-input>
+            </el-form-item>
+            <el-form-item>
+              <cover-upload cover-type="chapter" :bind-id="form.chapterId" :init-cover="form.chapterCover"
+                v-on:update:value="(value) => form.chapterCover = value" />
             </el-form-item>
 
             <el-form-item :label="$t('chapterManage.form.chapterNumber')">
@@ -85,6 +90,7 @@ import { ElMessage, ElMessageBox } from 'element-plus'
 import { Delete, Edit, Search } from '@element-plus/icons-vue'
 import chapterApi from "@/api/chapter";
 import tablePager from "@/components/table-pager.vue";
+import coverUpload from "@/components/cover-upload.vue";
 import i18n from '@/i18n';
 import { reactive } from 'vue';
 import type { mangaInfoType } from '@/type/manga';
@@ -99,7 +105,7 @@ const tableData = ref([]);
 const editChapterDialog = ref(false);
 const keyWord = ref('');
 const form = reactive({
-  chapterId: '',
+  chapterId: 0,
   chapterName: '',
   chapterPath: '',
   chapterCover: '',
@@ -107,7 +113,7 @@ const form = reactive({
 })
 
 const formInit = {
-  chapterId: '',
+  chapterId: 0,
   chapterName: '',
   chapterPath: '',
   chapterCover: '',

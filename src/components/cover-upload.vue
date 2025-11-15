@@ -32,7 +32,7 @@ import imageApi from '@/api/image';
 
 // 组件属性
 const props = defineProps<{
-  mangaCover: string; // 漫画封面
+  initCover: string; // 封面路径，支持v-model
   coverType: 'media' | 'manga' | 'chapter'; // 封面类型
   bindId: number; // 目标ID
 }>();
@@ -47,7 +47,7 @@ const coverFileSrc = ref<string>('');
 // 上传的文件对象
 const uploadFile = ref<any>(null);
 
-watch(() => props.mangaCover, async (newVal) => {
+watch(() => props.initCover, async (newVal) => {
   if (newVal) {
     coverFileSrc.value = await imageApi.get({ file: newVal });
   }
