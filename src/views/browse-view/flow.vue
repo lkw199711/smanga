@@ -86,13 +86,12 @@
 export default { name: 'browse-views' }
 </script>
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue';
+import { computed, ref, watch, onMounted, onUnmounted } from 'vue';
 import imageApi from '@/api/image';
 import { delay, window_go_top } from '@/utils';
 import { ElMessage as msg } from 'element-plus';
 import { config, userConfig } from '@/store';
 import i18n from '@/i18n';
-import { onMounted } from 'vue';
 import chapterListMenu from './components/chapter-list-menu.vue';
 import rightSidebar from './components/right-sidebar.vue';
 import bookmark from './components/bookmark.vue';
@@ -412,12 +411,12 @@ onMounted(() => {
 	// 加载自定义视图宽度
 	browse.load_view_width('flow');
 
-	// 原生
-	// window.addEventListener('scroll', scroll_page);
+// 原生
+// window.addEventListener('scroll', scroll_page);
 
-	// 防抖
-	// window.addEventListener('scroll', _.debounce(scroll_page, 50), { passive: true });
-	// 节流
+// 防抖
+// window.addEventListener('scroll', _.debounce(scroll_page, 50), { passive: true });
+// 节流
 	window.addEventListener('scroll', _.throttle(scroll_page, 200), { passive: true });
 })
 

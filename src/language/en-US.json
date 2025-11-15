@@ -91,7 +91,8 @@
         "power": "power",
         "mediaPower": "mediaReadPower"
       }
-    }
+    },
+    "batchDelete": "batchDelete"
   },
   "mediaManage": {
     "add": "addMedia",
@@ -171,7 +172,8 @@
     "button": {
       "re": "reScan",
       "update": "addScan",
-      "edit": "\nedit path"
+      "edit": "\nedit path",
+      "batchDelete": "batch delete"
     },
     "warning": {
       "name": "mediaName cannot be empty!"
@@ -182,7 +184,8 @@
       "title1": "",
       "text1": "are you sure to delete this path? The associated manga and chapter also will be deleted!",
       "title2": "confirm reScan",
-      "text2": "are you sure to reScan this path? The associated manga and chapter also will be cleared and rescanned to add!"
+      "text2": "are you sure to reScan this path? The associated manga and chapter also will be cleared and rescanned to add!",
+      "batchDeleteText": "are you sure to delete selected paths? The associated manga and chapter also will be deleted!"
     },
     "note": {
       "clude": "Include and exclude are the matching and exclusion rules. The scanned comics use the include matching path. If they are matched, they are added; if they are not matched, they are excluded; Exclude is the opposite, matching to exclude and not matching to add. When two values exist simultaneously, include takes precedence<br>\nBoth include and exclude are regular expression values. If you want to match multiple rules, please write them like this {0}",
@@ -222,6 +225,7 @@
     }
   },
   "chapterManage": {
+    "batchDelete": "batch delete",
     "id": "chapterId",
     "name": "chapterName",
     "createTime": "createTime",
@@ -249,18 +253,23 @@
       "title1": "confirm remove",
       "text1": "are you sure to remove this chapter?",
       "title2": "confirm deletion",
-      "text2": "are you sure to remove this chapter and delete source file?"
+      "text2": "are you sure to remove this chapter and delete source file?",
+      "batchDeleteTitle": "batch delete",
+      "batchDeleteText": "are you sure to delete selected chapters?"
     }
   },
   "bookmarkManage": {
     "add": "addBookmark",
     "remove": "removeBookmark",
+    "batchDelete": "batch delete",
     "id": "bookmarkId",
     "page": "page",
     "createTime": "createTime",
     "confirm": {
       "title": "confirm deletion",
-      "text": "are you sure to delete this bookmark?"
+      "text": "are you sure to delete this bookmark?",
+      "batchDeleteTitle": "batch delete",
+      "batchDeleteText": "are you sure to delete selected bookmarks?"
     }
   },
   "compressManage": {
@@ -270,9 +279,12 @@
     "path": "compressPath",
     "num": "imagesCount",
     "createTime": "createTime",
+    "batchDelete": "batch delete",
     "confirm": {
       "title": "confirm deletion",
-      "text": "are you sure to delete this compress record?"
+      "text": "are you sure to delete this compress record?",
+      "batchDeleteTitle": "batch delete",
+      "batchDeleteText": "are you sure to delete selected compress records?"
     }
   },
   "jobsManage": {
@@ -287,7 +299,12 @@
     "completed": "completed",
     "failed": "failed",
     "type": "Sync type",
-    "name": "Media/manga name"
+    "name": "Media/manga name",
+    "batchDelete": "batch delete",
+    "confirm": {
+      "batchDeleteTitle": "batch delete",
+      "batchDeleteText": "Are you sure to delete selected jobs?"
+    }
   },
   "collect": {
     "manga": "manga",
@@ -350,6 +367,7 @@
     }
   },
   "tagSetting": {
+    "batchDelete": "batch delete",
     "dialog": {
       "tagName": "tagName",
       "addTitle": "Add Tag",
@@ -362,7 +380,9 @@
       "nameWarning": "The tag name cannot be empty",
       "confirmText": "Are you sure to delete this tag?",
       "confirmTitle": "delete tag",
-      "tagColorNote": "Tag color: Please enter a color in hexadecimal format. If left blank, the default is \"#a0d911\" (green)"
+      "tagColorNote": "Tag color: Please enter a color in hexadecimal format. If left blank, the default is \"#a0d911\" (green)",
+      "batchDeleteTitle": "batch delete",
+      "batchDeleteText": "are you sure to delete selected tags?"
     },
     "addButton": "Add tag",
     "table": {
@@ -381,7 +401,10 @@
     "requestFullscreen": "Full screen page",
     "exitFullscreen": "Exit Full Screen",
     "editCover": "editCover",
-    "editMetas": "editMetas"
+    "editMetas": "editMetas",
+    "editChapter": "Edit chapter info",
+    "editManga": "Edit manga info",
+    "editMedia": "Edit media info"
   },
   "createTime": "createTime",
   "updateTime": "updateTime",
@@ -403,7 +426,10 @@
     "link": "share link",
     "syncInfoTitle": "aync details",
     "selectPath": "The target path cannot be empty",
-    "addSync": "Add sync"
+    "addSync": "Add sync",
+    "batchDelete": "batch delete",
+    "batchDeleteTitle": "batch delete",
+    "batchDeleteText": "Are you sure to delete selected sync records?"
   },
   "mangaInfo": {
     "mangaShareDialogTitle": "mangaShare",
@@ -414,7 +440,10 @@
   "mangaShare": {
     "link": "shareLink",
     "expires": "expires",
-    "sahreDetail": "Share information"
+    "sahreDetail": "Share information",
+    "batchDelete": "batch delete",
+    "batchDeleteTitle": "batch delete",
+    "batchDeleteText": "Are you sure to delete selected share records?"
   },
   "mediaList": {
     "scanMedia": "Scan media",

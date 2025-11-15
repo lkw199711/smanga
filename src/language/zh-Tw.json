@@ -91,7 +91,8 @@
         "power": "權限",
         "mediaPower": "媒體庫閱讀權限"
       }
-    }
+    },
+    "batchDelete": "批量刪除"
   },
   "mediaManage": {
     "add": "新增媒體庫",
@@ -171,7 +172,8 @@
     "button": {
       "re": "重新掃描",
       "update": "增量掃描",
-      "edit": "編輯路徑"
+      "edit": "編輯路徑",
+      "batchDelete": "批量刪除"
     },
     "warning": {
       "name": "媒體庫名稱不能為空!"
@@ -261,7 +263,8 @@
     "confirm": {
       "title": "確認刪除",
       "text": "確認刪除此書簽?"
-    }
+    },
+    "batchDelete": "批量刪除"
   },
   "compressManage": {
     "id": "轉換id",
@@ -273,7 +276,8 @@
     "confirm": {
       "title": "確認刪除",
       "text": "確認刪除此轉換記錄?"
-    }
+    },
+    "batchDelete": "批量刪除"
   },
   "jobsManage": {
     "id": "id",
@@ -287,7 +291,8 @@
     "completed": "已完成",
     "failed": "失敗",
     "type": "同步類型",
-    "name": "媒體庫/漫畫 名稱"
+    "name": "媒體庫/漫畫 名稱",
+    "batchDelete": "批量刪除"
   },
   "collect": {
     "manga": "漫畫",
@@ -369,7 +374,8 @@
       "tagName": "標簽名稱",
       "description": "描述",
       "tagColor": "標簽顏色"
-    }
+    },
+    "batchDelete": "批量刪除"
   },
   "rightSidebar": {
     "editTags": "編輯標簽",
@@ -380,7 +386,10 @@
     "requestFullscreen": "頁面全屏",
     "exitFullscreen": "退出全屏",
     "editCover": "編輯封面",
-    "editMetas": "編輯元數據"
+    "editMetas": "編輯元數據",
+    "editChapter": "修改章節信息",
+    "editManga": "編輯漫畫信息",
+    "editMedia": "編輯媒體庫信息"
   },
   "createTime": "創建時間",
   "updateTime": "更新時間",
@@ -402,7 +411,8 @@
     "link": "分享鏈接",
     "syncInfoTitle": "同步詳情",
     "selectPath": "目標路徑不能爲空",
-    "addSync": "新增同步"
+    "addSync": "新增同步",
+    "batchDelete": "批量刪除"
   },
   "mangaInfo": {
     "mangaShareDialogTitle": "漫畫分享",
@@ -413,7 +423,8 @@
   "mangaShare": {
     "link": "分享鏈接",
     "expires": "過期時間",
-    "sahreDetail": "分享信息"
+    "sahreDetail": "分享信息",
+    "batchDelete": "批量刪除"
   },
   "mediaList": {
     "scanMedia": "掃描媒體庫",

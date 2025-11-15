@@ -1,6 +1,6 @@
 <template>
   <div class="right-sidebar">
-    <el-drawer v-model="props.rightSidebarVisible" size="auto" :with-header="false" :before-close="close_sidebar">
+    <el-drawer v-model="rightSidebarVisible" size="auto" :with-header="false">
       <!-- 安卓端占位 -->
       <android-seat />
       <el-menu class="right-sidebar-menu" active-text-color="#ffd04b" background-color="#545c64" text-color="#fff"
@@ -36,19 +36,25 @@
           </el-icon>
           {{ $t('mediaList.shareMedia') }}
         </el-menu-item>
+        <el-menu-item index="edit" v-if="isAdmin">
+          <el-icon>
+            <Edit />
+          </el-icon>
+          {{ $t('rightSidebar.editMedia') }}
+        </el-menu-item>
       </el-menu>
     </el-drawer>
 
+    <media-edit v-model:editMediaDialog="editMediaDialog" edit-model="modify" :media-info="props.mediaInfo" @reload="emit('reload', browse.mangaListPage, browse.mangaListPageSize)" />
+
     <el-dialog :title="$t('mangaInfo.mangaShareDialogTitle')" v-model="mangaShareDialog">
-      <mangaShare :mediaInfo="mediaInfo" @close_dialog="mangaShareDialog = false" />
+      <mangaShare :mediaInfo="props.mediaInfo" @close_dialog="mangaShareDialog = false" />
     </el-dialog>
   </div>
 </template>
 
 <script lang="ts" setup>
 import { watch, ref, computed, onMounted } from 'vue';
-import { useRoute } from 'vue-router';
-import mangaApi from '@/api/manga';
 import { ElMessageBox } from 'element-plus';
 import i18n from '@/i18n';
 import imageApi from '@/api/image';
@@ -57,45 +63,34 @@ import androidSeat from '@/layout/components/android-seat.vue';
 import mangaShare from '@/components/share.vue';
 import mediaApi from '@/api/media';
 import { Cookies } from '@/utils';
+import mediaEdit from '@/views/media-manage/components/mediaEdit.vue';
+
 const browse = useBrowseStore();
 const placeholder = require('@/assets/s-blue.png');
 
 const { t } = i18n.global;
-const route = useRoute();
 const mangaShareDialog = ref(false);
 const blob = ref('');
 
-
-const props = defineProps(['mediaInfo', 'rightSidebarVisible']);
+const rightSidebarVisible = defineModel('rightSidebarVisible');
+const editMediaDialog = ref(false);
+const props = defineProps(['mediaInfo']);
 const emit = defineEmits(['reload', 'close']);
-
-const mediaId = computed(() => {
-  return props.mediaInfo.mediaId;
-});
 
 const isAdmin = computed(() => {
   return Cookies.get('role') === 'admin';
 });
 
 watch(
-  () => props.mediaInfo?.mediaId,
-  async (mangaId) => {
-    const mangaCover = props.mediaInfo?.mediaCover;
+  () => props.mediaInfo?.mediaCover,
+  async (mangaCover) => {
     if (mangaCover) {
-      blob.value = await imageApi.get(mangaCover);
+      blob.value = await imageApi.get({file: mangaCover});
     } else {
       blob.value = placeholder;
     }
   }
 );
-
-/**
- * @description: 关闭右侧菜单
- * @return {*}
- */
-function close_sidebar() {
-  emit('close');
-}
 
 /**
  * @description: 右侧菜单项选择事件
@@ -107,7 +102,7 @@ async function menu_select(key: string) {
     case 'remove':
       ElMessageBox.confirm(t('mediaList.remove'), { type: 'warning' })
         .then(async () => {
-          await mediaApi.delete_media(mediaId.value);
+          await mediaApi.delete_media(props.mediaInfo.mediaId);
           emit('reload', browse.mangaListPage, browse.mangaListPageSize);
         })
         .catch();
@@ -117,21 +112,24 @@ async function menu_select(key: string) {
       ElMessageBox.confirm(t('mediaList.delete'), {
         type: 'warning',
       }).then(async () => {
-        await mediaApi.delete_media(mediaId.value, true);
+        await mediaApi.delete_media(props.mediaInfo.mediaId, true);
         emit('reload', browse.mangaListPage, browse.mangaListPageSize);
       });
 
       break;
     case 'scan':
-      await mediaApi.scan(mediaId.value);
+      await mediaApi.scan(props.mediaInfo.mediaId);
       emit('reload', browse.mangaListPage, browse.mangaListPageSize);
       break;
     case 'share':
       mangaShareDialog.value = true;
       break;
+    case 'edit':
+      editMediaDialog.value = true;
+      break;
 
   }
-  close_sidebar();
+  rightSidebarVisible.value = false;
 }
 </script>
 

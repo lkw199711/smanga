@@ -84,9 +84,9 @@ const { t } = i18n.global;
 
 const route = useRoute();
 const router = useRouter();
-
-const imgSrc1 = ref('');
-const imgSrc2 = ref('');
+const sBlue = require('@/assets/s-blue-high.png');
+const imgSrc1 = ref(sBlue);
+const imgSrc2 = ref(sBlue);
 
 const page = ref(1);
 const removeFirst = ref(false);
@@ -144,20 +144,24 @@ async function page_change(pageParams: number) {
   const index = (pageParams - 1) * 2;
   const pageImage = browse.imagePathList[index];
 
-
-  // 加载第一张图片
-  imgSrc1.value = await imageApi.get(browse.imagePathList[index]);
-
-  // 加载第二张图片
-  imgSrc2.value = index + 1 < browse.imagePathList.length
-    ? await imageApi.get(browse.imagePathList[index + 1])
-    : '';
-
   // 只有启用动画才需要更新pageKey来触发过渡
   if (userConfig.enablePageAnimation) {
     pageKey.value++;
   }
 
+  // 置空图片 使其不显示上一页
+  imgSrc1.value = sBlue;
+  imgSrc2.value = sBlue;
+
+  // 加载第一张图片
+  imgSrc1.value = await imageApi.get({file: browse.imagePathList[index]});
+
+  // 加载第二张图片
+  imgSrc2.value = index + 1 < browse.imagePathList.length
+    ? await imageApi.get({file: browse.imagePathList[index + 1]})
+    : '';
+
+  
   // 缓存书签信息
   browse.page = pageParams;
   browse.pageImage = pageImage;

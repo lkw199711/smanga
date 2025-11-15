@@ -58,6 +58,16 @@ const pathApi = {
 	},
 
 	/**
+	 * 批量删除路径
+	 * @param pathIds 路径ID数组
+	 */
+	async batch_delete_path(pathIds: number[]) {
+		const res = ajax.delete(`path/${pathIds.join(',')}/batch`, { data: { pathIds } });
+
+		return (await res).data;
+	},
+
+	/**
 	 * 新增路径
 	 * @param mediaId
 	 * @param path

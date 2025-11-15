@@ -50,6 +50,16 @@ const bookmarkApi = {
 
 		return res.data;
 	},
+
+	/**
+	 * @description: 批量删除书签
+	 * @param {number[]} bookmarkIds 书签ID数组
+	 * @return {*}
+	 */
+	async batch_delete(bookmarkIds: number[]) {
+		const res = await ajax.delete(`bookmark/${bookmarkIds.join(',')}/batch`, { data: { bookmarkIds } });
+		return res.data;
+	},
 };
 
 export default bookmarkApi;

@@ -133,6 +133,18 @@ const mangaApi = {
 	async reload_meta(mangaId: number) {
 		const res = ajax.put(`manga/${mangaId}/reload-meta`, { mangaId });
 		return (await res).data;
+	},
+
+	/**
+	 * @description: 批量删除漫画
+	 * @param {number[]} mangaIds
+	 * @return {*}
+	 */
+	async batch_delete_manga(mangaIds: number[]) {
+		const res = ajax.delete(`manga/${mangaIds.join(',')}/batch`, { data: { mangaIds } });
+
+		const resData = (await res).data;
+		return resData;
 	}
 };
 

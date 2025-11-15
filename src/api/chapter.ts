@@ -101,6 +101,17 @@ const chapterApi = {
 
 		return (await res).data;
 	},
+
+	/**
+	 * 批量删除章节记录
+	 * @param chapterIds 章节ID数组
+	 * @param deleteFile 是否删除文件
+	 */
+	async batch_delete_chapter(chapterIds: number[], deleteFile = false) {
+		const res = ajax.delete(`chapter/${chapterIds.join(',')}/batch`, { data: { chapterIds, deleteFile } });
+
+		return (await res).data;
+	},
 };
 
 type chapterGetFormatType = {

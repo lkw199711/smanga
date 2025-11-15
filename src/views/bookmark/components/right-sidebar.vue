@@ -56,8 +56,7 @@ const bookmarkId = computed(() => {
 const blob = ref('')
 
 watch(() => props.info, async (val) => {
-  blob.value = await imageApi.get(val.pageImage)
-  console.log(val);
+  blob.value = await imageApi.get({file: val.pageImage});
 })
 
 watch(

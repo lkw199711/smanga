@@ -1,10 +1,3 @@
-/*
- * @Author: lkw199711 lkw199711@163.com
- * @Date: 2023-10-08 15:48:52
- * @LastEditors: lkw199711 lkw199711@163.com
- * @LastEditTime: 2024-08-04 22:04:17
- * @FilePath: /smanga/src/type/last-read.ts
- */
 type latestType = {
 	latestId: number;
 	page: string;
@@ -17,4 +10,17 @@ type latestType = {
 	finish: boolean;
 };
 
-export {latestType};
+const latestInit: latestType = {
+	latestId: 0,
+	page: '',
+	chapterId: '',
+	mangaId: 0,
+	createTime: '',
+	updateTime: '',
+	mangaCover: '',
+	blob: new Blob(),
+	finish: false,
+};
+
+
+export {latestType, latestInit};

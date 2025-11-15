@@ -1,6 +1,6 @@
 <template>
 	<div class="right-sidebar">
-		<el-drawer v-model="props.rightSidebarVisible" size="auto" :with-header="false" :before-close="close_sidebar">
+		<el-drawer v-model="rightSidebarVisible" size="auto" :with-header="false">
 			<!-- 安卓端占位 -->
 			<android-seat />
 			<el-menu class="right-sidebar-menu" active-text-color="#ffd04b" background-color="#545c64" text-color="#fff"
@@ -61,8 +61,16 @@
 					</el-icon>
 					{{ $t('option.share') }}
 				</el-menu-item>
+				<el-menu-item index="edit" v-if="isAdmin">
+					<el-icon>
+						<Edit />
+					</el-icon>
+					{{ $t('rightSidebar.editManga') }}
+				</el-menu-item>
 			</el-menu>
 		</el-drawer>
+
+		<manga-modify v-model:editMangaDialog="editMangaDialog" :mangaInfo="props.mangaInfo" @reload="emit('reload')" />
 
 		<el-dialog :title="$t('rightSidebar.editTags')" v-model="editTagsDialog">
 			<mangaTagBox :mangaId="mangaInfo.mangaId" :tags="mangaInfo.tags" @update_tags="update_tags"
@@ -90,7 +98,8 @@ import androidSeat from '@/layout/components/android-seat.vue';
 import mangaShare from '@/components/share.vue';
 import { Cookies } from '@/utils';
 import mangaTagBox from '../manga-info/components/manga-tag-box.vue';
-import { mangaInfoType } from '@/type/manga';
+import mangaModify from '../manga-manage/components/mangaModify.vue';
+import { mangaType } from '@/type/manga';
 const browse = useBrowseStore();
 const placeholder = require('@/assets/s-blue.png');
 const { t } = i18n.global;
@@ -99,7 +108,7 @@ const editTagsDialog = ref(false);
 const mangaShareDialog = ref(false);
 const blob = ref('');
 
-let mangaInfo = reactive<mangaInfoType>({
+let mangaInfo = reactive<mangaType>({
 	mediaId: 0,
 	mangaId: 0,
 	mangaName: '',
@@ -116,7 +125,9 @@ let mangaInfo = reactive<mangaInfoType>({
 	metas: [],
 });
 
-const props = defineProps(['mangaInfo', 'rightSidebarVisible']);
+const editMangaDialog = ref(false);
+const rightSidebarVisible = defineModel('rightSidebarVisible');
+const props = defineProps(['mangaInfo']);
 const emit = defineEmits(['reload', 'close']);
 
 const mangaId = computed(() => {
@@ -138,7 +149,7 @@ watch(
 		isCollect.value = await collectApi.is_collect('manga', mangaId);
 		const mangaCover = props.mangaInfo?.mangaCover;
 		if (mangaCover) {
-			blob.value = await imageApi.get(mangaCover);
+			blob.value = await imageApi.get({file: mangaCover});
 		} else {
 			blob.value = placeholder;
 		}
@@ -154,14 +165,6 @@ onMounted(async () => {
  */
 async function update_collect_state() {
 	isCollect.value = await collectApi.is_collect('manga', mangaId.value);
-}
-
-/**
- * @description: 关闭右侧菜单
- * @return {*}
- */
-function close_sidebar() {
-	emit('close');
 }
 
 /**
@@ -234,9 +237,12 @@ async function menu_select(key: string) {
 		case 'share':
 			mangaShareDialog.value = true;
 			break;
+		case 'edit':
+			editMangaDialog.value = true;
+			break;
 
 	}
-	close_sidebar();
+	rightSidebarVisible.value = false;
 }
 </script>
 

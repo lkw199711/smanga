@@ -1,17 +1,16 @@
-@import '@/style/color.less';
-
-.manga-setting-index {
-  padding: 20px;
-}
-
-.manga-setting-box {
+// 管理容器样式
+.manage-container {
   background-color: #fff;
   border-radius: 12px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
   padding: 24px;
   transition: all 0.3s ease;
 }
-
+// 搜索框样式
+.srarch-box {
+  margin-bottom: 2rem;
+}
+// 按钮盒子样式
 .btn-box {
   margin-bottom: 20px;
   display: flex;
@@ -19,6 +18,14 @@
   align-items: center;
 }
 
+// 对话框按钮盒子样式
+.dialog-btn-box {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+// 添加按钮样式
 .add-btn {
   background-color: @s-primary-color;
   border-color: @s-primary-color;
@@ -36,25 +43,7 @@
 .el-table {
   border-radius: 8px;
   overflow: hidden;
-
-  .color-preview-container {
-    display: flex;
-    align-items: center;
-    padding: 4px 0;
-  }
-
-  .color-preview {
-    width: 16px;
-    height: 16px;
-    border-radius: 4px;
-    margin-right: 8px;
-    border: 1px solid #eee;
-  }
-
-  .color-text {
-    font-size: 12px;
-    line-height: 1;
-  }
+  margin-bottom: 20px;
 
   .el-table__header-wrapper {
     background-color: #f5f7fa;
@@ -82,6 +71,7 @@
 .el-button {
   transition: all 0.3s ease;
   border-radius: 6px;
+  margin-right: 5px;
 
   &.el-button--primary {
     background-color: @s-primary-color;
@@ -90,6 +80,18 @@
     &:hover {
       background-color: @s-primary-color-hover;
       border-color: @s-primary-color-hover;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+  }
+
+  &.el-button--success {
+    background-color: #52c41a;
+    border-color: #52c41a;
+
+    &:hover {
+      background-color: #73d13d;
+      border-color: #73d13d;
       transform: translateY(-2px);
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     }
@@ -113,13 +115,22 @@
   margin-bottom: 16px;
 }
 
+.s-form-title {
+  font-size: 14px;
+  font-weight: 500;
+  margin: 16px 0 8px;
+  color: #303133;
+}
+
 .form-note {
   padding: 10px 15px;
   background-color: #f4f4f5;
   border-radius: 4px;
-  margin-top: 10px;
-  margin-bottom: 20px;
+  margin-top: 5px;
+  margin-bottom: 15px;
   line-height: 1.6;
+  font-size: 12px;
+  color: #606266;
 }
 
 // 对话框样式
@@ -142,25 +153,49 @@
   padding: 24px;
 }
 
-// 分页样式
-.table-pager {
-  margin-top: 20px;
+// 开关样式
+.auto-compress {
+  margin-left: 10px;
+}
+
+// 路径项样式
+.path-item {
+  padding: 10px 15px;
+  background-color: #f9fafc;
+  border-radius: 6px;
+  margin-bottom: 10px;
   display: flex;
-  justify-content: flex-start;
+  justify-content: space-between;
   align-items: center;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background-color: #f0f2f5;
+  }
+}
+
+.path-btn-box {
+  display: flex;
+  gap: 5px;
+}
+
+.path-item-btn {
+  height: 28px;
+  padding: 0 10px;
+  font-size: 12px;
 }
 
 // 响应式设计
 @media only screen and (min-width: 1200px) {
-  .manga-setting-box {
+  .manage-container {
     width: 100%;
-    max-width: 1200px;
+    max-width: 1400px;
     margin: 30px auto;
   }
 }
 
 @media only screen and (max-width: 1199px) and (min-width: 768px) {
-  .manga-setting-box {
+  .manage-container {
     width: 100%;
     max-width: 900px;
     margin: 20px auto;
@@ -168,7 +203,7 @@
 }
 
 @media only screen and (max-width: 767px) {
-  .manga-setting-box {
+  .manage-container {
     width: 100%;
     margin: 10px auto;
     padding: 16px;
