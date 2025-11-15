@@ -140,7 +140,7 @@ async function page_change(pageParams: number) {
 
   loading.value = true;
   imgSrc.value = sBlue;
-  imgSrc.value = await imageApi.get(pageImage);
+  imgSrc.value = await imageApi.get({file: pageImage});
   loading.value = false;
 
 

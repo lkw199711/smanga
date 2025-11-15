@@ -82,7 +82,7 @@ watch(
   async (mangaId) => {
     const mangaCover = props.mediaInfo?.mediaCover;
     if (mangaCover) {
-      blob.value = await imageApi.get(mangaCover);
+      blob.value = await imageApi.get({file: mangaCover});
     } else {
       blob.value = placeholder;
     }

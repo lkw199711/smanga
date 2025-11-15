@@ -355,7 +355,7 @@ async function render_meta() {
 
     // 漫画封面
     try {
-        mangaCover.value = await imageApi.get(mangaInfo.mangaCover);
+        mangaCover.value = await imageApi.get({file: mangaInfo.mangaCover});
     } catch (e: any) {
         console.log(e.message);
     }
@@ -386,7 +386,7 @@ async function render_meta() {
     banner.value = mangaInfo.metas.filter((item: metaItemType) => item.metaName === 'banner');
     banner.value.some((item: metaItemType) => /bannerBackground/.test(item.metaFile)) && (bannerModel.value = 'toomics');
     banner.value.forEach(async (item: metaItemType) => {
-        item.blob = await imageApi.get(item.metaFile);
+        item.blob = await imageApi.get({file: item.metaFile});
     });
 
     // 将图片进行排序
@@ -395,7 +395,7 @@ async function render_meta() {
     // 角色信息
     character.value = mangaInfo.metas.filter((item: metaItemType) => item.metaName === 'character');
     character.value.forEach(async (item: metaItemType) => {
-        const blob = await imageApi.get(item.metaFile);
+        const blob = await imageApi.get({file: item.metaFile});
         item.blob = blob;
     })
 }
@@ -485,7 +485,7 @@ function open_covers_edit() {
     editCover.value = true;
     covers.value.forEach(async (item: metaItemType) => {
         item.active = item.metaFile === mangaInfo.mangaCover;
-        const blob = await imageApi.get(item.metaFile);
+        const blob = await imageApi.get({file: item.metaFile});
         item.blob = blob;
     });
 }

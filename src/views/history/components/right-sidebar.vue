@@ -54,7 +54,7 @@ const historyId = computed(() => {
 })
 
 watch(() => props.info, async (val) => {
-  blob.value = await imageApi.get(val.chapterCover)
+  blob.value = await imageApi.get({file: val.chapterCover});
 })
 
 watch(

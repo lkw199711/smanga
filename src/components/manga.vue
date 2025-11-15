@@ -72,7 +72,7 @@ onMounted(() => {
 })
 
 async function get_poster(item: mangaItemType) {
-	blobLink.value = await imageApi.get(item.mangaCover);
+	blobLink.value = await imageApi.get({file: item.mangaCover});
 }
 
 async function go_chapter() {

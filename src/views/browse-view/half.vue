@@ -144,7 +144,7 @@ async function page_change(pageParams: number) {
     imgSrc.value = browse.imageFileList[pageParams - 1];
   } else {
     const img = new Image();
-    img.src = await imageApi.get(pageImage);;
+    img.src = await imageApi.get({file: pageImage});;
 
     const canvas: HTMLCanvasElement | null = document.querySelector('canvas');
 

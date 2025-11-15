@@ -154,11 +154,11 @@ async function page_change(pageParams: number) {
   imgSrc2.value = sBlue;
 
   // 加载第一张图片
-  imgSrc1.value = await imageApi.get(browse.imagePathList[index]);
+  imgSrc1.value = await imageApi.get({file: browse.imagePathList[index]});
 
   // 加载第二张图片
   imgSrc2.value = index + 1 < browse.imagePathList.length
-    ? await imageApi.get(browse.imagePathList[index + 1])
+    ? await imageApi.get({file: browse.imagePathList[index + 1]})
     : '';
 
   

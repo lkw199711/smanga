@@ -138,7 +138,7 @@ watch(
 		isCollect.value = await collectApi.is_collect('manga', mangaId);
 		const mangaCover = props.mangaInfo?.mangaCover;
 		if (mangaCover) {
-			blob.value = await imageApi.get(mangaCover);
+			blob.value = await imageApi.get({file: mangaCover});
 		} else {
 			blob.value = placeholder;
 		}

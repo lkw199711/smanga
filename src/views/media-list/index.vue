@@ -51,7 +51,7 @@ async function load_media() {
 
 	mediaList.value = res.list;
 	mediaList.value.forEach(async (item: mediaType) => {
-		item.mediaCoverLink = await imageApi.get(item.mediaCover);
+		item.mediaCoverLink = await imageApi.get({file: item.mediaCover});
 	});
 }
 

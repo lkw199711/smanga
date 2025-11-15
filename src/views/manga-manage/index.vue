@@ -1,10 +1,11 @@
 <template>
   <div class="manga-setting-index">
     <div class="top">
-      <el-input v-model="keyWord" class="search-input" placeholder="请输入漫画名称" @keyup.enter="()=>{load_table()}" @clear="()=>{load_table()}" @change="()=>{load_table()}">
+      <el-input v-model="keyWord" class="search-input" placeholder="请输入漫画名称" @keyup.enter="() => { load_table() }"
+        @clear="() => { load_table() }" @change="() => { load_table() }">
         <template #append>
-					<el-button :icon="Search" @click="()=>{load_table()}" />
-				</template>
+          <el-button :icon="Search" @click="() => { load_table() }" />
+        </template>
       </el-input>
     </div>
     <div class="manga-setting-box">
@@ -53,8 +54,18 @@
             <el-input v-model="form.mangaPath" :placeholder="$t('mangaManage.place.path')"></el-input>
           </el-form-item>
 
+          <!-- 封面设置 -->
           <el-form-item :label="$t('mangaManage.form.poster')">
-            <el-input v-model="form.mangaCover" :placeholder="$t('mangaManage.place.poster')"></el-input>
+            <!-- 服务器路径输入 -->
+            <el-input v-model="form.mangaCover" :placeholder="$t('mangaManage.place.poster')" class="mb-3"></el-input>
+
+            <!-- 使用全局封面上传组件 -->
+            <cover-upload 
+              cover-type="manga"
+              :manga-cover="form.mangaCover"
+              :bind-id="form.mangaId" 
+              @update:value="(value) => form.mangaCover = value"
+            />
           </el-form-item>
 
           <!--阅读字段-->
@@ -75,8 +86,8 @@
 
           <el-form-item :label="$t('mediaManage.form.direction')">
             <el-radio-group v-model="form.direction" class="ml-4">
-              <el-radio :label="0" size="large">{{ $t('mediaManage.select.ltr') }}</el-radio>
-              <el-radio :label="1" size="large">{{ $t('mediaManage.select.rtl') }}</el-radio>
+              <el-radio :value="0" size="large">{{ $t('mediaManage.select.ltr') }}</el-radio>
+              <el-radio :value="1" size="large">{{ $t('mediaManage.select.rtl') }}</el-radio>
             </el-radio-group>
           </el-form-item>
 
@@ -107,9 +118,10 @@
 export default { name: 'manga-manage' };
 </script>
 <script lang="ts" setup>
-import { onMounted, reactive, ref } from 'vue';
+import { onMounted, reactive, ref, computed } from 'vue';
 import { Delete, Edit } from '@element-plus/icons-vue';
 import { ElMessage, ElMessageBox } from 'element-plus';
+import coverUpload from '@/components/cover-upload.vue';
 import mangaApi from '@/api/manga';
 import tablePager from '@/components/table-pager.vue';
 import i18n from '@/i18n';
@@ -122,7 +134,7 @@ const tableData = ref([]);
 const editMangaDialog = ref(false);
 const keyWord = ref('');
 const form = reactive({
-  mangaId: '',
+  mangaId: 0,
   mangaName: '',
   mangaPath: '',
   mangaCover: '',
@@ -130,6 +142,7 @@ const form = reactive({
   removeFirst: 0,
   direction: 1,
 });
+
 const formInit = {
   mangaId: '',
   mangaName: '',
@@ -139,6 +152,8 @@ const formInit = {
   removeFirst: 0,
   direction: 1,
 }
+
+
 const { t } = i18n.global;
 
 
@@ -186,6 +201,8 @@ function edit_manga(index: number, row: any) {
   Object.assign(form, row);
 }
 
+
+
 async function update_manga() {
   // 表单校验-检查漫画名
   if (!form.mangaName) {
@@ -203,6 +220,7 @@ async function update_manga() {
   if (res.code === 0) {
     editMangaDialog.value = false;
     reload_table();
+  
   }
 }
 

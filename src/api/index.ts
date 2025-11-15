@@ -24,25 +24,37 @@ const ajax = Axios.create({
 		(data, headers) => {
 			// 设置请求头
 			headers['token'] = Cookies.get('token');
-			// 获取时间戳
-			const timestamp = new Date().getTime();
-			// 初始化传参
-			data = data || {};
-			// 加入时间戳与密钥
-			data = Object.assign(data, {
-				timestamp,
-			});
+			
+			// 判断是否为FormData或不需要JSON转换的情况
+			const contentType = headers['Content-Type'] || headers['content-type'];
+			const isFormData = data instanceof FormData;
+			const isJsonType = contentType && contentType.includes('json');
+			
+			// 只有在不是FormData且是JSON类型的情况下才进行数据处理和JSON转换
+			if (!isFormData && isJsonType) {
+				// 获取时间戳
+				const timestamp = new Date().getTime();
+				// 初始化传参
+				data = data || {};
+				// 加入时间戳与密钥
+				data = Object.assign(data, {
+					timestamp,
+				});
 
-			// 删除多余参数
-			if (data.data && data.data.createTime) {
-				delete data.data.createTime;
-			}
-			if (data.data && data.data.updateTime) {
-				delete data.data.updateTime;
-			}
+				// 删除多余参数
+				if (data.data && data.data.createTime) {
+					delete data.data.createTime;
+				}
+				if (data.data && data.data.updateTime) {
+					delete data.data.updateTime;
+				}
 
-			// 返回json
-			return JSON.stringify(data);
+				// 返回json
+				return JSON.stringify(data);
+			} else {
+				// 对于FormData或非JSON类型，直接返回原始数据
+				return data;
+			}
 		},
 	],
 	transformResponse: [
