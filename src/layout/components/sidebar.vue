@@ -12,7 +12,7 @@
       </el-menu-item>
 
       <!-- 媒体库列表 -->
-      <el-sub-menu v-if="userConfig.showSidebarMediaList">
+      <el-sub-menu v-if="userConfig.showSidebarMediaList" index="mediaList">
         <template #title>
           <i :class="['sidebar-sub-icon', 'colour']">
             <svg class="icon" aria-hidden="true">
@@ -88,7 +88,7 @@
         </el-menu-item>
 
         <!-- 媒体库列表 -->
-        <el-sub-menu v-if="userConfig.showSidebarMediaList">
+        <el-sub-menu v-if="userConfig.showSidebarMediaList" index="mediaList">
           <template #title>
             <i :class="['sidebar-sub-icon', 'colour']">
               <svg class="icon" aria-hidden="true">

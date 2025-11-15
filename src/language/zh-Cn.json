@@ -405,7 +405,10 @@
     "requestFullscreen": "页面全屏",
     "exitFullscreen": "退出全屏",
     "editCover": "编辑封面",
-    "editMetas": "编辑元数据"
+    "editMetas": "编辑元数据",
+    "editChapter": "修改章节信息",
+    "editManga": "编辑漫画信息",
+    "editMedia": "编辑媒体库信息"
   },
   "createTime": "创建时间",
   "updateTime": "更新时间",

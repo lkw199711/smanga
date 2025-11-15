@@ -85,7 +85,7 @@ import listSkeleton from '@/components/list-skeleton.vue';
 import queue from '@/store/quque';
 import useBrowseStore from '@/store/browse';
 import useSearchStore from '@/store/search';
-import { mangaInfoType } from '@/type/manga';
+import { mangaType } from '@/type/manga';
 import { chapterType } from '@/type/chapter';
 const browse = useBrowseStore();
 const searchStore = useSearchStore();
@@ -114,7 +114,7 @@ function get_page_size_array() {
 }
 let page = ref(1);
 let count = ref(0);
-type listType = mangaInfoType | chapterType | {
+type listType = mangaType | chapterType | {
 	blob: string;
 };
 let list = ref<listType[]>([]);

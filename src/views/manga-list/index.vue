@@ -20,8 +20,7 @@
 			:page-size-config="browse.mangaListPageSizes" @page-change="page_change" />
 
 		<!--功能菜单-->
-		<rightSidebar :mangaInfo="mangaInfo" :rightSidebarVisible="rightSidebarVisible" @reload="page_change"
-			@close="() => { rightSidebarVisible = false }" />
+		<rightSidebar :mangaInfo="mangaInfo" v-model:rightSidebarVisible="rightSidebarVisible" @reload="page_change" />
 	</div>
 </template>
 
@@ -43,7 +42,7 @@ import manga from '@/components/manga.vue';
 import mediaPager from '@/components/media-pager.vue';
 import listSkeleton from '@/components/list-skeleton.vue';
 import rightSidebar from './right-sidebar.vue';
-import { mangaInfoType } from '@/type/manga';
+import { mangaType } from '@/type/manga';
 import queue from '@/store/quque';
 import useBrowseStore from '@/store/browse';
 const browse = useBrowseStore();
@@ -51,8 +50,8 @@ const route = useRoute();
 
 let page = ref(1);
 let count = ref(-1);
-let list = ref<mangaInfoType[]>([]);
-let mangaInfo = ref<mangaInfoType>();
+let list = ref<mangaType[]>([]);
+let mangaInfo = ref<mangaType>();
 let rightSidebarVisible = ref(false);
 let loading = ref(false);
 
@@ -177,7 +176,7 @@ function reload() {
 /**
  * 打开右侧菜单
  */
-function context_menu(mangaInfoProps: mangaInfoType, key: number) {
+function context_menu(mangaInfoProps: mangaType, key: number) {
 	mangaInfo.value = mangaInfoProps;
 	rightSidebarVisible.value = true;
 }

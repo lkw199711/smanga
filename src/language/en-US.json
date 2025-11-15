@@ -401,7 +401,10 @@
     "requestFullscreen": "Full screen page",
     "exitFullscreen": "Exit Full Screen",
     "editCover": "editCover",
-    "editMetas": "editMetas"
+    "editMetas": "editMetas",
+    "editChapter": "Edit chapter info",
+    "editManga": "Edit manga info",
+    "editMedia": "Edit media info"
   },
   "createTime": "createTime",
   "updateTime": "updateTime",

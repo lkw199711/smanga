@@ -32,7 +32,7 @@ import imageApi from '@/api/image';
 
 // 组件属性
 const props = defineProps<{
-  initCover: string; // 封面路径，支持v-model
+  initCover: string // 封面路径，支持v-model
   coverType: 'media' | 'manga' | 'chapter'; // 封面类型
   bindId: number; // 目标ID
 }>();

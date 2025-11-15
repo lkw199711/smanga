@@ -43,14 +43,14 @@ export default {
 <script setup lang="ts">
 import { computed, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { mangaInfoType } from '@/type/manga';
+import { mangaType } from '@/type/manga';
 import imageApi from '@/api/image';
 import { onMounted } from 'vue';
 import queue from '@/store/quque';
 import usePosterStore from '@/store/image';
 import { userConfig } from '@/store';
 
-type mangaItemType = mangaInfoType & { blob: string; mangaCover: string; };
+type mangaItemType = mangaType & { blob: string; mangaCover: string; };
 
 const route = useRoute();
 const router = useRouter();

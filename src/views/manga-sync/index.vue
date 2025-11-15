@@ -293,7 +293,7 @@ async function analysis_link() {
   if (/\/api/.test(share.link)) {
     origin = origin + '/api';
   }
-  console.log(share, origin);
+  
   if (shareData.value.share.shareType === 'manga') {
     const manga = shareData.value.manga;
     // 加载封面

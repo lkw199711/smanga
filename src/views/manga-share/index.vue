@@ -139,11 +139,6 @@ async function load_table(page = 1, pageSize = 10) {
   browse.manageListPageSizeCache = pageSize;
 }
 
-function dialog_open() {
-  // 打开对话框逻辑
-  console.log('打开对话框');
-}
-
 async function edit_manga(index: number, row: any) {
   const shareResponse = await syncApi.analysis(row.link);
   shareData.value = shareResponse.data;

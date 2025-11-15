@@ -12,4 +12,18 @@ type mediaType = {
 	sourceWebsite?: string;
 };
 
-export { mediaType };
+const mediaInit: mediaType = {
+	mediaId: 0,
+	mediaName: '',
+	author: '',
+	mediaType: 0,
+	mediaCover: '',
+	mediaCoverLink: '',
+	createTime: '',
+	updateTime: '',
+	describe: '',
+	directoryFormat: 0,
+	sourceWebsite: '',
+};
+
+export { mediaType, mediaInit };

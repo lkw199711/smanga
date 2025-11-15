@@ -57,7 +57,6 @@ const blob = ref('')
 
 watch(() => props.info, async (val) => {
   blob.value = await imageApi.get({file: val.pageImage});
-  console.log(val);
 })
 
 watch(

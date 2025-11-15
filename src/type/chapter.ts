@@ -1,4 +1,4 @@
-import { latestType } from './latest';
+import { latestInit, latestType } from './latest';
 type chapterType = {
 	browseType: string;
 	chapterCover: string;
@@ -19,4 +19,24 @@ type chapterType = {
 	chapter: any;
 };
 
-export { chapterType };
+const chapterInit: chapterType = {
+	browseType: '',
+	chapterCover: '',
+	chapterId: 0,
+	chapterName: '',
+	chapterNumber: 0,
+	chapterPath: '',
+	chapterType: '',
+	createTime: '',
+	pageCount: 0,
+	mangaId: 0,
+	mediaId: 0,
+	pathId: 0,
+	picNum: 0,
+	updateTime: '',
+	page: 0,
+	latest: latestInit,
+	chapter: {},
+};
+
+export { chapterType, chapterInit };

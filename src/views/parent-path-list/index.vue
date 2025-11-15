@@ -20,11 +20,11 @@ import { global_set } from '@/utils';
 import { config } from '@/store';
 import { useRoute, useRouter } from 'vue-router';
 import mangaApi from '@/api/manga';
-import { mangaInfoType } from '@/type/manga';
+import { mangaType } from '@/type/manga';
 const route = useRoute();
 const router = useRouter();
 
-const mediaList = ref<mangaInfoType[]>([]);
+const mediaList = ref<mangaType[]>([]);
 
 function get_last_str(path: string) {
 	if (!path) return '无次级目录';
@@ -48,7 +48,7 @@ async function load_media() {
  * @param {*} mediaId
  * @return {*}
  */
-function go_manga_list(mangaInfo: mangaInfoType) {
+function go_manga_list(mangaInfo: mangaType) {
 	const parentPath = mangaInfo.parentPath;
 
 	router.push({

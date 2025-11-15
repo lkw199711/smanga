@@ -169,7 +169,6 @@ async function reload_table() {
 function edit_manga(index: number, row: any) {
   editMangaDialog.value = true;
   payload.value = JSON.stringify(row, null, 2);
-  console.log('payload', payload.value);
 }
 
 /**

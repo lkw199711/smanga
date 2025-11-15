@@ -1,7 +1,13 @@
 <template>
   <div class="manga-setting-box manage-container">
     <div class="srarch-box">
-      <el-input v-model="keyWord" class="search-input" placeholder="请输入章节名称" @keyup.enter="() => load_table()" @clear="() => load_table()" @change="() => load_table()">
+      <el-input
+        v-model="keyWord"
+        class="search-input"
+        placeholder="请输入章节名称"
+        @keyup.enter="() => load_table()"
+        @clear="() => load_table()"
+        @change="() => load_table()">
         <template #append>
           <el-button :icon="Search" @click="() => load_table()" />
         </template>
@@ -14,7 +20,7 @@
     </div>
     <!--表格-->
     <el-table v-loading="loading" :data="tableData" stripe border @selection-change="handleSelectionChange">
-        <el-table-column type="selection" width="55"></el-table-column>
+      <el-table-column type="selection" width="55"></el-table-column>
       <el-table-column type="index" :label="$t('account.serial')" width="54"></el-table-column>
 
       <el-table-column prop="mediaId" :label="$t('mediaManage.id')" width="80"></el-table-column>
@@ -34,43 +40,8 @@
         </template>
       </el-table-column>
     </el-table>
-
-    <el-dialog :title="$t('chapterManage.modify')" v-model="editChapterDialog" :before-close="dialog_close">
-      <el-form :model="form" label-width="11rem">
-        <el-form-item :label="$t('chapterManage.form.name')">
-          <el-input v-model="form.chapterName" :placeholder="$t('chapterManage.place.name')"></el-input>
-        </el-form-item>
-
-        <el-form-item :label="$t('chapterManage.form.path')">
-          <el-input v-model="form.chapterPath" :placeholder="$t('chapterManage.place.path')"></el-input>
-        </el-form-item>
-
-        <el-form-item :label="$t('chapterManage.form.poster')">
-          <el-input v-model="form.chapterCover" :placeholder="$t('chapterManage.place.poster')"></el-input>
-        </el-form-item>
-        <el-form-item>
-          <cover-upload
-            cover-type="chapter"
-            :bind-id="form.chapterId"
-            :init-cover="form.chapterCover"
-            v-on:update:value="value => (form.chapterCover = value)" />
-        </el-form-item>
-
-        <el-form-item :label="$t('chapterManage.form.chapterNumber')">
-          <el-input v-model="form.chapterNumber" :placeholder="$t('chapterManage.place.chapterNumber')"></el-input>
-        </el-form-item>
-      </el-form>
-
-      <template v-slot:footer>
-        <div class="dialog-footer">
-          <!--按钮盒子-->
-          <div class="dialog-btn-box">
-            <el-button type="primary" @click="do_update_chapter">{{ $t('option.confirm') }}</el-button>
-            <el-button type="warning" @click="editChapterDialog = false">{{ $t('option.cancel') }}</el-button>
-          </div>
-        </div>
-      </template>
-    </el-dialog>
+    <!--修改章节弹窗-->
+    <chapter-modify v-model:editChapterDialog="editChapterDialog" :chapterInfo="chapterInfo" @reload="load_table" />
     <!--分页-->
     <table-pager ref="pager" @pageChange="load_table" :page-size="browse.manageListPageSize" :count="count" />
   </div>
@@ -85,13 +56,14 @@ import {ElMessage, ElMessageBox} from 'element-plus';
 import {Delete, Edit, Search} from '@element-plus/icons-vue';
 import chapterApi from '@/api/chapter';
 import tablePager from '@/components/table-pager.vue';
-import coverUpload from '@/components/cover-upload.vue';
+import chapterModify from './components/chapterModify.vue';
+
 import i18n from '@/i18n';
 import {reactive} from 'vue';
-import type {mangaInfoType} from '@/type/manga';
+import type {mangaType} from '@/type/manga';
 import {userConfig} from '@/store';
 import useBrowseStore from '@/store/browse';
-import { chapterType } from '@/type/chapter';
+import {chapterInit, chapterType} from '@/type/chapter';
 
 const browse = useBrowseStore();
 const {t} = i18n.global;
@@ -102,13 +74,7 @@ const editChapterDialog = ref(false);
 const keyWord = ref('');
 const loading = ref(false);
 const selectedRows = ref<chapterType[]>([]);
-const form = reactive({
-  chapterId: 0,
-  chapterName: '',
-  chapterPath: '',
-  chapterCover: '',
-  chapterNumber: '',
-});
+const chapterInfo = reactive<chapterType>(chapterInit);
 
 const formInit = {
   chapterId: 0,
@@ -129,14 +95,10 @@ async function batch_delete_chapter() {
   if (selectedRows.value.length === 0) {
     return;
   }
-  
+
   const chapterIds = selectedRows.value.map(row => row.chapterId);
-  
-  ElMessageBox.confirm(
-    t('chapterManage.confirm.batchDeleteText'),
-    t('chapterManage.confirm.batchDeleteTitle'),
-    { type: 'warning' }
-  )
+
+  ElMessageBox.confirm(t('chapterManage.confirm.batchDeleteText'), t('chapterManage.confirm.batchDeleteTitle'), {type: 'warning'})
     .then(async () => {
       loading.value = true;
       const res = await chapterApi.batch_delete_chapter(chapterIds);
@@ -149,18 +111,6 @@ async function batch_delete_chapter() {
     .catch(() => {
       // 取消删除
     });
-}
-
-/*** 关闭弹窗 */
-function dialog_close() {
-  editChapterDialog.value = false;
-}
-/**
- * 开启弹窗
- */
-function dialog_open() {
-  Object.assign(form, formInit);
-  editChapterDialog.value = true;
 }
 
 /**
@@ -195,38 +145,16 @@ function reload_table() {
  * @param index
  * @param row
  */
-function edit_chapter(index: number, mangaInfo: mangaInfoType) {
-  dialog_open();
-  Object.assign(form, mangaInfo);
-}
-
-/**
- * 执行修改请求
- */
-async function do_update_chapter() {
-  // 表单验证-章节名
-  if (!form.chapterName) {
-    ElMessage.warning(t('chapterManage.warning.name'));
-    return false;
-  }
-  // 表单验证-章节路径
-  if (!form.chapterPath) {
-    ElMessage.warning(t('chapterManage.warning.path'));
-    return false;
-  }
-
-  const res = await chapterApi.update_chapter(form);
-  if (res.code === 0) {
-    editChapterDialog.value = false;
-    reload_table();
-  }
+function edit_chapter(index: number, chapterParams: chapterType) {
+  Object.assign(chapterInfo, formInit, chapterParams);
+  editChapterDialog.value = true;
 }
 
 /**
  * 删除漫画
  * */
 async function do_delete_chapter(index: number, row: any) {
-  ElMessageBox.confirm(t('chapterManage.confirm.text'), t('chapterManage.confirm.title'), { type: 'warning' })
+  ElMessageBox.confirm(t('chapterManage.confirm.text'), t('chapterManage.confirm.title'), {type: 'warning'})
     .then(async () => {
       const res = await chapterApi.delete_chapter(row.chapterId);
       if (res.code === 0) {
