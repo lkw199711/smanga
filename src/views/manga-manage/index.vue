@@ -1,136 +1,126 @@
 <template>
-  <div class="manga-setting-index">
-    <div class="top">
-      <el-input v-model="keyWord" class="search-input" placeholder="请输入漫画名称" @keyup.enter="() => { load_table() }"
-        @clear="() => { load_table() }" @change="() => { load_table() }">
+  <div class="manga-setting-box manage-container">
+    <div class="srarch-box">
+      <el-input
+        v-model="keyWord"
+        class="search-input"
+        placeholder="请输入漫画名称"
+        @keyup.enter="() => load_table()"
+        @clear="() => load_table()"
+        @change="() => load_table()">
         <template #append>
-          <el-button :icon="Search" @click="() => { load_table() }" />
+          <el-button :icon="Search" @click="() => load_table()" />
         </template>
       </el-input>
     </div>
-    <div class="manga-setting-box">
-      <!--表格-->
-      <el-table :data="tableData" stripe border>
-        <el-table-column type="index" :label="$t('account.serial')" width="54">
-        </el-table-column>
-
-        <el-table-column prop="mediaId" :label="$t('mediaManage.id')" width="80">
-        </el-table-column>
-
-        <el-table-column prop="mangaId" :label="$t('mangaManage.id')" width="86">
-        </el-table-column>
-
-        <el-table-column prop="mangaName" :label="$t('mangaManage.name')" width="180">
-        </el-table-column>
-
-        <el-table-column prop="createTime" :label="$t('mangaManage.createTime')" width="160">
-        </el-table-column>
-
-        <el-table-column prop="updateTime" :label="$t('mangaManage.updateTime')" width="160">
-        </el-table-column>
-
-        <el-table-column :label="$t('account.option')">
-          <template v-slot="scope">
-            <el-button size="small" type="primary" :icon="Edit" @click="edit_manga(scope.$index, scope.row)">{{
-              $t('option.modify') }}
-            </el-button>
-            <el-button size="small" type="danger" :icon="Delete" @click="delete_manga(scope.$index, scope.row)">{{
-              $t('option.delete') }}
-            </el-button>
-          </template>
-        </el-table-column>
-      </el-table>
-
-      <!--分页-->
-      <table-pager ref="pager" @pageChange="load_table" :pageSize="browse.manageListPageSize" :count="count" />
-
-      <el-dialog :title="$t('mangaManage.modify')" v-model="editMangaDialog" :before-close="dialog_close">
-        <el-form :model="form" label-width="11rem">
-          <el-form-item :label="$t('mangaManage.form.name')">
-            <el-input v-model="form.mangaName" :placeholder="$t('mangaManage.place.name')"></el-input>
-          </el-form-item>
-
-          <el-form-item :label="$t('mangaManage.form.path')">
-            <el-input v-model="form.mangaPath" :placeholder="$t('mangaManage.place.path')"></el-input>
-          </el-form-item>
-
-          <!-- 封面设置 -->
-          <el-form-item :label="$t('mangaManage.form.poster')">
-            <!-- 服务器路径输入 -->
-            <el-input v-model="form.mangaCover" :placeholder="$t('mangaManage.place.poster')" class="mb-3"></el-input>
-          </el-form-item>
-
-          <el-form-item :label="$t('mangaManage.form.directory')">
-            <!-- 使用全局封面上传组件 -->
-            <cover-upload cover-type="manga" :init-cover="form.mangaCover" :bind-id="form.mangaId"
-              @update:value="(value) => form.mangaCover = value" />
-          </el-form-item>
-
-          <!--阅读字段-->
-          <p class="s-form-title">{{ $t('mediaManage.title.read') }}</p>
-
-          <el-form-item :label="$t('mangaManage.form.browse')">
-            <el-select v-model="form.browseType" :placeholder="$t('mangaManage.place.browse')">
-              <el-option :label="$t('mediaManage.select.browse0')" value="flow" />
-              <el-option :label="$t('mediaManage.select.browse1')" value="single" />
-              <el-option :label="$t('mediaManage.select.browse2')" value="double" />
-              <el-option :label="$t('mediaManage.select.browse3')" value="half" />
-            </el-select>
-          </el-form-item>
-
-          <el-form-item :label="$t('mediaManage.form.removeFirst')">
-            <el-switch v-model.number="form.removeFirst" :active-value="1" :inactive-value="0" />
-          </el-form-item>
-
-          <el-form-item :label="$t('mediaManage.form.direction')">
-            <el-radio-group v-model="form.direction" class="ml-4">
-              <el-radio :value="0" size="large">{{ $t('mediaManage.select.ltr') }}</el-radio>
-              <el-radio :value="1" size="large">{{ $t('mediaManage.select.rtl') }}</el-radio>
-            </el-radio-group>
-          </el-form-item>
-
-          <div class="form-note mt-4 text-gray-500 text-sm">
-            <p>• {{ $t('mediaManage.note.browse') }}</p>
-            <p>• {{ $t('mediaManage.note.removeFirst') }}</p>
-            <p>• {{ $t('mediaManage.note.direction') }}</p>
-          </div>
-
-        </el-form>
-
-        <template v-slot:footer>
-          <div class="dialog-footer">
-            <!--按钮盒子-->
-            <div class="btn-box">
-              <el-button type="primary" @click="update_manga">{{ $t('option.confirm') }}</el-button>
-              <el-button type="warning" @click="editMangaDialog = false">{{ $t('option.cancel') }}</el-button>
-            </div>
-          </div>
-        </template>
-
-      </el-dialog>
+    <div class="btn-box">
+      <el-button type="danger" :icon="Delete" :disabled="multipleSelection.length === 0" @click="batch_delete_manga">{{ $t('option.delete') }}</el-button>
     </div>
+    <!--表格-->
+    <el-table :data="tableData" stripe border @selection-change="handle_selection_change">
+      <el-table-column type="selection" width="54"></el-table-column>
+      <el-table-column type="index" :label="$t('account.serial')" width="54"></el-table-column>
+      <el-table-column prop="mediaId" :label="$t('mediaManage.id')" width="80"></el-table-column>
+      <el-table-column prop="mangaId" :label="$t('mangaManage.id')" width="86"></el-table-column>
+      <el-table-column prop="mangaName" :label="$t('mangaManage.name')" width="180"></el-table-column>
+      <el-table-column prop="createTime" :label="$t('mangaManage.createTime')" width="160"></el-table-column>
+      <el-table-column prop="updateTime" :label="$t('mangaManage.updateTime')" width="160"></el-table-column>
+      <el-table-column :label="$t('account.option')">
+        <template v-slot="scope">
+          <el-button size="small" type="primary" :icon="Edit" @click="edit_manga(scope.$index, scope.row)">{{ $t('option.modify') }}</el-button>
+          <el-button size="small" type="danger" :icon="Delete" @click="delete_manga(scope.$index, scope.row)">{{ $t('option.delete') }}</el-button>
+        </template>
+      </el-table-column>
+    </el-table>
+
+    <!--分页-->
+    <table-pager ref="pager" @pageChange="load_table" :pageSize="browse.manageListPageSize" :count="count" />
+
+    <el-dialog :title="$t('mangaManage.modify')" v-model="editMangaDialog" :before-close="dialog_close">
+      <el-form :model="form" label-width="11rem">
+        <el-form-item :label="$t('mangaManage.form.name')">
+          <el-input v-model="form.mangaName" :placeholder="$t('mangaManage.place.name')"></el-input>
+        </el-form-item>
+
+        <el-form-item :label="$t('mangaManage.form.path')">
+          <el-input v-model="form.mangaPath" :placeholder="$t('mangaManage.place.path')"></el-input>
+        </el-form-item>
+
+        <!-- 封面设置 -->
+        <el-form-item :label="$t('mangaManage.form.poster')">
+          <!-- 服务器路径输入 -->
+          <el-input v-model="form.mangaCover" :placeholder="$t('mangaManage.place.poster')" class="mb-3"></el-input>
+        </el-form-item>
+
+        <!-- 使用全局封面上传组件 -->
+        <el-form-item>
+          <cover-upload cover-type="manga" :init-cover="form.mangaCover" :bind-id="form.mangaId" @update:value="value => (form.mangaCover = value)" />
+        </el-form-item>
+
+        <!--阅读字段-->
+        <p class="s-form-title">{{ $t('mediaManage.title.read') }}</p>
+
+        <el-form-item :label="$t('mangaManage.form.browse')">
+          <el-select v-model="form.browseType" :placeholder="$t('mangaManage.place.browse')">
+            <el-option :label="$t('mediaManage.select.browse0')" value="flow" />
+            <el-option :label="$t('mediaManage.select.browse1')" value="single" />
+            <el-option :label="$t('mediaManage.select.browse2')" value="double" />
+            <el-option :label="$t('mediaManage.select.browse3')" value="half" />
+          </el-select>
+        </el-form-item>
+
+        <el-form-item :label="$t('mediaManage.form.removeFirst')">
+          <el-switch v-model.number="form.removeFirst" :active-value="1" :inactive-value="0" />
+        </el-form-item>
+
+        <el-form-item :label="$t('mediaManage.form.direction')">
+          <el-radio-group v-model="form.direction" class="ml-4">
+            <el-radio :value="0" size="large">{{ $t('mediaManage.select.ltr') }}</el-radio>
+            <el-radio :value="1" size="large">{{ $t('mediaManage.select.rtl') }}</el-radio>
+          </el-radio-group>
+        </el-form-item>
+
+        <div class="form-note mt-4 text-gray-500 text-sm">
+          <p>• {{ $t('mediaManage.note.browse') }}</p>
+          <p>• {{ $t('mediaManage.note.removeFirst') }}</p>
+          <p>• {{ $t('mediaManage.note.direction') }}</p>
+        </div>
+      </el-form>
+
+      <template v-slot:footer>
+        <div class="dialog-footer">
+          <!--按钮盒子-->
+          <div class="dialog-btn-box">
+            <el-button type="primary" @click="update_manga">{{ $t('option.confirm') }}</el-button>
+            <el-button type="warning" @click="editMangaDialog = false">{{ $t('option.cancel') }}</el-button>
+          </div>
+        </div>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
 <script lang="ts">
-export default { name: 'manga-manage' };
+export default {name: 'manga-manage'};
 </script>
 <script lang="ts" setup>
-import { onMounted, reactive, ref, computed } from 'vue';
-import { Delete, Edit } from '@element-plus/icons-vue';
-import { ElMessage, ElMessageBox } from 'element-plus';
+import {onMounted, reactive, ref, computed} from 'vue';
+import {Delete, Edit} from '@element-plus/icons-vue';
+import {ElMessage, ElMessageBox} from 'element-plus';
 import coverUpload from '@/components/cover-upload.vue';
 import mangaApi from '@/api/manga';
 import tablePager from '@/components/table-pager.vue';
 import i18n from '@/i18n';
-import { Search } from '@element-plus/icons-vue';
+import {Search} from '@element-plus/icons-vue';
 import useBrowseStore from '@/store/browse';
+import {mangaInfoType} from '@/type/manga';
 const pager = ref();
 const browse = useBrowseStore();
 const count = ref(0);
 const tableData = ref([]);
 const editMangaDialog = ref(false);
 const keyWord = ref('');
+const multipleSelection = ref<mangaInfoType[]>([]);
 const form = reactive({
   mangaId: 0,
   mangaName: '',
@@ -149,11 +139,9 @@ const formInit = {
   browseType: 'flow',
   removeFirst: 0,
   direction: 1,
-}
+};
 
-
-const { t } = i18n.global;
-
+const {t} = i18n.global;
 
 onMounted(() => {
   // 获取当前页面的配置
@@ -174,7 +162,6 @@ function dialog_open() {
   editMangaDialog.value = true;
 }
 
-
 async function load_table(page = 1, pageSize = browse.manageListPageSize) {
   const res = await mangaApi.get(0, page, pageSize, 'id', keyWord.value);
   count.value = res.count;
@@ -190,16 +177,14 @@ function reload_table() {
 }
 
 /**
-   * 编辑漫画
-   * @param index
-   * @param row
-   */
+ * 编辑漫画
+ * @param index
+ * @param row
+ */
 function edit_manga(index: number, row: any) {
   dialog_open();
   Object.assign(form, row);
 }
-
-
 
 async function update_manga() {
   // 表单校验-检查漫画名
@@ -218,18 +203,11 @@ async function update_manga() {
   if (res.code === 0) {
     editMangaDialog.value = false;
     reload_table();
-  
   }
 }
 
 async function delete_manga(index: number, row: any) {
-  ElMessageBox.confirm(
-    t('mangaManage.confirm.text'),
-    t('mangaManage.confirm.title'),
-    {
-      type: 'warning',
-    }
-  )
+  ElMessageBox.confirm(t('mangaManage.confirm.text'), t('mangaManage.confirm.title'), {type: 'warning'})
     .then(async () => {
       const res = await mangaApi.delete_manga(row.mangaId);
 
@@ -237,11 +215,35 @@ async function delete_manga(index: number, row: any) {
         reload_table();
       }
     })
-    .catch(() => { });
+    .catch(() => {});
 }
 
+/**
+ * 处理选择项变化
+ */
+function handle_selection_change(val: mangaInfoType[]) {
+  multipleSelection.value = val;
+}
+
+/**
+ * 批量删除漫画
+ */
+async function batch_delete_manga() {
+  if (multipleSelection.value.length === 0) {
+    return;
+  }
+
+  ElMessageBox.confirm(t('mangaManage.confirm.text'), t('mangaManage.confirm.title'), {type: 'warning'})
+    .then(async () => {
+      const ids = multipleSelection.value.map(item => item.mangaId);
+      const res = await mangaApi.batch_delete_manga(ids as number[]);
+
+      if (res.code === 0) {
+        reload_table();
+      }
+    })
+    .catch(() => {});
+}
 </script>
 
-<style lang="less" scoped>
-@import '@/style/manga-manage.less';
-</style>
+<style lang="less" scoped src="@/style/manage.less"></style>

@@ -1,4 +1,4 @@
-import { ajax } from './index';
+import {ajax} from './index';
 
 const mediaApi = {
 	/**
@@ -8,7 +8,7 @@ const mediaApi = {
 	 * @return {*}
 	 */
 	async get(page: number = 1, pageSize: number = 999) {
-		const res = ajax.get('media', { params: { page, pageSize } });
+		const res = ajax.get('media', {params: {page, pageSize}});
 
 		const resData = (await res).data;
 
@@ -44,7 +44,7 @@ const mediaApi = {
 	 * @return {*}
 	 */
 	async delete_media(mediaId: any, deleteFile = false) {
-		const res = ajax.delete(`media/${mediaId}`, { data: { deleteFile } });
+		const res = ajax.delete(`media/${mediaId}`, {data: {deleteFile}});
 
 		const resData = (await res).data;
 		return resData;
@@ -60,7 +60,21 @@ const mediaApi = {
 		const res = ajax.put(`media/${mediaId}/scan`);
 		const resData = (await res).data;
 		return resData;
-	}
+	},
+
+	/**
+	 * @description: 批量删除媒体库
+	 * @param {number[]} mediaIds
+	 * @return {*}
+	 */
+	async batch_delete_media(mediaIds: number[], deleteFile = false) {
+		const res = ajax.delete(`media/${mediaIds.join(',')}/batch`, {
+			data: {mediaIds, deleteFile},
+		});
+
+		const resData = (await res).data;
+		return resData;
+	},
 };
 
 export default mediaApi;

@@ -1,104 +1,93 @@
 <template>
-  <div class="chapter-setting-index">
-    <div class="top">
-      <el-input v-model="keyWord" class="search-input" placeholder="请输入章节名称" @keyup.enter="() => { load_table() }"
-        @clear="() => { load_table() }" @change="() => { load_table() }">
+  <div class="manga-setting-box manage-container">
+    <div class="srarch-box">
+      <el-input v-model="keyWord" class="search-input" placeholder="请输入章节名称" @keyup.enter="() => load_table()" @clear="() => load_table()" @change="() => load_table()">
         <template #append>
-          <el-button :icon="Search" @click="()=>{load_table()}" />
+          <el-button :icon="Search" @click="() => load_table()" />
         </template>
       </el-input>
     </div>
-    <div class="chapter-setting-box">
-      <div class="manga-setting-box">
-        <!--表格-->
-        <el-table :data="tableData" stripe border>
-          <el-table-column type="index" :label="$t('account.serial')" width="54">
-          </el-table-column>
+    <!--表格-->
+    <el-table :data="tableData" stripe border>
+      <el-table-column type="index" :label="$t('account.serial')" width="54"></el-table-column>
 
-          <el-table-column prop="mediaId" :label="$t('mediaManage.id')" width="80">
-          </el-table-column>
+      <el-table-column prop="mediaId" :label="$t('mediaManage.id')" width="80"></el-table-column>
 
-          <el-table-column prop="chapterId" :label="$t('chapterManage.id')" width="90">
-          </el-table-column>
+      <el-table-column prop="chapterId" :label="$t('chapterManage.id')" width="90"></el-table-column>
 
-          <el-table-column prop="chapterName" :label="$t('chapterManage.name')" width="180">
-          </el-table-column>
+      <el-table-column prop="chapterName" :label="$t('chapterManage.name')" width="180"></el-table-column>
 
-          <el-table-column prop="createTime" :label="$t('chapterManage.createTime')" width="170">
-          </el-table-column>
+      <el-table-column prop="createTime" :label="$t('chapterManage.createTime')" width="170"></el-table-column>
 
-          <el-table-column prop="updateTime" :label="$t('chapterManage.updateTime')" width="170">
-          </el-table-column>
+      <el-table-column prop="updateTime" :label="$t('chapterManage.updateTime')" width="170"></el-table-column>
 
-          <el-table-column :label="$t('option.option')">
-            <template v-slot="scope">
-              <el-button size="small" type="primary" :icon="Edit" @click="edit_chapter(scope.$index, scope.row)">{{
-                $t('option.modify') }}
-              </el-button>
-              <el-button size="small" type="danger" :icon="Delete"
-                @click="do_delete_chapter(scope.$index, scope.row)">{{
-                $t('option.delete') }}
-              </el-button>
-            </template>
-          </el-table-column>
-        </el-table>
+      <el-table-column :label="$t('option.option')">
+        <template v-slot="scope">
+          <el-button size="small" type="primary" :icon="Edit" @click="edit_chapter(scope.$index, scope.row)">{{ $t('option.modify') }}</el-button>
+          <el-button size="small" type="danger" :icon="Delete" @click="do_delete_chapter(scope.$index, scope.row)">{{ $t('option.delete') }}</el-button>
+        </template>
+      </el-table-column>
+    </el-table>
 
-        <el-dialog :title="$t('chapterManage.modify')" v-model="editChapterDialog" :before-close="dialog_close">
-          <el-form :model="form" label-width="11rem">
-            <el-form-item :label="$t('chapterManage.form.name')">
-              <el-input v-model="form.chapterName" :placeholder="$t('chapterManage.place.name')"></el-input>
-            </el-form-item>
+    <el-dialog :title="$t('chapterManage.modify')" v-model="editChapterDialog" :before-close="dialog_close">
+      <el-form :model="form" label-width="11rem">
+        <el-form-item :label="$t('chapterManage.form.name')">
+          <el-input v-model="form.chapterName" :placeholder="$t('chapterManage.place.name')"></el-input>
+        </el-form-item>
 
-            <el-form-item :label="$t('chapterManage.form.path')">
-              <el-input v-model="form.chapterPath" :placeholder="$t('chapterManage.place.path')"></el-input>
-            </el-form-item>
+        <el-form-item :label="$t('chapterManage.form.path')">
+          <el-input v-model="form.chapterPath" :placeholder="$t('chapterManage.place.path')"></el-input>
+        </el-form-item>
 
-            <el-form-item :label="$t('chapterManage.form.poster')">
-              <el-input v-model="form.chapterCover" :placeholder="$t('chapterManage.place.poster')"></el-input>
-            </el-form-item>
-            <el-form-item>
-              <cover-upload cover-type="chapter" :bind-id="form.chapterId" :init-cover="form.chapterCover"
-                v-on:update:value="(value) => form.chapterCover = value" />
-            </el-form-item>
+        <el-form-item :label="$t('chapterManage.form.poster')">
+          <el-input v-model="form.chapterCover" :placeholder="$t('chapterManage.place.poster')"></el-input>
+        </el-form-item>
+        <el-form-item>
+          <cover-upload
+            cover-type="chapter"
+            :bind-id="form.chapterId"
+            :init-cover="form.chapterCover"
+            v-on:update:value="value => (form.chapterCover = value)" />
+        </el-form-item>
 
-            <el-form-item :label="$t('chapterManage.form.chapterNumber')">
-              <el-input v-model="form.chapterNumber" :placeholder="$t('chapterManage.place.chapterNumber')"></el-input>
-            </el-form-item>
-          </el-form>
+        <el-form-item :label="$t('chapterManage.form.chapterNumber')">
+          <el-input v-model="form.chapterNumber" :placeholder="$t('chapterManage.place.chapterNumber')"></el-input>
+        </el-form-item>
+      </el-form>
 
-          <template v-slot:footer>
-            <div class="dialog-footer">
-              <!--按钮盒子-->
-              <div class="btn-box">
-                <el-button type="primary" @click="do_update_chapter">{{ $t('option.confirm') }}</el-button>
-                <el-button type="warning" @click="editChapterDialog = false">{{ $t('option.cancel') }}</el-button>
-              </div>
-            </div>
-          </template>
-        </el-dialog>
-        <!--分页-->
-        <table-pager ref="pager" @pageChange="load_table" :page-size="browse.manageListPageSize" :count="count" />
-      </div>
-    </div>
+      <template v-slot:footer>
+        <div class="dialog-footer">
+          <!--按钮盒子-->
+          <div class="dialog-btn-box">
+            <el-button type="primary" @click="do_update_chapter">{{ $t('option.confirm') }}</el-button>
+            <el-button type="warning" @click="editChapterDialog = false">{{ $t('option.cancel') }}</el-button>
+          </div>
+        </div>
+      </template>
+    </el-dialog>
+    <!--分页-->
+    <table-pager ref="pager" @pageChange="load_table" :page-size="browse.manageListPageSize" :count="count" />
   </div>
 </template>
 
-<script lang="ts">export default { name: 'chapter-manage' }</script>
-<script setup lang='ts'>
-import { ref, onMounted } from 'vue'
-import { ElMessage, ElMessageBox } from 'element-plus'
-import { Delete, Edit, Search } from '@element-plus/icons-vue'
-import chapterApi from "@/api/chapter";
-import tablePager from "@/components/table-pager.vue";
-import coverUpload from "@/components/cover-upload.vue";
+<script lang="ts">
+export default {name: 'chapter-manage'};
+</script>
+<script setup lang="ts">
+import {ref, onMounted} from 'vue';
+import {ElMessage, ElMessageBox} from 'element-plus';
+import {Delete, Edit, Search} from '@element-plus/icons-vue';
+import chapterApi from '@/api/chapter';
+import tablePager from '@/components/table-pager.vue';
+import coverUpload from '@/components/cover-upload.vue';
 import i18n from '@/i18n';
-import { reactive } from 'vue';
-import type { mangaInfoType } from '@/type/manga';
-import { userConfig } from '@/store';
+import {reactive} from 'vue';
+import type {mangaInfoType} from '@/type/manga';
+import {userConfig} from '@/store';
 import useBrowseStore from '@/store/browse';
 
 const browse = useBrowseStore();
-const { t } = i18n.global;
+const {t} = i18n.global;
 
 const count = ref(0);
 const tableData = ref([]);
@@ -110,7 +99,7 @@ const form = reactive({
   chapterPath: '',
   chapterCover: '',
   chapterNumber: '',
-})
+});
 
 const formInit = {
   chapterId: 0,
@@ -118,7 +107,7 @@ const formInit = {
   chapterPath: '',
   chapterCover: '',
   chapterNumber: '',
-}
+};
 
 const pager = ref();
 /***
@@ -145,7 +134,7 @@ async function load_table(page = 1, pageSize = browse.manageListPageSize) {
     page,
     pageSize,
     order: userConfig.order,
-    keyWord: keyWord.value
+    keyWord: keyWord.value,
   });
   count.value = Number(res.count);
   tableData.value = res.list;
@@ -196,25 +185,18 @@ async function do_update_chapter() {
  * 删除漫画
  * */
 async function do_delete_chapter(index: number, row: any) {
-  ElMessageBox.confirm(
-    t('chapterManage.confirm.text'),
-    t('chapterManage.confirm.title'), {
-    type: 'warning'
-  }).then(async () => {
-    const res = await chapterApi.delete_chapter(row.chapterId);
-
-    if (res.code === 0) {
-      reload_table();
-    }
-  }).catch(() => {
-  })
+  ElMessageBox.confirm(t('chapterManage.confirm.text'), t('chapterManage.confirm.title'), { type: 'warning' })
+    .then(async () => {
+      const res = await chapterApi.delete_chapter(row.chapterId);
+      if (res.code === 0) {
+        reload_table();
+      }
+    })
+    .catch(() => {});
 }
 
 onMounted(() => {
   load_table();
-})
+});
 </script>
-
-<style scoped lang='less'>
-@import '@/style/chapter-manage.less';
-</style>
+<style scoped lang="less" src="@/style/manage.less"></style>

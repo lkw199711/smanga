@@ -1,55 +1,100 @@
 <template>
-  <div class="account">
-    <div class="account-table-box">
-      <div class="add-btn-box">
-        <el-button class="add-btn" type="primary" :icon="Plus" @click="add_dialog_open">{{ $t('account.add') }}
-        </el-button>
-      </div>
-      <!--表格-->
-      <el-table :data="tableData" stripe border>
-        <el-table-column type="index" :label="$t('account.serial')" width="54">
-        </el-table-column>
+  <div class="account-table-box manage-container">
+    <div class="btn-box">
+      <el-button class="add-btn" type="primary" :icon="Plus" @click="add_dialog_open">{{ $t('account.add') }}
+      </el-button>
+      <el-button type="danger" :icon="Delete" @click="handleBatchDelete" :disabled="selectedUsers.length === 0">
+        {{ $t('account.batchDelete') }}
+      </el-button>
+    </div>
+    <!--表格-->
+    <el-table :data="tableData" stripe border @selection-change="handleSelectionChange">
+      <el-table-column type="selection" width="55"></el-table-column>
+      <el-table-column type="index" :label="$t('account.serial')" width="54">
+      </el-table-column>
 
-        <el-table-column prop="userId" :label="$t('account.id')" width="70">
-        </el-table-column>
+      <el-table-column prop="userId" :label="$t('account.id')" width="70">
+      </el-table-column>
 
-        <el-table-column prop="userName" :label="$t('account.name')" width="140">
-        </el-table-column>
+      <el-table-column prop="userName" :label="$t('account.name')" width="140">
+      </el-table-column>
 
-        <el-table-column prop="createTime" :label="$t('account.registerTime')" width="180">
-        </el-table-column>
+      <el-table-column prop="createTime" :label="$t('account.registerTime')" width="180">
+      </el-table-column>
 
-        <el-table-column :label="$t('account.option')">
-          <template v-slot="scope">
-            <el-button size="small" type="primary" :icon="Edit" @click="handleEdit(scope.$index, scope.row)">{{
-              $t('option.modify') }}
-            </el-button>
-            <el-button size="small" type="danger" :icon="Delete" @click="handleDelete(scope.$index, scope.row)">{{
-              $t('option.delete') }}
-            </el-button>
-            <!-- <el-button
+      <el-table-column :label="$t('account.option')">
+        <template v-slot="scope">
+          <el-button size="small" type="primary" :icon="Edit" @click="handleEdit(scope.$index, scope.row)">{{
+            $t('option.modify') }}
+          </el-button>
+          <el-button size="small" type="danger" :icon="Delete" @click="handleDelete(scope.$index, scope.row)">{{
+            $t('option.delete') }}
+          </el-button>
+          <!-- <el-button
                     size="small"
                     type="success"
                     :icon="Lollipop"
                     @click="handlePower(scope.$index, scope.row)">{{ $t('account.power') }}
             </el-button> -->
-          </template>
-        </el-table-column>
-      </el-table>
-      <!--分页-->
-      <table-pager ref="pager" @pageChange="load_table" :page-size="browse.manageListPageSize" :count="count" />
+        </template>
+      </el-table-column>
+    </el-table>
+    <!--分页-->
+    <table-pager ref="pager" @pageChange="load_table" :page-size="browse.manageListPageSize" :count="count" />
+  </div>
+
+  <el-dialog :title="$t('account.add')" v-model="addDialog" :before-close="add_dialog_close">
+    <el-form :model="form" label-width="100px">
+      <el-form-item :label="$t('account.nameLabel')">
+        <el-input v-model="form.userName" :placeholder="$t('account.namePlace')"></el-input>
+      </el-form-item>
+
+      <el-form-item :label="$t('account.passLabel')">
+        <el-input v-model="form.passWord" :placeholder="$t('account.passPlace')"></el-input>
+      </el-form-item>
+    </el-form>
+
+    <el-form-item :label="'设置为管理员'">
+      <el-switch class="auto-compress" v-model="form.role" active-value="admin" inactive-value="user" />
+    </el-form-item>
+
+    <el-form-item :label="'开放全媒体库'">
+      <el-switch class="auto-compress" v-model="form.mediaPermit" active-value="all" inactive-value="limit" />
+    </el-form-item>
+
+    <!--媒体库权限-->
+    <template v-if="form.mediaPermit !== 'all'">
+      <p class="s-form-title">{{ $t('account.form.title.mediaPower') }}</p>
+      <el-checkbox v-for="i in medias" v-model="i.permit" :label="i.mediaName" :key="i.mediaId" size="large" />
+    </template>
+
+    <div class="form-note mt-4 text-gray-500 text-sm">
+      <p>• 用户名: {{ $t('account.note.name') }}</p>
+      <p>• 密码: {{ $t('account.note.pass') }}</p>
+      <p>• 设置为管理员: 开放设置界面.</p>
+      <p>• 开放全媒体库: 可浏览全部媒体库.</p>
     </div>
 
-    <el-dialog :title="$t('account.add')" v-model="addDialog" :before-close="add_dialog_close">
-      <el-form :model="form" label-width="100px">
-        <el-form-item :label="$t('account.nameLabel')">
-          <el-input v-model="form.userName" :placeholder="$t('account.namePlace')"></el-input>
-        </el-form-item>
+    <template v-slot:footer>
+      <div class="dialog-footer">
+        <!--按钮盒子-->
+        <div class="dialog-btn-box">
+          <el-button type="primary" @click="do_register">{{ $t('option.confirm') }}</el-button>
+          <el-button type="warning" @click="add_dialog_close">{{ $t('option.cancel') }}</el-button>
+        </div>
+      </div>
+    </template>
+  </el-dialog>
+  <!-- 修改用户信息表单 -->
+  <el-dialog :title="$t('account.modify')" v-model="dialogFormVisible" :before-close="dialog_close">
+    <el-form :model="form" label-width="100px">
+      <el-form-item :label="$t('account.nameLabel')">
+        <el-input v-model="form.userName" :placeholder="$t('account.namePlace')"></el-input>
+      </el-form-item>
 
-        <el-form-item :label="$t('account.passLabel')">
-          <el-input v-model="form.passWord" :placeholder="$t('account.passPlace')"></el-input>
-        </el-form-item>
-      </el-form>
+      <el-form-item :label="$t('account.passLabel')">
+        <el-input v-model="form.passWord" :placeholder="$t('account.passModifyPlace')"></el-input>
+      </el-form-item>
 
       <el-form-item :label="'设置为管理员'">
         <el-switch class="auto-compress" v-model="form.role" active-value="admin" inactive-value="user" />
@@ -71,62 +116,19 @@
         <p>• 设置为管理员: 开放设置界面.</p>
         <p>• 开放全媒体库: 可浏览全部媒体库.</p>
       </div>
+    </el-form>
 
-      <template v-slot:footer>
-        <div class="dialog-footer">
-          <!--按钮盒子-->
-          <div class="btn-box">
-            <el-button type="primary" @click="do_register">{{ $t('option.confirm') }}</el-button>
-            <el-button type="warning" @click="add_dialog_close">{{ $t('option.cancel') }}</el-button>
-          </div>
+    <template v-slot:footer>
+      <div class="dialog-footer">
+        <!--按钮盒子-->
+        <div class="dialog-btn-box">
+          <el-button type="primary" @click="do_update">{{ $t('option.confirm') }}</el-button>
+          <el-button type="warning" @click="dialogFormVisible = false">{{ $t('option.cancel') }}</el-button>
         </div>
-      </template>
-    </el-dialog>
-    <!-- 修改用户信息表单 -->
-    <el-dialog :title="$t('account.modify')" v-model="dialogFormVisible" :before-close="dialog_close">
-      <el-form :model="form" label-width="100px">
-        <el-form-item :label="$t('account.nameLabel')">
-          <el-input v-model="form.userName" :placeholder="$t('account.namePlace')"></el-input>
-        </el-form-item>
+      </div>
+    </template>
+  </el-dialog>
 
-        <el-form-item :label="$t('account.passLabel')">
-          <el-input v-model="form.passWord" :placeholder="$t('account.passModifyPlace')"></el-input>
-        </el-form-item>
-
-        <el-form-item :label="'设置为管理员'">
-          <el-switch class="auto-compress" v-model="form.role" active-value="admin" inactive-value="user" />
-        </el-form-item>
-
-        <el-form-item :label="'开放全媒体库'">
-          <el-switch class="auto-compress" v-model="form.mediaPermit" active-value="all" inactive-value="limit" />
-        </el-form-item>
-
-        <!--媒体库权限-->
-        <template v-if="form.mediaPermit !== 'all'">
-          <p class="s-form-title">{{ $t('account.form.title.mediaPower') }}</p>
-          <el-checkbox v-for="i in medias" v-model="i.permit" :label="i.mediaName" :key="i.mediaId" size="large" />
-        </template>
-
-        <div class="form-note mt-4 text-gray-500 text-sm">
-          <p>• 用户名: {{ $t('account.note.name') }}</p>
-          <p>• 密码: {{ $t('account.note.pass') }}</p>
-          <p>• 设置为管理员: 开放设置界面.</p>
-          <p>• 开放全媒体库: 可浏览全部媒体库.</p>
-        </div>
-      </el-form>
-
-      <template v-slot:footer>
-        <div class="dialog-footer">
-          <!--按钮盒子-->
-          <div class="btn-box">
-            <el-button type="primary" @click="do_update">{{ $t('option.confirm') }}</el-button>
-            <el-button type="warning" @click="dialogFormVisible = false">{{ $t('option.cancel') }}</el-button>
-          </div>
-        </div>
-      </template>
-    </el-dialog>
-
-  </div>
 </template>
 
 <script lang="ts">export default { name: 'user-manage' }</script>
@@ -150,6 +152,15 @@ const addDialog = ref(false);
 const dialogFormVisible = ref(false);
 const dialogPower = ref(false);
 const tableData = ref([]);
+const selectedUsers = ref([]);
+
+/**
+ * 处理多选框变化
+ * @param selection
+ */
+function handleSelectionChange(selection: any[]) {
+  selectedUsers.value = selection;
+}
 const form = reactive({
   userId: 0,
   userName: '',
@@ -260,11 +271,11 @@ function add_dialog_close() {
   addDialog.value = false;
   reset();
 }
-    /**
-     * 注册行为
-     * @returns {Promise<void>}
-     */
-    async function do_register() {
+/**
+ * 注册行为
+ * @returns {Promise<void>}
+ */
+async function do_register() {
   const data = form;
 
   if (!/^[a-zA-Z]\w{1,19}$/.test(data.userName)) {
@@ -304,183 +315,57 @@ function switch_change(val: any, activeVal: string, inactiveVal: string) {
   return val ? activeVal : inactiveVal;
 }
 
+/**
+ * 批量删除用户
+ */
+async function handleBatchDelete() {
+  if (selectedUsers.value.length === 0) {
+    ElMessage({ message: '请选择要删除的用户', type: 'warning' });
+    return;
+  }
+
+  // 添加确认对话框
+  try {
+    await ElMessageBox.confirm(
+      `确定要删除选中的 ${selectedUsers.value.length} 个用户吗？此操作不可撤销。`,
+      '确认删除',
+      {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }
+    );
+
+    // 保存选中用户的数量，以便在清空选中项后仍能显示正确的删除数量
+    const deleteCount = selectedUsers.value.length;
+
+    // 批量删除逻辑
+    const promises = selectedUsers.value.map(async (user: any) => {
+      try {
+        await userApi.delete_account(user.userId);
+      } catch (error) {
+        console.error(`删除用户 ${user.userName} 失败:`, error);
+      }
+    });
+
+    // 等待所有删除操作完成
+    await Promise.all(promises);
+
+    // 重新加载表格数据
+    reload_table();
+
+    // 清空选中项
+    selectedUsers.value = [];
+
+    ElMessage({
+      message: `成功删除 ${deleteCount} 个用户`,
+      type: 'success'
+    });
+  } catch (error) {
+    // 用户取消操作
+  }
+}
+
 </script>
 
-<style scoped lang='less'>
-@import '@/style/color.less';
-
-.account {
-  padding: 20px;
-}
-
-.account-table-box {
-  background-color: #fff;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-  padding: 24px;
-  transition: all 0.3s ease;
-}
-
-.add-btn-box {
-  margin-bottom: 20px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.add-btn {
-  background-color: @s-primary-color;
-  border-color: @s-primary-color;
-  transition: all 0.3s ease;
-
-  &:hover {
-    background-color: @s-primary-color-hover;
-    border-color: @s-primary-color-hover;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  }
-}
-
-.btn-box {
-  display: flex;
-  justify-content: flex-end;
-  gap: 10px;
-}
-
-// 表格样式
-.el-table {
-  border-radius: 8px;
-  overflow: hidden;
-
-  .el-table__header-wrapper {
-    background-color: #f5f7fa;
-  }
-
-  .el-table__body tr {
-    transition: all 0.2s ease;
-
-    &:hover {
-      background-color: #f9fafc;
-      transform: scale(1.003);
-    }
-  }
-
-  .el-table__body tr.el-table__row--striped {
-    background-color: #fafafa;
-  }
-
-  .el-table__body tr.el-table__row--striped:hover {
-    background-color: #f5f7fa;
-  }
-}
-
-// 按钮样式
-.el-button {
-  transition: all 0.3s ease;
-  border-radius: 6px;
-
-  &.el-button--primary {
-    background-color: @s-primary-color;
-    border-color: @s-primary-color;
-
-    &:hover {
-      background-color: @s-primary-color-hover;
-      border-color: @s-primary-color-hover;
-      transform: translateY(-2px);
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    }
-  }
-
-  &.el-button--danger {
-    background-color: #ff4d4f;
-    border-color: #ff4d4f;
-
-    &:hover {
-      background-color: #ff7875;
-      border-color: #ff7875;
-      transform: translateY(-2px);
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    }
-  }
-}
-
-// 表单样式
-.el-form-item {
-  margin-bottom: 16px;
-}
-
-.s-form-title {
-  font-size: 14px;
-  font-weight: 500;
-  margin: 16px 0 8px;
-  color: #303133;
-}
-
-// 对话框样式
-.el-dialog {
-  border-radius: 12px;
-  overflow: hidden;
-}
-
-.el-dialog__header {
-  background-color: #f5f7fa;
-  padding: 16px 24px;
-}
-
-.el-dialog__title {
-  font-size: 16px;
-  font-weight: 500;
-}
-
-.el-dialog__body {
-  padding: 24px;
-}
-
-// 开关样式
-.auto-compress {
-  margin-left: 10px;
-}
-
-.form-note {
-  padding: 10px 15px;
-  background-color: #f4f4f5;
-  border-radius: 4px;
-  margin-top: 10px;
-  margin-bottom: 20px;
-  line-height: 1.6;
-}
-
-// 响应式设计
-@media only screen and (min-width: 1200px) {
-  .account-table-box {
-    width: 100%;
-    max-width: 1200px;
-    margin: 30px auto;
-  }
-}
-
-@media only screen and (max-width: 1199px) and (min-width: 768px) {
-  .account-table-box {
-    width: 100%;
-    max-width: 900px;
-    margin: 20px auto;
-  }
-}
-
-@media only screen and (max-width: 767px) {
-  .account-table-box {
-    width: 100%;
-    margin: 10px auto;
-    padding: 16px;
-  }
-
-  .el-table {
-    font-size: 12px;
-  }
-
-  .el-button {
-    padding: 6px 12px;
-    font-size: 12px;
-  }
-}
-</style>
+<style scoped lang='less' src='@/style/manage.less'></style>

@@ -91,7 +91,8 @@
         "power": "權限",
         "mediaPower": "媒體庫閱讀權限"
       }
-    }
+    },
+    "batchDelete": "批量刪除"
   },
   "mediaManage": {
     "add": "新增媒體庫",
