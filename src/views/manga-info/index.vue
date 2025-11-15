@@ -63,7 +63,8 @@
 
         <el-button class="btn" type="success" @click="mangaShareDialog = true">分享漫画</el-button>
 
-        <el-button class="btn" type="primary" @click="open_tag_box">编辑标签</el-button>
+        <el-button class="btn" type="primary" @click="editMangaDialog = true">编辑漫画</el-button>
+        <el-button class="btn" type="primary" @click="editTagsDialog = true">编辑标签</el-button>
         <el-button class="btn" type="primary" @click="open_covers_edit" v-if="hasManyCover">编辑封面</el-button>
         <el-button class="btn" type="primary" @click="open_metas_edit">编辑元数据</el-button>
       </div>
@@ -97,6 +98,8 @@
     <el-dialog :title="$t('rightSidebar.editTags')" v-model="editTagsDialog">
       <mangaTagBox :mangaId="mangaInfo.mangaId" :tags="mangaInfo.tags" @update_tags="update_tags" @close_dialog="editTagsDialog = false" />
     </el-dialog>
+
+    <manga-modify v-model:editMangaDialog="editMangaDialog" @reload="render_meta" :mangaInfo="mangaInfo" />
 
     <el-dialog :title="$t('rightSidebar.editCover')" v-model="editCover">
       <div class="cover-setting">
@@ -169,6 +172,7 @@ import useBrowseStore from '@/store/browse';
 import chapter from './components/chapter.vue';
 import chapterSimple from './components/chapter-simple.vue';
 import rightSidebar from '../chapter-list/right-sidebar.vue';
+import mangaModify from '@/views/manga-manage/components/mangaModify.vue';
 const browse: any = useBrowseStore();
 const router = useRouter();
 const route = useRoute();
@@ -189,6 +193,8 @@ const continueRead = ref({
 });
 
 const chapterList = ref<chapterType[]>([]);
+const editMangaDialog = ref(false);
+
 let mangaInfo = reactive<mangaType>(mangaInit);
 
 let hasLatest = ref(false);
@@ -252,10 +258,6 @@ onMounted(async () => {
 
   get_collect_status();
 });
-
-function close_right_sidebar() {
-  rightSidebarVisible.value = false;
-}
 
 /**
  * @description: 获取漫画首个章节
@@ -477,10 +479,6 @@ async function remove_collect() {
   if (!mangaInfo.mangaId) return;
   await collectApi.remove_collect('manga', mangaInfo.mangaId);
   get_collect_status();
-}
-
-function open_tag_box() {
-  editTagsDialog.value = true;
 }
 
 function open_covers_edit() {
