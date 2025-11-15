@@ -1,7 +1,13 @@
 <template>
   <div class="bookmark-table-box manage-container">
+    <div class="btn-box">
+      <el-button type="danger" :icon="Delete" :disabled="selectedRows.length === 0" @click="batch_delete_bookmark">
+        {{ $t('bookmarkManage.batchDelete') }}
+      </el-button>
+    </div>
     <!--表格-->
-    <el-table :data="tableData" stripe border>
+    <el-table v-loading="loading" :data="tableData" stripe border @selection-change="handleSelectionChange">
+      <el-table-column type="selection" width="55"></el-table-column>
       <el-table-column type="index" :label="$t('account.serial')" width="54"></el-table-column>
 
       <el-table-column prop="bookmarkId" :label="$t('bookmarkManage.id')" width="72"></el-table-column>
@@ -30,7 +36,7 @@ export default {name: 'bookmark-manage'};
 </script>
 <script lang="ts" setup>
 import {ref, onMounted} from 'vue';
-import {ElMessageBox} from 'element-plus';
+import {ElMessage, ElMessageBox} from 'element-plus';
 import {Delete} from '@element-plus/icons-vue';
 import bookmarkApi from '@/api/bookmark';
 import tablePager from '@/components/table-pager.vue';
@@ -41,10 +47,44 @@ const browse = useBrowseStore();
 const {t} = i18n.global;
 const count = ref(0);
 const tableData = ref([]);
+const loading = ref(false);
+const selectedRows = ref([]);
 
 onMounted(() => {
   load_table();
 });
+
+// 处理选择变化
+function handleSelectionChange(selection) {
+  selectedRows.value = selection;
+}
+
+// 批量删除书签
+async function batch_delete_bookmark() {
+  if (selectedRows.value.length === 0) {
+    return;
+  }
+  
+  const bookmarkIds = selectedRows.value.map(row => row.bookmarkId);
+  
+  ElMessageBox.confirm(
+    t('bookmarkManage.confirm.batchDeleteText'),
+    t('bookmarkManage.confirm.batchDeleteTitle'),
+    { type: 'warning' }
+  )
+    .then(async () => {
+      loading.value = true;
+      const res = await bookmarkApi.batch_delete(bookmarkIds);
+      if (res.code === 0) {
+        reload_table();
+        selectedRows.value = [];
+      }
+      loading.value = false;
+    })
+    .catch(() => {
+      // 取消删除
+    });
+}
 /**
  * 删除书签
  * @param index
@@ -67,12 +107,14 @@ async function handleDelete(index: number, val: any) {
  * @returns {Promise<void>}
  */
 async function load_table(page = 1, pageSize = 10) {
+  loading.value = true;
   const res = await bookmarkApi.get(page, pageSize);
   tableData.value = res.list;
   count.value = Number(res.count);
 
   browse.manageListPage = page; // 保存当前页码
   browse.manageListPageSizeCache = pageSize; // 保存当前页码大小
+  loading.value = false;
 }
 
 /**

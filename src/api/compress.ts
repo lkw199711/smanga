@@ -29,6 +29,19 @@ const compressApi = {
 
 		return (await res).data;
 	},
+
+	/**
+	 * @description: 批量删除转换记录
+	 * @param {number[]} compressIds
+	 * @return {*}
+	 */
+	async batch_delete_compress(compressIds: number[]) {
+		const res = ajax.delete(`compress/${compressIds.join(',')}/batch`, {
+			data: compressIds
+		});
+
+		return (await res).data;
+	},
 };
 
 export default compressApi;

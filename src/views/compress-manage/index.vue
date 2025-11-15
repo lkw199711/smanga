@@ -1,7 +1,18 @@
 <template>
   <div class="compress-table-box manage-container">
+    <div class="btn-box">
+      <el-button
+        type="danger"
+        :icon="Delete"
+        :disabled="selectedRows.length === 0"
+        @click="batchDeleteCompress"
+      >
+        {{ $t('compressManage.batchDelete') }}
+      </el-button>
+    </div>
     <!--表格-->
-    <el-table :data="tableData" stripe border>
+    <el-table :data="tableData" stripe border @selection-change="handleSelectionChange">
+      <el-table-column type="selection" width="55" align="center"></el-table-column>
       <el-table-column type="index" :label="$t('account.serial')" width="54"></el-table-column>
 
       <el-table-column prop="compressId" :label="$t('compressManage.id')" width="104"></el-table-column>
@@ -32,22 +43,56 @@ export default {name: 'compress-manage'};
 </script>
 <script lang="ts" setup>
 import {ref, onMounted} from 'vue';
-import {ElMessageBox} from 'element-plus';
+import {ElMessageBox, ElMessage} from 'element-plus';
 import {Delete} from '@element-plus/icons-vue';
 import compressApi from '@/api/compress';
 import tablePager from '@/components/table-pager.vue';
 import i18n from '@/i18n';
 import useBrowseStore from '@/store/browse';
+import { compressType } from '@/type/compress';
 
 const browse = useBrowseStore();
 const {t} = i18n.global;
 
 const count = ref(0);
 const tableData = ref([]);
+const loading = ref(false);
+const selectedRows = ref<compressType[]>([]);
 
 onMounted(() => {
   load_table();
 });
+
+/**
+ * 处理表格选择变化
+ */
+function handleSelectionChange(val: compressType[]) {
+  selectedRows.value = val;
+}
+
+/**
+ * 批量删除压缩记录
+ */
+async function batchDeleteCompress() {
+  const ids = selectedRows.value.map(row => row.compressId);
+  
+  ElMessageBox.confirm(t('compressManage.confirm.batchDeleteText'), t('compressManage.confirm.batchDeleteTitle'), {
+    confirmButtonText: t('option.confirm'),
+    cancelButtonText: t('option.cancel'),
+    type: 'warning'
+  })
+    .then(async () => {
+      loading.value = true;
+      try {
+        await compressApi.batch_delete_compress(ids);
+        selectedRows.value = [];
+        reload_table();
+      } finally {
+        loading.value = false;
+      }
+    })
+    .catch(() => {});
+}
 /**
  * 删除书签
  * @param index
@@ -56,13 +101,21 @@ onMounted(() => {
  */
 async function handleDelete(index: number, val: any) {
   ElMessageBox.confirm(t('compressManage.confirm.text'), t('compressManage.confirm.title'), {
+    confirmButtonText: t('option.confirm'),
+    cancelButtonText: t('option.cancel'),
     type: 'warning',
   })
     .then(async () => {
-      const res = await compressApi.delete_compress(val.compressId);
+      loading.value = true;
+      try {
+        const res = await compressApi.delete_compress(val.compressId);
 
-      if (res.code === 0) {
-        reload_table();
+        if (res.code === 0) {
+          ElMessage.success(t('message.deleteSuccess'));
+          reload_table();
+        }
+      } finally {
+        loading.value = false;
       }
     })
     .catch(() => {});
@@ -73,18 +126,24 @@ async function handleDelete(index: number, val: any) {
  * @returns {Promise<void>}
  */
 async function load_table(page = 1, pageSize = browse.manageListPageSize) {
-  const res = await compressApi.get_compress(page, pageSize);
-  count.value = Number(res.count);
-  tableData.value = res.list;
+  loading.value = true;
+  try {
+    const res = await compressApi.get_compress(page, pageSize);
+    count.value = Number(res.count);
+    tableData.value = res.list;
 
-  browse.manageListPage = page;
-  browse.manageListPageSizeCache = pageSize;
+    browse.manageListPage = page;
+    browse.manageListPageSizeCache = pageSize;
+  } finally {
+    loading.value = false;
+  }
 }
 /**
  * 重载数据 页码不变
  */
 function reload_table() {
   tableData.value = [];
+  selectedRows.value = [];
   load_table(browse.manageListPage, browse.manageListPageSize);
 }
 </script>

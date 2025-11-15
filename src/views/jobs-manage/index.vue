@@ -1,7 +1,18 @@
 <template>
   <div class="manga-setting-box manage-container">
+    <div class="btn-box">
+      <el-button
+        type="danger"
+        :icon="Delete"
+        :disabled="selectedRows.length === 0"
+        @click="batch_delete_job"
+      >
+        {{ t('jobsManage.batchDelete') }}
+      </el-button>
+    </div>
     <!--表格-->
-    <el-table :data="tableData" stripe border>
+    <el-table :data="tableData" stripe border @selection-change="handleSelectionChange">
+      <el-table-column type="selection" width="55" align="center"></el-table-column>
       <el-table-column type="index" :label="t('account.serial')" width="54"></el-table-column>
 
       <el-table-column prop="id" :label="t('jobsManage.id')" width="100"></el-table-column>
@@ -74,6 +85,8 @@ let count = ref(0);
 let tableData = ref([]);
 let editMangaDialog = ref(false);
 let payload = ref('');
+let loading = ref(false);
+let selectedRows = ref<any[]>([]);
 
 onMounted(() => {
   browse.manageListPage = 1;
@@ -92,19 +105,61 @@ function dialog_close() {
  * 加载表格数据
  */
 async function load_table(page = 1, pageSize = 10) {
-  tableData.value = tasks.slice((page - 1) * pageSize, page * pageSize);
+  loading.value = true;
+  try {
+    tableData.value = tasks.slice((page - 1) * pageSize, page * pageSize);
 
-  browse.manageListPage = page;
-  browse.manageListPageSizeCache = pageSize;
+    browse.manageListPage = page;
+    browse.manageListPageSizeCache = pageSize;
+  } finally {
+    loading.value = false;
+  }
+}
+
+/**
+ * 处理表格选择变化
+ */
+function handleSelectionChange(val: any[]) {
+  selectedRows.value = val;
+}
+
+/**
+ * 批量删除任务
+ */
+async function batch_delete_job() {
+  const ids = selectedRows.value.map(row => row.id);
+  
+  ElMessageBox.confirm(t('jobsManage.confirm.batchDeleteText'), t('jobsManage.confirm.batchDeleteTitle'), {
+    confirmButtonText: t('option.confirm'),
+    cancelButtonText: t('option.cancel'),
+    type: 'warning'
+  })
+    .then(async () => {
+      loading.value = true;
+      try {
+        await jobsApi.batch_delete(ids);
+        selectedRows.value = [];
+        reload_table();
+      } finally {
+        loading.value = false;
+      }
+    })
+    .catch(() => {});
 }
 /**
  * 重载数据 页码不变
  */
 async function reload_table() {
-  const tasksResponse = await jobsApi.get();
-  tasks = tasksResponse.list;
-  count.value = tasksResponse.count;
-  load_table(browse.manageListPage, browse.manageListPageSize);
+  loading.value = true;
+  try {
+    const tasksResponse = await jobsApi.get();
+    tasks = tasksResponse.list;
+    count.value = tasksResponse.count;
+    selectedRows.value = [];
+    load_table(browse.manageListPage, browse.manageListPageSize);
+  } finally {
+    loading.value = false;
+  }
 }
 /**
  * 编辑漫画
@@ -135,17 +190,25 @@ async function copy_payload() {
 }
 
 /**
- * 删除漫画
+ * 删除任务
  * */
 async function delete_manga(index: number, row: any) {
   ElMessageBox.confirm(t('jobsManage.deleteConfirm'), t('mangaManage.deleteTitle'), {
+    confirmButtonText: t('option.confirm'),
+    cancelButtonText: t('option.cancel'),
     type: 'warning',
   })
     .then(async () => {
-      const res = await jobsApi.delete(row.id);
+      loading.value = true;
+      try {
+        const res = await jobsApi.delete(row.id);
 
-      if (res.code === 0) {
-        reload_table();
+        if (res.code === 0) {
+          ElMessage.success(t('message.deleteSuccess'));
+          reload_table();
+        }
+      } finally {
+        loading.value = false;
       }
     })
     .catch(() => {});

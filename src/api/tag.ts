@@ -113,6 +113,15 @@ const tagApi = {
 	delete: async function (tagId: number) {
 		await ajax.delete(`tag/${tagId}`);
 	},
+
+	/**
+	 * @description: 批量删除标签
+	 * @param {number[]} tagIds
+	 * @return {*}
+	 */
+	batch_delete: async function (tagIds: number[]) {
+		await ajax.delete(`tag/${tagIds.join(',')}/batch`, { data: { tagIds } });
+	},
 };
 
 export default tagApi;

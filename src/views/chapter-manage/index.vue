@@ -7,8 +7,14 @@
         </template>
       </el-input>
     </div>
+    <div class="btn-box">
+      <el-button type="danger" :icon="Delete" :disabled="selectedRows.length === 0" @click="batch_delete_chapter">
+        {{ $t('chapterManage.batchDelete') }}
+      </el-button>
+    </div>
     <!--表格-->
-    <el-table :data="tableData" stripe border>
+    <el-table v-loading="loading" :data="tableData" stripe border @selection-change="handleSelectionChange">
+        <el-table-column type="selection" width="55"></el-table-column>
       <el-table-column type="index" :label="$t('account.serial')" width="54"></el-table-column>
 
       <el-table-column prop="mediaId" :label="$t('mediaManage.id')" width="80"></el-table-column>
@@ -85,6 +91,7 @@ import {reactive} from 'vue';
 import type {mangaInfoType} from '@/type/manga';
 import {userConfig} from '@/store';
 import useBrowseStore from '@/store/browse';
+import { chapterType } from '@/type/chapter';
 
 const browse = useBrowseStore();
 const {t} = i18n.global;
@@ -93,6 +100,8 @@ const count = ref(0);
 const tableData = ref([]);
 const editChapterDialog = ref(false);
 const keyWord = ref('');
+const loading = ref(false);
+const selectedRows = ref<chapterType[]>([]);
 const form = reactive({
   chapterId: 0,
   chapterName: '',
@@ -110,9 +119,39 @@ const formInit = {
 };
 
 const pager = ref();
-/***
- * 关闭弹窗
- */
+// 处理选择变化
+function handleSelectionChange(selection: chapterType[]) {
+  selectedRows.value = selection;
+}
+
+/*** 批量删除章节 */
+async function batch_delete_chapter() {
+  if (selectedRows.value.length === 0) {
+    return;
+  }
+  
+  const chapterIds = selectedRows.value.map(row => row.chapterId);
+  
+  ElMessageBox.confirm(
+    t('chapterManage.confirm.batchDeleteText'),
+    t('chapterManage.confirm.batchDeleteTitle'),
+    { type: 'warning' }
+  )
+    .then(async () => {
+      loading.value = true;
+      const res = await chapterApi.batch_delete_chapter(chapterIds);
+      if (res.code === 0) {
+        reload_table();
+        selectedRows.value = [];
+      }
+      loading.value = false;
+    })
+    .catch(() => {
+      // 取消删除
+    });
+}
+
+/*** 关闭弹窗 */
 function dialog_close() {
   editChapterDialog.value = false;
 }
@@ -128,6 +167,7 @@ function dialog_open() {
  * 加载表格数据
  */
 async function load_table(page = 1, pageSize = browse.manageListPageSize) {
+  loading.value = true;
   const res = await chapterApi.get({
     mangaId: 0,
     mediaId: 0,
@@ -141,6 +181,7 @@ async function load_table(page = 1, pageSize = browse.manageListPageSize) {
 
   browse.manageListPage = page;
   browse.manageListPageSizeCache = pageSize;
+  loading.value = false;
 }
 /**
  * 重载数据 页码不变

@@ -41,6 +41,17 @@ const syncApi = {
     async execute(syncId: number) {
         const res = ajax.post(`sync/execute/${syncId}`);
         return (await res).data;
+    },
+    
+    /**
+     * 批量删除同步记录
+     * @param syncIds 同步记录ID数组
+     */
+    async batch_delete(syncIds: number[]) {
+        const res = ajax.delete(`sync/${syncIds.join(',')}/batch`, {
+            data: syncIds
+        });
+        return (await res).data;
     }
 };
 

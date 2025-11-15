@@ -1,10 +1,3 @@
-/*
- * @Author: lkw199711 lkw199711@163.com
- * @Date: 2023-09-24 22:29:57
- * @LastEditors: lkw199711 lkw199711@163.com
- * @LastEditTime: 2023-09-24 22:37:58
- * @FilePath: /smanga/src/type/chapter.ts
- */
 import { latestType } from './latest';
 type chapterType = {
 	browseType: string;

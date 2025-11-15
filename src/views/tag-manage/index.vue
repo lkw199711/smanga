@@ -2,9 +2,11 @@
   <div class="manga-setting-box manage-container">
     <div class="btn-box">
       <el-button class="add-btn" type="primary" :icon="Plus" @click="new_dialog">{{ $t('tagSetting.addButton') }}</el-button>
+      <el-button type="danger" :disabled="selectedRows.length === 0" :icon="Delete" @click="batch_delete_tag">{{ $t('tagSetting.batchDelete') }}</el-button>
     </div>
     <!--表格-->
-    <el-table :data="tableData" stripe border>
+    <el-table :data="tableData" stripe border @selection-change="handleSelectionChange">
+      <el-table-column type="selection" width="55"></el-table-column>
       <el-table-column type="index" :label="$t('account.serial')" width="54"></el-table-column>
 
       <el-table-column prop="tagId" :label="$t('tagSetting.table.tagId')" width="64"></el-table-column>
@@ -35,7 +37,7 @@
     </el-table>
 
     <!--分页-->
-    <table-pager ref="pager" @pageChange="load_table" :page-size="browse.manageListPageSize" :count="count" />
+    <table-pager ref="pager" @pageChange="load_table" :page-size="browse.manageListPageSize" :count="count" :loading="loading" />
 
     <!-- 新增标签弹框 -->
     <el-dialog :title="$t('tagSetting.dialog.addTitle')" v-model="addTagDialog">
@@ -103,6 +105,7 @@ import tagApi, {tagParams} from '@/api/tag';
 import tablePager from '@/components/table-pager.vue';
 import i18n from '@/i18n';
 import useBrowseStore from '@/store/browse';
+import { tagItemType } from '@/type/tag';
 
 const browse = useBrowseStore();
 
@@ -112,6 +115,8 @@ let count = ref(0);
 let tableData = ref([]);
 let addTagDialog = ref(false);
 let updateTagDialog = ref(false);
+let loading = ref(false);
+let selectedRows = ref<tagItemType[]>([]);
 let form = reactive({
   tagId: 0,
   tagName: '',
@@ -170,12 +175,17 @@ async function add_tag() {
  * @return {*}
  */
 async function load_table(page = 1, pageSize = 10) {
-  const res = await tagApi.get(page, pageSize);
-  count.value = res.count;
-  tableData.value = res.list;
+  loading.value = true;
+  try {
+    const res = await tagApi.get(page, pageSize);
+    count.value = res.count;
+    tableData.value = res.list;
 
-  browse.manageListPage = page;
-  browse.manageListPageSizeCache = pageSize;
+    browse.manageListPage = page;
+    browse.manageListPageSizeCache = pageSize;
+  } finally {
+    loading.value = false;
+  }
 }
 
 /**
@@ -184,6 +194,7 @@ async function load_table(page = 1, pageSize = 10) {
  */
 function reload_table() {
   tableData.value = [];
+  selectedRows.value = [];
   load_table(browse.manageListPage, browse.manageListPageSize);
 }
 
@@ -216,6 +227,36 @@ async function delete_tag(row: any) {
   })
     .then(async () => {
       await tagApi.delete(row.tagId);
+      reload_table();
+    })
+    .catch(() => {});
+}
+
+/**
+ * @description: 处理表格选择变化
+ * @param {any[]} val
+ * @return {*}
+ */
+function handleSelectionChange(val: tagItemType[]) {
+  selectedRows.value = val;
+}
+
+/**
+ * @description: 批量删除标签
+ * @return {*}
+ */
+async function batch_delete_tag() {
+  if (selectedRows.value.length === 0) {
+    ElMessage.warning(t('tagSetting.dialog.nameWarning'));
+    return false;
+  }
+
+  ElMessageBox.confirm(t('tagSetting.dialog.batchDeleteText'), t('tagSetting.dialog.batchDeleteTitle'), {
+    type: 'warning',
+  })
+    .then(async () => {
+      const tagIds = selectedRows.value.map(row => row.tagId);
+      await tagApi.batch_delete(tagIds);
       reload_table();
     })
     .catch(() => {});

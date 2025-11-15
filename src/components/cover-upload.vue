@@ -129,7 +129,6 @@ async function uploadImage(file: File) {
     }
   } catch (uploadError) {
     console.error('文件上传失败:', uploadError);
-    ElMessage.error('文件上传失败，请重试');
   } finally {
     loading.close();
   }

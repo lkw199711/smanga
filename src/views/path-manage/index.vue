@@ -1,7 +1,12 @@
 <template>
   <div class="path-setting-box manage-container">
+    <!--操作按钮区域-->
+    <div class="btn-box">
+      <el-button type="danger" :icon="Delete" :disabled="selectedRows.length === 0" @click="batch_delete_path">{{ $t('path.button.batchDelete') }}</el-button>
+    </div>
     <!--表格-->
-    <el-table :data="tableData" stripe border>
+    <el-table :data="tableData" stripe border @selection-change="handleSelectionChange">
+      <el-table-column type="selection" width="55"></el-table-column>
       <el-table-column type="index" :label="$t('account.serial')" width="54"></el-table-column>
 
       <el-table-column prop="mediaId" :label="$t('mediaManage.id')" width="80"></el-table-column>
@@ -91,6 +96,7 @@ const {t} = i18n.global;
 const editPathDialogVisible = ref(false);
 const count = ref(0);
 const tableData = ref([]);
+const selectedRows = ref([]);
 const pathForm = reactive({
   pathId: 0,
   pathContent: '',
@@ -191,6 +197,36 @@ function cancel_edit_path() {
     include: '',
     exclude: '',
   });
+}
+
+/**
+ * 处理表格选择变化
+ */
+function handleSelectionChange(rows: any[]) {
+  selectedRows.value = rows;
+}
+
+/**
+ * 批量删除路径
+ */
+async function batch_delete_path() {
+  if (selectedRows.value.length === 0) {
+    return;
+  }
+  
+  ElMessageBox.confirm(t('path.confirm.batchDeleteText'), t('path.confirm.title'), {
+    type: 'warning',
+  })
+    .then(async () => {
+      const pathIds = selectedRows.value.map(row => row.pathId);
+      const res = await pathApi.batch_delete_path(pathIds);
+
+      if (res.code === 0) {
+        selectedRows.value = [];
+        reload_table();
+      }
+    })
+    .catch(() => {});
 }
 </script>
 

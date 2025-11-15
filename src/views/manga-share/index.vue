@@ -1,7 +1,15 @@
 <template>
   <div class="manga-setting-box manage-container">
+    <!--操作按钮-->
+    <div class="btn-box">
+      <el-button :loading="loading" :disabled="selectedRows.length === 0" type="danger" @click="batch_delete_sync">
+        {{ t('mangaShare.batchDelete') }}
+      </el-button>
+    </div>
+    
     <!--表格-->
-    <el-table :data="tableData" stripe border>
+    <el-table :data="tableData" stripe border @selection-change="handleSelectionChange">
+      <el-table-column type="selection" width="55"></el-table-column>
       <el-table-column type="index" :label="t('account.serial')" width="54"></el-table-column>
 
       <el-table-column prop="shareId" :label="t('jobsManage.id')" width="100"></el-table-column>
@@ -80,6 +88,8 @@ const browse = useBrowseStore();
 const tableData = ref<any[]>([]);
 const {t} = i18n.global;
 let count = ref(0);
+const loading = ref(false);
+const selectedRows = ref<any[]>([]);
 
 const shareDetailDialog = ref(false);
 const posterBlob = ref('');
@@ -111,10 +121,19 @@ onMounted(() => {
 });
 
 async function load_table(page = 1, pageSize = 10) {
-  // 模拟加载数据
-  const response = await shareApi.get({page, pageSize});
-  tableData.value = response.list;
-  count.value = response.count;
+  loading.value = true;
+  try {
+    const response = await shareApi.get({page, pageSize});
+    tableData.value = response.list;
+    count.value = response.count;
+    
+    // 清空选中状态
+    selectedRows.value = [];
+  } catch (error) {
+    console.error('加载数据失败:', error);
+  } finally {
+    loading.value = false;
+  }
 
   browse.manageListPage = page;
   browse.manageListPageSizeCache = pageSize;
@@ -174,16 +193,70 @@ async function delete_manga(index: number, row: any) {
     return;
   }
 
-  // 删除漫画逻辑
-  shareApi
-    .delete(row.shareId)
-    .then(() => {
-      tableData.value.splice(index, 1);
-      count.value--;
-    })
-    .catch(error => {
-      console.error('删除失败:', error);
-    });
+  loading.value = true;
+  try {
+    // 删除漫画逻辑
+    await shareApi.delete(row.shareId);
+    tableData.value.splice(index, 1);
+    count.value--;
+    
+    // 从选中列表中移除
+    const selectedIndex = selectedRows.value.findIndex(item => item.shareId === row.shareId);
+    if (selectedIndex !== -1) {
+      selectedRows.value.splice(selectedIndex, 1);
+    }
+  } catch (error) {
+    console.error('删除失败:', error);
+  } finally {
+    loading.value = false;
+  }
+}
+
+// 处理选择变化
+function handleSelectionChange(selection: any[]) {
+  selectedRows.value = selection;
+}
+
+// 批量删除分享记录
+async function batch_delete_sync() {
+  if (selectedRows.value.length === 0) {
+    ElMessage.warning('请先选择要删除的记录');
+    return;
+  }
+
+  const confirm = await ElMessageBox.confirm(
+    t('mangaShare.batchDeleteText'),
+    t('mangaShare.batchDeleteTitle'),
+    {
+      confirmButtonText: t('option.confirm'),
+      cancelButtonText: t('option.cancel'),
+      type: 'warning'
+    }
+  );
+
+  if (!confirm) {
+    return;
+  }
+
+  loading.value = true;
+  try {
+    const shareIds = selectedRows.value.map(item => item.shareId);
+    await shareApi.batch_delete(shareIds);
+    
+    // 从表格数据中移除删除的记录
+    tableData.value = tableData.value.filter(
+      item => !shareIds.includes(item.shareId)
+    );
+    count.value -= shareIds.length;
+    
+    // 清空选中状态
+    selectedRows.value = [];
+    
+  } catch (error) {
+    console.error('批量删除失败:', error);
+  } finally {
+    loading.value = false;
+  }
 }
 </script>
 

@@ -3,10 +3,18 @@
     <!-- 表头按钮 -->
     <div class="btn-box">
       <el-button class="add-btn" type="primary" :icon="Plus" @click="dialog_open">{{ $t('mangaSync.addSync') }}</el-button>
+      <el-button 
+        class="delete-btn" 
+        type="danger" 
+        :icon="Delete" 
+        :disabled="selectedRows.length === 0" 
+        @click="batch_delete_sync"
+      >{{ $t('mangaSync.batchDelete') }}</el-button>
     </div>
 
     <!--表格-->
-    <el-table :data="tableData" stripe border>
+    <el-table :data="tableData" stripe border @selection-change="handleSelectionChange">
+      <el-table-column type="selection" width="55"></el-table-column>
       <el-table-column type="index" :label="t('account.serial')" width="54"></el-table-column>
 
       <el-table-column prop="syncType" :label="t('jobsManage.type')" width="100"></el-table-column>
@@ -142,6 +150,8 @@ const mediaSelectId = ref();
 const pathSelect = ref('');
 
 const posterBlob = ref('');
+const loading = ref(false);
+const selectedRows = ref<any[]>([]);
 
 const shareLink = ref('');
 const shareData: any = ref({
@@ -169,6 +179,42 @@ const tableData = ref<any[]>([]);
 const {t} = i18n.global;
 let count = ref(0);
 
+// 处理选择变化
+const handleSelectionChange = (rows: any[]) => {
+  selectedRows.value = rows;
+};
+
+// 批量删除同步记录
+const batch_delete_sync = async () => {
+  const confirm = await ElMessageBox.confirm(
+    t('mangaSync.batchDeleteText'), 
+    t('mangaSync.batchDeleteTitle'), 
+    {
+      confirmButtonText: t('option.confirm'),
+      cancelButtonText: t('option.cancel'),
+      type: 'warning',
+    }
+  );
+
+  if (!confirm) {
+    return;
+  }
+
+  loading.value = true;
+  try {
+    const ids = selectedRows.value.map(row => row.syncId);
+    await syncApi.batch_delete(ids);
+    // 重新加载表格数据
+    await load_table(browse.manageListPage, browse.manageListPageSizeCache);
+    // 清空选中状态
+    selectedRows.value = [];
+  } catch (error) {
+    console.error('批量删除失败:', error);
+  } finally {
+    loading.value = false;
+  }
+};
+
 onMounted(async () => {
   // 初始化加载数据
   load_table(browse.manageListPage, browse.manageListPageSizeCache);
@@ -181,17 +227,23 @@ async function load_paths() {
 }
 
 async function load_table(page = 1, pageSize = 10) {
-  // 模拟加载数据
-  const listResponse = await syncApi.get({
-    page,
-    pageSize,
-  });
+  loading.value = true;
+  try {
+    const listResponse = await syncApi.get({
+      page,
+      pageSize,
+    });
 
-  tableData.value = listResponse.list;
-  count.value = listResponse.count;
+    tableData.value = listResponse.list;
+    count.value = listResponse.count;
 
-  browse.manageListPage = page;
-  browse.manageListPageSizeCache = pageSize;
+    browse.manageListPage = page;
+    browse.manageListPageSizeCache = pageSize;
+    // 清空选中状态
+    selectedRows.value = [];
+  } finally {
+    loading.value = false;
+  }
 }
 
 function dialog_open() {
@@ -343,16 +395,19 @@ async function delete_manga(index: number, row: any) {
     return;
   }
 
-  // 删除漫画逻辑
-  syncApi
-    .delete(row.syncId)
-    .then(() => {
-      tableData.value.splice(index, 1);
-      count.value--;
-    })
-    .catch(error => {
-      console.error('删除失败:', error);
-    });
+  loading.value = true;
+  try {
+    await syncApi.delete(row.syncId);
+    ElMessage.success(t('message.deleteSuccess'));
+    tableData.value.splice(index, 1);
+    count.value--;
+    // 清空选中状态
+    selectedRows.value = [];
+  } catch (error) {
+    console.error('删除失败:', error);
+  } finally {
+    loading.value = false;
+  }
 }
 </script>
 
