@@ -396,6 +396,7 @@ const fetchVersionData = () => {
     .then(response => {
       isLoadingVersionData.value = false;
       versionDataRef.value = response.data;
+      versionDataRef.value.reverse();
     })
     .catch(error => {
       isLoadingVersionData.value = false;
