@@ -217,7 +217,7 @@ const menuVisible = computed(() => (router: any) => {
 })
 
 function media_route_index(media: mediaType) {
-  if (media.mediaType === 1) {
+  if (media.mediaType === 1 && userConfig.singleMediadirectChapterPage) {
     return '/chapter-list?mediaId=' + media.mediaId;
   } else {
     return '/manga-list?mediaId=' + media.mediaId;
