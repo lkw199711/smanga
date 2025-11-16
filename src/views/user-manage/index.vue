@@ -50,7 +50,7 @@
       </el-form-item>
 
       <el-form-item :label="$t('account.passLabel')">
-        <el-input v-model="form.passWord" :placeholder="$t('account.passPlace')"></el-input>
+        <el-input v-model="form.passWord" type="password" :placeholder="$t('account.passPlace')"></el-input>
       </el-form-item>
     </el-form>
 
@@ -93,7 +93,7 @@
       </el-form-item>
 
       <el-form-item :label="$t('account.passLabel')">
-        <el-input v-model="form.passWord" :placeholder="$t('account.passModifyPlace')"></el-input>
+        <el-input v-model="form.passWord" type="password" :placeholder="$t('account.passModifyPlace')"></el-input>
       </el-form-item>
 
       <el-form-item :label="'设置为管理员'">
