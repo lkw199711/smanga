@@ -1,8 +1,6 @@
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const webpack = require('webpack');
 const {VueLoaderPlugin} = require('vue-loader');
-// 添加压缩插件
-const CompressionPlugin = require('compression-webpack-plugin');
 // 获取项目版本号
 process.env.VUE_APP_VERSION = require('./package.json').version;
 
@@ -37,30 +35,6 @@ module.exports = {
     if (config.plugins.has('prefetch')) {
       config.plugins.delete('prefetch');
     }
-
-    // 配置图片压缩
-    config.module
-      .rule('images')
-      .use('image-webpack-loader')
-      .loader('image-webpack-loader')
-      .options({
-        bypassOnDebug: true,
-        mozjpeg: {
-          progressive: true,
-          quality: 65,
-        },
-        optipng: {
-          enabled: false,
-        },
-        pngquant: {
-          quality: [0.65, 0.9],
-          speed: 4,
-        },
-        gifsicle: {
-          interlaced: false,
-        },
-      })
-      .end();
   },
   // 开发环境代理
   devServer: {
@@ -121,17 +95,6 @@ module.exports = {
         __VUE_PROD_HYDRATION_MISMATCH_DETAILS__: 'false',
       }),
       new VueLoaderPlugin(),
-      // 生产环境下使用gzip压缩
-      ...(isProduction
-        ? [
-            new CompressionPlugin({
-              test: /\.(js|css|html|svg)$/,
-              algorithm: 'gzip',
-              threshold: 10240, // 大于10kb的文件才压缩
-              minRatio: 0.8, // 压缩率小于0.8的才压缩
-            }),
-          ]
-        : []),
     ],
     optimization: {
       splitChunks: {
