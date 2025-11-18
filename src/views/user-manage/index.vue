@@ -152,7 +152,7 @@ const addDialog = ref(false);
 const dialogFormVisible = ref(false);
 const dialogPower = ref(false);
 const tableData = ref([]);
-const selectedUsers = ref([]);
+const selectedUsers = ref<any[]>([]);
 
 /**
  * 处理多选框变化
