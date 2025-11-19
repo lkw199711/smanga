@@ -31,9 +31,6 @@
         </el-menu-item>
 
         <el-menu-item index="share" v-if="isAdmin">
-          <el-icon>
-            <Share />
-          </el-icon>
           {{ $t('mediaList.shareMedia') }}
         </el-menu-item>
         <el-menu-item index="edit" v-if="isAdmin">
