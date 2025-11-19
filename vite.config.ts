@@ -8,6 +8,9 @@ import AutoImport from 'unplugin-auto-import/vite';
 import Components from 'unplugin-vue-components/vite';
 import {ElementPlusResolver} from 'unplugin-vue-components/resolvers';
 
+// 定义需要手动分块的库
+const nameOutHash = ['axios', 'lodash', 'element-plus', 'echarts', 'vue', 'vue-router', 'pinia', 'vue-i18n', 'vendor'];
+
 // 路径解析函数
 const pathResolve = (dir: string) => resolve(__dirname, dir);
 
@@ -75,16 +78,36 @@ export default defineConfig(({mode}): UserConfig => {
       rollupOptions: {
         // 分割代码
         output: {
-          manualChunks: {},
-          //  {
+          // 自定义文件名格式，为特定chunk设置不带哈希值的文件名
+          entryFileNames: 'assets/[name]-[hash].js',
+          // 为特定chunk设置固定文件名（不带哈希值）
+          chunkFileNames: chunkInfo => {
+            // 对特定的chunk使用固定名称（不带哈希）
+            if (nameOutHash.includes(chunkInfo.name)) {
+              return `assets/${chunkInfo.name}.js`;
+            }
+            // 其他chunk保持默认的哈希文件名
+            return 'assets/[name]-[hash].js';
+          },
+          // manualChunks: {},
+          manualChunks: {
+            vue: ['vue', 'vue-router', 'pinia', 'vue-i18n'],
+            axios: ['axios'],
+            lodash: ['lodash'],
+          },
+          // manualChunks: {
           //   // 开发环境中可以包含所有模块
-          //   elementPlus: ['element-plus'],
+          //   // 需要注意引入顺序
+          //   vue: ['vue', 'vue-router', 'pinia', 'vue-i18n'],
           //   echarts: ['echarts', 'vue-echarts'],
-          //   vendor: ['vue', 'vue-router', 'pinia', 'vue-i18n', 'axios', 'lodash'],
+          //   elementPlus: ['element-plus'],
+          //   vendor: ['axios', 'lodash'],
           // },
         },
         // 生产环境使用CDN
-        external: isDevelopment ? [] : ['vue', 'vue-router', 'axios', 'lodash', 'pinia', 'vue-i18n', 'element-plus', 'echarts', 'vant'],
+        // external: isDevelopment ? [] : ['vue', 'vue-router', 'axios', 'lodash', 'pinia', 'vue-i18n', 'element-plus', 'echarts'],
+        external: isDevelopment ? [] : ['element-plus', 'echarts'],
+        // external: [],
       },
     },
     // 插件配置
