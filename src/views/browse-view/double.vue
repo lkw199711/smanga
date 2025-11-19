@@ -67,7 +67,6 @@
 
 <script setup lang='ts'>
 import { ref, onMounted, onBeforeUnmount, computed, watch } from 'vue';
-import { ElMessage } from 'element-plus';
 import { config, userConfig } from '@/store';
 import operationCover from './components/operation-cover.vue';
 import chapterListMenu from './components/chapter-list-menu.vue';

@@ -79,7 +79,6 @@ import {onMounted, ref} from 'vue';
 import i18n from '@/i18n';
 import useBrowseStore from '@/store/browse';
 import shareApi from '@/api/share';
-import {ElMessage, ElMessageBox} from 'element-plus';
 import syncApi from '@/api/sync';
 import imageApi from '@/api/image';
 

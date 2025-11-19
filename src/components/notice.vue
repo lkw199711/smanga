@@ -1,10 +1,3 @@
-<!--
- * @Author: lkw199711 lkw199711@163.com
- * @Date: 2023-05-21 22:52:41
- * @LastEditors: lkw199711 lkw199711@163.com
- * @LastEditTime: 2023-07-28 00:10:23
- * @FilePath: \smanga\src\components\notice.vue
--->
 <template>
 	<div class="notice"></div>
 </template>
@@ -12,9 +5,6 @@
 <script lang="ts" setup>
 import {userInfo} from '@/store';
 import {Cookies} from '@/utils';
-import {ElNotification} from 'element-plus';
-import {onMounted, onBeforeUnmount, watch} from 'vue';
-const isProduction = import.meta.env.PROD;
 
 let ws: any;
 

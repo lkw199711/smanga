@@ -90,7 +90,6 @@
 <script lang="ts" setup>
 import {reactive, computed, watch} from 'vue';
 import mediaApi from '@/api/media';
-import {ElMessage} from 'element-plus';
 import i18n from '@/i18n';
 import coverUpload from '@/components/cover-upload.vue';
 import { mediaInit } from '@/type/media';

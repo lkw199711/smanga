@@ -55,7 +55,6 @@
 
 <script lang="ts" setup>
 import { watch, ref, computed, onMounted } from 'vue';
-import { ElMessageBox } from 'element-plus';
 import i18n from '@/i18n';
 import imageApi from '@/api/image';
 import useBrowseStore from '@/store/browse';

@@ -43,7 +43,6 @@ export default {name: 'compress-manage'};
 </script>
 <script lang="ts" setup>
 import {ref, onMounted} from 'vue';
-import {ElMessageBox, ElMessage} from 'element-plus';
 import {Delete} from '@element-plus/icons-vue';
 import compressApi from '@/api/compress';
 import tablePager from '@/components/table-pager.vue';

@@ -56,7 +56,6 @@
 <script lang="ts" setup>
 import {watch, ref, computed} from 'vue';
 import chapterApi from '@/api/chapter';
-import {ElMessageBox} from 'element-plus';
 import i18n from '@/i18n';
 import collectApi from '@/api/collect';
 import imageApi from '@/api/image';

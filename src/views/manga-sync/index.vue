@@ -132,7 +132,6 @@ import {Delete, Edit, Plus, Refresh} from '@element-plus/icons-vue';
 import {onMounted, ref} from 'vue';
 import i18n from '@/i18n';
 import useBrowseStore from '@/store/browse';
-import {ElButton, ElDialog, ElInput, ElMessage, ElMessageBox} from 'element-plus';
 import syncApi from '@/api/sync';
 import type {mediaType} from '@/type/media';
 import {pathType} from '@/type/path';

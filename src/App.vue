@@ -14,7 +14,6 @@
 import { Cookies, global_set_json } from '@/utils';
 import { config, pageSizeConfig, userConfig } from '@/store';
 import { useRoute, useRouter } from 'vue-router';
-import { ElConfigProvider, ElMessage, ElMessageBox } from 'element-plus';
 import languages from '@/store/language';
 import { computed, onMounted, onBeforeMount } from 'vue';
 import { useI18n } from 'vue-i18n';

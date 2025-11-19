@@ -89,7 +89,6 @@ export default { name: 'browse-views' }
 import { computed, ref, watch, onMounted, onUnmounted } from 'vue';
 import imageApi from '@/api/image';
 import { delay, window_go_top } from '@/utils';
-import { ElMessage as msg } from 'element-plus';
 import { config, userConfig } from '@/store';
 import i18n from '@/i18n';
 import chapterListMenu from './components/chapter-list-menu.vue';

@@ -174,7 +174,6 @@
 <script setup lang="ts">
 import { ref, onMounted, reactive, computed } from 'vue';
 import serveSettingApi from '@/api/serve-setting';
-import { ElMessage } from 'element-plus';
 import { Check } from '@element-plus/icons-vue';
 import 'element-plus/es/components/message/style/css';
 import 'element-plus/es/components/card/style/css';

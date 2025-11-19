@@ -88,7 +88,6 @@
 import { watch, ref, computed, onMounted, reactive } from 'vue';
 import mangaApi from '@/api/manga';
 import collectApi from '@/api/collect';
-import { ElMessageBox } from 'element-plus';
 import i18n from '@/i18n';
 import tagApi, { tagItemType } from '@/api/tag';
 import historyApi from '@/api/history';

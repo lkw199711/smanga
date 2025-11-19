@@ -1,5 +1,4 @@
 import Axios from 'axios';
-import {ElMessage} from 'element-plus';
 import {Cookies} from '@/utils';
 import router from '@/router';
 import Response from '@/type/response';

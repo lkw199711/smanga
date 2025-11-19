@@ -52,7 +52,6 @@ export default {name: 'chapter-manage'};
 </script>
 <script setup lang="ts">
 import {ref, onMounted} from 'vue';
-import {ElMessage, ElMessageBox} from 'element-plus';
 import {Delete, Edit, Search} from '@element-plus/icons-vue';
 import chapterApi from '@/api/chapter';
 import tablePager from '@/components/table-pager.vue';
