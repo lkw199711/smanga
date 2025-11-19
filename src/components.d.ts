@@ -64,6 +64,7 @@ declare module 'vue' {
     MediaPager: typeof import('./components/media-pager.vue')['default']
     Notice: typeof import('./components/notice.vue')['default']
     Pie: typeof import('./components/charts/pie.vue')['default']
+    PullRefresh: typeof import('./components/pull-refresh.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     Seat: typeof import('./components/seat.vue')['default']
@@ -71,6 +72,7 @@ declare module 'vue' {
     TablePager: typeof import('./components/table-pager.vue')['default']
   }
   export interface GlobalDirectives {
+    vInfiniteScroll: typeof import('element-plus/es')['ElInfiniteScroll']
     vLoading: typeof import('element-plus/es')['ElLoadingDirective']
   }
 }

@@ -1,6 +1,6 @@
 {
   "name": "smanga",
-  "version": "4.2.41",
+  "version": "4.2.42",
   "private": true,
   "type": "module",
   "scripts": {
@@ -24,7 +24,6 @@
     "nprogress": "^0.2.0",
     "pinia": "^3.0.3",
     "reset-css": "^5.0.1",
-    "vant": "^4.2.0",
     "vue": "^3.5.22",
     "vue-echarts": "^6.6.1",
     "vue-i18n": "^9.3.0-beta.16",
