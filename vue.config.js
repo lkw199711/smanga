@@ -105,11 +105,6 @@ module.exports = {
             priority: 20,
             test: /[\\/]node_modules[\\/]element-plus[\\/]/,
           },
-          vant: {
-            name: 'chunk-vant',
-            priority: 15,
-            test: /[\\/]node_modules[\\/]vant[\\/]/,
-          },
           echarts: {
             name: 'chunk-echarts',
             priority: 10,

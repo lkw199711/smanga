@@ -75,16 +75,16 @@ export default defineConfig(({mode}): UserConfig => {
       rollupOptions: {
         // 分割代码
         output: {
-          manualChunks: {
-            // 开发环境中可以包含所有模块
-            elementPlus: ['element-plus'],
-            vant: ['vant'],
-            echarts: ['echarts', 'vue-echarts'],
-            vendor: ['vue', 'vue-router', 'pinia', 'vue-i18n', 'axios', 'lodash'],
-          },
+          manualChunks: {},
+          //  {
+          //   // 开发环境中可以包含所有模块
+          //   elementPlus: ['element-plus'],
+          //   echarts: ['echarts', 'vue-echarts'],
+          //   vendor: ['vue', 'vue-router', 'pinia', 'vue-i18n', 'axios', 'lodash'],
+          // },
         },
         // 生产环境使用CDN
-        external: [],
+        external: isDevelopment ? [] : ['vue', 'vue-router', 'axios', 'lodash', 'pinia', 'vue-i18n', 'element-plus', 'echarts', 'vant'],
       },
     },
     // 插件配置

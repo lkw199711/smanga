@@ -45,12 +45,10 @@ var vite_config_default = defineConfig(({ mode }) => {
         output: {
           manualChunks: isProduction ? {
             // 生产环境中，只包含不是external的模块
-            vant: ["vant"],
             vueEcharts: ["vue-echarts"]
           } : {
             // 开发环境中可以包含所有模块
             elementPlus: ["element-plus"],
-            vant: ["vant"],
             echarts: ["echarts", "vue-echarts"],
             vendor: ["vue", "vue-router", "pinia", "vue-i18n", "axios", "lodash"]
           }
