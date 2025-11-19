@@ -3,6 +3,10 @@ import vue from '@vitejs/plugin-vue';
 import { resolve } from 'path';
 import { createHtmlPlugin } from 'vite-plugin-html';
 import type { UserConfig } from 'vite';
+// Element Plus自动导入插件
+import AutoImport from 'unplugin-auto-import/vite';
+import Components from 'unplugin-vue-components/vite';
+import { ElementPlusResolver } from 'unplugin-vue-components/resolvers';
 
 // 路径解析函数
 const pathResolve = (dir: string) => resolve(__dirname, dir);
@@ -90,9 +94,20 @@ export default defineConfig(({ mode }): UserConfig => {
     // 插件配置
     plugins: [
       vue(),
+      // 自动导入Element Plus组件和API
+      AutoImport({
+        resolvers: [ElementPlusResolver()],
+        // 自动导入的类型声明文件路径
+        dts: 'src/auto-imports.d.ts',
+      }),
+      Components({
+        resolvers: [ElementPlusResolver()],
+        // 自动导入的组件类型声明文件路径
+        dts: 'src/components.d.ts',
+      }),
       createHtmlPlugin({
-           // 使用public目录的index.html作为模板
-           template: './public/index.html',
+           // 使用根目录的index.html作为模板
+           template: 'index.html',
            // 传递环境变量到HTML模板中
            inject: {
              data: {

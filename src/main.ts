@@ -6,9 +6,6 @@ import i18n from '@/i18n';
 
 import {List} from 'vant';
 import {PullRefresh} from 'vant';
-// 按需引入Element Plus组件和样式
-import ElementPlus from 'element-plus';
-import 'element-plus/theme-chalk/index.css';
 
 import 'reset-css';
 import './style/public.less';
@@ -28,7 +25,6 @@ const appVue = createApp(App);
 appVue
 	.use(router)
 	.use(i18n)
-	.use(ElementPlus)
 	.use(List)
 	.use(PullRefresh)
 	.use(createPinia());
