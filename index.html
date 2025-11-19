@@ -15,9 +15,9 @@
     <!-- 引入Vue应用入口文件 -->
     <script type="module" src="/src/main.ts"></script>
     <!-- CDN引入第三方库，仅在生产环境使用 -->
-    <% if (!isDevelopment) { %>
+    <% if (false) { %>
     <!-- Vue 3 -->
-    <script src="https://cdn.jsdelivr.net/npm/vue@3.4.27/dist/vue.global.prod.js"></script>
+    <script src="https://unpkg.com/vue@3.5.24/dist/vue.global.js"></script>
     <!-- Vue Router -->
     <script src="https://cdn.jsdelivr.net/npm/vue-router@4.0.0/dist/vue-router.global.prod.js"></script>
     <!-- Axios -->
