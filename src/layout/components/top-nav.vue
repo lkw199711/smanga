@@ -6,11 +6,11 @@
 		<div class="menu_collapse" @click="handleSelect('switch_sidebar')">
 			<!--大屏幕-->
 			<template v-if="screenType">
-				<expand v-show="config.sidebarCollapse" class="icon-operation" />
-				<fold v-show="!config.sidebarCollapse" class="icon-operation" />
+				<expand v-show="config.sidebarCollapse" class="iconfont icon-liebiaoshitu" />
+				<fold v-show="!config.sidebarCollapse" class="iconfont icon-liebiaoshitu" />
 			</template>
 			<!--小屏幕-->
-			<Operation v-else class="icon-operation"></Operation>
+			<Operation v-else class="iconfont icon-liebiaoshitu"></Operation>
 		</div>
 
 		<!-- 搜索框 -->
@@ -234,11 +234,12 @@ function switch_view_type() {
 		width: 60px;
 	}
 
-	.icon-operation {
+	.icon-liebiaoshitu {
 		display: block;
 		padding: 20px;
 		width: 20px;
-		color: #909399;
+		font-size: 2.2rem;
+		color: @s-primary;
 	}
 }
 
