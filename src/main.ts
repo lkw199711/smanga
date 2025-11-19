@@ -34,3 +34,6 @@ appVue
 	.use(createPinia());
 
 appVue.mount('#app');
+
+// 为了Vite兼容性，导出应用实例（可选）
+export default appVue;

@@ -14,11 +14,11 @@ import {userInfo} from '@/store';
 import {Cookies} from '@/utils';
 import {ElNotification} from 'element-plus';
 import {onMounted, onBeforeUnmount, watch} from 'vue';
-const isProduction = process.env.NODE_ENV === 'production';
+const isProduction = import.meta.env.PROD;
 
 let ws: any;
 
-const devUrl = process.env.VUE_APP_WS_URL;
+const devUrl = import.meta.env.VITE_APP_WS_URL;
 const prodUrl = 'ws://' + location.host + '/websocket';
 
 const url = isProduction ? prodUrl : devUrl;

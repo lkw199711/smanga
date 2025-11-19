@@ -2,14 +2,15 @@
   "name": "smanga",
   "version": "4.2.32",
   "private": true,
+  "type": "module",
   "scripts": {
-    "dev": "vue-cli-service serve --no-eslint",
-    "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint",
-    "build-baota": "vue-cli-service build --mode baota",
-    "build-docker": "vue-cli-service build --mode docker",
-    "serve-baota": "vue-cli-service serve --mode baota",
-    "serve-docker": "vue-cli-service serve --mode docker"
+    "dev": "vite",
+    "build": "vite build",
+    "lint": "eslint . --ext .vue,.js,.ts,.jsx,.tsx --fix",
+    "build-baota": "vite build --mode baota",
+    "build-docker": "vite build --mode docker",
+    "serve-baota": "vite --mode baota",
+    "serve-docker": "vite --mode docker"
   },
   "main": "background.js",
   "dependencies": {
@@ -31,27 +32,21 @@
   },
   "devDependencies": {
     "@types/lodash": "^4.17.4",
+    "@types/node": "^24.10.1",
     "@types/nprogress": "^0.2.3",
     "@typescript-eslint/eslint-plugin": "^7.11.0",
     "@typescript-eslint/parser": "^7.11.0",
-    "@vue/cli-plugin-babel": "~5.0.8",
-    "@vue/cli-plugin-eslint": "~5.0.8",
-    "@vue/cli-plugin-router": "~5.0.8",
-    "@vue/cli-plugin-typescript": "~5.0.8",
-    "@vue/cli-plugin-vuex": "~5.0.8",
-    "@vue/cli-service": "~5.0.8",
-    "@vue/compiler-sfc": "^3.4.27",
+    "@vitejs/plugin-vue": "^5.0.0",
     "@vue/eslint-config-typescript": "^13.0.0",
-    "babel-plugin-component": "^1.1.1",
-    "babel-plugin-transform-remove-console": "^6.9.4",
     "eslint": "^8.56.0",
     "eslint-plugin-vue": "^9.26.0",
     "less": "^4.2.0",
     "less-loader": "^12.2.0",
     "lint-staged": "^15.2.5",
     "prettier": "^3.2.5",
-    "style-resources-loader": "^1.5.0",
     "typescript": "~5.4.5",
-    "vue-cli-plugin-style-resources-loader": "^0.1.5"
+    "vite": "^5.0.0",
+    "vite-plugin-html": "^3.2.2",
+    "vue-tsc": "^1.8.25"
   }
 }

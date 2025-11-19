@@ -4,10 +4,17 @@
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width,initial-scale=1.0" />
-    <link rel="icon" href="<%= BASE_URL %>favicon.ico" />
-    <title><%= htmlWebpackPlugin.options.title %></title>
+    <link rel="icon" href="/favicon.ico" />
+    <title><%= VITE_APP_TITLE %></title>
+  </head>
+  <body>
+    <noscript>
+      <strong>We're sorry but SManga doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
+    </noscript>
+    <div id="app"></div>
+    <!-- built files will be auto injected -->
     <!-- CDN引入第三方库，仅在生产环境使用 -->
-    <% if (process.env.NODE_ENV === 'production') { %>
+    <% if (!isDevelopment) { %>
     <!-- Vue 3 -->
     <script src="https://cdn.jsdelivr.net/npm/vue@3.4.27/dist/vue.global.prod.js"></script>
     <!-- Vue Router -->
@@ -23,16 +30,11 @@
     <!-- Element Plus -->
     <link href="https://cdn.jsdelivr.net/npm/element-plus@2.7.3/dist/index.css" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/element-plus@2.7.3/dist/index.full.min.js"></script>
-
+    <!-- Vant -->
+    <link href="https://cdn.jsdelivr.net/npm/vant@4.7.3/dist/index.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/vant@4.7.3/dist/vant.min.js"></script>
     <!-- ECharts -->
     <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
     <% } %>
-  </head>
-  <body>
-    <noscript>
-      <strong>We're sorry but <%= htmlWebpackPlugin.options.title %> doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
-    </noscript>
-    <div id="app"></div>
-    <!-- built files will be auto injected -->
   </body>
 </html>

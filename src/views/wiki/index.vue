@@ -359,7 +359,7 @@ type versionDataType = {
 // 状态管理
 const activeTab = ref('intro');
 const versionDataRef = ref<versionDataType[]>([]);
-const version = process.env.VUE_APP_VERSION || '4.1.4';
+const version = import.meta.env.VITE_APP_VERSION || '4.1.4';
 const currentYear = new Date().getFullYear();
 
 // 版本更新状态
