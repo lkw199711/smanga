@@ -175,15 +175,6 @@
 import { ref, onMounted, reactive, computed } from 'vue';
 import serveSettingApi from '@/api/serve-setting';
 import { Check } from '@element-plus/icons-vue';
-import 'element-plus/es/components/message/style/css';
-import 'element-plus/es/components/card/style/css';
-import 'element-plus/es/components/form/style/css';
-import 'element-plus/es/components/input/style/css';
-import 'element-plus/es/components/switch/style/css';
-import 'element-plus/es/components/button/style/css';
-import 'element-plus/es/components/row/style/css';
-import 'element-plus/es/components/col/style/css';
-import 'element-plus/es/components/icon/style/css';
 
 const coverArr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16];
 let activeBack = ref(0);
