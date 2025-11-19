@@ -67,6 +67,7 @@ import {defineModel, reactive, watch} from 'vue';
 import mangaApi from '@/api/manga';
 import coverUpload from '@/components/cover-upload.vue';
 import { mangaInit } from '@/type/manga';
+import i18n from '@/i18n';
 
 const {t} = i18n.global;
 const editMangaDialog = defineModel('editMangaDialog');

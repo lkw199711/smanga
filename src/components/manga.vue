@@ -49,6 +49,7 @@ import { onMounted } from 'vue';
 import queue from '@/store/quque';
 import usePosterStore from '@/store/image';
 import { userConfig } from '@/store';
+import placeholder from "@/assets/s-blue.png";
 
 type mangaItemType = mangaType & { blob: string; mangaCover: string; };
 
@@ -57,7 +58,6 @@ const router = useRouter();
 const poster: any = usePosterStore();
 // 传值
 const props = defineProps(['mangaInfo', 'viewType']);
-const placeholder = require('@/assets/s-blue.png');
 const fit = 'cover';
 
 let blobLink = ref('');

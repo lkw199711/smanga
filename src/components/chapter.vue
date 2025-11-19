@@ -42,6 +42,7 @@
 export default { name: 'manga-chapter-item' }
 </script>
 <script lang="ts" setup>
+import placeholder from "@/assets/s-blue.png";
 import imageApi from "@/api/image";
 import queue from "@/store/quque";
 import { chapterType } from "@/type/chapter";
@@ -49,7 +50,6 @@ import { ref, onMounted, computed } from "vue";
 
 type chapterItemType = chapterType & { blob: string; chapterCover: string; pageImage: string; };
 const props = defineProps(['chapterInfo', 'bookmark', 'viewType']);
-const placeholder = require("@/assets/s-blue.png");
 const fit = 'cover';
 let blobLink = ref('');
 const chapterName = ref(props.chapterInfo.chapterName);

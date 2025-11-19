@@ -251,12 +251,12 @@ onMounted(async () => {
 <style scoped lang="less">
 .sidebar-sub-icon {
   font-size: 4.2rem;
-  transform: translate(-.8rem, -.6rem);
+  transform: translate(-.8rem);
 }
 
 .sidebar-icon {
   font-size: 2.6rem;
-  transform: translate(-1rem, -1.2rem);
+  transform: translate(-1rem);
 }
 
 .sidebar-icon.collapse {

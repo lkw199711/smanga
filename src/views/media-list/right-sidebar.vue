@@ -63,9 +63,9 @@ import mangaShare from '@/components/share.vue';
 import mediaApi from '@/api/media';
 import { Cookies } from '@/utils';
 import mediaEdit from '@/views/media-manage/components/mediaEdit.vue';
+import placeholder from '@/assets/s-blue.png';
 
 const browse = useBrowseStore();
-const placeholder = require('@/assets/s-blue.png');
 
 const { t } = i18n.global;
 const mangaShareDialog = ref(false);

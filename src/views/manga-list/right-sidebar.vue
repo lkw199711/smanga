@@ -99,8 +99,9 @@ import { Cookies } from '@/utils';
 import mangaTagBox from '../manga-info/components/manga-tag-box.vue';
 import mangaModify from '../manga-manage/components/mangaModify.vue';
 import { mangaType } from '@/type/manga';
+import placeholder from '@/assets/s-blue.png';
+
 const browse = useBrowseStore();
-const placeholder = require('@/assets/s-blue.png');
 const { t } = i18n.global;
 const isCollect = ref(false);
 const editTagsDialog = ref(false);

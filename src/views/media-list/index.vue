@@ -29,8 +29,9 @@ import {mediaType, mediaInit} from '@/type/media';
 import imageApi from '@/api/image';
 import useBrowseStore from '@/store/browse';
 import rightSidebar from './right-sidebar.vue';
+import placeholder from '@/assets/s-blue.png';
+
 const browse = useBrowseStore();
-const placeholder = require('@/assets/s-blue.png');
 const route = useRoute();
 const router = useRouter();
 

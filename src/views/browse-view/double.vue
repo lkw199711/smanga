@@ -79,11 +79,12 @@ import i18n from '@/i18n';
 import { useRoute, useRouter } from 'vue-router';
 import imageApi from '@/api/image';
 import useBrowseStore from '@/store/browse';
+import sBlue from '@/assets/s-blue-high.png';
 const { t } = i18n.global;
 
 const route = useRoute();
 const router = useRouter();
-const sBlue = require('@/assets/s-blue-high.png');
+
 const imgSrc1 = ref(sBlue);
 const imgSrc2 = ref(sBlue);
 

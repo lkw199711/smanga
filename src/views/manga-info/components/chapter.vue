@@ -32,10 +32,10 @@ import queue from "@/store/quque";
 import { chapterType } from "@/type/chapter";
 import { getFileNameWithoutExtension } from "@/utils";
 import { ref, onMounted, computed } from "vue";
+import placeholder from '@/assets/s-blue.png';
 
 type chapterItemType = chapterType & { blob: string; chapterCover: string; pageImage: string; };
 const props = defineProps(['chapterInfo', 'bookmark', 'sourceWebsite']);
-const placeholder = require("@/assets/s-blue.png");
 const fit = 'cover';
 let blobLink = ref('');
 let blobLink1 = ref('');
