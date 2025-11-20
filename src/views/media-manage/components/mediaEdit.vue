@@ -6,21 +6,26 @@
         <el-input v-model="form.mediaName" :placeholder="$t('mediaManage.place.name')"></el-input>
       </el-form-item>
 
-      <el-form-item :label="$t('mediaManage.form.type')">
-        <el-select v-model.number="form.mediaType">
-          <el-option :label="$t('mediaManage.select.mediaType0')" :value="0" />
-          <el-option :label="$t('mediaManage.select.mediaType1')" :value="1" />
-        </el-select>
+      <!-- 是否为单本漫画 -->
+      <el-form-item :label="$t('mediaManage.singleManga')">
+        <el-switch v-model="form.mediaType" :active-value="1" :inactive-value="0" />
       </el-form-item>
 
-      <el-form-item :label="$t('mediaManage.form.browse')">
-        <el-select v-model="form.browseType">
-          <el-option :label="$t('mediaManage.select.browse0')" value="flow" />
-          <el-option :label="$t('mediaManage.select.browse1')" value="single" />
-          <el-option :label="$t('mediaManage.select.browse2')" value="double" />
-          <el-option :label="$t('mediaManage.select.browse3')" value="half" />
-        </el-select>
+      <!-- 是否为云盘库 -->
+      <el-form-item :label="$t('mediaManage.cloudMedia')">
+        <el-switch v-model="form.isCloudMedia" :active-value="1" :inactive-value="0" />
       </el-form-item>
+
+      <!-- 浏览方式 -->
+      <el-form-item :label="$t('mediaManage.form.browse')">
+        <el-radio-group v-model="form.browseType" class="ml-4">
+          <el-radio :value="'flow'" size="large">{{ $t('mediaManage.select.browse0') }}</el-radio>
+          <el-radio :value="'single'" size="large">{{ $t('mediaManage.select.browse1') }}</el-radio>
+          <el-radio :value="'double'" size="large">{{ $t('mediaManage.select.browse2') }}</el-radio>
+          <el-radio :value="'half'" size="large">{{ $t('mediaManage.select.browse3') }}</el-radio>
+        </el-radio-group>
+      </el-form-item>
+
       <!-- 封面设置 -->
       <template v-if="props.editModel === 'modify'">
         <el-form-item :label="$t('mediaManage.form.cover')">
@@ -36,11 +41,8 @@
         </el-form-item>
       </template>
 
-      <el-form-item :label="$t('mediaManage.form.directory')">
-        <el-select v-model.number="form.directoryFormat" class="r30">
-          <el-option :label="$t('mediaManage.select.directory0')" :value="0" />
-          <el-option :label="$t('mediaManage.select.directory1')" :value="1" />
-        </el-select>
+      <el-form-item :label="$t('mediaManage.doubleFolder')">
+        <el-switch v-model="form.directoryFormat" :active-value="1" :inactive-value="0" />
       </el-form-item>
 
       <el-form-item :label="$t('mediaManage.form.sourceWebsite')">
