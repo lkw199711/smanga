@@ -267,7 +267,7 @@ onMounted(async () => {
 }
 
 .sidebar-icon.collapse {
-  transform: translate(-1rem, -1.4rem);
+  transform: translate(-1rem);
 }
 
 //响应式手机
