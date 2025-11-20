@@ -91,23 +91,19 @@ export default defineConfig(({mode}): UserConfig => {
           },
           // manualChunks: {},
           manualChunks: {
+            //   // 开发环境中可以包含所有模块
+            //   // 需要注意引入顺序
             vue: ['vue', 'vue-router', 'pinia', 'vue-i18n'],
             axios: ['axios'],
             lodash: ['lodash'],
+            echarts: ['echarts', 'vue-echarts'],
+            elementPlus: ['element-plus'],
           },
-          // manualChunks: {
-          //   // 开发环境中可以包含所有模块
-          //   // 需要注意引入顺序
-          //   vue: ['vue', 'vue-router', 'pinia', 'vue-i18n'],
-          //   echarts: ['echarts', 'vue-echarts'],
-          //   elementPlus: ['element-plus'],
-          //   vendor: ['axios', 'lodash'],
-          // },
         },
         // 生产环境使用CDN
         // external: isDevelopment ? [] : ['vue', 'vue-router', 'axios', 'lodash', 'pinia', 'vue-i18n', 'element-plus', 'echarts'],
-        external: isDevelopment ? [] : ['element-plus', 'echarts'],
-        // external: [],
+        // external: isDevelopment ? [] : ['element-plus', 'echarts'],
+        external: [],
       },
     },
     // 插件配置

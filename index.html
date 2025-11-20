@@ -14,13 +14,5 @@
     <div id="app"></div>
     <!-- 引入Vue应用入口文件 -->
     <script type="module" src="/src/main.ts"></script>
-    <!-- CDN引入第三方库，仅在生产环境使用 -->
-    <% if (!isDevelopment) { %>
-    <!-- Element Plus -->
-    <link href="//cdn.jsdelivr.net/npm/element-plus@2.7.3/dist/index.css" rel="stylesheet" />
-    <script src="//cdn.jsdelivr.net/npm/element-plus@2.7.3/dist/index.full.min.js"></script>
-    <!-- ECharts -->
-    <script src="//cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
-    <% } %>
   </body>
 </html>
