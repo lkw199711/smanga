@@ -1,4 +1,4 @@
-import { Directive } from 'vue';
+import {Directive} from 'vue';
 
 // 下拉刷新指令配置接口
 interface PullRefreshOptions {
@@ -16,22 +16,18 @@ interface PullRefreshOptions {
 const pullRefresh: Directive = {
   mounted(el, binding) {
     // 获取配置项
-    const options: PullRefreshOptions = typeof binding.value === 'function' 
-      ? { onRefresh: binding.value }
-      : { 
-          onRefresh: () => {},
-          threshold: 60,
-          maxDistance: 120,
-          resistance: 0.5,
-          ...binding.value 
-        };
+    const options: PullRefreshOptions =
+      typeof binding.value === 'function'
+        ? {onRefresh: binding.value}
+        : {
+            onRefresh: () => {},
+            threshold: 60,
+            maxDistance: 120,
+            resistance: 0.5,
+            ...binding.value,
+          };
 
-    const {
-      onRefresh,
-      threshold = 60,
-      maxDistance = 120,
-      resistance = 0.5
-    } = options;
+    const {onRefresh, threshold = 60, maxDistance = 120, resistance = 0.5} = options;
 
     // 状态变量
     let startY = 0;
@@ -61,7 +57,7 @@ const pullRefresh: Directive = {
       pointer-events: none;
       transition: transform 0.3s;
     `;
-    
+
     // 添加spinner样式
     const style = document.createElement('style');
     style.textContent = `
@@ -93,7 +89,7 @@ const pullRefresh: Directive = {
     // 初始化DOM结构
     el.style.position = 'relative';
     el.style.overflow = 'hidden';
-    
+
     // 创建内容容器
     const contentWrapper = document.createElement('div');
     contentWrapper.className = 'pull-refresh-wrapper';
@@ -102,12 +98,12 @@ const pullRefresh: Directive = {
       transition: transform 0.3s;
       will-change: transform;
     `;
-    
+
     // 移动原始内容到wrapper中
     while (el.firstChild) {
       contentWrapper.appendChild(el.firstChild);
     }
-    
+
     el.appendChild(spinner);
     el.appendChild(contentWrapper);
 
@@ -133,8 +129,13 @@ const pullRefresh: Directive = {
 
     // 开始下拉
     const startPull = (y: number) => {
-      if (isRefreshing || scrollTop > 0) return;
-      
+      // 获取文档元素的滚动高度
+      const documentScrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+      // 只有当组件滚动高度和文档滚动高度都为0且不在刷新状态时才能开始下拉
+      if (isRefreshing || scrollTop > 0 || documentScrollTop > 0) {
+        return;
+      }
+
       startY = y;
       isPulling = true;
       originalTransition = contentWrapper.style.transition;
@@ -144,18 +145,18 @@ const pullRefresh: Directive = {
     // 正在下拉
     const doPull = (y: number) => {
       if (!isPulling || isRefreshing) return;
-      
+
       currentY = y;
       const distance = (currentY - startY) * resistance;
-      
+
       if (distance > 0 && scrollTop <= 0) {
         // 阻止默认滚动
         event?.preventDefault?.();
-        
+
         pullingDistance = Math.min(distance, maxDistance);
         contentWrapper.style.transform = `translateY(${pullingDistance}px)`;
         spinner.style.transform = `translateY(${pullingDistance}px)`;
-        
+
         // 根据距离更新状态
         if (pullingDistance > threshold) {
           spinner.classList.add('pulling');
@@ -170,10 +171,10 @@ const pullRefresh: Directive = {
     // 结束下拉
     const endPull = async () => {
       if (!isPulling || isRefreshing) return;
-      
+
       isPulling = false;
       contentWrapper.style.transition = originalTransition || 'transform 0.3s';
-      
+
       // 判断是否触发刷新
       if (pullingDistance > threshold) {
         await triggerRefresh();
@@ -189,11 +190,11 @@ const pullRefresh: Directive = {
       spinner.classList.add('refreshing');
       spinner.classList.remove('pulling');
       spinner.querySelector('.spinner-text')!.textContent = '刷新中...';
-      
+
       // 保持一定高度显示刷新状态
       contentWrapper.style.transform = `translateY(50px)`;
       spinner.style.transform = `translateY(50px)`;
-      
+
       try {
         // 执行刷新回调
         await Promise.resolve(onRefresh());
@@ -242,15 +243,15 @@ const pullRefresh: Directive = {
 
     // 监听滚动事件以更新scrollTop
     scrollEl.addEventListener('scroll', updateScrollTop);
-    
+
     // 绑定鼠标事件（PC端）
     el.addEventListener('mousedown', handleMouseDown);
     document.addEventListener('mousemove', handleMouseMove);
     document.addEventListener('mouseup', handleMouseUp);
-    
+
     // 绑定触摸事件（移动端）
-    el.addEventListener('touchstart', handleTouchStart, { passive: false });
-    el.addEventListener('touchmove', handleTouchMove, { passive: false });
+    el.addEventListener('touchstart', handleTouchStart, {passive: false});
+    el.addEventListener('touchmove', handleTouchMove, {passive: false});
     el.addEventListener('touchend', handleTouchEnd);
 
     // 存储事件处理器以便后续清理
@@ -261,7 +262,7 @@ const pullRefresh: Directive = {
       handleTouchStart,
       handleTouchMove,
       handleTouchEnd,
-      updateScrollTop
+      updateScrollTop,
     };
   },
 
@@ -275,13 +276,13 @@ const pullRefresh: Directive = {
       el.removeEventListener('touchstart', handlers.handleTouchStart);
       el.removeEventListener('touchmove', handlers.handleTouchMove);
       el.removeEventListener('touchend', handlers.handleTouchEnd);
-      
+
       const scrollEl = el.querySelector('.scroll') || el.querySelector('.pull-refresh-wrapper');
       if (scrollEl) {
         scrollEl.removeEventListener('scroll', handlers.updateScrollTop);
       }
     }
-    
+
     // 移除样式元素
     const styleElements = document.head.querySelectorAll('style');
     styleElements.forEach(style => {
@@ -289,7 +290,7 @@ const pullRefresh: Directive = {
         document.head.removeChild(style);
       }
     });
-  }
+  },
 };
 
 export default pullRefresh;

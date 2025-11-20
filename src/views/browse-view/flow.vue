@@ -5,47 +5,35 @@
 
     <!-- 书签 -->
     <bookmark />
-
+    
     <!-- 列表 -->
-	<div v-pullRefresh="before_page">
-      <div
-        @click="switch_menu"
-        id="flowList"
-        ref="flowList"
-        v-infinite-scroll="
-          () => {
-            queue.flowQueue.add(page_change);
-          }
-        "
-        class="infinite-list"
-        style="overflow: auto">
-        <img
-          :style="browse.flowViewStyle"
-          :ref="'flow-' + index"
-          class="list-img"
-          v-for="(image, index) in browse.imageFileList"
-          :src="image"
-          :key="browse.imageFileList[index]"
-          :alt="t('browse.imgLoadError')"
-          draggable="false"
-          @click="load_image(index)" />
+    <div v-pullRefresh="before_page">
+      <div @mousedown="handleMouseDown" @mouseup="handleMouseUp" @touchstart="handleMouseDown" @touchend="handleMouseUp" id="flowList" ref="flowList" v-infinite-scroll="() => {
+          queue.flowQueue.add(page_change);
+        }
+        " class="infinite-list" style="overflow: auto">
+        <img :style="browseStore.flowViewStyle" :ref="'flow-' + index" class="list-img"
+          v-for="(image, index) in browseStore.imageFileList" :src="image" :key="browseStore.imageFileList[index]"
+          :alt="t('browse.imgLoadError')" draggable="false" @click="load_image(index)" />
       </div>
-	</div>
+    </div>
     <!-- 翻页按钮 -->
-    <div class="btn-box" v-show="browse.imageFileList.length">
+    <div class="btn-box" v-show="browseStore.imageFileList.length">
       <el-button class="btn" type="warning" plain @click="before_chapter">上一章</el-button>
       <el-button class="btn" type="success" plain @click="next_chapter">下一章</el-button>
     </div>
 
     <!-- 页码 -->
-    <page-number :page="currentPage" :count="browse.pageCount" />
+    <page-number :page="currentPage" :count="browseStore.pageCount" />
 
-    <div class="bottom" v-if="browse.pageCount > 0" v-show="config.browseTop">
-      <el-slider class="bottom-slider" v-model="currentPage" :min="1" :max="browse.pageCount" @change="jump_page(currentPage)" />
+    <div class="bottom" v-if="browseStore.pageCount > 0" v-show="config.browseTop">
+      <el-slider class="bottom-slider" v-model="currentPage" :min="1" :max="browseStore.pageCount"
+        @change="jump_page(currentPage)" />
     </div>
 
     <!-- 功能菜单 -->
-    <right-sidebar @dwonload="dwonload_image" @jumpPageNumber="open_jump_dialog" @set_image_width="browse.dialogViewWidth = true" />
+    <right-sidebar @dwonload="dwonload_image" @jumpPageNumber="open_jump_dialog"
+      @set_image_width="browseStore.dialogViewWidth = true" />
 
     <!-- 安卓端占位符 -->
     <div class="bottom-seat" v-if="config.android"></div>
@@ -53,14 +41,14 @@
 
   <el-dialog v-model="dialogJumpPage" :title="t('browse.jumpPageTitle')" class="dialog-jump-page">
     <template v-if="!showSmallJumpPage">
-      <el-slider v-model="targetPage" show-input :min="1" :max="browse.pageCount" />
+      <el-slider v-model="targetPage" show-input :min="1" :max="browseStore.pageCount" />
     </template>
     <template v-else>
-      <el-slider v-model="targetPage" :min="1" :max="browse.pageCount" />
+      <el-slider v-model="targetPage" :min="1" :max="browseStore.pageCount" />
 
-      <el-input-number v-model="targetPage" :min="1" :max="browse.pageCount" />
+      <el-input-number v-model="targetPage" :min="1" :max="browseStore.pageCount" />
     </template>
-    <div class="jump-page-tips">{{ targetPage }} / {{ browse.pageCount }}</div>
+    <div class="jump-page-tips">{{ targetPage }} / {{ browseStore.pageCount }}</div>
 
     <template #footer>
       <div class="dialog-footer">
@@ -73,24 +61,22 @@
   </el-dialog>
 
   <!-- 调整图片宽度 -->
-  <el-dialog v-model="browse.dialogViewWidth" :title="t('browse.title.setViewWidth')" class="dialog-jump-page">
+  <el-dialog v-model="browseStore.dialogViewWidth" :title="t('browse.title.setViewWidth')" class="dialog-jump-page">
     <p>{{ t('browse.label.useAutoViewWidth') }}</p>
-    <el-switch v-model="browse.useAutoViewWidth" />
-    <template v-if="!browse.useAutoViewWidth">
+    <el-switch v-model="browseStore.useAutoViewWidth" />
+    <template v-if="!browseStore.useAutoViewWidth">
       <p>{{ t('browse.label.setViewWidth') }}</p>
-      <el-slider v-model="browse.viewWidthValue" :min="0" :max="100" />
+      <el-slider v-model="browseStore.viewWidthValue" :min="0" :max="100" />
     </template>
 
     <template #footer>
       <div class="dialog-footer">
-        <el-button @click="browse.dialogViewWidth = false">{{ t('option.cancel') }}</el-button>
-        <el-button
-          type="primary"
-          @click="
-            () => {
-              browse.set_view_width('flow');
-            }
-          ">
+        <el-button @click="browseStore.dialogViewWidth = false">{{ t('option.cancel') }}</el-button>
+        <el-button type="primary" @click="
+          () => {
+            browseStore.set_view_width('flow');
+          }
+        ">
           {{ t('option.confirm') }}
         </el-button>
       </div>
@@ -99,27 +85,27 @@
 </template>
 
 <script lang="ts">
-export default {name: 'browse-views'};
+export default { name: 'browse-views' };
 </script>
 <script setup lang="ts">
-import {computed, ref, watch, onMounted, onUnmounted} from 'vue';
+import { computed, ref, watch, onMounted, onUnmounted } from 'vue';
 import imageApi from '@/api/image';
-import {delay, window_go_top} from '@/utils';
-import {config, userConfig} from '@/store';
+import { delay, window_go_top } from '@/utils';
+import { config, userConfig } from '@/store';
 import i18n from '@/i18n';
 import chapterListMenu from './components/chapter-list-menu.vue';
 import rightSidebar from './components/right-sidebar.vue';
 import bookmark from './components/bookmark.vue';
 import pageNumber from './components/page-number.vue';
-import {useRoute, useRouter} from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import chapterApi from '@/api/chapter';
 import queue from '@/store/quque';
 import useBrowseStore from '@/store/browse';
 import _ from 'lodash';
-const {t} = i18n.global;
+const { t } = i18n.global;
 const route = useRoute();
 const router = useRouter();
-const browse = useBrowseStore();
+const browseStore = useBrowseStore();
 
 // 跳页弹框
 let dialogJumpPage = ref(false);
@@ -147,13 +133,13 @@ let currentPage = ref(1);
 let beforeBookMark = 0;
 
 watch(currentPage, currentPage => {
-  const pageImage = browse.imagePathList[currentPage - beforeBookMark - 1];
+  const pageImage = browseStore.imagePathList[currentPage - beforeBookMark - 1];
   // 记录页码
-  browse.page = currentPage;
+  browseStore.page = currentPage;
   // 记录当前图片
-  browse.pageImage = pageImage;
+  browseStore.pageImage = pageImage;
   // 保存阅读记录
-  browse.save_latest(lastImageShown.value);
+  browseStore.save_latest(lastImageShown.value);
 });
 
 /**
@@ -161,13 +147,13 @@ watch(currentPage, currentPage => {
  */
 async function page_change() {
   // 无数据 退出
-  if (!browse.imagePathList?.length) {
+  if (!browseStore.imagePathList?.length) {
     loading.value = false;
     return;
   }
 
   // 是否加载完全部
-  finished.value = page >= browse.imagePathList.length;
+  finished.value = page >= browseStore.imagePathList.length;
 
   // 加载页面并等待返回
   await load_image(page - 1);
@@ -177,10 +163,10 @@ async function page_change() {
 
   const screenHeight = window.screen.height;
   const listHeight = flowList.value?.scrollHeight || 0;
-  if (userConfig.loadAllFlowIamge && page < browse.imagePathList.length) {
+  if (userConfig.loadAllFlowIamge && page < browseStore.imagePathList.length) {
     // 如果开启了自动加载所有图片 则继续加载下一页
     queue.flowQueue.add(page_change);
-  } else if (listHeight < screenHeight && page < browse.imagePathList.length) {
+  } else if (listHeight < screenHeight && page < browseStore.imagePathList.length) {
     // 当图片列表小于屏幕高度时 继续加载图片
     queue.flowQueue.add(page_change);
   }
@@ -215,15 +201,15 @@ async function before_page() {
  */
 async function load_image(index: number, unshift = false) {
   // 无数据 退出
-  if (!browse.imagePathList[index]) return false;
+  if (!browseStore.imagePathList[index]) return false;
   const mangaId = Number(route.query.mangaId);
   const chapterId = Number(route.query.chapterId);
-  const res = await imageApi.chapter_img(browse.imagePathList[index], index + 1, chapterId, mangaId);
+  const res = await imageApi.chapter_img(browseStore.imagePathList[index], index + 1, chapterId, mangaId);
 
   if (unshift) {
-    browse.imageFileList.unshift(res);
+    browseStore.imageFileList.unshift(res);
   } else {
-    browse.imageFileList[index - beforeBookMark] = res;
+    browseStore.imageFileList[index - beforeBookMark] = res;
   }
 
   // 加载结束,更新状态
@@ -237,17 +223,17 @@ async function load_image(index: number, unshift = false) {
  */
 async function reload_page(clearPage = true, pageParams = 1) {
   // 加载路由参数
-  browse.load_route_params(route);
+  browseStore.load_route_params(route);
   // 加载章节列表
-  browse.load_chapter_list();
+  browseStore.load_chapter_list();
   // 清空之前图片内容
-  browse.imageFileList = [];
+  browseStore.imageFileList = [];
 
   // 重置图片数据
   // 与其他模式不通 条漫重置页码需要重置滚动条
   if (clearPage) {
-    browse.imagePathList = [];
-    browse.imageFileList = [];
+    browseStore.imagePathList = [];
+    browseStore.imageFileList = [];
     beforeBookMark = pageParams - 1;
     currentPage.value = pageParams;
     page = pageParams;
@@ -266,8 +252,8 @@ async function reload_page(clearPage = true, pageParams = 1) {
       break;
     case 'compressing':
       // 进度有所增加 则更新图片列表
-      if (res.list.length > browse.imageFileList.length) {
-        browse.imagePathList = res.list;
+      if (res.list.length > browseStore.imageFileList.length) {
+        browseStore.imagePathList = res.list;
         finished.value = false;
         queue.flowQueue.add(page_change);
       }
@@ -277,23 +263,23 @@ async function reload_page(clearPage = true, pageParams = 1) {
       }, 2000);
       break;
     case 'compressed':
-      browse.imagePathList = res.list;
+      browseStore.imagePathList = res.list;
       queue.flowQueue.add(page_change);
       break;
     default:
-      browse.imagePathList = res.list;
+      browseStore.imagePathList = res.list;
       queue.flowQueue.add(page_change);
   }
 
-  browse.save_history();
+  browseStore.save_history();
 }
 
 /**
  * 上一页
  * */
 async function before_chapter() {
-  const index = browse.currentChapterIndex;
-  const chapterList = browse.chapterList;
+  const index = browseStore.currentChapterIndex;
+  const chapterList = browseStore.chapterList;
 
   if (index == 0) {
     msg(t('page.firstChapter'));
@@ -319,8 +305,8 @@ async function before_chapter() {
  * 下一页
  * */
 async function next_chapter() {
-  const index = browse.currentChapterIndex;
-  const chapterList = browse.chapterList;
+  const index = browseStore.currentChapterIndex;
+  const chapterList = browseStore.chapterList;
 
   if (index == chapterList.length - 1) {
     msg(t('page.lastChapter'));
@@ -355,8 +341,27 @@ async function change_chapter(chapterId: number) {
   reload_page();
 }
 
+// 点击时间控制变量
+let clickStartTime = 0;
+const CLICK_TIME_THRESHOLD = 200; // 点击时间阈值，超过这个时间被认为是长按
+
+// 处理鼠标/触摸按下
+function handleMouseDown() {
+  clickStartTime = Date.now();
+}
+
+// 处理鼠标/触摸松开
+function handleMouseUp() {
+  const clickDuration = Date.now() - clickStartTime;
+  // 只有当点击时间小于阈值时才认为是有效点击
+  if (clickDuration < CLICK_TIME_THRESHOLD) {
+    switch_menu();
+  }
+}
+
 // 阅读状态控制
 function switch_menu() {
+  if (browseStore.pulling) return;
   config.browseTop = !config.browseTop;
 }
 
@@ -389,7 +394,7 @@ function scroll_page() {
  */
 function dwonload_image() {
   // 获取当前图片
-  const src = browse.imageFileList[currentPage.value - beforeBookMark - 1];
+  const src = browseStore.imageFileList[currentPage.value - beforeBookMark - 1];
 
   const a = document.createElement('a');
   a.href = src;
@@ -416,7 +421,7 @@ function jump_page(pageNum?: number) {
 onMounted(() => {
   // 设置浏览模式
   config.browseType = 'flow';
-  let page = browse.page || 1;
+  let page = browseStore.page || 1;
 
   // 部分旧代码将页码设置为0或者-1 这里做下更正
   if (page < 1) page = 1;
@@ -424,7 +429,7 @@ onMounted(() => {
   reload_page(true, page);
 
   // 加载自定义视图宽度
-  browse.load_view_width('flow');
+  browseStore.load_view_width('flow');
 
   // 原生
   // window.addEventListener('scroll', scroll_page);
@@ -432,7 +437,7 @@ onMounted(() => {
   // 防抖
   // window.addEventListener('scroll', _.debounce(scroll_page, 50), { passive: true });
   // 节流
-  window.addEventListener('scroll', _.throttle(scroll_page, 200), {passive: true});
+  window.addEventListener('scroll', _.throttle(scroll_page, 200), { passive: true });
 });
 </script>
 
