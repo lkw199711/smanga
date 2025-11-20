@@ -151,6 +151,7 @@ export default defineConfig(({mode}): UserConfig => {
     ],
     // 开发服务器配置
     server: {
+      host: '0.0.0.0',
       // 端口号
       port: 8001,
       // 自动打开浏览器

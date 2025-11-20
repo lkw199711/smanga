@@ -8,7 +8,15 @@
     
     <!-- 列表 -->
     <div v-pullRefresh="before_page">
-      <div @mousedown="handleMouseDown" @mouseup="handleMouseUp" @touchstart="handleMouseDown" @touchend="handleMouseUp" id="flowList" ref="flowList" v-infinite-scroll="() => {
+      <div v-if="config.android" @touchstart="handleMouseDown" @touchend="handleMouseUp" id="flowList" ref="flowList" v-infinite-scroll="() => {
+          queue.flowQueue.add(page_change);
+        }
+        " class="infinite-list" style="overflow: auto">
+        <img :style="browseStore.flowViewStyle" :ref="'flow-' + index" class="list-img"
+          v-for="(image, index) in browseStore.imageFileList" :src="image" :key="browseStore.imageFileList[index]"
+          :alt="t('browse.imgLoadError')" draggable="false" @click="load_image(index)" />
+      </div>
+      <div v-else @mousedown="handleMouseDown" @mouseup="handleMouseUp" id="flowList" ref="flowList" v-infinite-scroll="() => {
           queue.flowQueue.add(page_change);
         }
         " class="infinite-list" style="overflow: auto">
