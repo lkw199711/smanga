@@ -1,6 +1,6 @@
 {
   "name": "smanga",
-  "version": "4.2.51",
+  "version": "4.2.6",
   "private": true,
   "type": "module",
   "scripts": {

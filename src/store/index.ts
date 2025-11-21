@@ -89,6 +89,8 @@ export const userConfig = reactive({
 	pageAnimationType: 'fade', // 翻页动画类型: fade(淡入淡出), slide(滑动), page(实体书翻页)
 	pageAnimationSpeed: 300, // 翻页动画速度(毫秒)
 	continueReadButtonShowChapterNumberOnly: false, // 继续阅读按钮仅展示章节序号而非章节全名
+	flowLoadStep: 3, // 流览模式下,每次加载图片数量
+	loadCoverConcurrency: 3, // 加载封面并发数量
 });
 
 export const pageSizeConfig = reactive({

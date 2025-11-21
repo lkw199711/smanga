@@ -5,26 +5,35 @@
 
     <!-- 书签 -->
     <bookmark />
-    
+
     <!-- 列表 -->
     <div v-pullRefresh="before_page">
-      <div v-if="config.android" @touchstart="handleMouseDown" @touchend="handleMouseUp" id="flowList" ref="flowList" v-infinite-scroll="() => {
-          queue.flowQueue.add(page_change);
-        }
-        " class="infinite-list" style="overflow: auto">
-        <img :style="browseStore.flowViewStyle" :ref="'flow-' + index" class="list-img"
-          v-for="(image, index) in browseStore.imageFileList" :src="image" :key="browseStore.imageFileList[index]"
-          :alt="t('browse.imgLoadError')" draggable="false" @click="load_image(index)" />
+      <div v-if="config.android" @click="switch_menu" id="flowList" ref="flowList">
+        <img
+          :style="browseStore.flowViewStyle"
+          :ref="'flow-' + index"
+          class="list-img"
+          v-for="(image, index) in browseStore.imageFileList"
+          :src="image"
+          :key="browseStore.imageFileList[index]"
+          :alt="t('browse.imgLoadError')"
+          draggable="false"
+          @click="load_image(index)" />
       </div>
-      <div v-else @mousedown="handleMouseDown" @mouseup="handleMouseUp" id="flowList" ref="flowList" v-infinite-scroll="() => {
-          queue.flowQueue.add(page_change);
-        }
-        " class="infinite-list" style="overflow: auto">
-        <img :style="browseStore.flowViewStyle" :ref="'flow-' + index" class="list-img"
-          v-for="(image, index) in browseStore.imageFileList" :src="image" :key="browseStore.imageFileList[index]"
-          :alt="t('browse.imgLoadError')" draggable="false" @click="load_image(index)" />
+      <div v-else @mousedown="handleMouseDown" @mouseup="handleMouseUp" id="flowList" ref="flowList">
+        <img
+          :style="browseStore.flowViewStyle"
+          :ref="'flow-' + index"
+          class="list-img"
+          v-for="(image, index) in browseStore.imageFileList"
+          :src="image"
+          :key="browseStore.imageFileList[index]"
+          :alt="t('browse.imgLoadError')"
+          draggable="false"
+          @click="load_image(index)" />
       </div>
     </div>
+
     <!-- 翻页按钮 -->
     <div class="btn-box" v-show="browseStore.imageFileList.length">
       <el-button class="btn" type="warning" plain @click="before_chapter">上一章</el-button>
@@ -35,13 +44,11 @@
     <page-number :page="currentPage" :count="browseStore.pageCount" />
 
     <div class="bottom" v-if="browseStore.pageCount > 0" v-show="config.browseTop">
-      <el-slider class="bottom-slider" v-model="currentPage" :min="1" :max="browseStore.pageCount"
-        @change="jump_page(currentPage)" />
+      <el-slider class="bottom-slider" v-model="currentPage" :min="1" :max="browseStore.pageCount" @change="jump_page(currentPage)" />
     </div>
 
     <!-- 功能菜单 -->
-    <right-sidebar @dwonload="dwonload_image" @jumpPageNumber="open_jump_dialog"
-      @set_image_width="browseStore.dialogViewWidth = true" />
+    <right-sidebar @dwonload="dwonload_image" @jumpPageNumber="open_jump_dialog" @set_image_width="browseStore.dialogViewWidth = true" />
 
     <!-- 安卓端占位符 -->
     <div class="bottom-seat" v-if="config.android"></div>
@@ -61,7 +68,7 @@
     <template #footer>
       <div class="dialog-footer">
         <el-button @click="dialogJumpPage = false">{{ t('option.cancel') }}</el-button>
-        <el-button type="primary" @click="jump_page">
+        <el-button type="primary" @click="() => jump_page">
           {{ t('option.confirm') }}
         </el-button>
       </div>
@@ -80,11 +87,13 @@
     <template #footer>
       <div class="dialog-footer">
         <el-button @click="browseStore.dialogViewWidth = false">{{ t('option.cancel') }}</el-button>
-        <el-button type="primary" @click="
-          () => {
-            browseStore.set_view_width('flow');
-          }
-        ">
+        <el-button
+          type="primary"
+          @click="
+            () => {
+              browseStore.set_view_width('flow');
+            }
+          ">
           {{ t('option.confirm') }}
         </el-button>
       </div>
@@ -93,24 +102,24 @@
 </template>
 
 <script lang="ts">
-export default { name: 'browse-views' };
+export default {name: 'browse-views'};
 </script>
 <script setup lang="ts">
-import { computed, ref, watch, onMounted, onUnmounted } from 'vue';
+import {computed, ref, watch, onMounted, onUnmounted} from 'vue';
 import imageApi from '@/api/image';
-import { delay, window_go_top } from '@/utils';
-import { config, userConfig } from '@/store';
+import {delay, window_go_top} from '@/utils';
+import {config, userConfig} from '@/store';
 import i18n from '@/i18n';
 import chapterListMenu from './components/chapter-list-menu.vue';
 import rightSidebar from './components/right-sidebar.vue';
 import bookmark from './components/bookmark.vue';
 import pageNumber from './components/page-number.vue';
-import { useRoute, useRouter } from 'vue-router';
+import {useRoute, useRouter} from 'vue-router';
 import chapterApi from '@/api/chapter';
 import queue from '@/store/quque';
 import useBrowseStore from '@/store/browse';
 import _ from 'lodash';
-const { t } = i18n.global;
+const {t} = i18n.global;
 const route = useRoute();
 const router = useRouter();
 const browseStore = useBrowseStore();
@@ -290,7 +299,7 @@ async function before_chapter() {
   const chapterList = browseStore.chapterList;
 
   if (index == 0) {
-    msg(t('page.firstChapter'));
+    ElMessage.warning(t('page.firstChapter'));
     return false;
   }
 
@@ -317,7 +326,7 @@ async function next_chapter() {
   const chapterList = browseStore.chapterList;
 
   if (index == chapterList.length - 1) {
-    msg(t('page.lastChapter'));
+    ElMessage.warning(t('page.lastChapter'));
     return false;
   }
 
@@ -379,10 +388,16 @@ function switch_menu() {
  */
 function scroll_page() {
   const flowListDom = flowList.value;
+  // 当前滚动高度
   const scrollY = window.scrollY;
+  // 最大滚动高度
   const maxScrollY = document.documentElement.scrollHeight - window.innerHeight;
 
   if (!flowListDom) return 0;
+
+  if (scrollY >= maxScrollY - 200) {
+    Array(userConfig.flowLoadStep).fill(0).forEach(() => queue.flowQueue.add(page_change));
+  }
 
   let imgs = flowListDom.getElementsByTagName('img');
 
@@ -445,7 +460,7 @@ onMounted(() => {
   // 防抖
   // window.addEventListener('scroll', _.debounce(scroll_page, 50), { passive: true });
   // 节流
-  window.addEventListener('scroll', _.throttle(scroll_page, 200), { passive: true });
+  window.addEventListener('scroll', _.throttle(scroll_page, 200), {passive: true});
 });
 </script>
 
