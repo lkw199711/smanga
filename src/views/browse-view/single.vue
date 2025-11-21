@@ -59,7 +59,6 @@
 
 <script setup lang='ts'>
 import { ref, onMounted, computed, watch } from 'vue';
-import { ElMessage } from 'element-plus';
 import { config, userConfig } from '@/store';
 import operationCover from './components/operation-cover.vue';
 import chapterListMenu from './components/chapter-list-menu.vue';
@@ -72,9 +71,8 @@ import i18n from '@/i18n';
 import { useRoute, useRouter } from 'vue-router';
 import imageApi from '@/api/image';
 import useBrowseStore from '@/store/browse';
+import sBlue from '@/assets/s-blue-high.png';
 const { t } = i18n.global;
-
-const sBlue = require('@/assets/s-blue-high.png');
 
 const route = useRoute();
 const router = useRouter();

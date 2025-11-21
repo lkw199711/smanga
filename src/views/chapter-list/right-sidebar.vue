@@ -56,7 +56,6 @@
 <script lang="ts" setup>
 import {watch, ref, computed} from 'vue';
 import chapterApi from '@/api/chapter';
-import {ElMessageBox} from 'element-plus';
 import i18n from '@/i18n';
 import collectApi from '@/api/collect';
 import imageApi from '@/api/image';
@@ -66,9 +65,9 @@ import useBrowseStore from '@/store/browse';
 import androidSeat from '@/layout/components/android-seat.vue';
 import {Cookies} from '@/utils';
 import chapterModify from '@/views/chapter-manage/components/chapterModify.vue';
+import placeholder from '@/assets/s-blue.png';
 
 const browse = useBrowseStore();
-const placeholder = require('@/assets/s-blue.png');
 const {t} = i18n.global;
 const isCollect = ref(false);
 const blob = ref('');

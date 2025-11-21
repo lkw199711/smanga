@@ -31,9 +31,6 @@
         </el-menu-item>
 
         <el-menu-item index="share" v-if="isAdmin">
-          <el-icon>
-            <Share />
-          </el-icon>
           {{ $t('mediaList.shareMedia') }}
         </el-menu-item>
         <el-menu-item index="edit" v-if="isAdmin">
@@ -55,7 +52,6 @@
 
 <script lang="ts" setup>
 import { watch, ref, computed, onMounted } from 'vue';
-import { ElMessageBox } from 'element-plus';
 import i18n from '@/i18n';
 import imageApi from '@/api/image';
 import useBrowseStore from '@/store/browse';
@@ -64,9 +60,9 @@ import mangaShare from '@/components/share.vue';
 import mediaApi from '@/api/media';
 import { Cookies } from '@/utils';
 import mediaEdit from '@/views/media-manage/components/mediaEdit.vue';
+import placeholder from '@/assets/s-blue.png';
 
 const browse = useBrowseStore();
-const placeholder = require('@/assets/s-blue.png');
 
 const { t } = i18n.global;
 const mangaShareDialog = ref(false);

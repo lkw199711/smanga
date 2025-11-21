@@ -450,5 +450,8 @@
     "shareMedia": "Share media",
     "remove": "Are you sure to remove this media?",
     "delete": "Are you sure to delete this media?"
-  }
+  },
+  "mediaManage.singleManga": "singleManga",
+  "mediaManage.cloudMedia": "cloudMedia",
+  "mediaManage.doubleFolder": "doubleFolder"
 }

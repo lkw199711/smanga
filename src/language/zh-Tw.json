@@ -431,5 +431,8 @@
     "shareMedia": "分享媒體庫",
     "remove": "確認移除此媒體?",
     "delete": "確認刪除此媒體?"
-  }
+  },
+  "mediaManage.singleManga": "單本漫畫",
+  "mediaManage.cloudMedia": "雲盤庫",
+  "mediaManage.doubleFolder": "雙層目錄"
 }

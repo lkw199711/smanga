@@ -56,7 +56,6 @@ import manga from '@/components/manga.vue';
 import chapter from '@/components/chapter.vue';
 import mediaPager from '@/components/media-pager.vue';
 import collectApi from '@/api/collect';
-import type { TabsPaneContext } from 'element-plus';
 import tabs from './tabs.vue';
 import i18n from '@/i18n';
 import { screenType } from '@/type/store';

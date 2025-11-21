@@ -1,11 +1,10 @@
 import Axios from 'axios';
-import { ElMessage } from 'element-plus';
-import { Cookies } from '@/utils';
+import {Cookies} from '@/utils';
 import router from '@/router';
 import Response from '@/type/response';
 
 // 接口路径的设置
-const url = process.env.NODE_ENV === 'development' ? process.env.VUE_APP_PROXY_HTTP_URL : process.env.VUE_APP_PATH;
+const url = import.meta.env.DEV ? import.meta.env.VITE_APP_PROXY_HTTP_URL : import.meta.env.VITE_APP_PATH;
 
 /**
  * 创建默认接口请求设置
@@ -14,106 +13,107 @@ const url = process.env.NODE_ENV === 'development' ? process.env.VUE_APP_PROXY_H
  * @type {Axios}
  */
 const ajax = Axios.create({
-	baseURL: url,
-	timeout: 10 * 1000,
-	params: {},
-	headers: {
-		'Content-Type': 'application/json; charset=UTF-8',
-	},
-	transformRequest: [
-		(data, headers) => {
-			// 设置请求头
-			headers['token'] = Cookies.get('token');
-			
-			// 判断是否为FormData或不需要JSON转换的情况
-			const contentType = headers['Content-Type'] || headers['content-type'];
-			const isFormData = data instanceof FormData;
-			const isJsonType = contentType && contentType.includes('json');
-			
-			// 只有在不是FormData且是JSON类型的情况下才进行数据处理和JSON转换
-			if (!isFormData && isJsonType) {
-				// 获取时间戳
-				const timestamp = new Date().getTime();
-				// 初始化传参
-				data = data || {};
-				// 加入时间戳与密钥
-				data = Object.assign(data, {
-					timestamp,
-				});
+  baseURL: url,
+  timeout: 10 * 1000,
+  params: {},
+  headers: {
+    'Content-Type': 'application/json; charset=UTF-8',
+  },
+  transformRequest: [
+    (data, headers) => {
+      // 设置请求头
+      headers['token'] = Cookies.get('token');
 
-				// 删除多余参数
-				if (data.data && data.data.createTime) {
-					delete data.data.createTime;
-				}
-				if (data.data && data.data.updateTime) {
-					delete data.data.updateTime;
-				}
+      // 判断是否为FormData或不需要JSON转换的情况
+      const contentType = headers['Content-Type'] || headers['content-type'];
+      const isFormData = data instanceof FormData;
+      const isJsonType = contentType && contentType.includes('json');
 
-				// 返回json
-				return JSON.stringify(data);
-			} else {
-				// 对于FormData或非JSON类型，直接返回原始数据
-				return data;
-			}
-		},
-	],
-	transformResponse: [
-		function (response: Response) {
-			response = response || {};
+      // 只有在不是FormData且是JSON类型的情况下才进行数据处理和JSON转换
+      if (!isFormData && isJsonType) {
+        // 获取时间戳
+        const timestamp = new Date().getTime();
+        // 初始化传参
+        data = data || {};
+        // 加入时间戳与密钥
+        data = Object.assign(data, {
+          timestamp,
+        });
 
-			if (typeof response === 'string') response = JSON.parse(response);
+        // 删除多余参数
+        if (data.data && data.data.createTime) {
+          delete data.data.createTime;
+        }
+        if (data.data && data.data.updateTime) {
+          delete data.data.updateTime;
+        }
 
-			if (response.message) {
-				let type: string;
-				switch (response.code) {
-					case 0:
-						type = 'success';
-						break;
-					case 1:
-						type = 'error';
-						break;
-					case 2:
-						type = 'warning';
-						break;
-					default:
-						type = 'info';
-						break;
-				}
+        // 返回json
+        return JSON.stringify(data);
+      } else {
+        // 对于FormData或非JSON类型，直接返回原始数据
+        return data;
+      }
+    },
+  ],
+  transformResponse: [
+    function (response: Response) {
+      // 修复类型错误，确保response符合Response类型
+      response = response || {code: 0, message: '', data: null};
 
-				ElMessage({
-					// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-					// @ts-ignore
-					message: response.message,
-					type: type,
-				});
-			}
+      if (typeof response === 'string') response = JSON.parse(response);
 
-			// 初次部署
-			if (response.status === 'first deploy') {
-				router.push('/init');
-			}
+      if (response.message) {
+        let type: string;
+        switch (response.code) {
+          case 0:
+            type = 'success';
+            break;
+          case 1:
+            type = 'error';
+            break;
+          case 2:
+            type = 'warning';
+            break;
+          default:
+            type = 'info';
+            break;
+        }
 
-			// 登录信息错误
-			if (response.status === 'token error') {
-				router.push('/login');
-			}
+        ElMessage({
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-ignore
+          message: response.message,
+          type: type,
+        });
+      }
 
-			// 处理时间格式
-			if (response.list) {
-				response.list.forEach((item: any) => {
-					if (item.createTime) {
-						item.createTime = new Date(item.createTime).toLocaleString();
-					}
+      // 初次部署
+      if (response.status === 'first deploy') {
+        router.push('/init');
+      }
 
-					if (item.updateTime) {
-						item.updateTime = new Date(item.updateTime).toLocaleString();
-					}
-				});
-			}
+      // 登录信息错误
+      if (response.status === 'token error') {
+        router.push('/login');
+      }
 
-			return response;
-		},
-	],
+      // 处理时间格式
+      if (response.list) {
+        response.list.forEach((item: any) => {
+          if (item.createTime) {
+            item.createTime = new Date(item.createTime).toLocaleString();
+          }
+
+          if (item.updateTime) {
+            item.updateTime = new Date(item.updateTime).toLocaleString();
+          }
+        });
+      }
+
+      return response;
+    },
+  ],
 });
 
 /**
@@ -121,12 +121,12 @@ const ajax = Axios.create({
  * @param arr
  */
 function array_sort(arr: any[]) {
-	arr.sort((a: any, b: any) => {
-		const valueA: any = a.match(/\d+(?=\b)/);
-		const valueB: any = b.match(/\d+(?=\b)/);
+  arr.sort((a: any, b: any) => {
+    const valueA: any = a.match(/\d+(?=\b)/);
+    const valueB: any = b.match(/\d+(?=\b)/);
 
-		return valueA - valueB;
-	});
+    return valueA - valueB;
+  });
 }
 
 /**
@@ -134,12 +134,12 @@ function array_sort(arr: any[]) {
  * @param arr
  */
 function array_sort_name(arr: any[]) {
-	arr.sort((a: any, b: any) => {
-		const valueA: any = a.name.match(/\d+(?=\b)/);
-		const valueB: any = b.name.match(/\d+(?=\b)/);
+  arr.sort((a: any, b: any) => {
+    const valueA: any = a.name.match(/\d+(?=\b)/);
+    const valueB: any = b.name.match(/\d+(?=\b)/);
 
-		return valueA - valueB;
-	});
+    return valueA - valueB;
+  });
 }
 
-export { ajax, url, array_sort, array_sort_name };
+export {ajax, url, array_sort, array_sort_name};

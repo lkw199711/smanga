@@ -19,8 +19,8 @@ module.exports = {
 		ecmaVersion: 2020,
 	},
 	rules: {
-		'no-console': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
-		'no-debugger': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
+		'no-console': process.env.VITE_APP_ENV === 'production' ? 'warn' : 'off',
+		'no-debugger': process.env.VITE_APP_ENV === 'production' ? 'warn' : 'off',
 		'no-self-assign': 'off',
 		'no-redeclare': 'off',
 		// 表达式

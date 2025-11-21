@@ -407,7 +407,7 @@ async function render_chapter_list() {
   const mangaId = mangaInfo.mangaId;
   if (!mangaId) return;
 
-  const chapterListResponse = await chapterApi.get({mangaId, order: chapterListDesc.value ? 'numberDesc' : 'number'});
+  const chapterListResponse = await chapterApi.get({mangaId, mediaId: mangaInfo.mediaId, order: chapterListDesc.value ? 'numberDesc' : 'number'});
   chapterList.value = chapterListResponse.list;
 }
 

@@ -22,6 +22,7 @@ function page_cahce() {
 
 const useBrowseStore = defineStore('browse', {
 	state: () => ({
+		pulling: false,
 		mangaListPage: 1,
 		mangaListPageSizeCache: 0,
 		chapterListPage: 1,

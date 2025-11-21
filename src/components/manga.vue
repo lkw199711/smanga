@@ -1,26 +1,18 @@
 <template>
 	<!-- 矩形视图 -->
-	<div class="manga" @click="go_chapter" v-if="props.viewType !== 'list'">
+	<div class="manga" @click="go_chapter" v-if="props.viewType !== 'list'" ref="mangaImageBox">
 		<!-- 未读角标 -->
 		<div class="un-watched" v-show="props.mangaInfo.unWatched">{{ props.mangaInfo.unWatched }}</div>
 		<!--封面图片-->
-		<el-image v-if="blobLink" class="anim cover-img" :src="blobLink" :fit="fit" :alt="mangaName" />
-
-		<!--占位图标-->
-		<el-image v-else class="cover-img" :src="placeholder" fit="fill" />
-
+		<el-image class="anim cover-img" :src="mangaCoverSrc" :fit="fit" :alt="mangaName" />
 		<!--漫画名称-->
 		<p class="manga-name single-line-text-overflow">{{ mangaName }}</p>
 	</div>
 
 	<!-- 列表视图 -->
-	<div class="manga-view-list" @click="go_chapter" v-else>
+	<div class="manga-view-list" @click="go_chapter" v-else ref="mangaImageBox">
 		<!--封面图片-->
-		<el-image v-if="blobLink" class="anim cover-img" :src="blobLink" :fit="fit" :alt="mangaName" />
-
-		<!--占位图标-->
-		<el-image v-else class="cover-img" :src="placeholder" fit="fill" />
-
+		<el-image class="anim cover-img" :src="mangaCoverSrc" :fit="fit" :alt="mangaName" />
 		<!--漫画名称-->
 		<div class="manga-content">
 			<p class="manga-name">{{ mangaName }}</p>
@@ -31,7 +23,6 @@
 				</el-tag>
 			</p>
 		</div>
-
 	</div>
 </template>
 
@@ -41,14 +32,14 @@ export default {
 }
 </script>
 <script setup lang="ts">
-import { computed, ref } from 'vue';
+import { computed, ref, onMounted, onBeforeUnmount } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { mangaType } from '@/type/manga';
 import imageApi from '@/api/image';
-import { onMounted } from 'vue';
 import queue from '@/store/quque';
 import usePosterStore from '@/store/image';
 import { userConfig } from '@/store';
+import placeholder from "@/assets/s-blue.png";
 
 type mangaItemType = mangaType & { blob: string; mangaCover: string; };
 
@@ -57,19 +48,34 @@ const router = useRouter();
 const poster: any = usePosterStore();
 // 传值
 const props = defineProps(['mangaInfo', 'viewType']);
-const placeholder = require('@/assets/s-blue.png');
 const fit = 'cover';
 
 let blobLink = ref('');
+const mangaCoverSrc = computed(() => {
+	return blobLink.value || placeholder;
+});
+const mangaImageBox = ref(null);
 
 const mangaName = computed(() => {
 	if (route.name === 'media-list') return props.mangaInfo.chapterName;
 	return props.mangaInfo.mangaName;
 })
 
+const observe = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      queue.mangaQueue.add(() => get_poster(props.mangaInfo));
+    }
+  });
+});
+
 onMounted(() => {
-	queue.mangaQueue.add(() => get_poster(props.mangaInfo));
-})
+	observe.observe(mangaImageBox.value);
+});
+
+onBeforeUnmount(() => {
+	observe.disconnect();
+});
 
 async function get_poster(item: mangaItemType) {
 	blobLink.value = await imageApi.get({file: item.mangaCover});

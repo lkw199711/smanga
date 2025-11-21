@@ -27,7 +27,6 @@
 <script lang="ts" setup>
 import { ref, computed, onMounted, watch } from 'vue';
 import { Upload } from '@element-plus/icons-vue';
-import { ElLoading, ElMessage } from 'element-plus';
 import imageApi from '@/api/image';
 
 // 组件属性

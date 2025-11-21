@@ -37,8 +37,6 @@
 <script lang="ts" setup>
 import {reactive, onMounted } from 'vue';
 import loginApi from '@/api/login';
-import {ElMessage} from 'element-plus';
-
 const emit = defineEmits(['update']);
 
 // do not use same name with ref

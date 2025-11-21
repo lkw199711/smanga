@@ -69,7 +69,6 @@ export default {
 <script setup lang="ts">
 import {Delete, Edit} from '@element-plus/icons-vue';
 import {onMounted, ref} from 'vue';
-import {ElMessage, ElMessageBox} from 'element-plus';
 import jobsApi from '@/api/jobs';
 import tablePager from '@/components/table-pager.vue';
 import i18n from '@/i18n';

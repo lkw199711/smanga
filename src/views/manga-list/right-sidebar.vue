@@ -32,39 +32,21 @@
 					{{ isCollect ? $t('option.removeCollect') : $t('option.collect') }}
 				</el-menu-item>
 				<el-menu-item index="alreadyRead">
-					<el-icon>
-						<Notebook />
-					</el-icon>
 					{{ alreadyRead ? $t('option.markAsUnRead') : $t('option.markAsRead') }}
 				</el-menu-item>
 				<el-menu-item index="tags" v-if="isAdmin">
-					<el-icon>
-						<Ticket />
-					</el-icon>
 					{{ $t('option.editTags') }}
 				</el-menu-item>
 				<el-menu-item index="scan" v-if="isAdmin">
-					<el-icon>
-						<Files />
-					</el-icon>
 					{{ $t('option.scan') }}
 				</el-menu-item>
 				<el-menu-item index="meta" v-if="isAdmin">
-					<el-icon>
-						<RefreshLeft />
-					</el-icon>
 					{{ $t('option.meta') }}
 				</el-menu-item>
 				<el-menu-item index="share" v-if="isAdmin">
-					<el-icon>
-						<Share />
-					</el-icon>
 					{{ $t('option.share') }}
 				</el-menu-item>
 				<el-menu-item index="edit" v-if="isAdmin">
-					<el-icon>
-						<Edit />
-					</el-icon>
 					{{ $t('rightSidebar.editManga') }}
 				</el-menu-item>
 			</el-menu>
@@ -88,7 +70,6 @@
 import { watch, ref, computed, onMounted, reactive } from 'vue';
 import mangaApi from '@/api/manga';
 import collectApi from '@/api/collect';
-import { ElMessageBox } from 'element-plus';
 import i18n from '@/i18n';
 import tagApi, { tagItemType } from '@/api/tag';
 import historyApi from '@/api/history';
@@ -100,8 +81,9 @@ import { Cookies } from '@/utils';
 import mangaTagBox from '../manga-info/components/manga-tag-box.vue';
 import mangaModify from '../manga-manage/components/mangaModify.vue';
 import { mangaType } from '@/type/manga';
+import placeholder from '@/assets/s-blue.png';
+
 const browse = useBrowseStore();
-const placeholder = require('@/assets/s-blue.png');
 const { t } = i18n.global;
 const isCollect = ref(false);
 const editTagsDialog = ref(false);

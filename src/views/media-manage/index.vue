@@ -117,7 +117,6 @@ import {Delete, Edit, Plus, FolderOpened} from '@element-plus/icons-vue';
 import {ref, reactive, onMounted} from 'vue';
 import mediaApi from '@/api/media';
 import pathApi from '@/api/path';
-import {ElMessage, ElMessageBox} from 'element-plus';
 import tablePager from '@/components/table-pager.vue';
 import i18n from '@/i18n';
 import useBrowseStore from '@/store/browse';

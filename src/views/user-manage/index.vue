@@ -50,7 +50,7 @@
       </el-form-item>
 
       <el-form-item :label="$t('account.passLabel')">
-        <el-input v-model="form.passWord" :placeholder="$t('account.passPlace')"></el-input>
+        <el-input v-model="form.passWord" type="password" :placeholder="$t('account.passPlace')"></el-input>
       </el-form-item>
     </el-form>
 
@@ -93,7 +93,7 @@
       </el-form-item>
 
       <el-form-item :label="$t('account.passLabel')">
-        <el-input v-model="form.passWord" :placeholder="$t('account.passModifyPlace')"></el-input>
+        <el-input v-model="form.passWord" type="password" :placeholder="$t('account.passModifyPlace')"></el-input>
       </el-form-item>
 
       <el-form-item :label="'设置为管理员'">
@@ -136,7 +136,6 @@
 import { ref, reactive, onMounted } from 'vue';
 import userApi from '@/api/account';
 import { Plus, Edit, Delete } from '@element-plus/icons-vue';
-import { ElMessage, ElMessageBox } from 'element-plus';
 import tablePager from '@/components/table-pager.vue';
 import i18n from '@/i18n';
 import mediaApi from '@/api/media';
@@ -152,7 +151,7 @@ const addDialog = ref(false);
 const dialogFormVisible = ref(false);
 const dialogPower = ref(false);
 const tableData = ref([]);
-const selectedUsers = ref([]);
+const selectedUsers = ref<any[]>([]);
 
 /**
  * 处理多选框变化

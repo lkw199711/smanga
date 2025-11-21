@@ -48,7 +48,6 @@ export default {name: 'manga-manage'};
 <script lang="ts" setup>
 import {onMounted, reactive, ref, computed} from 'vue';
 import {Delete, Edit} from '@element-plus/icons-vue';
-import {ElMessageBox} from 'element-plus';
 import mangaApi from '@/api/manga';
 import tablePager from '@/components/table-pager.vue';
 import i18n from '@/i18n';

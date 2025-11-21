@@ -78,7 +78,6 @@ import router from '@/router';
 import manga from '@/components/manga.vue';
 import chapter from '@/components/chapter.vue';
 import mediaPager from '@/components/media-pager.vue';
-import { ElMessage } from 'element-plus';
 import { screenType } from '@/type/store';
 import { mangaPageSize, chapterPageSize } from '@/store/page-size';
 import listSkeleton from '@/components/list-skeleton.vue';

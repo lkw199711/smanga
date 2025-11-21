@@ -1,10 +1,3 @@
-<!--
- * @Author: lkw199711 lkw199711@163.com
- * @Date: 2023-05-21 22:52:41
- * @LastEditors: lkw199711 lkw199711@163.com
- * @LastEditTime: 2023-07-28 00:10:23
- * @FilePath: \smanga\src\components\notice.vue
--->
 <template>
 	<div class="notice"></div>
 </template>
@@ -12,15 +5,13 @@
 <script lang="ts" setup>
 import {userInfo} from '@/store';
 import {Cookies} from '@/utils';
-import {ElNotification} from 'element-plus';
-import {onMounted, onBeforeUnmount, watch} from 'vue';
 
 let ws: any;
 
-const devUrl = process.env.VUE_APP_WS_URL;
+const devUrl = import.meta.env.VITE_APP_WS_URL;
 const prodUrl = 'ws://' + location.host + '/websocket';
 
-const url = process.env.NODE_ENV === 'development' ? devUrl : prodUrl;
+const url = isProduction ? prodUrl : devUrl;
 
 // userid变换重新告知
 /*

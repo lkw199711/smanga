@@ -36,8 +36,6 @@ export default {name: 'bookmark-manage'};
 </script>
 <script lang="ts" setup>
 import {ref, onMounted} from 'vue';
-import {ElMessage, ElMessageBox} from 'element-plus';
-import {Delete} from '@element-plus/icons-vue';
 import bookmarkApi from '@/api/bookmark';
 import tablePager from '@/components/table-pager.vue';
 import i18n from '@/i18n';

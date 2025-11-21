@@ -26,7 +26,6 @@
 <script lang="ts" setup>
 import { ref, computed, onMounted } from 'vue';
 import { config } from '@/store';
-import { ElMessageBox,ElMessage } from 'element-plus';
 import i18n from '@/i18n';
 import tagApi, { tagItemType } from '@/api/tag';
 
