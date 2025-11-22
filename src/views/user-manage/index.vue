@@ -1,35 +1,27 @@
 <template>
   <div class="account-table-box manage-container">
     <div class="btn-box">
-      <el-button class="add-btn" type="primary" :icon="Plus" @click="add_dialog_open">{{ $t('account.add') }}
-      </el-button>
+      <el-button type="primary" :icon="Refresh" @click="reload_table">{{ $t('option.refresh') }}</el-button>
+      <el-button class="add-btn" type="success" :icon="Plus" @click="add_dialog_open">{{ $t('option.add') }}</el-button>
       <el-button type="danger" :icon="Delete" @click="handleBatchDelete" :disabled="selectedUsers.length === 0">
-        {{ $t('account.batchDelete') }}
+        {{ $t('option.delete') }}
       </el-button>
     </div>
     <!--表格-->
     <el-table :data="tableData" stripe border @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55"></el-table-column>
-      <el-table-column type="index" :label="$t('account.serial')" width="54">
-      </el-table-column>
+      <el-table-column type="index" :label="$t('account.serial')" width="54"></el-table-column>
 
-      <el-table-column prop="userId" :label="$t('account.id')" width="70">
-      </el-table-column>
+      <el-table-column prop="userId" :label="$t('account.id')" width="70"></el-table-column>
 
-      <el-table-column prop="userName" :label="$t('account.name')" width="140">
-      </el-table-column>
+      <el-table-column prop="userName" :label="$t('account.name')" width="140"></el-table-column>
 
-      <el-table-column prop="createTime" :label="$t('account.registerTime')" width="180">
-      </el-table-column>
+      <el-table-column prop="createTime" :label="$t('account.registerTime')" width="180"></el-table-column>
 
       <el-table-column :label="$t('account.option')">
         <template v-slot="scope">
-          <el-button size="small" type="primary" :icon="Edit" @click="handleEdit(scope.$index, scope.row)">{{
-            $t('option.modify') }}
-          </el-button>
-          <el-button size="small" type="danger" :icon="Delete" @click="handleDelete(scope.$index, scope.row)">{{
-            $t('option.delete') }}
-          </el-button>
+          <el-button size="small" type="primary" :icon="Edit" @click="handleEdit(scope.$index, scope.row)">{{ $t('option.modify') }}</el-button>
+          <el-button size="small" type="danger" :icon="Delete" @click="handleDelete(scope.$index, scope.row)">{{ $t('option.delete') }}</el-button>
           <!-- <el-button
                     size="small"
                     type="success"
@@ -128,23 +120,24 @@
       </div>
     </template>
   </el-dialog>
-
 </template>
 
-<script lang="ts">export default { name: 'user-manage' }</script>
-<script lang='ts' setup>
-import { ref, reactive, onMounted } from 'vue';
+<script lang="ts">
+export default {name: 'user-manage'};
+</script>
+<script lang="ts" setup>
+import {ref, reactive, onMounted} from 'vue';
 import userApi from '@/api/account';
-import { Plus, Edit, Delete } from '@element-plus/icons-vue';
+import {Plus, Edit, Delete, Refresh} from '@element-plus/icons-vue';
 import tablePager from '@/components/table-pager.vue';
 import i18n from '@/i18n';
 import mediaApi from '@/api/media';
 import useBrowseStore from '@/store/browse';
-import type { mediaType } from '@/type/media';
-type mediaType1 = mediaType & { permit: boolean };
+import type {mediaType} from '@/type/media';
+type mediaType1 = mediaType & {permit: boolean};
 const browse = useBrowseStore();
 
-const { t } = i18n.global;
+const {t} = i18n.global;
 
 const count = ref(0);
 const addDialog = ref(false);
@@ -178,8 +171,7 @@ onMounted(async () => {
   const res = await mediaApi.get(1, 10000);
   medias.value = res.list;
   load_table();
-})
-
+});
 
 /**
  * 编辑用户
@@ -204,13 +196,9 @@ function handleEdit(index: number, val: any) {
  * @returns {Promise<void>}
  */
 async function handleDelete(index: number, val: any) {
-  ElMessageBox.confirm(
-    t('account.confirmBoxTitle'),
-    t('account.confirmBoxText'),
-    {
-      type: 'warning',
-    }
-  )
+  ElMessageBox.confirm(t('account.confirmBoxTitle'), t('account.confirmBoxText'), {
+    type: 'warning',
+  })
     .then(async () => {
       const res = await userApi.delete_account(val.userId);
 
@@ -218,7 +206,7 @@ async function handleDelete(index: number, val: any) {
         reload_table();
       }
     })
-    .catch(() => { });
+    .catch(() => {});
 }
 
 function reload_table() {
@@ -243,13 +231,10 @@ async function load_table(page = 1, pageSize = browse.manageListPageSize) {
  */
 async function do_update() {
   const targetUserId = form.userId;
-  const res = await userApi.update_account(
-    targetUserId,
-    Object.assign(form, { mediaLimit: medias })
-  );
+  const res = await userApi.update_account(targetUserId, Object.assign(form, {mediaLimit: medias}));
 
   if (res.code === 0) {
-    reload_table()
+    reload_table();
     dialogFormVisible.value = false;
   }
 }
@@ -290,9 +275,7 @@ async function do_register() {
       type: 'warning',
     });
   }
-  const res = await userApi.register(
-    Object.assign(form, { mediaLimit: medias })
-  );
+  const res = await userApi.register(Object.assign(form, {mediaLimit: medias}));
 
   if (res.code === 0) {
     add_dialog_close();
@@ -319,21 +302,17 @@ function switch_change(val: any, activeVal: string, inactiveVal: string) {
  */
 async function handleBatchDelete() {
   if (selectedUsers.value.length === 0) {
-    ElMessage({ message: '请选择要删除的用户', type: 'warning' });
+    ElMessage({message: '请选择要删除的用户', type: 'warning'});
     return;
   }
 
   // 添加确认对话框
   try {
-    await ElMessageBox.confirm(
-      `确定要删除选中的 ${selectedUsers.value.length} 个用户吗？此操作不可撤销。`,
-      '确认删除',
-      {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }
-    );
+    await ElMessageBox.confirm(`确定要删除选中的 ${selectedUsers.value.length} 个用户吗？此操作不可撤销。`, '确认删除', {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      type: 'warning',
+    });
 
     // 保存选中用户的数量，以便在清空选中项后仍能显示正确的删除数量
     const deleteCount = selectedUsers.value.length;
@@ -355,16 +334,10 @@ async function handleBatchDelete() {
 
     // 清空选中项
     selectedUsers.value = [];
-
-    ElMessage({
-      message: `成功删除 ${deleteCount} 个用户`,
-      type: 'success'
-    });
   } catch (error) {
     // 用户取消操作
   }
 }
-
 </script>
 
-<style scoped lang='less' src='@/style/manage.less'></style>
+<style scoped lang="less" src="@/style/manage.less"></style>

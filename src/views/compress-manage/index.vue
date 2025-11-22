@@ -1,13 +1,14 @@
 <template>
   <div class="compress-table-box manage-container">
     <div class="btn-box">
+      <el-button type="primary" :icon="Refresh" @click="reload_table">{{ $t('option.refresh') }}</el-button>
       <el-button
         type="danger"
         :icon="Delete"
         :disabled="selectedRows.length === 0"
         @click="batchDeleteCompress"
       >
-        {{ $t('compressManage.batchDelete') }}
+        {{ $t('option.delete') }}
       </el-button>
     </div>
     <!--表格-->
@@ -43,7 +44,7 @@ export default {name: 'compress-manage'};
 </script>
 <script lang="ts" setup>
 import {ref, onMounted} from 'vue';
-import {Delete} from '@element-plus/icons-vue';
+import {Delete, Refresh} from '@element-plus/icons-vue';
 import compressApi from '@/api/compress';
 import tablePager from '@/components/table-pager.vue';
 import i18n from '@/i18n';

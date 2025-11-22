@@ -1,7 +1,8 @@
 <template>
   <div class="media-manage-index manage-container">
     <div class="btn-box">
-      <el-button class="add-btn" type="primary" :icon="Plus" @click="add_media">{{ $t('mediaManage.add') }}</el-button>
+      <el-button type="primary" :icon="Refresh" @click="reload_table">{{ $t('option.refresh') }}</el-button>
+      <el-button class="add-btn" type="success" :icon="Plus" @click="add_media">{{ $t('option.add') }}</el-button>
       <el-button type="danger" :icon="Delete" :disabled="multipleSelection.length === 0" @click="batch_delete_media">{{ $t('option.delete') }}</el-button>
     </div>
 
@@ -113,7 +114,7 @@ export default {
 </script>
 
 <script lang="ts" setup>
-import {Delete, Edit, Plus, FolderOpened} from '@element-plus/icons-vue';
+import {Delete, Edit, Plus, FolderOpened, Refresh} from '@element-plus/icons-vue';
 import {ref, reactive, onMounted} from 'vue';
 import mediaApi from '@/api/media';
 import pathApi from '@/api/path';
