@@ -11,22 +11,13 @@
         <p class="title">{{ props.mediaInfo.mediaName }}</p>
         <!--操作-->
         <el-menu-item index="remove" v-if="isAdmin">
-          <el-icon>
-            <TopRight />
-          </el-icon>
           {{ $t('option.remove') }}
         </el-menu-item>
         <el-menu-item index="delete" v-if="isAdmin">
-          <el-icon>
-            <Delete />
-          </el-icon>
           {{ $t('option.delete') }}
         </el-menu-item>
 
         <el-menu-item index="scan" v-if="isAdmin">
-          <el-icon>
-            <Files />
-          </el-icon>
           {{ $t('mediaList.scanMedia') }}
         </el-menu-item>
 
@@ -34,9 +25,6 @@
           {{ $t('mediaList.shareMedia') }}
         </el-menu-item>
         <el-menu-item index="edit" v-if="isAdmin">
-          <el-icon>
-            <Edit />
-          </el-icon>
           {{ $t('rightSidebar.editMedia') }}
         </el-menu-item>
       </el-menu>

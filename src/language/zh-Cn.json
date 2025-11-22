@@ -330,7 +330,8 @@
     },
     "title": {
       "setViewWidth": "设置视图宽度"
-    }
+    },
+    "nextChapter": "下一章"
   },
   "page": {
     "before": "上一章",

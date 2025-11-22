@@ -34,14 +34,11 @@
       </div>
     </div>
 
-    <!-- 翻页按钮 -->
-    <div class="btn-box" v-show="browseStore.imageFileList.length">
-      <el-button class="btn" type="warning" plain @click="before_chapter">上一章</el-button>
-      <el-button class="btn" type="success" plain @click="next_chapter">下一章</el-button>
-    </div>
-
     <!-- 页码 -->
     <page-number :page="currentPage" :count="browseStore.pageCount" />
+
+    <!-- 阅读完成指示器 -->
+    <finish-indicator :visible="lastImageShown" @nextChapter="next_chapter" />
 
     <div class="bottom" v-if="browseStore.pageCount > 0" v-show="config.browseTop">
       <el-slider class="bottom-slider" v-model="currentPage" :min="1" :max="browseStore.pageCount" @change="jump_page(currentPage)" />
@@ -114,6 +111,7 @@ import chapterListMenu from './components/chapter-list-menu.vue';
 import rightSidebar from './components/right-sidebar.vue';
 import bookmark from './components/bookmark.vue';
 import pageNumber from './components/page-number.vue';
+import finishIndicator from './components/finish-indicator.vue';
 import {useRoute, useRouter} from 'vue-router';
 import chapterApi from '@/api/chapter';
 import queue from '@/store/quque';
@@ -135,6 +133,7 @@ const showSmallJumpPage = computed(() => {
 
 // 当前真实页码 从零开始
 let page = 1;
+let reTry = 0;
 // 是否正在加载图片
 const loading = ref(false);
 // 是否加载完全部图片
@@ -156,7 +155,7 @@ watch(currentPage, currentPage => {
   // 记录当前图片
   browseStore.pageImage = pageImage;
   // 保存阅读记录
-  browseStore.save_latest(lastImageShown.value);
+  queue.saveLatestQueue.add(() => browseStore.save_latest(lastImageShown.value));
 });
 
 /**
@@ -363,7 +362,9 @@ let clickStartTime = 0;
 const CLICK_TIME_THRESHOLD = 200; // 点击时间阈值，超过这个时间被认为是长按
 
 // 处理鼠标/触摸按下
-function handleMouseDown() {
+function handleMouseDown(event: MouseEvent) {
+  // 如果不是左键 则不处理
+  if (event.button !== 0) return;
   clickStartTime = Date.now();
 }
 
@@ -396,13 +397,17 @@ function scroll_page() {
   if (!flowListDom) return 0;
 
   if (scrollY >= maxScrollY - 200) {
-    Array(userConfig.flowLoadStep).fill(0).forEach(() => queue.flowQueue.add(page_change));
+    Array(userConfig.flowLoadStep)
+      .fill(0)
+      .forEach(() => queue.flowQueue.add(page_change));
   }
 
   let imgs = flowListDom.getElementsByTagName('img');
 
   // 当滚动到页面底部 记录阅读完成
-  lastImageShown.value = finished.value && scrollY > maxScrollY - 200;
+  lastImageShown.value = finished.value && maxScrollY > 0 && scrollY > maxScrollY - 200;
+  // 保存阅读记录
+  lastImageShown.value && queue.saveLatestQueue.add(() => browseStore.save_latest(lastImageShown.value));
 
   for (let i = 0; i < imgs.length; i++) {
     if (scrollY <= imgs[i].offsetTop) {

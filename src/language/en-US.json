@@ -330,7 +330,8 @@
     },
     "title": {
       "setViewWidth": "Set View Width"
-    }
+    },
+    "nextChapter": "Next Chapter"
   },
   "page": {
     "before": "beforeChapter",
