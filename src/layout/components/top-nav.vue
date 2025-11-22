@@ -32,7 +32,7 @@
 		<div class="right-option">
 			<!-- 简化版搜索 -->
 			<div class="search-small" @click="router.push('/search')" v-show="layoutLimit('miniSearch')">
-				<i class="iconfont icon-sousuo" @click="switch_view_type" />
+				<i class="iconfont icon-sousuo" />
 			</div>
 
 			<!-- 视图切换 -->
