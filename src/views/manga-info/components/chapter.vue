@@ -89,7 +89,7 @@ async function get_poster(item: chapterItemType) {
   // const coverExt = coverPath.split('.').pop() || 'jpg';
   blobLink.value = await imageApi.get({file: coverPath});
   if (props.sourceWebsite === 'toptoon') {
-    const chapterBaseName = getFileNameWithoutExtension(props.chapterInfo.chapterPath);
+    const chapterBaseName = getFileNameWithoutExtension(coverPath);
     blobLink1.value = await imageApi.get({file: chapterBaseName + '-1.jpg'});
   }
 }
