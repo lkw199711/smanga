@@ -13,7 +13,7 @@ type characterItem = {
 	blob: string;
 };
 
-type metaItemType = {
+type metaType = {
 	metaId: string;
 	metaFile: string;
 	metaName: string;
@@ -24,4 +24,16 @@ type metaItemType = {
 	characterId?: string; // 关联的角色ID
 };
 
-export { characterItem, metaItemType };
+const metaInit: metaType = {
+	metaId: '',
+	metaFile: '',
+	metaName: '',
+	metaContent: '',
+	description: '',
+	blob: '',
+	active: false,
+	characterId: '',
+};
+
+
+export { characterItem, metaType, metaInit };
