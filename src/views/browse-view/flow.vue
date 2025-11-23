@@ -309,6 +309,7 @@ async function next_chapter() {
 async function change_chapter(chapterId: number) {
   browseStore.page = 1;
   browseStore.imagePathList = [];
+  browseStore.imageFileList = [];
   await router.push({
     name: route.name as string,
     query: {
