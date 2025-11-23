@@ -37,6 +37,9 @@
     <!-- 页码 -->
     <page-number :page="currentPage" :count="browseStore.pageCount" />
 
+    <!-- 解压缩指示器 -->
+    <images-loading :compressState="compressState" :reTry="reTry" />
+
     <!-- 阅读完成指示器 -->
     <finish-indicator :visible="lastImageShown" @nextChapter="next_chapter" />
 
@@ -103,6 +106,8 @@ export default {name: 'browse-views'};
 </script>
 <script setup lang="ts">
 import {computed, ref, watch, onMounted, onUnmounted} from 'vue';
+import {ElMessage} from 'element-plus';
+import {useI18n} from 'vue-i18n';
 import imageApi from '@/api/image';
 import {delay, window_go_top} from '@/utils';
 import {config, userConfig} from '@/store';
@@ -112,12 +117,14 @@ import rightSidebar from './components/right-sidebar.vue';
 import bookmark from './components/bookmark.vue';
 import pageNumber from './components/page-number.vue';
 import finishIndicator from './components/finish-indicator.vue';
+import imagesLoading from './components/imagesLoading.vue';
 import {useRoute, useRouter} from 'vue-router';
 import chapterApi from '@/api/chapter';
 import queue from '@/store/quque';
 import useBrowseStore from '@/store/browse';
 import _ from 'lodash';
 const {t} = i18n.global;
+const {t: vueI18nT} = useI18n();
 const route = useRoute();
 const router = useRouter();
 const browseStore = useBrowseStore();
@@ -133,7 +140,7 @@ const showSmallJumpPage = computed(() => {
 
 // 当前真实页码 从零开始
 let page = 1;
-let reTry = 0;
+let reTry = ref(0);
 // 是否正在加载图片
 const loading = ref(false);
 // 是否加载完全部图片
@@ -141,6 +148,9 @@ let finished = ref(false);
 let lastImageShown = ref(false);
 // ref dom
 const flowList = ref();
+
+// 压缩状态管理 loadingImages compressing compressed failed
+const compressState = ref('loadingImages');
 
 // 表现页码 未必从零开始
 let currentPage = ref(1);
@@ -259,35 +269,34 @@ async function reload_page(clearPage = true, pageParams = 1) {
 
   // 加载图片列表
   const chapterId = Number(route.query.chapterId);
-  const res = await chapterApi.get_images(chapterId);
+  await chapter_images_compress(chapterId);
+
+  browseStore.save_history();
+}
+
+async function chapter_images_compress(chapterId: number) {
+  const res = await chapterApi.get_images(chapterId, reTry.value);
+  compressState.value = res.state;
   switch (res.state) {
-    case 'uncompressed':
-      setTimeout(() => {
-        reload_page(false);
-      }, 2000);
-      break;
     case 'compressing':
-      // 进度有所增加 则更新图片列表
-      if (res.list.length > browseStore.imageFileList.length) {
-        browseStore.imagePathList = res.list;
-        finished.value = false;
-        queue.flowQueue.add(page_change);
-      }
-      // 再次加载解压进度
-      setTimeout(() => {
-        reload_page(false);
-      }, 2000);
+      reTry.value++;
+      setTimeout(() => chapter_images_compress(chapterId), 2000);
       break;
+
     case 'compressed':
+      // 压缩完成 加载图片并隐藏指示器
       browseStore.imagePathList = res.list;
       queue.flowQueue.add(page_change);
       break;
+
+    case 'failed':
+      // 压缩失败 提示用户并隐藏指示器
+      break;
     default:
+      // 其他情况 隐藏指示器
       browseStore.imagePathList = res.list;
       queue.flowQueue.add(page_change);
   }
-
-  browseStore.save_history();
 }
 
 /**
@@ -405,7 +414,7 @@ function scroll_page() {
   let imgs = flowListDom.getElementsByTagName('img');
 
   // 当滚动到页面底部 记录阅读完成
-  lastImageShown.value = finished.value && maxScrollY > 0 && scrollY > maxScrollY - 200;
+  lastImageShown.value = finished.value && maxScrollY > 0 && scrollY > maxScrollY - 500;
   // 保存阅读记录
   lastImageShown.value && queue.saveLatestQueue.add(() => browseStore.save_latest(lastImageShown.value));
 
