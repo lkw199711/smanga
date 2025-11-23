@@ -12,10 +12,10 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted } from 'vue';
+import {ref, onMounted} from 'vue';
 import chapterApi from '@/api/chapter';
 import useBrowseStore from '@/store/browse';
-import { useRoute } from 'vue-router';
+import {useRoute} from 'vue-router';
 
 const route = useRoute();
 const browseStore = useBrowseStore();
@@ -38,17 +38,17 @@ const compressStateTipText = {
 };
 
 onMounted(() => {
-    const chapterId = Number(route.query.chapterId);
-  chapter_images_compress(chapterId);
+  const chapterId = Number(route.query.chapterId);
+  chapter_images_load(chapterId);
 });
 
-async function chapter_images_compress(chapterId: number) {
+async function chapter_images_load(chapterId: number) {
   const res = await chapterApi.get_images(chapterId, reTry.value);
   compressState.value = res.state;
   switch (res.state) {
     case 'compressing':
       reTry.value++;
-      setTimeout(() => chapter_images_compress(chapterId), 2000);
+      setTimeout(() => chapter_images_load(chapterId), 2000);
       break;
     case 'compressed':
       // 压缩完成 加载图片并隐藏指示器
@@ -62,6 +62,11 @@ async function chapter_images_compress(chapterId: number) {
       break;
   }
 }
+
+// 暴露方法 刷新页码
+defineExpose({
+  chapter_images_load,
+});
 </script>
 
 <style scoped lang="less">

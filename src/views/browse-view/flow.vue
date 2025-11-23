@@ -38,7 +38,7 @@
     <page-number :page="currentPage" :count="browseStore.pageCount" />
 
     <!-- 解压缩指示器 -->
-    <images-loader @page_change="page_change" :key="browseStore.chapterId" />
+    <images-loader ref="imagesLoaderRef" @page_change="page_change" :key="browseStore.chapterId" />
 
     <!-- 阅读完成指示器 -->
     <finish-indicator :visible="lastImageShown" @nextChapter="next_chapter" />
@@ -146,6 +146,7 @@ let finished = ref(false);
 let lastImageShown = ref(false);
 // ref dom
 const flowList = ref();
+const imagesLoaderRef = ref();
 
 // 表现页码 未必从零开始
 let currentPage = ref(1);
@@ -243,6 +244,8 @@ async function load_image(index: number, unshift = false) {
  * 重载页面
  */
 async function reload_page(clearPage = true, pageParams = 1) {
+  // 清空队列
+  queue.flowQueue.clear();
   // 加载路由参数
   browseStore.load_route_params(route);
   // 加载章节列表
@@ -396,12 +399,19 @@ function open_jump_dialog() {
   dialogJumpPage.value = true;
 }
 
-function jump_page(pageNum?: number) {
+async function jump_page(pageNum?: number) {
+  console.log('jump_page', pageNum);
   if (pageNum) {
     targetPage.value = pageNum;
   }
+
   // return
   reload_page(true, targetPage.value);
+
+  // 调用imagesLoder组件的chapter_images_load方法重载图片路径数组
+  if (imagesLoaderRef.value && imagesLoaderRef.value.chapter_images_load) {
+    await imagesLoaderRef.value.chapter_images_load(browseStore.chapterId);
+  }
 }
 
 // 生命周期
