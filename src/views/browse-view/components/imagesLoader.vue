@@ -1,28 +1,34 @@
 <template>
   <!-- 解压缩状态指示器 -->
-    <div v-if="compressState !== 'compressed'" class="compression-overlay">
-      <div class="compression-content">
-        <div class="spinner"></div>
-        <div class="text-content">
-          <div class="main-text">{{ compressStateTipText[compressState] }}</div>
-          <div class="sub-text">{{ `${reTry * 2}/20 秒` }}</div>
-        </div>
+  <div v-if="compressState !== 'compressed'" class="compression-overlay">
+    <div class="compression-content">
+      <div class="spinner"></div>
+      <div class="text-content">
+        <div class="main-text">{{ compressStateTipText[compressState] }}</div>
+        <div class="sub-text">{{ `${reTry * 2}/20 秒` }}</div>
       </div>
     </div>
+  </div>
 </template>
 
 <script lang="ts" setup>
+import { ref, onMounted } from 'vue';
+import chapterApi from '@/api/chapter';
+import useBrowseStore from '@/store/browse';
+import { useRoute } from 'vue-router';
 
+const route = useRoute();
+const browseStore = useBrowseStore();
+const reTry = ref(0);
+const compressState = ref('loadingImages');
 defineProps({
   compressState: {
     type: String,
     default: 'loadingImages',
   },
-  reTry: {
-    type: Number,
-    default: 0,
-  }
-})
+});
+
+const emit = defineEmits(['page_change']);
 
 const compressStateTipText = {
   loadingImages: '加载中',
@@ -31,6 +37,31 @@ const compressStateTipText = {
   failed: '压缩失败',
 };
 
+onMounted(() => {
+    const chapterId = Number(route.query.chapterId);
+  chapter_images_compress(chapterId);
+});
+
+async function chapter_images_compress(chapterId: number) {
+  const res = await chapterApi.get_images(chapterId, reTry.value);
+  compressState.value = res.state;
+  switch (res.state) {
+    case 'compressing':
+      reTry.value++;
+      setTimeout(() => chapter_images_compress(chapterId), 2000);
+      break;
+    case 'compressed':
+      // 压缩完成 加载图片并隐藏指示器
+      browseStore.imagePathList = res.list;
+      emit('page_change', browseStore.page || 1);
+      break;
+    case 'failed':
+      // 压缩失败 提示用户并隐藏指示器
+      break;
+    default:
+      break;
+  }
+}
 </script>
 
 <style scoped lang="less">

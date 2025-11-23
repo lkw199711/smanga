@@ -38,7 +38,7 @@
     <page-number :page="currentPage" :count="browseStore.pageCount" />
 
     <!-- 解压缩指示器 -->
-    <images-loading :compressState="compressState" :reTry="reTry" />
+    <images-loader @page_change="page_change" :key="browseStore.chapterId" />
 
     <!-- 阅读完成指示器 -->
     <finish-indicator :visible="lastImageShown" @nextChapter="next_chapter" />
@@ -117,9 +117,8 @@ import rightSidebar from './components/right-sidebar.vue';
 import bookmark from './components/bookmark.vue';
 import pageNumber from './components/page-number.vue';
 import finishIndicator from './components/finish-indicator.vue';
-import imagesLoading from './components/imagesLoading.vue';
+import imagesLoader from './components/imagesLoader.vue';
 import {useRoute, useRouter} from 'vue-router';
-import chapterApi from '@/api/chapter';
 import queue from '@/store/quque';
 import useBrowseStore from '@/store/browse';
 import _ from 'lodash';
@@ -140,7 +139,6 @@ const showSmallJumpPage = computed(() => {
 
 // 当前真实页码 从零开始
 let page = 1;
-let reTry = ref(0);
 // 是否正在加载图片
 const loading = ref(false);
 // 是否加载完全部图片
@@ -148,9 +146,6 @@ let finished = ref(false);
 let lastImageShown = ref(false);
 // ref dom
 const flowList = ref();
-
-// 压缩状态管理 loadingImages compressing compressed failed
-const compressState = ref('loadingImages');
 
 // 表现页码 未必从零开始
 let currentPage = ref(1);
@@ -267,36 +262,7 @@ async function reload_page(clearPage = true, pageParams = 1) {
     window_go_top();
   }
 
-  // 加载图片列表
-  const chapterId = Number(route.query.chapterId);
-  await chapter_images_compress(chapterId);
-
   browseStore.save_history();
-}
-
-async function chapter_images_compress(chapterId: number) {
-  const res = await chapterApi.get_images(chapterId, reTry.value);
-  compressState.value = res.state;
-  switch (res.state) {
-    case 'compressing':
-      reTry.value++;
-      setTimeout(() => chapter_images_compress(chapterId), 2000);
-      break;
-
-    case 'compressed':
-      // 压缩完成 加载图片并隐藏指示器
-      browseStore.imagePathList = res.list;
-      queue.flowQueue.add(page_change);
-      break;
-
-    case 'failed':
-      // 压缩失败 提示用户并隐藏指示器
-      break;
-    default:
-      // 其他情况 隐藏指示器
-      browseStore.imagePathList = res.list;
-      queue.flowQueue.add(page_change);
-  }
 }
 
 /**
@@ -314,16 +280,7 @@ async function before_chapter() {
   if (!index) return;
 
   const beforeChapterId = chapterList[index - 1].chapterId;
-
-  await router.push({
-    name: route.name as string,
-    query: {
-      ...route.query,
-      chapterId: beforeChapterId,
-    },
-  });
-
-  reload_page();
+  change_chapter(beforeChapterId);
 }
 
 /**
@@ -339,22 +296,15 @@ async function next_chapter() {
   }
 
   const nextChapterId = chapterList[index + 1].chapterId;
-
-  await router.push({
-    name: route.name as string,
-    query: {
-      ...route.query,
-      chapterId: nextChapterId,
-    },
-  });
-
-  reload_page();
+  change_chapter(nextChapterId);
 }
+
 /**
  * 选择章节
  * @param index
  */
 async function change_chapter(chapterId: number) {
+  browseStore.page = 1;
   await router.push({
     name: route.name as string,
     query: {
