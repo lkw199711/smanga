@@ -53,6 +53,8 @@
         <el-form-item :label="$t('path.form.add')">
           <el-input v-model="pathForm.pathContent" :placeholder="$t('path.place.add')">
             <template #append>
+              {{ $t('option.add') }}
+              &nbsp;
               <el-button :icon="Plus" @click="add_path_cache" />
             </template>
           </el-input>

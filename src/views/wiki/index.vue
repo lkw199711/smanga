@@ -351,7 +351,9 @@ type versionDataType = {
 // 状态管理
 const activeTab = ref('intro');
 const versionDataRef = ref<versionDataType[]>([]);
-const version = import.meta.env.VITE_APP_VERSION || '4.1.4';
+// 直接从package.json导入版本号
+import packageJson from '../../../package.json';
+const version = packageJson.version || '0.0.0';
 const currentYear = new Date().getFullYear();
 
 // 版本更新状态
