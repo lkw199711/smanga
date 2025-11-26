@@ -34,14 +34,14 @@
       </div>
     </div>
 
-    <!-- 翻页按钮 -->
-    <div class="btn-box" v-show="browseStore.imageFileList.length">
-      <el-button class="btn" type="warning" plain @click="before_chapter">上一章</el-button>
-      <el-button class="btn" type="success" plain @click="next_chapter">下一章</el-button>
-    </div>
-
     <!-- 页码 -->
     <page-number :page="currentPage" :count="browseStore.pageCount" />
+
+    <!-- 解压缩指示器 -->
+    <images-loader ref="imagesLoaderRef" @page_change="page_change" :key="browseStore.chapterId" />
+
+    <!-- 阅读完成指示器 -->
+    <finish-indicator :visible="lastImageShown" @nextChapter="next_chapter" />
 
     <div class="bottom" v-if="browseStore.pageCount > 0" v-show="config.browseTop">
       <el-slider class="bottom-slider" v-model="currentPage" :min="1" :max="browseStore.pageCount" @change="jump_page(currentPage)" />
@@ -106,6 +106,8 @@ export default {name: 'browse-views'};
 </script>
 <script setup lang="ts">
 import {computed, ref, watch, onMounted, onUnmounted} from 'vue';
+import {ElMessage} from 'element-plus';
+import {useI18n} from 'vue-i18n';
 import imageApi from '@/api/image';
 import {delay, window_go_top} from '@/utils';
 import {config, userConfig} from '@/store';
@@ -114,12 +116,14 @@ import chapterListMenu from './components/chapter-list-menu.vue';
 import rightSidebar from './components/right-sidebar.vue';
 import bookmark from './components/bookmark.vue';
 import pageNumber from './components/page-number.vue';
+import finishIndicator from './components/finish-indicator.vue';
+import imagesLoader from './components/imagesLoader.vue';
 import {useRoute, useRouter} from 'vue-router';
-import chapterApi from '@/api/chapter';
 import queue from '@/store/quque';
 import useBrowseStore from '@/store/browse';
 import _ from 'lodash';
 const {t} = i18n.global;
+const {t: vueI18nT} = useI18n();
 const route = useRoute();
 const router = useRouter();
 const browseStore = useBrowseStore();
@@ -142,6 +146,7 @@ let finished = ref(false);
 let lastImageShown = ref(false);
 // ref dom
 const flowList = ref();
+const imagesLoaderRef = ref();
 
 // 表现页码 未必从零开始
 let currentPage = ref(1);
@@ -156,7 +161,7 @@ watch(currentPage, currentPage => {
   // 记录当前图片
   browseStore.pageImage = pageImage;
   // 保存阅读记录
-  browseStore.save_latest(lastImageShown.value);
+  queue.saveLatestQueue.add(() => browseStore.save_latest(lastImageShown.value));
 });
 
 /**
@@ -239,6 +244,8 @@ async function load_image(index: number, unshift = false) {
  * 重载页面
  */
 async function reload_page(clearPage = true, pageParams = 1) {
+  // 清空队列
+  queue.flowQueue.clear();
   // 加载路由参数
   browseStore.load_route_params(route);
   // 加载章节列表
@@ -256,36 +263,6 @@ async function reload_page(clearPage = true, pageParams = 1) {
     page = pageParams;
     // 重置滚动条
     window_go_top();
-  }
-
-  // 加载图片列表
-  const chapterId = Number(route.query.chapterId);
-  const res = await chapterApi.get_images(chapterId);
-  switch (res.state) {
-    case 'uncompressed':
-      setTimeout(() => {
-        reload_page(false);
-      }, 2000);
-      break;
-    case 'compressing':
-      // 进度有所增加 则更新图片列表
-      if (res.list.length > browseStore.imageFileList.length) {
-        browseStore.imagePathList = res.list;
-        finished.value = false;
-        queue.flowQueue.add(page_change);
-      }
-      // 再次加载解压进度
-      setTimeout(() => {
-        reload_page(false);
-      }, 2000);
-      break;
-    case 'compressed':
-      browseStore.imagePathList = res.list;
-      queue.flowQueue.add(page_change);
-      break;
-    default:
-      browseStore.imagePathList = res.list;
-      queue.flowQueue.add(page_change);
   }
 
   browseStore.save_history();
@@ -306,16 +283,7 @@ async function before_chapter() {
   if (!index) return;
 
   const beforeChapterId = chapterList[index - 1].chapterId;
-
-  await router.push({
-    name: route.name as string,
-    query: {
-      ...route.query,
-      chapterId: beforeChapterId,
-    },
-  });
-
-  reload_page();
+  change_chapter(beforeChapterId);
 }
 
 /**
@@ -331,22 +299,17 @@ async function next_chapter() {
   }
 
   const nextChapterId = chapterList[index + 1].chapterId;
-
-  await router.push({
-    name: route.name as string,
-    query: {
-      ...route.query,
-      chapterId: nextChapterId,
-    },
-  });
-
-  reload_page();
+  change_chapter(nextChapterId);
 }
+
 /**
  * 选择章节
  * @param index
  */
 async function change_chapter(chapterId: number) {
+  browseStore.page = 1;
+  browseStore.imagePathList = [];
+  browseStore.imageFileList = [];
   await router.push({
     name: route.name as string,
     query: {
@@ -363,7 +326,9 @@ let clickStartTime = 0;
 const CLICK_TIME_THRESHOLD = 200; // 点击时间阈值，超过这个时间被认为是长按
 
 // 处理鼠标/触摸按下
-function handleMouseDown() {
+function handleMouseDown(event: MouseEvent) {
+  // 如果不是左键 则不处理
+  if (event.button !== 0) return;
   clickStartTime = Date.now();
 }
 
@@ -396,13 +361,17 @@ function scroll_page() {
   if (!flowListDom) return 0;
 
   if (scrollY >= maxScrollY - 200) {
-    Array(userConfig.flowLoadStep).fill(0).forEach(() => queue.flowQueue.add(page_change));
+    Array(userConfig.flowLoadStep)
+      .fill(0)
+      .forEach(() => queue.flowQueue.add(page_change));
   }
 
   let imgs = flowListDom.getElementsByTagName('img');
 
   // 当滚动到页面底部 记录阅读完成
-  lastImageShown.value = finished.value && scrollY > maxScrollY - 200;
+  lastImageShown.value = finished.value && maxScrollY > 0 && scrollY > maxScrollY - 500;
+  // 保存阅读记录
+  lastImageShown.value && queue.saveLatestQueue.add(() => browseStore.save_latest(lastImageShown.value));
 
   for (let i = 0; i < imgs.length; i++) {
     if (scrollY <= imgs[i].offsetTop) {
@@ -432,12 +401,19 @@ function open_jump_dialog() {
   dialogJumpPage.value = true;
 }
 
-function jump_page(pageNum?: number) {
+async function jump_page(pageNum?: number) {
+  console.log('jump_page', pageNum);
   if (pageNum) {
     targetPage.value = pageNum;
   }
+
   // return
   reload_page(true, targetPage.value);
+
+  // 调用imagesLoder组件的chapter_images_load方法重载图片路径数组
+  if (imagesLoaderRef.value && imagesLoaderRef.value.chapter_images_load) {
+    await imagesLoaderRef.value.chapter_images_load(browseStore.chapterId);
+  }
 }
 
 // 生命周期

@@ -10,25 +10,13 @@
 				<!--名称-->
 				<p class="title">{{ props.mangaInfo.mangaName }}</p>
 				<!--操作-->
-				<!--<el-menu-item index="read"><el-icon><Memo /></el-icon>阅读</el-menu-item>-->
-				<!--<el-menu-item index="collection"><el-icon><Collection /></el-icon>收藏</el-menu-item>-->
 				<el-menu-item index="remove" v-if="isAdmin">
-					<el-icon>
-						<TopRight />
-					</el-icon>
 					{{ $t('option.remove') }}
 				</el-menu-item>
 				<el-menu-item index="delete" v-if="isAdmin">
-					<el-icon>
-						<Delete />
-					</el-icon>
 					{{ $t('option.delete') }}
 				</el-menu-item>
 				<el-menu-item index="collect">
-					<el-icon>
-						<StarFilled v-if="isCollect" />
-						<Star v-else />
-					</el-icon>
 					{{ isCollect ? $t('option.removeCollect') : $t('option.collect') }}
 				</el-menu-item>
 				<el-menu-item index="alreadyRead">
@@ -108,7 +96,7 @@ let mangaInfo = reactive<mangaType>({
 });
 
 const editMangaDialog = ref(false);
-const rightSidebarVisible = defineModel('rightSidebarVisible');
+const rightSidebarVisible = defineModel<boolean>('rightSidebarVisible');
 const props = defineProps(['mangaInfo']);
 const emit = defineEmits(['reload', 'close']);
 

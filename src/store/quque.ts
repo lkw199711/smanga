@@ -46,16 +46,19 @@ const globalQueue = new Queue();
 const mangaQueue = new Queue(userConfig.loadCoverConcurrency);
 const chapterQueue = new Queue(userConfig.loadCoverConcurrency);
 const flowQueue = new Queue(1);
+const saveLatestQueue = new Queue(1);
 const queue = reactive({
 	globalQueue,
 	mangaQueue,
 	chapterQueue,
 	flowQueue,
+	saveLatestQueue,
 	clear() {
 		globalQueue.clear();
 		mangaQueue.clear();
 		chapterQueue.clear();
 		flowQueue.clear();
+		saveLatestQueue.clear();
 	},
 });
 

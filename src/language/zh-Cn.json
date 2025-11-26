@@ -56,7 +56,8 @@
     "warning": "警报",
     "deleteConfirm": "确认删除这条记录?",
     "share": "分享漫画",
-    "sync": "同步"
+    "sync": "同步",
+    "refresh": "刷新"
   },
   "account": {
     "add": "新增用户",
@@ -92,7 +93,8 @@
         "mediaPower": "媒体库阅读权限"
       }
     },
-    "batchDelete": "批量删除"
+    "batchDelete": "批量删除",
+    "refresh": "刷新"
   },
   "mediaManage": {
     "add": "新增媒体库",
@@ -328,7 +330,8 @@
     },
     "title": {
       "setViewWidth": "设置视图宽度"
-    }
+    },
+    "nextChapter": "下一章"
   },
   "page": {
     "before": "上一章",

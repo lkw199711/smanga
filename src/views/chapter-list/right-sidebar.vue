@@ -9,37 +9,19 @@
         <!--名称-->
         <p class="title">{{ props.chapterInfo?.chapterName }}</p>
         <!--操作-->
-        <!--<el-menu-item index="read"><el-icon><Memo /></el-icon>阅读</el-menu-item>-->
-        <!--<el-menu-item index="collection"><el-icon><Collection /></el-icon>收藏</el-menu-item>-->
         <el-menu-item index="remove" v-if="isAdmin">
-          <el-icon>
-            <TopRight />
-          </el-icon>
           {{ $t('option.remove') }}
         </el-menu-item>
         <el-menu-item index="delete" v-if="isAdmin">
-          <el-icon>
-            <Delete />
-          </el-icon>
           {{ $t('option.delete') }}
         </el-menu-item>
         <el-menu-item index="collect">
-          <el-icon>
-            <StarFilled v-if="isCollect" />
-            <Star v-else />
-          </el-icon>
           {{ isCollect ? $t('option.removeCollect') : $t('option.collect') }}
         </el-menu-item>
         <el-menu-item index="alreadyRead">
-          <el-icon>
-            <Notebook />
-          </el-icon>
           {{ alreadyRead ? $t('option.markAsUnRead') : $t('option.markAsRead') }}
         </el-menu-item>
         <el-menu-item index="edit" v-if="isAdmin">
-          <el-icon>
-            <Edit />
-          </el-icon>
           {{ $t('rightSidebar.editChapter') }}
         </el-menu-item>
       </el-menu>

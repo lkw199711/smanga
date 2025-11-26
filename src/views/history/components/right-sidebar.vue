@@ -10,12 +10,7 @@
         <!--名称-->
         <p class="title">{{ chapterName }}</p>
         <!--操作-->
-        <!--<el-menu-item index="read"><el-icon><Memo /></el-icon>阅读</el-menu-item>-->
-        <!--<el-menu-item index="collection"><el-icon><Collection /></el-icon>收藏</el-menu-item>-->
         <el-menu-item index="delete">
-          <el-icon>
-            <Delete />
-          </el-icon>
           {{ $t('option.delete') }}
         </el-menu-item>
       </el-menu>

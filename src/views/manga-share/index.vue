@@ -2,11 +2,12 @@
   <div class="manga-setting-box manage-container">
     <!--操作按钮-->
     <div class="btn-box">
-      <el-button :loading="loading" :disabled="selectedRows.length === 0" type="danger" @click="batch_delete_sync">
-        {{ t('mangaShare.batchDelete') }}
+      <el-button type="primary" :icon="Refresh" @click="load_table()">{{ $t('option.refresh') }}</el-button>
+      <el-button :icon="Delete" :loading="loading" :disabled="selectedRows.length === 0" type="danger" @click="batch_delete_sync">
+        {{ $t('option.delete') }}
       </el-button>
     </div>
-    
+
     <!--表格-->
     <el-table :data="tableData" stripe border @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55"></el-table-column>
@@ -74,7 +75,7 @@
 export default {name: 'manga-share'};
 </script>
 <script setup lang="ts">
-import {Delete, Edit, Plus} from '@element-plus/icons-vue';
+import {Delete, Edit, Plus, Refresh} from '@element-plus/icons-vue';
 import {onMounted, ref} from 'vue';
 import i18n from '@/i18n';
 import useBrowseStore from '@/store/browse';
@@ -125,7 +126,7 @@ async function load_table(page = 1, pageSize = 10) {
     const response = await shareApi.get({page, pageSize});
     tableData.value = response.list;
     count.value = response.count;
-    
+
     // 清空选中状态
     selectedRows.value = [];
   } catch (error) {
@@ -193,7 +194,7 @@ async function delete_manga(index: number, row: any) {
     await shareApi.delete(row.shareId);
     tableData.value.splice(index, 1);
     count.value--;
-    
+
     // 从选中列表中移除
     const selectedIndex = selectedRows.value.findIndex(item => item.shareId === row.shareId);
     if (selectedIndex !== -1) {
@@ -218,15 +219,11 @@ async function batch_delete_sync() {
     return;
   }
 
-  const confirm = await ElMessageBox.confirm(
-    t('mangaShare.batchDeleteText'),
-    t('mangaShare.batchDeleteTitle'),
-    {
-      confirmButtonText: t('option.confirm'),
-      cancelButtonText: t('option.cancel'),
-      type: 'warning'
-    }
-  );
+  const confirm = await ElMessageBox.confirm(t('mangaShare.batchDeleteText'), t('mangaShare.batchDeleteTitle'), {
+    confirmButtonText: t('option.confirm'),
+    cancelButtonText: t('option.cancel'),
+    type: 'warning',
+  });
 
   if (!confirm) {
     return;
@@ -236,16 +233,13 @@ async function batch_delete_sync() {
   try {
     const shareIds = selectedRows.value.map(item => item.shareId);
     await shareApi.batch_delete(shareIds);
-    
+
     // 从表格数据中移除删除的记录
-    tableData.value = tableData.value.filter(
-      item => !shareIds.includes(item.shareId)
-    );
+    tableData.value = tableData.value.filter(item => !shareIds.includes(item.shareId));
     count.value -= shareIds.length;
-    
+
     // 清空选中状态
     selectedRows.value = [];
-    
   } catch (error) {
     console.error('批量删除失败:', error);
   } finally {

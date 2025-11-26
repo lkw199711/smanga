@@ -14,8 +14,9 @@
       </el-input>
     </div>
     <div class="btn-box">
+      <el-button type="primary" :icon="Refresh" @click="reload_table">{{ $t('option.refresh') }}</el-button>
       <el-button type="danger" :icon="Delete" :disabled="selectedRows.length === 0" @click="batch_delete_chapter">
-        {{ $t('chapterManage.batchDelete') }}
+        {{ $t('option.delete') }}
       </el-button>
     </div>
     <!--表格-->
@@ -52,7 +53,7 @@ export default {name: 'chapter-manage'};
 </script>
 <script setup lang="ts">
 import {ref, onMounted} from 'vue';
-import {Delete, Edit, Search} from '@element-plus/icons-vue';
+import {Delete, Edit, Search, Refresh} from '@element-plus/icons-vue';
 import chapterApi from '@/api/chapter';
 import tablePager from '@/components/table-pager.vue';
 import chapterModify from './components/chapterModify.vue';
