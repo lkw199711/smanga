@@ -5,7 +5,7 @@
       <div class="spinner"></div>
       <div class="text-content">
         <div class="main-text">{{ compressStateTipText[compressState] }}</div>
-        <div class="sub-text">{{ `${reTry * 2}/20 秒` }}</div>
+        <div class="sub-text">{{ `${waitTime}/20 秒` }}</div>
       </div>
     </div>
   </div>
@@ -21,6 +21,8 @@ const route = useRoute();
 const browseStore = useBrowseStore();
 const reTry = ref(0);
 const compressState = ref('loadingImages');
+const intervalId = ref<number | null>(null);
+const waitTime = ref(0);
 defineProps({
   compressState: {
     type: String,
@@ -40,6 +42,7 @@ const compressStateTipText = {
 onMounted(() => {
   const chapterId = Number(route.query.chapterId);
   chapter_images_load(chapterId);
+  intervalId.value = setInterval(() => waitTime.value++, 1000);
 });
 
 async function chapter_images_load(chapterId: number) {
