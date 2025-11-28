@@ -34,9 +34,9 @@ const emit = defineEmits(['page_change']);
 
 const compressStateTipText = {
   loadingImages: '加载中',
-  compressing: '压缩中',
-  compressed: '压缩完成',
-  failed: '压缩失败',
+  compressing: '解压缩中',
+  compressed: '加载完成',
+  failed: '加载失败',
 };
 
 onMounted(() => {
@@ -52,6 +52,10 @@ async function chapter_images_load(chapterId: number) {
   switch (res.state) {
     case 'compressing':
       reTry.value++;
+      if(res.list && res.list.length > browseStore.imagePathList.length) {
+        browseStore.imagePathList = res.list;
+        emit('page_change', browseStore.page || 1);
+      }
       setTimeout(() => chapter_images_load(chapterId), 2000);
       break;
     case 'compressed':
