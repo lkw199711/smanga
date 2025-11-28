@@ -175,7 +175,7 @@ async function page_change() {
   }
 
   // 是否加载完全部
-  finished.value = page >= browseStore.imagePathList.length;
+  finished.value = page > browseStore.imagePathList.length;
 
   // 加载页面并等待返回
   await load_image(page - 1);
