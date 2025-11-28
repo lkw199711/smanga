@@ -40,6 +40,7 @@ const compressStateTipText = {
 };
 
 onMounted(() => {
+  browseStore.imageLoaded = false;
   const chapterId = Number(route.query.chapterId);
   chapter_images_load(chapterId);
   intervalId.value = setInterval(() => waitTime.value++, 1000);
