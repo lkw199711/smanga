@@ -1,6 +1,6 @@
 <template>
   <!-- 解压缩状态指示器 -->
-  <div v-if="compressState !== 'compressed'" class="compression-overlay">
+  <div v-if="!browseStore.imageLoaded" class="compression-overlay">
     <div class="compression-content">
       <div class="spinner"></div>
       <div class="text-content">
@@ -57,8 +57,10 @@ async function chapter_images_load(chapterId: number) {
       // 压缩完成 加载图片并隐藏指示器
       browseStore.imagePathList = res.list;
       emit('page_change', browseStore.page || 1);
+      clearInterval(intervalId.value);
       break;
     case 'failed':
+      clearInterval(intervalId.value);
       // 压缩失败 提示用户并隐藏指示器
       break;
     default:

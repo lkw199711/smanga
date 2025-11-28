@@ -54,6 +54,7 @@ const useBrowseStore = defineStore('browse', {
 		useAutoViewWidth: true,
 		viewWidthValue: 50,
 		dialogViewWidth: false,
+		imageLoaded: false,
 	}),
 	getters: {
 		/**
