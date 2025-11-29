@@ -71,6 +71,10 @@ async function chapter_images_load(chapterId: number) {
     default:
       break;
   }
+  // 为应对阻塞,重新加载章节列表
+  if(!browseStore.chapterList.length){
+    await browseStore.load_chapter_list();
+  }
 }
 
 // 暴露方法 刷新页码
