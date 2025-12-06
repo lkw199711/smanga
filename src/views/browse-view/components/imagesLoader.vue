@@ -1,11 +1,11 @@
 <template>
   <!-- 解压缩状态指示器 -->
-  <div v-if="compressState !== 'compressed'" class="compression-overlay">
+  <div v-if="!browseStore.imageLoaded" class="compression-overlay">
     <div class="compression-content">
       <div class="spinner"></div>
       <div class="text-content">
         <div class="main-text">{{ compressStateTipText[compressState] }}</div>
-        <div class="sub-text">{{ `${reTry * 2}/20 秒` }}</div>
+        <div class="sub-text">{{ `${waitTime}/20 秒` }}</div>
       </div>
     </div>
   </div>
@@ -21,6 +21,8 @@ const route = useRoute();
 const browseStore = useBrowseStore();
 const reTry = ref(0);
 const compressState = ref('loadingImages');
+const intervalId = ref<number | null>(null);
+const waitTime = ref(0);
 defineProps({
   compressState: {
     type: String,
@@ -32,14 +34,16 @@ const emit = defineEmits(['page_change']);
 
 const compressStateTipText = {
   loadingImages: '加载中',
-  compressing: '压缩中',
-  compressed: '压缩完成',
-  failed: '压缩失败',
+  compressing: '解压缩中',
+  compressed: '加载完成',
+  failed: '加载失败',
 };
 
 onMounted(() => {
+  browseStore.imageLoaded = false;
   const chapterId = Number(route.query.chapterId);
   chapter_images_load(chapterId);
+  intervalId.value = setInterval(() => waitTime.value++, 1000);
 });
 
 async function chapter_images_load(chapterId: number) {
@@ -48,18 +52,28 @@ async function chapter_images_load(chapterId: number) {
   switch (res.state) {
     case 'compressing':
       reTry.value++;
+      if(res.list && res.list.length > browseStore.imagePathList.length) {
+        browseStore.imagePathList = res.list;
+        emit('page_change', browseStore.page || 1);
+      }
       setTimeout(() => chapter_images_load(chapterId), 2000);
       break;
     case 'compressed':
       // 压缩完成 加载图片并隐藏指示器
       browseStore.imagePathList = res.list;
       emit('page_change', browseStore.page || 1);
+      clearInterval(intervalId.value);
       break;
     case 'failed':
+      clearInterval(intervalId.value);
       // 压缩失败 提示用户并隐藏指示器
       break;
     default:
       break;
+  }
+  // 为应对阻塞,重新加载章节列表
+  if(!browseStore.chapterList.length){
+    await browseStore.load_chapter_list();
   }
 }
 

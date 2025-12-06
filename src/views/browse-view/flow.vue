@@ -175,10 +175,13 @@ async function page_change() {
   }
 
   // 是否加载完全部
-  finished.value = page >= browseStore.imagePathList.length;
+  finished.value = page > browseStore.imagePathList.length;
 
   // 加载页面并等待返回
   await load_image(page - 1);
+
+  // 加载完第一张图即可改变状态
+  browseStore.imageLoaded = true;
 
   // 页码递增
   ++page;
