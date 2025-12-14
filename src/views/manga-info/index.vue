@@ -40,6 +40,7 @@
         <el-descriptions-item label="章节总数">{{ mangaInfo.chapterCount }}</el-descriptions-item>
         <el-descriptions-item label="阅读方式">{{ mangaInfo.browseType }}</el-descriptions-item>
         <el-descriptions-item label="所属媒体库">{{ mangaInfo.media?.mediaName }}</el-descriptions-item>
+        <el-descriptions-item label="漫画路径">{{ mangaInfo.mangaPath }}</el-descriptions-item>
         <el-descriptions-item label="入库时间">{{ mangaInfo.createTime }}</el-descriptions-item>
         <el-descriptions-item label="更新时间">{{ mangaInfo.updateTime }}</el-descriptions-item>
         <el-descriptions-item label="评分">{{ mangaInfo.star }}</el-descriptions-item>
