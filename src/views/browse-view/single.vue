@@ -167,6 +167,8 @@ async function page_change(pageParams: number) {
   imgSrc.value = await imageApi.get({file: pageImage});
   loading.value = false;
 
+  browseStore.imageLoaded = true;
+
   browseStore.page = pageParams;
   browseStore.pageImage = pageImage;
   browseStore.save_latest();

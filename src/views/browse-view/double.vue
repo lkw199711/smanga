@@ -168,6 +168,7 @@ async function page_change(pageParams: number) {
     ? await imageApi.get({file: browseStore.imagePathList[index + 1]})
     : '';
 
+  browseStore.imageLoaded = true;
   
   // 缓存书签信息
   browseStore.page = pageParams;

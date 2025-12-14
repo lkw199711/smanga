@@ -203,6 +203,8 @@ async function page_change(pageParams: number) {
     };
   }
 
+  browseStore.imageLoaded = true;
+
   browseStore.page = pageParams;
   browseStore.pageImage = pageImage;
   browseStore.save_latest();
