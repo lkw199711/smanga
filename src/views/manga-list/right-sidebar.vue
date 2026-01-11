@@ -126,9 +126,6 @@ watch(
 	}
 );
 
-onMounted(async () => {
-});
-
 /**
  * @description: 更新漫画收藏状态
  * @return {*}

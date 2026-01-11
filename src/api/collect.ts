@@ -49,6 +49,20 @@ const collectApi = {
 		const response = http.data;
 		return response.data;
 	},
+
+	/**
+	 * @description: 新增收藏
+	 * @param {any} data
+	 * @return {*}
+	 */
+	async add_chapter_collect(collectType: string, chapterId: number, data: any) {
+		const http = await ajax.post(
+			`collect-${collectType}/${chapterId}`,
+			data
+		);
+		const response = http.data;
+		return response.data;
+	},
 };
 
 export default collectApi;
