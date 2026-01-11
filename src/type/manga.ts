@@ -1,5 +1,5 @@
 import { mediaInit, mediaType } from "./media";
-import { metaItemType } from "./meta";
+import { metaType } from "./meta";
 import { tagItemType } from "./tag";
 
 type mangaType = {
@@ -17,7 +17,8 @@ type mangaType = {
 	chapterCount: number;
 	parentPath?: string;
 	mangaCover: string;
-	metas?: metaItemType[];
+	mangaPath?: string;
+	metas?: metaType[];
 	tags?: tagItemType[];
 	media?: mediaType;
 };

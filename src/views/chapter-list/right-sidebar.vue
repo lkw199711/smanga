@@ -122,10 +122,10 @@ async function menu_select(key: string) {
       if (isCollect.value) {
         await collectApi.remove_collect('chapter', chapterId.value);
       } else {
-        await collectApi.add_collect(
-          Object.assign(chapterInfo, {
-            collectType: 'chapter',
-          })
+        await collectApi.add_chapter_collect(
+          'chapter',
+          chapterId.value,
+          chapterInfo
         );
       }
       // 更新收藏状态
