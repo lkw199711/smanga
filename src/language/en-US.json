@@ -407,7 +407,10 @@
     "editMetas": "editMetas",
     "editChapter": "Edit chapter info",
     "editManga": "Edit manga info",
-    "editMedia": "Edit media info"
+    "editMedia": "Edit media info",
+    "compressCreate": "Compress all chapters",
+    "compressDelete": "Delete all chapter compress",
+    "chapterCompressDelete": "Delete chapter compress"
   },
   "createTime": "createTime",
   "updateTime": "updateTime",

@@ -411,7 +411,10 @@
     "editMetas": "编辑元数据",
     "editChapter": "修改章节信息",
     "editManga": "编辑漫画信息",
-    "editMedia": "编辑媒体库信息"
+    "editMedia": "编辑媒体库信息",
+    "compressCreate": "解压全部章节",
+    "compressDelete": "删除全部解压记录",
+    "chapterCompressDelete": "删除章节解压记录"
   },
   "createTime": "创建时间",
   "updateTime": "更新时间",
