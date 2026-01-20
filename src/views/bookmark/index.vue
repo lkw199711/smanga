@@ -8,8 +8,8 @@
       </template>
       <template v-else>
         <div :class="['chapter-list-box', { 'block': config.viewType === 'list' }]">
-          <chapter v-for="(chapter, index) in list" :key="chapter" :viewType="config.viewType" :chapterInfo="chapter"
-            :bookmark="true" @click="go_browse(chapter)" @contextmenu.prevent="context_menu(chapter, index)" />
+          <chapter v-for="chapterItem in list" :key="chapterItem.chapterId" :viewType="config.viewType" :chapterInfo="chapterItem"
+            :bookmark="true" @click="go_browse(chapterItem)" @contextmenu.prevent="context_menu(chapterItem)" />
         </div>
       </template>
     </div>
@@ -19,7 +19,7 @@
       :page-size-config="browse.chapterListPageSizes" @page-change="page_change" />
 
     <!--功能菜单-->
-    <right-sidebar :info="chapterInfo" @reload="page_change" />
+    <right-sidebar v-model:rightSidebarVisible="rightSidebarVisible" :chapterInfo="chapterInfo" @reload="page_change" />
   </div>
 </template>
 
@@ -29,7 +29,7 @@ import chapter from '@/components/chapter.vue';
 import { config, userConfig } from '@/store';
 import bookmarkApi from '@/api/bookmark';
 import MediaPager from '@/components/media-pager.vue';
-import rightSidebar from './components/right-sidebar.vue';
+import rightSidebar from '@/views/chapter-list/right-sidebar.vue';
 import { chapterType } from '@/type/chapter';
 import { useRoute, useRouter } from 'vue-router';
 import listSkeleton from '@/components/list-skeleton.vue';
@@ -45,6 +45,7 @@ const page = ref(1);
 const list = ref([]);
 const count = ref(-1);
 const chapterInfo = ref<chapterType>();
+let rightSidebarVisible = ref(false);
 
 /**
  * 去往浏览界面
@@ -109,9 +110,10 @@ async function page_change(pageParams = 1, pageSize: number = 10) {
 /**
  * 打开右侧菜单
  */
-function context_menu(info: any, key: number) {
-  chapterInfo.value = info;
-  config.rightSidebar = true;
+function context_menu(chapter: chapterType) {
+  chapter.chapterCover = chapter.pageImage
+  chapterInfo.value = chapter;
+  rightSidebarVisible.value = true;
 }
 
 function touch_page_change() {

@@ -49,7 +49,7 @@
         <div class="manga-list" v-if="searchStore.searchType === 'manga'">
           <div class="touch-dom">
             <div :class="['manga-list-box', {block: config.viewType === 'list'}]">
-              <manga v-for="(i, k) in list" :key="k" :viewType="config.viewType" :mangaInfo="i" @contextmenu.prevent="context_menu(i, k)" />
+              <manga v-for="item in list" :key="item.mangaId" :viewType="config.viewType" :mangaInfo="item" @contextmenu.prevent="context_menu(item)" />
             </div>
           </div>
 
@@ -61,12 +61,12 @@
           <!-- 章节列表 -->
           <div :class="['chapter-list-box', {block: config.viewType === 'list'}]">
             <chapter
-              v-for="(i, k) in list"
-              :key="k"
+              v-for="item in list"
+              :key="item.chapterId"
               :view-type="config.viewType"
-              :chapterInfo="i"
-              @click="go_browse(i)"
-              @contextmenu.prevent="context_menu(i, k)" />
+              :chapterInfo="item"
+              @click="go_browse(item)"
+              @contextmenu.prevent="context_menu(item)" />
           </div>
 
           <!-- 分页组件 -->
@@ -142,9 +142,9 @@ function get_page_size_array() {
 let page = ref(1);
 let count = ref(0);
 type listType =
-  | mangaType
-  | chapterType
-  | {
+  & mangaType
+  & chapterType
+  & {
       blob: string;
     };
 let list = ref<listType[]>([]);

@@ -8,8 +8,8 @@
       </template>
       <template v-else>
         <div :class="['chapter-list-box', { 'block': config.viewType === 'list' }]">
-          <chapter v-for="(i, k) in list" :key="k" :viewType="config.viewType" :chapterInfo="i" @click="go_browse(i)"
-            @contextmenu.prevent="context_menu(i, k)" />
+          <chapter v-for="item in list" :key="item.chapterId" :viewType="config.viewType" :chapterInfo="item" @click="go_browse(item)"
+            @contextmenu.prevent="context_menu(item)" />
         </div>
       </template>
     </div>
@@ -18,7 +18,7 @@
     <media-pager ref="pager" :page="page" :count="count" :page-size-config="pageSizes" @page-change="page_change" />
 
     <!--功能菜单-->
-    <right-sidebar :info="chapterInfo" @reload="page_change" />
+    <right-sidebar v-model:rightSidebarVisible="rightSidebarVisible" :chapterInfo="chapterInfo" @reload="page_change" />
   </div>
 </template>
 
@@ -28,7 +28,7 @@ import chapter from '@/components/chapter.vue';
 import store, { config, userConfig } from '@/store';
 import historyApi from '@/api/history';
 import MediaPager from '@/components/media-pager.vue';
-import RightSidebar from './components/right-sidebar.vue';
+import RightSidebar from '../chapter-list/right-sidebar.vue';
 import { chapterType } from '@/type/chapter';
 import { useRoute, useRouter } from 'vue-router';
 import { chapterPageSize } from '@/store/page-size';
@@ -40,6 +40,7 @@ const browse = useBrowseStore();
 
 let pageSizes: number[] = [];
 let defaultPageSize = 10;
+let rightSidebarVisible = ref(false);
 
 get_page_size_array();
 
@@ -51,7 +52,6 @@ function get_page_size_array() {
   defaultPageSize = chapterPageSize[screen][0];
 }
 
-const route = useRoute();
 const router = useRouter();
 
 const page = ref(1);
@@ -114,9 +114,9 @@ async function page_change(pageParams = 1, pageSize = defaultPageSize) {
 /**
  * 打开右侧菜单
  */
-function context_menu(info: any, key: number) {
+function context_menu(info: any) {
   chapterInfo.value = info;
-  config.rightSidebar = true;
+  rightSidebarVisible.value = true;
 }
 
 function touch_page_change() {

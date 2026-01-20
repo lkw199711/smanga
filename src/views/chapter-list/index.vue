@@ -58,7 +58,6 @@ let count = ref(-1);
 let list = ref([]);
 let chapterInfo = ref<chapterType>(chapterInit);
 let loading = ref(false);
-
 let rightSidebarVisible = ref(false);
 
 let mangaId = route.query.mangaId;

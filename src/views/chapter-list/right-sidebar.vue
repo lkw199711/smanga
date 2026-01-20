@@ -149,8 +149,10 @@ async function menu_select(key: string) {
         });
       }
       emit('reload', browse.chapterListPage, browse.chapterListPageSize);
+      break;
     case 'edit':
       editChapterDialog.value = true;
+      break;
     case 'compress-delete':
       await chapterApi.compress_delete(chapterId.value);
       break;
