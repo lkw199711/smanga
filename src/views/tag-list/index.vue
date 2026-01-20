@@ -27,6 +27,9 @@
     <!--分页组件-->
     <media-pager ref="pager" :page="page" :page-size="browse.mangaListPageSize" :count="count"
         :page-size-config="browse.mangaListPageSizes" @page-change="page_change" />
+
+    <!--功能菜单-->
+    <rightSidebar :mangaInfo="mangaInfo" v-model:rightSidebarVisible="rightSidebarVisible" @reload="page_change" />
 </template>
 
 <script lang="ts" setup>
@@ -36,32 +39,17 @@ import tagApi, { tagItemType } from '@/api/tag';
 import mangaApi from '@/api/manga';
 import manga from '@/components/manga.vue';
 import mediaPager from '@/components/media-pager.vue';
-import i18n from '@/i18n';
-const { t } = i18n.global;
-
+import { mangaType } from '@/type/manga';
 import useBrowseStore from '@/store/browse';
+import rightSidebar from '@/views/manga-list/right-sidebar.vue';
 const browse = useBrowseStore();
 
-type mangaItemType = {
-    browseType: string;
-    chapterCount: number;
-    createTime: string;
-    direction: number;
-    mangaCover: string;
-    mangaId: number;
-    mangaName: string;
-    mangaPath: string;
-    mangaTagId: number;
-    mediaId: number;
-    pathId: number;
-    removeFirst: number;
-    updateTime: string;
-    blob: string;
-}
+let mangaInfo = ref<mangaType>();
+let rightSidebarVisible = ref(false);
 
 const page = ref(1);
 // 漫画列表
-let mangaList = ref<mangaItemType[]>([]);
+let mangaList = ref<mangaType[]>([]);
 const count = ref(0);
 // 标签列表
 const tagList = ref<tagItemType[]>([]);
@@ -90,15 +78,12 @@ const tagStyle = computed(() => {
     }
 })
 
-let mangaInfo = ref({});
-let menuPoster = '';
-
 /**
  * 打开右侧菜单
  */
-function context_menu(mangaItem: mangaItemType) {
-    menuPoster = mangaItem.blob;
-    config.rightSidebar = true;
+function context_menu(mangaItem: mangaType) {
+    mangaInfo.value = mangaItem;
+    rightSidebarVisible.value = true;
 }
 
 // 切换排序规则时 重新加载列表

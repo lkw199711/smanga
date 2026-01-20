@@ -37,6 +37,12 @@
 				<el-menu-item index="edit" v-if="isAdmin">
 					{{ $t('rightSidebar.editManga') }}
 				</el-menu-item>
+				<el-menu-item index="compress-all">
+					{{ $t('rightSidebar.compressCreate') }}
+				</el-menu-item>
+				<el-menu-item index="compress-delete">
+					{{ $t('rightSidebar.compressDelete') }}
+				</el-menu-item>
 			</el-menu>
 		</el-drawer>
 
@@ -207,6 +213,13 @@ async function menu_select(key: string) {
 		case 'edit':
 			editMangaDialog.value = true;
 			break;
+		case 'compress-all':
+			await mangaApi.compress_all(mangaId.value);
+			break;
+		case 'compress-delete':
+			await mangaApi.compress_delete(mangaId.value);
+			break;
+			
 
 	}
 	rightSidebarVisible.value = false;

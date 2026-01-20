@@ -2,9 +2,12 @@
   <div class="manga-list">
     <div class="title">继续阅读</div>
     <div :class="['manga-list-box', {block: config.viewType === 'list'}]">
-      <manga v-for="item in latestList" :key="item.latestId" :viewType="config.viewType" :mangaInfo="item" />
+      <manga v-for="item in latestList" :key="item.latestId" :viewType="config.viewType" :mangaInfo="item" @contextmenu.prevent="context_menu(item)" />
     </div>
   </div>
+
+  <!--功能菜单-->
+  <rightSidebar :mangaInfo="mangaInfo" v-model:rightSidebarVisible="rightSidebarVisible" @reload="page_change" />
 </template>
 
 <script setup lang="ts">
@@ -13,12 +16,22 @@ import {onMounted, ref} from 'vue';
 import latestApi from '@/api/latest';
 import {latestType} from '@/type/latest';
 import manga from '@/components/manga.vue';
+import { mangaType } from '@/type/manga';
+import rightSidebar from '@/views/manga-list/right-sidebar.vue';
 
 let latestList = ref<latestType[]>([]);
+let mangaInfo = ref<mangaType>();
+let rightSidebarVisible = ref(false);
+/**
+ * 打开右侧菜单
+ */
+function context_menu(mangaInfoProps: any) {
+	mangaInfo.value = mangaInfoProps;
+	rightSidebarVisible.value = true;
+}
 
-onMounted(async () => {
+async function page_change() {
   let pageSize = 10;
-
   switch (config.screenType) {
     case '4k':
       pageSize = 36;
@@ -46,6 +59,10 @@ onMounted(async () => {
       break;
   }
   latestList.value = await latestApi.get(1, pageSize);
+}
+
+onMounted(() => {
+  page_change();
 });
 </script>
 <style lang="less" scoped>

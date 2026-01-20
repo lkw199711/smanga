@@ -106,6 +106,15 @@ const chapterApi = {
 
     return (await res).data;
   },
+  /**
+   * @description: 删除漫画章节压缩文件
+   * @param {number} chapterId
+   * @return {*}
+   */
+  async compress_delete(chapterId: number) {
+    const res = ajax.delete(`chapter/${chapterId}/compress`, {data: {chapterId}});
+    return (await res).data;
+  },
 };
 
 type chapterGetFormatType = {

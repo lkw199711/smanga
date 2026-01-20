@@ -9,8 +9,8 @@
 
 			<template v-else>
 				<div :class="['manga-list-box', { block: config.viewType === 'list' }]">
-					<manga v-for="(i, k) in list" :key="i.mangaId" :viewType="config.viewType" :mangaInfo="i"
-						@contextmenu.prevent="context_menu(i, k)" />
+					<manga v-for="item in list" :key="item.mangaId" :viewType="config.viewType" :mangaInfo="item"
+						@contextmenu.prevent="context_menu(item)" />
 				</div>
 			</template>
 		</div>
@@ -176,7 +176,7 @@ function reload() {
 /**
  * 打开右侧菜单
  */
-function context_menu(mangaInfoProps: mangaType, key: number) {
+function context_menu(mangaInfoProps: mangaType) {
 	mangaInfo.value = mangaInfoProps;
 	rightSidebarVisible.value = true;
 }
