@@ -115,7 +115,7 @@ const alreadyRead = computed(() => {
 });
 
 const isAdmin = computed(() => {
-	return Cookies.get('role') === 'admin';
+	return Cookies.get('smanga-role') === 'admin';
 });
 
 watch(

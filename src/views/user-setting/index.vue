@@ -276,8 +276,8 @@ async function submit() {
 }
 
 function user_logout() {
-  Cookies.remove('userName');
-  Cookies.remove('userId');
+  Cookies.remove('smanga-userName');
+  Cookies.remove('smanga-userId');
   router.push('/login');
 }
 

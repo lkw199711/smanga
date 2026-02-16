@@ -39,7 +39,7 @@ function socket_init() {
 	ws = new WebSocket(url);
 	ws.onopen = () => {
 		console.log('socket连接成功');
-		ws.send(Cookies.get('userId'));
+		ws.send(Cookies.get('smanga-userId'));
 	};
 
 	ws.onmessage = (e: any) => {

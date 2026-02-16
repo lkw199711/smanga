@@ -62,7 +62,7 @@ const props = defineProps(['mediaInfo']);
 const emit = defineEmits(['reload', 'close']);
 
 const isAdmin = computed(() => {
-  return Cookies.get('role') === 'admin';
+  return Cookies.get('smanga-role') === 'admin';
 });
 
 watch(
