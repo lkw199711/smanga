@@ -406,6 +406,12 @@ const routes: Array<RouteRecordRaw> = [
 				meta: { view: 'browse' },
 				component: () => import('../views/browse-view/half.vue'),
 			},
+			{
+				path: 'pdfView',
+				name: 'pdfView',
+				meta: { view: 'browse' },
+				component: () => import('../views/browse-view/pdf.vue'),
+			}
 		],
 	},
 

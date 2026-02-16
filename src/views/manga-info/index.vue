@@ -424,12 +424,19 @@ function go_browse(chapter: any) {
     browse.page = 1;
   }
 
+  let name = chapter.browseType;
+  if (chapter.chapterType === 'pdf') {
+    name = 'pdfView';
+  }
+
+  browse.chapter = chapter;
   const browsePageRoute = {
-    name: chapter.browseType,
+    name,
     query: {
       mediaId: chapter.mediaId,
       mangaId: chapter.mangaId,
       chapterId: chapter.chapterId,
+      chapterPath: chapter.chapterPath,
     },
   };
 

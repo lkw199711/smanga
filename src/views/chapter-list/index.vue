@@ -161,9 +161,10 @@ function go_browse(chapter: any) {
   const browsePageRoute = {
     name: chapter.browseType,
     query: {
-      mediaId: chapter.mediaId,
+      mediaId: chapter.chapterType === 'pdf' ? 'pdfView' : chapter.mediaId,
       mangaId: chapter.mangaId,
       chapterId: chapter.chapterId,
+      chapterPath: chapter.chapterPath,
     },
   };
 

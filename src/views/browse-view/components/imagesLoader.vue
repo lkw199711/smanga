@@ -16,6 +16,7 @@ import {ref, onMounted} from 'vue';
 import chapterApi from '@/api/chapter';
 import useBrowseStore from '@/store/browse';
 import {useRoute} from 'vue-router';
+import imageApi from '@/api/image';
 
 const route = useRoute();
 const browseStore = useBrowseStore();
@@ -39,11 +40,17 @@ const compressStateTipText = {
   failed: '加载失败',
 };
 
-onMounted(() => {
+onMounted(async() => {
   browseStore.imageLoaded = false;
   const chapterId = Number(route.query.chapterId);
-  chapter_images_load(chapterId);
-  intervalId.value = setInterval(() => waitTime.value++, 1000);
+  const chapterPath = route.query.chapterPath as string;
+  if (browseStore.browseType === 'pdf') {
+    browseStore.pdfPath = await imageApi.get({ file: chapterPath });
+    finish_loader();
+  } else {
+    chapter_images_load(chapterId);
+    intervalId.value = setInterval(() => waitTime.value++, 1000);
+  }
 });
 
 async function chapter_images_load(chapterId: number) {
@@ -77,9 +84,16 @@ async function chapter_images_load(chapterId: number) {
   }
 }
 
+function finish_loader() {
+  browseStore.imageLoaded = true;
+  compressState.value = 'compressed';
+  clearInterval(intervalId.value);
+}
+
 // 暴露方法 刷新页码
 defineExpose({
   chapter_images_load,
+  finish_loader,
 });
 </script>
 
