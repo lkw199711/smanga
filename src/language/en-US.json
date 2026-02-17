@@ -60,7 +60,8 @@
     "deleteConfirm": "Are you sure to delete this record?",
     "share": "Sahre manga",
     "sync": "Sync",
-    "refresh": "Refresh"
+    "refresh": "Refresh",
+    "clear": "clear"
   },
   "account": {
     "add": "addUser",
