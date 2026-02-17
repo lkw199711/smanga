@@ -140,6 +140,36 @@
               <el-button type="primary" @click="comfirm_sync_compress" class="ml-4">确定</el-button>
             </el-form-item>
           </el-col>
+
+          <el-col :span="24">
+            <el-form-item label="解压缓存自动清理">
+              <el-radio-group v-model="form.compress.autoClear">
+                <el-radio :label="0">不自动清理</el-radio>
+                <el-radio :label="1">每次解压时执行清理</el-radio>
+                <el-radio :label="2">通过cron定时清理</el-radio>
+              </el-radio-group>
+              <el-button type="primary" @click="comfirm_auto_clear" class="ml-4">确定</el-button>
+            </el-form-item>
+          </el-col>
+
+          <el-col :span="24" v-if="form.compress.autoClear !== 0">
+            <el-form-item label="解压缓存数量限制">
+              <el-input v-model="form.compress.limit" placeholder="输入缓存数量限制" type="number" min="1"
+                :style="{ width: '150px' }"></el-input>
+              <span class="suffix ml-2 text-gray-500">个</span>
+              <el-button type="primary" @click="confirm_cache_limit" class="ml-4">确定</el-button>
+            </el-form-item>
+          </el-col>
+
+          <el-col :span="24" v-if="form.compress.autoClear === 2">
+            <el-form-item label="cron定时表达式">
+              <el-input v-model="form.compress.clearCron" placeholder="输入cron表达式"
+                :style="{ width: '300px' }"></el-input>
+              <span class="suffix ml-2 text-gray-500">cron表达式</span>
+              <el-button type="primary" @click="confirm_clear_cron" class="ml-4">确定</el-button>
+            </el-form-item>
+          </el-col>
+
         </el-row>
       </el-form>
 
@@ -147,6 +177,10 @@
         <p>• 封面压缩大小单位为KB,设置过小将影响封面质量.</p>
         <p>• 文件保存周期单位为天,填写0不删除文件.</p>
         <p>• 开启同步加载压缩包后,浏览章节时会在单词请求等待压缩包解压完成.适合比较小的章节</p>
+        <p>• 解压缓存自动清理:设置解压缓存的自动清理策略.</p>
+        <p>• 选择"每次解压时执行清理"会在每次解压漫画时清理之前的缓存.</p>
+        <p>• 选择"通过cron定时清理"会按照设置的cron表达式定期执行清理.</p>
+        <p>• 解压缓存数量限制:设置最大缓存数量,当超过限制时会清理最旧的缓存.</p>
       </div>
     </el-card>
 
@@ -218,6 +252,9 @@ const form = reactive({
     poster: 300,
     bookmark: 300,
     sync: 1,
+    autoClear: 0,
+    clearCron: '',
+    limit: 0,
   },
 });
 
@@ -317,6 +354,30 @@ async function comfirm_sync_compress() {
     await serveSettingApi.set('compress', 'sync', form.compress.sync);
   } catch (error) {
     console.error('Failed to set sync compress:', error);
+  }
+}
+
+async function comfirm_auto_clear() {
+  try {
+    await serveSettingApi.set('compress', 'autoClear', form.compress.autoClear);
+  } catch (error) {
+    console.error('Failed to set auto clear:', error);
+  }
+}
+
+async function confirm_clear_cron() {
+  try {
+    await serveSettingApi.set('compress', 'clearCron', form.compress.clearCron);
+  } catch (error) {
+    console.error('Failed to set clear cron:', error);
+  }
+}
+
+async function confirm_cache_limit() {
+  try {
+    await serveSettingApi.set('compress', 'limit', form.compress.limit);
+  } catch (error) {
+    console.error('Failed to set cache limit:', error);
   }
 }
 
