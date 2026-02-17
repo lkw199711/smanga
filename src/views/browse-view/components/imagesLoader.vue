@@ -68,6 +68,7 @@ async function chapter_images_load(chapterId: number) {
     case 'compressed':
       // 压缩完成 加载图片并隐藏指示器
       browseStore.imagePathList = res.list;
+      browseStore.imageLoaded = true;
       emit('page_change', browseStore.page || 1);
       clearInterval(intervalId.value);
       break;
