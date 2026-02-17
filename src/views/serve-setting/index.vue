@@ -50,6 +50,13 @@
               <el-button type="primary" @click="comfirm_scan_ignore_hidden" class="ml-4">确定</el-button>
             </el-form-item>
           </el-col>
+
+          <el-col :span="24">
+            <el-form-item label="生成媒体库封面">
+              <el-switch v-model="form.scan.createMediaPoster" :active-value="1" :inactive-value="0" />
+              <el-button type="primary" @click="comfirm_create_poster" class="ml-4">确定</el-button>
+            </el-form-item>
+          </el-col>
         </el-row>
       </el-form>
 
@@ -59,6 +66,7 @@
         <p>• 再次扫描媒体库时,是否对已有封面的漫画再次加载封面.开启会增加扫描时间.</p>
         <p>• 不建议纯压缩包库开启更新封面功能.</p>
         <p>• 忽略隐藏文件夹和文件,开启后扫描时会忽略以.开头的文件夹和文件.对于群辉,威联通成品nas机器有用,可规避其系统自动生成的隐藏目录.</p>
+        <p>• 生成媒体库封面,开启后扫描时会生成媒体库的封面图片,用于在漫画列表中显示.如果您希望自定义封面,请关闭此选项.</p>
       </div>
     </el-card>
 
@@ -125,12 +133,20 @@
               <el-button type="primary" @click="confirm_compress_duration" class="ml-4">确定</el-button>
             </el-form-item>
           </el-col>
+
+          <el-col :span="24">
+            <el-form-item label="同步加载压缩包">
+              <el-switch v-model="form.compress.sync" :active-value="1" :inactive-value="0" />
+              <el-button type="primary" @click="comfirm_sync_compress" class="ml-4">确定</el-button>
+            </el-form-item>
+          </el-col>
         </el-row>
       </el-form>
 
       <div class="form-note mt-4 text-gray-500 text-sm">
         <p>• 封面压缩大小单位为KB,设置过小将影响封面质量.</p>
         <p>• 文件保存周期单位为天,填写0不删除文件.</p>
+        <p>• 开启同步加载压缩包后,浏览章节时会在单词请求等待压缩包解压完成.适合比较小的章节</p>
       </div>
     </el-card>
 
@@ -186,7 +202,8 @@ const form = reactive({
     interval: 60,
     reloadCover: 0,
     ignoreHiddenFiles: 0,
-    mediaPosterInterval: 0
+    mediaPosterInterval: 0,
+    createMediaPoster: 0,
   },
   sync: {
     interval: 60
@@ -199,7 +216,8 @@ const form = reactive({
     auto: 0,
     saveDuration: 30,
     poster: 300,
-    bookmark: 300
+    bookmark: 300,
+    sync: 1,
   },
 });
 
@@ -262,6 +280,14 @@ async function comfirm_scan_ignore_hidden() {
   }
 }
 
+async function comfirm_create_poster() {
+  try {
+    await serveSettingApi.set('scan', 'createMediaPoster', form.scan.createMediaPoster);
+  } catch (error) {
+    console.error('Failed to set create media poster:', error);
+  }
+}
+
 async function confirm_poster_size() {
   try {
     await serveSettingApi.set('compress', 'poster', form.compress.poster);
@@ -285,6 +311,15 @@ async function confirm_compress_duration() {
     console.error('Failed to set compress duration:', error);
   }
 }
+
+async function comfirm_sync_compress() {
+  try {
+    await serveSettingApi.set('compress', 'sync', form.compress.sync);
+  } catch (error) {
+    console.error('Failed to set sync compress:', error);
+  }
+}
+
 
 /**
  * @description: 设置ssl证书
