@@ -2,6 +2,11 @@
 	<div :class="['login-index', backClass]">
 		<div class="seat"></div>
 
+		<!-- 服务连接按钮 -->
+		<div class="service-connect-btn">
+			<el-button type="text" @click="openServiceDialog">连接到其他服务</el-button>
+		</div>
+
 		<!-- 登录面板 -->
 		<div class="login-box">
 			<div class="logo">
@@ -26,6 +31,46 @@
 				<el-button class="login-btn" type="primary" @click="do_login">登录</el-button>
 			</div>
 		</div>
+
+		<!-- 服务卡片列表 -->
+		<div v-if="services.length > 0" class="service-cards">
+			<el-card 
+				v-for="(service, index) in services" 
+				:key="index" 
+				class="service-card"
+				@click="navigateToService(service.url)"
+			>
+				{{ service.name }}
+				<el-button 
+					type="text" 
+					size="small" 
+					class="service-remove-btn"
+					@click.stop="removeService(index)"
+				>×</el-button>
+			</el-card>
+		</div>
+
+		<!-- 连接服务弹窗 -->
+		<el-dialog
+			v-model="serviceDialogVisible"
+			title="连接到其他服务"
+			width="500px"
+		>
+			<el-form :model="serviceForm" label-width="80px">
+				<el-form-item label="服务名称:">
+					<el-input v-model="serviceForm.name" placeholder="请输入服务名称"></el-input>
+				</el-form-item>
+				<el-form-item label="服务网址:">
+					<el-input v-model="serviceForm.url" placeholder="请输入服务网址，例如：http://example.com"></el-input>
+				</el-form-item>
+			</el-form>
+			<template #footer>
+				<span class="dialog-footer">
+					<el-button @click="serviceDialogVisible = false">取消</el-button>
+					<el-button type="primary" @click="addService">确定</el-button>
+				</span>
+			</template>
+		</el-dialog>
 	</div>
 </template>
 
@@ -52,6 +97,11 @@ const backClass = ref('bg' + 1);
 const browse = useBrowseStore();
 const { locale } = useI18n();
 
+// 服务连接相关
+const services = ref<Array<{ name: string; url: string }>>([]);
+const serviceDialogVisible = ref(false);
+const serviceForm = reactive({ name: '', url: '' });
+
 onMounted(() => {
 	document.onkeypress = (e) => {
 		const keycode = document.all ? e.keyCode : e.which;
@@ -65,6 +115,9 @@ onMounted(() => {
 
 	const val = localStorage.getItem('activeBack');
 	if (val && val !== '0') backClass.value = 'bg' + val;
+
+	// 加载保存的服务
+	loadServices();
 })
 
 
@@ -132,6 +185,48 @@ function getBackActive() {
 async function download_apk(event: MouseEvent) {
 	event.preventDefault();
 	await loginApi.download_apk();
+}
+
+// 服务连接相关方法
+function loadServices() {
+	const savedServices = localStorage.getItem('smanga-services');
+	if (savedServices) {
+		services.value = JSON.parse(savedServices);
+	}
+}
+
+function saveServices() {
+	localStorage.setItem('smanga-services', JSON.stringify(services.value));
+}
+
+function openServiceDialog() {
+	// 重置表单
+	serviceForm.name = '';
+	serviceForm.url = '';
+	serviceDialogVisible.value = true;
+}
+
+function addService() {
+	if (serviceForm.name && serviceForm.url) {
+		// 确保URL格式正确
+		let url = serviceForm.url;
+		if (!url.startsWith('http://') && !url.startsWith('https://')) {
+			url = 'http://' + url;
+		}
+		
+		services.value.push({ name: serviceForm.name, url });
+		saveServices();
+		serviceDialogVisible.value = false;
+	}
+}
+
+function removeService(index: number) {
+	services.value.splice(index, 1);
+	saveServices();
+}
+
+function navigateToService(url: string) {
+	window.open(url, '_blank');
 }
 
 </script>
@@ -217,6 +312,89 @@ async function download_apk(event: MouseEvent) {
 		width: 34rem;
 		height: 26rem;
 		margin: -12rem auto;
+	}
+}
+
+/* 服务连接相关样式 */
+.service-connect-btn {
+	position: absolute;
+	top: 4rem;
+	right: 2rem;
+	z-index: 10;
+
+	.el-button {
+		background-color: rgba(135, 206, 235, 0.8); /* 柔和天蓝色 */
+		border: 1px solid rgba(135, 206, 235, 0.5);
+		border-radius: 4px;
+		color: #333;
+		padding: 6px 12px;
+
+		&:hover {
+			background-color: rgba(135, 206, 235, 1);
+			border-color: rgba(135, 206, 235, 0.8);
+		}
+	}
+}
+
+.service-cards {
+	display: flex;
+	overflow-x: auto;
+	padding: 2rem;
+	gap: 1.6rem;
+	z-index: 1;
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	right: 0;
+
+	/* 隐藏滚动条但保留功能 */
+	&::-webkit-scrollbar {
+		height: 6px;
+	}
+
+	&::-webkit-scrollbar-track {
+		background: rgba(135, 206, 235, 0.1);
+		border-radius: 3px;
+	}
+
+	&::-webkit-scrollbar-thumb {
+		background: rgba(135, 206, 235, 0.3);
+		border-radius: 3px;
+	}
+
+	&::-webkit-scrollbar-thumb:hover {
+		background: rgba(135, 206, 235, 0.5);
+	}
+}
+
+.service-card {
+	min-width: 10rem;
+	background-color: rgba(135, 206, 235, 0.8); /* 柔和天蓝色 */
+	backdrop-filter: blur(10px);
+	border: 1px solid rgba(135, 206, 235, 0.5);
+	border-radius: 8px;
+	cursor: pointer;
+	transition: all 0.3s ease;
+	position: relative;
+	padding: 1.6rem;
+	color: #333;
+
+	&:hover {
+		transform: translateY(-5px);
+		box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+		background-color: rgba(135, 206, 235, 1);
+		border-color: rgba(135, 206, 235, 0.8);
+	}
+}
+
+.service-remove-btn {
+	position: absolute;
+	top: 8px;
+	right: 8px;
+	color: #666;
+
+	&:hover {
+		color: #ff4d4f;
 	}
 }
 </style>
