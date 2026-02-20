@@ -113,6 +113,36 @@ lkw199711/smanga-nodejs;
 5. 新版本如果在访问过旧版本的浏览器登录,请先清除旧版本cookie再登录.
 6. 新版本暂未支持pdf
 
+##### 这里提供一个飞牛的compose示例,群辉等成品nas可用,注意自己调整目录等参数
+
+```
+services:
+  speedtest:
+    image: lkw199711/smanga-nodejs:4.2.80
+    container_name: smanga
+    ports:
+      - "9797:9797"
+      - "9798:9798"
+    restart: unless-stopped
+    networks:
+      - smanga-network
+    volumes:
+      - ./data:/data
+      - /vol1:/vol1	#自己有几个硬盘,或者说存储池,就要映射多少目录,保持docker内外路径一致.
+      - /vol2:/vol2 #我这里是接了三个硬盘
+      - /vol3:/vol3
+    environment:
+      PUID: 0    # 想切换为哪个用户来运行程序，不希望用root,可以根据自己的机器权限调整
+      PGID: 0	 
+      TZ: Asia/Shanghai
+
+networks:
+  smanga-network:
+    driver: bridge
+```
+
+
+
 ##### 新版本目前实现条漫跳页,媒体库封面生成 等功能.
 
 ![media poster](https://github.com/lkw199711/smanga/raw/electron/src/assets/readme/media-poster.PNG)
