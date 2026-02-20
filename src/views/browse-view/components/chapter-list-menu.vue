@@ -42,7 +42,7 @@ const emit = defineEmits(['change_chapter', 'before_chapter', 'next_chapter']);
 
 let popup = ref(false);
 
-function change_chapter(index: number) {
+function change_chapter(index: string) {
   emit('change_chapter', browse.chapterList[index].chapterId);
 }
 function before() {

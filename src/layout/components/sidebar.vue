@@ -205,7 +205,7 @@ const menuVisible = computed(() => (router: any) => {
   }
 
   // 是否需要管理员权限
-  const isAdmin = Cookies.get('role') === 'admin';
+  const isAdmin = Cookies.get('smanga-role') === 'admin';
   const onlyAdmin = router.meta?.onlyAdmin;
 
   if (onlyAdmin && !isAdmin) {

@@ -42,6 +42,16 @@ const compressApi = {
 
 		return (await res).data;
 	},
+
+	/**
+	 * @description: 清空转换记录
+	 * @return {*}
+	 */
+	async clear() {
+		const res = ajax.delete(`compress-clear`);
+
+		return (await res).data;
+	}
 };
 
 export default compressApi;

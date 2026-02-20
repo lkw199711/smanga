@@ -5,7 +5,7 @@
       <div class="spinner"></div>
       <div class="text-content">
         <div class="main-text">{{ compressStateTipText[compressState] }}</div>
-        <div class="sub-text">{{ `${waitTime}/20 秒` }}</div>
+        <div class="sub-text">{{ `${waitTime}/${maxWaitTime} 秒` }}</div>
       </div>
     </div>
   </div>
@@ -16,6 +16,7 @@ import {ref, onMounted} from 'vue';
 import chapterApi from '@/api/chapter';
 import useBrowseStore from '@/store/browse';
 import {useRoute} from 'vue-router';
+import imageApi from '@/api/image';
 
 const route = useRoute();
 const browseStore = useBrowseStore();
@@ -23,6 +24,7 @@ const reTry = ref(0);
 const compressState = ref('loadingImages');
 const intervalId = ref<number | null>(null);
 const waitTime = ref(0);
+const maxWaitTime = 30;
 defineProps({
   compressState: {
     type: String,
@@ -39,11 +41,22 @@ const compressStateTipText = {
   failed: '加载失败',
 };
 
-onMounted(() => {
+onMounted(async() => {
   browseStore.imageLoaded = false;
   const chapterId = Number(route.query.chapterId);
-  chapter_images_load(chapterId);
-  intervalId.value = setInterval(() => waitTime.value++, 1000);
+  const chapterPath = route.query.chapterPath as string;
+  if (browseStore.browseType === 'pdf') {
+    browseStore.pdfPath = await imageApi.get({ file: chapterPath });
+    finish_loader();
+  } else {
+    chapter_images_load(chapterId);
+    intervalId.value = setInterval(() => {
+      waitTime.value++
+      if(waitTime.value >= maxWaitTime) {
+        fail_loader();
+      }
+    }, 1000);
+  }
 });
 
 async function chapter_images_load(chapterId: number) {
@@ -61,6 +74,7 @@ async function chapter_images_load(chapterId: number) {
     case 'compressed':
       // 压缩完成 加载图片并隐藏指示器
       browseStore.imagePathList = res.list;
+      browseStore.imageLoaded = true;
       emit('page_change', browseStore.page || 1);
       clearInterval(intervalId.value);
       break;
@@ -77,9 +91,22 @@ async function chapter_images_load(chapterId: number) {
   }
 }
 
+function finish_loader() {
+  browseStore.imageLoaded = true;
+  compressState.value = 'compressed';
+  clearInterval(intervalId.value);
+}
+
+function fail_loader() {
+  compressState.value = 'failed';
+  ElMessage.error('加载超时');
+  clearInterval(intervalId.value);
+}
+
 // 暴露方法 刷新页码
 defineExpose({
   chapter_images_load,
+  finish_loader,
 });
 </script>
 

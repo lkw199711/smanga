@@ -10,6 +10,7 @@
       >
         {{ $t('option.delete') }}
       </el-button>
+      <el-button type="success" :icon="RefreshLeft" @click="clear_compress">{{ $t('option.clear') }}</el-button>
     </div>
     <!--表格-->
     <el-table :data="tableData" stripe border @selection-change="handleSelectionChange">
@@ -44,7 +45,7 @@ export default {name: 'compress-manage'};
 </script>
 <script lang="ts" setup>
 import {ref, onMounted} from 'vue';
-import {Delete, Refresh} from '@element-plus/icons-vue';
+import {Delete, Refresh, RefreshLeft} from '@element-plus/icons-vue';
 import compressApi from '@/api/compress';
 import tablePager from '@/components/table-pager.vue';
 import i18n from '@/i18n';
@@ -108,12 +109,7 @@ async function handleDelete(index: number, val: any) {
     .then(async () => {
       loading.value = true;
       try {
-        const res = await compressApi.delete_compress(val.compressId);
-
-        if (res.code === 0) {
-          ElMessage.success(t('message.deleteSuccess'));
-          reload_table();
-        }
+        await compressApi.delete_compress(val.compressId);
       } finally {
         loading.value = false;
       }
@@ -145,6 +141,15 @@ function reload_table() {
   tableData.value = [];
   selectedRows.value = [];
   load_table(browse.manageListPage, browse.manageListPageSize);
+}
+/**
+ * 清空压缩记录
+ */
+async function clear_compress() {
+  await compressApi.clear()
+  setTimeout(() => {
+    reload_table()
+  }, 2000);
 }
 </script>
 

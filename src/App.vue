@@ -11,7 +11,7 @@
 </template>
 
 <script lang="ts" setup>
-import { Cookies, global_set_json } from '@/utils';
+import { global_set_json } from '@/utils';
 import { config, pageSizeConfig, userConfig } from '@/store';
 import { useRoute, useRouter } from 'vue-router';
 import languages from '@/store/language';

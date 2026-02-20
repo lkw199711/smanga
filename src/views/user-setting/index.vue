@@ -199,6 +199,24 @@
           <span class="ml-2">{{ userConfig.pageAnimationSpeed }}ms</span>
         </el-form-item>
       </el-card>
+
+      <!-- 缓存设置 -->
+      <el-card class="setting-card mt-6 mb-6" shadow="hover">
+        <template #header>
+          <div class="card-header">
+            <span class="card-title">缓存设置</span>
+          </div>
+        </template>
+        <el-form-item label="图片缓存数量限制" class="setting-item">
+          <el-input v-model="userConfig.imageCacheLimit" type="number" style="width: 120px" />
+          <span class="ml-2">个</span>
+        </el-form-item>
+        <div class="form-note mt-4 text-gray-500 text-sm mb-4">
+          设置浏览器中图片缓存的最大数量，超过限制时会自动清理最旧的缓存。
+          <br />
+          设置为0表示无限制。
+        </div>
+      </el-card>
     </el-form>
 
     <div class="btn-box mt-6">
@@ -276,8 +294,8 @@ async function submit() {
 }
 
 function user_logout() {
-  Cookies.remove('userName');
-  Cookies.remove('userId');
+  Cookies.remove('smanga-userName');
+  Cookies.remove('smanga-userId');
   router.push('/login');
 }
 

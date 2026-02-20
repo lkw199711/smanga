@@ -91,6 +91,7 @@ export const userConfig = reactive({
 	continueReadButtonShowChapterNumberOnly: false, // 继续阅读按钮仅展示章节序号而非章节全名
 	flowLoadStep: 3, // 流览模式下,每次加载图片数量
 	loadCoverConcurrency: 3, // 加载封面并发数量
+	imageCacheLimit: 0, // 图片缓存数量限制，0表示无限制
 });
 
 export const pageSizeConfig = reactive({

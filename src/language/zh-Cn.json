@@ -57,7 +57,8 @@
     "deleteConfirm": "确认删除这条记录?",
     "share": "分享漫画",
     "sync": "同步",
-    "refresh": "刷新"
+    "refresh": "刷新",
+    "clear": "清理"
   },
   "account": {
     "add": "新增用户",
