@@ -1,6 +1,30 @@
 #!/usr/bin/with-contenv bash
 # shellcheck shell=bash
 
+# 设置默认值
+DB_TYPE=${DB_TYPE:-sqlite}
+DB_HOST=${DB_HOST:-127.0.0.1}
+DB_PORT=${DB_PORT:-3306}
+DB_USERNAME=${DB_USERNAME:-smanga}
+DB_PASSWORD=${DB_PASSWORD:-smanga}
+DB_DATABASE=${DB_DATABASE:-smanga}
+DB_FILE=${DB_FILE:-./data/smanga.db}
+
+# 根据数据库类型设置端口默认值（仅当用户未指定时）
+case "$DB_TYPE" in
+    mysql)
+        DB_PORT=${DB_PORT:-3306}
+        ;;
+    pgsql|postgres|postgresql)
+        DB_TYPE="pgsql"
+        DB_PORT=${DB_PORT:-5432}
+        ;;
+    sqlite)
+        # SQLite不使用端口，忽略DB_PORT
+        DB_PORT=""
+        ;;
+esac
+
 if [ ! -f /app/adonis/.env ]; then
     cat > /app/adonis/.env << EOF
 TZ=UTC
@@ -27,6 +51,28 @@ if [ ! -f /data/config/smanga.json ]; then
     cp /app/adonis/smanga.json /data/config/smanga.json
 fi
 
+# 修改/data/config/smanga.json文件，根据环境变量设置数据库配置
+echo "Configuring database connection..."
+echo "DB_TYPE: $DB_TYPE"
+echo "DB_HOST: $DB_HOST"
+echo "DB_PORT: ${DB_PORT:-null}"
+echo "DB_USERNAME: $DB_USERNAME"
+echo "DB_PASSWORD: $DB_PASSWORD"
+echo "DB_DATABASE: $DB_DATABASE"
+echo "DB_FILE: $DB_FILE"
+
+# 修改smanga.json文件
+jq --arg type "$DB_TYPE" \
+   --arg host "$DB_HOST" \
+   --argjson port "${DB_PORT:-null}" \
+   --arg username "$DB_USERNAME" \
+   --arg password "$DB_PASSWORD" \
+   --arg database "$DB_DATABASE" \
+   --arg file "$DB_FILE" \
+   '.sql.client = $type | .sql.host = $host | .sql.port = $port | .sql.username = $username | .sql.password = $password | .sql.database = $database | .sql.file = $file' \
+   /data/config/smanga.json > /tmp/smanga.json.tmp && \
+mv /tmp/smanga.json.tmp /data/config/smanga.json
+
 if [ ! -d /data/db ]; then
     mkdir -p /data/db
 fi
@@ -36,6 +82,11 @@ if [ ! -f /data/db/smanga.db ]; then
 fi
 
 cp -rf /app/adonis/file /data
+
+# 如果使用的是SQLite，确保数据目录存在
+if [ "$DB_TYPE" = "sqlite" ]; then
+    mkdir -p "$(dirname "$DB_FILE")"
+fi
 
 # 读取配置文件
 CONFIG_FILE="/data/config/smanga.json"

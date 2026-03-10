@@ -11,7 +11,8 @@ services:
     ports:
       - "9799:5432"
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - ./lib:/var/lib/postgresql
+      - ./log:/var/log/postgresql
     restart: unless-stopped
     networks:
       - smanga-network

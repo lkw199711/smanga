@@ -36,52 +36,6 @@ COPY --from=builder /smanga-adonis/data-example/file /app/adonis/file
 COPY --from=prepare /smanga-express /app/express
 COPY ./dist/docker /app/smanga-website
 
-# 创建配置脚本，在运行时根据环境变量修改smanga.json
-RUN mkdir -p /etc/cont-init.d && \
-    echo '#!/bin/bash' > /etc/cont-init.d/10-config-smanga && \
-    echo 'set -e' >> /etc/cont-init.d/10-config-smanga && \
-    echo '' >> /etc/cont-init.d/10-config-smanga && \
-    echo '# 设置默认值' >> /etc/cont-init.d/10-config-smanga && \
-    echo 'DB_TYPE=${DB_TYPE:-sqlite}' >> /etc/cont-init.d/10-config-smanga && \
-    echo 'DB_HOST=${DB_HOST:-127.0.0.1}' >> /etc/cont-init.d/10-config-smanga && \
-    echo 'DB_PORT=${DB_PORT:-3306}' >> /etc/cont-init.d/10-config-smanga && \
-    echo 'DB_USERNAME=${DB_USERNAME:-smanga}' >> /etc/cont-init.d/10-config-smanga && \
-    echo 'DB_PASSWORD=${DB_PASSWORD:-smanga}' >> /etc/cont-init.d/10-config-smanga && \
-    echo 'DB_DATABASE=${DB_DATABASE:-smanga}' >> /etc/cont-init.d/10-config-smanga && \
-    echo 'DB_FILE=${DB_FILE:-./data/smanga.db}' >> /etc/cont-init.d/10-config-smanga && \
-    echo '' >> /etc/cont-init.d/10-config-smanga && \
-    echo '# 根据数据库类型设置端口默认值' >> /etc/cont-init.d/10-config-smanga && \
-    echo 'case "$DB_TYPE" in' >> /etc/cont-init.d/10-config-smanga && \
-    echo '    mysql)' >> /etc/cont-init.d/10-config-smanga && \
-    echo '        DB_PORT=${DB_PORT:-3306}' >> /etc/cont-init.d/10-config-smanga && \
-    echo '        ;;' >> /etc/cont-init.d/10-config-smanga && \
-    echo '    pgsql|postgres|postgresql)' >> /etc/cont-init.d/10-config-smanga && \
-    echo '        DB_TYPE="pgsql"' >> /etc/cont-init.d/10-config-smanga && \
-    echo '        DB_PORT=${DB_PORT:-5432}' >> /etc/cont-init.d/10-config-smanga && \
-    echo '        ;;' >> /etc/cont-init.d/10-config-smanga && \
-    echo '    sqlite)' >> /etc/cont-init.d/10-config-smanga && \
-    echo '        DB_PORT=""' >> /etc/cont-init.d/10-config-smanga && \
-    echo '        ;;' >> /etc/cont-init.d/10-config-smanga && \
-    echo 'esac' >> /etc/cont-init.d/10-config-smanga && \
-    echo '' >> /etc/cont-init.d/10-config-smanga && \
-    echo '# 修改smanga.json文件' >> /etc/cont-init.d/10-config-smanga && \
-    echo 'jq --arg type "$DB_TYPE" \\' >> /etc/cont-init.d/10-config-smanga && \
-    echo '   --arg host "$DB_HOST" \\' >> /etc/cont-init.d/10-config-smanga && \
-    echo '   --argjson port "${DB_PORT:-null}" \\' >> /etc/cont-init.d/10-config-smanga && \
-    echo '   --arg username "$DB_USERNAME" \\' >> /etc/cont-init.d/10-config-smanga && \
-    echo '   --arg password "$DB_PASSWORD" \\' >> /etc/cont-init.d/10-config-smanga && \
-    echo '   --arg database "$DB_DATABASE" \\' >> /etc/cont-init.d/10-config-smanga && \
-    echo '   --arg file "$DB_FILE" \\' >> /etc/cont-init.d/10-config-smanga && \
-    echo '   ".sql.client = \$type | .sql.host = \$host | .sql.port = \$port | .sql.username = \$username | .sql.password = \$password | .sql.database = \$database | .sql.file = \$file" \\' >> /etc/cont-init.d/10-config-smanga && \
-    echo '   /app/adonis/smanga.json > /tmp/smanga.json.tmp && \\' >> /etc/cont-init.d/10-config-smanga && \
-    echo 'mv /tmp/smanga.json.tmp /app/adonis/smanga.json' >> /etc/cont-init.d/10-config-smanga && \
-    echo '' >> /etc/cont-init.d/10-config-smanga && \
-    echo '# 如果使用的是SQLite，确保数据目录存在' >> /etc/cont-init.d/10-config-smanga && \
-    echo 'if [ "$DB_TYPE" = "sqlite" ]; then' >> /etc/cont-init.d/10-config-smanga && \
-    echo '    mkdir -p "$(dirname "$DB_FILE")"' >> /etc/cont-init.d/10-config-smanga && \
-    echo 'fi' >> /etc/cont-init.d/10-config-smanga && \
-    chmod +x /etc/cont-init.d/10-config-smanga
-
 RUN apk add --no-cache \
         bash \
         shadow \
