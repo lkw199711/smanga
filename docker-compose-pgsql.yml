@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   postgres:
     image: postgres:18
@@ -11,8 +9,8 @@ services:
     ports:
       - "9799:5432"
     volumes:
-      - ./lib:/var/lib/postgresql
-      - ./log:/var/log/postgresql
+      - ./postgres_lib:/var/lib/postgresql
+      - ./postgres_log:/var/log/postgresql
     restart: unless-stopped
     networks:
       - smanga-network
@@ -47,6 +45,3 @@ services:
 networks:
   smanga-network:
     driver: bridge
-
-volumes:
-  postgres_data:
