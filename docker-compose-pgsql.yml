@@ -1,0 +1,45 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:18
+    container_name: smanga-postgres
+    environment:
+      POSTGRES_DB: smanga
+      POSTGRES_USER: smanga
+      POSTGRES_PASSWORD: smanga
+    ports:
+      - "9799:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: unless-stopped
+    networks:
+      - smanga-network
+
+  smanga-nodejs:
+    image: lkw199711/smanga-nodejs:latest
+    container_name: smanga
+    ports:
+      - "9797:9797"
+      - "9798:9798"
+    environment:
+      DB_TYPE: pgsql
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_USERNAME: smanga
+      DB_PASSWORD: smanga
+      DB_DATABASE: smanga
+    restart: unless-stopped
+    depends_on:
+      - postgres
+    networks:
+      - smanga-network
+    volumes:
+      - ./data:/data
+
+networks:
+  smanga-network:
+    driver: bridge
+
+volumes:
+  postgres_data:

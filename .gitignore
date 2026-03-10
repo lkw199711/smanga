@@ -17,6 +17,7 @@ pnpm-debug.log*
 .idea
 .vscode
 .joycode
+.github/data-example
 *.suo
 *.ntvs*
 *.njsproj
