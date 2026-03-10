@@ -6,11 +6,11 @@
 		<div class="menu_collapse" @click="handleSelect('switch_sidebar')">
 			<!--大屏幕-->
 			<template v-if="screenType">
-				<expand v-show="config.sidebarCollapse" class="icon-operation" />
-				<fold v-show="!config.sidebarCollapse" class="icon-operation" />
+				<i v-show="config.sidebarCollapse" class="iconfont icon-liebiaoshitu" />
+				<i v-show="!config.sidebarCollapse" class="iconfont icon-liebiaoshitu" />
 			</template>
 			<!--小屏幕-->
-			<Operation v-else class="icon-operation"></Operation>
+			<i v-else class="iconfont icon-liebiaoshitu"></i>
 		</div>
 
 		<!-- 搜索框 -->
@@ -32,7 +32,7 @@
 		<div class="right-option">
 			<!-- 简化版搜索 -->
 			<div class="search-small" @click="router.push('/search')" v-show="layoutLimit('miniSearch')">
-				<i class="iconfont icon-sousuo" @click="switch_view_type" />
+				<i class="iconfont icon-sousuo" />
 			</div>
 
 			<!-- 视图切换 -->
@@ -234,11 +234,12 @@ function switch_view_type() {
 		width: 60px;
 	}
 
-	.icon-operation {
+	.icon-liebiaoshitu {
 		display: block;
 		padding: 20px;
 		width: 20px;
-		color: #909399;
+		font-size: 2.2rem;
+		color: @s-primary;
 	}
 }
 

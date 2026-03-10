@@ -205,7 +205,7 @@ const menuVisible = computed(() => (router: any) => {
   }
 
   // 是否需要管理员权限
-  const isAdmin = Cookies.get('role') === 'admin';
+  const isAdmin = Cookies.get('smanga-role') === 'admin';
   const onlyAdmin = router.meta?.onlyAdmin;
 
   if (onlyAdmin && !isAdmin) {
@@ -249,18 +249,25 @@ onMounted(async () => {
 }
 </style>
 <style scoped lang="less">
+// icon默认vertical-align: -.15em; element会毁坏样式 所以我们覆盖回来 如果以后有其他问题 记得去看阿里icon原生样式
 .sidebar-sub-icon {
   font-size: 4.2rem;
-  transform: translate(-.8rem, -.6rem);
+  transform: translate(-.8rem);
+  .icon {
+    vertical-align: -.15em;
+  }
 }
 
 .sidebar-icon {
   font-size: 2.6rem;
-  transform: translate(-1rem, -1.2rem);
+  transform: translate(-1rem);
+  .icon {
+    vertical-align: -.15em;
+  }
 }
 
 .sidebar-icon.collapse {
-  transform: translate(-1rem, -1.4rem);
+  transform: translate(-1rem);
 }
 
 //响应式手机

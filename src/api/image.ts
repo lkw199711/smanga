@@ -20,7 +20,7 @@ const img = Axios.create({
 	transformRequest: [
 		(data, headers) => {
 			// 设置请求头
-			headers['token'] = Cookies.get('token');
+			headers['token'] = Cookies.get('smanga-token');
 			// 获取时间戳
 			const timestamp = new Date().getTime();
 			// 初始化传参
@@ -42,7 +42,8 @@ const img = Axios.create({
 	],
 });
 
-const placeholder = require('@/assets/s-blue-high.png');
+// 使用import代替require
+import placeholder from '@/assets/s-blue-high.png';
 const imageCache: any = useImageStore();
 const imageApi = {
 	/**

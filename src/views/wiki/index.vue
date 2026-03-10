@@ -25,7 +25,6 @@
         </div>
 
         <div v-if="isCheckingUpdate" class="update-checking">
-          <el-loading-spinner size="small"></el-loading-spinner>
           <span>正在检查更新...</span>
         </div>
 
@@ -50,7 +49,6 @@
         <div class="version-history-section">
           <h3>最近更新</h3>
           <div v-if="isLoadingVersionData" class="loading-container">
-            <el-loading-spinner size="small"></el-loading-spinner>
             <span>加载版本数据中...</span>
           </div>
           <div v-else-if="versionDataError" class="error-container">
@@ -341,12 +339,6 @@ services:
 
 <script lang="ts" setup>
 import { ref, onMounted } from 'vue';
-import { ElTabs, ElTabPane, ElDialog } from 'element-plus';
-import 'element-plus/es/components/tabs/style/css';
-import 'element-plus/es/components/tab-pane/style/css';
-import 'element-plus/es/components/icon/style/css';
-import 'element-plus/es/components/dialog/style/css';
-import 'element-plus/es/components/loading/style/css';
 import axios from 'axios';
 
 // 恢复logo引入
@@ -359,7 +351,9 @@ type versionDataType = {
 // 状态管理
 const activeTab = ref('intro');
 const versionDataRef = ref<versionDataType[]>([]);
-const version = process.env.VUE_APP_VERSION || '4.1.4';
+// 直接从package.json导入版本号
+import packageJson from '../../../package.json';
+const version = packageJson.version || '0.0.0';
 const currentYear = new Date().getFullYear();
 
 // 版本更新状态
@@ -396,6 +390,7 @@ const fetchVersionData = () => {
     .then(response => {
       isLoadingVersionData.value = false;
       versionDataRef.value = response.data;
+      versionDataRef.value.reverse();
     })
     .catch(error => {
       isLoadingVersionData.value = false;

@@ -2,7 +2,8 @@
   <div class="path-setting-box manage-container">
     <!--操作按钮区域-->
     <div class="btn-box">
-      <el-button type="danger" :icon="Delete" :disabled="selectedRows.length === 0" @click="batch_delete_path">{{ $t('path.button.batchDelete') }}</el-button>
+      <el-button type="primary" :icon="Refresh" @click="reload_table">{{ $t('option.refresh') }}</el-button>
+      <el-button type="danger" :icon="Delete" :disabled="selectedRows.length === 0" @click="batch_delete_path">{{ $t('option.delete') }}</el-button>
     </div>
     <!--表格-->
     <el-table :data="tableData" stripe border @selection-change="handleSelectionChange">
@@ -83,7 +84,6 @@ export default {name: 'path-manage'};
 <script setup lang="ts">
 import {Delete, Edit, Refresh, RefreshRight} from '@element-plus/icons-vue';
 import {ref, reactive, onMounted} from 'vue';
-import {ElMessageBox} from 'element-plus';
 import pathApi from '@/api/path';
 import tablePager from '@/components/table-pager.vue';
 import i18n from '@/i18n';
@@ -213,7 +213,7 @@ async function batch_delete_path() {
   if (selectedRows.value.length === 0) {
     return;
   }
-  
+
   ElMessageBox.confirm(t('path.confirm.batchDeleteText'), t('path.confirm.title'), {
     type: 'warning',
   })

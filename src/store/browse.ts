@@ -9,6 +9,7 @@ import { screenType } from '@/type/store';
 import { config } from '@/store';
 import { mangaPageSize, chapterPageSize, manageListPageSizes } from '@/store/page-size';
 import { ObjectFit } from '@/type/store';
+import { mangaType } from '@/type/manga';
 
 function page_cahce() {
 	const pageJump = localStorage.getItem('pageJump');
@@ -22,6 +23,7 @@ function page_cahce() {
 
 const useBrowseStore = defineStore('browse', {
 	state: () => ({
+		pulling: false,
 		mangaListPage: 1,
 		mangaListPageSizeCache: 0,
 		chapterListPage: 1,
@@ -32,6 +34,9 @@ const useBrowseStore = defineStore('browse', {
 		mediaId: -1,
 		mangaId: -1,
 		chapterId: -1,
+		manga: <mangaType>{},
+		chapter: <chapterType>{},
+		pdfPath: '',
 		// 当前页码
 		page: page_cahce(),
 		// 当前图片路径 用于书签 与 下载图片
@@ -53,6 +58,7 @@ const useBrowseStore = defineStore('browse', {
 		useAutoViewWidth: true,
 		viewWidthValue: 50,
 		dialogViewWidth: false,
+		imageLoaded: false,
 	}),
 	getters: {
 		/**

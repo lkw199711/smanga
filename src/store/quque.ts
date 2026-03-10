@@ -1,12 +1,5 @@
-/*
- * @Author: lkw199711 lkw199711@163.com
- * @Date: 2023-10-26 03:47:24
- * @LastEditors: lkw199711 lkw199711@163.com
- * @LastEditTime: 2023-12-15 20:50:14
- * @FilePath: /smanga/src/store/quque.ts
- */
-
 import {reactive} from 'vue';
+import { userConfig } from '.';
 
 /**
  * @description: ts队列系统
@@ -50,19 +43,22 @@ class Queue {
 }
 
 const globalQueue = new Queue();
-const mangaQueue = new Queue();
-const chapterQueue = new Queue();
-const flowQueue = new Queue();
+const mangaQueue = new Queue(userConfig.loadCoverConcurrency);
+const chapterQueue = new Queue(userConfig.loadCoverConcurrency);
+const flowQueue = new Queue(1);
+const saveLatestQueue = new Queue(1);
 const queue = reactive({
 	globalQueue,
 	mangaQueue,
 	chapterQueue,
 	flowQueue,
+	saveLatestQueue,
 	clear() {
 		globalQueue.clear();
 		mangaQueue.clear();
 		chapterQueue.clear();
 		flowQueue.clear();
+		saveLatestQueue.clear();
 	},
 });
 

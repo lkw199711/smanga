@@ -16,7 +16,7 @@
             <p>文件名: {{ uploadFile.name }}</p>
             <p>大小: {{ formatFileSize(uploadFile.size) }}</p>
             <p>类型: {{ uploadFile.type }}</p>
-            <el-button type=" danger" size="small" @click="removeFile">删除</el-button>
+            <el-button type="danger" size="small" @click="removeFile">删除</el-button>
           </div>
         </div>
       </div>
@@ -25,14 +25,13 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, computed, onMounted, watch } from 'vue';
-import { Upload } from '@element-plus/icons-vue';
-import { ElLoading, ElMessage } from 'element-plus';
+import {ref, computed, onMounted, watch} from 'vue';
+import {Upload} from '@element-plus/icons-vue';
 import imageApi from '@/api/image';
 
 // 组件属性
 const props = defineProps<{
-  initCover: string // 封面路径，支持v-model
+  initCover: string; // 封面路径，支持v-model
   coverType: 'media' | 'manga' | 'chapter'; // 封面类型
   bindId: number; // 目标ID
 }>();
@@ -47,11 +46,13 @@ const coverFileSrc = ref<string>('');
 // 上传的文件对象
 const uploadFile = ref<any>(null);
 
-watch(() => props.initCover, async (newVal) => {
-  if (newVal) {
-    coverFileSrc.value = await imageApi.get({ file: newVal });
-  }
-}, { immediate: true })
+watch(
+  () => props.initCover,
+  async newVal => {
+    coverFileSrc.value = newVal ? await imageApi.get({file: newVal}) : '';
+  },
+  {immediate: true}
+);
 
 // 处理文件选择
 function handleFileSelect(event: Event) {

@@ -32,7 +32,6 @@
 <script lang="ts" setup>
 import {reactive, onMounted} from 'vue';
 import {database_set} from '@/api/login';
-import {ElMessage} from 'element-plus';
 import {register} from '@/api/account';
 import i18n from '@/i18n';
 

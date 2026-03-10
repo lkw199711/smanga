@@ -1,8 +1,9 @@
 <template>
   <div class="manga-setting-box manage-container">
     <div class="btn-box">
-      <el-button class="add-btn" type="primary" :icon="Plus" @click="new_dialog">{{ $t('tagSetting.addButton') }}</el-button>
-      <el-button type="danger" :disabled="selectedRows.length === 0" :icon="Delete" @click="batch_delete_tag">{{ $t('tagSetting.batchDelete') }}</el-button>
+      <el-button type="primary" :icon="Refresh" @click="reload_table">{{ $t('option.refresh') }}</el-button>
+      <el-button class="add-btn" type="success" :icon="Plus" @click="() => new_dialog()">{{ $t('option.add') }}</el-button>
+      <el-button type="danger" :disabled="selectedRows.length === 0" :icon="Delete" @click="batch_delete_tag">{{ $t('option.delete') }}</el-button>
     </div>
     <!--表格-->
     <el-table :data="tableData" stripe border @selection-change="handleSelectionChange">
@@ -98,9 +99,8 @@
 </template>
 
 <script lang="ts" setup>
-import {Delete, Edit, Plus} from '@element-plus/icons-vue';
+import {Delete, Edit, Plus, Refresh} from '@element-plus/icons-vue';
 import {ref, reactive, onMounted} from 'vue';
-import {ElMessage, ElMessageBox} from 'element-plus';
 import tagApi, {tagParams} from '@/api/tag';
 import tablePager from '@/components/table-pager.vue';
 import i18n from '@/i18n';

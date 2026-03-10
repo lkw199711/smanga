@@ -50,6 +50,13 @@
               <el-button type="primary" @click="comfirm_scan_ignore_hidden" class="ml-4">确定</el-button>
             </el-form-item>
           </el-col>
+
+          <el-col :span="24">
+            <el-form-item label="生成媒体库封面">
+              <el-switch v-model="form.scan.createMediaPoster" :active-value="1" :inactive-value="0" />
+              <el-button type="primary" @click="comfirm_create_poster" class="ml-4">确定</el-button>
+            </el-form-item>
+          </el-col>
         </el-row>
       </el-form>
 
@@ -59,6 +66,7 @@
         <p>• 再次扫描媒体库时,是否对已有封面的漫画再次加载封面.开启会增加扫描时间.</p>
         <p>• 不建议纯压缩包库开启更新封面功能.</p>
         <p>• 忽略隐藏文件夹和文件,开启后扫描时会忽略以.开头的文件夹和文件.对于群辉,威联通成品nas机器有用,可规避其系统自动生成的隐藏目录.</p>
+        <p>• 生成媒体库封面,开启后扫描时会生成媒体库的封面图片,用于在漫画列表中显示.如果您希望自定义封面,请关闭此选项.</p>
       </div>
     </el-card>
 
@@ -125,12 +133,54 @@
               <el-button type="primary" @click="confirm_compress_duration" class="ml-4">确定</el-button>
             </el-form-item>
           </el-col>
+
+          <el-col :span="24">
+            <el-form-item label="同步加载压缩包">
+              <el-switch v-model="form.compress.sync" :active-value="1" :inactive-value="0" />
+              <el-button type="primary" @click="comfirm_sync_compress" class="ml-4">确定</el-button>
+            </el-form-item>
+          </el-col>
+
+          <el-col :span="24">
+            <el-form-item label="解压缓存自动清理">
+              <el-radio-group v-model="form.compress.autoClear">
+                <el-radio :label="0">不自动清理</el-radio>
+                <el-radio :label="1">每次解压时执行清理</el-radio>
+                <el-radio :label="2">通过cron定时清理</el-radio>
+              </el-radio-group>
+              <el-button type="primary" @click="comfirm_auto_clear" class="ml-4">确定</el-button>
+            </el-form-item>
+          </el-col>
+
+          <el-col :span="24" v-if="form.compress.autoClear !== 0">
+            <el-form-item label="解压缓存数量限制">
+              <el-input v-model="form.compress.limit" placeholder="输入缓存数量限制" type="number" min="1"
+                :style="{ width: '150px' }"></el-input>
+              <span class="suffix ml-2 text-gray-500">个</span>
+              <el-button type="primary" @click="confirm_cache_limit" class="ml-4">确定</el-button>
+            </el-form-item>
+          </el-col>
+
+          <el-col :span="24" v-if="form.compress.autoClear === 2">
+            <el-form-item label="cron定时表达式">
+              <el-input v-model="form.compress.clearCron" placeholder="输入cron表达式"
+                :style="{ width: '300px' }"></el-input>
+              <span class="suffix ml-2 text-gray-500">cron表达式</span>
+              <el-button type="primary" @click="confirm_clear_cron" class="ml-4">确定</el-button>
+            </el-form-item>
+          </el-col>
+
         </el-row>
       </el-form>
 
       <div class="form-note mt-4 text-gray-500 text-sm">
         <p>• 封面压缩大小单位为KB,设置过小将影响封面质量.</p>
         <p>• 文件保存周期单位为天,填写0不删除文件.</p>
+        <p>• 开启同步加载压缩包后,浏览章节时会在单词请求等待压缩包解压完成.适合比较小的章节</p>
+        <p>• 解压缓存自动清理:设置解压缓存的自动清理策略.</p>
+        <p>• 选择"每次解压时执行清理"会在每次解压漫画时清理之前的缓存.</p>
+        <p>• 选择"通过cron定时清理"会按照设置的cron表达式定期执行清理.</p>
+        <p>• 解压缓存数量限制:设置最大缓存数量,当超过限制时会清理最旧的缓存.</p>
       </div>
     </el-card>
 
@@ -174,17 +224,7 @@
 <script setup lang="ts">
 import { ref, onMounted, reactive, computed } from 'vue';
 import serveSettingApi from '@/api/serve-setting';
-import { ElMessage } from 'element-plus';
 import { Check } from '@element-plus/icons-vue';
-import 'element-plus/es/components/message/style/css';
-import 'element-plus/es/components/card/style/css';
-import 'element-plus/es/components/form/style/css';
-import 'element-plus/es/components/input/style/css';
-import 'element-plus/es/components/switch/style/css';
-import 'element-plus/es/components/button/style/css';
-import 'element-plus/es/components/row/style/css';
-import 'element-plus/es/components/col/style/css';
-import 'element-plus/es/components/icon/style/css';
 
 const coverArr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16];
 let activeBack = ref(0);
@@ -196,7 +236,8 @@ const form = reactive({
     interval: 60,
     reloadCover: 0,
     ignoreHiddenFiles: 0,
-    mediaPosterInterval: 0
+    mediaPosterInterval: 0,
+    createMediaPoster: 0,
   },
   sync: {
     interval: 60
@@ -209,7 +250,11 @@ const form = reactive({
     auto: 0,
     saveDuration: 30,
     poster: 300,
-    bookmark: 300
+    bookmark: 300,
+    sync: 1,
+    autoClear: 0,
+    clearCron: '',
+    limit: 0,
   },
 });
 
@@ -272,6 +317,14 @@ async function comfirm_scan_ignore_hidden() {
   }
 }
 
+async function comfirm_create_poster() {
+  try {
+    await serveSettingApi.set('scan', 'createMediaPoster', form.scan.createMediaPoster);
+  } catch (error) {
+    console.error('Failed to set create media poster:', error);
+  }
+}
+
 async function confirm_poster_size() {
   try {
     await serveSettingApi.set('compress', 'poster', form.compress.poster);
@@ -295,6 +348,39 @@ async function confirm_compress_duration() {
     console.error('Failed to set compress duration:', error);
   }
 }
+
+async function comfirm_sync_compress() {
+  try {
+    await serveSettingApi.set('compress', 'sync', form.compress.sync);
+  } catch (error) {
+    console.error('Failed to set sync compress:', error);
+  }
+}
+
+async function comfirm_auto_clear() {
+  try {
+    await serveSettingApi.set('compress', 'autoClear', form.compress.autoClear);
+  } catch (error) {
+    console.error('Failed to set auto clear:', error);
+  }
+}
+
+async function confirm_clear_cron() {
+  try {
+    await serveSettingApi.set('compress', 'clearCron', form.compress.clearCron);
+  } catch (error) {
+    console.error('Failed to set clear cron:', error);
+  }
+}
+
+async function confirm_cache_limit() {
+  try {
+    await serveSettingApi.set('compress', 'limit', form.compress.limit);
+  } catch (error) {
+    console.error('Failed to set cache limit:', error);
+  }
+}
+
 
 /**
  * @description: 设置ssl证书

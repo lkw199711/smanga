@@ -56,7 +56,9 @@
     "warning": "警報",
     "deleteConfirm": "確認刪除這條記錄?",
     "share": "分享漫畫",
-    "sync": "同步"
+    "sync": "同步",
+    "refresh": "刷新",
+    "clear": "清理"
   },
   "account": {
     "add": "新增用戶",
@@ -92,7 +94,8 @@
         "mediaPower": "媒體庫閱讀權限"
       }
     },
-    "batchDelete": "批量刪除"
+    "batchDelete": "批量刪除",
+    "refresh": "刷新"
   },
   "mediaManage": {
     "add": "新增媒體庫",
@@ -316,7 +319,8 @@
     },
     "title": {
       "setViewWidth": "設置視圖寬度"
-    }
+    },
+    "nextChapter": "下一章"
   },
   "page": {
     "before": "上一章",
@@ -389,7 +393,10 @@
     "editMetas": "編輯元數據",
     "editChapter": "修改章節信息",
     "editManga": "編輯漫畫信息",
-    "editMedia": "編輯媒體庫信息"
+    "editMedia": "編輯媒體庫信息",
+    "compressCreate": "解壓全部章節",
+    "compressDelete": "刪除全部解壓記錄",
+    "chapterCompressDelete": "刪除章節解壓記錄"
   },
   "createTime": "創建時間",
   "updateTime": "更新時間",
@@ -431,5 +438,8 @@
     "shareMedia": "分享媒體庫",
     "remove": "確認移除此媒體?",
     "delete": "確認刪除此媒體?"
-  }
+  },
+  "mediaManage.singleManga": "單本漫畫",
+  "mediaManage.cloudMedia": "雲盤庫",
+  "mediaManage.doubleFolder": "雙層目錄"
 }

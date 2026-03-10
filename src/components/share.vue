@@ -32,7 +32,6 @@
 
 <script setup lang="ts">
 import shareApi from '@/api/share';
-import { ElMessageBox } from 'element-plus';
 import { ref, onMounted } from 'vue'
 
 const props = defineProps(['mangaInfo', 'mediaInfo']);

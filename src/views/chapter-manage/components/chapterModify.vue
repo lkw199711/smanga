@@ -37,7 +37,6 @@
 import {ref, onMounted, reactive, computed, watch} from 'vue';
 import chapterApi from '@/api/chapter';
 import coverUpload from '@/components/cover-upload.vue';
-import {ElMessage} from 'element-plus';
 import i18n from '@/i18n';
 import { chapterInit } from '@/type/chapter';
 const {t} = i18n.global;

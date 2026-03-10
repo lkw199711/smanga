@@ -9,38 +9,23 @@
         <!--名称-->
         <p class="title">{{ props.chapterInfo?.chapterName }}</p>
         <!--操作-->
-        <!--<el-menu-item index="read"><el-icon><Memo /></el-icon>阅读</el-menu-item>-->
-        <!--<el-menu-item index="collection"><el-icon><Collection /></el-icon>收藏</el-menu-item>-->
         <el-menu-item index="remove" v-if="isAdmin">
-          <el-icon>
-            <TopRight />
-          </el-icon>
           {{ $t('option.remove') }}
         </el-menu-item>
         <el-menu-item index="delete" v-if="isAdmin">
-          <el-icon>
-            <Delete />
-          </el-icon>
           {{ $t('option.delete') }}
         </el-menu-item>
         <el-menu-item index="collect">
-          <el-icon>
-            <StarFilled v-if="isCollect" />
-            <Star v-else />
-          </el-icon>
           {{ isCollect ? $t('option.removeCollect') : $t('option.collect') }}
         </el-menu-item>
         <el-menu-item index="alreadyRead">
-          <el-icon>
-            <Notebook />
-          </el-icon>
           {{ alreadyRead ? $t('option.markAsUnRead') : $t('option.markAsRead') }}
         </el-menu-item>
         <el-menu-item index="edit" v-if="isAdmin">
-          <el-icon>
-            <Edit />
-          </el-icon>
           {{ $t('rightSidebar.editChapter') }}
+        </el-menu-item>
+        <el-menu-item index="compress-delete">
+          {{ $t('rightSidebar.chapterCompressDelete') }}
         </el-menu-item>
       </el-menu>
     </el-drawer>
@@ -56,7 +41,6 @@
 <script lang="ts" setup>
 import {watch, ref, computed} from 'vue';
 import chapterApi from '@/api/chapter';
-import {ElMessageBox} from 'element-plus';
 import i18n from '@/i18n';
 import collectApi from '@/api/collect';
 import imageApi from '@/api/image';
@@ -66,9 +50,9 @@ import useBrowseStore from '@/store/browse';
 import androidSeat from '@/layout/components/android-seat.vue';
 import {Cookies} from '@/utils';
 import chapterModify from '@/views/chapter-manage/components/chapterModify.vue';
+import placeholder from '@/assets/s-blue.png';
 
 const browse = useBrowseStore();
-const placeholder = require('@/assets/s-blue.png');
 const {t} = i18n.global;
 const isCollect = ref(false);
 const blob = ref('');
@@ -100,7 +84,7 @@ const chapterId = computed(() => {
 });
 
 const isAdmin = computed(() => {
-  return Cookies.get('role') === 'admin';
+  return Cookies.get('smanga-role') === 'admin';
 });
 
 watch(
@@ -141,10 +125,10 @@ async function menu_select(key: string) {
       if (isCollect.value) {
         await collectApi.remove_collect('chapter', chapterId.value);
       } else {
-        await collectApi.add_collect(
-          Object.assign(chapterInfo, {
-            collectType: 'chapter',
-          })
+        await collectApi.add_chapter_collect(
+          'chapter',
+          chapterId.value,
+          chapterInfo
         );
       }
       // 更新收藏状态
@@ -165,8 +149,12 @@ async function menu_select(key: string) {
         });
       }
       emit('reload', browse.chapterListPage, browse.chapterListPageSize);
+      break;
     case 'edit':
       editChapterDialog.value = true;
+      break;
+    case 'compress-delete':
+      await chapterApi.compress_delete(chapterId.value);
       break;
   }
 

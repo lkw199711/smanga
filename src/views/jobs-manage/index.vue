@@ -1,13 +1,14 @@
 <template>
   <div class="manga-setting-box manage-container">
     <div class="btn-box">
+      <el-button type="primary" :icon="Refresh" @click="reload_table">{{ $t('option.refresh') }}</el-button>
       <el-button
         type="danger"
         :icon="Delete"
         :disabled="selectedRows.length === 0"
         @click="batch_delete_job"
       >
-        {{ t('jobsManage.batchDelete') }}
+        {{ $t('option.delete') }}
       </el-button>
     </div>
     <!--表格-->
@@ -67,9 +68,8 @@ export default {
 };
 </script>
 <script setup lang="ts">
-import {Delete, Edit} from '@element-plus/icons-vue';
+import {Delete, Edit, Refresh} from '@element-plus/icons-vue';
 import {onMounted, ref} from 'vue';
-import {ElMessage, ElMessageBox} from 'element-plus';
 import jobsApi from '@/api/jobs';
 import tablePager from '@/components/table-pager.vue';
 import i18n from '@/i18n';

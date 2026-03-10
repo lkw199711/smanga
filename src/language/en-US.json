@@ -59,7 +59,9 @@
     "warning": "warning",
     "deleteConfirm": "Are you sure to delete this record?",
     "share": "Sahre manga",
-    "sync": "Sync"
+    "sync": "Sync",
+    "refresh": "Refresh",
+    "clear": "clear"
   },
   "account": {
     "add": "addUser",
@@ -92,7 +94,8 @@
         "mediaPower": "mediaReadPower"
       }
     },
-    "batchDelete": "batchDelete"
+    "batchDelete": "batchDelete",
+    "refresh": "Refresh"
   },
   "mediaManage": {
     "add": "addMedia",
@@ -328,7 +331,8 @@
     },
     "title": {
       "setViewWidth": "Set View Width"
-    }
+    },
+    "nextChapter": "Next Chapter"
   },
   "page": {
     "before": "beforeChapter",
@@ -404,7 +408,10 @@
     "editMetas": "editMetas",
     "editChapter": "Edit chapter info",
     "editManga": "Edit manga info",
-    "editMedia": "Edit media info"
+    "editMedia": "Edit media info",
+    "compressCreate": "Compress all chapters",
+    "compressDelete": "Delete all chapter compress",
+    "chapterCompressDelete": "Delete chapter compress"
   },
   "createTime": "createTime",
   "updateTime": "updateTime",
@@ -450,5 +457,8 @@
     "shareMedia": "Share media",
     "remove": "Are you sure to remove this media?",
     "delete": "Are you sure to delete this media?"
-  }
+  },
+  "mediaManage.singleManga": "singleManga",
+  "mediaManage.cloudMedia": "cloudMedia",
+  "mediaManage.doubleFolder": "doubleFolder"
 }

@@ -10,6 +10,7 @@ type mediaType = {
 	describe: string;
 	directoryFormat: number;
 	sourceWebsite?: string;
+	isCloudMedia: number;
 };
 
 const mediaInit: mediaType = {
@@ -24,6 +25,7 @@ const mediaInit: mediaType = {
 	describe: '',
 	directoryFormat: 0,
 	sourceWebsite: '',
+	isCloudMedia: 0,
 };
 
 export { mediaType, mediaInit };

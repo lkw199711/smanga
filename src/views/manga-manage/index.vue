@@ -14,6 +14,7 @@
       </el-input>
     </div>
     <div class="btn-box">
+      <el-button type="primary" :icon="Refresh" @click="reload_table">{{ $t('option.refresh') }}</el-button>
       <el-button type="danger" :icon="Delete" :disabled="multipleSelection.length === 0" @click="batch_delete_manga">{{ $t('option.delete') }}</el-button>
     </div>
 
@@ -47,8 +48,7 @@ export default {name: 'manga-manage'};
 </script>
 <script lang="ts" setup>
 import {onMounted, reactive, ref, computed} from 'vue';
-import {Delete, Edit} from '@element-plus/icons-vue';
-import {ElMessageBox} from 'element-plus';
+import {Delete, Edit, Refresh} from '@element-plus/icons-vue';
 import mangaApi from '@/api/manga';
 import tablePager from '@/components/table-pager.vue';
 import i18n from '@/i18n';

@@ -56,7 +56,9 @@
     "warning": "警报",
     "deleteConfirm": "确认删除这条记录?",
     "share": "分享漫画",
-    "sync": "同步"
+    "sync": "同步",
+    "refresh": "刷新",
+    "clear": "清理"
   },
   "account": {
     "add": "新增用户",
@@ -92,7 +94,8 @@
         "mediaPower": "媒体库阅读权限"
       }
     },
-    "batchDelete": "批量删除"
+    "batchDelete": "批量删除",
+    "refresh": "刷新"
   },
   "mediaManage": {
     "add": "新增媒体库",
@@ -328,7 +331,8 @@
     },
     "title": {
       "setViewWidth": "设置视图宽度"
-    }
+    },
+    "nextChapter": "下一章"
   },
   "page": {
     "before": "上一章",
@@ -408,7 +412,10 @@
     "editMetas": "编辑元数据",
     "editChapter": "修改章节信息",
     "editManga": "编辑漫画信息",
-    "editMedia": "编辑媒体库信息"
+    "editMedia": "编辑媒体库信息",
+    "compressCreate": "解压全部章节",
+    "compressDelete": "删除全部解压记录",
+    "chapterCompressDelete": "删除章节解压记录"
   },
   "createTime": "创建时间",
   "updateTime": "更新时间",
@@ -454,5 +461,8 @@
     "shareMedia": "分享媒体库",
     "remove": "确认移除此媒体?",
     "delete": "确认删除此媒体?"
-  }
+  },
+  "mediaManage.singleManga": "单本漫画",
+  "mediaManage.cloudMedia": "云盘库",
+  "mediaManage.doubleFolder": "双层目录"
 }

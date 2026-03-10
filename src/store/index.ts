@@ -76,7 +76,7 @@ export const userConfig = reactive({
 	enableTouchPageChange: true,
 	mangaPageSize: 0,
 	chapterPageSize: 0,
-	openNewTab: true, // 打开新标签页
+	openNewTab: false, // 打开新标签页
 	singleMediadirectChapterPage: true, // 单本漫画,由媒体库直接浏览章节页
 	// 条漫模式下,自动加载所有图片
 	loadAllFlowIamge: false,
@@ -89,6 +89,9 @@ export const userConfig = reactive({
 	pageAnimationType: 'fade', // 翻页动画类型: fade(淡入淡出), slide(滑动), page(实体书翻页)
 	pageAnimationSpeed: 300, // 翻页动画速度(毫秒)
 	continueReadButtonShowChapterNumberOnly: false, // 继续阅读按钮仅展示章节序号而非章节全名
+	flowLoadStep: 3, // 流览模式下,每次加载图片数量
+	loadCoverConcurrency: 3, // 加载封面并发数量
+	imageCacheLimit: 0, // 图片缓存数量限制，0表示无限制
 });
 
 export const pageSizeConfig = reactive({

@@ -1,7 +1,8 @@
 <template>
   <div class="media-manage-index manage-container">
     <div class="btn-box">
-      <el-button class="add-btn" type="primary" :icon="Plus" @click="add_media">{{ $t('mediaManage.add') }}</el-button>
+      <el-button type="primary" :icon="Refresh" @click="reload_table">{{ $t('option.refresh') }}</el-button>
+      <el-button class="add-btn" type="success" :icon="Plus" @click="add_media">{{ $t('option.add') }}</el-button>
       <el-button type="danger" :icon="Delete" :disabled="multipleSelection.length === 0" @click="batch_delete_media">{{ $t('option.delete') }}</el-button>
     </div>
 
@@ -52,6 +53,8 @@
         <el-form-item :label="$t('path.form.add')">
           <el-input v-model="pathForm.pathContent" :placeholder="$t('path.place.add')">
             <template #append>
+              {{ $t('option.add') }}
+              &nbsp;
               <el-button :icon="Plus" @click="add_path_cache" />
             </template>
           </el-input>
@@ -113,11 +116,10 @@ export default {
 </script>
 
 <script lang="ts" setup>
-import {Delete, Edit, Plus, FolderOpened} from '@element-plus/icons-vue';
+import {Delete, Edit, Plus, FolderOpened, Refresh} from '@element-plus/icons-vue';
 import {ref, reactive, onMounted} from 'vue';
 import mediaApi from '@/api/media';
 import pathApi from '@/api/path';
-import {ElMessage, ElMessageBox} from 'element-plus';
 import tablePager from '@/components/table-pager.vue';
 import i18n from '@/i18n';
 import useBrowseStore from '@/store/browse';

@@ -1,10 +1,3 @@
-<!--
- * @Author: lkw199711 lkw199711@163.com
- * @Date: 2023-10-27 11:08:16
- * @LastEditors: lkw199711 lkw199711@163.com
- * @LastEditTime: 2023-10-28 17:06:12
- * @FilePath: /smanga/src/views/index/index.vue
--->
 <template>
     <div class="charts">
         <pie ref="pieRef" class="chart charts-pie" v-if="layoutLimit('pie')"></pie>
@@ -54,8 +47,8 @@ onMounted(() => {
 })
 
 function user_logout() {
-    Cookies.remove('userName');
-    Cookies.remove('userId');
+    Cookies.remove('smanga-userName');
+    Cookies.remove('smanga-userId');
     router.push('/login')
 }
 </script>

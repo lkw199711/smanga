@@ -30,6 +30,7 @@ import { useRoute } from 'vue-router';
 import { config } from '@/store';
 import i18n from '@/i18n';
 import useBrowseStore from '@/store/browse';
+import androidSeat from '@/layout/components/android-seat.vue';
 
 const browse = useBrowseStore();
 

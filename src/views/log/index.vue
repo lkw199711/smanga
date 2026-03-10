@@ -45,15 +45,6 @@
 <script lang="ts" setup>
 import logApi from '@/api/log';
 import { computed, ref, onMounted } from 'vue';
-import { ElMessage } from 'element-plus';
-import 'element-plus/es/components/message/style/css';
-import 'element-plus/es/components/empty/style/css';
-import 'element-plus/es/components/select/style/css';
-import 'element-plus/es/components/option/style/css';
-import 'element-plus/es/components/pagination/style/css';
-import 'element-plus/es/components/card/style/css';
-import 'element-plus/es/components/badge/style/css';
-import 'element-plus/es/components/icon/style/css';
 
 const count = ref(0);
 const currentPage = ref(1);

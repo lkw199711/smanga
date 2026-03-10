@@ -145,7 +145,25 @@ const mangaApi = {
 
 		const resData = (await res).data;
 		return resData;
-	}
+	},
+	/**
+	 * @description: 压缩漫画
+	 * @param {number} mangaId
+	 * @return {*}
+	 */
+	async compress_all(mangaId: number) {
+		const res = ajax.put(`manga/${mangaId}/compress`, { mangaId });
+		return (await res).data;
+	},
+	/**
+	 * @description: 删除漫画压缩文件
+	 * @param {number} mangaId
+	 * @return {*}
+	 */
+	async compress_delete(mangaId: number) {
+		const res = ajax.delete(`manga/${mangaId}/compress`, { data: { mangaId } });
+		return (await res).data;
+	},
 };
 
 export default mangaApi;

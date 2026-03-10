@@ -11,35 +11,20 @@
         <p class="title">{{ props.mediaInfo.mediaName }}</p>
         <!--操作-->
         <el-menu-item index="remove" v-if="isAdmin">
-          <el-icon>
-            <TopRight />
-          </el-icon>
           {{ $t('option.remove') }}
         </el-menu-item>
         <el-menu-item index="delete" v-if="isAdmin">
-          <el-icon>
-            <Delete />
-          </el-icon>
           {{ $t('option.delete') }}
         </el-menu-item>
 
         <el-menu-item index="scan" v-if="isAdmin">
-          <el-icon>
-            <Files />
-          </el-icon>
           {{ $t('mediaList.scanMedia') }}
         </el-menu-item>
 
         <el-menu-item index="share" v-if="isAdmin">
-          <el-icon>
-            <Share />
-          </el-icon>
           {{ $t('mediaList.shareMedia') }}
         </el-menu-item>
         <el-menu-item index="edit" v-if="isAdmin">
-          <el-icon>
-            <Edit />
-          </el-icon>
           {{ $t('rightSidebar.editMedia') }}
         </el-menu-item>
       </el-menu>
@@ -55,7 +40,6 @@
 
 <script lang="ts" setup>
 import { watch, ref, computed, onMounted } from 'vue';
-import { ElMessageBox } from 'element-plus';
 import i18n from '@/i18n';
 import imageApi from '@/api/image';
 import useBrowseStore from '@/store/browse';
@@ -64,9 +48,9 @@ import mangaShare from '@/components/share.vue';
 import mediaApi from '@/api/media';
 import { Cookies } from '@/utils';
 import mediaEdit from '@/views/media-manage/components/mediaEdit.vue';
+import placeholder from '@/assets/s-blue.png';
 
 const browse = useBrowseStore();
-const placeholder = require('@/assets/s-blue.png');
 
 const { t } = i18n.global;
 const mangaShareDialog = ref(false);
@@ -78,7 +62,7 @@ const props = defineProps(['mediaInfo']);
 const emit = defineEmits(['reload', 'close']);
 
 const isAdmin = computed(() => {
-  return Cookies.get('role') === 'admin';
+  return Cookies.get('smanga-role') === 'admin';
 });
 
 watch(

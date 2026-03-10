@@ -2,14 +2,15 @@
   <div class="manga-setting-box manage-container">
     <!-- 表头按钮 -->
     <div class="btn-box">
-      <el-button class="add-btn" type="primary" :icon="Plus" @click="dialog_open">{{ $t('mangaSync.addSync') }}</el-button>
+      <el-button type="primary" :icon="Refresh" @click="load_table()">{{ $t('option.refresh') }}</el-button>
+      <el-button class="add-btn" type="success" :icon="Plus" @click="dialog_open">{{ $t('option.add') }}</el-button>
       <el-button 
         class="delete-btn" 
         type="danger" 
         :icon="Delete" 
         :disabled="selectedRows.length === 0" 
         @click="batch_delete_sync"
-      >{{ $t('mangaSync.batchDelete') }}</el-button>
+      >{{ $t('option.delete') }}</el-button>
     </div>
 
     <!--表格-->
@@ -132,7 +133,6 @@ import {Delete, Edit, Plus, Refresh} from '@element-plus/icons-vue';
 import {onMounted, ref} from 'vue';
 import i18n from '@/i18n';
 import useBrowseStore from '@/store/browse';
-import {ElButton, ElDialog, ElInput, ElMessage, ElMessageBox} from 'element-plus';
 import syncApi from '@/api/sync';
 import type {mediaType} from '@/type/media';
 import {pathType} from '@/type/path';

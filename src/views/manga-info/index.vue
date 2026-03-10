@@ -3,7 +3,7 @@
     <div class="top" :style="[bannerModel === 'toomics' && {marginTop: 0}]">
       <template v-if="banner.length">
         <el-carousel class="carousel" :interval="interval" :type="carouselType" v-if="bannerModel === 'toptoon'">
-          <el-carousel-item class="banner-box" v-for="item in banner" :key="item">
+          <el-carousel-item class="banner-box" v-for="item in banner" :key="item.metaId">
             <img class="banner" :src="item.blob" alt="banner" />
           </el-carousel-item>
           <!-- 使用一张图片撑开容器的高度 -->
@@ -12,7 +12,7 @@
 
         <div class="banner-toomics" v-if="bannerModel === 'toomics'">
           <img class="banner-toomics-fore" :src="banner[0]?.blob" alt="banner" />
-          <img class="banner-toomics-back" :src="banner[1]?.blob" alt="bannerBg" />
+          <img class="banner-toomics-back" :src="bannerBg?.blob" alt="bannerBg" />
         </div>
       </template>
 
@@ -40,6 +40,7 @@
         <el-descriptions-item label="章节总数">{{ mangaInfo.chapterCount }}</el-descriptions-item>
         <el-descriptions-item label="阅读方式">{{ mangaInfo.browseType }}</el-descriptions-item>
         <el-descriptions-item label="所属媒体库">{{ mangaInfo.media?.mediaName }}</el-descriptions-item>
+        <el-descriptions-item label="漫画路径">{{ mangaInfo.mangaPath }}</el-descriptions-item>
         <el-descriptions-item label="入库时间">{{ mangaInfo.createTime }}</el-descriptions-item>
         <el-descriptions-item label="更新时间">{{ mangaInfo.updateTime }}</el-descriptions-item>
         <el-descriptions-item label="评分">{{ mangaInfo.star }}</el-descriptions-item>
@@ -160,7 +161,7 @@ import mangaApi from '@/api/manga';
 import imageApi from '@/api/image';
 import {config, userConfig} from '@/store';
 import {tagItemType} from '@/type/tag';
-import {metaItemType} from '@/type/meta';
+import {metaType, metaInit} from '@/type/meta';
 import {mangaType, mangaInit} from '@/type/manga';
 import {chapterInit, chapterType} from '@/type/chapter';
 import chapterApi from '@/api/chapter';
@@ -199,9 +200,9 @@ let mangaInfo = reactive<mangaType>(mangaInit);
 
 let hasLatest = ref(false);
 
-let banner = ref<metaItemType[]>([]);
-let covers = ref<metaItemType[]>([]);
-let character = ref<metaItemType[]>([]);
+let banner = ref<metaType[]>([]);
+let covers = ref<metaType[]>([]);
+let character = ref<metaType[]>([]);
 let mangaCover = ref<string>('');
 let isCollect = ref(false);
 let editTagsDialog = ref(false);
@@ -209,6 +210,7 @@ let editCover = ref(false);
 let editMetasDialog = ref(false);
 let mangaShareDialog = ref(false);
 let bannerModel = ref<string>('toptoon');
+let bannerBg = ref<metaType>();
 let hasManyCover = ref(false);
 let metaWriteJson = ref(true);
 
@@ -363,29 +365,30 @@ async function render_meta() {
 
   if (!mangaInfo.metas) return;
 
-  const title = mangaInfo.metas.find((item: metaItemType) => item.metaName === 'title')?.metaContent;
+  const title = mangaInfo.metas.find((item: metaType) => item.metaName === 'title')?.metaContent;
   if (title) mangaInfo.title = title;
 
-  const author = mangaInfo.metas.find((item: metaItemType) => item.metaName === 'author')?.metaContent;
+  const author = mangaInfo.metas.find((item: metaType) => item.metaName === 'author')?.metaContent;
   if (author) mangaInfo.author = author;
 
-  const publishDate = mangaInfo.metas.find((item: metaItemType) => item.metaName === 'publishDate')?.metaContent;
+  const publishDate = mangaInfo.metas.find((item: metaType) => item.metaName === 'publishDate')?.metaContent;
   if (publishDate) mangaInfo.publishDate = publishDate;
 
-  const describe = mangaInfo.metas.find((item: metaItemType) => item.metaName === 'describe')?.metaContent;
+  const describe = mangaInfo.metas.find((item: metaType) => item.metaName === 'describe')?.metaContent;
   if (describe) mangaInfo.describe = describe;
 
-  const star = mangaInfo.metas.find((item: metaItemType) => item.metaName === 'star')?.metaContent;
+  const star = mangaInfo.metas.find((item: metaType) => item.metaName === 'star')?.metaContent;
   if (star) mangaInfo.star = star;
 
   // 封面
-  covers.value = mangaInfo.metas.filter((item: metaItemType) => item.metaName === 'cover');
+  covers.value = mangaInfo.metas.filter((item: metaType) => item.metaName === 'cover');
   hasManyCover.value = covers.value.length > 0;
 
   // 广告图
-  banner.value = mangaInfo.metas.filter((item: metaItemType) => item.metaName === 'banner');
-  banner.value.some((item: metaItemType) => /bannerBackground/.test(item.metaFile)) && (bannerModel.value = 'toomics');
-  banner.value.forEach(async (item: metaItemType) => {
+  banner.value = mangaInfo.metas.filter((item: metaType) => /banner/.test(item.metaName));
+  bannerBg.value = banner.value.find((item: metaType) => /bannerBackground/.test(item.metaFile));
+  if (bannerBg.value) bannerModel.value = 'toomics';
+  banner.value.forEach(async (item: metaType) => {
     item.blob = await imageApi.get({file: item.metaFile});
   });
 
@@ -395,8 +398,8 @@ async function render_meta() {
   });
 
   // 角色信息
-  character.value = mangaInfo.metas.filter((item: metaItemType) => item.metaName === 'character');
-  character.value.forEach(async (item: metaItemType) => {
+  character.value = mangaInfo.metas.filter((item: metaType) => item.metaName === 'character');
+  character.value.forEach(async (item: metaType) => {
     const blob = await imageApi.get({file: item.metaFile});
     item.blob = blob;
   });
@@ -407,7 +410,7 @@ async function render_chapter_list() {
   const mangaId = mangaInfo.mangaId;
   if (!mangaId) return;
 
-  const chapterListResponse = await chapterApi.get({mangaId, order: chapterListDesc.value ? 'numberDesc' : 'number'});
+  const chapterListResponse = await chapterApi.get({mangaId, mediaId: mangaInfo.mediaId, order: chapterListDesc.value ? 'numberDesc' : 'number'});
   chapterList.value = chapterListResponse.list;
 }
 
@@ -421,12 +424,19 @@ function go_browse(chapter: any) {
     browse.page = 1;
   }
 
+  let name = chapter.browseType;
+  if (chapter.chapterType === 'pdf') {
+    name = 'pdfView';
+  }
+
+  browse.chapter = chapter;
   const browsePageRoute = {
-    name: chapter.browseType,
+    name,
     query: {
       mediaId: chapter.mediaId,
       mangaId: chapter.mangaId,
       chapterId: chapter.chapterId,
+      chapterPath: chapter.chapterPath,
     },
   };
 
@@ -483,7 +493,7 @@ async function remove_collect() {
 
 function open_covers_edit() {
   editCover.value = true;
-  covers.value.forEach(async (item: metaItemType) => {
+  covers.value.forEach(async (item: metaType) => {
     item.active = item.metaFile === mangaInfo.mangaCover;
     const blob = await imageApi.get({file: item.metaFile});
     item.blob = blob;
@@ -497,7 +507,7 @@ function open_metas_edit() {
 
 function choose_cover(metaFile: string) {
   if (!metaFile) return;
-  covers.value.forEach((item: metaItemType) => {
+  covers.value.forEach((item: metaType) => {
     item.active = item.metaFile === metaFile;
   });
   mangaApi

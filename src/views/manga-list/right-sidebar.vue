@@ -10,62 +10,38 @@
 				<!--名称-->
 				<p class="title">{{ props.mangaInfo.mangaName }}</p>
 				<!--操作-->
-				<!--<el-menu-item index="read"><el-icon><Memo /></el-icon>阅读</el-menu-item>-->
-				<!--<el-menu-item index="collection"><el-icon><Collection /></el-icon>收藏</el-menu-item>-->
 				<el-menu-item index="remove" v-if="isAdmin">
-					<el-icon>
-						<TopRight />
-					</el-icon>
 					{{ $t('option.remove') }}
 				</el-menu-item>
 				<el-menu-item index="delete" v-if="isAdmin">
-					<el-icon>
-						<Delete />
-					</el-icon>
 					{{ $t('option.delete') }}
 				</el-menu-item>
 				<el-menu-item index="collect">
-					<el-icon>
-						<StarFilled v-if="isCollect" />
-						<Star v-else />
-					</el-icon>
 					{{ isCollect ? $t('option.removeCollect') : $t('option.collect') }}
 				</el-menu-item>
 				<el-menu-item index="alreadyRead">
-					<el-icon>
-						<Notebook />
-					</el-icon>
 					{{ alreadyRead ? $t('option.markAsUnRead') : $t('option.markAsRead') }}
 				</el-menu-item>
 				<el-menu-item index="tags" v-if="isAdmin">
-					<el-icon>
-						<Ticket />
-					</el-icon>
 					{{ $t('option.editTags') }}
 				</el-menu-item>
 				<el-menu-item index="scan" v-if="isAdmin">
-					<el-icon>
-						<Files />
-					</el-icon>
 					{{ $t('option.scan') }}
 				</el-menu-item>
 				<el-menu-item index="meta" v-if="isAdmin">
-					<el-icon>
-						<RefreshLeft />
-					</el-icon>
 					{{ $t('option.meta') }}
 				</el-menu-item>
 				<el-menu-item index="share" v-if="isAdmin">
-					<el-icon>
-						<Share />
-					</el-icon>
 					{{ $t('option.share') }}
 				</el-menu-item>
 				<el-menu-item index="edit" v-if="isAdmin">
-					<el-icon>
-						<Edit />
-					</el-icon>
 					{{ $t('rightSidebar.editManga') }}
+				</el-menu-item>
+				<el-menu-item index="compress-all">
+					{{ $t('rightSidebar.compressCreate') }}
+				</el-menu-item>
+				<el-menu-item index="compress-delete">
+					{{ $t('rightSidebar.compressDelete') }}
 				</el-menu-item>
 			</el-menu>
 		</el-drawer>
@@ -88,7 +64,6 @@
 import { watch, ref, computed, onMounted, reactive } from 'vue';
 import mangaApi from '@/api/manga';
 import collectApi from '@/api/collect';
-import { ElMessageBox } from 'element-plus';
 import i18n from '@/i18n';
 import tagApi, { tagItemType } from '@/api/tag';
 import historyApi from '@/api/history';
@@ -100,8 +75,9 @@ import { Cookies } from '@/utils';
 import mangaTagBox from '../manga-info/components/manga-tag-box.vue';
 import mangaModify from '../manga-manage/components/mangaModify.vue';
 import { mangaType } from '@/type/manga';
+import placeholder from '@/assets/s-blue.png';
+
 const browse = useBrowseStore();
-const placeholder = require('@/assets/s-blue.png');
 const { t } = i18n.global;
 const isCollect = ref(false);
 const editTagsDialog = ref(false);
@@ -126,7 +102,7 @@ let mangaInfo = reactive<mangaType>({
 });
 
 const editMangaDialog = ref(false);
-const rightSidebarVisible = defineModel('rightSidebarVisible');
+const rightSidebarVisible = defineModel<boolean>('rightSidebarVisible');
 const props = defineProps(['mangaInfo']);
 const emit = defineEmits(['reload', 'close']);
 
@@ -139,7 +115,7 @@ const alreadyRead = computed(() => {
 });
 
 const isAdmin = computed(() => {
-	return Cookies.get('role') === 'admin';
+	return Cookies.get('smanga-role') === 'admin';
 });
 
 watch(
@@ -155,9 +131,6 @@ watch(
 		}
 	}
 );
-
-onMounted(async () => {
-});
 
 /**
  * @description: 更新漫画收藏状态
@@ -240,6 +213,13 @@ async function menu_select(key: string) {
 		case 'edit':
 			editMangaDialog.value = true;
 			break;
+		case 'compress-all':
+			await mangaApi.compress_all(mangaId.value);
+			break;
+		case 'compress-delete':
+			await mangaApi.compress_delete(mangaId.value);
+			break;
+			
 
 	}
 	rightSidebarVisible.value = false;

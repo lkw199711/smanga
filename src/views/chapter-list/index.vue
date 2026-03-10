@@ -58,7 +58,6 @@ let count = ref(-1);
 let list = ref([]);
 let chapterInfo = ref<chapterType>(chapterInit);
 let loading = ref(false);
-
 let rightSidebarVisible = ref(false);
 
 let mangaId = route.query.mangaId;
@@ -162,9 +161,10 @@ function go_browse(chapter: any) {
   const browsePageRoute = {
     name: chapter.browseType,
     query: {
-      mediaId: chapter.mediaId,
+      mediaId: chapter.chapterType === 'pdf' ? 'pdfView' : chapter.mediaId,
       mangaId: chapter.mangaId,
       chapterId: chapter.chapterId,
+      chapterPath: chapter.chapterPath,
     },
   };
 

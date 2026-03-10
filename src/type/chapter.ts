@@ -17,6 +17,7 @@ type chapterType = {
 	page?: number;
 	latest: latestType;
 	chapter: any;
+	pageImage: string;
 };
 
 const chapterInit: chapterType = {
@@ -37,6 +38,7 @@ const chapterInit: chapterType = {
 	page: 0,
 	latest: latestInit,
 	chapter: {},
+	pageImage: '',
 };
 
 export { chapterType, chapterInit };
