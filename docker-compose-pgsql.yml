@@ -30,6 +30,9 @@ services:
       DB_USERNAME: smanga
       DB_PASSWORD: smanga
       DB_DATABASE: smanga
+      PUID: 0
+      PGID: 0
+      TZ: Asia/Shanghai
     restart: unless-stopped
     depends_on:
       - postgres
@@ -37,6 +40,9 @@ services:
       - smanga-network
     volumes:
       - ./data:/data
+      - /vol1:/vol1	#自己有几个硬盘,或者说存储池,就要映射多少目录,保持docker内外路径一致.
+      - /vol2:/vol2 #我这里是接了三个硬盘
+      - /vol3:/vol3
 
 networks:
   smanga-network:

@@ -9,6 +9,8 @@ DB_USERNAME=${DB_USERNAME:-smanga}
 DB_PASSWORD=${DB_PASSWORD:-smanga}
 DB_DATABASE=${DB_DATABASE:-smanga}
 DB_FILE=${DB_FILE:-./data/smanga.db}
+WEB_PORT=${WEB_PORT:-9797}
+BACKEND_PORT=${BACKEND_PORT:-9798}
 
 # 根据数据库类型设置端口默认值（仅当用户未指定时）
 case "$DB_TYPE" in
@@ -28,7 +30,7 @@ esac
 if [ ! -f /app/adonis/.env ]; then
     cat > /app/adonis/.env << EOF
 TZ=UTC
-PORT=9798
+PORT=$BACKEND_PORT
 HOST=0.0.0.0
 LOG_LEVEL=info
 APP_KEY=0idvSh_Fq0b5rbHGIx7WIXJ5tySdGO-D
