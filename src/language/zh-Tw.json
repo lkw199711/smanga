@@ -350,7 +350,9 @@
     "createTime": "入庫時間",
     "createTimeDesc": "入庫時間-倒序",
     "updateTime": "更新時間",
-    "updateTimeDesc": "更新時間-倒序"
+    "updateTimeDesc": "更新時間-倒序",
+    "chapterUpdate": "章節更新時間",
+    "chapterUpdateDesc": "章節更新時間-倒序"
   },
   "history": {
     "confirm": {

@@ -367,7 +367,9 @@
     "createTime": "入库时间",
     "createTimeDesc": "入库时间-倒序",
     "updateTime": "更新时间",
-    "updateTimeDesc": "更新时间-倒序"
+    "updateTimeDesc": "更新时间-倒序",
+    "chapterUpdate": "章节更新时间",
+    "chapterUpdateDesc": "章节更新时间-倒序"
   },
   "history": {
     "confirm": {

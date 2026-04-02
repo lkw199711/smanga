@@ -1,10 +1,36 @@
 #!/usr/bin/with-contenv bash
 # shellcheck shell=bash
 
+# 设置默认值
+DB_TYPE=${DB_TYPE:-sqlite}
+DB_HOST=${DB_HOST:-127.0.0.1}
+DB_PORT=${DB_PORT:-3306}
+DB_USERNAME=${DB_USERNAME:-smanga}
+DB_PASSWORD=${DB_PASSWORD:-smanga}
+DB_DATABASE=${DB_DATABASE:-smanga}
+DB_FILE=${DB_FILE:-./data/smanga.db}
+WEB_PORT=${WEB_PORT:-9797}
+BACKEND_PORT=${BACKEND_PORT:-9798}
+
+# 根据数据库类型设置端口默认值（仅当用户未指定时）
+case "$DB_TYPE" in
+    mysql)
+        DB_PORT=${DB_PORT:-3306}
+        ;;
+    pgsql|postgres|postgresql)
+        DB_TYPE="pgsql"
+        DB_PORT=${DB_PORT:-5432}
+        ;;
+    sqlite)
+        # SQLite不使用端口，忽略DB_PORT
+        DB_PORT=""
+        ;;
+esac
+
 if [ ! -f /app/adonis/.env ]; then
     cat > /app/adonis/.env << EOF
 TZ=UTC
-PORT=9798
+PORT=$BACKEND_PORT
 HOST=0.0.0.0
 LOG_LEVEL=info
 APP_KEY=0idvSh_Fq0b5rbHGIx7WIXJ5tySdGO-D
@@ -23,8 +49,63 @@ if [ ! -d /data/config ]; then
     mkdir -p /data/config
 fi
 
+# 检查smanga.json文件是否存在
 if [ ! -f /data/config/smanga.json ]; then
-    cp /app/adonis/smanga.json /data/config/smanga.json
+    echo "smanga.json not found, creating new configuration file..."
+    
+    # 创建新的smanga.json配置文件，包含数据库配置
+    cat > /data/config/smanga.json << EOF
+{
+  "sql": {
+    "client": "$DB_TYPE",
+    "host": "$DB_HOST",
+    "port": ${DB_PORT:-null},
+    "username": "$DB_USERNAME",
+    "password": "$DB_PASSWORD",
+    "database": "$DB_DATABASE",
+    "file": "$DB_FILE",
+    "deploy": true
+  },
+  "imagick": {
+    "memory": "1gb",
+    "map": "1gb",
+    "density": 300,
+    "quality": 100
+  },
+  "scan": {
+    "auto": 0,
+    "concurrency": 1,
+    "reloadCover": 0,
+    "doNotCopyCover": 1,
+    "ignoreHiddenFiles": 1,
+    "defaultTagColor": "#a0d911",
+    "interval": "0 0 0,12 * * *",
+    "mediaPosterInterval": "0 0 1 * * *"
+  },
+  "debug": {
+    "dispatchSync": 0
+  },
+  "ssl": {
+    "pem": "",
+    "key": ""
+  },
+  "compress": {
+    "auto": 0,
+    "saveDuration": 100,
+    "poster": 300,
+    "bookmark": 300
+  },
+  "queue": {
+    "concurrency": 1,
+    "attempts": 3,
+    "timeout": 120000
+  }
+}
+EOF
+    
+    echo "Created new smanga.json configuration file with database settings."
+else
+    echo "smanga.json already exists, skipping configuration file creation."
 fi
 
 if [ ! -d /data/db ]; then
@@ -36,6 +117,27 @@ if [ ! -f /data/db/smanga.db ]; then
 fi
 
 cp -rf /app/adonis/file /data
+
+# 如果使用的是SQLite，确保数据目录存在
+if [ "$DB_TYPE" = "sqlite" ]; then
+    mkdir -p "$(dirname "$DB_FILE")"
+fi
+
+# 配置express应用的端口
+echo "Configuring express application port..."
+# 更新WEB_PORT
+if grep -q "^WEB_PORT=" /app/express/.env.docker; then
+    sed -i "s/^WEB_PORT=.*/WEB_PORT=$WEB_PORT/" /app/express/.env.docker
+else
+    echo "WEB_PORT=$WEB_PORT" >> /app/express/.env.docker
+fi
+
+# 更新BACKEND_PORT（如果需要）
+if grep -q "^BACKEND_PORT=" /app/express/.env.docker; then
+    sed -i "s/^BACKEND_PORT=.*/BACKEND_PORT=$BACKEND_PORT/" /app/express/.env.docker
+else
+    echo "BACKEND_PORT=$BACKEND_PORT" >> /app/express/.env.docker
+fi
 
 # 读取配置文件
 CONFIG_FILE="/data/config/smanga.json"
@@ -77,6 +179,15 @@ if grep -q "$VAR_NAME=" "$ENV_FILE"; then
 else
   # 如果不存在，则添加
   echo "$VAR_NAME=$DB_URL" >> "$ENV_FILE"
+fi
+
+# 更新PORT
+if grep -q "PORT" "$ENV_FILE"; then
+  # 存在则替换
+  sed -i "s|^PORT=.*|PORT=$BACKEND_PORT|" "$ENV_FILE"
+else
+  # 如果不存在，则添加
+  echo "PORT=$BACKEND_PORT" >> "$ENV_FILE"
 fi
 
 echo -e "Change owner to user smanga...\nIt may take a while"
