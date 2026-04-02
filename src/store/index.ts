@@ -63,7 +63,7 @@ export const userConfig = reactive({
 	// 主题皮肤
 	theme: 'light',
 	// 默认排序规则
-	order: 'updateTimeDesc',
+	order: 'chapterUpdateDesc',
 	chapterOrder: 'number',
 	// 翻页按钮调转
 	pageTurningReverse: false,
@@ -105,7 +105,7 @@ export const pageSizeConfig = reactive({
 });
 
 // 排序方式
-export const sortOrder = ['id', 'idDesc', 'name', 'nameDesc', 'createTime', 'createTimeDesc', 'updateTime', 'updateTimeDesc'];
+export const sortOrder = ['id', 'idDesc', 'name', 'nameDesc', 'createTime', 'createTimeDesc', 'updateTime', 'updateTimeDesc', 'chapterUpdate', 'chapterUpdateDesc'];
 export const chapterSortOrder = ['id', 'idDesc', 'name', 'nameDesc', 'number', 'numberDesc', 'createTime', 'createTimeDesc', 'updateTime', 'updateTimeDesc'];
 
 
