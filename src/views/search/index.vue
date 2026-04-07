@@ -241,7 +241,7 @@ async function page_change(pageParams = 1, pageSize: number = defaultPageSize) {
     return false;
   }
 
-  const res: any = await searchApi.get(searchStore.searchText, searchStore.searchType, page.value, pageSize, userConfig.order);
+  const res: any = await searchApi.get(searchStore.searchText, searchStore.searchType, page.value, pageSize, browse.orderBy);
   list.value = res.list;
   count.value = res.count;
 

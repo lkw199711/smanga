@@ -6,10 +6,11 @@ import chapterApi from '@/api/chapter';
 import historyApi from '@/api/history';
 import latestApi from '@/api/latest';
 import { screenType } from '@/type/store';
-import { config } from '@/store';
+import { config, userConfig } from '@/store';
 import { mangaPageSize, chapterPageSize, manageListPageSizes } from '@/store/page-size';
 import { ObjectFit } from '@/type/store';
 import { mangaType } from '@/type/manga';
+import { useRoute } from 'vue-router';
 
 function page_cahce() {
 	const pageJump = localStorage.getItem('pageJump');
@@ -59,8 +60,28 @@ const useBrowseStore = defineStore('browse', {
 		viewWidthValue: 50,
 		dialogViewWidth: false,
 		imageLoaded: false,
+		// 排序方式
+		mangaOrder: 'chapterUpdateDesc',
+		chapterOrder: 'number',
 	}),
 	getters: {
+		orderBy: () => {
+			const route = useRoute();
+			const mangaOrderBy = userConfig.order;
+			const chapterOrderBy = userConfig.chapterOrder;
+
+			switch (route.name) {
+				case 'manga-info':
+					return chapterOrderBy;
+				case 'chapter-list':
+					const mediaId = route.params.mediaId;
+					return mediaId ? mangaOrderBy : chapterOrderBy;
+				case 'bookmark':
+					return chapterOrderBy;
+				default:
+					return mangaOrderBy;
+			};
+		},
 		/**
 		 * @description: 当前章节
 		 * @return {*}

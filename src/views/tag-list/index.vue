@@ -119,7 +119,7 @@ async function page_change(
         count.value = 0;
         return;
     } else {
-        const res = await mangaApi.get_by_tags(tagIds.value, page.value, pageSize, userConfig.order);
+        const res = await mangaApi.get_by_tags(tagIds.value, page.value, pageSize, browse.orderBy);
         mangaList.value = res.list;
         count.value = res.count;
     }

@@ -446,7 +446,7 @@ router.beforeEach((pre, next) => {
 	start();
 });
 
-router.afterEach(() => {
+router.afterEach((to, from) => {
 	close();
 });
 
