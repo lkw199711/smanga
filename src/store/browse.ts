@@ -10,7 +10,7 @@ import { config, userConfig } from '@/store';
 import { mangaPageSize, chapterPageSize, manageListPageSizes } from '@/store/page-size';
 import { ObjectFit } from '@/type/store';
 import { mangaType } from '@/type/manga';
-import { useRoute } from 'vue-router';
+import { RouteLocationNormalizedLoaded } from 'vue-router';
 
 function page_cahce() {
 	const pageJump = localStorage.getItem('pageJump');
@@ -63,19 +63,19 @@ const useBrowseStore = defineStore('browse', {
 		// 排序方式
 		mangaOrder: 'chapterUpdateDesc',
 		chapterOrder: 'number',
+		route: <RouteLocationNormalizedLoaded | null>null
 	}),
 	getters: {
-		orderBy: () => {
-			const route = useRoute();
+		orderBy: (state) => {
 			const mangaOrderBy = userConfig.order;
 			const chapterOrderBy = userConfig.chapterOrder;
+			const routeName = state.route?.name;
 
-			switch (route.name) {
+			switch (routeName) {
 				case 'manga-info':
 					return chapterOrderBy;
 				case 'chapter-list':
-					const mediaId = route.params.mediaId;
-					return mediaId ? mangaOrderBy : chapterOrderBy;
+					return chapterOrderBy;
 				case 'bookmark':
 					return chapterOrderBy;
 				default:
