@@ -84,7 +84,7 @@ const chapterId = computed(() => {
 });
 
 const isAdmin = computed(() => {
-  return Cookies.get('smanga-role') === 'admin';
+  return Cookies.getRole() === 'admin';
 });
 
 watch(

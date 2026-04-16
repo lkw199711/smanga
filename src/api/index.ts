@@ -22,7 +22,7 @@ const ajax = Axios.create({
   transformRequest: [
     (data, headers) => {
       // 设置请求头
-      headers['token'] = Cookies.get('smanga-token');
+      headers['token'] = Cookies.getToken();
 
       // 判断是否为FormData或不需要JSON转换的情况
       const contentType = headers['Content-Type'] || headers['content-type'];

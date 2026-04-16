@@ -127,11 +127,9 @@ async function do_login() {
 	if (!loginResponse) return;
 	// 缓存用户信息
 	Object.assign(userInfo, loginResponse);
-	Cookies.set('smanga-userName', loginResponse.userName);
-	Cookies.set('smanga-userId', loginResponse.userId);
-	Cookies.set('smanga-header', loginResponse.header);
-	Cookies.set('smanga-token', loginResponse.token)
-	Cookies.set('smanga-role', loginResponse.userRole)
+	Cookies.set('smanga-server-key', loginResponse.serverKey);
+	Cookies.setToken(loginResponse.token)
+	Cookies.setRole(loginResponse.userRole)
 
 	await router.push('/');
 

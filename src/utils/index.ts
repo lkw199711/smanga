@@ -108,6 +108,84 @@ export const Cookies = {
         Cookies.set(key, '', -1);
         return key;
     },
+
+    /**
+     * 设置token
+     * @param token
+     * @param time
+     */
+    setToken: function (token: string, time = 365) {
+        const serverKey = Cookies.get('smanga-server-key');
+        if (!serverKey) return false;
+        return Cookies.set(serverKey + '-smanga-token', token, time);
+    },
+
+    /**
+     * 获取token
+     */
+    getToken: function () {
+        const serverKey = Cookies.get('smanga-server-key');
+        if (!serverKey) return '';
+        return Cookies.get(serverKey + '-smanga-token');
+    },
+
+    /**
+     * 移除token
+     */
+    removeToken: function () {
+        const serverKey = Cookies.get('smanga-server-key');
+        if (!serverKey) return false;
+        return Cookies.remove(serverKey + '-smanga-token');
+    },
+
+   /**
+     * 设置角色
+    * @param role 
+    * @param time 
+    * @returns 
+    */
+    setRole: function (role: string, time = 365) {
+        const serverKey = Cookies.get('smanga-server-key');
+        if (!serverKey) return false;
+        return Cookies.set(serverKey + '-smanga-role', role, time);
+    },
+    /**
+     * 获取角色
+     */
+    getRole: function () {
+        const serverKey = Cookies.get('smanga-server-key');
+        if (!serverKey) return '';
+        return Cookies.get(serverKey + '-smanga-role');
+    },
+    /**
+     * 设置带前缀的cookie
+     * @param serverKey 前缀
+     * @param key cookie键名
+     * @param value cookie值
+     * @param time 过期时间，单位为天
+     */
+    smangaSet: function (serverKey: string, key: string, value: string, time = 365) {
+        const fullKey = serverKey ? `${serverKey}_${key}` : key;
+        return Cookies.set(fullKey, value, time);
+    },
+    /**
+     * 获取带前缀的cookie
+     * @param serverKey 前缀
+     * @param key cookie键名
+     */
+    smangaGet: function (serverKey: string, key: string) {
+        const fullKey = serverKey ? `${serverKey}_${key}` : key;
+        return Cookies.get(fullKey);
+    },
+    /**
+     * 移除带前缀的cookie
+     * @param serverKey 前缀
+     * @param key cookie键名
+     */
+    smangaRemove: function (serverKey: string, key: string) {
+        const fullKey = serverKey ? `${serverKey}_${key}` : key;
+        return Cookies.remove(fullKey);
+    },
 }
 
 export function get_cookie(key: string) {

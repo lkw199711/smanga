@@ -25,7 +25,7 @@ export const testAxios = Axios.create({
     transformRequest: [
         data => {
             // 用户标识
-            const userId = Cookies.get('smanga-userId');
+            const userId = Cookies.getToken();
             // 获取时间戳
             const timestamp = new Date().getTime();
             // 初始化传参
