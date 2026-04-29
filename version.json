@@ -209,5 +209,13 @@
             "Auth中间件支持动态配置读取,初始化流程中添加serverKey配置生成逻辑",
             "TagsController无分页查询中增加用户鉴权与媒体权限过滤"
         ]
+    },
+    {
+        "version": "4.2.87",
+        "date": "2026-04-30",
+        "content": [
+            "feat: 添加目录浏览模块",
+            "feat(homepage): 后端新增 homepage 自定义API支持(/homepage/statistic), 适配 gethomepage.dev customapi 仪表盘并支持 apikey 鉴权"
+        ]
     }
 ]
