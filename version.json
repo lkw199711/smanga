@@ -170,5 +170,44 @@
         "content": [
             "登录界面新增连接到其他服务功能"
         ]
+    },
+    {
+        "version": "4.2.82",
+        "date": "2026-03-11",
+        "content": [
+            "支持使用环境变量参数变更数据库(初次部署时)",
+            "支持使用环境变量参数修改前后端服务端口"
+        ]
+    },
+    {
+        "version": "4.2.83",
+        "date": "2026-04-03",
+        "content": [
+            "新增章节更新时间排序选项",
+            "修复无法删除用户的问题",
+            "redis数据库可自定义host与port"
+        ]
+    },
+    {
+        "version": "4.2.84",
+        "date": "2026-04-07",
+        "content": [
+            "修复章节排序错误问题",
+            "修复redis配置读取错误问题"
+        ]
+    },
+    {
+        "version": "4.2.86",
+        "date": "2026-04-12",
+        "content": [
+            "新增token和角色的cookie统一管理方法(setToken/getToken/removeToken/setRole/getRole)",
+            "优化cookie键名管理,使用带前缀的方法(smangaSet/smangaGet/smangaRemove)避免冲突",
+            "修复鉴权中mediaId类型判断问题,避免Number转换错误",
+            "登录成功接口返回中增加serverKey配置字段",
+            "优化标签关联漫画及阅读计数统计查询,使用Prisma.raw提升性能",
+            "使用lodash优化漫画标签数据去重逻辑,提升性能",
+            "Auth中间件支持动态配置读取,初始化流程中添加serverKey配置生成逻辑",
+            "TagsController无分页查询中增加用户鉴权与媒体权限过滤"
+        ]
     }
 ]

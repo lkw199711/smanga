@@ -216,7 +216,7 @@ async function page_change(pageParams = 1, pageSize: number = 10) {
   // 清空数据 避免缓存
   list.value = [];
 
-  const res: any = await collectApi.get(collectStore.collectType, page.value, pageSize, userConfig.order);
+  const res: any = await collectApi.get(collectStore.collectType, page.value, pageSize, browse.orderBy);
   list.value = res.list;
   count.value = res.count;
 

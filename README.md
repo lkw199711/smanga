@@ -115,6 +115,60 @@ lkw199711/smanga-nodejs;
 
 ##### 这里提供一个飞牛的compose示例,群辉等成品nas可用,注意自己调整目录等参数
 
+```dockerfile
+services:
+  postgres:
+    image: postgres:18
+    container_name: smanga-postgres
+    environment:
+      POSTGRES_DB: smanga
+      POSTGRES_USER: smanga
+      POSTGRES_PASSWORD: smanga
+    ports:
+      - "9799:5432"
+    volumes:
+      - ./postgres_lib:/var/lib/postgresql
+      - ./postgres_log:/var/log/postgresql
+    restart: unless-stopped
+    networks:
+      - smanga-network
+
+  smanga-nodejs:
+    image: lkw199711/smanga-nodejs:latest
+    container_name: smanga
+    ports:
+      - "9797:9797"
+      - "9798:9798"
+    environment:
+      DB_TYPE: pgsql
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_USERNAME: smanga
+      DB_PASSWORD: smanga
+      DB_DATABASE: smanga
+      WEB_PORT: 9797
+      BACKEND_PORT: 9798
+      PUID: 0
+      PGID: 0
+      TZ: Asia/Shanghai
+    restart: unless-stopped
+    depends_on:
+      - postgres
+    networks:
+      - smanga-network
+    volumes:
+      - ./data:/data
+      - /vol1:/vol1	#自己有几个硬盘,或者说存储池,就要映射多少目录,保持docker内外路径一致.
+      - /vol2:/vol2 #我这里是接了三个硬盘
+      - /vol3:/vol3
+
+networks:
+  smanga-network:
+    driver: bridge
+```
+
+##### 如果不需要独立数据库，可以使用默认的sqlite
+
 ```
 services:
   speedtest:

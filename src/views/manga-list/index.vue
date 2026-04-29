@@ -152,9 +152,9 @@ async function page_change(
 
 	let res = null;
 	if (byParentPath) {
-		res = await mangaApi.get_by_parent_path(String(parentPath), page.value, pageSize, userConfig.order);
+		res = await mangaApi.get_by_parent_path(String(parentPath), page.value, pageSize, browse.orderBy);
 	} else {
-		res = await mangaApi.get(mediaId.value, page.value, pageSize, userConfig.order);
+		res = await mangaApi.get(mediaId.value, page.value, pageSize, browse.orderBy);
 	}
 
 	list.value = res.list;

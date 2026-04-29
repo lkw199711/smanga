@@ -57,4 +57,4 @@ ENTRYPOINT [ "/init" ]
 
 VOLUME [ "/data" ]
 
-EXPOSE 9797
+EXPOSE ${WEB_PORT:-9797}

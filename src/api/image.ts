@@ -20,7 +20,7 @@ const img = Axios.create({
 	transformRequest: [
 		(data, headers) => {
 			// 设置请求头
-			headers['token'] = Cookies.get('smanga-token');
+			headers['token'] = Cookies.getToken();
 			// 获取时间戳
 			const timestamp = new Date().getTime();
 			// 初始化传参

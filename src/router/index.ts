@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router';
 import Layout from '@/layout/index.vue';
 import browse from '@/layout/browse.vue';
+import useBrowseStore from '@/store/browse';
 
 import NProgress from 'nprogress';
 import 'nprogress/nprogress.css';
@@ -458,8 +459,10 @@ router.beforeEach((pre, next) => {
 	start();
 });
 
-router.afterEach(() => {
+router.afterEach((to, from) => {
 	close();
+	const browseStore = useBrowseStore();
+	browseStore.route = to;
 });
 
 export default router;
