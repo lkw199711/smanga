@@ -28,7 +28,15 @@
     "rightMenu": "Function menu",
     "mangaSync": "mangaSync",
     "mangaShare": "mangaShare",
-    "mangaInfo": "Manga detail"
+    "mangaInfo": "Manga detail",
+    "mangaBrowser": "Browse by folder"
+  },
+  "mangaBrowser": {
+    "allMedia": "Libraries",
+    "noMedia": "No libraries",
+    "subFolders": "Sub folders",
+    "mangas": "Mangas",
+    "emptyDir": "This folder is empty"
   },
   "option": {
     "option": "option",

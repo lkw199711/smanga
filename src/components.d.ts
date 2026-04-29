@@ -15,6 +15,8 @@ declare module 'vue' {
     BrowsePager: typeof import('./components/browse-pager.vue')['default']
     Chapter: typeof import('./components/chapter.vue')['default']
     CoverUpload: typeof import('./components/cover-upload.vue')['default']
+    ElBreadcrumb: typeof import('element-plus/es')['ElBreadcrumb']
+    ElBreadcrumbItem: typeof import('element-plus/es')['ElBreadcrumbItem']
     ElButton: typeof import('element-plus/es')['ElButton']
     ElCard: typeof import('element-plus/es')['ElCard']
     ElCarousel: typeof import('element-plus/es')['ElCarousel']

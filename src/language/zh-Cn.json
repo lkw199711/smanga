@@ -28,7 +28,15 @@
     "rightMenu": "功能菜单",
     "mangaSync": "漫画迁移",
     "mangaShare": "漫画分享",
-    "mangaInfo": "漫画详情"
+    "mangaInfo": "漫画详情",
+    "mangaBrowser": "目录浏览"
+  },
+  "mangaBrowser": {
+    "allMedia": "媒体库",
+    "noMedia": "暂无媒体库",
+    "subFolders": "子目录",
+    "mangas": "漫画",
+    "emptyDir": "此目录下暂无内容"
   },
   "option": {
     "option": "操作",

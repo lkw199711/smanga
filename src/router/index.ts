@@ -94,6 +94,18 @@ const routes: Array<RouteRecordRaw> = [
 				meta: { sidebar: false, view: 'list' },
 				component: () => import('../views/parent-path-list/index.vue'),
 			},
+			// 漫画目录浏览（按文件夹层级）
+			{
+				path: '/manga-browser',
+				name: 'manga-browser',
+				meta: {
+					sidebar: true,
+					title: 'mangaBrowser',
+					icon: 'folder',
+					view: 'list',
+				},
+				component: () => import('../views/manga-browser/index.vue'),
+			},
 			// 漫画列表
 			{
 				path: '/manga-list',
