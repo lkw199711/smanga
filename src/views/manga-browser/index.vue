@@ -96,6 +96,7 @@ import { computed, onMounted, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import mediaApi from '@/api/media';
 import mangaApi from '@/api/manga';
+import pathApi from '@/api/path';
 import imageApi from '@/api/image';
 import { config } from '@/store';
 import { mediaType } from '@/type/media';
@@ -111,6 +112,38 @@ const loading = ref(false);
 const mediaList = ref<mediaType[]>([]);
 const allMangas = ref<mangaType[]>([]);
 
+/**
+ * 把任意 OS 的路径统一成正斜杠形式,并去掉首尾多余的分隔符
+ * - Windows: "D:\\foo\\bar\\" -> "D:/foo/bar"
+ * - Linux:   "/vol2/foo/"     -> "vol2/foo"  注意:Linux 绝对路径会被去掉开头的 "/"
+ *   该函数仅用于"相对路径"的规范化,绝对路径请使用 normalize_abs
+ */
+function normalize_rel(p: string): string {
+  if (!p) return '';
+  return p.replace(/\\/g, '/').replace(/^\/+/, '').replace(/\/+$/, '');
+}
+
+/**
+ * 把绝对路径统一成正斜杠形式,只去尾部分隔符,保留开头的 "/"(Linux)或盘符(Windows)
+ */
+function normalize_abs(p: string): string {
+  if (!p) return '';
+  return p.replace(/\\/g, '/').replace(/\/+$/, '');
+}
+
+/**
+ * 当前媒体库下所有路径根(media library 根目录的绝对路径列表)
+ * 用于把 manga.parentPath 裁掉根前缀,得到相对路径
+ */
+const mediaRoots = ref<string[]>([]);
+
+/**
+ * 浏览起点(绝对路径):所有 mediaRoots 的最长公共父目录
+ * - 单根时等于根的父目录,可以让用户在第一层看到"根目录名"
+ * - 多根时等于它们的公共父目录,用户下钻能选择不同的分支
+ */
+const browseBase = ref<string>('');
+
 // 路由中的 mediaId & 路径
 const mediaId = computed<number>(() => Number(route.query.mediaId) || 0);
 const currentPath = computed<string>(() => String(route.query.path || ''));
@@ -122,14 +155,92 @@ const currentMedia = computed<mediaType | null>(
 );
 
 /**
- * 当前层级下的子目录（聚合 parentPath）
+ * 计算多个绝对路径的"最长公共父目录"(按路径段,而非字符)
+ * 例如:
+ *   ["/vol2/1000/02manga-compress/toptoon", "/vol2/1000/02manga-other"]
+ *   -> "/vol2/1000"
+ *   ["D:/manga/a", "D:/manga/b/c"] -> "D:/manga"
+ *   单个输入时返回其"父目录"
+ */
+function common_parent_dir(paths: string[]): string {
+  const list = paths.map((p) => normalize_abs(p)).filter(Boolean);
+  if (!list.length) return '';
+
+  // 用第一条做基准,按段比较
+  const isWin = /^[a-zA-Z]:\//.test(list[0]);
+  const cmp = (s: string) => (isWin ? s.toLowerCase() : s);
+
+  // 判断绝对路径头(Linux 开头 "/",Windows 开头 "X:")
+  const headMatch = list[0].match(/^([a-zA-Z]:|)/);
+  const head = headMatch ? headMatch[1] : '';
+  // 剩余按 "/" 分段
+  const segsList = list.map((p) => p.slice(head.length).split('/').filter(Boolean));
+
+  // 找公共前缀段
+  const common: string[] = [];
+  const minLen = Math.min(...segsList.map((s) => s.length));
+  for (let i = 0; i < minLen; i++) {
+    const seg = segsList[0][i];
+    if (segsList.every((segs) => cmp(segs[i]) === cmp(seg))) {
+      common.push(seg);
+    } else {
+      break;
+    }
+  }
+
+  // 若只有一个输入,则再退一级(去掉最后一段,作为"父目录")
+  if (list.length === 1 && common.length > 0) {
+    common.pop();
+  }
+
+  // Linux: 若公共段为空,至少回到 "/"
+  // Windows: 若公共段为空,回到 "X:/"
+  if (isWin) {
+    return head + '/' + common.join('/');
+  }
+  return '/' + common.join('/');
+}
+
+/**
+ * 把 manga.parentPath(绝对路径)裁成相对"浏览起点"的相对路径
+ * - 浏览起点 = mediaRoots 的公共父目录(common_parent_dir)
+ * - 兼容 Windows 反斜杠 与 Linux 正斜杠
+ * - Windows 路径前缀比较时不区分大小写;Linux 区分大小写
+ */
+function strip_media_root(parentPathRaw: string): string {
+  const parentNorm = normalize_abs(parentPathRaw);
+  if (!parentNorm) return '';
+
+  const base = normalize_abs(browseBase.value);
+  if (!base) {
+    // 没有浏览起点,保守地仅做归一化,去掉开头 "/",避免空目录项
+    return normalize_rel(parentNorm);
+  }
+
+  const isWin = /^[a-zA-Z]:\//.test(parentNorm);
+  const a = isWin ? parentNorm.toLowerCase() : parentNorm;
+  const b = isWin ? base.toLowerCase() : base;
+
+  // 处理 base 是 "/" 或 "X:/" 这种根的情况,末尾不应再加 "/"
+  const baseWithSlash = b.endsWith('/') ? b : b + '/';
+  if (a === b) return '';
+  if (a.startsWith(baseWithSlash)) {
+    return normalize_rel(parentNorm.slice(baseWithSlash.length));
+  }
+  // 不在浏览起点下,做兜底归一化
+  return normalize_rel(parentNorm);
+}
+
+/**
+ * 当前层级下的子目录(聚合 parentPath)
  */
 const subFolders = computed(() => {
-  const prefix = currentPath.value ? currentPath.value.replace(/\/+$/, '') + '/' : '';
+  const prefix = currentPath.value ? normalize_rel(currentPath.value) + '/' : '';
   const map = new Map<string, number>();
 
   for (const m of allMangas.value) {
-    const parent = (m.parentPath || '').replace(/\\/g, '/').replace(/\/+$/, '');
+    // m.parentPath 在 load_mangas() 中已被处理为"相对媒体库根"的相对路径
+    const parent = normalize_rel(m.parentPath || '');
     if (!parent) continue;
 
     // 必须以当前路径为前缀
@@ -141,6 +252,7 @@ const subFolders = computed(() => {
     if (!remain) continue;
 
     const next = remain.split('/')[0];
+    if (!next) continue; // 兜底:不展示空目录项
     map.set(next, (map.get(next) || 0) + 1);
   }
 
@@ -153,9 +265,9 @@ const subFolders = computed(() => {
  * 当前层级直接所属的漫画
  */
 const currentMangas = computed<mangaType[]>(() => {
-  const target = currentPath.value.replace(/\/+$/, '');
+  const target = normalize_rel(currentPath.value);
   return allMangas.value.filter((m) => {
-    const parent = (m.parentPath || '').replace(/\\/g, '/').replace(/\/+$/, '');
+    const parent = normalize_rel(m.parentPath || '');
     return parent === target;
   });
 });
@@ -180,15 +292,34 @@ async function load_media() {
 async function load_mangas() {
   if (!mediaId.value) {
     allMangas.value = [];
+    mediaRoots.value = [];
+    browseBase.value = '';
     return;
   }
   loading.value = true;
   try {
-    // 不分页拉取（后端在不传 page 时返回全部）
+    // 先拉取该媒体库下所有 path 的根目录,便于把 parentPath 裁成相对路径
+    let roots: string[] = [];
+    try {
+      const pathRes: any = await pathApi.get(mediaId.value);
+      const pathList: any[] = pathRes?.list || pathRes?.data?.list || [];
+      roots = pathList
+        .map((p: any) => (p && p.pathContent ? String(p.pathContent) : ''))
+        .filter(Boolean);
+    } catch (e) {
+      // 拉取失败不阻塞,后续只走兜底归一化
+      roots = [];
+    }
+    mediaRoots.value = roots;
+    // 计算浏览起点(所有 path 根的公共父目录)
+    browseBase.value = common_parent_dir(roots);
+
+    // 不分页拉取(后端在不传 page 时返回全部)
     const res = await mangaApi.get(mediaId.value, 0 as any, 0 as any);
     allMangas.value = (res.list || []).map((m: any) => ({
       ...m,
-      parentPath: (m.parentPath || '').replace(/\\/g, '/'),
+      // 关键:把绝对路径裁成相对浏览起点的相对路径,兼容 win/linux
+      parentPath: strip_media_root(m.parentPath || ''),
     }));
   } finally {
     loading.value = false;

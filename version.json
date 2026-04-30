@@ -217,5 +217,12 @@
             "feat: 添加目录浏览模块",
             "feat(homepage): 后端新增 homepage 自定义API支持(/homepage/statistic), 适配 gethomepage.dev customapi 仪表盘并支持 apikey 鉴权"
         ]
+    },
+    {
+        "version": "4.2.88",
+        "date": "2026-05-02",
+        "content": [
+            "修复目录浏览展示错误问题"
+        ]
     }
 ]
