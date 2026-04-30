@@ -29,6 +29,12 @@
     - [添加书签](#添加书签)
     - [切换浏览模式](#切换浏览模式)
     - [阅读界面的使用](#阅读界面的使用)
+  - [外部支持](#外部支持)
+    - [功能概览](#功能概览)
+    - [开启方式](#开启方式)
+    - [订阅地址](#订阅地址)
+    - [可用接口一览](#可用接口一览)
+    - [常见问题](#常见问题)
   - [初衷](#初衷)
   - [产品局限性](#产品局限性)
     - [虽然为条漫开发, 但是并不支持长图条漫(需裁切)](#虽然为条漫开发-但是并不支持长图条漫需裁切)
@@ -402,6 +408,155 @@ Smanga3版本以上, 新增了数据库以及压缩文件支持, 为此引入了
 ![](https://github.com/lkw199711/smanga/raw/master/src/assets/readme/smanga-operation.PNG)
 
 为最大程度的使用屏幕, 我采用了这种所有的除图片元素外都可隐藏的交互界面.
+
+
+## 外部支持
+
+Smanga 内置了 **OPDS (Open Publication Distribution System) 1.2** 协议支持, 您可以使用任意兼容 OPDS 的第三方漫画/电子书阅读器 (例如 **可达漫画 / Chunky Comic Reader / Panels / KyBook / Thorium / Foliate**) 直接订阅您的漫画库并在线阅读, 无需再手动下载整本漫画.
+
+### 功能概览
+
+- 完整目录浏览: 媒体库 → 漫画 → 章节, 全部支持分页
+- 搜索 (OpenSearch) / 最新更新 / 我的收藏 三个专用入口
+- 章节下载: 压缩包直接下载; 图片目录型章节自动打包为 CBZ
+- **OPDS-PSE 流式翻页**: 支持按页请求, 边下边看, 可通过 `width` 参数动态缩图以节省流量
+- HTTP Basic Auth 鉴权, 沿用现有 smanga 账号
+- 媒体库权限过滤: 第三方客户端看到的内容与该用户在 Web 端一致
+
+### 开启方式
+
+在服务端 `.env` 文件中配置以下环境变量, 修改后重启服务即可生效:
+
+```env
+# 是否启用 OPDS 接口 (默认开启)
+OPDS_ENABLED=true
+
+# 每页条目数 (可选, 默认 30)
+OPDS_PAGE_SIZE=30
+
+# 对外暴露的根地址 (可选, 留空时自动根据请求推断;
+# 若使用反向代理且域名/端口不同, 建议显式指定)
+# OPDS_BASE_URL=https://manga.example.com
+```
+
+### 订阅地址
+
+在第三方阅读器中选择 "添加 OPDS 目录 / Add OPDS Catalog", 填写以下信息:
+
+- **URL**: `http(s)://<你的smanga地址>/opds`
+- **用户名 / 密码**: 您的 smanga 登录账号
+
+示例:
+
+- `http://192.168.1.10:9797/opds`
+- `https://manga.example.com/opds`
+
+### 可用接口一览
+
+| 路径 | 说明 |
+| --- | --- |
+| `/opds` | 根目录 (Catalog 入口, 客户端填这个即可) |
+| `/opds/libraries` | 媒体库列表 |
+| `/opds/libraries/:mediaId` | 某媒体库下的漫画列表 (分页) |
+| `/opds/manga/:mangaId` | 某漫画下的章节列表 (分页) |
+| `/opds/chapter/:chapterId` | 章节详情 entry |
+| `/opds/chapter/:chapterId/download` | 下载章节 (zip/cbz/pdf 直接流式; 图片目录打包为 CBZ) |
+| `/opds/chapter/:chapterId/page/:page` | PSE 流式翻页, 支持 `?width=1080` 按需缩图 |
+| `/opds/chapter/:chapterId/cover` | 章节封面 |
+| `/opds/manga/:mangaId/cover` | 漫画封面 |
+| `/opds/search?q=关键词` | 全库搜索 |
+| `/opds/opensearch.xml` | OpenSearch 描述文档 (客户端自动发现) |
+| `/opds/latest` | 最新更新 Feed |
+| `/opds/collects` | 我的收藏 Feed |
+
+### 常见问题
+
+- **客户端提示 401 / 无法登录?** 请确认账号密码正确, 并且服务端未关闭 `OPDS_ENABLED`. 使用反向代理时需保留 `Authorization` 请求头.
+- **下载目录型章节为何是 CBZ 文件?** 对于图片目录章节 (非压缩包), Smanga 会即时将其中图片按顺序打包为 CBZ 返回, 绝大多数漫画阅读器均可直接识别.
+- **压缩包章节第一次打开较慢?** PSE 翻页在首次访问压缩包章节时会触发一次同步解压并写入缓存, 后续访问直接命中缓存. PDF 章节不支持流式翻页, 请使用下载方式阅读.
+- **想节省流量 / 加速移动网络阅读?** 支持 PSE 的客户端会自动在请求 URL 中带上 `width` 参数; 也可手动访问 `/opds/chapter/<id>/page/1?width=1080` 测试效果.
+
+
+### Homepage 仪表盘集成
+
+Smanga 同时提供了对 [Homepage (gethomepage.dev)](https://gethomepage.dev/) 的原生适配, 通过其 [`customapi`](https://gethomepage.dev/widgets/services/customapi/) 组件即可把漫画库的统计数据 (媒体库 / 漫画 / 章节 / 标签 / 用户 / 今日阅读量 等) 直接展示到您的 Homepage 首页.
+
+#### 开启方式
+
+在服务端 `.env` 中配置一个自定义 apikey (可选, 留空则不校验; 建议仅在本地调试时留空):
+
+```env
+# Homepage customapi 鉴权密钥 (推荐设置)
+HOMEPAGE_API_KEY=your-random-key-here
+```
+
+接口地址: `GET http(s)://<你的smanga地址>/homepage/statistic`, 支持以下三种鉴权方式之一:
+
+- Query 参数: `?apikey=your-random-key-here`
+- 请求头: `X-API-Key: your-random-key-here`
+- 请求头: `Authorization: Bearer your-random-key-here`
+
+#### Homepage 配置示例 (services.yaml)
+
+将下面片段粘贴到 Homepage 配置目录的 `services.yaml` 中, 替换域名与 apikey 后即可生效:
+
+```yaml
+- 漫画:
+    - Smanga:
+        icon: mdi-book-open-page-variant
+        href: https://manga.example.com
+        description: 漫画流媒体阅读
+        widget:
+          type: customapi
+          url: https://manga.example.com/homepage/statistic
+          refreshInterval: 30000
+          method: GET
+          headers:
+            X-API-Key: your-random-key-here
+          display: list
+          mappings:
+            - field:
+                data: manga_count
+              label: 漫画
+              format: number
+            - field:
+                data: chapter_count
+              label: 章节
+              format: number
+            - field:
+                data: today_views
+              label: 今日阅读
+              format: number
+            - field:
+                data: latest_manga
+              label: 最新入库
+```
+
+> `mappings.field.data` 支持任意在响应 `data` 对象下的字段; `format` 可选 `number / float / percent / bytes / date / relativeDate / text`, 更多用法请参考 [Homepage customapi 官方文档](https://gethomepage.dev/widgets/services/customapi/).
+
+#### 响应字段一览
+
+接口返回体结构为 `{ code, data: { ... }, message }`, 下表列出 `data` 中可用的字段 (均为扁平结构, 可直接用于 mappings):
+
+| 字段 | 类型 | 说明 |
+| --- | --- | --- |
+| `media_count` | number | 媒体库数量 (未删除) |
+| `manga_count` | number | 漫画数量 (未删除) |
+| `chapter_count` | number | 章节数量 (未删除) |
+| `tag_count` | number | 标签数量 |
+| `user_count` | number | 用户数量 |
+| `collect_count` | number | 收藏数量 |
+| `bookmark_count` | number | 书签数量 |
+| `history_count` | number | 阅读历史总数 |
+| `today_views` | number | 今日阅读次数 (按 history 记录) |
+| `week_views` | number | 近 7 天阅读次数 |
+| `latest_manga` | string | 最新入库漫画名称 |
+| `latest_manga_time` | datetime \| null | 最新入库漫画的创建时间 (ISO) |
+| `latest_chapter` | string | 最新入库章节名称 |
+| `latest_chapter_time` | datetime \| null | 最新入库章节的创建时间 (ISO) |
+| `server_time` | string | 服务器当前时间 (ISO 8601) |
+
+> 提示: 为方便 Homepage 调用, 该接口走独立的 `apikey` 校验, 不经过前端登录态; 请务必设置 `HOMEPAGE_API_KEY` 并仅在内网或反向代理后暴露.
 
 
 ## 初衷

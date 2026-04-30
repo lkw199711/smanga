@@ -94,6 +94,7 @@
         <el-tab-pane label="功能特点" name="features"></el-tab-pane>
         <el-tab-pane label="安装指南" name="install"></el-tab-pane>
         <el-tab-pane label="使用说明" name="usage"></el-tab-pane>
+        <el-tab-pane label="外部支持" name="external"></el-tab-pane>
         <el-tab-pane label="注意事项" name="notes"></el-tab-pane>
         <el-tab-pane label="发布信息" name="links"></el-tab-pane>
       </el-tabs>
@@ -233,6 +234,163 @@ services:
         </div>
       </div>
 
+      <!-- 外部支持 -->
+      <div v-if="activeTab === 'external'" class="content-section">
+        <h2 class="section-title">外部支持</h2>
+        <div class="section-content">
+          <p>
+            Smanga 内置了 <strong>OPDS (Open Publication Distribution System) 1.2</strong> 协议支持,
+            您可以使用任意兼容 OPDS 的第三方阅读器 (例如 <em>可达漫画 / Chunky Comic Reader / Panels / KyBook / Thorium / Foliate</em>) 直接订阅您的漫画库并在线阅读, 无需再手动下载.
+          </p>
+
+          <h3 class="subsection-title">功能概览</h3>
+          <ul class="steps-list">
+            <li>完整目录浏览: 媒体库 → 漫画 → 章节</li>
+            <li>搜索 (OpenSearch) / 最新更新 / 我的收藏 三个专用入口</li>
+            <li>章节下载: 压缩包直接下载, 图片目录型章节自动打包为 CBZ</li>
+            <li>OPDS-PSE 流式翻页: 支持按页请求, 边下边看, 可动态缩放图片尺寸节省流量</li>
+            <li>HTTP Basic Auth 鉴权, 沿用现有 smanga 账号</li>
+            <li>媒体库权限过滤: 第三方客户端看到的内容与该用户在 Web 端一致</li>
+          </ul>
+
+          <h3 class="subsection-title">开启方式</h3>
+          <p>在服务端 <code>.env</code> 文件中确认以下配置, 修改后重启服务即可:</p>
+          <div class="code-block">
+            <pre><code># 是否启用 OPDS 接口 (默认开启)
+OPDS_ENABLED=true
+
+# 每页条目数 (可选, 默认 30)
+OPDS_PAGE_SIZE=30
+
+# 对外暴露的根地址 (可选, 留空时自动根据请求推断;
+# 若使用反向代理且域名/端口不同, 建议显式指定)
+# OPDS_BASE_URL=https://manga.example.com</code></pre>
+          </div>
+
+          <h3 class="subsection-title">订阅地址</h3>
+          <p>在第三方阅读器中 "添加 OPDS 目录 / Catalog" 时, 填写以下信息:</p>
+          <ul class="steps-list">
+            <li><strong>URL</strong>: <code>http(s)://&lt;你的smanga地址&gt;/opds</code></li>
+            <li><strong>用户名 / 密码</strong>: 您的 smanga 登录账号</li>
+          </ul>
+          <p>示例: <code>http://192.168.1.10:3000/opds</code> 或 <code>https://manga.example.com/opds</code></p>
+
+          <h3 class="subsection-title">可用接口一览</h3>
+          <el-table :data="opdsEndpoints" border size="small" style="width: 100%">
+            <el-table-column prop="path" label="路径" width="320" />
+            <el-table-column prop="desc" label="说明" />
+          </el-table>
+
+          <h3 class="subsection-title">常见问题</h3>
+          <div class="note-card">
+            <div class="note-icon"><i class="el-icon-question"></i></div>
+            <div class="note-content">
+              <h3 class="note-title">客户端提示 401 / 无法登录?</h3>
+              <p>请确认账号密码正确, 并且服务端未关闭 <code>OPDS_ENABLED</code>. 若通过反向代理访问, 需保留 <code>Authorization</code> 请求头.</p>
+            </div>
+          </div>
+          <div class="note-card">
+            <div class="note-icon"><i class="el-icon-question"></i></div>
+            <div class="note-content">
+              <h3 class="note-title">下载的目录型章节是 CBZ 文件</h3>
+              <p>对于图片目录章节 (非压缩包), Smanga 会即时将其中的图片按顺序打包为 CBZ 返回, 绝大多数漫画阅读器均可直接识别.</p>
+            </div>
+          </div>
+          <div class="note-card">
+            <div class="note-icon"><i class="el-icon-question"></i></div>
+            <div class="note-content">
+              <h3 class="note-title">压缩包章节第一次打开较慢?</h3>
+              <p>PSE 流式翻页在首次访问压缩包章节时会触发一次同步解压并写入缓存, 后续访问将直接命中缓存速度很快. PDF 章节不支持流式翻页, 请使用下载方式阅读.</p>
+            </div>
+          </div>
+          <div class="note-card">
+            <div class="note-icon"><i class="el-icon-question"></i></div>
+            <div class="note-content">
+              <h3 class="note-title">想节省流量 / 加速移动网络阅读</h3>
+              <p>支持 PSE 的客户端会自动在请求 URL 中带上 <code>width</code> 参数, 服务端会使用 sharp 按需等比缩图为 JPEG 返回; 也可手动访问 <code>/opds/chapter/&lt;id&gt;/page/1?width=1080</code> 测试.</p>
+            </div>
+          </div>
+
+          <!-- Homepage (gethomepage.dev) 集成 -->
+          <h3 class="subsection-title">Homepage 仪表盘集成</h3>
+          <p>
+            Smanga 提供了对 <a href="https://gethomepage.dev/" target="_blank"><strong>Homepage</strong></a>
+            的原生适配, 通过其
+            <a href="https://gethomepage.dev/widgets/services/customapi/" target="_blank"><code>customapi</code></a>
+            组件即可把漫画库的统计数据 (媒体库 / 漫画 / 章节 / 标签 / 用户 / 今日阅读量 等) 直接展示到您的 Homepage 首页.
+          </p>
+
+          <h3 class="subsection-title">开启方式</h3>
+          <p>在服务端 <code>.env</code> 中配置一个自定义 apikey (可选, 留空则不校验, 仅建议本地调试时使用):</p>
+          <div class="code-block">
+            <pre><code># Homepage customapi 鉴权密钥 (推荐设置)
+HOMEPAGE_API_KEY=your-random-key-here</code></pre>
+          </div>
+          <p>接口地址: <code>GET http(s)://&lt;你的smanga地址&gt;/homepage/statistic</code>, 支持以下三种鉴权方式之一:</p>
+          <ul class="steps-list">
+            <li>Query 参数: <code>?apikey=your-random-key-here</code></li>
+            <li>请求头: <code>X-API-Key: your-random-key-here</code></li>
+            <li>请求头: <code>Authorization: Bearer your-random-key-here</code></li>
+          </ul>
+
+          <h3 class="subsection-title">Homepage 配置示例 (services.yaml)</h3>
+          <p>将下面片段粘贴到 Homepage 配置目录的 <code>services.yaml</code> 中, 替换域名与 apikey 后即可生效:</p>
+          <div class="code-block">
+            <pre><code>- 漫画:
+    - Smanga:
+        icon: mdi-book-open-page-variant
+        href: https://manga.example.com
+        description: 漫画流媒体阅读
+        widget:
+          type: customapi
+          url: https://manga.example.com/homepage/statistic
+          refreshInterval: 30000
+          method: GET
+          headers:
+            X-API-Key: your-random-key-here
+          display: list
+          mappings:
+            - field:
+                data: manga_count
+              label: 漫画
+              format: number
+            - field:
+                data: chapter_count
+              label: 章节
+              format: number
+            - field:
+                data: today_views
+              label: 今日阅读
+              format: number
+            - field:
+                data: latest_manga
+              label: 最新入库</code></pre>
+          </div>
+          <p>
+            说明: <code>mappings.field.data</code> 支持任意在响应 <code>data</code> 对象下的字段;
+            <code>format</code> 可选 <code>number / float / percent / bytes / date / relativeDate / text</code>,
+            更多用法请参考
+            <a href="https://gethomepage.dev/widgets/services/customapi/" target="_blank">Homepage customapi 官方文档</a>.
+          </p>
+
+          <h3 class="subsection-title">响应字段一览</h3>
+          <p>接口返回体结构为 <code>{ code, data: { ... }, message }</code>, 下表列出 <code>data</code> 中可用的字段 (均为扁平结构, 可直接用于 mappings):</p>
+          <el-table :data="homepageFields" border size="small" style="width: 100%">
+            <el-table-column prop="field" label="字段" width="220" />
+            <el-table-column prop="type" label="类型" width="120" />
+            <el-table-column prop="desc" label="说明" />
+          </el-table>
+
+          <div class="note-card">
+            <div class="note-icon"><i class="el-icon-info"></i></div>
+            <div class="note-content">
+              <h3 class="note-title">无需登录 token</h3>
+              <p>为方便 Homepage 调用, 该接口走独立的 <code>apikey</code> 校验, 不经过前端登录态; 请务必设置 <code>HOMEPAGE_API_KEY</code> 并仅在内网或反向代理后暴露.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <!-- 注意事项 -->
       <div v-if="activeTab === 'notes'" class="content-section">
         <h2 class="section-title">注意事项</h2>
@@ -351,6 +509,42 @@ type versionDataType = {
 // 状态管理
 const activeTab = ref('intro');
 const versionDataRef = ref<versionDataType[]>([]);
+
+// OPDS 外部支持 - 接口一览
+const opdsEndpoints = [
+  { path: '/opds', desc: '根目录 (Catalog 入口, 填这个即可)' },
+  { path: '/opds/libraries', desc: '媒体库列表' },
+  { path: '/opds/libraries/:mediaId', desc: '某媒体库下的漫画列表 (分页)' },
+  { path: '/opds/manga/:mangaId', desc: '某漫画下的章节列表 (分页)' },
+  { path: '/opds/chapter/:chapterId', desc: '章节详情 entry' },
+  { path: '/opds/chapter/:chapterId/download', desc: '下载章节 (zip/cbz/pdf 直接流式; 图片目录打包为 CBZ)' },
+  { path: '/opds/chapter/:chapterId/page/:page', desc: 'PSE 流式翻页, 支持 ?width=1080 按需缩图' },
+  { path: '/opds/chapter/:chapterId/cover', desc: '章节封面' },
+  { path: '/opds/manga/:mangaId/cover', desc: '漫画封面' },
+  { path: '/opds/search?q=关键词', desc: '全库搜索' },
+  { path: '/opds/opensearch.xml', desc: 'OpenSearch 描述文档 (客户端自动发现)' },
+  { path: '/opds/latest', desc: '最新更新 Feed' },
+  { path: '/opds/collects', desc: '我的收藏 Feed' },
+];
+
+// Homepage customapi - 响应字段一览 (GET /homepage/statistic)
+const homepageFields = [
+  { field: 'media_count', type: 'number', desc: '媒体库数量 (未删除)' },
+  { field: 'manga_count', type: 'number', desc: '漫画数量 (未删除)' },
+  { field: 'chapter_count', type: 'number', desc: '章节数量 (未删除)' },
+  { field: 'tag_count', type: 'number', desc: '标签数量' },
+  { field: 'user_count', type: 'number', desc: '用户数量' },
+  { field: 'collect_count', type: 'number', desc: '收藏数量' },
+  { field: 'bookmark_count', type: 'number', desc: '书签数量' },
+  { field: 'history_count', type: 'number', desc: '阅读历史总数' },
+  { field: 'today_views', type: 'number', desc: '今日阅读次数 (按 history 记录)' },
+  { field: 'week_views', type: 'number', desc: '近 7 天阅读次数' },
+  { field: 'latest_manga', type: 'string', desc: '最新入库漫画名称' },
+  { field: 'latest_manga_time', type: 'datetime|null', desc: '最新入库漫画的创建时间 (ISO)' },
+  { field: 'latest_chapter', type: 'string', desc: '最新入库章节名称' },
+  { field: 'latest_chapter_time', type: 'datetime|null', desc: '最新入库章节的创建时间 (ISO)' },
+  { field: 'server_time', type: 'string', desc: '服务器当前时间 (ISO 8601)' },
+];
 // 直接从package.json导入版本号
 import packageJson from '../../../package.json';
 const version = packageJson.version || '0.0.0';
