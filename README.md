@@ -425,19 +425,26 @@ Smanga 内置了 **OPDS (Open Publication Distribution System) 1.2** 协议支�
 
 ### 开启方式
 
-在服务端 `.env` 文件中配置以下环境变量, 修改后重启服务即可生效:
+OPDS 默认已开启, 相关配置位于 `/data/config/smanga.json` (Windows 为项目目录下的 `data/config/smanga.json`) 的 `opds` 节, 修改后无需重启服务即可生效:
 
-```env
-# 是否启用 OPDS 接口 (默认开启)
-OPDS_ENABLED=true
+```json
+{
+  "opds": {
+    // 是否启用 OPDS 接口, 1 开启 / 0 关闭 (默认 1)
+    "enabled": 1,
 
-# 每页条目数 (可选, 默认 30)
-OPDS_PAGE_SIZE=30
+    // 每页条目数 (默认 30)
+    "pageSize": 30,
 
-# 对外暴露的根地址 (可选, 留空时自动根据请求推断;
-# 若使用反向代理且域名/端口不同, 建议显式指定)
-# OPDS_BASE_URL=https://manga.example.com
+    // 对外暴露的根地址, 留空时自动根据请求推断
+    // 若使用反向代理且域名/端口不同, 建议显式指定, 例如:
+    // "baseUrl": "https://manga.example.com"
+    "baseUrl": ""
+  }
+}
 ```
+
+> 老版本通过 `.env` 里 `OPDS_ENABLED / OPDS_PAGE_SIZE / OPDS_BASE_URL` 配置的方式已废弃, 升级后这些变量会被忽略, 请将配置迁移到 `smanga.json` 的 `opds` 节.
 
 ### 订阅地址
 
@@ -471,7 +478,7 @@ OPDS_PAGE_SIZE=30
 
 ### 常见问题
 
-- **客户端提示 401 / 无法登录?** 请确认账号密码正确, 并且服务端未关闭 `OPDS_ENABLED`. 使用反向代理时需保留 `Authorization` 请求头.
+- **客户端提示 401 / 无法登录?** 请确认账号密码正确, 并且 `smanga.json` 中 `opds.enabled` 未被设为 `0`. 使用反向代理时需保留 `Authorization` 请求头.
 - **下载目录型章节为何是 CBZ 文件?** 对于图片目录章节 (非压缩包), Smanga 会即时将其中图片按顺序打包为 CBZ 返回, 绝大多数漫画阅读器均可直接识别.
 - **压缩包章节第一次打开较慢?** PSE 翻页在首次访问压缩包章节时会触发一次同步解压并写入缓存, 后续访问直接命中缓存. PDF 章节不支持流式翻页, 请使用下载方式阅读.
 - **想节省流量 / 加速移动网络阅读?** 支持 PSE 的客户端会自动在请求 URL 中带上 `width` 参数; 也可手动访问 `/opds/chapter/<id>/page/1?width=1080` 测试效果.

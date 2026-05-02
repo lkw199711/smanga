@@ -254,18 +254,27 @@ services:
           </ul>
 
           <h3 class="subsection-title">开启方式</h3>
-          <p>在服务端 <code>.env</code> 文件中确认以下配置, 修改后重启服务即可:</p>
+          <p>OPDS 默认已开启, 相关配置位于 <code>/data/config/smanga.json</code> (Windows 为项目目录下的 <code>data/config/smanga.json</code>) 的 <code>opds</code> 节, 修改后无需重启服务即可生效:</p>
           <div class="code-block">
-            <pre><code># 是否启用 OPDS 接口 (默认开启)
-OPDS_ENABLED=true
+            <pre><code>{
+  "opds": {
+    // 是否启用 OPDS 接口, 1 开启 / 0 关闭 (默认 1)
+    "enabled": 1,
 
-# 每页条目数 (可选, 默认 30)
-OPDS_PAGE_SIZE=30
+    // 每页条目数 (默认 30)
+    "pageSize": 30,
 
-# 对外暴露的根地址 (可选, 留空时自动根据请求推断;
-# 若使用反向代理且域名/端口不同, 建议显式指定)
-# OPDS_BASE_URL=https://manga.example.com</code></pre>
+    // 对外暴露的根地址, 留空时自动根据请求推断
+    // 若使用反向代理且域名/端口不同, 建议显式指定, 例如:
+    // "baseUrl": "https://manga.example.com"
+    "baseUrl": ""
+  }
+}</code></pre>
           </div>
+          <p class="tip-text">
+            老版本通过 <code>.env</code> 里 <code>OPDS_ENABLED / OPDS_PAGE_SIZE / OPDS_BASE_URL</code> 配置的方式已废弃,
+            升级后这些变量会被忽略, 请将配置迁移到 <code>smanga.json</code> 的 <code>opds</code> 节.
+          </p>
 
           <h3 class="subsection-title">订阅地址</h3>
           <p>在第三方阅读器中 "添加 OPDS 目录 / Catalog" 时, 填写以下信息:</p>
@@ -286,7 +295,7 @@ OPDS_PAGE_SIZE=30
             <div class="note-icon"><i class="el-icon-question"></i></div>
             <div class="note-content">
               <h3 class="note-title">客户端提示 401 / 无法登录?</h3>
-              <p>请确认账号密码正确, 并且服务端未关闭 <code>OPDS_ENABLED</code>. 若通过反向代理访问, 需保留 <code>Authorization</code> 请求头.</p>
+              <p>请确认账号密码正确, 并且 <code>smanga.json</code> 中 <code>opds.enabled</code> 未被设为 <code>0</code>. 若通过反向代理访问, 需保留 <code>Authorization</code> 请求头.</p>
             </div>
           </div>
           <div class="note-card">
