@@ -184,6 +184,149 @@
       </div>
     </el-card>
 
+    <!-- P2P 设置卡片 -->
+    <el-card class="setting-card mt-6" shadow="hover">
+      <template #header>
+        <div class="card-header">
+          <span class="card-title">P2P 设置</span>
+          <span class="text-sm text-gray-500 ml-2">(分布式漫画同步与多源下载)</span>
+        </div>
+      </template>
+
+      <el-form :model="form" label-width="180px" size="default">
+        <el-row :gutter="20">
+          <!-- 总开关 -->
+          <el-col :span="24">
+            <el-form-item label="启用 P2P">
+              <el-switch v-model="form.p2p.enable" />
+              <el-button type="primary" @click="comfirm_p2p_enable" class="ml-4">确定</el-button>
+            </el-form-item>
+          </el-col>
+
+          <!-- 角色选择 -->
+          <el-col :span="24">
+            <el-form-item label="作为节点(Node)">
+              <el-switch v-model="form.p2p.role.node" />
+              <el-button type="primary" @click="comfirm_p2p_role_node" class="ml-4">确定</el-button>
+              <span class="suffix ml-2 text-gray-500">作为下载节点向 Tracker 注册并参与拉取/做种</span>
+            </el-form-item>
+          </el-col>
+
+          <el-col :span="24">
+            <el-form-item label="作为 Tracker">
+              <el-switch v-model="form.p2p.role.tracker" />
+              <el-button type="primary" @click="comfirm_p2p_role_tracker" class="ml-4">确定</el-button>
+              <span class="suffix ml-2 text-gray-500">本机对外提供 Tracker 服务,供其它节点注册</span>
+            </el-form-item>
+          </el-col>
+
+          <!-- 节点信息 -->
+          <el-col :span="24">
+            <el-form-item label="节点名称">
+              <el-input v-model="form.p2p.node.nodeName" placeholder="自定义节点显示名" :style="{ width: '300px' }" />
+              <el-button type="primary" @click="comfirm_p2p_node_name" class="ml-4">确定</el-button>
+            </el-form-item>
+          </el-col>
+
+          <el-col :span="24">
+            <el-form-item label="本机公网地址">
+              <el-input v-model="form.p2p.node.publicHost"
+                placeholder="例如 1.2.3.4 或 nas.example.com,留空由 Tracker 自动识别"
+                :style="{ width: '500px' }" />
+              <el-button type="primary" @click="comfirm_p2p_public_host" class="ml-4">确定</el-button>
+            </el-form-item>
+          </el-col>
+
+          <el-col :span="24">
+            <el-form-item label="本机公网端口">
+              <el-input v-model="form.p2p.node.publicPort" type="number" min="0"
+                placeholder="对外可达端口,留 0 则使用监听端口" :style="{ width: '180px' }" />
+              <el-button type="primary" @click="comfirm_p2p_public_port" class="ml-4">确定</el-button>
+              <span class="suffix ml-2 text-gray-500">NAT 后需要做端口映射</span>
+            </el-form-item>
+          </el-col>
+
+          <el-col :span="24">
+            <el-form-item label="本机监听端口">
+              <el-input v-model="form.p2p.node.listenPort" type="number" min="1"
+                placeholder="P2P HTTP 监听端口" :style="{ width: '180px' }" />
+              <el-button type="primary" @click="comfirm_p2p_listen_port" class="ml-4">确定</el-button>
+              <span class="suffix ml-2 text-gray-500">修改后需要重启服务</span>
+            </el-form-item>
+          </el-col>
+
+          <el-col :span="24">
+            <el-form-item label="心跳间隔">
+              <el-input v-model="form.p2p.node.heartbeatInterval" type="number" min="10"
+                :style="{ width: '180px' }" />
+              <span class="suffix ml-2 text-gray-500">秒(最小 10)</span>
+              <el-button type="primary" @click="comfirm_p2p_heartbeat" class="ml-4">确定</el-button>
+            </el-form-item>
+          </el-col>
+
+          <!-- Tracker 列表 -->
+          <el-col :span="24">
+            <el-form-item label="Tracker 服务器">
+              <div class="tracker-list">
+                <div v-for="(_, idx) in p2pTrackerInputs" :key="idx" class="tracker-row">
+                  <el-input v-model="p2pTrackerInputs[idx]"
+                    placeholder="http://tracker.example.com:9798"
+                    :style="{ width: '500px' }" />
+                  <el-button type="danger" link @click="remove_tracker_input(idx)" class="ml-2">移除</el-button>
+                </div>
+                <div class="tracker-actions mt-2">
+                  <el-button @click="add_tracker_input">+ 添加 Tracker</el-button>
+                  <el-button type="primary" @click="comfirm_p2p_trackers" class="ml-2">保存 Tracker 列表</el-button>
+                </div>
+              </div>
+            </el-form-item>
+          </el-col>
+
+          <!-- 仅在作为 tracker 时显示 -->
+          <el-col :span="24" v-if="form.p2p.role.tracker">
+            <el-form-item label="Tracker 对外地址">
+              <el-input v-model="form.p2p.tracker.publicUrl"
+                placeholder="例如 http://tracker.example.com:9798"
+                :style="{ width: '500px' }" />
+              <el-button type="primary" @click="comfirm_p2p_tracker_public_url" class="ml-4">确定</el-button>
+            </el-form-item>
+          </el-col>
+
+          <el-col :span="24" v-if="form.p2p.role.tracker">
+            <el-form-item label="允许公开注册">
+              <el-switch v-model="form.p2p.tracker.allowPublicRegister" />
+              <el-button type="primary" @click="comfirm_p2p_allow_public_register" class="ml-4">确定</el-button>
+              <span class="suffix ml-2 text-gray-500">关闭后需要邀请码才能注册</span>
+            </el-form-item>
+          </el-col>
+
+          <el-col :span="24" v-if="form.p2p.role.tracker">
+            <el-form-item label="强制邀请码">
+              <el-switch v-model="form.p2p.tracker.requireInviteToRegister" />
+              <el-button type="primary" @click="comfirm_p2p_require_invite" class="ml-4">确定</el-button>
+            </el-form-item>
+          </el-col>
+
+          <el-col :span="24" v-if="form.p2p.node.nodeId">
+            <el-form-item label="当前节点 ID">
+              <el-input v-model="form.p2p.node.nodeId" readonly :style="{ width: '500px' }" />
+              <span class="suffix ml-2 text-gray-500">由 Tracker 分配,只读</span>
+            </el-form-item>
+          </el-col>
+        </el-row>
+      </el-form>
+
+      <div class="form-note mt-4 text-gray-500 text-sm">
+        <p>• <b>启用 P2P</b>:总开关,关闭后本机不参与任何 P2P 通信。</p>
+        <p>• <b>作为节点</b>:开启后会向 Tracker 列表注册自身,参与多源下载。</p>
+        <p>• <b>作为 Tracker</b>:本机对外提供索引服务,允许其它节点注册并相互发现。</p>
+        <p>• <b>本机公网地址 / 端口</b>:其它节点连过来时使用的地址。Tracker 会反向探测可达性,无法连通将拒绝注册。</p>
+        <p>• 留空公网地址时,Tracker 会用请求来源 IP 自动识别;但若你处于内网,必须显式填写公网信息并做端口映射。</p>
+        <p>• <b>Tracker 服务器</b>:本节点要注册到的 Tracker 地址列表,可填多个。修改后会自动用新配置重新注册。</p>
+        <p>• 监听端口变更需要重启服务才能生效。</p>
+      </div>
+    </el-card>
+
     <!-- 登录封面设置卡片 -->
     <el-card class="setting-card mt-6" shadow="hover">
       <template #header>
@@ -256,7 +399,43 @@ const form = reactive({
     clearCron: '',
     limit: 0,
   },
+  p2p: {
+    enable: false,
+    role: {
+      node: false,
+      tracker: false,
+    },
+    node: {
+      nodeId: '',
+      nodeName: '',
+      listenPort: 19798,
+      publicHost: '',
+      publicPort: 0,
+      heartbeatInterval: 30,
+      trackers: [] as string[],
+    },
+    tracker: {
+      publicUrl: '',
+      allowPublicRegister: true,
+      requireInviteToRegister: false,
+    },
+  },
 });
+
+// P2P trackers 列表的临时编辑模型(以字符串数组形式绑定输入框)
+const p2pTrackerInputs = ref<string[]>([]);
+// 同步 form.p2p.node.trackers -> p2pTrackerInputs(在加载与每次提交后调用)
+function syncTrackerInputs() {
+  const list = (form.p2p.node.trackers || []).slice();
+  p2pTrackerInputs.value = list.length ? list : [''];
+}
+function add_tracker_input() {
+  p2pTrackerInputs.value.push('');
+}
+function remove_tracker_input(index: number) {
+  p2pTrackerInputs.value.splice(index, 1);
+  if (!p2pTrackerInputs.value.length) p2pTrackerInputs.value.push('');
+}
 
 // 计算封面图片URL
 const getCoverUrl = (index: number) => {
@@ -408,10 +587,134 @@ async function reset_ssl() {
   }
 }
 
+// ===== P2P 设置提交方法 =====
+async function comfirm_p2p_enable() {
+  try {
+    await serveSettingApi.set('p2p', 'enable', form.p2p.enable);
+    ElMessage.success(form.p2p.enable ? 'P2P 已开启' : 'P2P 已关闭');
+  } catch (error) {
+    console.error('Failed to set p2p.enable:', error);
+  }
+}
+
+async function comfirm_p2p_role_node() {
+  try {
+    await serveSettingApi.set('p2p', 'role.node', form.p2p.role.node);
+    ElMessage.success('已保存,节点角色变更后会自动重新注册');
+  } catch (error) {
+    console.error('Failed to set p2p.role.node:', error);
+  }
+}
+
+async function comfirm_p2p_role_tracker() {
+  try {
+    await serveSettingApi.set('p2p', 'role.tracker', form.p2p.role.tracker);
+    ElMessage.success('已保存,Tracker 角色变更建议重启服务');
+  } catch (error) {
+    console.error('Failed to set p2p.role.tracker:', error);
+  }
+}
+
+async function comfirm_p2p_node_name() {
+  try {
+    await serveSettingApi.set('p2p', 'node.nodeName', form.p2p.node.nodeName);
+    ElMessage.success('节点名称已保存');
+  } catch (error) {
+    console.error('Failed to set p2p.node.nodeName:', error);
+  }
+}
+
+async function comfirm_p2p_public_host() {
+  try {
+    await serveSettingApi.set('p2p', 'node.publicHost', form.p2p.node.publicHost);
+    ElMessage.success('公网地址已保存,节点将自动重新注册');
+  } catch (error) {
+    console.error('Failed to set p2p.node.publicHost:', error);
+  }
+}
+
+async function comfirm_p2p_public_port() {
+  try {
+    await serveSettingApi.set('p2p', 'node.publicPort', Number(form.p2p.node.publicPort) || 0);
+    ElMessage.success('公网端口已保存,节点将自动重新注册');
+  } catch (error) {
+    console.error('Failed to set p2p.node.publicPort:', error);
+  }
+}
+
+async function comfirm_p2p_listen_port() {
+  try {
+    await serveSettingApi.set('p2p', 'node.listenPort', Number(form.p2p.node.listenPort) || 19798);
+    ElMessage.warning('监听端口已保存,需要重启服务后生效');
+  } catch (error) {
+    console.error('Failed to set p2p.node.listenPort:', error);
+  }
+}
+
+async function comfirm_p2p_heartbeat() {
+  try {
+    await serveSettingApi.set('p2p', 'node.heartbeatInterval', Number(form.p2p.node.heartbeatInterval) || 30);
+    ElMessage.success('心跳间隔已保存');
+  } catch (error) {
+    console.error('Failed to set p2p.node.heartbeatInterval:', error);
+  }
+}
+
+async function comfirm_p2p_trackers() {
+  try {
+    // 过滤空值并去重
+    const list = Array.from(
+      new Set(
+        p2pTrackerInputs.value
+          .map((u) => String(u || '').trim())
+          .filter((u) => /^https?:\/\//i.test(u))
+      )
+    );
+    if (list.length === 0) {
+      ElMessage.warning('请至少填写一个有效的 tracker 地址(以 http:// 或 https:// 开头)');
+      return;
+    }
+    await serveSettingApi.set('p2p', 'node.trackers', list);
+    form.p2p.node.trackers = list;
+    syncTrackerInputs();
+    ElMessage.success('Tracker 列表已保存,节点将自动重新注册');
+  } catch (error) {
+    console.error('Failed to set p2p.node.trackers:', error);
+  }
+}
+
+async function comfirm_p2p_tracker_public_url() {
+  try {
+    await serveSettingApi.set('p2p', 'tracker.publicUrl', form.p2p.tracker.publicUrl);
+    ElMessage.success('Tracker 对外地址已保存');
+  } catch (error) {
+    console.error('Failed to set p2p.tracker.publicUrl:', error);
+  }
+}
+
+async function comfirm_p2p_allow_public_register() {
+  try {
+    await serveSettingApi.set('p2p', 'tracker.allowPublicRegister', form.p2p.tracker.allowPublicRegister);
+    ElMessage.success('已保存');
+  } catch (error) {
+    console.error('Failed to set p2p.tracker.allowPublicRegister:', error);
+  }
+}
+
+async function comfirm_p2p_require_invite() {
+  try {
+    await serveSettingApi.set('p2p', 'tracker.requireInviteToRegister', form.p2p.tracker.requireInviteToRegister);
+    ElMessage.success('已保存');
+  } catch (error) {
+    console.error('Failed to set p2p.tracker.requireInviteToRegister:', error);
+  }
+}
+
 onMounted(async () => {
   try {
     const res = await serveSettingApi.get();
     Object.assign(form, res);
+    syncTrackerInputs();
 
     const val = localStorage.getItem('activeBack');
     if (val && val !== '0') {
@@ -552,5 +855,20 @@ onMounted(async () => {
 
 .text-sm {
   font-size: 12px;
+}
+
+.tracker-list {
+  width: 100%;
+}
+
+.tracker-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.tracker-actions {
+  display: flex;
+  align-items: center;
 }
 </style>
