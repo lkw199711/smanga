@@ -130,6 +130,21 @@ export const p2pTransferApi = {
     const res = await ajax.post(`p2p/transfer/${id}/retry`);
     return res.data;
   },
+
+  /** 删除单条传输记录 (进行中的会先取消再删除) */
+  async destroy(id: number) {
+    const res = await ajax.delete(`p2p/transfer/${id}`);
+    return res.data;
+  },
+
+  /**
+   * 批量清理已结束的任务记录
+   * @param status 可选,指定只清理某个终态(success | failed | canceled);不传则清理全部已结束记录
+   */
+  async clear(status?: 'success' | 'failed' | 'canceled') {
+    const res = await ajax.post('p2p/transfer/clear', status ? { status } : {});
+    return res.data;
+  },
 };
 
 export default { p2pGroupApi, p2pShareApi, p2pPeerApi, p2pTransferApi };

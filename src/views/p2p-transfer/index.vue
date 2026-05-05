@@ -11,6 +11,9 @@
       <el-button type="primary" :icon="Refresh" @click="load_table(browse.manageListPage, browse.manageListPageSizeCache)">
         {{ $t('option.refresh') }}
       </el-button>
+      <el-button type="danger" :icon="Delete" @click="clear_finished">
+        {{ t('p2pTransfer.clearFinished') }}
+      </el-button>
       <el-switch v-model="autoRefresh" style="margin-left: 16px" :active-text="$t('option.refresh')" />
     </div>
 
@@ -36,13 +39,16 @@
       </el-table-column>
       <el-table-column prop="error" :label="t('p2pTransfer.errorMessage')" width="200" show-overflow-tooltip></el-table-column>
       <el-table-column prop="createTime" :label="t('createTime')" width="160"></el-table-column>
-      <el-table-column :label="t('account.option')" width="180">
+      <el-table-column :label="t('account.option')" width="240">
         <template v-slot="scope">
           <el-button v-if="scope.row.status === 'pending' || scope.row.status === 'running'" size="small" type="warning" @click="cancel_transfer(scope.row)">
             {{ t('p2pTransfer.cancel') }}
           </el-button>
           <el-button v-if="scope.row.status === 'failed' || scope.row.status === 'canceled'" size="small" type="success" @click="retry_transfer(scope.row)">
             {{ t('p2pTransfer.retry') }}
+          </el-button>
+          <el-button size="small" type="danger" @click="delete_transfer(scope.row)">
+            {{ t('p2pTransfer.delete') }}
           </el-button>
         </template>
       </el-table-column>
@@ -55,7 +61,7 @@
 export default {name: 'p2p-transfer'};
 </script>
 <script setup lang="ts">
-import {Refresh} from '@element-plus/icons-vue';
+import {Refresh, Delete} from '@element-plus/icons-vue';
 import {onMounted, onUnmounted, ref, watch} from 'vue';
 import i18n from '@/i18n';
 import useBrowseStore from '@/store/browse';
@@ -179,6 +185,45 @@ async function retry_transfer(row: P2PTransferType) {
     await load_table(browse.manageListPage, browse.manageListPageSizeCache);
   } catch (err: any) {
     ElMessage.error(err?.message || 'retry failed');
+  }
+}
+
+async function delete_transfer(row: P2PTransferType) {
+  if (!row.p2pTransferId) return;
+  try {
+    await ElMessageBox.confirm(t('p2pTransfer.deleteConfirm'), t('p2pTransfer.delete'), {
+      type: 'warning',
+      confirmButtonText: t('option.confirm'),
+      cancelButtonText: t('option.cancel'),
+    });
+  } catch {
+    return; // 用户取消
+  }
+  try {
+    await p2pTransferApi.destroy(row.p2pTransferId);
+    ElMessage.success(t('p2pTransfer.delete'));
+    await load_table(browse.manageListPage, browse.manageListPageSizeCache);
+  } catch (err: any) {
+    ElMessage.error(err?.message || 'delete failed');
+  }
+}
+
+async function clear_finished() {
+  try {
+    await ElMessageBox.confirm(t('p2pTransfer.clearConfirm'), t('p2pTransfer.clearFinished'), {
+      type: 'warning',
+      confirmButtonText: t('option.confirm'),
+      cancelButtonText: t('option.cancel'),
+    });
+  } catch {
+    return; // 用户取消
+  }
+  try {
+    const res = await p2pTransferApi.clear();
+    ElMessage.success(res?.message || t('p2pTransfer.clearFinished'));
+    await load_table(1, browse.manageListPageSizeCache);
+  } catch (err: any) {
+    ElMessage.error(err?.message || 'clear failed');
   }
 }
 </script>

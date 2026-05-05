@@ -540,6 +540,10 @@
     "statusCanceled": "Canceled",
     "cancel": "Cancel",
     "retry": "Retry",
+    "delete": "Delete",
+    "clearFinished": "Clear Finished",
+    "deleteConfirm": "Delete this transfer record? Running tasks will be canceled first.",
+    "clearConfirm": "Clear all completed/failed/canceled transfer records? This cannot be undone.",
     "errorMessage": "Error"
   }
 }

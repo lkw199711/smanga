@@ -544,6 +544,10 @@
     "statusCanceled": "已取消",
     "cancel": "取消",
     "retry": "重试",
+    "delete": "删除",
+    "clearFinished": "清理已结束",
+    "deleteConfirm": "确认删除该传输记录？进行中的任务会先被取消。",
+    "clearConfirm": "确认清理所有已完成/失败/已取消的传输记录？此操作不可恢复。",
     "errorMessage": "错误信息"
   }
 }

@@ -141,6 +141,7 @@ export type P2PLocalShareUpdateParams = {
 export type P2PPullCreateParams = {
   groupNo: string;
   peerNodeId: string;
+  peerBaseUrl: string; // 对端 http 入口,例如 http://1.2.3.4:3000 (由前端从 /p2p/peer/members 拿到)
   transferType: 'media' | 'manga' | 'chapter';
   remoteMediaId?: number;
   remoteMangaId?: number;
