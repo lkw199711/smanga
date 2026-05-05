@@ -320,6 +320,71 @@ const routes: Array<RouteRecordRaw> = [
 		],
 	},
 
+	// P2P 共享
+	{
+		path: '/p2p',
+		redirect: '/p2p-group',
+		meta: {
+			submenu: true,
+			sidebar: true,
+			onlyAdmin: true,
+			title: 'p2p',
+			icon: 'share',
+			view: 'setting',
+		},
+		component: Layout,
+		children: [
+			{
+				path: '/p2p-group',
+				name: 'p2p-group',
+				meta: {
+					sidebar: true,
+					onlyAdmin: true,
+					title: 'p2pGroup',
+					icon: 'share',
+					view: 'setting',
+				},
+				component: () => import('../views/p2p-group/index.vue'),
+			},
+			{
+				path: '/p2p-share',
+				name: 'p2p-share',
+				meta: {
+					sidebar: true,
+					onlyAdmin: true,
+					title: 'p2pShare',
+					icon: 'share',
+					view: 'setting',
+				},
+				component: () => import('../views/p2p-share/index.vue'),
+			},
+			{
+				path: '/p2p-peers',
+				name: 'p2p-peers',
+				meta: {
+					sidebar: true,
+					onlyAdmin: true,
+					title: 'p2pPeers',
+					icon: 'media-list',
+					view: 'setting',
+				},
+				component: () => import('../views/p2p-peers/index.vue'),
+			},
+			{
+				path: '/p2p-transfer',
+				name: 'p2p-transfer',
+				meta: {
+					sidebar: true,
+					onlyAdmin: true,
+					title: 'p2pTransfer',
+					icon: 'sync',
+					view: 'setting',
+				},
+				component: () => import('../views/p2p-transfer/index.vue'),
+			},
+		],
+	},
+
 	// 用户与服务器设置
 	{
 		path: '/setting',

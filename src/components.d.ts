@@ -74,7 +74,6 @@ declare module 'vue' {
     TablePager: typeof import('./components/table-pager.vue')['default']
   }
   export interface GlobalDirectives {
-    vInfiniteScroll: typeof import('element-plus/es')['ElInfiniteScroll']
     vLoading: typeof import('element-plus/es')['ElLoadingDirective']
   }
 }

@@ -1,0 +1,242 @@
+<template>
+  <div class="manga-setting-box manage-container">
+    <!-- 顶部:群组选择 + 操作 -->
+    <div class="btn-box">
+      <el-select v-model="groupId" :placeholder="t('p2pPeers.selectGroup')" style="width: 260px; margin-right: 10px" @change="on_group_change">
+        <el-option v-for="g in groupList" :key="g.p2pGroupId" :label="`${g.groupName} (${g.groupNo})`" :value="g.p2pGroupId as number"></el-option>
+      </el-select>
+      <el-button type="primary" :icon="Refresh" :disabled="!groupNo" @click="load_all">{{ $t('p2pPeers.fromTracker') }}</el-button>
+      <el-button type="info" :icon="DocumentCopy" :disabled="!groupNo" @click="load_cache">{{ $t('p2pPeers.fromCache') }}</el-button>
+    </div>
+
+    <!-- 成员 -->
+    <h3 class="section-title">{{ t('p2pPeers.members') }}</h3>
+    <el-table :data="members" stripe border v-loading="loadingMembers" size="small">
+      <el-table-column type="index" :label="t('account.serial')" width="54"></el-table-column>
+      <el-table-column prop="nodeId" :label="t('p2pPeers.nodeId')" width="260" show-overflow-tooltip></el-table-column>
+      <el-table-column prop="nodeName" :label="t('p2pPeers.nodeName')" width="180"></el-table-column>
+      <el-table-column prop="publicHost" label="Public" width="180" show-overflow-tooltip>
+        <template v-slot="scope">
+          <span v-if="scope.row.publicHost">{{ scope.row.publicHost }}:{{ scope.row.publicPort }}</span>
+          <span v-else>-</span>
+        </template>
+      </el-table-column>
+      <el-table-column prop="online" :label="t('p2pPeers.online')" width="80">
+        <template v-slot="scope">
+          <el-tag :type="scope.row.online ? 'success' : 'info'" size="small">
+            {{ scope.row.online ? t('p2pPeers.online') : t('p2pPeers.offline') }}
+          </el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column prop="lastSeen" :label="t('p2pPeers.lastSeen')" width="170"></el-table-column>
+    </el-table>
+
+    <!-- 共享索引 -->
+    <h3 class="section-title">{{ t('p2pPeers.shares') }}</h3>
+    <el-table :data="shares" stripe border v-loading="loadingShares" size="small">
+      <el-table-column type="index" :label="t('account.serial')" width="54"></el-table-column>
+      <el-table-column prop="nodeName" :label="t('p2pPeers.nodeName')" width="150"></el-table-column>
+      <el-table-column prop="shareType" :label="t('p2pShare.shareType')" width="90">
+        <template v-slot="scope">
+          {{ scope.row.shareType === 'media' ? t('p2pShare.media') : t('p2pShare.manga') }}
+        </template>
+      </el-table-column>
+      <el-table-column prop="mediaName" :label="t('p2pShare.media')" width="200" show-overflow-tooltip></el-table-column>
+      <el-table-column prop="mangaName" :label="t('p2pShare.manga')" show-overflow-tooltip></el-table-column>
+      <el-table-column prop="chapterCount" label="Chapters" width="90"></el-table-column>
+      <el-table-column prop="updateTime" :label="t('updateTime')" width="160"></el-table-column>
+      <el-table-column :label="t('account.option')" width="120">
+        <template v-slot="scope">
+          <el-button size="small" type="success" :icon="Download" @click="open_pull_dialog(scope.row)">
+            {{ t('p2pPeers.pull') }}
+          </el-button>
+        </template>
+      </el-table-column>
+    </el-table>
+
+    <!-- 拉取对话框 -->
+    <el-dialog v-model="pullDialogVisible" :title="$t('p2pPeers.pullDialog')" :close-on-click-modal="false" width="560px">
+      <el-form :model="pullForm" label-width="110px">
+        <el-form-item label="From">
+          <el-input v-model="pullForm.fromNodeId" disabled></el-input>
+        </el-form-item>
+        <el-form-item :label="t('p2pShare.shareType')">
+          <el-input v-model="pullForm.resourceType" disabled></el-input>
+        </el-form-item>
+        <el-form-item :label="t('p2pTransfer.resourceName')">
+          <el-input v-model="pullForm.resourceName" disabled></el-input>
+        </el-form-item>
+        <el-form-item :label="t('p2pPeers.receivedPath')" required>
+          <el-select v-model="pullForm.receivedPath" filterable allow-create style="width: 100%" :placeholder="t('p2pPeers.receivedPathPlaceholder')">
+            <el-option v-for="p in pathList" :key="p.pathId" :label="p.pathContent" :value="p.pathContent"></el-option>
+          </el-select>
+        </el-form-item>
+      </el-form>
+      <div class="dialog-footer">
+        <div class="btn-box">
+          <el-button type="primary" @click="submit_pull">{{ $t('option.confirm') }}</el-button>
+          <el-button @click="pullDialogVisible = false">{{ $t('option.cancel') }}</el-button>
+        </div>
+      </div>
+    </el-dialog>
+  </div>
+</template>
+<script lang="ts">
+export default {name: 'p2p-peers'};
+</script>
+<script setup lang="ts">
+import {DocumentCopy, Download, Refresh} from '@element-plus/icons-vue';
+import {onMounted, ref, computed} from 'vue';
+import i18n from '@/i18n';
+import {p2pGroupApi, p2pPeerApi, p2pTransferApi} from '@/api/p2p';
+import pathApi from '@/api/path';
+import type {P2PGroupType, P2PPeerNodeType, P2PShareIndexType, P2PPullCreateParams} from '@/type/p2p';
+import type {pathType} from '@/type/path';
+
+const {t} = i18n.global;
+
+const groupList = ref<P2PGroupType[]>([]);
+const groupId = ref<number | undefined>(undefined);
+const groupNo = computed(() => {
+  const g = groupList.value.find(x => x.p2pGroupId === groupId.value);
+  return g?.groupNo || '';
+});
+
+const members = ref<P2PPeerNodeType[]>([]);
+const shares = ref<P2PShareIndexType[]>([]);
+const loadingMembers = ref(false);
+const loadingShares = ref(false);
+
+const pathList = ref<pathType[]>([]);
+
+const pullDialogVisible = ref(false);
+const pullForm = ref<P2PPullCreateParams & {resourceName?: string}>({
+  p2pGroupId: 0,
+  fromNodeId: '',
+  resourceType: 'manga',
+  resourceId: 0,
+  receivedPath: '',
+  resourceName: '',
+});
+
+onMounted(async () => {
+  await load_groups();
+  await load_paths();
+});
+
+async function load_groups() {
+  try {
+    const res = await p2pGroupApi.list({page: 1, pageSize: 999});
+    groupList.value = res?.list || res?.data?.list || [];
+    if (groupList.value.length && !groupId.value) {
+      groupId.value = groupList.value[0].p2pGroupId;
+      await load_all();
+    }
+  } catch (err) {
+    console.error('load groups failed:', err);
+  }
+}
+
+async function load_paths() {
+  try {
+    const res = await pathApi.get(0);
+    pathList.value = res?.list || [];
+  } catch (err) {
+    console.error('load paths failed:', err);
+  }
+}
+
+async function on_group_change() {
+  members.value = [];
+  shares.value = [];
+  if (groupId.value) await load_all();
+}
+
+async function load_all() {
+  if (!groupNo.value) return;
+  await Promise.all([load_members(), load_shares(true)]);
+}
+
+async function load_members() {
+  if (!groupNo.value) return;
+  loadingMembers.value = true;
+  try {
+    const res = await p2pPeerApi.members(groupNo.value);
+    members.value = res?.list || res?.data?.list || res?.data || [];
+  } catch (err) {
+    console.error('load members failed:', err);
+  } finally {
+    loadingMembers.value = false;
+  }
+}
+
+async function load_shares(fromTracker = false) {
+  if (!groupNo.value) return;
+  loadingShares.value = true;
+  try {
+    const res = fromTracker
+      ? await p2pPeerApi.shares(groupNo.value)
+      : await p2pPeerApi.cache(groupNo.value);
+    shares.value = res?.list || res?.data?.list || res?.data || [];
+  } catch (err) {
+    console.error('load shares failed:', err);
+  } finally {
+    loadingShares.value = false;
+  }
+}
+
+async function load_cache() {
+  await load_shares(false);
+}
+
+function open_pull_dialog(row: P2PShareIndexType) {
+  if (!groupId.value) return;
+  const resourceType = row.shareType === 'media' ? 'media' : 'manga';
+  const resourceId = row.shareType === 'media' ? (row.mediaId || 0) : (row.mangaId || 0);
+  const resourceName = row.shareType === 'media' ? (row.mediaName || '') : (row.mangaName || '');
+
+  pullForm.value = {
+    p2pGroupId: groupId.value,
+    fromNodeId: row.nodeId,
+    resourceType,
+    resourceId,
+    receivedPath: pathList.value[0]?.pathContent || '',
+    resourceName,
+  };
+  pullDialogVisible.value = true;
+}
+
+async function submit_pull() {
+  if (!pullForm.value.receivedPath) {
+    ElMessage.error(t('p2pPeers.receivedPath'));
+    return;
+  }
+  if (!pullForm.value.resourceId) {
+    ElMessage.error('resourceId missing');
+    return;
+  }
+  try {
+    await p2pTransferApi.pull({
+      p2pGroupId: pullForm.value.p2pGroupId,
+      fromNodeId: pullForm.value.fromNodeId,
+      resourceType: pullForm.value.resourceType,
+      resourceId: pullForm.value.resourceId,
+      receivedPath: pullForm.value.receivedPath,
+      resourceName: pullForm.value.resourceName,
+    });
+    ElMessage.success(t('option.confirm'));
+    pullDialogVisible.value = false;
+  } catch (err: any) {
+    ElMessage.error(err?.message || 'pull failed');
+  }
+}
+</script>
+
+<style scoped lang="less" src="@/style/manage.less"></style>
+<style scoped lang="less">
+.section-title {
+  margin: 20px 0 10px;
+  font-size: 16px;
+  color: var(--el-color-primary);
+}
+</style>
