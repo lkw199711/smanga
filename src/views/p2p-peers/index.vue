@@ -56,9 +56,6 @@
     <!-- 拉取对话框 -->
     <el-dialog v-model="pullDialogVisible" :title="$t('p2pPeers.pullDialog')" :close-on-click-modal="false" width="560px">
       <el-form :model="pullForm" label-width="110px">
-        <el-form-item label="From">
-          <el-input v-model="pullForm.peerNodeId" disabled></el-input>
-        </el-form-item>
         <el-form-item :label="t('p2pShare.shareType')">
           <el-input v-model="pullForm.transferType" disabled></el-input>
         </el-form-item>
@@ -111,7 +108,6 @@ const pathList = ref<pathType[]>([]);
 const pullDialogVisible = ref(false);
 const pullForm = ref<P2PPullCreateParams>({
   groupNo: '',
-  peerNodeId: '',
   transferType: 'manga',
   remoteMediaId: undefined,
   remoteMangaId: undefined,
@@ -197,7 +193,6 @@ function open_pull_dialog(row: P2PShareIndexType) {
 
   pullForm.value = {
     groupNo: groupNo.value,
-    peerNodeId: row.nodeId,
     transferType,
     remoteMediaId: transferType === 'media' ? (row.remoteMediaId ?? undefined) : undefined,
     remoteMangaId: transferType === 'manga' ? (row.remoteMangaId ?? undefined) : undefined,

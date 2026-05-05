@@ -87,7 +87,6 @@ export type P2PIdentityType = {
 export type P2PTransferType = {
   p2pTransferId?: number;
   p2pGroupId?: number;
-  peerNodeId?: string;
   transferType: 'media' | 'manga' | 'chapter';
   remoteMediaId?: number | null;
   remoteMangaId?: number | null;
@@ -138,10 +137,9 @@ export type P2PLocalShareUpdateParams = {
 };
 
 // 发起拉取参数(POST /p2p/transfer/pull)
+// 多源 P2P:不再由前端指定具体节点,后端通过 Tracker 自动发现并轮询所有持有该资源的节点
 export type P2PPullCreateParams = {
   groupNo: string;
-  peerNodeId: string;
-  peerBaseUrl: string; // 对端 http 入口,例如 http://1.2.3.4:3000 (由前端从 /p2p/peer/members 拿到)
   transferType: 'media' | 'manga' | 'chapter';
   remoteMediaId?: number;
   remoteMangaId?: number;
