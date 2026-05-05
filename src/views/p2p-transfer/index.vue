@@ -35,6 +35,10 @@
           <span v-if="scope.row.totalBytes" class="progress-meta">
             {{ format_bytes(scope.row.downloadedBytes) }}/{{ format_bytes(scope.row.totalBytes) }}
           </span>
+          <span v-if="scope.row.status === 'running' && scope.row.speedBps" class="progress-speed">
+            {{ format_speed(scope.row.speedBps) }}
+            <span v-if="eta_text(scope.row)" class="progress-eta">· {{ eta_text(scope.row) }}</span>
+          </span>
         </template>
       </el-table-column>
       <el-table-column prop="error" :label="t('p2pTransfer.errorMessage')" width="200" show-overflow-tooltip></el-table-column>
@@ -145,6 +149,28 @@ function format_bytes(value: any): string {
   return `${n.toFixed(i === 0 ? 0 : 1)} ${units[i]}`;
 }
 
+function format_speed(value: any): string {
+  const v = Number(value ?? 0);
+  if (!v || isNaN(v) || v <= 0) return '';
+  return `${format_bytes(v)}/s`;
+}
+
+function eta_text(row: P2PTransferType): string {
+  const total = Number(row.totalBytes ?? 0);
+  const done = Number(row.downloadedBytes ?? 0);
+  const speed = Number(row.speedBps ?? 0);
+  if (!total || !speed || speed <= 0 || done >= total) return '';
+  const remain = Math.max(0, total - done);
+  const seconds = Math.ceil(remain / speed);
+  if (seconds < 60) return `${seconds}s`;
+  const m = Math.floor(seconds / 60);
+  const s = seconds % 60;
+  if (m < 60) return `${m}m${s ? s + 's' : ''}`;
+  const h = Math.floor(m / 60);
+  const mm = m % 60;
+  return `${h}h${mm}m`;
+}
+
 function status_tag_type(status: string) {
   switch (status) {
     case 'success': return 'success';
@@ -235,5 +261,17 @@ async function clear_finished() {
   margin-left: 8px;
   color: var(--el-text-color-secondary);
   font-size: 12px;
+}
+.progress-speed {
+  display: inline-block;
+  margin-left: 8px;
+  color: var(--el-color-primary);
+  font-size: 12px;
+  font-weight: 500;
+}
+.progress-eta {
+  margin-left: 4px;
+  color: var(--el-text-color-secondary);
+  font-weight: normal;
 }
 </style>
