@@ -28,7 +28,7 @@
           </el-tag>
         </template>
       </el-table-column>
-      <el-table-column prop="lastSeen" :label="t('p2pPeers.lastSeen')" width="170"></el-table-column>
+      <el-table-column prop="lastHeartbeat" :label="t('p2pPeers.lastSeen')" width="170"></el-table-column>
     </el-table>
 
     <!-- 共享索引 -->
@@ -41,9 +41,8 @@
           {{ scope.row.shareType === 'media' ? t('p2pShare.media') : t('p2pShare.manga') }}
         </template>
       </el-table-column>
-      <el-table-column prop="mediaName" :label="t('p2pShare.media')" width="200" show-overflow-tooltip></el-table-column>
-      <el-table-column prop="mangaName" :label="t('p2pShare.manga')" show-overflow-tooltip></el-table-column>
-      <el-table-column prop="chapterCount" label="Chapters" width="90"></el-table-column>
+      <el-table-column prop="shareName" :label="t('p2pTransfer.resourceName')" show-overflow-tooltip></el-table-column>
+      <el-table-column prop="mangaCount" label="Mangas" width="90"></el-table-column>
       <el-table-column prop="updateTime" :label="t('updateTime')" width="160"></el-table-column>
       <el-table-column :label="t('account.option')" width="120">
         <template v-slot="scope">
@@ -58,13 +57,13 @@
     <el-dialog v-model="pullDialogVisible" :title="$t('p2pPeers.pullDialog')" :close-on-click-modal="false" width="560px">
       <el-form :model="pullForm" label-width="110px">
         <el-form-item label="From">
-          <el-input v-model="pullForm.fromNodeId" disabled></el-input>
+          <el-input v-model="pullForm.peerNodeId" disabled></el-input>
         </el-form-item>
         <el-form-item :label="t('p2pShare.shareType')">
-          <el-input v-model="pullForm.resourceType" disabled></el-input>
+          <el-input v-model="pullForm.transferType" disabled></el-input>
         </el-form-item>
         <el-form-item :label="t('p2pTransfer.resourceName')">
-          <el-input v-model="pullForm.resourceName" disabled></el-input>
+          <el-input v-model="pullForm.remoteName" disabled></el-input>
         </el-form-item>
         <el-form-item :label="t('p2pPeers.receivedPath')" required>
           <el-select v-model="pullForm.receivedPath" filterable allow-create style="width: 100%" :placeholder="t('p2pPeers.receivedPathPlaceholder')">
@@ -110,13 +109,15 @@ const loadingShares = ref(false);
 const pathList = ref<pathType[]>([]);
 
 const pullDialogVisible = ref(false);
-const pullForm = ref<P2PPullCreateParams & {resourceName?: string}>({
-  p2pGroupId: 0,
-  fromNodeId: '',
-  resourceType: 'manga',
-  resourceId: 0,
+const pullForm = ref<P2PPullCreateParams>({
+  groupNo: '',
+  peerNodeId: '',
+  transferType: 'manga',
+  remoteMediaId: undefined,
+  remoteMangaId: undefined,
+  remoteChapterId: undefined,
+  remoteName: '',
   receivedPath: '',
-  resourceName: '',
 });
 
 onMounted(async () => {
@@ -190,18 +191,19 @@ async function load_cache() {
 }
 
 function open_pull_dialog(row: P2PShareIndexType) {
-  if (!groupId.value) return;
-  const resourceType = row.shareType === 'media' ? 'media' : 'manga';
-  const resourceId = row.shareType === 'media' ? (row.mediaId || 0) : (row.mangaId || 0);
-  const resourceName = row.shareType === 'media' ? (row.mediaName || '') : (row.mangaName || '');
+  if (!groupNo.value) return;
+  const transferType: 'media' | 'manga' = row.shareType === 'media' ? 'media' : 'manga';
+  const remoteName = row.shareName || '';
 
   pullForm.value = {
-    p2pGroupId: groupId.value,
-    fromNodeId: row.nodeId,
-    resourceType,
-    resourceId,
+    groupNo: groupNo.value,
+    peerNodeId: row.nodeId,
+    transferType,
+    remoteMediaId: transferType === 'media' ? (row.remoteMediaId ?? undefined) : undefined,
+    remoteMangaId: transferType === 'manga' ? (row.remoteMangaId ?? undefined) : undefined,
+    remoteChapterId: undefined,
+    remoteName,
     receivedPath: pathList.value[0]?.pathContent || '',
-    resourceName,
   };
   pullDialogVisible.value = true;
 }
@@ -211,23 +213,24 @@ async function submit_pull() {
     ElMessage.error(t('p2pPeers.receivedPath'));
     return;
   }
-  if (!pullForm.value.resourceId) {
-    ElMessage.error('resourceId missing');
+  if (pullForm.value.transferType === 'media' && !pullForm.value.remoteMediaId) {
+    ElMessage.error('remoteMediaId missing');
+    return;
+  }
+  if (pullForm.value.transferType === 'manga' && !pullForm.value.remoteMangaId) {
+    ElMessage.error('remoteMangaId missing');
+    return;
+  }
+  if (!pullForm.value.remoteName) {
+    ElMessage.error('remoteName missing');
     return;
   }
   try {
-    await p2pTransferApi.pull({
-      p2pGroupId: pullForm.value.p2pGroupId,
-      fromNodeId: pullForm.value.fromNodeId,
-      resourceType: pullForm.value.resourceType,
-      resourceId: pullForm.value.resourceId,
-      receivedPath: pullForm.value.receivedPath,
-      resourceName: pullForm.value.resourceName,
-    });
+    await p2pTransferApi.pull(pullForm.value);
     ElMessage.success(t('option.confirm'));
     pullDialogVisible.value = false;
   } catch (err: any) {
-    ElMessage.error(err?.message || 'pull failed');
+    ElMessage.error(err?.response?.data?.message || err?.message || 'pull failed');
   }
 }
 </script>

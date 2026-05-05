@@ -2,12 +2,12 @@
   <div class="manga-setting-box manage-container">
     <!-- 表头按钮 -->
     <div class="btn-box">
-      <el-select v-model="filterGroupId" :placeholder="t('p2pShare.selectGroup')" clearable style="width: 240px; margin-right: 10px" @change="load_table(1, browse.manageListPageSizeCache)">
-        <el-option v-for="g in groupList" :key="g.p2pGroupId" :label="`${g.groupName} (${g.groupNo})`" :value="g.p2pGroupId as number"></el-option>
+      <el-select v-model="filterGroupNo" :placeholder="t('p2pShare.selectGroup')" clearable style="width: 240px; margin-right: 10px" @change="load_table(1, browse.manageListPageSizeCache)">
+        <el-option v-for="g in groupList" :key="g.groupNo" :label="`${g.groupName} (${g.groupNo})`" :value="g.groupNo"></el-option>
       </el-select>
       <el-button type="primary" :icon="Refresh" @click="load_table(browse.manageListPage, browse.manageListPageSizeCache)">{{ $t('option.refresh') }}</el-button>
       <el-button class="add-btn" type="success" :icon="Plus" :disabled="groupList.length === 0" @click="open_add_dialog">{{ $t('p2pShare.add') }}</el-button>
-      <el-button type="warning" :icon="Upload" :disabled="!filterGroupId" @click="announce_group">{{ $t('p2pShare.announce') }}</el-button>
+      <el-button type="warning" :icon="Upload" :disabled="!filterGroupNo" @click="announce_group">{{ $t('p2pShare.announce') }}</el-button>
     </div>
 
     <!-- 表格 -->
@@ -42,8 +42,8 @@
     <el-dialog v-model="addDialogVisible" :title="$t('p2pShare.add')" :close-on-click-modal="false" width="520px">
       <el-form :model="addForm" label-width="110px">
         <el-form-item :label="t('p2pShare.selectGroup')" required>
-          <el-select v-model="addForm.p2pGroupId" style="width: 100%">
-            <el-option v-for="g in groupList" :key="g.p2pGroupId" :label="`${g.groupName} (${g.groupNo})`" :value="g.p2pGroupId as number"></el-option>
+          <el-select v-model="addForm.groupNo" style="width: 100%">
+            <el-option v-for="g in groupList" :key="g.groupNo" :label="`${g.groupName} (${g.groupNo})`" :value="g.groupNo"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item :label="t('p2pShare.shareType')" required>
@@ -105,16 +105,15 @@ const groupList = ref<P2PGroupType[]>([]);
 const mediaList = ref<mediaType[]>([]);
 const mangaList = ref<mangaType[]>([]);
 
-const filterGroupId = ref<number | undefined>(undefined);
+const filterGroupNo = ref<string>('');
 const mangaSelectMediaId = ref<number>();
 
 const addDialogVisible = ref(false);
 const addForm = ref<P2PLocalShareCreateParams>({
-  p2pGroupId: 0,
+  groupNo: '',
   shareType: 'media',
   mediaId: undefined,
   mangaId: undefined,
-  enable: 1,
 });
 
 onMounted(async () => {
@@ -127,9 +126,6 @@ async function load_groups() {
   try {
     const res = await p2pGroupApi.list({page: 1, pageSize: 999});
     groupList.value = res?.list || res?.data?.list || [];
-    if (groupList.value.length && !filterGroupId.value) {
-      // 不自动选择,让用户选择后再过滤
-    }
   } catch (err) {
     console.error('load groups failed:', err);
   }
@@ -160,7 +156,7 @@ async function load_mangas_for_media(mediaId: number) {
 async function load_table(page = 1, pageSize = 10) {
   loading.value = true;
   try {
-    const res = await p2pShareApi.list({page, pageSize, p2pGroupId: filterGroupId.value});
+    const res = await p2pShareApi.list({page, pageSize, groupNo: filterGroupNo.value || undefined});
     tableData.value = res?.list || res?.data?.list || [];
     count.value = res?.count || res?.data?.count || tableData.value.length;
     browse.manageListPage = page;
@@ -174,11 +170,10 @@ async function load_table(page = 1, pageSize = 10) {
 
 function open_add_dialog() {
   addForm.value = {
-    p2pGroupId: filterGroupId.value || (groupList.value[0]?.p2pGroupId as number) || 0,
+    groupNo: filterGroupNo.value || groupList.value[0]?.groupNo || '',
     shareType: 'media',
     mediaId: undefined,
     mangaId: undefined,
-    enable: 1,
   };
   mangaSelectMediaId.value = undefined;
   mangaList.value = [];
@@ -193,7 +188,7 @@ function on_share_type_change() {
 }
 
 async function submit_add() {
-  if (!addForm.value.p2pGroupId) {
+  if (!addForm.value.groupNo) {
     ElMessage.error(t('p2pShare.selectGroup'));
     return;
   }
@@ -245,11 +240,9 @@ async function delete_share(row: P2PLocalShareType) {
 }
 
 async function announce_group() {
-  if (!filterGroupId.value) return;
-  const group = groupList.value.find(g => g.p2pGroupId === filterGroupId.value);
-  if (!group) return;
+  if (!filterGroupNo.value) return;
   try {
-    await p2pShareApi.announce(group.groupNo);
+    await p2pShareApi.announce(filterGroupNo.value);
     ElMessage.success(t('p2pShare.announceSuccess'));
   } catch (err: any) {
     ElMessage.error(err?.message || 'announce failed');

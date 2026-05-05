@@ -16,10 +16,9 @@
 
     <el-table :data="tableData" stripe border v-loading="loading">
       <el-table-column type="index" :label="t('account.serial')" width="54"></el-table-column>
-      <el-table-column prop="transferType" :label="t('p2pTransfer.transferType')" width="80"></el-table-column>
-      <el-table-column prop="resourceType" :label="t('p2pTransfer.resourceType')" width="100"></el-table-column>
-      <el-table-column prop="resourceName" :label="t('p2pTransfer.resourceName')" show-overflow-tooltip></el-table-column>
-      <el-table-column prop="fromNodeId" :label="t('p2pTransfer.fromNodeId')" width="200" show-overflow-tooltip></el-table-column>
+      <el-table-column prop="transferType" :label="t('p2pTransfer.transferType')" width="100"></el-table-column>
+      <el-table-column prop="remoteName" :label="t('p2pTransfer.resourceName')" show-overflow-tooltip></el-table-column>
+      <el-table-column prop="peerNodeId" :label="t('p2pTransfer.fromNodeId')" width="200" show-overflow-tooltip></el-table-column>
       <el-table-column prop="status" :label="t('p2pTransfer.status')" width="100">
         <template v-slot="scope">
           <el-tag :type="status_tag_type(scope.row.status)" size="small">
@@ -30,10 +29,12 @@
       <el-table-column prop="progress" :label="t('p2pTransfer.progress')" width="220">
         <template v-slot="scope">
           <el-progress :percentage="progress_percent(scope.row)" :status="scope.row.status === 'failed' ? 'exception' : (scope.row.status === 'success' ? 'success' : undefined)" />
-          <span v-if="scope.row.total" class="progress-meta">{{ scope.row.current || 0 }}/{{ scope.row.total }}</span>
+          <span v-if="scope.row.totalBytes" class="progress-meta">
+            {{ format_bytes(scope.row.downloadedBytes) }}/{{ format_bytes(scope.row.totalBytes) }}
+          </span>
         </template>
       </el-table-column>
-      <el-table-column prop="errorMessage" :label="t('p2pTransfer.errorMessage')" width="200" show-overflow-tooltip></el-table-column>
+      <el-table-column prop="error" :label="t('p2pTransfer.errorMessage')" width="200" show-overflow-tooltip></el-table-column>
       <el-table-column prop="createTime" :label="t('createTime')" width="160"></el-table-column>
       <el-table-column :label="t('account.option')" width="180">
         <template v-slot="scope">
@@ -117,10 +118,25 @@ function progress_percent(row: P2PTransferType): number {
   if (typeof row.progress === 'number') {
     return Math.max(0, Math.min(100, Math.round(row.progress)));
   }
-  if (row.total && row.current) {
-    return Math.round((row.current / row.total) * 100);
+  const total = Number(row.totalBytes ?? 0);
+  const downloaded = Number(row.downloadedBytes ?? 0);
+  if (total > 0) {
+    return Math.round((downloaded / total) * 100);
   }
   return row.status === 'success' ? 100 : 0;
+}
+
+function format_bytes(value: any): string {
+  const v = Number(value ?? 0);
+  if (!v || isNaN(v)) return '0 B';
+  const units = ['B', 'KB', 'MB', 'GB', 'TB'];
+  let i = 0;
+  let n = v;
+  while (n >= 1024 && i < units.length - 1) {
+    n /= 1024;
+    i++;
+  }
+  return `${n.toFixed(i === 0 ? 0 : 1)} ${units[i]}`;
 }
 
 function status_tag_type(status: string) {
