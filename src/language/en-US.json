@@ -34,7 +34,8 @@
     "p2pGroup": "Groups",
     "p2pShare": "Local Shares",
     "p2pPeers": "Peers",
-    "p2pTransfer": "Transfers"
+    "p2pTransfer": "Transfers",
+    "trackerGroup": "Tracker Groups"
   },
   "mangaBrowser": {
     "allMedia": "Libraries",
@@ -491,7 +492,26 @@
     "memberCount": "Members",
     "shareCount": "Shares",
     "leaveConfirm": "Leaving the group will clear local share cache and transfers. Continue?",
-    "createPlaceholder": "Leave trackerUrl empty to use local tracker (all-in-one mode)"
+    "createPlaceholder": "Leave trackerUrl empty to use local tracker (all-in-one mode)",
+    "role": "Role",
+    "roleOwner": "Owner",
+    "roleMember": "Member",
+    "detail": "Detail",
+    "detailTitle": "Group Detail",
+    "dismiss": "Dismiss",
+    "dismissConfirm": "Are you sure to dismiss group {groupNo}? This will delete the group on the tracker and clear all related local data, irreversible.",
+    "dismissOk": "Group dismissed",
+    "kick": "Kick",
+    "kickConfirm": "Are you sure to kick {nodeName} out of the group?",
+    "kickOk": "Member kicked out",
+    "memberList": "Member List",
+    "trackerOffline": "Tracker is currently unreachable, only local cached data is shown",
+    "lastSyncTime": "Last Sync",
+    "you": "Current Node",
+    "youAreOwner": "You are the owner",
+    "maxMembers": "Max Members",
+    "inviteCode": "Invite Code",
+    "optional": "Optional"
   },
   "p2pShare": {
     "title": "Local Shares",
@@ -545,5 +565,31 @@
     "deleteConfirm": "Delete this transfer record? Running tasks will be canceled first.",
     "clearConfirm": "Clear all completed/failed/canceled transfer records? This cannot be undone.",
     "errorMessage": "Error"
+  },
+  "trackerGroup": {
+    "title": "Tracker Groups",
+    "searchPlaceholder": "Search by groupNo / name / desc / owner",
+    "enableFilter": "Status",
+    "enableOn": "Enabled",
+    "enableOff": "Disabled",
+    "enable": "Status",
+    "owner": "Owner",
+    "maxMembers": "Max",
+    "detail": "Detail",
+    "dismiss": "Dismiss",
+    "dismissOk": "Group dismissed",
+    "dismissConfirm": "Dismiss group {groupNo}? All memberships and share indexes will be removed. This cannot be undone.",
+    "detailTitle": "Group Detail",
+    "hasPassword": "Password",
+    "passwordOn": "With password",
+    "passwordOff": "No password",
+    "inviteCount": "Invites",
+    "shareIndexCount": "Share Indexes",
+    "memberList": "Members",
+    "role": "Role",
+    "kick": "Kick",
+    "kickConfirm": "Kick member {nodeName} out of the group?",
+    "kickOk": "Member removed",
+    "joinTime": "Join Time"
   }
 }

@@ -34,7 +34,8 @@
     "p2pGroup": "群組管理",
     "p2pShare": "本地共享",
     "p2pPeers": "群內節點",
-    "p2pTransfer": "傳輸任務"
+    "p2pTransfer": "傳輸任務",
+    "trackerGroup": "Tracker 群管理"
   },
   "mangaBrowser": {
     "allMedia": "媒體庫",
@@ -472,7 +473,26 @@
     "memberCount": "成員數",
     "shareCount": "共享數",
     "leaveConfirm": "退出群組將清空本地相關共享快取與傳輸任務,確認退出?",
-    "createPlaceholder": "留空 trackerUrl 將使用本機 tracker(一體機模式)"
+    "createPlaceholder": "留空 trackerUrl 將使用本機 tracker(一體機模式)",
+    "role": "角色",
+    "roleOwner": "群主",
+    "roleMember": "成員",
+    "detail": "詳情",
+    "detailTitle": "群組詳情",
+    "dismiss": "解散",
+    "dismissConfirm": "確定要解散群組 {groupNo} 嗎?此操作會在 tracker 端刪除整個群組並清空本機相關資料,不可復原。",
+    "dismissOk": "群組已解散",
+    "kick": "踢出",
+    "kickConfirm": "確定要將 {nodeName} 踢出群組嗎?",
+    "kickOk": "已踢出該成員",
+    "memberList": "群成員列表",
+    "trackerOffline": "Tracker 暫不可達,目前僅顯示本地快取資料",
+    "lastSyncTime": "上次同步時間",
+    "you": "目前節點",
+    "youAreOwner": "本節點為群主",
+    "maxMembers": "最大成員數",
+    "inviteCode": "邀請碼",
+    "optional": "選填"
   },
   "p2pShare": {
     "title": "本地共享",
@@ -522,5 +542,31 @@
     "cancel": "取消",
     "retry": "重試",
     "errorMessage": "錯誤訊息"
+  },
+  "trackerGroup": {
+    "title": "Tracker 群管理",
+    "searchPlaceholder": "搜尋群號/群名/描述/群主",
+    "enableFilter": "狀態",
+    "enableOn": "啟用",
+    "enableOff": "停用",
+    "enable": "狀態",
+    "owner": "群主",
+    "maxMembers": "上限",
+    "detail": "詳情",
+    "dismiss": "解散",
+    "dismissOk": "已解散群組",
+    "dismissConfirm": "確認解散群組 {groupNo} ?此操作將清空所有成員關係與共享索引,不可恢復。",
+    "detailTitle": "群組詳情",
+    "hasPassword": "加密",
+    "passwordOn": "有密碼",
+    "passwordOff": "無密碼",
+    "inviteCount": "邀請碼數",
+    "shareIndexCount": "共享索引數",
+    "memberList": "成員列表",
+    "role": "角色",
+    "kick": "踢出",
+    "kickConfirm": "確認將成員 {nodeName} 踢出群組?",
+    "kickOk": "已移出群組",
+    "joinTime": "加入時間"
   }
 }

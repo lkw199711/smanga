@@ -382,6 +382,18 @@ const routes: Array<RouteRecordRaw> = [
 				},
 				component: () => import('../views/p2p-transfer/index.vue'),
 			},
+			{
+				path: '/tracker-group',
+				name: 'tracker-group',
+				meta: {
+					sidebar: true,
+					onlyAdmin: true,
+					title: 'trackerGroup',
+					icon: 'job-manage',
+					view: 'setting',
+				},
+				component: () => import('../views/tracker-group/index.vue'),
+			},
 		],
 	},
 

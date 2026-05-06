@@ -43,6 +43,30 @@ export const p2pGroupApi = {
     const res = await ajax.post('p2p/group/refresh');
     return res.data;
   },
+
+  /** 获取本机节点身份(nodeId/nodeName) */
+  async whoami() {
+    const res = await ajax.get('p2p/group/whoami');
+    return res.data;
+  },
+
+  /** 群组详情(本地 + tracker 最新群信息 + 成员) */
+  async detail(groupNo: string) {
+    const res = await ajax.get(`p2p/group/by-no/${encodeURIComponent(groupNo)}/detail`);
+    return res.data;
+  },
+
+  /** 群主踢人(body: {groupNo, targetNodeId}) */
+  async kick(groupNo: string, targetNodeId: string) {
+    const res = await ajax.post('p2p/group/kick', {groupNo, targetNodeId});
+    return res.data;
+  },
+
+  /** 群主解散群组(body: {groupNo}) */
+  async dismiss(groupNo: string) {
+    const res = await ajax.post('p2p/group/dismiss', {groupNo});
+    return res.data;
+  },
 };
 
 /**
@@ -147,4 +171,43 @@ export const p2pTransferApi = {
   },
 };
 
-export default { p2pGroupApi, p2pShareApi, p2pPeerApi, p2pTransferApi };
+/**
+ * Tracker 管理员接口(本机 web 管理 tracker 上的群组)
+ * 后端: /api/tracker-admin/group/*
+ * 鉴权: 用户 token + admin 角色;且本机需开启 tracker 角色
+ */
+export const trackerAdminGroupApi = {
+  /** 群组列表(分页) */
+  async list(params: {page?: number; pageSize?: number; keyword?: string; enable?: number} = {}) {
+    const res = await ajax.get('tracker-admin/group', {params});
+    return res.data;
+  },
+
+  /** 群组详情(含成员/邀请/索引数) */
+  async detail(groupNo: string) {
+    const res = await ajax.get(`tracker-admin/group/${encodeURIComponent(groupNo)}`);
+    return res.data;
+  },
+
+  /** 群组成员列表 */
+  async members(groupNo: string) {
+    const res = await ajax.get(`tracker-admin/group/${encodeURIComponent(groupNo)}/members`);
+    return res.data;
+  },
+
+  /** 踢出成员 */
+  async kick(groupNo: string, nodeId: string) {
+    const res = await ajax.delete(
+      `tracker-admin/group/${encodeURIComponent(groupNo)}/member/${encodeURIComponent(nodeId)}`,
+    );
+    return res.data;
+  },
+
+  /** 解散群组 */
+  async dismiss(groupNo: string) {
+    const res = await ajax.delete(`tracker-admin/group/${encodeURIComponent(groupNo)}`);
+    return res.data;
+  },
+};
+
+export default {p2pGroupApi, p2pShareApi, p2pPeerApi, p2pTransferApi, trackerAdminGroupApi};
