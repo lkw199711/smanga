@@ -169,6 +169,18 @@
 lkw199711/smanga-nodejs;</code></pre>
           </div>
 
+          <h3 class="subsection-title">国内镜像加速 (阿里云镜像仓库)</h3>
+          <p>国内用户可使用阿里云镜像仓库地址进行拉取, 与 Docker Hub 镜像同步上传, 所有 tag 保持一致:</p>
+          <p><code>registry.cn-hangzhou.aliyuncs.com/lkw199711/smanga-nodejs:latest</code></p>
+          <div class="code-block">
+            <pre><code>docker run -itd --name smanga \
+-p 9797:9797 \
+-v /mnt:/mnt \
+-v /route/smanga:/data \
+registry.cn-hangzhou.aliyuncs.com/lkw199711/smanga-nodejs:latest;</code></pre>
+          </div>
+          <p class="note-text">docker-compose 部署时, 将 image 字段替换为上述阿里云地址即可。</p>
+
           <h3 class="subsection-title">Docker Compose 部署</h3>
           <div class="code-block">
             <pre><code>version: "3"

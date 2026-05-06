@@ -112,6 +112,31 @@ docker run -itd --name smanga \
 lkw199711/smanga-nodejs;
 ```
 
+##### 国内镜像加速 (阿里云镜像仓库)
+
+由于部分地区拉取 Docker Hub 速度较慢, 本项目同步推送了阿里云镜像仓库, 与 Docker Hub 镜像保持同步上传, 国内用户可选择使用:
+
+- 镜像地址: `registry.cn-hangzhou.aliyuncs.com/lkw199711/smanga-nodejs:latest`
+- 所有 tag (版本号 / latest) 与 Docker Hub 保持一致
+
+使用示例, 只需将镜像名替换为阿里云地址即可:
+
+```
+docker run -itd --name smanga \
+-p 9797:9797 \
+-v /mnt:/mnt \
+-v /route/smanga:/data \
+registry.cn-hangzhou.aliyuncs.com/lkw199711/smanga-nodejs:latest;
+```
+
+docker-compose 同理, 将 `image:` 字段替换为阿里云镜像地址即可, 例如:
+
+```yaml
+services:
+  smanga-nodejs:
+    image: registry.cn-hangzhou.aliyuncs.com/lkw199711/smanga-nodejs:latest
+```
+
 1. 新版进需要映射/data 一个目录,细分目录映射不再支持
 2. 新旧目录不想兼容,请另外准备空目录映射data目录
 3. 新版本网页端口改为9797.部署时请注意
