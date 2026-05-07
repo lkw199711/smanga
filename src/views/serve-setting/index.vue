@@ -230,19 +230,11 @@
 
           <el-col :span="24">
             <el-form-item label="本机公网地址">
-              <el-input v-model="form.p2p.node.publicHost"
-                placeholder="例如 1.2.3.4 或 nas.example.com,留空由 Tracker 自动识别"
+              <el-input v-model="form.p2p.node.publicUrl"
+                placeholder="示例 smanga.com:9797/api"
                 :style="{ width: '500px' }" />
-              <el-button type="primary" @click="comfirm_p2p_public_host" class="ml-4">确定</el-button>
-            </el-form-item>
-          </el-col>
-
-          <el-col :span="24">
-            <el-form-item label="本机公网端口">
-              <el-input v-model="form.p2p.node.publicPort" type="number" min="0"
-                placeholder="对外可达端口,留 0 则使用监听端口" :style="{ width: '180px' }" />
-              <el-button type="primary" @click="comfirm_p2p_public_port" class="ml-4">确定</el-button>
-              <span class="suffix ml-2 text-gray-500">NAT 后需要做端口映射</span>
+              <el-button type="primary" @click="comfirm_p2p_public_url" class="ml-4">确定</el-button>
+              <span class="suffix ml-2 text-gray-500">smanga访问地址+/api</span>
             </el-form-item>
           </el-col>
 
@@ -311,6 +303,41 @@
             <el-form-item label="当前节点 ID">
               <el-input v-model="form.p2p.node.nodeId" readonly :style="{ width: '500px' }" />
               <span class="suffix ml-2 text-gray-500">由 Tracker 分配,只读</span>
+            </el-form-item>
+          </el-col>
+
+          <!-- 手动注册节点 -->
+          <el-col :span="24">
+            <el-form-item label="手动注册节点">
+              <el-button type="primary" :loading="registerLoading" @click="click_register_node">
+                {{ registerLoading ? '注册中...' : '立即注册' }}
+              </el-button>
+              <span class="suffix ml-2 text-gray-500">将当前配置上报到 Tracker 并触发反向可达性检测</span>
+            </el-form-item>
+          </el-col>
+
+          <el-col :span="24" v-if="registerResult">
+            <el-form-item label=" " class="register-result-item">
+              <el-alert
+                :title="registerResult.success ? '注册成功' : '注册失败'"
+                :type="registerResult.success ? 'success' : 'error'"
+                :closable="true"
+                @close="registerResult = null"
+                show-icon
+              >
+                <template #default>
+                  <div class="register-result-content">
+                    <div v-if="registerResult.success">
+                      <div><b>节点 ID:</b> {{ registerResult.nodeId || '-' }}</div>
+                      <div v-if="registerResult.nodeName"><b>节点名称:</b> {{ registerResult.nodeName }}</div>
+                    </div>
+                    <div v-else class="register-error-reason">
+                      <div><b>失败原因:</b></div>
+                      <pre>{{ registerResult.reason }}</pre>
+                    </div>
+                  </div>
+                </template>
+              </el-alert>
             </el-form-item>
           </el-col>
         </el-row>
@@ -409,8 +436,7 @@ const form = reactive({
       nodeId: '',
       nodeName: '',
       listenPort: 19798,
-      publicHost: '',
-      publicPort: 0,
+      publicUrl: '',
       heartbeatInterval: 30,
       trackers: [] as string[],
     },
@@ -624,21 +650,12 @@ async function comfirm_p2p_node_name() {
   }
 }
 
-async function comfirm_p2p_public_host() {
+async function comfirm_p2p_public_url() {
   try {
-    await serveSettingApi.set('p2p', 'node.publicHost', form.p2p.node.publicHost);
+    await serveSettingApi.set('p2p', 'node.publicUrl', String(form.p2p.node.publicUrl || '').trim());
     ElMessage.success('公网地址已保存,节点将自动重新注册');
   } catch (error) {
-    console.error('Failed to set p2p.node.publicHost:', error);
-  }
-}
-
-async function comfirm_p2p_public_port() {
-  try {
-    await serveSettingApi.set('p2p', 'node.publicPort', Number(form.p2p.node.publicPort) || 0);
-    ElMessage.success('公网端口已保存,节点将自动重新注册');
-  } catch (error) {
-    console.error('Failed to set p2p.node.publicPort:', error);
+    console.error('Failed to set p2p.node.publicUrl:', error);
   }
 }
 
@@ -707,6 +724,59 @@ async function comfirm_p2p_require_invite() {
     ElMessage.success('已保存');
   } catch (error) {
     console.error('Failed to set p2p.tracker.requireInviteToRegister:', error);
+  }
+}
+
+// ===== 手动注册节点 =====
+const registerLoading = ref(false);
+const registerResult = ref<{ success: boolean; nodeId?: string; nodeName?: string; reason?: string } | null>(null);
+
+async function click_register_node() {
+  // 前置校验
+  if (!form.p2p.enable) {
+    registerResult.value = { success: false, reason: '请先开启"启用 P2P"开关' };
+    return;
+  }
+  if (!form.p2p.role.node) {
+    registerResult.value = { success: false, reason: '请先开启"作为节点(Node)"角色' };
+    return;
+  }
+
+  registerLoading.value = true;
+  registerResult.value = null;
+
+  try {
+    const res: any = await serveSettingApi.register_node_now();
+    if (res && res.code === 0) {
+      registerResult.value = {
+        success: true,
+        nodeId: res.data?.nodeId,
+        nodeName: res.data?.nodeName,
+      };
+      // 重新拉取配置以刷新 nodeId 显示
+      try {
+        const latest = await serveSettingApi.get();
+        Object.assign(form, latest);
+        syncTrackerInputs();
+      } catch (e) {
+        console.warn('刷新配置失败:', e);
+      }
+    } else {
+      registerResult.value = {
+        success: false,
+        reason: (res && res.message) || '未知错误',
+      };
+    }
+  } catch (err: any) {
+    // 网络错误或 HTTP 非 2xx
+    const reason =
+      err?.response?.data?.message ||
+      err?.message ||
+      '请求失败,请检查网络与服务状态';
+    registerResult.value = { success: false, reason };
+    console.error('register_node_now failed:', err);
+  } finally {
+    registerLoading.value = false;
   }
 }
 
@@ -870,5 +940,30 @@ onMounted(async () => {
 .tracker-actions {
   display: flex;
   align-items: center;
+}
+
+.register-result-item {
+  :deep(.el-form-item__label) {
+    visibility: hidden;
+  }
+}
+
+.register-result-content {
+  font-size: 13px;
+  line-height: 1.6;
+
+  .register-error-reason {
+    pre {
+      margin: 4px 0 0 0;
+      padding: 8px 10px;
+      background: rgba(0, 0, 0, 0.04);
+      border-radius: 4px;
+      white-space: pre-wrap;
+      word-break: break-all;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 12px;
+      color: #c0392b;
+    }
+  }
 }
 </style>

@@ -24,8 +24,7 @@ export type P2PGroupType = {
 export type P2PPeerNodeType = {
   nodeId: string;
   nodeName?: string;
-  publicHost?: string;
-  publicPort?: number;
+  publicUrl?: string;
   localHost?: string;
   localPort?: number;
   online?: number;
@@ -76,8 +75,7 @@ export type P2PIdentityType = {
   nodeName: string;
   role: P2PRole;
   registered: boolean;
-  publicHost?: string;
-  publicPort?: number;
+  publicUrl?: string;
   localHost?: string;
   localPort?: number;
   trackers?: string[];

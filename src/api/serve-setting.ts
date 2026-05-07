@@ -53,6 +53,17 @@ const serveSettingApi = {
 
 		return (await res).data;
 	},
+
+	/**
+	 * @description: 手动触发节点向 Tracker 注册
+	 * - 成功: { code:0, message:'节点注册成功', data:{ nodeId, nodeName } }
+	 * - 失败: { code:1, message:'<具体原因>', status:'error' }
+	 * 这里不走全局 ajax 成功/失败弹窗逻辑,返回完整 response.data 交给页面自行处理展示
+	 */
+	async register_node_now() {
+		const http = await ajax.post('p2p/node/register-now', {});
+		return http.data;
+	},
 };
 
 export default serveSettingApi;

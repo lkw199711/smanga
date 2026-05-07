@@ -116,9 +116,9 @@
               </el-tag>
             </template>
           </el-table-column>
-          <el-table-column label="Public" width="170">
+          <el-table-column label="Public" width="220">
             <template v-slot="scope">
-              <span v-if="scope.row.publicHost">{{ scope.row.publicHost }}:{{ scope.row.publicPort }}</span>
+              <span v-if="scope.row.publicUrl">{{ scope.row.publicUrl }}</span>
               <span v-else>-</span>
             </template>
           </el-table-column>
@@ -175,8 +175,7 @@ interface TrackerGroupMember {
   nodeName: string | null;
   role: string;
   online: number;
-  publicHost: string | null;
-  publicPort: number | null;
+  publicUrl: string | null;
   lastHeartbeat: string | null;
   joinTime: string;
 }

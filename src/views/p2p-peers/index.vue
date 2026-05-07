@@ -15,9 +15,9 @@
       <el-table-column type="index" :label="t('account.serial')" width="54"></el-table-column>
       <el-table-column prop="nodeId" :label="t('p2pPeers.nodeId')" width="260" show-overflow-tooltip></el-table-column>
       <el-table-column prop="nodeName" :label="t('p2pPeers.nodeName')" width="180"></el-table-column>
-      <el-table-column prop="publicHost" label="Public" width="180" show-overflow-tooltip>
+      <el-table-column prop="publicUrl" label="Public" width="220" show-overflow-tooltip>
         <template v-slot="scope">
-          <span v-if="scope.row.publicHost">{{ scope.row.publicHost }}:{{ scope.row.publicPort }}</span>
+          <span v-if="scope.row.publicUrl">{{ scope.row.publicUrl }}</span>
           <span v-else>-</span>
         </template>
       </el-table-column>
