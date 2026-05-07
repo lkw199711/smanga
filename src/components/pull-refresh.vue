@@ -90,7 +90,7 @@ const startPull = (y: number) => {
   startY.value = y;
   isPulling.value = true;
   
-  const content = container.value?.querySelector('.pull-refresh-content');
+  const content = container.value?.querySelector('.pull-refresh-content') as HTMLElement | null;
   if (content) {
     originalTransition.value = content.style.transition;
     content.style.transition = '';
@@ -118,7 +118,7 @@ const endPull = async () => {
   
   isPulling.value = false;
   
-  const content = container.value?.querySelector('.pull-refresh-content');
+  const content = container.value?.querySelector('.pull-refresh-content') as HTMLElement | null;
   if (content) {
     content.style.transition = originalTransition.value || 'transform 0.3s';
   }

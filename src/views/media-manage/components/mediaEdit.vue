@@ -98,7 +98,7 @@ import { mediaInit } from '@/type/media';
 
 const {t} = i18n.global;
 
-const editMediaDialog = defineModel('editMediaDialog');
+const editMediaDialog = defineModel<boolean>('editMediaDialog');
 const props = defineProps({
   editModel: {
     type: String,

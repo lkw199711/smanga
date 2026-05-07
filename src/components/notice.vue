@@ -5,9 +5,11 @@
 <script lang="ts" setup>
 import {userInfo} from '@/store';
 import {Cookies} from '@/utils';
+import {ElNotification} from 'element-plus';
 
 let ws: any;
 
+const isProduction = import.meta.env.PROD;
 const devUrl = import.meta.env.VITE_APP_WS_URL;
 const prodUrl = 'ws://' + location.host + '/websocket';
 
@@ -65,7 +67,7 @@ function socket_init() {
 function socket_message(socketRes: any) {
 	if (!socketRes.message) return;
 
-	let type: string;
+	let type: 'success' | 'error' | 'warning' | 'info';
 	switch (Number(socketRes.code)) {
 		case 0:
 			type = 'success';
@@ -85,7 +87,7 @@ function socket_message(socketRes: any) {
 		title: socketRes.title,
 		message: socketRes.message,
 		type,
-	});
+	} as any);
 }
 
 /**

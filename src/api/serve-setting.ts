@@ -21,7 +21,7 @@ const serveSettingApi = {
 	 * @param {string} value 字符串形式的数值 以s为单位 可以设置为*的表达式
 	 * @return {*}
 	 */
-	async set(title: string, key: string, value: string | number) {
+	async set(title: string, key: string, value: string | number | boolean | string[]) {
 		const http = await ajax.put('serve-config', { key: title + '.' + key, value });
 		const response = http.data;
 		return response.data;

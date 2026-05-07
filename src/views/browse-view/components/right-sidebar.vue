@@ -109,14 +109,21 @@ function menu_select(key: string) {
 			emit('set_image_width');
 			break;
 		case 'requestFullscreen':
-			if (document.documentElement.requestFullscreen) {
-				document.documentElement.requestFullscreen();
-			} else if (document.documentElement.webkitRequestFullscreen) {
-				document.documentElement.webkitRequestFullscreen();
-			} else if (document.documentElement.mozRequestFullScreen) {
-				document.documentElement.mozRequestFullScreen();
-			} else if (document.documentElement.msRequestFullscreen) {
-				document.documentElement.msRequestFullscreen();
+			{
+				const docEl = document.documentElement as HTMLElement & {
+					webkitRequestFullscreen?: () => Promise<void>;
+					mozRequestFullScreen?: () => Promise<void>;
+					msRequestFullscreen?: () => Promise<void>;
+				};
+				if (docEl.requestFullscreen) {
+					docEl.requestFullscreen();
+				} else if (docEl.webkitRequestFullscreen) {
+					docEl.webkitRequestFullscreen();
+				} else if (docEl.mozRequestFullScreen) {
+					docEl.mozRequestFullScreen();
+				} else if (docEl.msRequestFullscreen) {
+					docEl.msRequestFullscreen();
+				}
 			}
 			break;
 		case 'exitFullscreen':

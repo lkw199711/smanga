@@ -70,7 +70,7 @@ import { mangaInit } from '@/type/manga';
 import i18n from '@/i18n';
 
 const {t} = i18n.global;
-const editMangaDialog = defineModel('editMangaDialog');
+const editMangaDialog = defineModel<boolean>('editMangaDialog');
 const props = defineProps({
   mangaInfo: {
     type: Object,

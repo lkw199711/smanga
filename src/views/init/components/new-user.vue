@@ -31,9 +31,12 @@
 
 <script lang="ts" setup>
 import {reactive, onMounted} from 'vue';
-import {database_set} from '@/api/login';
-import {register} from '@/api/account';
+import loginApi from '@/api/login';
+import userApi from '@/api/account';
 import i18n from '@/i18n';
+
+const database_set = loginApi.database_set;
+const register = userApi.register;
 
 const emit = defineEmits(['update']);
 const {t} = i18n.global;

@@ -48,7 +48,7 @@ const props = defineProps({
 });
 
 const emit = defineEmits(['close', 'reload']);
-const editChapterDialog = defineModel('editChapterDialog');
+const editChapterDialog = defineModel<boolean>('editChapterDialog');
 
 const form = reactive(props.chapterInfo);
 watch(

@@ -56,7 +56,7 @@ const { t } = i18n.global;
 const mangaShareDialog = ref(false);
 const blob = ref('');
 
-const rightSidebarVisible = defineModel('rightSidebarVisible');
+const rightSidebarVisible = defineModel<boolean>('rightSidebarVisible');
 const editMediaDialog = ref(false);
 const props = defineProps(['mediaInfo']);
 const emit = defineEmits(['reload', 'close']);

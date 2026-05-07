@@ -69,7 +69,7 @@ const rightSidebarVisible = computed({
 });
 */
 // Vue 3.4+ 推荐使用defineModel宏，它会自动处理prop和update事件
-const rightSidebarVisible = defineModel('rightSidebarVisible');
+const rightSidebarVisible = defineModel<boolean>('rightSidebarVisible');
 const props = defineProps(['chapterInfo']);
 const emit = defineEmits(['reload', 'close']);
 

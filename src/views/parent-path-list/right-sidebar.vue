@@ -17,9 +17,11 @@
 import { watch, ref, computed } from 'vue'
 import { useRoute } from "vue-router";
 import { config } from "@/store";
+import useBrowseStore from '@/store/browse';
 import androidSeat from '@/layout/components/android-seat.vue';
 
 const route = useRoute();
+const browse = useBrowseStore();
 
 const drawer = ref(false)
 
@@ -31,7 +33,7 @@ const removeFirstTitle = computed(() => {
 });
 
 const bookmarkTitle = computed(() => {
-  return config.bookmarkShow ? '移除书签' : '添加书签';
+  return browse.bookmarkShow ? '移除书签' : '添加书签';
 });
 
 const directionTitle = computed(() => {
