@@ -543,7 +543,14 @@
     "pull": "Pull",
     "pullDialog": "Pull Resource",
     "receivedPath": "Receive Path",
-    "receivedPathPlaceholder": "Select or input local receive path"
+    "receivedPathPlaceholder": "Select or input local receive path",
+    "viewDetail": "View Detail",
+    "manifestDetail": "Share Manifest Detail",
+    "truncated": "Truncated",
+    "tabMangas": "Mangas",
+    "tabTree": "File Tree",
+    "loadTree": "Load Tree",
+    "treeHint": "Click \"Load Tree\" on a manga row to view its file tree."
   },
   "p2pTransfer": {
     "title": "Transfers",

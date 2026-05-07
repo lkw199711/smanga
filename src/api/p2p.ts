@@ -123,6 +123,54 @@ export const p2pPeerApi = {
     const res = await ajax.get(`p2p/peer/cache/${encodeURIComponent(groupNo)}`);
     return res.data;
   },
+
+  /**
+   * 获取群组 manifest 摘要列表(查看详情用)
+   * - sync 默认 1: 顺带写入本地 p2p_peer_share_manifest 缓存
+   * - fallback=1: tracker 不可达时回落本地缓存
+   */
+  async manifests(
+    groupNo: string,
+    opts: { since?: number; nodeId?: string; sync?: 0 | 1; fallback?: 0 | 1 } = {}
+  ) {
+    const params: Record<string, any> = {};
+    if (opts.since) params.since = opts.since;
+    if (opts.nodeId) params.nodeId = opts.nodeId;
+    if (opts.sync !== undefined) params.sync = opts.sync;
+    if (opts.fallback !== undefined) params.fallback = opts.fallback;
+    const res = await ajax.get(`p2p/peer/manifests/${encodeURIComponent(groupNo)}`, { params });
+    return res.data;
+  },
+
+  /** 获取单个 manifest 完整 payload(含元数据/章节/可选文件树) */
+  async manifest(
+    groupNo: string,
+    params: {
+      nodeId: string;
+      shareType: 'media' | 'manga' | string;
+      remoteMediaId?: number | null;
+      remoteMangaId?: number | null;
+    }
+  ) {
+    const res = await ajax.get(`p2p/peer/manifest/${encodeURIComponent(groupNo)}`, { params });
+    return res.data;
+  },
+
+  /** 按需拉取指定 manga 的文件树(payload 被截断时用) */
+  async mangaTree(groupNo: string, remoteMangaId: number) {
+    const res = await ajax.get(`p2p/peer/manifest/${encodeURIComponent(groupNo)}/manga-tree`, {
+      params: { remoteMangaId },
+    });
+    return res.data;
+  },
+
+  /** 按需拉取指定 chapter 的文件树 */
+  async chapterTree(groupNo: string, remoteMangaId: number, remoteChapterId: number) {
+    const res = await ajax.get(`p2p/peer/manifest/${encodeURIComponent(groupNo)}/chapter-tree`, {
+      params: { remoteMangaId, remoteChapterId },
+    });
+    return res.data;
+  },
 };
 
 /**

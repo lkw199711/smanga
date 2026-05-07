@@ -547,7 +547,14 @@
     "pull": "拉取",
     "pullDialog": "发起拉取",
     "receivedPath": "接收路径",
-    "receivedPathPlaceholder": "请选择或输入本地接收路径"
+    "receivedPathPlaceholder": "请选择或输入本地接收路径",
+    "viewDetail": "查看详情",
+    "manifestDetail": "共享清单详情",
+    "truncated": "详情已截断",
+    "tabMangas": "漫画列表",
+    "tabTree": "文件树",
+    "loadTree": "加载文件树",
+    "treeHint": "请点击某行的「加载文件树」按钮查看该漫画的文件树。"
   },
   "p2pTransfer": {
     "title": "传输任务",

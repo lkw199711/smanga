@@ -44,14 +44,24 @@
       <el-table-column prop="shareName" :label="t('p2pTransfer.resourceName')" show-overflow-tooltip></el-table-column>
       <el-table-column prop="mangaCount" label="Mangas" width="90"></el-table-column>
       <el-table-column prop="updateTime" :label="t('updateTime')" width="160"></el-table-column>
-      <el-table-column :label="t('account.option')" width="120">
+      <el-table-column :label="t('account.option')" width="200">
         <template v-slot="scope">
+          <el-button size="small" type="primary" link :icon="View" @click="open_detail_dialog(scope.row)">
+            {{ t('p2pPeers.viewDetail') }}
+          </el-button>
           <el-button size="small" type="success" :icon="Download" @click="open_pull_dialog(scope.row)">
             {{ t('p2pPeers.pull') }}
           </el-button>
         </template>
       </el-table-column>
     </el-table>
+
+    <!-- manifest 详情对话框 -->
+    <ManifestDetailDialog
+      v-model="detailDialogVisible"
+      :group-no="groupNo"
+      :share="selectedShare"
+    />
 
     <!-- 拉取对话框 -->
     <el-dialog v-model="pullDialogVisible" :title="$t('p2pPeers.pullDialog')" :close-on-click-modal="false" width="560px">
@@ -81,7 +91,8 @@
 export default {name: 'p2p-peers'};
 </script>
 <script setup lang="ts">
-import {DocumentCopy, Download, Refresh} from '@element-plus/icons-vue';
+import {DocumentCopy, Download, Refresh, View} from '@element-plus/icons-vue';
+import ManifestDetailDialog from './ManifestDetailDialog.vue';
 import {onMounted, ref, computed} from 'vue';
 import i18n from '@/i18n';
 import {p2pGroupApi, p2pPeerApi, p2pTransferApi} from '@/api/p2p';
@@ -115,6 +126,9 @@ const pullForm = ref<P2PPullCreateParams>({
   remoteName: '',
   receivedPath: '',
 });
+
+const detailDialogVisible = ref(false);
+const selectedShare = ref<any | null>(null);
 
 onMounted(async () => {
   await load_groups();
@@ -171,10 +185,14 @@ async function load_shares(fromTracker = false) {
   if (!groupNo.value) return;
   loadingShares.value = true;
   try {
+    // 统一走 manifests 接口(摘要版,含 payloadTruncated 字段,供"查看详情"判断)
+    // fromTracker=true → tracker 优先 + 本地缓存兜底
+    // fromTracker=false → 仅本地缓存(不访问 tracker)
     const res = fromTracker
-      ? await p2pPeerApi.shares(groupNo.value)
-      : await p2pPeerApi.cache(groupNo.value);
-    shares.value = res?.list || res?.data?.list || res?.data || [];
+      ? await p2pPeerApi.manifests(groupNo.value, { sync: 1, fallback: 1 })
+      : await p2pPeerApi.manifests(groupNo.value, { sync: 0, fallback: 1 });
+    const data = res?.data || res;
+    shares.value = data?.list || [];
   } catch (err) {
     console.error('load shares failed:', err);
   } finally {
@@ -201,6 +219,20 @@ function open_pull_dialog(row: P2PShareIndexType) {
     receivedPath: pathList.value[0]?.pathContent || '',
   };
   pullDialogVisible.value = true;
+}
+
+function open_detail_dialog(row: any) {
+  if (!groupNo.value) return;
+  selectedShare.value = {
+    nodeId: row.nodeId,
+    nodeName: row.nodeName,
+    shareType: row.shareType,
+    remoteMediaId: row.remoteMediaId ?? null,
+    remoteMangaId: row.remoteMangaId ?? null,
+    shareName: row.shareName,
+    payloadTruncated: row.payloadTruncated ?? 0,
+  };
+  detailDialogVisible.value = true;
 }
 
 async function submit_pull() {
