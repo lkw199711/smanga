@@ -210,7 +210,7 @@ async function retry_transfer(row: P2PTransferType) {
     ElMessage.success(t('p2pTransfer.retry'));
     await load_table(browse.manageListPage, browse.manageListPageSizeCache);
   } catch (err: any) {
-    ElMessage.error(err?.message || 'retry failed');
+    ElMessage.error(err?.response?.data?.message || err?.message || 'retry failed');
   }
 }
 
