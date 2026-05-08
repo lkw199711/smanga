@@ -60,6 +60,7 @@ declare module 'vue' {
     ElTabPane: typeof import('element-plus/es')['ElTabPane']
     ElTabs: typeof import('element-plus/es')['ElTabs']
     ElTag: typeof import('element-plus/es')['ElTag']
+    ElTree: typeof import('element-plus/es')['ElTree']
     Line: typeof import('./components/charts/line.vue')['default']
     List: typeof import('./components/charts/list.vue')['default']
     ListSkeleton: typeof import('./components/list-skeleton.vue')['default']
