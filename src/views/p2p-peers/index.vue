@@ -46,7 +46,7 @@
       <el-table-column prop="updateTime" :label="t('updateTime')" width="160"></el-table-column>
       <el-table-column :label="t('account.option')" width="200">
         <template v-slot="scope">
-          <el-button size="small" type="primary" link :icon="View" @click="open_detail_dialog(scope.row)">
+          <el-button size="small" type="primary" :icon="View" @click="open_detail_dialog(scope.row)">
             {{ t('p2pPeers.viewDetail') }}
           </el-button>
           <el-button size="small" type="success" :icon="Download" @click="open_pull_dialog(scope.row)">
