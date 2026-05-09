@@ -58,9 +58,9 @@
 						<div class="sb-hero-sub">WELCOME BACK</div>
 						<div class="sb-hero-title">你的漫画世界，<br />等你翻开下一页 ✨</div>
 						<div class="sb-hero-meta">
-							<span class="sb-hero-chip">📖 今日 {{ stats.readToday }} 章</span>
+							<span class="sb-hero-chip">📖 今日 {{ statsData.readToday || 47 }} 章</span>
 							<span class="sb-hero-chip">🔥 连续 23 天</span>
-							<span class="sb-hero-chip">⭐ 收藏 {{ stats.totalManga.toLocaleString() }}</span>
+							<span class="sb-hero-chip">⭐ 收藏 {{ statsData.mangaCount.toLocaleString() || 0 }}</span>
 						</div>
 					</div>
 					<div class="sb-hero-deco">
@@ -74,20 +74,20 @@
 				<section class="sb-section">
 					<div class="sb-section-head">
 						<h2>🌟 继续阅读</h2>
-						<a class="sb-link">全部 →</a>
+						<a class="sb-link" @click="$router.push('/history')">全部 →</a>
 					</div>
 					<div class="sb-continue">
-						<div v-for="m in continueReading" :key="m.id" class="sb-cont-card">
+						<div v-for="item in historyList" :key="item.chapterId" class="sb-cont-card" @click="goRead(item)">
 							<div class="sb-cont-cover"
-								:style="{ background: `linear-gradient(135deg, ${m.gradient[0]}, ${m.gradient[1]})` }">
-								<span v-if="m.tag" class="sb-cont-tag">{{ m.tag }}</span>
-								<span v-if="m.unread" class="sb-cont-unread">{{ m.unread }}</span>
+								:style="{ background: `linear-gradient(135deg, ${getGradient(item.chapterId)[0]}, ${getGradient(item.chapterId)[1]})` }">
+								<span v-if="item.tag" class="sb-cont-tag">{{ item.tag }}</span>
+								<span v-if="item.unread" class="sb-cont-unread">{{ item.unread }}</span>
 								<div class="sb-cont-progress">
-									<div class="sb-cont-progress-bar" :style="{ width: m.progress + '%' }"></div>
+									<div class="sb-cont-progress-bar" :style="{ width: getProgress(item) + '%' }"></div>
 								</div>
 							</div>
-							<div class="sb-cont-name">{{ m.name }}</div>
-							<div class="sb-cont-chapter">{{ m.chapter }}</div>
+							<div class="sb-cont-name">{{ item.mangaName || '未知漫画' }}</div>
+							<div class="sb-cont-chapter">{{ item.chapterName || '未知章节' }}</div>
 						</div>
 					</div>
 				</section>
@@ -96,19 +96,19 @@
 				<section class="sb-section">
 					<div class="sb-section-head">
 						<h2>💫 最近添加</h2>
-						<a class="sb-link">全部 →</a>
+						<a class="sb-link" @click="$router.push('/manga-list')">全部 →</a>
 					</div>
 					<div class="sb-grid">
-						<div v-for="m in recentAdded" :key="m.id" class="sb-grid-card">
+						<div v-for="item in latestList" :key="item.mangaId" class="sb-grid-card" @click="goManga(item)">
 							<div class="sb-grid-cover"
-								:style="{ background: `linear-gradient(135deg, ${m.gradient[0]}, ${m.gradient[1]})` }">
-								<span v-if="m.tag" class="sb-grid-tag">{{ m.tag }}</span>
+								:style="{ background: `linear-gradient(135deg, ${getGradient(item.mangaId)[0]}, ${getGradient(item.mangaId)[1]})` }">
+								<span v-if="item.tag" class="sb-grid-tag">{{ item.tag }}</span>
 								<div class="sb-grid-hover">
 									<button class="sb-grid-play">▶ 立即阅读</button>
 								</div>
 							</div>
-							<div class="sb-grid-name">{{ m.name }}</div>
-							<div class="sb-grid-meta">{{ m.chapter }}</div>
+							<div class="sb-grid-name">{{ item.mangaName }}</div>
+							<div class="sb-grid-meta">{{ item.chapterCount || 0 }} 章节</div>
 						</div>
 					</div>
 				</section>
@@ -118,7 +118,89 @@
 </template>
 
 <script lang="ts" setup>
-import { sidebarMenu as menu, mediaList, continueReading, recentAdded, stats } from '../mock';
+import { ref, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
+import historyApi from '@/api/history'
+import latestApi from '@/api/latest'
+import chartsApi from '@/api/charts'
+
+const router = useRouter()
+
+const statsData = ref({ mangaCount: 0, chapterCount: 0, readToday: 47, readThisWeek: 312 })
+const historyList = ref<any[]>([])
+const latestList = ref<any[]>([])
+
+// Mock数据
+const menu = [
+	{ key: 'home', label: '首页', icon: '🏠' },
+	{ key: 'history', label: '最近阅读', icon: '🕘' },
+	{ key: 'bookmark', label: '书签', icon: '🔖' },
+	{ key: 'collect', label: '收藏', icon: '⭐' },
+	{ key: 'search', label: '搜索', icon: '🔍' },
+	{ key: 'tag', label: '标签', icon: '🏷️' },
+	{ key: 'manage', label: '管理', icon: '⚙️' },
+	{ key: 'setting', label: '设置', icon: '🔧' },
+]
+
+const mediaList = [
+	{ id: 1, name: '少年漫画', icon: '📚', count: 128 },
+	{ id: 2, name: '少女漫画', icon: '🌸', count: 64 },
+	{ id: 3, name: '青年漫画', icon: '📖', count: 96 },
+	{ id: 4, name: '同人本', icon: '🎨', count: 32 },
+]
+
+// 渐变色彩板
+const palette = [
+	['#FFB5A7', '#FEC89A'],
+	['#A0C4FF', '#BDB2FF'],
+	['#B9FBC0', '#A0E8AF'],
+	['#FDCB82', '#F7B267'],
+	['#C5DEDD', '#F0EFEB'],
+	['#FCD5CE', '#F8EDEB'],
+	['#CDB4DB', '#FFC8DD'],
+	['#BEE1E6', '#FAF3DD'],
+	['#F1C0E8', '#CFBAF0'],
+	['#90DBF4', '#8EECF5'],
+	['#F7AEF8', '#B388EB'],
+	['#FF9F1C', '#FFBF69'],
+]
+
+onMounted(async () => {
+	try {
+		const [statsRes, historyRes, latestRes] = await Promise.allSettled([
+			chartsApi.get_count(),
+			historyApi.get(1, 6),
+			latestApi.get(1, 12),
+		])
+		if (statsRes.status === 'fulfilled') {
+			statsData.value = {
+				...statsData.value,
+				...(statsRes.value || {})
+			}
+		}
+		if (historyRes.status === 'fulfilled') historyList.value = historyRes.value?.list || []
+		if (latestRes.status === 'fulfilled') latestList.value = latestRes.value?.list || []
+	} catch (e) {
+		// fallback
+	}
+})
+
+function getGradient(id: number) {
+	return palette[id % palette.length]
+}
+
+function getProgress(item: any) {
+	if (!item.page || !item.pageCount) return 0
+	return Math.round((item.page / item.pageCount) * 100)
+}
+
+function goRead(item: any) {
+	router.push({ path: '/browse-view/flow', query: { chapterId: item.chapterId } })
+}
+
+function goManga(item: any) {
+	router.push({ path: '/chapter-list', query: { mangaId: item.mangaId } })
+}
 </script>
 
 <style scoped>

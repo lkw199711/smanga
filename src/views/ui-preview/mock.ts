@@ -75,6 +75,96 @@ export const stats = {
 	readThisWeek: 312,
 };
 
+// ========== 阅读器场景 mock ==========
+export const readerMock = {
+	mangaName: '葬送的芙莉莲',
+	chapterName: '第 128 话 · 魔法的才能',
+	currentPage: 5,
+	totalPages: 24,
+	pages: Array.from({ length: 12 }, (_, i) => ({
+		id: i + 1,
+		gradient: palette[i % palette.length],
+	})),
+	chapters: [
+		{ id: 1, name: '第 125 话', read: true },
+		{ id: 2, name: '第 126 话', read: true },
+		{ id: 3, name: '第 127 话', read: true },
+		{ id: 4, name: '第 128 话', read: false, current: true },
+		{ id: 5, name: '第 129 话', read: false },
+		{ id: 6, name: '第 130 话', read: false },
+		{ id: 7, name: '第 131 话', read: false },
+		{ id: 8, name: '第 132 话', read: false },
+	],
+};
+
+// ========== 管理场景 mock ==========
+export const manageMock = {
+	tableData: [
+		{ mangaId: 1, mediaId: 1, mangaName: '进击的巨人', createTime: '2024-01-15 08:30', updateTime: '2024-12-01 14:22' },
+		{ mangaId: 2, mediaId: 1, mangaName: '咒术回战', createTime: '2024-02-20 10:15', updateTime: '2024-11-28 09:45' },
+		{ mangaId: 3, mediaId: 2, mangaName: '葬送的芙莉莲', createTime: '2024-03-10 14:00', updateTime: '2024-12-02 16:30' },
+		{ mangaId: 4, mediaId: 1, mangaName: '间谍过家家', createTime: '2024-04-05 11:20', updateTime: '2024-11-30 08:10' },
+		{ mangaId: 5, mediaId: 3, mangaName: '蓝锁', createTime: '2024-05-12 09:45', updateTime: '2024-12-01 20:55' },
+		{ mangaId: 6, mediaId: 2, mangaName: '药屋少女的呢喃', createTime: '2024-06-18 16:30', updateTime: '2024-11-25 12:40' },
+		{ mangaId: 7, mediaId: 3, mangaName: '排球少年', createTime: '2024-07-22 13:10', updateTime: '2024-10-15 07:20' },
+		{ mangaId: 8, mediaId: 1, mangaName: '海贼王', createTime: '2024-01-01 00:00', updateTime: '2024-12-03 06:00' },
+	],
+	totalCount: 1284,
+};
+
+// ========== 设置场景 mock ==========
+export type SettingItem = {
+	label: string;
+	type: 'switch' | 'select' | 'input' | 'slider';
+	value?: any;
+	options?: string[];
+	desc?: string;
+};
+
+export type SettingGroup = {
+	title: string;
+	items: SettingItem[];
+};
+
+export const settingMock: SettingGroup[] = [
+	{
+		title: '界面设置',
+		items: [
+			{ label: '语言设置', type: 'select', value: '中文', options: ['中文', 'English', '日本語'] },
+			{ label: '主题设置', type: 'select', value: '蓝色', options: ['蓝色', '粉色', '绿色', '紫色', '暗色'] },
+			{ label: '侧边栏媒体库', type: 'switch', value: true },
+		],
+	},
+	{
+		title: '列表设置',
+		items: [
+			{ label: '漫画默认排序', type: 'select', value: '更新时间', options: ['更新时间', '创建时间', '名称', 'ID'] },
+			{ label: '章节默认排序', type: 'select', value: '升序', options: ['升序', '降序'] },
+			{ label: '开启滑动翻页', type: 'switch', value: true },
+			{ label: '封面加载并发', type: 'input', value: '4' },
+			{ label: '漫画页面容量', type: 'input', value: '30' },
+		],
+	},
+	{
+		title: '阅读设置',
+		items: [
+			{ label: '翻页按钮反向', type: 'switch', value: false },
+			{ label: '显示页码', type: 'switch', value: true },
+			{ label: '使用阅读进度条', type: 'switch', value: true },
+			{ label: '条漫加载步进', type: 'input', value: '5' },
+			{ label: '启用翻页动画', type: 'switch', value: true },
+			{ label: '翻页动画类型', type: 'select', value: '淡入淡出', options: ['淡入淡出', '左右滑动', '实体书翻页'] },
+			{ label: '动画速度', type: 'slider', value: 300 },
+		],
+	},
+	{
+		title: '缓存设置',
+		items: [
+			{ label: '图片缓存数量限制', type: 'input', value: '100', desc: '设置为0表示无限制' },
+		],
+	},
+];
+
 export const styleSpec = {
 	A: {
 		title: '现代简约 · Linear / Notion',
@@ -123,5 +213,41 @@ export const styleSpec = {
 			['主文本', '#0F172A'],
 		],
 		spec: ['圆角 10px', '轻阴影', '保留主题切换', '改动最小'],
+	},
+	E: {
+		title: '新拟物主义 · Neumorphism',
+		palette: [
+			['背景', '#E0E5EC'],
+			['卡片', '#E0E5EC'],
+			['内阴影', 'inset 2px 2px 5px #BABECC'],
+			['外阴影', '5px 5px 10px #BABECC'],
+			['高光', '-5px -5px 10px #FFFFFF'],
+			['主文本', '#2D3748'],
+		],
+		spec: ['圆角 12px', '内外阴影营造立体感', '柔和渐变', '现代科技感'],
+	},
+	F: {
+		title: '极简日式 · Japanese Minimal',
+		palette: [
+			['背景', '#FAF9F7'],
+			['卡片', '#FFFFFF'],
+			['边框', '#E5E3E0'],
+			['主文本', '#2D2D2D'],
+			['次级文本', '#8B8680'],
+			['强调色', '#D64541'],
+		],
+		spec: ['圆角 2px', '直角设计', '细腻分隔线', 'Noto Sans JP 字体'],
+	},
+	G: {
+		title: '赛博朋克 · Cyberpunk',
+		palette: [
+			['背景', '#0F0F23'],
+			['面板', '#1A1A2E'],
+			['卡片', '#16213E'],
+			['边框', '#E94560'],
+			['主文本', '#E94560'],
+			['次级文本', '#0F3460'],
+		],
+		spec: ['圆角 2px', '霓虹色彩对比', '等宽字体', '科技感十足'],
 	},
 };

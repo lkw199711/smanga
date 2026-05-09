@@ -6,11 +6,23 @@
 				<span class="pv-badge">UI 预览</span>
 				<span class="pv-title">{{ currentSpec.title }}</span>
 			</div>
-			<div class="pv-tabs">
-				<button v-for="item in tabs" :key="item.key" :class="['pv-tab', { active: active === item.key }]"
-					@click="active = item.key">
-					{{ item.label }}
-				</button>
+			<div class="pv-header-center">
+				<!-- 场景切换 -->
+				<div class="pv-scene-tabs">
+					<button v-for="item in scenes" :key="item.key"
+						:class="['pv-scene-tab', { active: activeScene === item.key }]"
+						@click="activeScene = item.key">
+						{{ item.label }}
+					</button>
+				</div>
+				<!-- 风格切换 -->
+				<div class="pv-tabs">
+					<button v-for="item in tabs" :key="item.key"
+						:class="['pv-tab', { active: active === item.key }]"
+						@click="active = item.key">
+						{{ item.label }}
+					</button>
+				</div>
 			</div>
 			<div class="pv-header-right">
 				<button class="pv-tab" @click="showSpec = !showSpec">
@@ -44,15 +56,38 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, computed, shallowRef } from 'vue';
+import { ref, computed } from 'vue';
 import { useRouter } from 'vue-router';
 import { styleSpec } from './mock';
+// 首页风格
 import StyleA from './styles/style-a-minimal.vue';
 import StyleB from './styles/style-b-manga.vue';
 import StyleC from './styles/style-c-dark.vue';
 import StyleD from './styles/style-d-desat.vue';
+// 阅读器风格
+import ReaderA from './reader/reader-a-minimal.vue';
+import ReaderB from './reader/reader-b-manga.vue';
+import ReaderC from './reader/reader-c-dark.vue';
+import ReaderD from './reader/reader-d-desat.vue';
+// 管理风格
+import ManageA from './manage/manage-a-minimal.vue';
+import ManageB from './manage/manage-b-manga.vue';
+import ManageC from './manage/manage-c-dark.vue';
+import ManageD from './manage/manage-d-desat.vue';
+// 设置风格
+import SettingA from './setting/setting-a-minimal.vue';
+import SettingB from './setting/setting-b-manga.vue';
+import SettingC from './setting/setting-c-dark.vue';
+import SettingD from './setting/setting-d-desat.vue';
 
 const router = useRouter();
+
+const scenes = [
+	{ key: 'home', label: '首页' },
+	{ key: 'reader', label: '阅读器' },
+	{ key: 'manage', label: '管理' },
+	{ key: 'setting', label: '设置' },
+] as const;
 
 const tabs = [
 	{ key: 'A', label: 'A 现代简约' },
@@ -61,16 +96,23 @@ const tabs = [
 	{ key: 'D', label: 'D 降饱和多主题' },
 ] as const;
 
+type SceneKey = 'home' | 'reader' | 'manage' | 'setting';
 type TabKey = 'A' | 'B' | 'C' | 'D';
+const activeScene = ref<SceneKey>('home');
 const active = ref<TabKey>('A');
 const showSpec = ref(true);
 
-const views: Record<TabKey, any> = { A: StyleA, B: StyleB, C: StyleC, D: StyleD };
-const currentView = computed(() => views[active.value]);
+const viewMap: Record<SceneKey, Record<TabKey, any>> = {
+	home: { A: StyleA, B: StyleB, C: StyleC, D: StyleD },
+	reader: { A: ReaderA, B: ReaderB, C: ReaderC, D: ReaderD },
+	manage: { A: ManageA, B: ManageB, C: ManageC, D: ManageD },
+	setting: { A: SettingA, B: SettingB, C: SettingC, D: SettingD },
+};
+
+const currentView = computed(() => viewMap[activeScene.value][active.value]);
 const currentSpec = computed(() => styleSpec[active.value]);
 
 function pickColor(v: string) {
-	// 处理类似 '#EFF6FF' 或 '#FFF5FA → #EEF4FF' 或 'rgba(...)'
 	if (v.includes('→')) {
 		const parts = v.split('→').map((s) => s.trim());
 		return `linear-gradient(135deg, ${parts[0]} 0%, ${parts[1]} 100%)`;
@@ -102,8 +144,8 @@ function goBack() {
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
-	gap: 16px;
-	padding: 12px 20px;
+	gap: 12px;
+	padding: 10px 20px;
 	background: rgba(255, 255, 255, 0.92);
 	backdrop-filter: blur(10px);
 	border-bottom: 1px solid #e5e7eb;
@@ -113,7 +155,44 @@ function goBack() {
 	display: flex;
 	align-items: center;
 	gap: 12px;
-	min-width: 260px;
+	min-width: 220px;
+}
+
+.pv-header-center {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 6px;
+}
+
+.pv-scene-tabs {
+	display: flex;
+	gap: 4px;
+	padding: 3px;
+	background: #e0e7ff;
+	border-radius: 8px;
+}
+
+.pv-scene-tab {
+	padding: 5px 14px;
+	font-size: 12px;
+	font-weight: 500;
+	color: #4338ca;
+	background: transparent;
+	border: none;
+	border-radius: 6px;
+	cursor: pointer;
+	transition: all 0.15s ease;
+}
+
+.pv-scene-tab:hover {
+	background: rgba(255, 255, 255, 0.6);
+}
+
+.pv-scene-tab.active {
+	background: #fff;
+	color: #312e81;
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
 }
 
 .pv-badge {
@@ -174,7 +253,7 @@ function goBack() {
 .pv-header-right {
 	display: flex;
 	gap: 8px;
-	min-width: 260px;
+	min-width: 220px;
 	justify-content: flex-end;
 }
 

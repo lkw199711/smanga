@@ -2,6 +2,9 @@ import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router';
 import Layout from '@/layout/index.vue';
 import browse from '@/layout/browse.vue';
 import useBrowseStore from '@/store/browse';
+import ThemeLayout from '@/themes/layout-wrapper.vue';
+import ThemeBridge from '@/themes/bridge.vue';
+import ThemeReaderWrapper from '@/themes/reader-wrapper.vue';
 
 import NProgress from 'nprogress';
 import 'nprogress/nprogress.css';
@@ -519,6 +522,49 @@ const routes: Array<RouteRecordRaw> = [
 		name: 'ui-preview',
 		meta: { sidebar: false, title: 'UI Preview' },
 		component: () => import('../views/ui-preview/index.vue'),
+	},
+	
+	// UI 风格预览2（独立页面，不走 Layout）
+	{
+		path: '/ui-preview2',
+		name: 'ui-preview2',
+		meta: { sidebar: false, title: 'UI Preview 2' },
+		component: () => import('../views/ui-preview2/index.vue'),
+	},
+
+	// ===== 主题系统路由 =====
+	{
+		path: '/t',
+		component: ThemeLayout,
+		meta: { sidebar: false },
+		children: [
+			{ path: '', name: 't-home', component: ThemeBridge, props: { page: 'home' }, meta: { title: '首页' } },
+			{ path: 'media', name: 't-media-list', component: ThemeBridge, props: { page: 'media-list' }, meta: { title: '媒体库' } },
+			{ path: 'media/:mediaId', name: 't-manga-list', component: ThemeBridge, props: { page: 'manga-list' }, meta: { title: '漫画列表' } },
+			{ path: 'manga/:mangaId', name: 't-manga-info', component: ThemeBridge, props: { page: 'manga-info' }, meta: { title: '漫画详情' } },
+			{ path: 'manga/:mangaId/chapters', name: 't-chapter-list', component: ThemeBridge, props: { page: 'chapter-list' }, meta: { title: '章节列表' } },
+			{ path: 'history', name: 't-history', component: ThemeBridge, props: { page: 'history' }, meta: { title: '历史' } },
+			{ path: 'bookmark', name: 't-bookmark', component: ThemeBridge, props: { page: 'bookmark' }, meta: { title: '书签' } },
+			{ path: 'collect', name: 't-collect', component: ThemeBridge, props: { page: 'collect' }, meta: { title: '收藏' } },
+			{ path: 'search', name: 't-search', component: ThemeBridge, props: { page: 'search' }, meta: { title: '搜索' } },
+			{ path: 'tags', name: 't-tag-list', component: ThemeBridge, props: { page: 'tag-list' }, meta: { title: '标签' } },
+			{ path: 'setting/user', name: 't-user-setting', component: ThemeBridge, props: { page: 'user-setting' }, meta: { title: '用户设置' } },
+			{ path: 'setting/serve', name: 't-serve-setting', component: ThemeBridge, props: { page: 'serve-setting' }, meta: { title: '服务器设置' } },
+			{ path: 'manage', name: 't-manage', component: ThemeBridge, props: { page: 'manage' }, meta: { title: '管理' } },
+		],
+	},
+	{
+		path: '/t/login',
+		name: 't-login',
+		component: ThemeBridge,
+		props: { page: 'login' },
+		meta: { sidebar: false, title: '登录' },
+	},
+	{
+		path: '/t/reader/:chapterId',
+		name: 't-reader',
+		component: ThemeReaderWrapper,
+		meta: { sidebar: false, title: '阅读' },
 	},
 
 	// 404
