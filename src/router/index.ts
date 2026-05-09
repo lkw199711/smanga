@@ -513,6 +513,14 @@ const routes: Array<RouteRecordRaw> = [
 		component: () => import('../views/test/index.vue'),
 	},
 
+	// UI 风格预览（独立页面，不走 Layout）
+	{
+		path: '/ui-preview',
+		name: 'ui-preview',
+		meta: { sidebar: false, title: 'UI Preview' },
+		component: () => import('../views/ui-preview/index.vue'),
+	},
+
 	// 404
 	{
 		path: '/404',
