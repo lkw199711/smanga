@@ -12,7 +12,8 @@
 				:key="item.path"
 				:to="item.path"
 				class="sa-nav-item"
-				active-class="active"
+				:active-class="item.exact ? '' : 'active'"
+				exact-active-class="active"
 			>
 				<span class="sa-nav-icon">{{ item.icon }}</span>
 				<span>{{ item.label }}</span>
@@ -53,7 +54,7 @@ import mediaApi from '@/api/media'
 const router = useRouter()
 
 const navItems = [
-	{ path: '/t', icon: '🏠', label: '首页' },
+	{ path: '/t', icon: '🏠', label: '首页', exact: true },
 	{ path: '/t/history', icon: '🕘', label: '最近阅读' },
 	{ path: '/t/bookmark', icon: '🔖', label: '书签' },
 	{ path: '/t/collect', icon: '⭐', label: '收藏' },

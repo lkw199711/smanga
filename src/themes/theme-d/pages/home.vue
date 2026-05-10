@@ -76,7 +76,7 @@ import { onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import historyApi from '@/api/history'
 import latestApi from '@/api/latest'
-import mediaApi from '@/api/media'
+import chartsApi from '@/api/charts'
 
 type MangaCard = {
 	id: number
@@ -91,10 +91,10 @@ type MangaCard = {
 const router = useRouter()
 
 const stats = ref({
-	totalManga: 1284,
-	totalChapter: 38562,
-	readToday: 47,
-	readThisWeek: 312,
+	totalManga: 0,
+	totalChapter: 0,
+	readToday: 0,
+	readThisWeek: 0,
 })
 
 const continueReading = ref<MangaCard[]>([])
@@ -124,23 +124,15 @@ function getProgress(item: any) {
 	return Math.round((item.page / item.pageCount) * 100)
 }
 
-function pickMediaList(payload: any): any[] {
-	if (!payload) return []
-	if (Array.isArray(payload)) return payload
-	if (Array.isArray(payload.list)) return payload.list
-	if (Array.isArray(payload.data)) return payload.data
-	if (Array.isArray(payload.data?.list)) return payload.data.list
-	return []
-}
-
 onMounted(async () => {
 	try {
-		const r = await mediaApi.get()
-		const list = pickMediaList(r)
-		const totalManga = list.reduce((sum: number, m: any) => sum + Number(m.mangaCount || 0), 0)
+		const r = await chartsApi.get_count()
 		stats.value = {
 			...stats.value,
-			totalManga: totalManga || stats.value.totalManga,
+			totalManga: Number(r?.mangaCount || 0),
+			totalChapter: Number(r?.chapterCount || 0),
+			readToday: Number(r?.readToday || 0),
+			readThisWeek: Number(r?.readThisWeek || 0),
 		}
 	} catch {}
 

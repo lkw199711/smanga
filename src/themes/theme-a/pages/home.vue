@@ -5,21 +5,21 @@
 			<div class="sa-stat-card">
 				<div class="sa-stat-label">漫画总数</div>
 				<div class="sa-stat-value">{{ statsData.mangaCount.toLocaleString() }}</div>
-				<div class="sa-stat-delta up">+24 本周</div>
+				<div class="sa-stat-delta up">+{{ statsData.mangaWeekAdd.toLocaleString() }} 本周</div>
 			</div>
 			<div class="sa-stat-card">
 				<div class="sa-stat-label">章节总数</div>
 				<div class="sa-stat-value">{{ statsData.chapterCount.toLocaleString() }}</div>
-				<div class="sa-stat-delta up">+1.2k 本周</div>
+				<div class="sa-stat-delta up">+{{ statsData.chapterWeekAdd.toLocaleString() }} 本周</div>
 			</div>
 			<div class="sa-stat-card">
 				<div class="sa-stat-label">今日阅读</div>
-				<div class="sa-stat-value">{{ statsData.readToday || 47 }}</div>
+				<div class="sa-stat-value">{{ statsData.readToday.toLocaleString() }}</div>
 				<div class="sa-stat-delta">章</div>
 			</div>
 			<div class="sa-stat-card">
 				<div class="sa-stat-label">本周阅读</div>
-				<div class="sa-stat-value">{{ statsData.readThisWeek || 312 }}</div>
+				<div class="sa-stat-value">{{ statsData.readThisWeek.toLocaleString() }}</div>
 				<div class="sa-stat-delta">章</div>
 			</div>
 		</section>
@@ -78,7 +78,14 @@ import { globalData } from '@/store'
 
 const router = useRouter()
 
-const statsData = ref({ mangaCount: 0, chapterCount: 0, readToday: 47, readThisWeek: 312 })
+const statsData = ref({
+	mangaCount: 0,
+	chapterCount: 0,
+	mangaWeekAdd: 0,
+	chapterWeekAdd: 0,
+	readToday: 0,
+	readThisWeek: 0
+})
 const historyList = ref<any[]>([])
 const latestList = ref<any[]>([])
 

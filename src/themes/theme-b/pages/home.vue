@@ -6,7 +6,7 @@
 				<div class="sb-hero-sub">WELCOME BACK</div>
 				<div class="sb-hero-title">你的漫画世界，<br />等你翻开下一页 ✨</div>
 				<div class="sb-hero-meta">
-					<span class="sb-hero-chip">📖 今日 {{ statsData.readToday || 47 }} 章</span>
+					<span class="sb-hero-chip">📖 今日 {{ statsData.readToday.toLocaleString() }} 章</span>
 					<span class="sb-hero-chip">🔥 连续 23 天</span>
 					<span class="sb-hero-chip">⭐ 收藏 {{ statsData.mangaCount.toLocaleString() || 0 }}</span>
 				</div>
@@ -73,7 +73,14 @@ import { globalData } from '@/store'
 
 const router = useRouter()
 
-const statsData = ref({ mangaCount: 0, chapterCount: 0, readToday: 47, readThisWeek: 312 })
+const statsData = ref({
+	mangaCount: 0,
+	chapterCount: 0,
+	mangaWeekAdd: 0,
+	chapterWeekAdd: 0,
+	readToday: 0,
+	readThisWeek: 0
+})
 const historyList = ref<any[]>([])
 const latestList = ref<any[]>([])
 
