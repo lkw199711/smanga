@@ -1,17 +1,17 @@
 <template>
-	<div class="history-list">
+	<div class="ta-history">
 		<div class="ta-page-head"><h1>历史记录</h1></div>
 		<div class="touch-dom">
 			<template v-if="loading">
 				<list-skeleton />
 			</template>
 			<template v-else>
-				<div class="chapter-list-box block">
-					<chapter
+				<div class="ta-history-list">
+					<t-history-item
 						v-for="item in list"
 						:key="item.chapterId"
-						viewType="list"
-						:chapterInfo="item"
+						:item="item"
+						variant="A"
 						@click="go_read(item)"
 					/>
 				</div>
@@ -32,12 +32,12 @@
 <script lang="ts" setup>
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import chapter from '@/components/chapter.vue'
 import historyApi from '@/api/history'
 import MediaPager from '@/components/media-pager.vue'
 import listSkeleton from '@/components/list-skeleton.vue'
 import { chapterPageSize } from '@/store/page-size'
 import { config } from '@/store'
+import THistoryItem from '@/themes/components/history-item.vue'
 
 const router = useRouter()
 
@@ -78,6 +78,11 @@ onMounted(() => {
 </script>
 
 <style scoped lang="less">
+.ta-history {
+	max-width: 980px;
+	margin: 0 auto;
+}
+
 .ta-page-head {
 	margin-bottom: 24px;
 }
@@ -93,6 +98,10 @@ onMounted(() => {
 	padding: 60px;
 	color: #9ca3af;
 }
-</style>
 
-<style src="@/style/chapter-list.less" scoped lang="less"></style>
+.ta-history-list {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+}
+</style>

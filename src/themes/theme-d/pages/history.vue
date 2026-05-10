@@ -7,12 +7,12 @@
 				<list-skeleton />
 			</template>
 			<template v-else>
-				<div class="chapter-list-box block">
-					<chapter
+				<div class="td-history-list">
+					<t-history-item
 						v-for="item in list"
 						:key="item.chapterId"
-						viewType="list"
-						:chapterInfo="item"
+						:item="item"
+						variant="D"
 						@click="go_read(item)"
 					/>
 				</div>
@@ -33,12 +33,12 @@
 <script lang="ts" setup>
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import chapter from '@/components/chapter.vue'
 import historyApi from '@/api/history'
 import MediaPager from '@/components/media-pager.vue'
 import listSkeleton from '@/components/list-skeleton.vue'
 import { chapterPageSize } from '@/store/page-size'
 import { config } from '@/store'
+import THistoryItem from '@/themes/components/history-item.vue'
 
 const router = useRouter()
 
@@ -81,7 +81,6 @@ onMounted(() => {
 <style scoped>
 .td-history { max-width: 800px; margin: 0 auto; }
 .td-page-title { font-size: 20px; font-weight: 700; color: var(--fg); margin-bottom: 20px; }
+.td-history-list { display: flex; flex-direction: column; gap: 10px; }
 .td-empty { text-align: center; color: var(--fg2); margin-top: 40px; }
 </style>
-
-<style src="@/style/chapter-list.less" scoped lang="less"></style>

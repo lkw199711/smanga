@@ -6,12 +6,12 @@
 				<list-skeleton />
 			</template>
 			<template v-else>
-				<div class="chapter-list-box block">
-					<chapter
+				<div class="tb-history-list">
+					<t-history-item
 						v-for="item in list"
 						:key="item.chapterId"
-						viewType="list"
-						:chapterInfo="item"
+						:item="item"
+						variant="B"
 						@click="go_read(item)"
 					/>
 				</div>
@@ -31,12 +31,12 @@
 <script lang="ts" setup>
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import chapter from '@/components/chapter.vue'
 import historyApi from '@/api/history'
 import MediaPager from '@/components/media-pager.vue'
 import listSkeleton from '@/components/list-skeleton.vue'
 import { chapterPageSize } from '@/store/page-size'
 import { config } from '@/store'
+import THistoryItem from '@/themes/components/history-item.vue'
 
 const router = useRouter()
 
@@ -77,7 +77,6 @@ onMounted(() => {
 </script>
 <style scoped>
 h1{font-size:20px;font-weight:700;margin:0 0 20px;color:#fff}
+.tb-history-list{display:flex;flex-direction:column;gap:10px}
 .tb-empty{text-align:center;padding:60px;color:rgba(255,255,255,0.4)}
 </style>
-
-<style src="@/style/chapter-list.less" scoped lang="less"></style>
