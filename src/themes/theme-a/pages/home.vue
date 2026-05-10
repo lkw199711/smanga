@@ -32,10 +32,12 @@
 			</div>
 			<div class="sa-continue">
 				<div v-for="item in historyList" :key="item.chapterId" class="sa-cont-card" @click="goRead(item)">
-					<div class="sa-cont-cover"
-						:style="{ background: `linear-gradient(135deg, ${getGradient(item.chapterId)[0]}, ${getGradient(item.chapterId)[1]})` }">
-						<span v-if="item.tag" class="sa-cont-tag">{{ item.tag }}</span>
-						<span v-if="item.unread" class="sa-cont-unread">{{ item.unread }}</span>
+					<div
+						class="sa-cont-cover"
+						:style="coverStyle(item, { kind: 'chapter', fallbackSeed: item.chapterId })"
+					>
+						<span v-if="tagText(item)" class="sa-cont-tag">{{ tagText(item) }}</span>
+						<span v-if="unreadCount(item) > 0" class="sa-cont-unread">{{ unreadCount(item) }}</span>
 					</div>
 					<div class="sa-cont-info">
 						<div class="sa-cont-name">{{ item.mangaName || '未知漫画' }}</div>
@@ -56,9 +58,12 @@
 			</div>
 			<div class="sa-grid">
 				<div v-for="item in latestList" :key="item.mangaId" class="sa-grid-card" @click="goManga(item)">
-					<div class="sa-grid-cover"
-						:style="{ background: `linear-gradient(135deg, ${getGradient(item.mangaId)[0]}, ${getGradient(item.mangaId)[1]})` }">
-						<span v-if="item.tag" class="sa-grid-tag">{{ item.tag }}</span>
+					<div
+						class="sa-grid-cover"
+						:style="coverStyle(item, { kind: 'manga', fallbackSeed: item.mangaId })"
+					>
+						<span v-if="tagText(item)" class="sa-grid-tag">{{ tagText(item) }}</span>
+						<span v-if="unreadCount(item) > 0" class="sa-grid-unread">{{ unreadCount(item) }}</span>
 					</div>
 					<div class="sa-grid-name">{{ item.mangaName }}</div>
 					<div class="sa-grid-meta">{{ item.chapterCount || 0 }} 章节</div>
@@ -74,6 +79,7 @@ import { useRouter } from 'vue-router'
 import historyApi from '@/api/history'
 import latestApi from '@/api/latest'
 import chartsApi from '@/api/charts'
+import imageApi from '@/api/image'
 import { globalData } from '@/store'
 
 const router = useRouter()
@@ -88,6 +94,8 @@ const statsData = ref({
 })
 const historyList = ref<any[]>([])
 const latestList = ref<any[]>([])
+const coverCache = ref<Record<string, string>>({})
+const hotMangaIdSet = ref<Set<number>>(new Set())
 
 // 渐变色彩板
 const palette = [
@@ -107,10 +115,11 @@ const palette = [
 
 onMounted(async () => {
 	try {
-		const [statsRes, historyRes, latestRes] = await Promise.allSettled([
+		const [statsRes, historyRes, latestRes, rankingRes] = await Promise.allSettled([
 			chartsApi.get_count(),
 			historyApi.get(1, 6),
 			latestApi.get(1, 12),
+			chartsApi.ranking(30),
 		])
 		if (statsRes.status === 'fulfilled') {
 			statsData.value = {
@@ -122,6 +131,15 @@ onMounted(async () => {
 		if (latestRes.status === 'fulfilled') {
 			latestList.value = Array.isArray(latestRes.value) ? latestRes.value : (latestRes.value?.list || [])
 		}
+		if (rankingRes.status === 'fulfilled') {
+			const ids = Array.isArray(rankingRes.value)
+				? rankingRes.value.map((x: any) => Number(x?.mangaId)).filter((n: any) => Number.isFinite(n))
+				: []
+			hotMangaIdSet.value = new Set(ids)
+		}
+
+		await warmCovers(historyList.value, { kind: 'chapter' })
+		await warmCovers(latestList.value, { kind: 'manga' })
 	} catch (e) {
 		// fallback
 	}
@@ -132,8 +150,57 @@ function getGradient(id: number) {
 }
 
 function getProgress(item: any) {
-	if (!item.page || !item.pageCount) return 0
-	return Math.round((item.page / item.pageCount) * 100)
+	const latest = item?.latest
+	if (!latest) return 0
+	if (latest.finish) return 100
+	const page = Number(latest.page || 0)
+	const count = Number(latest.count || 0)
+	if (!page || !count) return 0
+	return Math.min(100, Math.max(0, Math.round((page / count) * 100)))
+}
+
+function unreadCount(item: any): number {
+	const n = Number(item?.unWatched || item?.unread || 0)
+	return Number.isFinite(n) ? n : 0
+}
+
+function tagText(item: any): string {
+	const mangaId = Number(item?.mangaId)
+	if (Number.isFinite(mangaId) && hotMangaIdSet.value.has(mangaId)) return '热门'
+	const unread = unreadCount(item)
+	if (unread === 0 && Number.isFinite(mangaId)) return '完结'
+	return ''
+}
+
+async function warmCovers(list: any[], opt: { kind: 'manga' | 'chapter' }) {
+	const files = Array.from(
+		new Set(
+			list
+				.map((it) => (opt.kind === 'manga' ? it?.mangaCover : it?.pageImage || it?.chapterCover))
+				.filter(Boolean)
+		)
+	) as string[]
+
+	await Promise.allSettled(
+		files.map(async (file) => {
+			if (coverCache.value[file]) return
+			const src = await imageApi.get({ file })
+			coverCache.value[file] = src
+		})
+	)
+}
+
+function coverStyle(
+	item: any,
+	opt: { kind: 'manga' | 'chapter'; fallbackSeed: number }
+): Record<string, string> {
+	const file = opt.kind === 'manga' ? item?.mangaCover : item?.pageImage || item?.chapterCover
+	const src = file ? coverCache.value[file] : ''
+	if (src) {
+		return { backgroundImage: `url("${src}")` }
+	}
+	const g = getGradient(Number(opt.fallbackSeed) || 0)
+	return { backgroundImage: `linear-gradient(135deg, ${g[0]}, ${g[1]})` }
 }
 
 function goRead(item: any) {
@@ -245,6 +312,10 @@ function goManga(item: any) {
 	height: 96px;
 	border-radius: 8px;
 	overflow: hidden;
+	background-size: cover;
+	background-position: center;
+	background-repeat: no-repeat;
+	background-color: #f3f4f6;
 }
 
 .sa-cont-tag {
@@ -335,6 +406,11 @@ function goManga(item: any) {
 	border-radius: 10px;
 	margin-bottom: 8px;
 	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+	overflow: hidden;
+	background-size: cover;
+	background-position: center;
+	background-repeat: no-repeat;
+	background-color: #f3f4f6;
 }
 
 .sa-grid-tag {
@@ -347,6 +423,23 @@ function goManga(item: any) {
 	color: #fff;
 	background: #2563eb;
 	border-radius: 4px;
+}
+
+.sa-grid-unread {
+	position: absolute;
+	top: 8px;
+	right: 8px;
+	min-width: 18px;
+	height: 18px;
+	padding: 0 6px;
+	font-size: 11px;
+	font-weight: 700;
+	color: #fff;
+	background: #ef4444;
+	border-radius: 9px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
 }
 
 .sa-grid-name {
