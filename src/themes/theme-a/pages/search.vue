@@ -22,10 +22,7 @@
       </template>
       <template v-else>
         <div class="ta-grid" v-if="tab === 'manga'">
-          <div v-for="item in list" :key="item.mangaId" class="ta-grid-card" @click="go_manga(item)">
-            <t-cover class="ta-grid-cover" variant="A" :seed="Number(item?.mangaId || 0)" :file="item?.mangaCover || ''" />
-            <div class="ta-grid-name">{{ item.mangaName }}</div>
-          </div>
+          <t-manga-card v-for="item in list" :key="item.mangaId" :item="item" variant="A" @click="go_manga(item)" />
         </div>
 
         <div class="ta-chapter-list" v-else>
@@ -56,6 +53,7 @@ import { mangaPageSize, chapterPageSize } from '@/store/page-size'
 import MediaPager from '@/components/media-pager.vue'
 import listSkeleton from '@/components/list-skeleton.vue'
 import TCover from '@/themes/components/media-cover.vue'
+import TMangaCard from '@/themes/components/manga-card.vue'
 
 const router = useRouter()
 const route = useRoute()

@@ -57,17 +57,16 @@
 				<a class="sa-link" @click="router.push('/t/media')">查看全部 →</a>
 			</div>
 			<div class="sa-grid">
-				<div v-for="item in latestList" :key="item.mangaId" class="sa-grid-card" @click="goManga(item)">
-					<div
-						class="sa-grid-cover"
-						:style="coverStyle(item, { kind: 'manga', fallbackSeed: item.mangaId })"
-					>
-						<span v-if="tagText(item)" class="sa-grid-tag">{{ tagText(item) }}</span>
-						<span v-if="unreadCount(item) > 0" class="sa-grid-unread">{{ unreadCount(item) }}</span>
-					</div>
-					<div class="sa-grid-name">{{ item.mangaName }}</div>
-					<div class="sa-grid-meta">{{ item.chapterCount || 0 }} 章节</div>
-				</div>
+				<t-manga-card
+					v-for="item in latestList"
+					:key="item.mangaId"
+					:item="item"
+					variant="A"
+					:tag="tagText(item)"
+					:unread="unreadCount(item)"
+					:meta="`${item.chapterCount || 0} 章节`"
+					@click="goManga(item)"
+				/>
 			</div>
 		</section>
 	</div>
@@ -81,6 +80,7 @@ import latestApi from '@/api/latest'
 import chartsApi from '@/api/charts'
 import imageApi from '@/api/image'
 import { globalData } from '@/store'
+import TMangaCard from '@/themes/components/manga-card.vue'
 
 const router = useRouter()
 
@@ -139,7 +139,6 @@ onMounted(async () => {
 		}
 
 		await warmCovers(historyList.value, { kind: 'chapter' })
-		await warmCovers(latestList.value, { kind: 'manga' })
 	} catch (e) {
 		// fallback
 	}
