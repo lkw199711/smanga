@@ -6,10 +6,10 @@
 			<span class="sa-search-kbd">Ctrl K</span>
 		</div>
 		<div class="sa-top-actions">
-			<button class="sa-btn-ghost" @click="toggleView">
-				{{ viewType === 'block' ? '📊 列表' : '📋 网格' }}
-			</button>
-			<button class="sa-btn-ghost" @click="showThemeSwitch = !showThemeSwitch">🎨 主题</button>
+			<button class="sa-btn-ghost">{{ viewType === 'block' ? '📊 列表' : '📋 网格' }}</button>
+			<button class="sa-btn-ghost">排序 ↓</button>
+			<button class="sa-btn-ghost" @click="toggleTheme">{{ isDark ? '☀️' : '🌙' }}</button>
+			<button class="sa-btn-ghost" @click="toggleLanguage">{{ currentLanguage }}</button>
 			<button class="sa-btn-primary" @click="addMediaDialog = true">+ 新建媒体库</button>
 		</div>
 
@@ -32,6 +32,9 @@ const keyword = ref('')
 const showThemeSwitch = ref(false)
 const addMediaDialog = ref(false)
 const viewType = ref('block')
+const isDark = ref(false)
+const currentLanguage = ref('中文')
+const languages = ['中文', 'English', '日本語']
 
 function doSearch() {
 	if (keyword.value.trim()) {
@@ -41,6 +44,18 @@ function doSearch() {
 
 function toggleView() {
 	viewType.value = viewType.value === 'block' ? 'list' : 'block'
+}
+
+function toggleTheme() {
+	isDark.value = !isDark.value
+	// 可以在这里添加主题切换逻辑
+}
+
+function toggleLanguage() {
+	const currentIndex = languages.indexOf(currentLanguage.value)
+	const nextIndex = (currentIndex + 1) % languages.length
+	currentLanguage.value = languages[nextIndex]
+	// 可以在这里添加语言切换逻辑
 }
 </script>
 

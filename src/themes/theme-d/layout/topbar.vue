@@ -1,49 +1,132 @@
 <template>
-  <div class="td-topbar">
-    <div class="td-topbar-left">
-      <span class="td-breadcrumb">{{ route.meta?.title || 'Home' }}</span>
-    </div>
-    <div class="td-topbar-right">
-      <input class="td-search-input" placeholder="搜索..." @keyup.enter="doSearch" v-model="keyword" />
-      <div class="td-user-avatar" @click="router.push('/setting/user')">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-6 8-6s8 2 8 6"/></svg>
-      </div>
-    </div>
-  </div>
+	<header class="sd-topbar">
+		<div class="sd-search">
+			<span>🔍</span>
+			<input v-model="keyword" placeholder="搜索漫画、章节、标签…" @keydown.enter="doSearch" />
+		</div>
+		<div class="sd-top-actions">
+			<button class="sd-btn">{{ viewType === 'block' ? '📊 列表' : '📋 网格' }}</button>
+			<button class="sd-btn">排序</button>
+			<button class="sd-btn" @click="toggleTheme">{{ isDark ? '☀️' : '🌙' }}</button>
+			<button class="sd-btn" @click="toggleLanguage">{{ currentLanguage }}</button>
+			<button class="sd-btn-primary" @click="addMediaDialog = true">+ 新建</button>
+		</div>
+	</header>
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
+import { ref, inject } from 'vue'
+import { useRouter } from 'vue-router'
 
-const route = useRoute()
 const router = useRouter()
 const keyword = ref('')
+const viewType = ref('block')
+const isDark = ref(false)
+const currentLanguage = ref('中文')
+const languages = ['中文', 'English', '日本語']
+const addMediaDialog = ref(false)
+
+// 获取主题切换函数
+const setColor = inject('td-set-color') as (color: string) => void
 
 function doSearch() {
-  if (keyword.value.trim()) {
-    router.push({ path: '/search', query: { q: keyword.value.trim() } })
-  }
+	if (keyword.value.trim()) {
+		router.push({ path: '/search', query: { q: keyword.value } })
+	}
+}
+
+function toggleView() {
+	viewType.value = viewType.value === 'block' ? 'list' : 'block'
+}
+
+function toggleTheme() {
+	isDark.value = !isDark.value
+	// 切换深色/浅色主题
+	setColor(isDark.value ? 'dark' : 'blue')
+}
+
+function toggleLanguage() {
+	const currentIndex = languages.indexOf(currentLanguage.value)
+	const nextIndex = (currentIndex + 1) % languages.length
+	currentLanguage.value = languages[nextIndex]
+	// 可以在这里添加语言切换逻辑
 }
 </script>
 
 <style scoped>
-.td-topbar {
-  display: flex; align-items: center; justify-content: space-between;
-  height: 56px; padding: 0 24px;
-  background: var(--bg2); border-bottom: 1px solid var(--border);
+.sd-topbar {
+	display: flex;
+	align-items: center;
+	gap: 16px;
+	padding: 12px 20px;
+	background: var(--bg2);
+	border-bottom: 1px solid var(--border);
 }
-.td-breadcrumb { font-size: 15px; font-weight: 600; color: var(--fg); }
-.td-topbar-right { display: flex; align-items: center; gap: 12px; }
-.td-search-input {
-  width: 200px; height: 32px; padding: 0 12px; border-radius: 16px;
-  border: 1px solid var(--border); background: var(--bg); color: var(--fg);
-  font-size: 13px; outline: none; transition: border-color .2s;
+
+.sd-search {
+	flex: 1;
+	max-width: 400px;
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	padding: 8px 12px;
+	background: var(--bg);
+	border: 1px solid var(--border);
+	border-radius: 8px;
 }
-.td-search-input:focus { border-color: var(--accent); }
-.td-user-avatar {
-  width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
-  background: var(--accent-soft); color: var(--accent); cursor: pointer; transition: transform .2s;
+
+.sd-search span {
+	color: var(--fg2);
 }
-.td-user-avatar:hover { transform: scale(1.1); }
+
+.sd-search input {
+	flex: 1;
+	border: none;
+	outline: none;
+	background: transparent;
+	font-size: 13px;
+	color: var(--fg);
+}
+
+.sd-search input::placeholder {
+	color: var(--fg2);
+}
+
+.sd-top-actions {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+}
+
+.sd-btn {
+	padding: 7px 12px;
+	font-size: 13px;
+	color: var(--fg2);
+	background: transparent;
+	border: 1px solid var(--border);
+	border-radius: 6px;
+	cursor: pointer;
+	transition: all 0.2s;
+}
+
+.sd-btn:hover {
+	background: var(--accent-soft);
+	color: var(--accent);
+}
+
+.sd-btn-primary {
+	padding: 7px 14px;
+	font-size: 13px;
+	font-weight: 500;
+	color: #fff;
+	background: var(--accent);
+	border: none;
+	border-radius: 6px;
+	cursor: pointer;
+	transition: all 0.2s;
+}
+
+.sd-btn-primary:hover {
+	opacity: 0.9;
+}
 </style>

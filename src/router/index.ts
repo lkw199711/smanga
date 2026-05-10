@@ -523,14 +523,6 @@ const routes: Array<RouteRecordRaw> = [
 		meta: { sidebar: false, title: 'UI Preview' },
 		component: () => import('../views/ui-preview/index.vue'),
 	},
-	
-	// UI 风格预览2（独立页面，不走 Layout）
-	{
-		path: '/ui-preview2',
-		name: 'ui-preview2',
-		meta: { sidebar: false, title: 'UI Preview 2' },
-		component: () => import('../views/ui-preview2/index.vue'),
-	},
 
 	// ===== 主题系统路由 =====
 	{
