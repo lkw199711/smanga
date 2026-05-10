@@ -1,8 +1,8 @@
 <template>
   <div class="td-double">
     <div class="td-double-spread" v-if="images.length">
-      <img v-if="images[current*2]" :src="images[current*2]" class="td-double-page" />
-      <img v-if="images[current*2+1]" :src="images[current*2+1]" class="td-double-page" />
+      <t-reader-image v-if="images[current*2]" :file="images[current*2]" :lazy="false" class="td-double-page" />
+      <t-reader-image v-if="images[current*2+1]" :file="images[current*2+1]" :lazy="false" class="td-double-page" />
     </div>
     <div class="td-double-nav" v-if="images.length">
       <button :disabled="current<=0" @click="current--">‹</button>
@@ -15,6 +15,7 @@
 
 <script lang="ts" setup>
 import { ref, watch } from 'vue'
+import TReaderImage from '@/themes/components/reader-image.vue'
 
 const props = defineProps<{ images: string[]; chapterId?: number; initialPage?: number }>()
 const current = ref(0)

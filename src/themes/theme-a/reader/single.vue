@@ -1,6 +1,6 @@
 <template>
   <div class="ta-single">
-    <img v-if="currentImage" :src="currentImage" class="ta-single-img" @click="nextPage" />
+    <t-reader-image v-if="currentFile" :file="currentFile" class="ta-single-img" :lazy="false" @click="nextPage" />
     <div v-else class="ta-single-empty">加载中...</div>
   </div>
 </template>
@@ -8,8 +8,9 @@
 <script lang="ts" setup>
 import { computed } from 'vue'
 import { globalData } from '@/store'
+import TReaderImage from '@/themes/components/reader-image.vue'
 
-const currentImage = computed(() => {
+const currentFile = computed(() => {
   const list = globalData.imgPathList || []
   return list[globalData.page] || ''
 })

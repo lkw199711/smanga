@@ -16,9 +16,12 @@
       <component :is="readerComp" />
     </div>
     <footer class="ta-reader-bottom" v-show="showControls">
-      <button class="ta-reader-btn" :disabled="!canPrevChapter" @click="prevChapter">上一章</button>
-      <span class="ta-reader-page">{{ globalData.page + 1 }}</span>
-      <button class="ta-reader-btn" :disabled="!canNextChapter" @click="nextChapter">下一章</button>
+      <button class="ta-reader-btn" :disabled="!canPrevPage" @click="prevPage">上一页</button>
+      <div class="ta-reader-progress">
+        <div class="ta-reader-progress-bar" :style="{ width: progressPct + '%' }"></div>
+      </div>
+      <span class="ta-reader-page">{{ pageDisplay }} / {{ totalPages }}</span>
+      <button class="ta-reader-btn" :disabled="!canNextPage" @click="nextPage">下一页</button>
     </footer>
 
     <aside v-if="showChapters" class="ta-chapter-drawer" @click.self="showChapters = false">
@@ -68,8 +71,18 @@ const readerComp = computed(() => {
   return TaSingle
 })
 
-const canPrevChapter = computed(() => globalData.chapterIndex > 0 && chapters.value.length > 0)
-const canNextChapter = computed(() => chapters.value.length > 0 && globalData.chapterIndex < chapters.value.length - 1)
+const imageCount = computed(() => (globalData.imgPathList || []).length)
+const totalPages = computed(() => {
+  if (mode.value === 'double') return Math.max(1, Math.ceil(imageCount.value / 2))
+  return Math.max(1, imageCount.value)
+})
+const pageDisplay = computed(() => Math.min(totalPages.value, Math.max(1, Number(globalData.page || 0) + 1)))
+const progressPct = computed(() => {
+  if (!totalPages.value) return 0
+  return Math.min(100, Math.max(0, Math.round((pageDisplay.value / totalPages.value) * 100)))
+})
+const canPrevPage = computed(() => pageDisplay.value > 1)
+const canNextPage = computed(() => pageDisplay.value < totalPages.value)
 
 async function loadChapter() {
   if (!chapterId.value) return
@@ -91,6 +104,16 @@ async function loadChapter() {
 }
 
 watch(
+  () => mode.value,
+  () => {
+    const maxPageIndex = mode.value === 'double' ? Math.max(0, Math.ceil(imageCount.value / 2) - 1) : Math.max(0, imageCount.value - 1)
+    const cur = Number(globalData.page || 0)
+    if (cur > maxPageIndex) globalData.page = maxPageIndex
+    if (cur < 0) globalData.page = 0
+  }
+)
+
+watch(
   () => chapterId.value,
   () => {
     showChapters.value = false
@@ -108,14 +131,14 @@ function goChapter(idx: number) {
   router.push(`/t/reader/${target.chapterId}`)
 }
 
-function prevChapter() {
-  if (!canPrevChapter.value) return
-  goChapter(globalData.chapterIndex - 1)
+function prevPage() {
+  if (!canPrevPage.value) return
+  globalData.page = Math.max(0, Number(globalData.page || 0) - 1)
 }
 
-function nextChapter() {
-  if (!canNextChapter.value) return
-  goChapter(globalData.chapterIndex + 1)
+function nextPage() {
+  if (!canNextPage.value) return
+  globalData.page = Math.min(totalPages.value - 1, Number(globalData.page || 0) + 1)
 }
 
 onMounted(() => {
@@ -189,7 +212,7 @@ onMounted(() => {
 .ta-reader-bottom {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  gap: 12px;
   padding: 10px 16px;
   background: rgba(0,0,0,0.8);
   backdrop-filter: blur(8px);
@@ -214,6 +237,23 @@ onMounted(() => {
 .ta-reader-page {
   font-size: 13px;
   color: #9ca3af;
+  min-width: 84px;
+  text-align: center;
+}
+
+.ta-reader-progress {
+  flex: 1;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.14);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.ta-reader-progress-bar {
+  height: 100%;
+  background: #2563eb;
+  border-radius: 999px;
+  transition: width 0.2s;
 }
 
 .ta-chapter-drawer {

@@ -1,8 +1,9 @@
-<template><div class="tb-single"><img v-if="currentImage" :src="currentImage" @click="nextPage" /><div v-else class="tb-empty">加载中...</div></div></template>
+<template><div class="tb-single"><t-reader-image v-if="currentFile" :file="currentFile" :lazy="false" @click="nextPage" /><div v-else class="tb-empty">加载中...</div></div></template>
 <script lang="ts" setup>
 import { computed } from 'vue'
 import { globalData } from '@/store'
-const currentImage = computed(() => (globalData.imgPathList||[])[globalData.page]||'')
+import TReaderImage from '@/themes/components/reader-image.vue'
+const currentFile = computed(() => (globalData.imgPathList||[])[globalData.page]||'')
 function nextPage(){ if(globalData.page < (globalData.imgPathList||[]).length-1) globalData.page++ }
 </script>
 <style scoped>

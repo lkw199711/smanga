@@ -14,10 +14,10 @@
     </header>
     <div class="tb-reader-body" @click="showControls=!showControls"><component :is="readerComp" /></div>
     <footer class="tb-reader-bottom" v-show="showControls">
-      <button :disabled="!canPrevChapter" @click="prevChapter">上一章</button>
+      <button :disabled="!canPrevPage" @click="prevPage">上一页</button>
       <div class="tb-progress"><div class="tb-progress-bar" :style="{width: pct+'%'}"></div></div>
-      <span class="tb-page-num">{{ globalData.page+1 }}</span>
-      <button :disabled="!canNextChapter" @click="nextChapter">下一章</button>
+      <span class="tb-page-num">{{ pageDisplay }} / {{ totalPages }}</span>
+      <button :disabled="!canNextPage" @click="nextPage">下一页</button>
     </footer>
 
     <aside v-if="showChapters" class="tb-drawer" @click.self="showChapters = false">
@@ -64,7 +64,15 @@ const readerComp = computed(() => {
   return TbSingle
 })
 
-const pct = computed(() => { const l = globalData.imgPathList?.length || 1; return Math.round(((globalData.page+1)/l)*100) })
+const imageCount = computed(() => globalData.imgPathList?.length || 0)
+const totalPages = computed(() => {
+  if (mode.value === 'double') return Math.max(1, Math.ceil(imageCount.value / 2))
+  return Math.max(1, imageCount.value)
+})
+const pageDisplay = computed(() => Math.min(totalPages.value, Math.max(1, Number(globalData.page || 0) + 1)))
+const pct = computed(() => Math.min(100, Math.max(0, Math.round((pageDisplay.value / totalPages.value) * 100))))
+const canPrevPage = computed(() => pageDisplay.value > 1)
+const canNextPage = computed(() => pageDisplay.value < totalPages.value)
 
 const canPrevChapter = computed(() => globalData.chapterIndex > 0 && chapters.value.length > 0)
 const canNextChapter = computed(() => chapters.value.length > 0 && globalData.chapterIndex < chapters.value.length - 1)
@@ -97,6 +105,16 @@ watch(
   { immediate: true }
 )
 
+watch(
+  () => mode.value,
+  () => {
+    const maxPageIndex = mode.value === 'double' ? Math.max(0, Math.ceil(imageCount.value / 2) - 1) : Math.max(0, imageCount.value - 1)
+    const cur = Number(globalData.page || 0)
+    if (cur > maxPageIndex) globalData.page = maxPageIndex
+    if (cur < 0) globalData.page = 0
+  }
+)
+
 function goChapter(idx: number) {
   const target = chapters.value[idx]
   if (!target?.chapterId) return
@@ -114,6 +132,16 @@ function prevChapter() {
 function nextChapter() {
   if (!canNextChapter.value) return
   goChapter(globalData.chapterIndex + 1)
+}
+
+function prevPage() {
+  if (!canPrevPage.value) return
+  globalData.page = Math.max(0, Number(globalData.page || 0) - 1)
+}
+
+function nextPage() {
+  if (!canNextPage.value) return
+  globalData.page = Math.min(totalPages.value - 1, Number(globalData.page || 0) + 1)
 }
 </script>
 <style scoped>

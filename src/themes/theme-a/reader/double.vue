@@ -1,22 +1,23 @@
 <template>
   <div class="ta-double">
-    <img v-if="leftImage" :src="leftImage" class="ta-double-img" />
-    <img v-if="rightImage" :src="rightImage" class="ta-double-img" />
-    <div v-if="!leftImage && !rightImage" class="ta-double-empty">加载中...</div>
+    <t-reader-image v-if="leftFile" :file="leftFile" class="ta-double-img" :lazy="false" />
+    <t-reader-image v-if="rightFile" :file="rightFile" class="ta-double-img" :lazy="false" />
+    <div v-if="!leftFile && !rightFile" class="ta-double-empty">加载中...</div>
   </div>
 </template>
 
 <script lang="ts" setup>
 import { computed } from 'vue'
 import { globalData } from '@/store'
+import TReaderImage from '@/themes/components/reader-image.vue'
 
-const leftImage = computed(() => {
+const leftFile = computed(() => {
   const list = globalData.imgPathList || []
   const idx = globalData.page * 2
   return list[idx] || ''
 })
 
-const rightImage = computed(() => {
+const rightFile = computed(() => {
   const list = globalData.imgPathList || []
   const idx = globalData.page * 2 + 1
   return list[idx] || ''

@@ -1,12 +1,13 @@
 <template>
   <div class="td-flow">
-    <img v-for="(img, i) in images" :key="i" :data-idx="i" :src="img" class="td-flow-img" />
+    <t-reader-image v-for="(file, i) in images" :key="file" :data-idx="i" :file="file" class="td-flow-img" />
     <p class="td-empty" v-if="!images.length">暂无图片</p>
   </div>
 </template>
 
 <script lang="ts" setup>
 import { nextTick, onMounted, watch } from 'vue'
+import TReaderImage from '@/themes/components/reader-image.vue'
 
 const props = defineProps<{ images: string[]; chapterId?: number; initialPage?: number }>()
 

@@ -1,7 +1,7 @@
 <template>
   <div class="td-single">
     <div class="td-single-page" v-if="images.length">
-      <img :src="images[current]" @click="next" />
+      <t-reader-image :file="images[current]" :lazy="false" @click="next" />
       <div class="td-single-nav">
         <button :disabled="current<=0" @click="current--">‹</button>
         <span>{{ current + 1 }} / {{ images.length }}</span>
@@ -14,6 +14,7 @@
 
 <script lang="ts" setup>
 import { ref, watch } from 'vue'
+import TReaderImage from '@/themes/components/reader-image.vue'
 
 const props = defineProps<{ images: string[]; chapterId?: number; initialPage?: number }>()
 const current = ref(0)
