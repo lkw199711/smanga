@@ -1,40 +1,89 @@
 <template>
-  <div class="td-bookmark">
-    <h2 class="td-page-title">书签</h2>
-    <div class="td-list">
-      <div class="td-list-item" v-for="item in list" :key="item.bookmarkId" @click="router.push(`/reader/${item.chapterId}`)">
-        <img class="td-list-cover" :src="item.poster || '/favicon.ico'" />
-        <div class="td-list-info">
-          <div class="td-list-name">{{ item.mangaName }}</div>
-          <div class="td-list-sub">{{ item.chapterName }} - 第{{ item.page }}页</div>
-        </div>
-      </div>
-    </div>
-    <p class="td-empty" v-if="!list.length">暂无书签</p>
-  </div>
+	<div class="td-bookmark">
+		<h2 class="td-page-title">书签</h2>
+
+		<div class="touch-dom">
+			<template v-if="loading">
+				<list-skeleton />
+			</template>
+			<template v-else>
+				<div class="td-bookmark-list">
+					<t-bookmark-item
+						v-for="item in list"
+						:key="item.bookmarkId"
+						:item="item"
+						variant="D"
+						@click="go_read(item)"
+					/>
+				</div>
+			</template>
+		</div>
+
+		<media-pager
+			:page="page"
+			:count="count"
+			:page-size-config="pageSizes"
+			@page-change="page_change"
+		/>
+
+		<p class="td-empty" v-if="!loading && !list.length">暂无书签</p>
+	</div>
 </template>
 
 <script lang="ts" setup>
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import bookmarkApi from '@/api/bookmark'
+import MediaPager from '@/components/media-pager.vue'
+import listSkeleton from '@/components/list-skeleton.vue'
+import { chapterPageSize } from '@/store/page-size'
+import { config, globalData } from '@/store'
+import TBookmarkItem from '@/themes/components/bookmark-item.vue'
 
 const router = useRouter()
+const page = ref(1)
 const list = ref<any[]>([])
+const count = ref(0)
+const loading = ref(false)
+const pageSizes = ref<number[]>([])
+const defaultPageSize = ref(10)
 
-onMounted(async () => {
-  try { const r = await bookmarkApi.get('', 1, 50, ''); list.value = r?.data?.list || [] } catch {}
+function setupPageSize() {
+	const screen = config.screenType
+	pageSizes.value = chapterPageSize[screen]
+	defaultPageSize.value = chapterPageSize[screen][0]
+}
+
+async function go_read(item: any) {
+	if (!item?.chapterId) return
+	const pageNum = Number(item?.page || 1)
+	localStorage.setItem('pageJump', String(pageNum))
+	globalData.mangaName = item.mangaName || globalData.mangaName
+	globalData.chapterName = item.chapterName || globalData.chapterName
+	await router.push(`/t/reader/${item.chapterId}`)
+}
+
+async function page_change(pageParams = 1, pageSize = defaultPageSize.value) {
+	if (pageParams < 1) return
+	page.value = pageParams
+	loading.value = true
+	list.value = []
+
+	const res = await bookmarkApi.get(pageParams, pageSize)
+	list.value = res?.list || []
+	count.value = Number(res?.count || 0)
+	loading.value = false
+}
+
+onMounted(() => {
+	setupPageSize()
+	page_change()
 })
 </script>
 
 <style scoped>
 .td-bookmark { max-width: 800px; margin: 0 auto; }
 .td-page-title { font-size: 20px; font-weight: 700; color: var(--fg); margin-bottom: 20px; }
-.td-list { display: flex; flex-direction: column; gap: 8px; }
-.td-list-item { display: flex; align-items: center; gap: 12px; padding: 10px 14px; background: var(--bg2); border: 1px solid var(--border); border-radius: 10px; cursor: pointer; transition: all .2s; }
-.td-list-item:hover { border-color: var(--accent); }
-.td-list-cover { width: 40px; height: 54px; border-radius: 6px; object-fit: cover; }
-.td-list-name { font-size: 14px; font-weight: 500; color: var(--fg); }
-.td-list-sub { font-size: 12px; color: var(--fg2); margin-top: 2px; }
+.td-bookmark-list { display: flex; flex-direction: column; gap: 10px; }
 .td-empty { text-align: center; color: var(--fg2); margin-top: 40px; }
 </style>

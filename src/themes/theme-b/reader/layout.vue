@@ -72,7 +72,13 @@ const canNextChapter = computed(() => chapters.value.length > 0 && globalData.ch
 async function loadChapter() {
   if (!chapterId.value) return
   globalData.chapterId = chapterId.value
-  globalData.page = 0
+  const pageJump = Number(localStorage.getItem('pageJump') || 0)
+  if (pageJump && pageJump > 1) {
+    localStorage.removeItem('pageJump')
+    globalData.page = Math.max(pageJump - 1, 0)
+  } else {
+    globalData.page = 0
+  }
   try {
     const r = await chapterApi.get_images(chapterId.value, 0)
     globalData.imgPathList = r?.list || []

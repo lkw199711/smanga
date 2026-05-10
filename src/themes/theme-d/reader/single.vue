@@ -13,10 +13,19 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 
-const props = defineProps<{ images: string[]; chapterId?: string }>()
+const props = defineProps<{ images: string[]; chapterId?: number; initialPage?: number }>()
 const current = ref(0)
+
+watch(
+	() => [props.initialPage, props.images.length] as const,
+	() => {
+		const n = Number(props.initialPage || 0)
+		current.value = Math.max(0, Math.min(props.images.length - 1, Number.isFinite(n) ? n : 0))
+	},
+	{ immediate: true }
+)
 
 function next() { if (current.value < props.images.length - 1) current.value++ }
 </script>

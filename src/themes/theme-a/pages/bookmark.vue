@@ -1,56 +1,111 @@
 <template>
-  <div class="ta-list-page">
-    <div class="ta-page-head"><h1>书签</h1></div>
-    <div class="ta-list">
-      <div v-for="item in list" :key="item.bookmarkId" class="ta-list-item" @click="goRead(item)">
-        <div class="ta-list-cover">
-          <img v-if="item.chapterCover" :src="item.chapterCover" alt="" />
-          <div v-else class="ta-list-cover-ph">🔖</div>
-        </div>
-        <div class="ta-list-info">
-          <div class="ta-list-title">{{ item.mangaName }}</div>
-          <div class="ta-list-sub">{{ item.chapterName }} - 第{{ item.page }}页</div>
-        </div>
-      </div>
-    </div>
-    <div v-if="list.length === 0" class="ta-empty">暂无书签</div>
-  </div>
+	<div class="ta-bookmark">
+		<div class="ta-page-head"><h1>书签</h1></div>
+		<div class="touch-dom">
+			<template v-if="loading">
+				<list-skeleton />
+			</template>
+			<template v-else>
+				<div class="ta-bookmark-list">
+					<t-bookmark-item
+						v-for="item in list"
+						:key="item.bookmarkId"
+						:item="item"
+						variant="A"
+						@click="go_read(item)"
+					/>
+				</div>
+			</template>
+		</div>
+
+		<media-pager
+			:page="page"
+			:count="count"
+			:page-size-config="pageSizes"
+			@page-change="page_change"
+		/>
+
+		<div v-if="!loading && list.length === 0" class="ta-empty">暂无书签</div>
+	</div>
 </template>
 
 <script lang="ts" setup>
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import bookmarkApi from '@/api/bookmark'
-import { globalData } from '@/store'
+import MediaPager from '@/components/media-pager.vue'
+import listSkeleton from '@/components/list-skeleton.vue'
+import { chapterPageSize } from '@/store/page-size'
+import { config, globalData } from '@/store'
+import TBookmarkItem from '@/themes/components/bookmark-item.vue'
 
 const router = useRouter()
+
+const page = ref(1)
 const list = ref<any[]>([])
+const count = ref(0)
+const loading = ref(false)
+const pageSizes = ref<number[]>([])
+const defaultPageSize = ref(10)
 
-onMounted(async () => {
-  try {
-    const res = await bookmarkApi.get(1, 50)
-    list.value = res?.list || []
-  } catch (e) { /* empty */ }
-})
-
-function goRead(item: any) {
-  globalData.mangaName = item.mangaName || globalData.mangaName
-  globalData.chapterName = item.chapterName || globalData.chapterName
-  router.push(`/t/reader/${item.chapterId}`)
+function setupPageSize() {
+	const screen = config.screenType
+	pageSizes.value = chapterPageSize[screen]
+	defaultPageSize.value = chapterPageSize[screen][0]
 }
+
+async function go_read(item: any) {
+	if (!item?.chapterId) return
+	const pageNum = Number(item?.page || 1)
+	localStorage.setItem('pageJump', String(pageNum))
+	globalData.mangaName = item.mangaName || globalData.mangaName
+	globalData.chapterName = item.chapterName || globalData.chapterName
+	await router.push(`/t/reader/${item.chapterId}`)
+}
+
+async function page_change(pageParams = 1, pageSize = defaultPageSize.value) {
+	if (pageParams < 1) return
+	page.value = pageParams
+	loading.value = true
+	list.value = []
+
+	const res = await bookmarkApi.get(pageParams, pageSize)
+	list.value = res?.list || []
+	count.value = Number(res?.count || 0)
+	loading.value = false
+}
+
+onMounted(() => {
+	setupPageSize()
+	page_change()
+})
 </script>
 
-<style scoped>
-.ta-page-head { margin-bottom: 24px; }
-.ta-page-head h1 { font-size: 20px; font-weight: 700; margin: 0; }
-.ta-list { display: flex; flex-direction: column; gap: 8px; }
-.ta-list-item { display: flex; align-items: center; gap: 14px; padding: 12px; background: #fff; border: 1px solid #eaeaea; border-radius: 10px; cursor: pointer; transition: all 0.15s; }
-.ta-list-item:hover { border-color: #d1d5db; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
-.ta-list-cover { flex-shrink: 0; width: 48px; height: 64px; border-radius: 6px; overflow: hidden; background: #f3f4f6; }
-.ta-list-cover img { width: 100%; height: 100%; object-fit: cover; }
-.ta-list-cover-ph { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; font-size: 18px; background: linear-gradient(135deg, #fef3c7, #fde68a); }
-.ta-list-info { min-width: 0; flex: 1; }
-.ta-list-title { font-size: 14px; font-weight: 500; color: #111827; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.ta-list-sub { font-size: 12px; color: #6b7280; margin-top: 4px; }
-.ta-empty { text-align: center; padding: 60px; color: #9ca3af; }
+<style scoped lang="less">
+.ta-bookmark {
+	max-width: 980px;
+	margin: 0 auto;
+}
+
+.ta-page-head {
+	margin-bottom: 24px;
+}
+
+.ta-page-head h1 {
+	font-size: 20px;
+	font-weight: 700;
+	margin: 0;
+}
+
+.ta-bookmark-list {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+}
+
+.ta-empty {
+	text-align: center;
+	padding: 60px;
+	color: #9ca3af;
+}
 </style>

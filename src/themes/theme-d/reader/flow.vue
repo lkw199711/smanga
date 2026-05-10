@@ -1,12 +1,33 @@
 <template>
   <div class="td-flow">
-    <img v-for="(img, i) in images" :key="i" :src="img" class="td-flow-img" />
+    <img v-for="(img, i) in images" :key="i" :data-idx="i" :src="img" class="td-flow-img" />
     <p class="td-empty" v-if="!images.length">暂无图片</p>
   </div>
 </template>
 
 <script lang="ts" setup>
-defineProps<{ images: string[]; chapterId?: string }>()
+import { nextTick, onMounted, watch } from 'vue'
+
+const props = defineProps<{ images: string[]; chapterId?: number; initialPage?: number }>()
+
+async function scrollToInitial() {
+	const idx = Number(props.initialPage || 0)
+	if (!Number.isFinite(idx) || idx <= 0) return
+	await nextTick()
+	const el = document.querySelector(`.td-flow-img[data-idx="${idx}"]`) as HTMLElement | null
+	el?.scrollIntoView({ block: 'start' })
+}
+
+onMounted(() => {
+	scrollToInitial()
+})
+
+watch(
+	() => [props.initialPage, props.images.length] as const,
+	() => {
+		scrollToInitial()
+	}
+)
 </script>
 
 <style scoped>

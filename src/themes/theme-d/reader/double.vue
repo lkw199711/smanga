@@ -14,10 +14,20 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 
-defineProps<{ images: string[]; chapterId?: string }>()
+const props = defineProps<{ images: string[]; chapterId?: number; initialPage?: number }>()
 const current = ref(0)
+
+watch(
+	() => [props.initialPage, props.images.length] as const,
+	() => {
+		const n = Number(props.initialPage || 0)
+		const page = Number.isFinite(n) ? n : 0
+		current.value = Math.max(0, Math.floor(page / 2))
+	},
+	{ immediate: true }
+)
 </script>
 
 <style scoped>

@@ -10,7 +10,7 @@
       </div>
     </div>
     <div class="td-reader-body">
-      <component :is="readerComp" :images="images" :chapter-id="chapterId" />
+      <component :is="readerComp" :images="images" :chapter-id="chapterIdNum" :initial-page="initialPage" />
     </div>
   </div>
 </template>
@@ -19,16 +19,18 @@
 import { ref, computed, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import chapterApi from '@/api/chapter'
+import { globalData } from '@/store'
 import TdSingle from './single.vue'
 import TdDouble from './double.vue'
 import TdFlow from './flow.vue'
 
 const route = useRoute()
 const router = useRouter()
-const chapterId = computed(() => route.params.chapterId as string)
+const chapterIdNum = computed(() => Number(route.params.chapterId) || 0)
 const images = ref<string[]>([])
 const chapterName = ref('')
 const mode = ref<'single'|'double'|'flow'>('single')
+const initialPage = ref(0)
 
 const readerComp = computed(() => {
   if (mode.value === 'double') return TdDouble
@@ -37,10 +39,18 @@ const readerComp = computed(() => {
 })
 
 onMounted(async () => {
+  const pageJump = Number(localStorage.getItem('pageJump') || 0)
+  if (pageJump && pageJump > 1) {
+    localStorage.removeItem('pageJump')
+    initialPage.value = Math.max(pageJump - 1, 0)
+  } else {
+    initialPage.value = 0
+  }
+
   try {
-    const r = await chapterApi.getContent(chapterId.value)
-    images.value = r?.data?.images || r?.data?.list || []
-    chapterName.value = r?.data?.chapterName || ''
+    const r = await chapterApi.get_images(chapterIdNum.value, 0)
+    images.value = r?.list || []
+    chapterName.value = globalData.chapterName || ''
   } catch {}
 })
 </script>

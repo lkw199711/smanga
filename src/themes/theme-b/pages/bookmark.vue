@@ -1,23 +1,85 @@
-<template><div class="tb-page"><h1>书签</h1><div class="tb-list"><div v-for="item in list" :key="item.bookmarkId" class="tb-list-item" @click="goRead(item)"><span class="tb-item-name">{{ item.mangaName }} - {{ item.chapterName }}</span></div></div><div v-if="!list.length" class="tb-empty">暂无书签</div></div></template>
+<template>
+	<div class="tb-page">
+		<h1>书签</h1>
+		<div class="touch-dom">
+			<template v-if="loading">
+				<list-skeleton />
+			</template>
+			<template v-else>
+				<div class="tb-bookmark-list">
+					<t-bookmark-item
+						v-for="item in list"
+						:key="item.bookmarkId"
+						:item="item"
+						variant="B"
+						@click="go_read(item)"
+					/>
+				</div>
+			</template>
+		</div>
+
+		<media-pager
+			:page="page"
+			:count="count"
+			:page-size-config="pageSizes"
+			@page-change="page_change"
+		/>
+
+		<div v-if="!loading && !list.length" class="tb-empty">暂无书签</div>
+	</div>
+</template>
 <script lang="ts" setup>
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import bookmarkApi from '@/api/bookmark'
-import { globalData } from '@/store'
+import MediaPager from '@/components/media-pager.vue'
+import listSkeleton from '@/components/list-skeleton.vue'
+import { chapterPageSize } from '@/store/page-size'
+import { config, globalData } from '@/store'
+import TBookmarkItem from '@/themes/components/bookmark-item.vue'
 const router = useRouter()
+
+const page = ref(1)
 const list = ref<any[]>([])
-onMounted(async () => { try { list.value = (await bookmarkApi.get(1,50))?.list || [] } catch(e){} })
-function goRead(item:any){
-  globalData.mangaName = item.mangaName || globalData.mangaName
-  globalData.chapterName = item.chapterName || globalData.chapterName
-  router.push(`/t/reader/${item.chapterId}`)
+const count = ref(0)
+const loading = ref(false)
+const pageSizes = ref<number[]>([])
+const defaultPageSize = ref(10)
+
+function setupPageSize() {
+	const screen = config.screenType
+	pageSizes.value = chapterPageSize[screen]
+	defaultPageSize.value = chapterPageSize[screen][0]
 }
+
+async function go_read(item: any) {
+	if (!item?.chapterId) return
+	const pageNum = Number(item?.page || 1)
+	localStorage.setItem('pageJump', String(pageNum))
+	globalData.mangaName = item.mangaName || globalData.mangaName
+	globalData.chapterName = item.chapterName || globalData.chapterName
+	await router.push(`/t/reader/${item.chapterId}`)
+}
+
+async function page_change(pageParams = 1, pageSize = defaultPageSize.value) {
+	if (pageParams < 1) return
+	page.value = pageParams
+	loading.value = true
+	list.value = []
+
+	const res = await bookmarkApi.get(pageParams, pageSize)
+	list.value = res?.list || []
+	count.value = Number(res?.count || 0)
+	loading.value = false
+}
+
+onMounted(() => {
+	setupPageSize()
+	page_change()
+})
 </script>
 <style scoped>
 h1{font-size:20px;font-weight:700;margin:0 0 20px;color:#fff}
-.tb-list{display:flex;flex-direction:column;gap:6px}
-.tb-list-item{padding:12px 16px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.06);border-radius:12px;cursor:pointer;transition:all .15s}
-.tb-list-item:hover{background:rgba(255,255,255,0.1)}
-.tb-item-name{font-size:13px;color:#fff}
+.tb-bookmark-list{display:flex;flex-direction:column;gap:10px}
 .tb-empty{text-align:center;padding:60px;color:rgba(255,255,255,0.4)}
 </style>
