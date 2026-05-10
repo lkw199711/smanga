@@ -90,7 +90,7 @@ const mangaApi = {
 
 		const data = res.data;
 
-		return data.code === 0 ? data.data : {};
+		return data.data ? data.data : {};
 	},
 
 	/**

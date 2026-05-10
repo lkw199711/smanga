@@ -17,11 +17,7 @@ const historyApi = {
 			data: { mangaId },
 		});
 
-		if (res.data.code == 1) {
-			return false;
-		} else {
-			return res.data.info;
-		}
+		return res.data?.info || false;
 	},
 
 	/**

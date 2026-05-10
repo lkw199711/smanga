@@ -19,7 +19,7 @@ const emit = defineEmits(['update']);
 onMounted(async () => {
 	const res = await deployApi.system_init(props.userName, props.passWord);
 
-	if (res.code === 0) {
+	if (res) {
 		emit('update', true, 3, '升级部署成功');
 	}
 });

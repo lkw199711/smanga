@@ -103,12 +103,12 @@ async function submitAdd() {
       mediaName: form.value.mediaName.trim(),
       mediaPath: form.value.mediaPath.trim(),
     })
-    if (res?.code === 0 || res?.status === 0 || res?.success) {
+    if (res) {
       closeAdd()
       await loadData()
       return
     }
-    error.value = res?.message || res?.msg || '创建失败'
+    error.value = '创建失败'
   } catch {
     error.value = '创建失败'
   } finally {

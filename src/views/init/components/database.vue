@@ -50,10 +50,7 @@ const form = reactive({
 
 onMounted(async () => {
 	const res = await loginApi.database_get();
-
-	if (res.code === 0) {
-		Object.assign(form, res);
-	}
+	Object.assign(form, res);
 
 	await check();
 });
@@ -61,7 +58,7 @@ onMounted(async () => {
 async function check() {
 	if (!form_check()) return false;
 	const res = await loginApi.database_check(form);
-	emit('update', res.code === 0);
+	emit('update', !!res);
 }
 
 function form_check() {
@@ -88,7 +85,7 @@ function form_check() {
 async function setting() {
 	if (!form_check()) return false;
 	const res = await loginApi.database_set(form);
-	emit('update', res.code === 0);
+	emit('update', !!res);
 }
 </script>
 

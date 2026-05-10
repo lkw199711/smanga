@@ -200,11 +200,8 @@ async function handleDelete(index: number, val: any) {
     type: 'warning',
   })
     .then(async () => {
-      const res = await userApi.delete_account(val.userId);
-
-      if (res.code === 0) {
-        reload_table();
-      }
+      await userApi.delete_account(val.userId);
+      reload_table();
     })
     .catch(() => {});
 }
@@ -233,7 +230,7 @@ async function do_update() {
   const targetUserId = form.userId;
   const res = await userApi.update_account(targetUserId, Object.assign(form, {mediaLimit: medias}));
 
-  if (res.code === 0) {
+  if (res) {
     reload_table();
     dialogFormVisible.value = false;
   }
@@ -277,7 +274,7 @@ async function do_register() {
   }
   const res = await userApi.register(Object.assign(form, {mediaLimit: medias}));
 
-  if (res.code === 0) {
+  if (res) {
     add_dialog_close();
     load_table();
   }

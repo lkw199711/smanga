@@ -76,7 +76,7 @@ async function do_update_chapter() {
   }
 
   const res = await chapterApi.update_chapter(form);
-  if (res.code === 0) {
+  if (res) {
     editChapterDialog.value = false;
     emit('reload');
   }

@@ -100,7 +100,7 @@ async function update_manga() {
 
   const res = await mangaApi.update_manga(form);
 
-  if (res.code === 0) {
+  if (res) {
     editMangaDialog.value = false;
     emit('reload');
   }

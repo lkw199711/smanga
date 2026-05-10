@@ -134,11 +134,8 @@ async function delete_path(index: number, row: any) {
     type: 'warning',
   })
     .then(async () => {
-      const res = await pathApi.delete_path(row.pathId);
-
-      if (res.code === 0) {
-        reload_table();
-      }
+      await pathApi.delete_path(row.pathId);
+      reload_table();
     })
     .catch(() => {});
 }
@@ -153,11 +150,8 @@ async function rescan_path(index: number, row: any) {
     type: 'warning',
   })
     .then(async () => {
-      const res = await pathApi.rescan_path(row.mediaId);
-
-      if (res.code === 0) {
-        reload_table();
-      }
+      await pathApi.rescan_path(row.mediaId);
+      reload_table();
     })
     .catch(() => {});
 }
@@ -168,11 +162,8 @@ async function rescan_path(index: number, row: any) {
  * @param row
  */
 async function scan_path(index: number, row: any) {
-  const res = await pathApi.scan_path(row.mediaId);
-
-  if (res.code === 0) {
-    reload_table();
-  }
+  await pathApi.scan_path(row.mediaId);
+  reload_table();
 }
 
 async function edit_path(index: number, row: any) {
@@ -219,12 +210,9 @@ async function batch_delete_path() {
   })
     .then(async () => {
       const pathIds = selectedRows.value.map(row => row.pathId);
-      const res = await pathApi.batch_delete_path(pathIds);
-
-      if (res.code === 0) {
-        selectedRows.value = [];
-        reload_table();
-      }
+      await pathApi.batch_delete_path(pathIds);
+      selectedRows.value = [];
+      reload_table();
     })
     .catch(() => {});
 }

@@ -23,11 +23,7 @@ const latestApi = {
 			data: { mangaId },
 		});
 
-		if (res.data.code == 1) {
-			return false;
-		} else {
-			return res.data.data;
-		}
+		return res.data?.data || false;
 	},
 
 	/**

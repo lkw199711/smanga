@@ -102,10 +102,8 @@ async function batch_delete_chapter() {
     .then(async () => {
       loading.value = true;
       const res = await chapterApi.batch_delete_chapter(chapterIds);
-      if (res.code === 0) {
-        reload_table();
-        selectedRows.value = [];
-      }
+      reload_table();
+      selectedRows.value = [];
       loading.value = false;
     })
     .catch(() => {
@@ -156,10 +154,8 @@ function edit_chapter(index: number, chapterParams: chapterType) {
 async function do_delete_chapter(index: number, row: any) {
   ElMessageBox.confirm(t('chapterManage.confirm.text'), t('chapterManage.confirm.title'), {type: 'warning'})
     .then(async () => {
-      const res = await chapterApi.delete_chapter(row.chapterId);
-      if (res.code === 0) {
-        reload_table();
-      }
+      await chapterApi.delete_chapter(row.chapterId);
+      reload_table();
     })
     .catch(() => {});
 }
