@@ -96,7 +96,11 @@ async function page_change(pageParams = 1, pageSize: number = 10) {
   list.value = [];
 
   const res = await bookmarkApi.get(pageParams, pageSize);
-  list.value = res.list;
+  list.value = (res.list || []).map((it: any) => {
+    const pageImage = it.pageImage || it.page_image || it.pageimage || '';
+    const chapterCover = it.chapterCover || it.chapter_cover || '';
+    return { ...it, pageImage, chapterCover };
+  });
   count.value = res.count;
 
   // 结束加载

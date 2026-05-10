@@ -6,6 +6,7 @@
 			:seed="Number(item?.chapterId || item?.mangaId || 0)"
 			:file="coverFile"
 		>
+			<i class="iconfont icon-bookmark t-bookmark-item__bookmark" />
 			<div class="t-bookmark-item__page">P{{ pageText }}</div>
 		</t-cover>
 
@@ -48,7 +49,16 @@ const pageText = computed(() => {
 })
 
 const coverFile = computed(() => {
-	return props.item?.pageImage || props.item?.chapterCover || props.item?.mangaCover || ''
+	const i: any = props.item || {}
+	return (
+		i.pageImage ||
+		i.page_image ||
+		i.chapterCover ||
+		i.chapter_cover ||
+		i.mangaCover ||
+		i.manga_cover ||
+		''
+	)
 })
 </script>
 
@@ -97,6 +107,15 @@ const coverFile = computed(() => {
 	width: 52px;
 	height: 70px;
 	border-radius: 10px;
+}
+
+.t-bookmark-item__bookmark {
+	position: absolute;
+	top: 6px;
+	left: 6px;
+	font-size: 18px;
+	color: var(--el-color-warning, #f59e0b);
+	text-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
 }
 
 .t-bookmark-item__page {

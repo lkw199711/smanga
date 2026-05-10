@@ -263,10 +263,17 @@ const useBrowseStore = defineStore('browse', {
 				if (!bookmark) return;
 				await bookmarkApi.delete(bookmark.bookmarkId);
 			} else {
+				let pageImage = this.pageImage;
+				if (!pageImage) {
+					const index = page - 1;
+					pageImage = this.imagePathList?.[index] || '';
+				}
+				if (!pageImage) return;
+				this.pageImage = pageImage;
 				// 添加书签
 				await bookmarkApi.add({
 					page: page,
-					pageImage: this.pageImage,
+					pageImage: pageImage,
 					browseType: this.browseType,
 					mediaId: this.mediaId,
 					mangaId: this.mangaId,
