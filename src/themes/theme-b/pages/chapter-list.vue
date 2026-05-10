@@ -1,9 +1,9 @@
 <template>
   <div class="tb-page">
     <button class="tb-btn-back" @click="router.back()">← 返回</button>
-    <h1>章节列表</h1>
+    <h1>{{ mangaName || '章节列表' }}</h1>
     <div class="tb-chapters">
-      <div v-for="ch in list" :key="ch.chapterId" class="tb-ch-item" @click="goRead(ch)">
+      <div v-for="(ch, idx) in list" :key="ch.chapterId" class="tb-ch-item" @click="goRead(ch, idx)">
         <div class="tb-ch-name">{{ ch.chapterName }}</div>
         <div class="tb-ch-meta">{{ ch.pageCount || '?' }} 页</div>
       </div>
@@ -15,11 +15,33 @@
 import { ref, onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import chapterApi from '@/api/chapter'
+import mangaApi from '@/api/manga'
+import { globalData } from '@/store'
 const router = useRouter()
 const route = useRoute()
 const list = ref<any[]>([])
-onMounted(async () => { const mangaId = Number(route.query.mangaId)||0; if(mangaId){ try{ const r = await chapterApi.get({mangaId,page:1,pageSize:200,order:'number'}); list.value=r?.list||[] }catch(e){} } })
-function goRead(ch:any){ router.push({path:'/browse-view/flow',query:{chapterId:ch.chapterId}}) }
+const mangaName = ref('')
+
+onMounted(async () => {
+  const mangaId = Number(route.params.mangaId) || 0
+  if (!mangaId) return
+  try {
+    const info = await mangaApi.get_manga_info(mangaId)
+    mangaName.value = info?.mangaName || ''
+    globalData.mangaName = mangaName.value || globalData.mangaName
+  } catch {}
+  try {
+    const r = await chapterApi.get({ mangaId, page: 1, pageSize: 200, order: 'number' })
+    list.value = r?.list || []
+  } catch(e){}
+})
+
+function goRead(ch:any, idx: number){
+  globalData.chapterList = list.value
+  globalData.chapterIndex = idx
+  globalData.chapterName = ch.chapterName || ''
+  router.push(`/t/reader/${ch.chapterId}`)
+}
 </script>
 
 <style scoped>

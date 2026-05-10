@@ -29,10 +29,15 @@ const mediaName = ref('')
 const totalPages = computed(() => Math.ceil(total.value / 32))
 onMounted(() => loadData())
 async function loadData() {
-  const mediaId = Number(route.query.mediaId) || 0
-  try { const res = await mangaApi.get(mediaId, page.value, 32, 'updateTimeDesc', ''); list.value = res?.list || []; total.value = res?.count || 0 } catch(e){}
+  const mediaId = Number(route.params.mediaId) || 0
+  try {
+    const res = await mangaApi.get(mediaId, page.value, 32, 'updateTimeDesc', '')
+    list.value = res?.list || res?.data?.list || []
+    total.value = res?.count || res?.data?.count || 0
+    mediaName.value = res?.mediaName || res?.data?.mediaName || mediaName.value
+  } catch(e){}
 }
-function goChapters(m: any) { router.push({ path: '/chapter-list', query: { mangaId: m.mangaId, mediaId: route.query.mediaId } }) }
+function goChapters(m: any) { router.push(`/t/manga/${m.mangaId}/chapters`) }
 </script>
 
 <style scoped>

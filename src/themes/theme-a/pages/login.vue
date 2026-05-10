@@ -37,7 +37,7 @@ async function doLogin() {
   try {
     const res = await loginApi.login({ userName: username.value, passWord: password.value })
     if (res) {
-      router.push('/')
+      router.push('/t')
     } else {
       error.value = '用户名或密码错误'
     }

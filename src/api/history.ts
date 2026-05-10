@@ -50,6 +50,10 @@ const historyApi = {
 		return response
 	},
 
+	async get(page: number | undefined = undefined, pageSize: number | undefined = undefined) {
+		return this.get_history(page, pageSize)
+	},
+
 	/**
 	 * @description: 删除历史记录
 	 * @param {number} chapterId

@@ -22,6 +22,7 @@
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import historyApi from '@/api/history'
+import { globalData } from '@/store'
 
 const router = useRouter()
 const list = ref<any[]>([])
@@ -34,7 +35,9 @@ onMounted(async () => {
 })
 
 function goRead(item: any) {
-  router.push({ path: '/browse-view/flow', query: { chapterId: item.chapterId } })
+  globalData.mangaName = item.mangaName || globalData.mangaName
+  globalData.chapterName = item.chapterName || globalData.chapterName
+  router.push(`/t/reader/${item.chapterId}`)
 }
 </script>
 

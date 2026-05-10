@@ -17,8 +17,16 @@ import { useRouter } from 'vue-router'
 import mediaApi from '@/api/media'
 const router = useRouter()
 const list = ref<any[]>([])
-onMounted(async () => { try { list.value = (await mediaApi.get())?.list || [] } catch(e){} })
-function goMedia(m: any) { router.push({ path: '/manga-list', query: { mediaId: m.mediaId } }) }
+onMounted(async () => { try { list.value = pickMediaList(await mediaApi.get()) } catch(e){} })
+function pickMediaList(payload: any): any[] {
+  if (!payload) return []
+  if (Array.isArray(payload)) return payload
+  if (Array.isArray(payload.list)) return payload.list
+  if (Array.isArray(payload.data)) return payload.data
+  if (Array.isArray(payload.data?.list)) return payload.data.list
+  return []
+}
+function goMedia(m: any) { router.push(`/t/media/${m.mediaId}`) }
 </script>
 
 <style scoped>

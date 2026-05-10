@@ -6,7 +6,7 @@
 		</div>
 
 		<nav class="sb-nav">
-			<div v-for="(item, i) in menu" :key="item.key" :class="['sb-nav-item', { active: i === 0 }]">
+			<div v-for="item in menu" :key="item.key" :class="['sb-nav-item', { active: isActive(item.path) }]" @click="go(item.path)">
 				<span class="sb-nav-icon">{{ item.icon }}</span>
 				<span>{{ item.label }}</span>
 			</div>
@@ -14,7 +14,7 @@
 
 		<div class="sb-sec">
 			<div class="sb-sec-title">✨ 我的书架</div>
-			<div v-for="m in mediaList" :key="m.id" class="sb-sec-item">
+			<div v-for="m in mediaList" :key="m.id" class="sb-sec-item" @click="goMedia(m.id)">
 				<span>{{ m.icon }} {{ m.name }}</span>
 				<span class="sb-sec-count">{{ m.count }}</span>
 			</div>
@@ -23,24 +23,25 @@
 		<div class="sb-card-hint">
 			<div class="sb-card-hint-title">今日推荐 🎁</div>
 			<div class="sb-card-hint-desc">打开盲盒，发现新漫画</div>
-			<button class="sb-card-hint-btn">去看看</button>
+			<button class="sb-card-hint-btn" @click="go('/t/media')">去看看</button>
 		</div>
 	</aside>
 </template>
 
 <script lang="ts" setup>
 import { ref, onMounted } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 import mediaApi from '@/api/media'
 
 const menu = [
-	{ key: 'home', label: '首页', icon: '🏠' },
-	{ key: 'history', label: '最近阅读', icon: '🕘' },
-	{ key: 'bookmark', label: '书签', icon: '🔖' },
-	{ key: 'collect', label: '收藏', icon: '⭐' },
-	{ key: 'search', label: '搜索', icon: '🔍' },
-	{ key: 'tag', label: '标签', icon: '🏷️' },
-	{ key: 'manage', label: '管理', icon: '⚙️' },
-	{ key: 'setting', label: '设置', icon: '🔧' },
+	{ key: 'home', label: '首页', icon: '🏠', path: '/t' },
+	{ key: 'history', label: '最近阅读', icon: '🕘', path: '/t/history' },
+	{ key: 'bookmark', label: '书签', icon: '🔖', path: '/t/bookmark' },
+	{ key: 'collect', label: '收藏', icon: '⭐', path: '/t/collect' },
+	{ key: 'search', label: '搜索', icon: '🔍', path: '/t/search' },
+	{ key: 'tag', label: '标签', icon: '🏷️', path: '/t/tags' },
+	{ key: 'manage', label: '管理', icon: '⚙️', path: '/t/manage' },
+	{ key: 'setting', label: '设置', icon: '🔧', path: '/t/setting/user' },
 ]
 
 const mediaList = ref([
@@ -50,19 +51,50 @@ const mediaList = ref([
 	{ id: 4, name: '同人本', icon: '🎨', count: 32 },
 ])
 
+const router = useRouter()
+const route = useRoute()
+
+function normalizePath(p: string) {
+	if (p === '/t') return '/t'
+	return p.replace(/\/+$/, '')
+}
+
+function isActive(path: string) {
+	const cur = normalizePath(route.path)
+	const base = normalizePath(path)
+	if (base === '/t') return cur === '/t'
+	return cur === base || cur.startsWith(base + '/')
+}
+
+function go(path: string) {
+	router.push(path)
+}
+
+function goMedia(mediaId: number) {
+	router.push(`/t/media/${mediaId}`)
+}
+
+function pickMediaList(payload: any): any[] {
+	if (!payload) return []
+	if (Array.isArray(payload)) return payload
+	if (Array.isArray(payload.list)) return payload.list
+	if (Array.isArray(payload.data)) return payload.data
+	if (Array.isArray(payload.data?.list)) return payload.data.list
+	return []
+}
+
 onMounted(async () => {
 	try {
 		const res = await mediaApi.get()
-		if (res?.list) {
-			mediaList.value = res.list.map((item: any) => ({
-				id: item.mediaId,
-				name: item.mediaName || item.mediaId,
-				icon: '📚',
-				count: item.mangaCount || 0
-			}))
-		}
+		const list = pickMediaList(res)
+		if (!list.length) return
+		mediaList.value = list.map((item: any) => ({
+			id: Number(item.mediaId),
+			name: item.mediaName || String(item.mediaId),
+			icon: '📚',
+			count: Number(item.mangaCount || 0),
+		}))
 	} catch (e) {
-		// 使用默认数据
 	}
 })
 </script>

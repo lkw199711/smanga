@@ -56,18 +56,19 @@ onMounted(() => {
 })
 
 async function loadData() {
-  const mediaId = Number(route.query.mediaId) || 0
+  const mediaId = Number(route.params.mediaId) || 0
   loading.value = true
   try {
     const res = await mangaApi.get(mediaId, page.value, pageSize, order.value, keyword.value)
-    list.value = res?.list || []
-    total.value = res?.count || 0
+    list.value = res?.list || res?.data?.list || []
+    total.value = res?.count || res?.data?.count || 0
+    mediaName.value = res?.mediaName || res?.data?.mediaName || mediaName.value
   } catch (e) { /* empty */ }
   loading.value = false
 }
 
 function goChapters(m: any) {
-  router.push({ path: '/chapter-list', query: { mangaId: m.mangaId, mediaId: route.query.mediaId } })
+  router.push(`/t/manga/${m.mangaId}/chapters`)
 }
 </script>
 

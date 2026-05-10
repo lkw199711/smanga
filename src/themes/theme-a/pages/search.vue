@@ -19,7 +19,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, watch } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import searchApi from '@/api/search'
 
@@ -30,23 +30,29 @@ const list = ref<any[]>([])
 const searched = ref(false)
 
 onMounted(() => {
-  if (route.query.keyword) {
-    keyword.value = String(route.query.keyword)
-    doSearch()
-  }
+  if (route.query.q) keyword.value = String(route.query.q)
+  if (keyword.value) doSearch()
 })
+
+watch(
+  () => route.query.q,
+  (v) => {
+    keyword.value = (v as string) || ''
+    if (keyword.value) doSearch()
+  }
+)
 
 async function doSearch() {
   if (!keyword.value.trim()) return
   searched.value = true
   try {
-    const res = await searchApi.get(keyword.value, 1, 50)
-    list.value = res?.list || []
+    const res = await searchApi.get(keyword.value.trim(), 'manga', 1, 50)
+    list.value = res?.list || res?.data?.list || []
   } catch (e) { /* empty */ }
 }
 
 function goManga(item: any) {
-  router.push({ path: '/chapter-list', query: { mangaId: item.mangaId } })
+  router.push(`/t/manga/${item.mangaId}`)
 }
 </script>
 

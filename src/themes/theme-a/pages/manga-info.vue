@@ -15,7 +15,7 @@
         <p class="ta-info-desc">{{ info.description || '暂无简介' }}</p>
         <div class="ta-info-actions">
           <button class="ta-btn-primary" @click="startRead">开始阅读</button>
-          <button class="ta-btn-ghost">收藏</button>
+          <button class="ta-btn-ghost" @click="toggleCollect">{{ isCollected ? '已收藏' : '收藏' }}</button>
         </div>
       </div>
     </div>
@@ -23,29 +23,45 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted } from 'vue'
+import { computed, ref, onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import mangaApi from '@/api/manga'
 import chapterApi from '@/api/chapter'
+import collectApi from '@/api/collect'
 
 const router = useRouter()
 const route = useRoute()
 const info = ref<any>({})
+const isCollected = ref(false)
+const mangaId = computed(() => Number(route.params.mangaId) || 0)
 
 onMounted(async () => {
-  const mangaId = Number(route.query.mangaId) || 0
-  if (mangaId) {
-    info.value = await mangaApi.get_manga_info(mangaId) || {}
-  }
+  if (!mangaId.value) return
+  info.value = await mangaApi.get_manga_info(mangaId.value) || {}
+  try {
+    isCollected.value = !!(await collectApi.is_collect('manga', mangaId.value))
+  } catch {}
 })
 
 async function startRead() {
-  const mangaId = Number(route.query.mangaId) || 0
-  if (!mangaId) return
-  const first = await chapterApi.get_first(mangaId, 'number')
+  if (!mangaId.value) return
+  const first = await chapterApi.get_first(mangaId.value, 'number')
   if (first?.chapterId) {
-    router.push({ path: '/browse-view/flow', query: { chapterId: first.chapterId } })
+    router.push(`/t/reader/${first.chapterId}`)
   }
+}
+
+async function toggleCollect() {
+  if (!mangaId.value) return
+  try {
+    if (isCollected.value) {
+      await collectApi.remove_collect('manga', mangaId.value)
+      isCollected.value = false
+    } else {
+      await collectApi.add_collect({ collectType: 'manga', mangaId: mangaId.value })
+      isCollected.value = true
+    }
+  } catch {}
 }
 </script>
 

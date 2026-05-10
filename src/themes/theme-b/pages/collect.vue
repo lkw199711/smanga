@@ -5,8 +5,8 @@ import { useRouter } from 'vue-router'
 import collectApi from '@/api/collect'
 const router = useRouter()
 const list = ref<any[]>([])
-onMounted(async () => { try { list.value = (await collectApi.get('',1,50,''))?.list || [] } catch(e){} })
-function goManga(item:any){ router.push({path:'/chapter-list',query:{mangaId:item.mangaId}}) }
+onMounted(async () => { try { list.value = (await collectApi.get('manga',1,50,''))?.list || [] } catch(e){} })
+function goManga(item:any){ router.push(`/t/manga/${item.mangaId}`) }
 </script>
 <style scoped>
 h1{font-size:20px;font-weight:700;margin:0 0 20px;color:#fff}

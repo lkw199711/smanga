@@ -27,7 +27,7 @@ onMounted(async () => {
 })
 
 function goTag(tag: any) {
-  router.push({ path: '/manga-list', query: { tagId: tag.tagId } })
+  router.push({ path: '/t/search', query: { q: tag.tagName } })
 }
 </script>
 

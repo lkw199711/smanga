@@ -15,7 +15,7 @@
       </div>
     </div>
     <div class="ta-chapters">
-      <div v-for="ch in list" :key="ch.chapterId" class="ta-ch-item" @click="goRead(ch)">
+      <div v-for="(ch, idx) in list" :key="ch.chapterId" class="ta-ch-item" @click="goRead(ch, idx)">
         <div class="ta-ch-cover">
           <img v-if="ch.chapterCover" :src="ch.chapterCover" alt="" />
           <div v-else class="ta-ch-cover-ph">📄</div>
@@ -39,6 +39,8 @@
 import { ref, onMounted, computed } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import chapterApi from '@/api/chapter'
+import mangaApi from '@/api/manga'
+import { globalData } from '@/store'
 
 const router = useRouter()
 const route = useRoute()
@@ -56,19 +58,27 @@ const totalPages = computed(() => Math.ceil(total.value / pageSize))
 onMounted(() => { loadData() })
 
 async function loadData() {
-  const mangaId = Number(route.query.mangaId) || 0
+  const mangaId = Number(route.params.mangaId) || 0
   if (!mangaId) return
   loading.value = true
   try {
     const res = await chapterApi.get({ mangaId, page: page.value, pageSize, order: order.value })
     list.value = res?.list || []
     total.value = res?.count || 0
+    if (!mangaName.value) {
+      const info = await mangaApi.get_manga_info(mangaId)
+      mangaName.value = info?.mangaName || ''
+    }
   } catch (e) { /* empty */ }
   loading.value = false
 }
 
-function goRead(ch: any) {
-  router.push({ path: '/browse-view/flow', query: { chapterId: ch.chapterId } })
+function goRead(ch: any, idx: number) {
+  globalData.chapterList = list.value
+  globalData.chapterIndex = idx
+  globalData.chapterName = ch.chapterName || ''
+  globalData.mangaName = mangaName.value || globalData.mangaName
+  router.push(`/t/reader/${ch.chapterId}`)
 }
 </script>
 

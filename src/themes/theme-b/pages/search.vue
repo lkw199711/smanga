@@ -1,15 +1,16 @@
 <template><div class="tb-page"><h1>搜索</h1><div class="tb-search-bar"><input v-model="keyword" placeholder="搜索漫画..." @keydown.enter="doSearch" /><button @click="doSearch">搜索</button></div><div class="tb-grid"><div v-for="item in list" :key="item.mangaId" class="tb-card" @click="goManga(item)"><div class="tb-card-cover"><img v-if="item.mangaCover" :src="item.mangaCover" /><div v-else class="tb-card-ph">📚</div></div><div class="tb-card-name">{{ item.mangaName }}</div></div></div></div></template>
 <script lang="ts" setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, watch } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import searchApi from '@/api/search'
 const router = useRouter()
 const route = useRoute()
 const keyword = ref('')
 const list = ref<any[]>([])
-onMounted(() => { if(route.query.keyword){keyword.value=String(route.query.keyword);doSearch()} })
-async function doSearch(){ if(!keyword.value.trim())return; try{ list.value=(await searchApi.get(keyword.value,1,50))?.list||[] }catch(e){} }
-function goManga(item:any){ router.push({path:'/chapter-list',query:{mangaId:item.mangaId}}) }
+onMounted(() => { if(route.query.q){keyword.value=String(route.query.q);doSearch()} })
+watch(() => route.query.q, (v) => { keyword.value = (v as string) || ''; if(keyword.value) doSearch() })
+async function doSearch(){ if(!keyword.value.trim())return; try{ const res = await searchApi.get(keyword.value.trim(),'manga',1,50); list.value=res?.list||res?.data?.list||[] }catch(e){} }
+function goManga(item:any){ router.push(`/t/manga/${item.mangaId}`) }
 </script>
 <style scoped>
 h1{font-size:20px;font-weight:700;margin:0 0 20px;color:#fff}

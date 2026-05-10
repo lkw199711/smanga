@@ -19,7 +19,7 @@ const router = useRouter()
 const username = ref('')
 const password = ref('')
 const error = ref('')
-async function doLogin(){ error.value=''; try{ const r=await loginApi.login({userName:username.value,passWord:password.value}); if(r)router.push('/'); else error.value='登录失败' }catch(e){error.value='登录失败'} }
+async function doLogin(){ error.value=''; try{ const r=await loginApi.login({userName:username.value,passWord:password.value}); if(r)router.push('/t'); else error.value='登录失败' }catch(e){error.value='登录失败'} }
 </script>
 <style scoped>
 .tb-login{display:flex;align-items:center;justify-content:center;min-height:100vh;background:linear-gradient(160deg,#1a1040,#2d1b69)}

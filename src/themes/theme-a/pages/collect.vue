@@ -24,13 +24,13 @@ const list = ref<any[]>([])
 
 onMounted(async () => {
   try {
-    const res = await collectApi.get('', 1, 50, '')
+    const res = await collectApi.get('manga', 1, 50, '')
     list.value = res?.list || []
   } catch (e) { /* empty */ }
 })
 
 function goManga(item: any) {
-  router.push({ path: '/chapter-list', query: { mangaId: item.mangaId } })
+  router.push(`/t/manga/${item.mangaId}`)
 }
 </script>
 

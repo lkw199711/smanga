@@ -2,60 +2,97 @@
 	<header class="sa-topbar">
 		<div class="sa-search">
 			<span class="sa-search-icon">🔍</span>
-			<input v-model="keyword" placeholder="搜索漫画、章节、标签…" @keydown.enter="doSearch" />
+			<input ref="searchInputRef" v-model="keyword" placeholder="搜索漫画、章节、标签…" @keydown.enter="doSearch" />
 			<span class="sa-search-kbd">Ctrl K</span>
 		</div>
 		<div class="sa-top-actions">
-			<button class="sa-btn-ghost">{{ viewType === 'block' ? '📊 列表' : '📋 网格' }}</button>
+			<button class="sa-btn-ghost" @click="toggleView">{{ config.viewType === 'block' ? '📋 网格' : '📊 列表' }}</button>
 			<button class="sa-btn-ghost">排序 ↓</button>
-			<button class="sa-btn-ghost" @click="toggleTheme">{{ isDark ? '☀️' : '🌙' }}</button>
+			<button class="sa-btn-ghost" @click="toggleThemeSwitch">主题 {{ themeState.current }}</button>
 			<button class="sa-btn-ghost" @click="toggleLanguage">{{ currentLanguage }}</button>
-			<button class="sa-btn-primary" @click="addMediaDialog = true">+ 新建媒体库</button>
+			<button class="sa-btn-primary" @click="router.push({ path: '/t/media', query: { add: '1' } })">+ 新建媒体库</button>
 		</div>
 
 		<!-- Theme switcher dropdown -->
 		<div v-if="showThemeSwitch" class="sa-theme-dropdown">
-			<div class="sa-theme-option" :class="{ active: themeState.current === 'A' }" @click="setTheme('A')">A - 现代简约</div>
-			<div class="sa-theme-option" :class="{ active: themeState.current === 'B' }" @click="setTheme('B')">B - 漫画风</div>
-			<div class="sa-theme-option" :class="{ active: themeState.current === 'D' }" @click="setTheme('D')">D - 多主题</div>
+			<div class="sa-theme-option" :class="{ active: themeState.current === 'A' }" @click="applyTheme('A')">A - 现代简约</div>
+			<div class="sa-theme-option" :class="{ active: themeState.current === 'B' }" @click="applyTheme('B')">B - 漫画风</div>
+			<div class="sa-theme-option" :class="{ active: themeState.current === 'D' }" @click="applyTheme('D')">D - 多主题</div>
 		</div>
 	</header>
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 import { themeState, setTheme } from '@/themes/store'
+import { config, userConfig } from '@/store'
 
 const router = useRouter()
+const { locale } = useI18n()
 const keyword = ref('')
 const showThemeSwitch = ref(false)
-const addMediaDialog = ref(false)
-const viewType = ref('block')
-const isDark = ref(false)
-const currentLanguage = ref('中文')
+const searchInputRef = ref<HTMLInputElement>()
+
+const currentLanguage = computed(() => {
+	if (userConfig.language === 'en') return 'English'
+	if (userConfig.language === 'ja') return '日本語'
+	return '中文'
+})
+
 const languages = ['中文', 'English', '日本語']
 
 function doSearch() {
 	if (keyword.value.trim()) {
-		router.push({ path: '/t/search', query: { q: keyword.value } })
+		router.push({ path: '/t/search', query: { q: keyword.value.trim() } })
 	}
 }
 
 function toggleView() {
-	viewType.value = viewType.value === 'block' ? 'list' : 'block'
+	config.viewType = config.viewType === 'block' ? 'list' : 'block'
 }
 
-function toggleTheme() {
-	isDark.value = !isDark.value
-	// 可以在这里添加主题切换逻辑
+function toggleThemeSwitch() {
+	showThemeSwitch.value = !showThemeSwitch.value
 }
 
 function toggleLanguage() {
 	const currentIndex = languages.indexOf(currentLanguage.value)
 	const nextIndex = (currentIndex + 1) % languages.length
-	currentLanguage.value = languages[nextIndex]
-	// 可以在这里添加语言切换逻辑
+	const next = languages[nextIndex]
+	userConfig.language = next === 'English' ? 'en' : next === '日本語' ? 'ja' : 'zhCn'
+	locale.value = userConfig.language
+	localStorage.setItem('language', userConfig.language)
+}
+
+function onKeydown(e: KeyboardEvent) {
+	if (e.key.toLowerCase() !== 'k') return
+	if (!(e.ctrlKey || e.metaKey)) return
+	e.preventDefault()
+	searchInputRef.value?.focus()
+}
+
+function onGlobalClick(e: MouseEvent) {
+	const target = e.target as HTMLElement | null
+	if (!target) return
+	if (target.closest('.sa-theme-dropdown')) return
+	showThemeSwitch.value = false
+}
+
+onMounted(() => {
+	window.addEventListener('keydown', onKeydown)
+	window.addEventListener('click', onGlobalClick)
+})
+
+onBeforeUnmount(() => {
+	window.removeEventListener('keydown', onKeydown)
+	window.removeEventListener('click', onGlobalClick)
+})
+
+function applyTheme(key: 'A' | 'B' | 'D') {
+	setTheme(key)
+	showThemeSwitch.value = false
 }
 </script>
 

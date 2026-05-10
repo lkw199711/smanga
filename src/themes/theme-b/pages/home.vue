@@ -22,7 +22,7 @@
 		<section class="sb-section">
 			<div class="sb-section-head">
 				<h2>🌟 继续阅读</h2>
-				<a class="sb-link" @click="$router.push('/history')">全部 →</a>
+				<a class="sb-link" @click="router.push('/t/history')">全部 →</a>
 			</div>
 			<div class="sb-continue">
 				<div v-for="item in historyList" :key="item.chapterId" class="sb-cont-card" @click="goRead(item)">
@@ -44,7 +44,7 @@
 		<section class="sb-section">
 			<div class="sb-section-head">
 				<h2>💫 最近添加</h2>
-				<a class="sb-link" @click="$router.push('/manga-list')">全部 →</a>
+				<a class="sb-link" @click="router.push('/t/media')">全部 →</a>
 			</div>
 			<div class="sb-grid">
 				<div v-for="item in latestList" :key="item.mangaId" class="sb-grid-card" @click="goManga(item)">
@@ -69,6 +69,7 @@ import { useRouter } from 'vue-router'
 import historyApi from '@/api/history'
 import latestApi from '@/api/latest'
 import chartsApi from '@/api/charts'
+import { globalData } from '@/store'
 
 const router = useRouter()
 
@@ -106,7 +107,9 @@ onMounted(async () => {
 			}
 		}
 		if (historyRes.status === 'fulfilled') historyList.value = historyRes.value?.list || []
-		if (latestRes.status === 'fulfilled') latestList.value = latestRes.value?.list || []
+		if (latestRes.status === 'fulfilled') {
+			latestList.value = Array.isArray(latestRes.value) ? latestRes.value : (latestRes.value?.list || [])
+		}
 	} catch (e) {
 		// fallback
 	}
@@ -122,11 +125,13 @@ function getProgress(item: any) {
 }
 
 function goRead(item: any) {
-	router.push({ path: '/browse-view/flow', query: { chapterId: item.chapterId } })
+	globalData.mangaName = item.mangaName || globalData.mangaName
+	globalData.chapterName = item.chapterName || globalData.chapterName
+	router.push({ path: '/t/reader/' + item.chapterId })
 }
 
 function goManga(item: any) {
-	router.push({ path: '/chapter-list', query: { mangaId: item.mangaId } })
+	router.push({ path: '/t/manga/' + item.mangaId })
 }
 </script>
 

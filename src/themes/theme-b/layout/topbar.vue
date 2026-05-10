@@ -9,43 +9,90 @@
 		</div>
 		<div class="sb-search">
 			<span>🔍</span>
-			<input v-model="keyword" placeholder="搜索你喜欢的漫画…" @keydown.enter="doSearch" />
+			<input ref="searchInputRef" v-model="keyword" placeholder="搜索你喜欢的漫画…" @keydown.enter="doSearch" />
 		</div>
 		<div class="sb-top-actions">
-			<button class="sb-pill" @click="toggleTheme">{{ isDark ? '☀️' : '🌙' }}</button>
+			<button class="sb-pill" @click="toggleThemeSwitch">主题 {{ themeState.current }}</button>
 			<button class="sb-pill" @click="toggleLanguage">{{ currentLanguage }}</button>
 			<div class="sb-avatar">U</div>
+		</div>
+
+		<div v-if="showThemeSwitch" class="sb-theme-dropdown">
+			<div class="sb-theme-option" :class="{ active: themeState.current === 'A' }" @click="applyTheme('A')">A - 现代简约</div>
+			<div class="sb-theme-option" :class="{ active: themeState.current === 'B' }" @click="applyTheme('B')">B - 漫画风</div>
+			<div class="sb-theme-option" :class="{ active: themeState.current === 'D' }" @click="applyTheme('D')">D - 多主题</div>
 		</div>
 	</header>
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { useI18n } from 'vue-i18n'
+import { userConfig } from '@/store'
+import { themeState, setTheme } from '@/themes/store'
 
 const router = useRouter()
+const { locale } = useI18n()
 const keyword = ref('')
-const isDark = ref(false)
-const currentLanguage = ref('中文')
+const showThemeSwitch = ref(false)
+const searchInputRef = ref<HTMLInputElement>()
+
+const currentLanguage = computed(() => {
+	if (userConfig.language === 'en') return 'English'
+	if (userConfig.language === 'ja') return '日本語'
+	return '中文'
+})
+
 const languages = ['中文', 'English', '日本語']
 
 function doSearch() {
 	if (keyword.value.trim()) {
-		router.push({ path: '/search', query: { keyword: keyword.value } })
+		router.push({ path: '/t/search', query: { q: keyword.value.trim() } })
 	}
 }
 
-function toggleTheme() {
-	isDark.value = !isDark.value
-	// 可以在这里添加主题切换逻辑
+function toggleThemeSwitch() {
+	showThemeSwitch.value = !showThemeSwitch.value
 }
 
 function toggleLanguage() {
 	const currentIndex = languages.indexOf(currentLanguage.value)
 	const nextIndex = (currentIndex + 1) % languages.length
-	currentLanguage.value = languages[nextIndex]
-	// 可以在这里添加语言切换逻辑
+	const next = languages[nextIndex]
+	userConfig.language = next === 'English' ? 'en' : next === '日本語' ? 'ja' : 'zhCn'
+	locale.value = userConfig.language
+	localStorage.setItem('language', userConfig.language)
 }
+
+function applyTheme(key: 'A' | 'B' | 'D') {
+	setTheme(key)
+	showThemeSwitch.value = false
+}
+
+function onKeydown(e: KeyboardEvent) {
+	if (e.key.toLowerCase() !== 'k') return
+	if (!(e.ctrlKey || e.metaKey)) return
+	e.preventDefault()
+	searchInputRef.value?.focus()
+}
+
+function onGlobalClick(e: MouseEvent) {
+	const target = e.target as HTMLElement | null
+	if (!target) return
+	if (target.closest('.sb-theme-dropdown')) return
+	showThemeSwitch.value = false
+}
+
+onMounted(() => {
+	window.addEventListener('keydown', onKeydown)
+	window.addEventListener('click', onGlobalClick)
+})
+
+onBeforeUnmount(() => {
+	window.removeEventListener('keydown', onKeydown)
+	window.removeEventListener('click', onGlobalClick)
+})
 </script>
 
 <style scoped>
@@ -147,5 +194,39 @@ function toggleLanguage() {
 	font-weight: 600;
 	border-radius: 50%;
 	cursor: pointer;
+}
+
+.sb-theme-dropdown {
+	position: absolute;
+	top: 100%;
+	right: 20px;
+	margin-top: 10px;
+	background: rgba(255, 255, 255, 0.86);
+	backdrop-filter: blur(16px);
+	border: 1px solid rgba(255, 255, 255, 0.8);
+	border-radius: 16px;
+	padding: 6px;
+	box-shadow: 0 12px 36px rgba(0, 0, 0, 0.12);
+	z-index: 100;
+}
+
+.sb-theme-option {
+	padding: 10px 14px;
+	font-size: 13px;
+	border-radius: 12px;
+	cursor: pointer;
+	color: #4b5563;
+	transition: all 0.2s;
+}
+
+.sb-theme-option:hover {
+	background: rgba(255, 255, 255, 0.7);
+	color: #ff6fa3;
+}
+
+.sb-theme-option.active {
+	background: rgba(255, 111, 163, 0.12);
+	color: #ff6fa3;
+	font-weight: 600;
 }
 </style>

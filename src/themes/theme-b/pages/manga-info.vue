@@ -14,15 +14,25 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted } from 'vue'
+import { computed, ref, onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import mangaApi from '@/api/manga'
 import chapterApi from '@/api/chapter'
+import { globalData } from '@/store'
 const router = useRouter()
 const route = useRoute()
 const info = ref<any>({})
-onMounted(async () => { const id = Number(route.query.mangaId)||0; if(id) info.value = await mangaApi.get_manga_info(id) || {} })
-async function startRead() { const id = Number(route.query.mangaId)||0; const f = await chapterApi.get_first(id,'number'); if(f?.chapterId) router.push({path:'/browse-view/flow',query:{chapterId:f.chapterId}}) }
+const mangaId = computed(() => Number(route.params.mangaId) || 0)
+onMounted(async () => {
+  if(!mangaId.value) return
+  info.value = await mangaApi.get_manga_info(mangaId.value) || {}
+  globalData.mangaName = info.value?.mangaName || globalData.mangaName
+})
+async function startRead() {
+  if(!mangaId.value) return
+  const f = await chapterApi.get_first(mangaId.value,'number')
+  if(f?.chapterId) router.push(`/t/reader/${f.chapterId}`)
+}
 </script>
 
 <style scoped>

@@ -6,7 +6,7 @@ import tagApi from '@/api/tag'
 const router = useRouter()
 const list = ref<any[]>([])
 onMounted(async () => { try { list.value = (await tagApi.get(1,200))?.list || [] } catch(e){} })
-function goTag(tag:any){ router.push({path:'/manga-list',query:{tagId:tag.tagId}}) }
+function goTag(tag:any){ router.push({path:'/t/search',query:{q:tag.tagName}}) }
 </script>
 <style scoped>
 h1{font-size:20px;font-weight:700;margin:0 0 20px;color:#fff}
