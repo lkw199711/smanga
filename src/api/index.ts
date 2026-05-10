@@ -59,25 +59,31 @@ const ajax = Axios.create({
   transformResponse: [
     function (response: Response) {
       // 修复类型错误，确保response符合Response类型
-      response = response || {code: 0, message: '', data: null};
+      response = response || {code: 200, message: '', data: null};
 
       if (typeof response === 'string') response = JSON.parse(response);
 
       if (response.message) {
         let type: string;
-        switch (response.code) {
-          case 0:
-            type = 'success';
-            break;
-          case 1:
-            type = 'error';
-            break;
-          case 2:
-            type = 'warning';
-            break;
-          default:
-            type = 'info';
-            break;
+        const code = Number(response.code);
+        if (code >= 200 && code < 300) type = 'success';
+        else if (code >= 500) type = 'error';
+        else if (code >= 400) type = 'warning';
+        else {
+          switch (response.code) {
+            case 0:
+              type = 'success';
+              break;
+            case 1:
+              type = 'error';
+              break;
+            case 2:
+              type = 'warning';
+              break;
+            default:
+              type = 'info';
+              break;
+          }
         }
 
         ElMessage({
