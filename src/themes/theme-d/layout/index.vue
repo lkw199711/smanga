@@ -76,7 +76,7 @@
 <script lang="ts" setup>
 import { computed, onMounted, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import mediaApi from '@/api/media'
+import mediaStatsApi from '@/api/media-stats'
 import { userInfo } from '@/store'
 
 const router = useRouter()
@@ -174,23 +174,13 @@ function go(path: string) {
 type MediaItem = { id: number; name: string; count: number }
 const mediaListData = ref<MediaItem[]>([])
 
-function pickMediaList(payload: any): any[] {
-	if (!payload) return []
-	if (Array.isArray(payload)) return payload
-	if (Array.isArray(payload.list)) return payload.list
-	if (Array.isArray(payload.data)) return payload.data
-	if (Array.isArray(payload.data?.list)) return payload.data.list
-	return []
-}
-
 onMounted(async () => {
 	try {
-		const r = await mediaApi.get()
-		const list = pickMediaList(r)
-		mediaListData.value = list.map((m: any) => ({
+		const mediaWithCounts = await mediaStatsApi.getMediaWithCounts()
+		mediaListData.value = mediaWithCounts.map((m: any) => ({
 			id: Number(m.mediaId),
 			name: m.mediaName || String(m.mediaId),
-			count: Number(m.mangaCount || 0),
+			count: m.mangaCount || 0,
 		}))
 	} catch {
 		mediaListData.value = []

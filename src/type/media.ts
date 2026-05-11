@@ -11,6 +11,7 @@ type mediaType = {
 	directoryFormat: number;
 	sourceWebsite?: string;
 	isCloudMedia: number;
+	mangaCount?: number;
 };
 
 const mediaInit: mediaType = {

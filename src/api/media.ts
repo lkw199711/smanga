@@ -1,4 +1,5 @@
 import {ajax} from './index';
+import { onMediaOperation } from '@/utils/cache';
 
 const mediaApi = {
 	/**
@@ -23,6 +24,9 @@ const mediaApi = {
 		const res = ajax.put(`media/${data.mediaId}`, data);
 
 		const resData = (await res).data;
+		
+		// 清除缓存
+		onMediaOperation();
 
 		return resData;
 	},
@@ -35,6 +39,10 @@ const mediaApi = {
 	async add_media(data: any) {
 		const res = ajax.post('media', data);
 		const resData = (await res).data;
+		
+		// 清除缓存
+		onMediaOperation();
+		
 		return resData;
 	},
 
@@ -47,6 +55,10 @@ const mediaApi = {
 		const res = ajax.delete(`media/${mediaId}`, {data: {deleteFile}});
 
 		const resData = (await res).data;
+		
+		// 清除缓存
+		onMediaOperation();
+		
 		return resData;
 	},
 
@@ -59,6 +71,10 @@ const mediaApi = {
 	async scan(mediaId: number) {
 		const res = ajax.put(`media/${mediaId}/scan`);
 		const resData = (await res).data;
+		
+		// 清除缓存
+		onMediaOperation();
+		
 		return resData;
 	},
 
@@ -73,6 +89,10 @@ const mediaApi = {
 		});
 
 		const resData = (await res).data;
+		
+		// 清除缓存
+		onMediaOperation();
+		
 		return resData;
 	},
 };

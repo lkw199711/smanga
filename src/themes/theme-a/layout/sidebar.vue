@@ -49,7 +49,7 @@
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { userInfo } from '@/store'
-import mediaApi from '@/api/media'
+import mediaStatsApi from '@/api/media-stats'
 
 const router = useRouter()
 
@@ -68,8 +68,7 @@ const mediaListData = ref<any[]>([])
 
 onMounted(async () => {
 	try {
-		const res = await mediaApi.get()
-		mediaListData.value = res?.list || []
+		mediaListData.value = await mediaStatsApi.getMediaWithCounts()
 	} catch (e) {
 		mediaListData.value = []
 	}

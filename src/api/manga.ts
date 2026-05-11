@@ -1,5 +1,6 @@
 import { ajax } from './index';
 import type { ResType } from '@/type/api';
+import { onMangaOperation } from '@/utils/cache';
 
 const mangaApi = {
 	/**
@@ -100,13 +101,23 @@ const mangaApi = {
 	async update_manga(data: any) {
 		const res = ajax.put(`manga/${data.mangaId}`, data);
 
-		return (await res).data;
+		const resData = (await res).data;
+		
+		// 清除缓存
+		onMangaOperation();
+		
+		return resData;
 	},
 
 	async update_manga_meta(data: any, wirteMetaJson: boolean = true) {
 		const res = ajax.put(`manga/${data.mangaId}/meta`, { ...data, wirteMetaJson });
 
-		return (await res).data;
+		const resData = (await res).data;
+		
+		// 清除缓存
+		onMangaOperation();
+		
+		return resData;
 	},
 
 	/**
@@ -117,7 +128,12 @@ const mangaApi = {
 	async delete_manga(mangaId: number, deleteFile = false) {
 		const res = ajax.delete(`manga/${mangaId}`, { data: { deleteFile } });
 
-		return (await res).data;
+		const resData = (await res).data;
+		
+		// 清除缓存
+		onMangaOperation();
+		
+		return resData;
 	},
 
 	/**
@@ -127,11 +143,19 @@ const mangaApi = {
 	 */
 	async scan(mangaId: number) {
 		const res = ajax.put(`manga/${mangaId}/scan`, { mangaId });
+		
+		// 清除缓存
+		onMangaOperation();
+		
 		return (await res).data;
 	},
 
 	async reload_meta(mangaId: number) {
 		const res = ajax.put(`manga/${mangaId}/reload-meta`, { mangaId });
+		
+		// 清除缓存
+		onMangaOperation();
+		
 		return (await res).data;
 	},
 
@@ -144,6 +168,10 @@ const mangaApi = {
 		const res = ajax.delete(`manga/${mangaIds.join(',')}/batch`, { data: { mangaIds } });
 
 		const resData = (await res).data;
+		
+		// 清除缓存
+		onMangaOperation();
+		
 		return resData;
 	},
 	/**

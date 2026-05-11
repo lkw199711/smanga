@@ -31,7 +31,7 @@
 <script lang="ts" setup>
 import { ref, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import mediaApi from '@/api/media'
+import mediaStatsApi from '@/api/media-stats'
 
 const menu = [
 	{ key: 'home', label: '首页', icon: '🏠', path: '/t' },
@@ -74,26 +74,17 @@ function goMedia(mediaId: number) {
 	router.push(`/t/media/${mediaId}`)
 }
 
-function pickMediaList(payload: any): any[] {
-	if (!payload) return []
-	if (Array.isArray(payload)) return payload
-	if (Array.isArray(payload.list)) return payload.list
-	if (Array.isArray(payload.data)) return payload.data
-	if (Array.isArray(payload.data?.list)) return payload.data.list
-	return []
-}
-
 onMounted(async () => {
 	try {
-		const res = await mediaApi.get()
-		const list = pickMediaList(res)
-		if (!list.length) return
-		mediaList.value = list.map((item: any) => ({
-			id: Number(item.mediaId),
-			name: item.mediaName || String(item.mediaId),
-			icon: '📚',
-			count: Number(item.mangaCount || 0),
-		}))
+		const mediaWithCounts = await mediaStatsApi.getMediaWithCounts()
+		if (mediaWithCounts.length > 0) {
+			mediaList.value = mediaWithCounts.map((item: any) => ({
+				id: Number(item.mediaId),
+				name: item.mediaName || String(item.mediaId),
+				icon: '📚',
+				count: item.mangaCount || 0,
+			}))
+		}
 	} catch (e) {
 	}
 })
