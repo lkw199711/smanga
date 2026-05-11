@@ -531,7 +531,7 @@ const routes: Array<RouteRecordRaw> = [
 		meta: { sidebar: false },
 		children: [
 			{ path: '', name: 't-home', component: ThemeBridge, props: { page: 'home' }, meta: { title: '首页' } },
-			{ path: 'media', name: 't-media-list', component: ThemeBridge, props: { page: 'media-list' }, meta: { title: '媒体库' } },
+			{ path: 'media', name: 't-media-list', component: ThemeBridge, props: { page: 'media' }, meta: { title: '媒体库' } },
 			{ path: 'media/:mediaId', name: 't-manga-list', component: ThemeBridge, props: { page: 'manga-list' }, meta: { title: '漫画列表' } },
 			{ path: 'manga/:mangaId', name: 't-manga-info', component: ThemeBridge, props: { page: 'manga-info' }, meta: { title: '漫画详情' } },
 			{ path: 'manga/:mangaId/chapters', name: 't-chapter-list', component: ThemeBridge, props: { page: 'chapter-list' }, meta: { title: '章节列表' } },

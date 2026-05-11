@@ -17,7 +17,7 @@
     <div class="ta-chapters">
       <div v-for="(ch, idx) in list" :key="ch.chapterId" class="ta-ch-item" @click="goRead(ch, idx)">
         <div class="ta-ch-cover">
-          <img v-if="ch.chapterCover" :src="ch.chapterCover" alt="" />
+          <img v-if="getChapterCover(ch)" :src="getChapterCover(ch)" alt="" />
           <div v-else class="ta-ch-cover-ph">📄</div>
         </div>
         <div class="ta-ch-info">
@@ -40,6 +40,8 @@ import { ref, onMounted, computed } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import chapterApi from '@/api/chapter'
 import mangaApi from '@/api/manga'
+import imageApi from '@/api/image'
+import queue from '@/store/quque'
 import { globalData } from '@/store'
 
 const router = useRouter()
@@ -55,6 +57,9 @@ const mangaName = ref('')
 
 const totalPages = computed(() => Math.ceil(total.value / pageSize))
 
+// 章节封面缓存
+const chapterCoverCache = ref<{[key: string]: string}>({})
+
 onMounted(() => { loadData() })
 
 async function loadData() {
@@ -65,12 +70,38 @@ async function loadData() {
     const res = await chapterApi.get({ mangaId, page: page.value, pageSize, order: order.value })
     list.value = res?.list || []
     total.value = res?.count || 0
+    
+    // 加载章节封面
+    list.value.forEach(chapter => {
+      if (chapter.chapterCover || chapter.pageImage) {
+        queue.mangaQueue.add(() => loadChapterCover(chapter))
+      }
+    })
+    
     if (!mangaName.value) {
       const info = await mangaApi.get_manga_info(mangaId)
       mangaName.value = info?.mangaName || ''
     }
   } catch (e) { /* empty */ }
   loading.value = false
+}
+
+async function loadChapterCover(chapter: any) {
+  const coverFile = chapter.pageImage || chapter.chapterCover
+  if (!coverFile) return
+  
+  try {
+    const blobUrl = await imageApi.get({ file: coverFile })
+    if (blobUrl) {
+      chapterCoverCache.value[chapter.chapterId] = blobUrl
+    }
+  } catch (e) {
+    console.warn('Failed to load chapter cover:', chapter.chapterName, e)
+  }
+}
+
+function getChapterCover(chapter: any) {
+  return chapterCoverCache.value[chapter.chapterId] || chapter.chapterCover || chapter.pageImage
 }
 
 function goRead(ch: any, idx: number) {
