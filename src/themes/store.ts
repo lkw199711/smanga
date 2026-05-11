@@ -1,11 +1,12 @@
 import { reactive, watch } from 'vue'
+import { Cookies } from '@/utils'
 
 export type ThemeKey = 'A' | 'B' | 'D'
 
-const STORAGE_KEY = 'smanga-ui-theme'
+const COOKIE_KEY = 'smanga-theme'
 
 function loadTheme(): ThemeKey {
-  const saved = localStorage.getItem(STORAGE_KEY)
+  const saved = Cookies.get(COOKIE_KEY)
   if (saved === 'A' || saved === 'B' || saved === 'D') return saved
   return 'A'
 }
@@ -17,7 +18,7 @@ export const themeState = reactive({
 watch(
   () => themeState.current,
   (val) => {
-    localStorage.setItem(STORAGE_KEY, val)
+    Cookies.set(COOKIE_KEY, val)
   }
 )
 
