@@ -136,4 +136,13 @@ onMounted(() => {
 .td-chapter-title { font-size: 14px; font-weight: 600; color: var(--fg); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .td-chapter-sub { margin-top: 4px; font-size: 12px; color: var(--fg2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .td-empty { text-align: center; color: var(--fg2); margin-top: 40px; }
+.td-card-cover {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	border-radius: 8px;
+  background-size: cover;
+	background-position: center;
+	background-repeat: no-repeat;
+}
 </style>

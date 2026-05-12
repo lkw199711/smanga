@@ -399,7 +399,7 @@ async function get_poster(item: any) {
 	color: var(--sd-text-faint);
 }
 
-.sd-cont-cover-img {
+.sd-cont-cover-img, .sd-grid-cover-img {
 	width: 100%;
 	height: 100%;
 	object-fit: cover;
