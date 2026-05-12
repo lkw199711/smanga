@@ -15,7 +15,7 @@
     <div class="ta-grid">
       <div v-for="m in list" :key="m.mangaId" class="ta-manga-card" @click="goChapters(m)">
         <div class="ta-manga-cover">
-          <img v-if="m.mangaCover" :src="m.mangaCover" alt="" />
+          <img v-if="m.blob" :src="m.blob" alt="" />
           <div v-else class="ta-cover-placeholder">📚</div>
         </div>
         <div class="ta-manga-name">{{ m.mangaName }}</div>
@@ -36,6 +36,8 @@
 import { ref, onMounted, computed } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import mangaApi from '@/api/manga'
+import imageApi from '@/api/image'
+import queue from '@/store/quque'
 
 const router = useRouter()
 const route = useRoute()
@@ -63,12 +65,19 @@ async function loadData() {
     list.value = res?.list || res?.data?.list || []
     total.value = res?.count || res?.data?.count || 0
     mediaName.value = res?.mediaName || res?.data?.mediaName || mediaName.value
+    list.value.forEach(async (item) => {
+      await get_poster(item)
+    })
   } catch (e) { /* empty */ }
   loading.value = false
 }
 
 function goChapters(m: any) {
   router.push(`/t/manga/${m.mangaId}/chapters`)
+}
+
+async function get_poster(item: any) {
+	item.blob = await imageApi.get({file: item.mangaCover});
 }
 </script>
 
