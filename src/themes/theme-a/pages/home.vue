@@ -36,8 +36,8 @@
 						class="sa-cont-cover"
 						:style="coverStyle(item, { kind: 'chapter', fallbackSeed: item.chapterId })"
 					>
-						<span v-if="tagText(item)" class="sa-cont-tag">{{ tagText(item) }}</span>
-						<span v-if="unreadCount(item) > 0" class="sa-cont-unread">{{ unreadCount(item) }}</span>
+						<span v-if="item.tag" class="sa-cont-tag">{{ item.tag }}</span>
+						<span v-if="item.unread" class="sa-cont-unread">{{ item.unread }}</span>
 					</div>
 					<div class="sa-cont-info">
 						<div class="sa-cont-name">{{ item.mangaName || '未知漫画' }}</div>
