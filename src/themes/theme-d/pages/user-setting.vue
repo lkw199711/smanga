@@ -402,10 +402,8 @@ async function saveAll() {
     await savePageSize()
     // 保存用户配置
     await save()
-    alert('设置已保存')
   } catch (e) {
     console.error('保存设置失败:', e)
-    alert('保存失败，请重试')
   }
 }
 

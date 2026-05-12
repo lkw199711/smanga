@@ -402,10 +402,8 @@ async function saveAll() {
     await savePageSize()
     // 保存用户配置
     await save()
-    alert('设置已保存')
   } catch (e) {
     console.error('保存设置失败:', e)
-    alert('保存失败，请重试')
   }
 }
 
@@ -434,9 +432,6 @@ function toggleFullscreen() {
   position: relative;
   min-height: 100%;
   box-sizing: border-box;
-  background: rgba(15, 15, 15, 0.8);
-  border-radius: 16px;
-  backdrop-filter: blur(10px);
 }
 
 .tb-page-head {
@@ -450,15 +445,15 @@ function toggleFullscreen() {
   font-size: 24px;
   font-weight: 700;
   margin: 0;
-  color: #e5e7eb;
+  color: #1f2937;
 }
 
 .tb-btn-logout {
   padding: 8px 16px;
   font-size: 14px;
-  color: #fecaca;
-  background: rgba(127, 29, 29, 0.3);
-  border: 1px solid rgba(127, 29, 29, 0.5);
+  color: #dc2626;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
   border-radius: 8px;
   cursor: pointer;
   transition: all 0.2s;
@@ -477,18 +472,18 @@ function toggleFullscreen() {
 }
 
 .tb-setting-card {
-  background: rgba(30, 30, 30, 0.7);
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: #fff;
+  border: 1px solid #e5e7eb;
   border-radius: 16px;
   padding: 24px;
-  backdrop-filter: blur(10px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
 }
 
 .tb-setting-card h3 {
   font-size: 18px;
   font-weight: 600;
   margin: 0 0 20px;
-  color: #e5e7eb;
+  color: #1f2937;
 }
 
 .tb-setting-row {
@@ -496,7 +491,7 @@ function toggleFullscreen() {
   align-items: center;
   justify-content: space-between;
   padding: 12px 0;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid #f3f4f6;
 }
 
 .tb-setting-row:last-child {
@@ -505,13 +500,13 @@ function toggleFullscreen() {
 
 .tb-setting-label {
   font-size: 15px;
-  color: #d1d5db;
+  color: #4b5563;
   flex: 1;
 }
 
 .tb-setting-value {
   font-size: 15px;
-  color: #e5e7eb;
+  color: #111827;
   font-weight: 500;
 }
 
@@ -523,34 +518,34 @@ function toggleFullscreen() {
 
 .tb-select {
   padding: 6px 12px;
-  border: 1px solid rgba(255, 255, 255, 0.3);
+  border: 1px solid #d1d5db;
   border-radius: 8px;
   font-size: 14px;
-  background: rgba(40, 40, 40, 0.7);
-  color: #e5e7eb;
-  backdrop-filter: blur(5px);
+  background: #fff;
+  color: #1f2937;
+  transition: all 0.2s;
 }
 
 .tb-select:focus {
   outline: none;
-  border-color: rgba(168, 85, 247, 0.7);
+  border-color: #a855f7;
 }
 
 .tb-input-number {
   width: 80px;
   padding: 6px 12px;
-  border: 1px solid rgba(255, 255, 255, 0.3);
+  border: 1px solid #d1d5db;
   border-radius: 8px;
   font-size: 14px;
   text-align: center;
-  background: rgba(40, 40, 40, 0.7);
-  color: #e5e7eb;
-  backdrop-filter: blur(5px);
+  background: #fff;
+  color: #1f2937;
+  transition: all 0.2s;
 }
 
 .tb-input-number:focus {
   outline: none;
-  border-color: rgba(168, 85, 247, 0.7);
+  border-color: #a855f7;
 }
 
 .tb-slider-container {
@@ -563,7 +558,7 @@ function toggleFullscreen() {
   width: 120px;
   height: 4px;
   border-radius: 2px;
-  background: rgba(255, 255, 255, 0.3);
+  background: #e5e7eb;
   outline: none;
   -webkit-appearance: none;
 }
@@ -579,7 +574,7 @@ function toggleFullscreen() {
 
 .tb-slider-value {
   font-size: 14px;
-  color: #d1d5db;
+  color: #6b7280;
   min-width: 50px;
 }
 
@@ -603,7 +598,7 @@ function toggleFullscreen() {
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(255, 255, 255, 0.3);
+  background-color: #e5e7eb;
   transition: .4s;
   border-radius: 24px;
 }
@@ -615,7 +610,7 @@ function toggleFullscreen() {
   width: 18px;
   left: 3px;
   bottom: 3px;
-  background-color: #e5e7eb;
+  background-color: #fff;
   transition: .4s;
   border-radius: 50%;
 }
@@ -636,17 +631,16 @@ function toggleFullscreen() {
 .tb-theme-btn {
   padding: 8px 16px;
   font-size: 14px;
-  border: 1px solid rgba(255, 255, 255, 0.3);
+  border: 1px solid #d1d5db;
   border-radius: 20px;
-  background: rgba(40, 40, 40, 0.7);
-  color: #e5e7eb;
+  background: #fff;
+  color: #1f2937;
   cursor: pointer;
   transition: all 0.2s;
-  backdrop-filter: blur(5px);
 }
 
 .tb-theme-btn:hover {
-  border-color: rgba(168, 85, 247, 0.7);
+  border-color: #a855f7;
 }
 
 .tb-theme-btn.active {
@@ -694,31 +688,30 @@ function toggleFullscreen() {
 .tb-btn-secondary {
   padding: 8px 16px;
   font-size: 14px;
-  color: #fff;
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #374151;
+  background: #f3f4f6;
+  border: 1px solid #d1d5db;
   border-radius: 8px;
   cursor: pointer;
   transition: all 0.2s;
-  backdrop-filter: blur(5px);
 }
 
 .tb-btn-secondary:hover {
-  background: rgba(255, 255, 255, 0.15);
+  background: #e5e7eb;
 }
 
 .tb-setting-footer {
   position: sticky;
   bottom: 0;
-  background: rgba(25, 25, 25, 0.9);
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  background: #fff;
+  border-top: 1px solid #eaeaea;
   padding: 16px 24px;
   display: flex;
   justify-content: center;
-  backdrop-filter: blur(10px);
   z-index: 10;
   margin: 0 -24px -24px -24px;
   position: -webkit-sticky;
+  box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.04);
 }
 
 @media (max-width: 768px) {
