@@ -87,7 +87,7 @@ export const Cookies = {
     set: function (key: string, value: string, time = 365) {
         // return localStorage.setItem(key, value);
         const cookiesTime = new Date(Date.now() + time * 365 * 24 * 60 * 60 * 1000).toUTCString();
-        document.cookie = key + '=' + value + ';expires=' + cookiesTime;
+        document.cookie = key + '=' + value + ';expires=' + cookiesTime + ';path=/';
         return value;
     },
     /**
