@@ -291,7 +291,7 @@ async function toggleCollect() {
       await collectApi.remove_collect('manga', mangaId.value)
       isCollected.value = false
     } else {
-      await collectApi.add_collect({ collectType: 'manga', mangaId: mangaId.value })
+      await collectApi.add_collect({ collectType: 'manga', mangaId: mangaId.value, mediaId: mangaInfo.value.mediaId })
       isCollected.value = true
     }
   } catch (error) {

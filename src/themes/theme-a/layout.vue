@@ -59,7 +59,8 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted, onUnmounted } from 'vue'
+import { useRouter } from 'vue-router'
 
 const menu = [
 	{ key: 'home', label: '首页', icon: '🏠' },
@@ -83,6 +84,8 @@ const isDark = ref(false)
 const currentLanguage = ref('中文')
 const languages = ['中文', 'English', '日本語']
 
+const router = useRouter()
+
 function toggleTheme() {
 	isDark.value = !isDark.value
 	// 可以在这里添加主题切换逻辑
@@ -94,6 +97,31 @@ function toggleLanguage() {
 	currentLanguage.value = languages[nextIndex]
 	// 可以在这里添加语言切换逻辑
 }
+
+// 跳转到搜索页面
+function goToSearch() {
+	router.push('/t/search')
+}
+
+// 处理键盘事件
+function handleKeydown(event: KeyboardEvent) {
+	// 检查是否按下了 Ctrl+K (或 Cmd+K on Mac)
+	if ((event.ctrlKey || event.metaKey) && event.key === 'k') {
+		event.preventDefault()
+		goToSearch()
+	}
+}
+
+// 组件挂载时添加事件监听器
+onMounted(() => {
+	document.addEventListener('keydown', handleKeydown)
+})
+
+// 组件卸载时移除事件监听器
+onUnmounted(() => {
+	document.removeEventListener('keydown', handleKeydown)
+})
+
 </script>
 
 <style scoped>
