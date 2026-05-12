@@ -38,7 +38,9 @@
 			</div>
 			<div class="sd-continue">
 				<div v-for="m in continueReading" :key="m.id" class="sd-cont-card" @click="goRead(m)">
-					<div class="sd-cont-cover" :style="{ background: `linear-gradient(135deg, ${m.gradient[0]}, ${m.gradient[1]})` }">
+					<div class="sd-cont-cover"
+						:style="{ background: `linear-gradient(135deg, ${m.gradient[0]}, ${m.gradient[1]})` }">
+						<img v-if="m.blob" :src="m.blob" alt="" class="sd-cont-cover-img">
 						<span v-if="m.tag" class="sd-cont-tag">{{ m.tag }}</span>
 						<span v-if="m.unread" class="sd-cont-unread">{{ m.unread }}</span>
 					</div>
@@ -60,7 +62,9 @@
 			</div>
 			<div class="sd-grid">
 				<div v-for="m in recentAdded" :key="m.id" class="sd-grid-card" @click="goManga(m)">
-					<div class="sd-grid-cover" :style="{ background: `linear-gradient(135deg, ${m.gradient[0]}, ${m.gradient[1]})` }">
+					<div class="sd-grid-cover"
+						:style="{ background: `linear-gradient(135deg, ${m.gradient[0]}, ${m.gradient[1]})` }">
+						<img v-if="m.blob" :src="m.blob" alt="" class="sd-grid-cover-img">
 						<span v-if="m.tag" class="sd-grid-tag">{{ m.tag }}</span>
 					</div>
 					<div class="sd-grid-name">{{ m.name }}</div>
@@ -77,6 +81,8 @@ import { useRouter } from 'vue-router'
 import historyApi from '@/api/history'
 import latestApi from '@/api/latest'
 import chartsApi from '@/api/charts'
+import imageApi from '@/api/image'
+import queue from '@/store/quque'
 
 type MangaCard = {
 	id: number
@@ -134,7 +140,7 @@ onMounted(async () => {
 			readToday: Number(r?.readToday || 0),
 			readThisWeek: Number(r?.readThisWeek || 0),
 		}
-	} catch {}
+	} catch { }
 
 	try {
 		const r = await historyApi.get_history(1, 6)
@@ -143,21 +149,32 @@ onMounted(async () => {
 			id: Number(item.chapterId),
 			name: item.mangaName || '未知漫画',
 			chapter: item.chapterName || '未知章节',
+			chapterCover: item.chapterCover,
 			progress: getProgress(item),
 			gradient: getGradient(Number(item.chapterId)),
 		}))
-	} catch {}
+	} catch { }
 
 	try {
 		const list = await latestApi.get(1, 12)
 		recentAdded.value = (list || []).map((item: any) => ({
 			id: Number(item.mangaId),
 			name: item.mangaName || '未知漫画',
+			mangaCover: item.mangaCover,
 			chapter: `${Number(item.chapterCount || 0)} 章节`,
 			progress: 0,
 			gradient: getGradient(Number(item.mangaId)),
 		}))
-	} catch {}
+	} catch { }
+
+	console.log('continueReading', continueReading.value)
+	continueReading.value.forEach((item) => {
+		queue.mangaQueue.add(() => get_poster(item))
+		// get_poster(item)
+	})
+	recentAdded.value.forEach((item) => {
+		queue.mangaQueue.add(() => get_poster(item))
+	})
 })
 
 function goRead(item: MangaCard) {
@@ -167,11 +184,14 @@ function goRead(item: MangaCard) {
 function goManga(item: MangaCard) {
 	router.push(`/t/manga/${item.id}`)
 }
+
+async function get_poster(item: any) {
+	item.blob = await imageApi.get({ file: item.mangaCover || item.chapterCover });
+}
 </script>
 
 <style scoped>
-.sd-home {
-}
+.sd-home {}
 
 .sd-stats {
 	display: grid;
@@ -377,5 +397,12 @@ function goManga(item: MangaCard) {
 	margin-top: 2px;
 	font-size: 11px;
 	color: var(--sd-text-faint);
+}
+
+.sd-cont-cover-img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	border-radius: 8px;
 }
 </style>
