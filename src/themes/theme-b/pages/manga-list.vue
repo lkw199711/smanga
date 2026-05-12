@@ -106,6 +106,7 @@ async function get_poster(item: any) {
   font-size: 20px;
   font-weight: 700;
   margin: 0;
+  color: #1f2937;
 }
 
 .tb-head-actions {
@@ -116,22 +117,24 @@ async function get_poster(item: any) {
 .tb-input {
   padding: 8px 12px;
   font-size: 13px;
-  border: 1px solid rgba(255, 255, 255, 0.14);
+  border: 1px solid rgba(0, 0, 0, 0.1);
   border-radius: 8px;
   outline: none;
-  background: rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.8);
+  color: #1f2937;
 }
 
 .tb-input::placeholder {
-  color: rgba(255, 255, 255, 0.5);
+  color: rgba(0, 0, 0, 0.4);
 }
 
 .tb-select {
   padding: 8px 12px;
   font-size: 13px;
-  border: 1px solid rgba(255, 255, 255, 0.14);
+  border: 1px solid rgba(0, 0, 0, 0.1);
   border-radius: 8px;
-  background: rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.8);
+  color: #1f2937;
   outline: none;
 }
 
@@ -144,7 +147,7 @@ async function get_poster(item: any) {
 .tb-empty {
   text-align: center;
   padding: 60px;
-  color: rgba(255, 255, 255, 0.6);
+  color: #6b7280;
 }
 
 .tb-pagination {
@@ -158,24 +161,28 @@ async function get_poster(item: any) {
 
 .tb-pagination button {
   padding: 8px 16px;
-  background: rgba(255, 255, 255, 0.1);
-  border: none;
+  background: rgba(255, 255, 255, 0.8);
+  border: 1px solid rgba(0, 0, 0, 0.1);
   border-radius: 20px;
+  color: #1f2937;
   cursor: pointer;
   transition: background 0.2s;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
 .tb-pagination button:hover:not(:disabled) {
-  background: rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .tb-pagination button:disabled {
-  opacity: 0.3;
+  opacity: 0.4;
   cursor: not-allowed;
 }
 
 .tb-pagination span {
-  color: rgba(255, 255, 255, 0.7);
+  color: #6b7280;
   font-size: 13px;
 }
 </style>
+
