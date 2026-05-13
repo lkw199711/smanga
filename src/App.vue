@@ -60,7 +60,7 @@ onMounted(() => {
 	const alreadyAlertsVersionMsg = Cookies.get('alertsVersionMsg');
 	if (!alreadyAlertsVersionMsg) {
 		const laertText = [
-			'4.2.91版本带来了新的皮肤,可通过首页按钮进入,',
+			'4.3.01版本带来了新的皮肤,可通过首页按钮进入,',
 			'设置界面可回退到旧版本皮肤.',
 			'新版皮肤功能未制作完全,适用于追求界面美观但无需深度使用的用户.',
 			'管理界面都是通过链接跳转到旧版本页面.',
