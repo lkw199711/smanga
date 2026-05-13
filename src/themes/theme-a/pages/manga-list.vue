@@ -66,7 +66,7 @@ async function loadData() {
     total.value = res?.count || res?.data?.count || 0
     mediaName.value = res?.mediaName || res?.data?.mediaName || mediaName.value
     list.value.forEach(async (item) => {
-      await get_poster(item)
+      queue.mangaQueue.add(() => get_poster(item))
     })
   } catch (e) { /* empty */ }
   loading.value = false

@@ -40,6 +40,8 @@ const emit = defineEmits<{
 
 const variant = computed(() => props.variant)
 
+console.log('MangaCard', props.item)
+
 const name = computed(() => String(props.item?.mangaName || props.item?.title || '未知漫画'))
 
 const coverFile = computed(() => {
@@ -139,10 +141,10 @@ const metaText = computed(() => {
 }
 
 .t-manga-card--B .t-manga-card__name {
-	color: #fff;
+	color: #111827;
 }
 .t-manga-card--B .t-manga-card__meta {
-	color: rgba(255, 255, 255, 0.7);
+	color: #6b7280;
 }
 .t-manga-card--B:hover {
 	transform: translateY(-3px);

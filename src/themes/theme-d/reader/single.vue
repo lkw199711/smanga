@@ -1,44 +1,46 @@
 <template>
   <div class="td-single">
-    <div class="td-single-page" v-if="images.length">
-      <t-reader-image :file="images[current]" :lazy="false" @click="next" />
-      <div class="td-single-nav">
-        <button :disabled="current<=0" @click="current--">‹</button>
-        <span>{{ current + 1 }} / {{ images.length }}</span>
-        <button :disabled="current>=images.length-1" @click="current++">›</button>
-      </div>
-    </div>
-    <p class="td-empty" v-else>暂无图片</p>
+    <t-reader-image v-if="currentFile" :file="currentFile" class="td-single-img" :lazy="false" @click="nextPage" />
+    <div v-else class="td-single-empty">加载中...</div>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { ref, watch } from 'vue'
+import { computed } from 'vue'
+import { globalData } from '@/store'
 import TReaderImage from '@/themes/components/reader-image.vue'
 
-const props = defineProps<{ images: string[]; chapterId?: number; initialPage?: number }>()
-const current = ref(0)
+const currentFile = computed(() => {
+  const list = globalData.imgPathList || []
+  return list[globalData.page] || ''
+})
 
-watch(
-	() => [props.initialPage, props.images.length] as const,
-	() => {
-		const n = Number(props.initialPage || 0)
-		current.value = Math.max(0, Math.min(props.images.length - 1, Number.isFinite(n) ? n : 0))
-	},
-	{ immediate: true }
-)
-
-function next() { if (current.value < props.images.length - 1) current.value++ }
+function nextPage() {
+  const list = globalData.imgPathList || []
+  if (globalData.page < list.length - 1) {
+    globalData.page++
+  }
+}
 </script>
 
 <style scoped>
-.td-single { display: flex; flex-direction: column; align-items: center; padding: 20px; min-height: 100%; }
-.td-single-page { text-align: center; }
-.td-single-page img { max-width: 100%; max-height: 80vh; object-fit: contain; border-radius: 4px; cursor: pointer; }
-.td-single-nav { display: flex; align-items: center; justify-content: center; gap: 20px; margin-top: 16px; }
-.td-single-nav button { width: 36px; height: 36px; border-radius: 50%; border: 1px solid var(--border); background: var(--bg2); color: var(--fg); font-size: 18px; cursor: pointer; transition: all .2s; }
-.td-single-nav button:hover:not(:disabled) { border-color: var(--accent); color: var(--accent); }
-.td-single-nav button:disabled { opacity: 0.3; }
-.td-single-nav span { font-size: 13px; color: var(--fg2); }
-.td-empty { text-align: center; color: var(--fg2); margin-top: 40px; }
+.td-single {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+
+.td-single-img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  cursor: pointer;
+}
+
+.td-single-empty {
+  color: #9ca3af;
+  font-size: 14px;
+}
 </style>

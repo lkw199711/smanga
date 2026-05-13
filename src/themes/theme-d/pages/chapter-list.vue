@@ -3,10 +3,16 @@
     <div class="td-header">
       <div class="td-back" @click="goBack">
         <span>←</span>
-        <span>返回漫画列表</span>
+        <span>返回</span>
       </div>
-      <div class="td-title">{{ mangaInfo.mangaName }}</div>
+      <div class="td-title">{{ mangaInfo.mangaName || '章节列表' }}</div>
       <div class="td-actions">
+        <select v-model="order" class="td-select" @change="loadChapters">
+          <option value="number">序号正序</option>
+          <option value="numberDesc">序号倒序</option>
+          <option value="name">名称 A-Z</option>
+          <option value="nameDesc">名称 Z-A</option>
+        </select>
         <button class="td-btn-icon" @click="toggleCollect">
           <span v-if="isCollected">★</span>
           <span v-else>☆</span>
@@ -21,11 +27,11 @@
           <div v-else class="td-cover-placeholder">📚</div>
         </div>
         <div class="td-info">
-          <div class="td-author" v-if="mangaInfo.mangaAuthor">作者：{{ mangaInfo.mangaAuthor }}</div>
-          <div class="td-desc" v-if="mangaInfo.mangaDesc">{{ mangaInfo.mangaDesc }}</div>
+          <div class="td-author" v-if="mangaInfo.author">作者：{{ mangaInfo.author }}</div>
+          <div class="td-desc" v-if="mangaInfo.describe">{{ mangaInfo.describe }}</div>
           <div class="td-meta">
-            <span>{{ chapterList.length }} 章节</span>
-            <span>{{ mangaInfo.updateTime | formatDate }}</span>
+            <span>{{ total }} 章节</span>
+            <span v-if="mangaInfo.publishDate">{{ formatDate(mangaInfo.publishDate) }}</span>
           </div>
         </div>
       </div>
@@ -34,47 +40,66 @@
         <div class="td-section-title">章节列表</div>
         <div class="td-chapter-grid">
           <div
-            v-for="ch in chapterList"
+            v-for="(ch, idx) in chapterList"
             :key="ch.chapterId"
             class="td-chapter-item"
-            @click="goRead(ch)"
-            ref="chapterBox"
+            @click="goRead(ch, idx)"
+            :class="{ 'td-chapter-read': ch.latest?.finish }"
           >
             <div class="td-chapter-cover">
-              <img v-if="ch.chapterImage" :src="getChapterCover(ch)" alt="" />
+              <img v-if="getChapterCover(ch)" :src="getChapterCover(ch)" alt="" />
               <div v-else class="td-cover-placeholder">📖</div>
             </div>
             <div class="td-chapter-info">
               <div class="td-chapter-name">{{ ch.chapterName }}</div>
-              <div class="td-chapter-meta">{{ ch.chapterPath }}</div>
+              <div class="td-chapter-meta">{{ ch.pageCount || '?' }} 页</div>
+              <div class="td-chapter-status" v-if="ch.latest">
+                <span v-if="ch.latest.finish">✓ 已读</span>
+                <span v-else>读至第 {{ ch.latest.page }} 页</span>
+              </div>
             </div>
           </div>
         </div>
-        <div v-if="chapterList.length === 0" class="td-empty">暂无章节</div>
+        <div v-if="chapterList.length === 0 && !loading" class="td-empty">暂无章节</div>
+        
+        <div v-if="totalPages > 1" class="td-pagination">
+          <button :disabled="page <= 1" @click="page--; loadChapters()">上一页</button>
+          <span>{{ page }} / {{ totalPages }}</span>
+          <button :disabled="page >= totalPages" @click="page++; loadChapters()">下一页</button>
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted, watch } from 'vue'
+import { ref, onMounted, watch, computed } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import mangaApi from '@/api/manga'
 import chapterApi from '@/api/chapter'
 import collectApi from '@/api/collect'
 import imageApi from '@/api/image'
 import queue from '@/store/quque'
+import useBrowseStore from '@/store/browse'
 
 const router = useRouter()
 const route = useRoute()
+const browse = useBrowseStore()
 
 const mangaInfo = ref<any>({})
 const chapterList = ref<any[]>([])
 const isCollected = ref(false)
 const mangaId = ref<number | null>(null)
+const order = ref('number')
+const page = ref(1)
+const pageSize = 50
+const total = ref(0)
+const loading = ref(false)
 
 // 章节封面缓存
 const chapterCoverCache = ref<{[key: string]: string}>({})
+
+const totalPages = computed(() => Math.ceil(total.value / pageSize))
 
 onMounted(async () => {
   mangaId.value = Number(route.params.mangaId)
@@ -97,8 +122,8 @@ watch(() => route.params.mangaId, async (newMangaId) => {
 async function loadMangaInfo() {
   if (!mangaId.value) return
   try {
-    const res = await mangaApi.get_info(mangaId.value)
-    mangaInfo.value = res?.data || res || {}
+    const res = await mangaApi.get_manga_info(mangaId.value)
+    mangaInfo.value = res || {}
   } catch (e) {
     mangaInfo.value = {}
   }
@@ -106,26 +131,36 @@ async function loadMangaInfo() {
 
 async function loadChapters() {
   if (!mangaId.value) return
+  loading.value = true
   try {
-    const res = await chapterApi.get(mangaId.value, 1, 999)
-    chapterList.value = res?.list || res?.data?.list || []
+    const res = await chapterApi.get({
+      mangaId: mangaId.value,
+      page: page.value,
+      pageSize,
+      order: order.value
+    })
+    chapterList.value = res?.list || []
+    total.value = res?.count || 0
     
     // 异步加载章节封面
     chapterList.value.forEach(ch => {
-      if (ch.chapterImage) {
-        queue.chapterQueue.add(() => loadChapterCover(ch))
+      if (ch.chapterCover || ch.pageImage) {
+        queue.mangaQueue.add(() => loadChapterCover(ch))
       }
     })
   } catch (e) {
     chapterList.value = []
+    total.value = 0
   }
+  loading.value = false
 }
 
 async function loadChapterCover(chapter: any) {
-  if (!chapter.chapterImage) return
+  const coverFile = chapter.pageImage || chapter.chapterCover
+  if (!coverFile) return
   
   try {
-    const blobUrl = await imageApi.get({ file: chapter.chapterImage })
+    const blobUrl = await imageApi.get({ file: coverFile })
     if (blobUrl) {
       chapterCoverCache.value[chapter.chapterId] = blobUrl
     }
@@ -135,7 +170,7 @@ async function loadChapterCover(chapter: any) {
 }
 
 function getChapterCover(chapter: any) {
-  return chapterCoverCache.value[chapter.chapterId] || chapter.chapterImage
+  return chapterCoverCache.value[chapter.chapterId] || chapter.chapterCover || chapter.pageImage
 }
 
 function getMangaCover(manga: any) {
@@ -146,8 +181,7 @@ function getMangaCover(manga: any) {
 async function checkCollectStatus() {
   if (!mangaId.value) return
   try {
-    const res = await collectApi.is_collect(mangaId.value)
-    isCollected.value = res?.data || false
+    isCollected.value = await collectApi.is_collect('manga', mangaId.value)
   } catch (e) {
     isCollected.value = false
   }
@@ -155,26 +189,36 @@ async function checkCollectStatus() {
 
 async function toggleCollect() {
   if (!mangaId.value) return
-  const action = isCollected.value ? 'remove' : 'add'
   try {
-    if (action === 'add') {
-      await collectApi.add(mangaId.value)
+    if (isCollected.value) {
+      await collectApi.remove_collect('manga', mangaId.value)
     } else {
-      await collectApi.remove(mangaId.value)
+      await collectApi.add_collect({ collectType: 'manga', mangaId: mangaId.value, mediaId: mangaInfo.value.mediaId })
     }
     isCollected.value = !isCollected.value
   } catch (e) {
-    // 处理收藏失败
+    console.error('收藏操作失败:', e)
   }
+}
+
+function formatDate(dateStr: string) {
+  if (!dateStr) return ''
+  return dateStr.split(' ')[0]
 }
 
 function goBack() {
   router.back()
 }
 
-function goRead(chapter: any) {
-  if (!mangaId.value || !chapter.chapterId) return
-  router.push(`/t/read/${mangaId.value}/${chapter.chapterId}`)
+function goRead(ch: any, idx: number) {
+  if (!mangaId.value || !ch.chapterId) return
+  
+  globalData.chapterList = chapterList.value
+  globalData.chapterIndex = idx
+  globalData.chapterName = ch.chapterName || ''
+  globalData.mangaName = mangaInfo.value.mangaName || globalData.mangaName
+  
+  router.push(`/t/reader/${ch.chapterId}`)
 }
 </script>
 

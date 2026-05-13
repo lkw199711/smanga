@@ -1,21 +1,21 @@
 <template>
   <div class="tb-media">
-    <!-- 媒体库列表 -->
+    <!-- 媒体库列�?-->
     <div class="tb-section" v-if="!selectedMediaId">
       <div class="tb-page-head">
-        <h1>媒体库</h1>
-        <button class="tb-btn-primary" @click="showAdd = true">+ 新建媒体库</button>
+        <h1>媒体�?/h1>
+        <button class="tb-btn-primary" @click="showAdd = true">+ 新建媒体�?/button>
       </div>
       <div class="tb-grid">
         <div v-for="m in mediaList" :key="m.mediaId" class="tb-media-card" @click="selectMedia(m)">
           <div class="tb-media-icon">📁</div>
           <div class="tb-media-info">
             <div class="tb-media-name">{{ m.mediaName }}</div>
-            <div class="tb-media-meta">{{ m.mangaCount || 0 }} 部漫画</div>
+            <div class="tb-media-meta">{{ m.mangaCount || 0 }} 部漫�?/div>
             <div class="tb-media-path">{{ m.mediaPath }}</div>
           </div>
         </div>
-        <div v-if="mediaList.length === 0" class="tb-empty">暂无媒体库，点击右上角添加</div>
+        <div v-if="mediaList.length === 0" class="tb-empty">暂无媒体库，点击右上角添�?/div>
       </div>
     </div>
 
@@ -24,17 +24,17 @@
       <div class="tb-page-head">
         <div class="tb-head-left">
           <button class="tb-btn-ghost" @click="backToMediaList">
-            <span>← 返回媒体库</span>
+            <span>�?返回媒体�?/span>
           </button>
           <h1>{{ selectedMediaName }}</h1>
         </div>
         <div class="tb-head-actions">
           <input v-model="keyword" class="tb-input" placeholder="搜索..." @keydown.enter="loadMangaData" />
           <select v-model="order" class="tb-select" @change="loadMangaData">
-            <option value="updateTimeDesc">最近更新</option>
+            <option value="updateTimeDesc">最近更�?/option>
             <option value="nameDesc">名称 Z-A</option>
             <option value="name">名称 A-Z</option>
-            <option value="createTimeDesc">最近添加</option>
+            <option value="createTimeDesc">最近添�?/option>
           </select>
         </div>
       </div>
@@ -52,19 +52,19 @@
       
       <!-- 分页 -->
       <div v-if="totalPages > 1" class="tb-pagination">
-        <button :disabled="page <= 1" @click="page--; loadMangaData()">上一页</button>
+        <button :disabled="page <= 1" @click="page--; loadMangaData()">上一�?/button>
         <span>{{ page }} / {{ totalPages }}</span>
-        <button :disabled="page >= totalPages" @click="page++; loadMangaData()">下一页</button>
+        <button :disabled="page >= totalPages" @click="page++; loadMangaData()">下一�?/button>
       </div>
     </div>
 
-    <!-- 新建媒体库弹窗 -->
+    <!-- 新建媒体库弹�?-->
     <div v-if="showAdd" class="tb-modal" @click.self="closeAdd">
       <div class="tb-modal-card">
-        <div class="tb-modal-title">新建媒体库</div>
+        <div class="tb-modal-title">新建媒体�?/div>
         <div class="tb-form">
           <label class="tb-label">名称</label>
-          <input v-model="form.mediaName" class="tb-input" placeholder="例如：少年漫画" />
+          <input v-model="form.mediaName" class="tb-input" placeholder="例如：少年漫�? />
           <label class="tb-label">路径</label>
           <input v-model="form.mediaPath" class="tb-input" placeholder="例如：D:\\Manga" />
         </div>
@@ -91,7 +91,7 @@ import queue from '@/store/quque'
 const router = useRouter()
 const route = useRoute()
 
-// 媒体库相关
+// 媒体库相�?
 const mediaList = ref<mediaType[]>([])
 const showAdd = ref(false)
 const submitting = ref(false)
@@ -443,7 +443,7 @@ onMediaOperation(async () => {
   padding: 8px 16px;
   font-size: 13px;
   font-weight: 500;
-  color: #fff;
+  color: #1f2937;
   background: #2563eb;
   border: none;
   border-radius: 8px;
@@ -532,3 +532,4 @@ onMediaOperation(async () => {
   color: #ef4444;
 }
 </style>
+

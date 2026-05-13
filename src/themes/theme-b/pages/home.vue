@@ -28,6 +28,7 @@
 				<div v-for="item in historyList" :key="item.chapterId" class="sb-cont-card" @click="goRead(item)">
 					<div class="sb-cont-cover"
 						:style="{ background: `linear-gradient(135deg, ${getGradient(item.chapterId)[0]}, ${getGradient(item.chapterId)[1]})` }">
+						<img v-if="item.blob" :src="item.blob" alt="" class="continue-cover" />
 						<span v-if="item.tag" class="sb-cont-tag">{{ item.tag }}</span>
 						<span v-if="item.unread" class="sb-cont-unread">{{ item.unread }}</span>
 						<div class="sb-cont-progress">
@@ -50,6 +51,7 @@
 				<div v-for="item in latestList" :key="item.mangaId" class="sb-grid-card" @click="goManga(item)">
 					<div class="sb-grid-cover"
 						:style="{ background: `linear-gradient(135deg, ${getGradient(item.mangaId)[0]}, ${getGradient(item.mangaId)[1]})` }">
+						<img v-if="item.blob" :src="item.blob" alt="" class="continue-cover" />
 						<span v-if="item.tag" class="sb-grid-tag">{{ item.tag }}</span>
 						<div class="sb-grid-hover">
 							<button class="sb-grid-play">▶ 立即阅读</button>
@@ -69,7 +71,9 @@ import { useRouter } from 'vue-router'
 import historyApi from '@/api/history'
 import latestApi from '@/api/latest'
 import chartsApi from '@/api/charts'
+import imageApi from '@/api/image'
 import { globalData } from '@/store'
+import queue from '@/store/quque'
 
 const router = useRouter()
 
@@ -117,6 +121,12 @@ onMounted(async () => {
 		if (latestRes.status === 'fulfilled') {
 			latestList.value = Array.isArray(latestRes.value) ? latestRes.value : (latestRes.value?.list || [])
 		}
+		historyList.value.forEach((item) => {
+			queue.mangaQueue.add(() => get_poster(item))
+		})
+		latestList.value.forEach((item) => {
+			queue.mangaQueue.add(() => get_poster(item))
+		})
 	} catch (e) {
 		// fallback
 	}
@@ -139,6 +149,10 @@ function goRead(item: any) {
 
 function goManga(item: any) {
 	router.push({ path: '/t/manga/' + item.mangaId })
+}
+
+async function get_poster(item: any) {
+	item.blob = await imageApi.get({file: item.mangaCover || item.chapterCover});
 }
 </script>
 
@@ -421,5 +435,12 @@ function goManga(item: any) {
 	margin-top: 2px;
 	font-size: 11px;
 	color: #9ca3af;
+}
+
+.continue-cover {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	border-radius: 16px;
 }
 </style>

@@ -35,7 +35,7 @@ import historyApi from '@/api/history'
 import MediaPager from '@/components/media-pager.vue'
 import listSkeleton from '@/components/list-skeleton.vue'
 import { chapterPageSize } from '@/store/page-size'
-import { config } from '@/store'
+import { config, globalData } from '@/store'
 import THistoryItem from '@/themes/components/history-item.vue'
 
 const router = useRouter()
@@ -76,7 +76,8 @@ onMounted(() => {
 })
 </script>
 <style scoped>
-h1{font-size:20px;font-weight:700;margin:0 0 20px;color:#fff}
+h1{font-size:20px;font-weight:700;margin:0 0 20px;color:#1f2937}
 .tb-history-list{display:flex;flex-direction:column;gap:10px}
-.tb-empty{text-align:center;padding:60px;color:rgba(255,255,255,0.4)}
+.tb-empty{text-align:center;padding:60px;color:#6b7280}
 </style>
+

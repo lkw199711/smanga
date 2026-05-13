@@ -31,8 +31,8 @@
               <div class="tb-chapter-title">{{ item.chapterName || '未知章节' }}</div>
               <div class="tb-chapter-sub" v-if="item.latest && item.latest.page">上次看到第 {{ item.latest.page }} 页</div>
               <div class="tb-chapter-sub" v-else>未读</div>
-            </div>
-          </div>
+                      </div>
+        </div>
         </div>
       </template>
     </div>
@@ -146,23 +146,25 @@ onMounted(() => {
 })
 </script>
 <style scoped>
-h1{font-size:20px;font-weight:700;margin:0 0 20px;color:#fff}
+h1{font-size:20px;font-weight:700;margin:0 0 20px;color:#1f2937}
 .tb-tabs{display:flex;gap:10px;margin:0 0 14px}
-.tb-tab{padding:8px 14px;font-size:13px;border-radius:999px;border:1px solid rgba(255,255,255,0.14);background:rgba(255,255,255,0.06);color:rgba(255,255,255,0.8);cursor:pointer}
-.tb-tab.active{border-color:rgba(59,130,246,0.8);color:#fff;background:rgba(59,130,246,0.18)}
+.tb-tab{padding:8px 14px;font-size:13px;border-radius:999px;border:1px solid rgba(0,0,0,0.1);background:rgba(255,255,255,0.8);color:#6b7280;cursor:pointer}
+.tb-tab.active{border-color:rgba(59,130,246,0.8);color:#1f2937;background:rgba(59,130,246,0.9)}
 .tb-search-bar{display:flex;gap:10px;margin-bottom:20px}
-.tb-search-bar input{flex:1;max-width:400px;padding:10px 16px;background:rgba(255,255,255,0.08);border:none;border-radius:20px;color:#fff;font-size:14px;outline:none}
-.tb-search-bar input::placeholder{color:rgba(255,255,255,0.4)}
-.tb-search-bar button{padding:10px 20px;background:linear-gradient(135deg,#a855f7,#ec4899);border:none;border-radius:20px;color:#fff;cursor:pointer;font-size:13px}
+.tb-search-bar input{flex:1;max-width:400px;padding:10px 16px;background:rgba(255,255,255,0.8);border:1px solid rgba(0,0,0,0.1);border-radius:20px;color:#1f2937;font-size:14px;outline:none}
+.tb-search-bar input::placeholder{color:rgba(0,0,0,0.4)}
+.tb-search-bar button{padding:10px 20px;background:linear-gradient(135deg,#a855f7,#ec4899);border:none;border-radius:20px;color:#1f2937;cursor:pointer;font-size:13px}
 .tb-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:16px}
 .tb-card{cursor:pointer;transition:transform .2s}.tb-card:hover{transform:translateY(-3px)}
-.tb-card-cover{aspect-ratio:3/4;border-radius:14px;overflow:hidden;background:rgba(255,255,255,0.05);box-shadow:0 4px 16px rgba(0,0,0,0.3);margin-bottom:8px}
-.tb-card-name{font-size:13px;font-weight:500;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tb-card-cover{aspect-ratio:3/4;border-radius:14px;overflow:hidden;background:rgba(255,255,255,0.8);box-shadow:0 4px 16px rgba(0,0,0,0.08);margin-bottom:8px}
+.tb-card-name{font-size:13px;font-weight:500;color:#1f2937;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .tb-chapter-list{display:flex;flex-direction:column;gap:10px;margin-bottom:18px}
-.tb-chapter-item{display:flex;align-items:center;gap:14px;padding:12px;border-radius:14px;border:1px solid rgba(255,255,255,0.08);background:rgba(255,255,255,0.04);cursor:pointer;transition:all .15s}
-.tb-chapter-item:hover{border-color:rgba(255,255,255,0.16);background:rgba(255,255,255,0.06)}
+.tb-chapter-item{display:flex;align-items:center;gap:14px;padding:12px;border-radius:14px;border:1px solid rgba(0,0,0,0.1);background:rgba(255,255,255,0.8);cursor:pointer;transition:all .15s}
+.tb-chapter-item:hover{border-color:rgba(0,0,0,0.2);background:#f9fafb}
 .tb-chapter-cover{flex-shrink:0;width:52px;height:70px;border-radius:12px;overflow:hidden}
 .tb-chapter-info{min-width:0;flex:1}
-.tb-chapter-title{font-size:14px;font-weight:600;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.tb-chapter-sub{margin-top:4px;font-size:12px;color:rgba(255,255,255,0.65);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tb-chapter-title{font-size:14px;font-weight:600;color:#1f2937;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tb-chapter-sub{margin-top:4px;font-size:12px;color:#6b7280;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 </style>
+
+
