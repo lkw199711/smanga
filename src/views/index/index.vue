@@ -7,7 +7,11 @@
     </div>
     <latest v-if="layoutLimit('latest')">
     </latest>
-    <el-button class="logout-btn" type="primary" @click="user_logout">登出用户</el-button>
+    <div class="bottom-btn-box">
+        <el-button type="primary" @click="new_theme">前往新主题</el-button>
+        <el-button class="logout-btn" type="primary" @click="user_logout">登出用户</el-button>
+    </div>
+
 </template>
 
 <script setup lang="ts">
@@ -20,6 +24,7 @@ import { onMounted, ref, computed } from 'vue';
 import { config, userConfig } from '@/store';
 import { useRouter } from 'vue-router';
 import { Cookies } from '@/utils';
+import { themeState, setTheme } from '@/themes/store'
 const router = useRouter();
 const pieRef = ref();
 
@@ -41,7 +46,8 @@ const layoutLimit = computed(() => (key: string) => {
 });
 
 onMounted(() => {
-
+    const useNewTheme = Cookies.get('useNewTheme');
+    if (useNewTheme) router.push('/t');
     if (!pieRef.value) return;
     window.addEventListener('resize', pieRef.value.resize());
 })
@@ -50,6 +56,11 @@ function user_logout() {
     Cookies.remove('smanga-userName');
     Cookies.remove('smanga-userId');
     router.push('/login')
+}
+
+function new_theme() {
+    Cookies.set('useNewTheme', '1')
+    router.push('/t')
 }
 </script>
 
@@ -73,15 +84,18 @@ function user_logout() {
     }
 }
 
-.logout-btn{
+.bottom-btn-box {
     position: fixed;
     bottom: 1rem;
     right: 1rem;
     z-index: 1000;
-    width: 10rem;
-    height: 3rem;
-    border-radius: .6rem;
-    box-shadow: .4rem .3rem .4rem rgb(139, 130, 130);
+    .logout-btn {
+    
+        width: 10rem;
+        height: 3rem;
+        border-radius: .6rem;
+        box-shadow: .4rem .3rem .4rem rgb(139, 130, 130);
+    }
 }
 
 

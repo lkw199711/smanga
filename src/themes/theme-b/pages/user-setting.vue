@@ -38,6 +38,12 @@
             >
               D 多主题
             </button>
+            <button 
+              :class="['tb-theme-btn']" 
+              @click="back_old_theme"
+            >
+              回到旧主题
+            </button>
           </div>
         </div>
         <div class="tb-setting-row">
@@ -421,6 +427,11 @@ function toggleFullscreen() {
   } else {
     document.documentElement.requestFullscreen()
   }
+}
+
+function back_old_theme(){
+  Cookies.remove('useNewTheme')
+  router.push('/index')
 }
 </script>
 
