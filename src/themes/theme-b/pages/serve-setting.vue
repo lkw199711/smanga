@@ -1,4 +1,4 @@
-<template><div class="tb-page"><h1>服务器设�?/h1><div class="tb-card"><p>服务器管理功能占�?/p></div></div></template>
+<template><div class="tb-page"><h1>服务器设置</h1><div class="tb-card"><p>服务器管理功能占位</p></div></div></template>
 <script lang="ts" setup></script>
 <style scoped>
 h1{font-size:20px;font-weight:700;margin:0 0 20px;color:#1f2937}

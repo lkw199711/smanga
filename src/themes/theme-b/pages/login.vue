@@ -1,9 +1,9 @@
 <template>
   <div class="tb-login">
     <div class="tb-login-card">
-      <h2>�?smanga</h2>
+      <h2>smanga</h2>
       <form @submit.prevent="doLogin">
-        <input v-model="username" type="text" placeholder="用户�? />
+        <input v-model="username" type="text" placeholder="用户名" />
         <input v-model="password" type="password" placeholder="密码" />
         <button type="submit">登录</button>
       </form>

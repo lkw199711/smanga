@@ -1,13 +1,13 @@
 <template>
   <div class="tb-page">
-    <button class="tb-btn-back" @click="router.back()">�?返回</button>
+    <button class="tb-btn-back" @click="router.back()">← 返回</button>
     <div class="tb-info-card">
       <div class="tb-info-cover"><img v-if="info.mangaCover" :src="info.mangaCover" /><div v-else class="tb-ph">📚</div></div>
       <div class="tb-info-detail">
-        <h1>{{ info.mangaName || '加载�?..' }}</h1>
+        <h1>{{ info.mangaName || '加载�?..' }}</h1>
         <p class="tb-meta">{{ info.chapterCount || 0 }} 章节</p>
-        <p class="tb-desc">{{ info.description || '暂无简�? }}</p>
-        <button class="tb-btn-read" @click="startRead">开始阅�?/button>
+        <p class="tb-desc">{{ info.description || '暂无简介' }}</p>
+        <button class="tb-btn-read" @click="startRead">开始阅</button>
       </div>
     </div>
   </div>
