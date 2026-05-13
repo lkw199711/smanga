@@ -110,11 +110,8 @@ function edit_manga(index: number, row: any) {
 async function delete_manga(index: number, row: any) {
   ElMessageBox.confirm(t('mangaManage.confirm.text'), t('mangaManage.confirm.title'), {type: 'warning'})
     .then(async () => {
-      const res = await mangaApi.delete_manga(row.mangaId);
-
-      if (res.code === 0) {
-        reload_table();
-      }
+      await mangaApi.delete_manga(row.mangaId);
+      reload_table();
     })
     .catch(() => {});
 }
@@ -137,11 +134,8 @@ async function batch_delete_manga() {
   ElMessageBox.confirm(t('mangaManage.confirm.text'), t('mangaManage.confirm.title'), {type: 'warning'})
     .then(async () => {
       const ids = multipleSelection.value.map(item => item.mangaId);
-      const res = await mangaApi.batch_delete_manga(ids as number[]);
-
-      if (res.code === 0) {
-        reload_table();
-      }
+      await mangaApi.batch_delete_manga(ids as number[]);
+      reload_table();
     })
     .catch(() => {});
 }

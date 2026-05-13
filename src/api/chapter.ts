@@ -23,20 +23,10 @@ const chapterApi = {
     });
     const resData: chapterGetRes = res.data;
 
-    // 接口错误返回默认值
-    if (resData.code !== 0) {
-      return {
-        list: [],
-        count: 0,
-      };
-    }
-
-    const resFormat: chapterGetFormatType = {
-      list: resData.list,
-      count: resData.count,
+    return {
+      list: resData.list || [],
+      count: resData.count || 0,
     };
-
-    return resFormat;
   },
 
   /**
@@ -52,7 +42,7 @@ const chapterApi = {
     });
 
     const response = res.data;
-    return response.code === 0 ? response.data : {};
+    return response.data || {};
   },
 
   async get_images(chapterId: number, reTry: number) {

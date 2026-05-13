@@ -154,15 +154,20 @@ let currentPage = ref(1);
 // 在中途加载 前置没有加载的页面数量
 let beforeBookMark = 0;
 
-watch(currentPage, currentPage => {
-  const pageImage = browseStore.imagePathList[currentPage - beforeBookMark - 1];
-  // 记录页码
-  browseStore.page = currentPage;
-  // 记录当前图片
-  browseStore.pageImage = pageImage;
-  // 保存阅读记录
-  queue.saveLatestQueue.add(() => browseStore.save_latest(lastImageShown.value));
-});
+watch(
+  [currentPage, () => browseStore.imagePathList.length],
+  ([currentPage]) => {
+    if (!browseStore.imagePathList?.length) return;
+    const pageImage = browseStore.imagePathList[currentPage - beforeBookMark - 1] || '';
+    // 记录页码
+    browseStore.page = currentPage;
+    // 记录当前图片
+    browseStore.pageImage = pageImage;
+    // 保存阅读记录
+    queue.saveLatestQueue.add(() => browseStore.save_latest(lastImageShown.value));
+  },
+  { immediate: true }
+);
 
 /**
  * 加载图片

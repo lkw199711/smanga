@@ -747,7 +747,7 @@ async function click_register_node() {
 
   try {
     const res: any = await serveSettingApi.register_node_now();
-    if (res && res.code === 0) {
+    if (res) {
       registerResult.value = {
         success: true,
         nodeId: res.data?.nodeId,

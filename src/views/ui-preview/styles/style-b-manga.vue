@@ -294,7 +294,7 @@ import { sidebarMenu as menu, mediaList, continueReading, recentAdded, stats } f
 	display: flex;
 	flex-direction: column;
 	min-width: 0;
-	padding: 16px 16px 16px 0;
+	padding: 16px;
 	position: relative;
 	z-index: 1;
 }

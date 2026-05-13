@@ -200,12 +200,9 @@ async function delete_manga(index: number, row: any) {
     .then(async () => {
       loading.value = true;
       try {
-        const res = await jobsApi.delete(row.id);
-
-        if (res.code === 0) {
-          ElMessage.success(t('message.deleteSuccess'));
-          reload_table();
-        }
+        await jobsApi.delete(row.id);
+        ElMessage.success(t('message.deleteSuccess'));
+        reload_table();
       } finally {
         loading.value = false;
       }

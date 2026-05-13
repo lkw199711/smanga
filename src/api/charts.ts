@@ -8,6 +8,16 @@
 import {ajax} from './index';
 
 const chartsApi = {
+	async get_count() {
+		try {
+			const http = await ajax.get('chart-count');
+			const response = http.data;
+			return response.data || {};
+		} catch {
+			return {};
+		}
+	},
+
 	async browse() {
 		const http = await ajax.get('chart-browse');
 

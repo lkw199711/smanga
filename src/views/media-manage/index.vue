@@ -234,11 +234,8 @@ async function do_delete_media(index: any, row: any) {
     type: 'warning',
   })
     .then(async () => {
-      const res = await mediaApi.delete_media(row.mediaId);
-
-      if (res.code === 0) {
-        reload_table();
-      }
+      await mediaApi.delete_media(row.mediaId);
+      reload_table();
     })
     .catch(() => {});
 }
@@ -250,11 +247,8 @@ async function delete_path(pathInfo: any) {
     type: 'warning',
   })
     .then(async () => {
-      const res = await pathApi.delete_path(pathInfo.pathId);
-
-      if (res.code === 0) {
-        load_path(pathInfo.mediaId);
-      }
+      await pathApi.delete_path(pathInfo.pathId);
+      load_path(pathInfo.mediaId);
     })
     .catch(() => {});
 }
@@ -267,20 +261,14 @@ async function rescan_path(pathInfo: any) {
     type: 'warning',
   })
     .then(async () => {
-      const res = await pathApi.rescan_path(pathInfo.pathId);
-
-      if (res.code === 0) {
-        load_path(pathInfo.mediaId);
-      }
+      await pathApi.rescan_path(pathInfo.pathId);
+      load_path(pathInfo.mediaId);
     })
     .catch(() => {});
 }
 async function scan_path(pathInfo: any) {
-  const res = await pathApi.scan_path(pathInfo.pathId);
-
-  if (res.code === 0) {
-    load_path(pathInfo.mediaId);
-  }
+  await pathApi.scan_path(pathInfo.pathId);
+  load_path(pathInfo.mediaId);
 }
 
 /**
@@ -325,11 +313,8 @@ async function batch_delete_media() {
   })
     .then(async () => {
       const ids = multipleSelection.value.map(item => item.mediaId);
-      const res = await mediaApi.batch_delete_media(ids);
-
-      if (res.code === 0) {
-        reload_table();
-      }
+      await mediaApi.batch_delete_media(ids);
+      reload_table();
     })
     .catch(() => {});
 }

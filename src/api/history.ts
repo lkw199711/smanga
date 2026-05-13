@@ -17,11 +17,7 @@ const historyApi = {
 			data: { mangaId },
 		});
 
-		if (res.data.code == 1) {
-			return false;
-		} else {
-			return res.data.info;
-		}
+		return res.data?.info || false;
 	},
 
 	/**
@@ -48,6 +44,10 @@ const historyApi = {
 		});
 		const response = http.data;
 		return response
+	},
+
+	async get(page: number | undefined = undefined, pageSize: number | undefined = undefined) {
+		return this.get_history(page, pageSize)
 	},
 
 	/**

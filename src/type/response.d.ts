@@ -5,13 +5,23 @@
  * @LastEditTime: 2024-05-29 15:03:01
  * @FilePath: \smanga\src\type\response.d.ts
  */
-type Response = {
-    code: number;
-    message: string;
-    data: any;
-    list?: any[];
-    error?: string;
-    status?: string;
-}
+export type ApiResponse<TData = unknown, TError = unknown> = {
+  code: number;
+  message: string;
+  data?: TData;
+  error?: TError;
+  status?: string;
+};
+
+export type ApiListResponse<TItem = unknown, TError = unknown> = {
+  code: number;
+  message: string;
+  list: TItem[];
+  count: number;
+  error?: TError;
+  status?: string;
+};
+
+type Response = ApiResponse<any, any> & Partial<ApiListResponse<any, any>>;
 
 export default Response;

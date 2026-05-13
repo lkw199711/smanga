@@ -1,0 +1,89 @@
+<template>
+	<div class="td-bookmark">
+		<h2 class="td-page-title">书签</h2>
+
+		<div class="touch-dom">
+			<template v-if="loading">
+				<list-skeleton />
+			</template>
+			<template v-else>
+				<div class="td-bookmark-list">
+					<t-bookmark-item
+						v-for="item in list"
+						:key="item.bookmarkId"
+						:item="item"
+						variant="D"
+						@click="go_read(item)"
+					/>
+				</div>
+			</template>
+		</div>
+
+		<media-pager
+			:page="page"
+			:count="count"
+			:page-size-config="pageSizes"
+			@page-change="page_change"
+		/>
+
+		<p class="td-empty" v-if="!loading && !list.length">暂无书签</p>
+	</div>
+</template>
+
+<script lang="ts" setup>
+import { ref, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
+import bookmarkApi from '@/api/bookmark'
+import MediaPager from '@/components/media-pager.vue'
+import listSkeleton from '@/components/list-skeleton.vue'
+import { chapterPageSize } from '@/store/page-size'
+import { config, globalData } from '@/store'
+import TBookmarkItem from '@/themes/components/bookmark-item.vue'
+
+const router = useRouter()
+const page = ref(1)
+const list = ref<any[]>([])
+const count = ref(0)
+const loading = ref(false)
+const pageSizes = ref<number[]>([])
+const defaultPageSize = ref(10)
+
+function setupPageSize() {
+	const screen = config.screenType
+	pageSizes.value = chapterPageSize[screen]
+	defaultPageSize.value = chapterPageSize[screen][0]
+}
+
+async function go_read(item: any) {
+	if (!item?.chapterId) return
+	const pageNum = Number(item?.page || 1)
+	localStorage.setItem('pageJump', String(pageNum))
+	globalData.mangaName = item.mangaName || globalData.mangaName
+	globalData.chapterName = item.chapterName || globalData.chapterName
+	await router.push(`/t/reader/${item.chapterId}`)
+}
+
+async function page_change(pageParams = 1, pageSize = defaultPageSize.value) {
+	if (pageParams < 1) return
+	page.value = pageParams
+	loading.value = true
+	list.value = []
+
+	const res = await bookmarkApi.get(pageParams, pageSize)
+	list.value = res?.list || []
+	count.value = Number(res?.count || 0)
+	loading.value = false
+}
+
+onMounted(() => {
+	setupPageSize()
+	page_change()
+})
+</script>
+
+<style scoped>
+.td-bookmark { max-width: 800px; margin: 0 auto; }
+.td-page-title { font-size: 20px; font-weight: 700; color: var(--fg); margin-bottom: 20px; }
+.td-bookmark-list { display: flex; flex-direction: column; gap: 10px; }
+.td-empty { text-align: center; color: var(--fg2); margin-top: 40px; }
+</style>

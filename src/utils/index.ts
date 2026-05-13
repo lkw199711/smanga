@@ -17,7 +17,7 @@ export function global_set<T extends keyof GlobalData>
     (key: T, value: GlobalData[T] & any) {
 
     globalData[key] = value;
-    localStorage.setItem(key, value);
+    Cookies.set(key, value);
 
     return value;
 }
@@ -34,7 +34,7 @@ export function global_set<T extends keyof GlobalData>
 export function global_set_json<T extends keyof GlobalData>
     (key: T, value: GlobalData[T]) {
     globalData[key] = value;
-    localStorage.setItem(key, JSON.stringify(value));
+    Cookies.set(key, JSON.stringify(value));
 }
 
 /**
@@ -58,8 +58,8 @@ export function global_get_array(key: keyof typeof globalData) {
         return arr;
     }
 
-    // storage有值
-    const json = localStorage.getItem(key);
+    // cookie有值
+    const json = Cookies.get(key);
 
     if (json) {
         return JSON.parse(json);
@@ -87,7 +87,7 @@ export const Cookies = {
     set: function (key: string, value: string, time = 365) {
         // return localStorage.setItem(key, value);
         const cookiesTime = new Date(Date.now() + time * 365 * 24 * 60 * 60 * 1000).toUTCString();
-        document.cookie = key + '=' + value + ';expires=' + cookiesTime;
+        document.cookie = key + '=' + value + ';expires=' + cookiesTime + ';path=/';
         return value;
     },
     /**
@@ -104,7 +104,6 @@ export const Cookies = {
      * @param key
      */
     remove: function (key: string) {
-        return localStorage.removeItem(key);
         Cookies.set(key, '', -1);
         return key;
     },

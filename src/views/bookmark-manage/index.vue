@@ -75,10 +75,8 @@ async function batch_delete_bookmark() {
     .then(async () => {
       loading.value = true;
       const res = await bookmarkApi.batch_delete(bookmarkIds);
-      if (res.code === 0) {
-        reload_table();
-        selectedRows.value = [];
-      }
+      reload_table();
+      selectedRows.value = [];
       loading.value = false;
     })
     .catch(() => {
@@ -95,10 +93,8 @@ async function handleDelete(index: number, val: any) {
   ElMessageBox.confirm(t('bookmarkManage.confirm.text'), t('bookmarkManage.confirm.title'), {
     type: 'warning',
   }).then(async () => {
-    const res = await bookmarkApi.delete(val.bookmarkId);
-    if (res.code === 0) {
-      reload_table();
-    }
+    await bookmarkApi.delete(val.bookmarkId);
+    reload_table();
   });
 }
 

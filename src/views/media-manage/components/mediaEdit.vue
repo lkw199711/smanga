@@ -137,7 +137,7 @@ async function media_submit() {
 
   const res = props.editModel === 'add' ? await mediaApi.add_media(form) : await mediaApi.update_media(form);
 
-  if (res.code === 0) {
+  if (res) {
     editMediaDialog.value = false;
     emit('reload');
   }
