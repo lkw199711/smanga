@@ -150,7 +150,7 @@ async function rescan_path(index: number, row: any) {
     type: 'warning',
   })
     .then(async () => {
-      await pathApi.rescan_path(row.mediaId);
+      await pathApi.rescan_path(row.pathId);
       reload_table();
     })
     .catch(() => {});
@@ -162,7 +162,7 @@ async function rescan_path(index: number, row: any) {
  * @param row
  */
 async function scan_path(index: number, row: any) {
-  await pathApi.scan_path(row.mediaId);
+  await pathApi.scan_path(row.pathId);
   reload_table();
 }
 
