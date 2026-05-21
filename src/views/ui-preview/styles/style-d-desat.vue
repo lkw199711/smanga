@@ -17,21 +17,29 @@
 				</div>
 			</div>
 
+			<div class="sd-sec-title">{{ currentMenuTitle }}</div>
 			<nav class="sd-nav">
-				<div v-for="(item, i) in menu" :key="item.key" :class="['sd-nav-item', { active: i === 0 }]" @click="navigateMenu(item.key)">
+				<div
+					v-for="item in currentMenu"
+					:key="item.key"
+					:class="['sd-nav-item', { active: isMenuActive(item), back: item.key === 'back-browse' }]"
+					@click="navigateMenu(item)"
+				>
 					<span class="sd-nav-icon">{{ item.icon }}</span>
 					<span>{{ item.label }}</span>
 				</div>
 			</nav>
 
-			<div class="sd-sec-title">媒体库</div>
-			<nav class="sd-nav">
-				<div v-for="m in mediaList" :key="m.id" class="sd-nav-item" @click="emit('navigate', { page: 'manga-list', params: { mediaId: m.id } })">
-					<span class="sd-nav-icon">{{ m.icon }}</span>
-					<span>{{ m.name }}</span>
-					<span class="sd-nav-count">{{ m.count }}</span>
-				</div>
-			</nav>
+			<template v-if="menuMode === 'browse'">
+				<div class="sd-sec-title">媒体库</div>
+				<nav class="sd-nav">
+					<div v-for="m in mediaList" :key="m.id" class="sd-nav-item" @click="emit('navigate', { page: 'manga-list', params: { mediaId: m.id } })">
+						<span class="sd-nav-icon">{{ m.icon }}</span>
+						<span>{{ m.name }}</span>
+						<span class="sd-nav-count">{{ m.count }}</span>
+					</div>
+				</nav>
+			</template>
 
 			<div class="sd-user">
 				<div class="sd-avatar">U</div>
@@ -147,9 +155,11 @@
 
 <script lang="ts" setup>
 import { ref, computed } from 'vue';
-import { sidebarMenu as menu, mediaList, continueReading, recentAdded, stats } from '../mock';
+import { browseMenu, manageMenu, settingMenu, mediaList, continueReading, recentAdded, stats } from '../mock';
+import type { PreviewNavItem } from '../mock';
 import PreviewPageView from '../preview-page.vue';
 import ManageD from '../manage/manage-d-desat.vue';
+import ManagePanel from '../manage/manage-panel.vue';
 import SettingD from '../setting/setting-d-desat.vue';
 
 const props = defineProps<{
@@ -178,8 +188,24 @@ const styleKey = computed(() => props.styleKey || 'D');
 const params = computed(() => props.params || {});
 const theme = computed(() => themeList.find((t) => t.key === currentTheme.value)!);
 const isDark = computed(() => currentTheme.value === 'dark');
+const menuMode = computed(() => {
+	if (activePage.value === 'setting-user' || activePage.value === 'setting-serve') return 'setting';
+	if (activePage.value === 'manage' || activePage.value.startsWith('manage-')) return 'manage';
+	return 'browse';
+});
+const currentMenuTitle = computed(() => {
+	if (menuMode.value === 'manage') return '管理';
+	if (menuMode.value === 'setting') return '设置';
+	return '导航';
+});
+const currentMenu = computed(() => {
+	if (menuMode.value === 'manage') return manageMenu;
+	if (menuMode.value === 'setting') return settingMenu;
+	return browseMenu;
+});
 const contentView = computed(() => {
 	if (activePage.value === 'manage-manga') return ManageD;
+	if (activePage.value.startsWith('manage-')) return ManagePanel;
 	if (activePage.value === 'setting-user') return SettingD;
 	return PreviewPageView;
 });
@@ -204,18 +230,20 @@ const emit = defineEmits<{
 	back: [];
 }>();
 
-function navigateMenu(key: string) {
-	const pageMap: Record<string, string> = {
-		home: 'home',
-		history: 'history',
-		bookmark: 'bookmark',
-		collect: 'collect',
-		search: 'search',
-		tag: 'tag-list',
-		manage: 'manage',
-		setting: 'setting-user',
-	};
-	emit('navigate', { page: pageMap[key] || 'home' });
+function navigateMenu(item: PreviewNavItem) {
+	if (item.mode === 'browse') {
+		emit('navigate', { page: 'browse-return', replace: true });
+		return;
+	}
+	if (item.page) emit('navigate', { page: item.page });
+}
+
+function isMenuActive(item: PreviewNavItem) {
+	if (item.key === 'back-browse') return false;
+	if (item.page === 'media') {
+		return ['media', 'manga-list', 'manga-info', 'chapter-list'].includes(activePage.value);
+	}
+	return item.page === activePage.value;
 }
 
 function submitSearch() {
@@ -335,6 +363,11 @@ function forwardNavigate(payload: { page: string; params?: Record<string, any>; 
 	background: var(--sd-primary-bg);
 	color: var(--sd-primary);
 	font-weight: 600;
+}
+
+.sd-nav-item.back {
+	color: var(--sd-primary);
+	font-weight: 700;
 }
 
 .sd-nav-icon {

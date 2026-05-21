@@ -12,22 +12,30 @@
 				<span>🔍</span><input v-model="keyword" placeholder="Quick find…" />
 			</form>
 
+			<div class="sc-sec-title">{{ currentMenuTitle }}</div>
 			<nav class="sc-nav">
-				<div v-for="(item, i) in menu" :key="item.key" :class="['sc-nav-item', { active: i === 0 }]" @click="navigateMenu(item.key)">
+				<div
+					v-for="item in currentMenu"
+					:key="item.key"
+					:class="['sc-nav-item', { active: isMenuActive(item), back: item.key === 'back-browse' }]"
+					@click="navigateMenu(item)"
+				>
 					<span class="sc-nav-icon">{{ item.icon }}</span>
 					<span>{{ item.label }}</span>
-					<span v-if="i === 1" class="sc-nav-dot"></span>
+					<span v-if="item.key === 'history'" class="sc-nav-dot"></span>
 				</div>
 			</nav>
 
-			<div class="sc-sec-title">LIBRARIES</div>
-			<nav class="sc-nav">
-				<div v-for="m in mediaList" :key="m.id" class="sc-nav-item" @click="emit('navigate', { page: 'manga-list', params: { mediaId: m.id } })">
-					<span class="sc-nav-icon">{{ m.icon }}</span>
-					<span>{{ m.name }}</span>
-					<span class="sc-nav-count">{{ m.count }}</span>
-				</div>
-			</nav>
+			<template v-if="menuMode === 'browse'">
+				<div class="sc-sec-title">LIBRARIES</div>
+				<nav class="sc-nav">
+					<div v-for="m in mediaList" :key="m.id" class="sc-nav-item" @click="emit('navigate', { page: 'manga-list', params: { mediaId: m.id } })">
+						<span class="sc-nav-icon">{{ m.icon }}</span>
+						<span>{{ m.name }}</span>
+						<span class="sc-nav-count">{{ m.count }}</span>
+					</div>
+				</nav>
+			</template>
 
 			<div class="sc-user">
 				<div class="sc-avatar">U</div>
@@ -149,9 +157,11 @@
 
 <script lang="ts" setup>
 import { computed, ref } from 'vue';
-import { sidebarMenu as menu, mediaList, continueReading, recentAdded, stats } from '../mock';
+import { browseMenu, manageMenu, settingMenu, mediaList, continueReading, recentAdded, stats } from '../mock';
+import type { PreviewNavItem } from '../mock';
 import PreviewPageView from '../preview-page.vue';
 import ManageC from '../manage/manage-c-dark.vue';
+import ManagePanel from '../manage/manage-panel.vue';
 import SettingC from '../setting/setting-c-dark.vue';
 
 const props = defineProps<{
@@ -169,24 +179,42 @@ const keyword = ref('');
 const activePage = computed(() => props.page || 'home');
 const styleKey = computed(() => props.styleKey || 'C');
 const params = computed(() => props.params || {});
+const menuMode = computed(() => {
+	if (activePage.value === 'setting-user' || activePage.value === 'setting-serve') return 'setting';
+	if (activePage.value === 'manage' || activePage.value.startsWith('manage-')) return 'manage';
+	return 'browse';
+});
+const currentMenuTitle = computed(() => {
+	if (menuMode.value === 'manage') return 'MANAGE';
+	if (menuMode.value === 'setting') return 'SETTINGS';
+	return 'NAVIGATION';
+});
+const currentMenu = computed(() => {
+	if (menuMode.value === 'manage') return manageMenu;
+	if (menuMode.value === 'setting') return settingMenu;
+	return browseMenu;
+});
 const contentView = computed(() => {
 	if (activePage.value === 'manage-manga') return ManageC;
+	if (activePage.value.startsWith('manage-')) return ManagePanel;
 	if (activePage.value === 'setting-user') return SettingC;
 	return PreviewPageView;
 });
 
-function navigateMenu(key: string) {
-	const pageMap: Record<string, string> = {
-		home: 'home',
-		history: 'history',
-		bookmark: 'bookmark',
-		collect: 'collect',
-		search: 'search',
-		tag: 'tag-list',
-		manage: 'manage',
-		setting: 'setting-user',
-	};
-	emit('navigate', { page: pageMap[key] || 'home' });
+function navigateMenu(item: PreviewNavItem) {
+	if (item.mode === 'browse') {
+		emit('navigate', { page: 'browse-return', replace: true });
+		return;
+	}
+	if (item.page) emit('navigate', { page: item.page });
+}
+
+function isMenuActive(item: PreviewNavItem) {
+	if (item.key === 'back-browse') return false;
+	if (item.page === 'media') {
+		return ['media', 'manga-list', 'manga-info', 'chapter-list'].includes(activePage.value);
+	}
+	return item.page === activePage.value;
 }
 
 function submitSearch() {
@@ -306,6 +334,11 @@ function forwardNavigate(payload: { page: string; params?: Record<string, any>; 
 	background: #1e232b;
 	color: #f5a524;
 	position: relative;
+}
+
+.sc-nav-item.back {
+	color: #f5a524;
+	font-weight: 700;
 }
 
 .sc-nav-item.active::before {

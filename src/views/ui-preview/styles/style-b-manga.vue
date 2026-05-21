@@ -7,14 +7,20 @@
 				<span class="sb-logo-text">smanga</span>
 			</div>
 
+			<div class="sb-sec-title">{{ currentMenuTitle }}</div>
 			<nav class="sb-nav">
-				<div v-for="(item, i) in menu" :key="item.key" :class="['sb-nav-item', { active: i === 0 }]" @click="navigateMenu(item.key)">
+				<div
+					v-for="item in currentMenu"
+					:key="item.key"
+					:class="['sb-nav-item', { active: isMenuActive(item), back: item.key === 'back-browse' }]"
+					@click="navigateMenu(item)"
+				>
 					<span class="sb-nav-icon">{{ item.icon }}</span>
 					<span>{{ item.label }}</span>
 				</div>
 			</nav>
 
-			<div class="sb-sec">
+			<div v-if="menuMode === 'browse'" class="sb-sec">
 				<div class="sb-sec-title">✨ 我的书架</div>
 				<div v-for="m in mediaList" :key="m.id" class="sb-sec-item" @click="emit('navigate', { page: 'manga-list', params: { mediaId: m.id } })">
 					<span>{{ m.icon }} {{ m.name }}</span>
@@ -22,7 +28,7 @@
 				</div>
 			</div>
 
-			<div class="sb-card-hint">
+			<div v-if="menuMode === 'browse'" class="sb-card-hint">
 				<div class="sb-card-hint-title">今日推荐 🎁</div>
 				<div class="sb-card-hint-desc">打开盲盒，发现新漫画</div>
 				<button class="sb-card-hint-btn">去看看</button>
@@ -130,9 +136,11 @@
 
 <script lang="ts" setup>
 import { computed, ref } from 'vue';
-import { sidebarMenu as menu, mediaList, continueReading, recentAdded, stats } from '../mock';
+import { browseMenu, manageMenu, settingMenu, mediaList, continueReading, recentAdded, stats } from '../mock';
+import type { PreviewNavItem } from '../mock';
 import PreviewPageView from '../preview-page.vue';
 import ManageB from '../manage/manage-b-manga.vue';
+import ManagePanel from '../manage/manage-panel.vue';
 import SettingB from '../setting/setting-b-manga.vue';
 
 const props = defineProps<{
@@ -150,24 +158,42 @@ const keyword = ref('');
 const activePage = computed(() => props.page || 'home');
 const styleKey = computed(() => props.styleKey || 'B');
 const params = computed(() => props.params || {});
+const menuMode = computed(() => {
+	if (activePage.value === 'setting-user' || activePage.value === 'setting-serve') return 'setting';
+	if (activePage.value === 'manage' || activePage.value.startsWith('manage-')) return 'manage';
+	return 'browse';
+});
+const currentMenuTitle = computed(() => {
+	if (menuMode.value === 'manage') return '管理';
+	if (menuMode.value === 'setting') return '设置';
+	return '导航';
+});
+const currentMenu = computed(() => {
+	if (menuMode.value === 'manage') return manageMenu;
+	if (menuMode.value === 'setting') return settingMenu;
+	return browseMenu;
+});
 const contentView = computed(() => {
 	if (activePage.value === 'manage-manga') return ManageB;
+	if (activePage.value.startsWith('manage-')) return ManagePanel;
 	if (activePage.value === 'setting-user') return SettingB;
 	return PreviewPageView;
 });
 
-function navigateMenu(key: string) {
-	const pageMap: Record<string, string> = {
-		home: 'home',
-		history: 'history',
-		bookmark: 'bookmark',
-		collect: 'collect',
-		search: 'search',
-		tag: 'tag-list',
-		manage: 'manage',
-		setting: 'setting-user',
-	};
-	emit('navigate', { page: pageMap[key] || 'home' });
+function navigateMenu(item: PreviewNavItem) {
+	if (item.mode === 'browse') {
+		emit('navigate', { page: 'browse-return', replace: true });
+		return;
+	}
+	if (item.page) emit('navigate', { page: item.page });
+}
+
+function isMenuActive(item: PreviewNavItem) {
+	if (item.key === 'back-browse') return false;
+	if (item.page === 'media') {
+		return ['media', 'manga-list', 'manga-info', 'chapter-list'].includes(activePage.value);
+	}
+	return item.page === activePage.value;
 }
 
 function submitSearch() {
@@ -278,6 +304,11 @@ function forwardNavigate(payload: { page: string; params?: Record<string, any>; 
 .sb-nav-item.active {
 	background: linear-gradient(135deg, rgba(255, 111, 163, 0.18), rgba(108, 141, 255, 0.18));
 	color: #1f2937;
+}
+
+.sb-nav-item.back {
+	color: #ff6fa3;
+	font-weight: 700;
 }
 
 .sb-nav-icon {

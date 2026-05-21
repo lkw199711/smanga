@@ -113,8 +113,8 @@ import type { PreviewManga } from './mock';
 type PreviewStyle = 'A' | 'B' | 'C' | 'D';
 type PreviewPage =
 	| 'media' | 'manga-list' | 'manga-info' | 'chapter-list' | 'history' | 'bookmark' | 'collect' | 'search'
-	| 'tag-list' | 'manage' | 'manage-user' | 'manage-media' | 'manage-chapter' | 'manage-bookmark' | 'manage-tag'
-	| 'manage-jobs' | 'setting-serve';
+	| 'tag-list' | 'manage' | 'manage-user' | 'manage-media' | 'manage-manga' | 'manage-path' | 'manage-chapter'
+	| 'manage-bookmark' | 'manage-tag' | 'manage-compress' | 'manage-jobs' | 'setting-serve';
 
 const props = defineProps<{
 	page: PreviewPage;
@@ -162,9 +162,12 @@ const title = computed(() => {
 		manage: '管理入口',
 		'manage-user': '用户管理',
 		'manage-media': '媒体库管理',
+		'manage-manga': '漫画管理',
+		'manage-path': '路径管理',
 		'manage-chapter': '章节管理',
 		'manage-bookmark': '书签管理',
 		'manage-tag': '标签管理',
+		'manage-compress': '解压管理',
 		'manage-jobs': '任务管理',
 		'setting-serve': '服务器设置',
 	};

@@ -102,8 +102,9 @@ type PreviewStyle = 'A' | 'B' | 'C' | 'D';
 type PreviewPage =
 	| 'home' | 'media' | 'manga-list' | 'manga-info' | 'chapter-list' | 'reader' | 'history' | 'bookmark'
 	| 'collect' | 'search' | 'tag-list' | 'manage' | 'manage-user' | 'manage-media' | 'manage-manga'
-	| 'manage-chapter' | 'manage-bookmark' | 'manage-tag' | 'manage-jobs' | 'setting-user' | 'setting-serve';
-type NavigatePayload = { page: PreviewPage; params?: Record<string, any>; replace?: boolean };
+	| 'manage-path' | 'manage-chapter' | 'manage-bookmark' | 'manage-tag' | 'manage-compress' | 'manage-jobs'
+	| 'setting-user' | 'setting-serve';
+type NavigatePayload = { page: PreviewPage | 'browse-return'; params?: Record<string, any>; replace?: boolean };
 
 const activeStyle = ref<PreviewStyle>('A');
 const showSpec = ref(true);
@@ -115,6 +116,7 @@ const previewParams = reactive({
 	keyword: '',
 });
 const pageStack = ref<Array<{ page: PreviewPage; params: Record<string, any> }>>([]);
+const lastBrowseLocation = ref<{ page: PreviewPage; params: Record<string, any> }>({ page: 'home', params: {} });
 
 const shellMap: Record<PreviewStyle, any> = { A: StyleA, B: StyleB, C: StyleC, D: StyleD };
 const readerMap: Record<PreviewStyle, any> = {
@@ -141,9 +143,11 @@ const pageLabelMap: Record<PreviewPage, string> = {
 	'manage-user': '用户管理',
 	'manage-media': '媒体库管理',
 	'manage-manga': '漫画管理',
+	'manage-path': '路径管理',
 	'manage-chapter': '章节管理',
 	'manage-bookmark': '书签管理',
 	'manage-tag': '标签管理',
+	'manage-compress': '解压管理',
 	'manage-jobs': '任务管理',
 	'setting-user': '用户设置',
 	'setting-serve': '服务器设置',
@@ -166,7 +170,24 @@ function resetParams() {
 	previewParams.keyword = '';
 }
 
+function isBrowsePage(page: PreviewPage) {
+	return !page.startsWith('manage') && !page.startsWith('setting') && page !== 'reader';
+}
+
 function navigate(payload: NavigatePayload) {
+	if (payload.page === 'browse-return') {
+		currentPage.value = lastBrowseLocation.value.page;
+		resetParams();
+		Object.assign(previewParams, lastBrowseLocation.value.params);
+		pageStack.value = [];
+		return;
+	}
+	if (isBrowsePage(currentPage.value)) {
+		lastBrowseLocation.value = {
+			page: currentPage.value,
+			params: { ...previewParams },
+		};
+	}
 	if (!payload.replace) {
 		pageStack.value.push({
 			page: currentPage.value,
@@ -175,6 +196,12 @@ function navigate(payload: NavigatePayload) {
 	}
 	currentPage.value = payload.page;
 	if (payload.params) Object.assign(previewParams, payload.params);
+	if (isBrowsePage(currentPage.value)) {
+		lastBrowseLocation.value = {
+			page: currentPage.value,
+			params: { ...previewParams },
+		};
+	}
 }
 
 function goPreviewBack() {
@@ -193,6 +220,9 @@ function quickJump(page: PreviewPage) {
 	currentPage.value = page;
 	resetParams();
 	pageStack.value = [];
+	if (isBrowsePage(page)) {
+		lastBrowseLocation.value = { page, params: {} };
+	}
 }
 
 function goAppBack() {

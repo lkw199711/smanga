@@ -7,16 +7,49 @@ export const mediaList = [
 	{ id: 4, name: '同人本', icon: '🎨', count: 32 },
 ];
 
-export const sidebarMenu = [
-	{ key: 'home', label: '首页', icon: '🏠' },
-	{ key: 'history', label: '最近阅读', icon: '🕘' },
-	{ key: 'bookmark', label: '书签', icon: '🔖' },
-	{ key: 'collect', label: '收藏', icon: '⭐' },
-	{ key: 'search', label: '搜索', icon: '🔍' },
-	{ key: 'tag', label: '标签', icon: '🏷️' },
-	{ key: 'manage', label: '管理', icon: '⚙️' },
-	{ key: 'setting', label: '设置', icon: '🔧' },
+export type PreviewMenuMode = 'browse' | 'manage' | 'setting';
+
+export type PreviewNavItem = {
+	key: string;
+	label: string;
+	icon: string;
+	page?: string;
+	mode?: PreviewMenuMode;
+};
+
+export const browseMenu: PreviewNavItem[] = [
+	{ key: 'home', label: '首页', icon: '🏠', page: 'home' },
+	{ key: 'media', label: '媒体库', icon: '📚', page: 'media' },
+	{ key: 'history', label: '最近阅读', icon: '🕘', page: 'history' },
+	{ key: 'bookmark', label: '书签', icon: '🔖', page: 'bookmark' },
+	{ key: 'collect', label: '收藏', icon: '⭐', page: 'collect' },
+	{ key: 'search', label: '搜索', icon: '🔍', page: 'search' },
+	{ key: 'tag', label: '标签', icon: '🏷️', page: 'tag-list' },
+	{ key: 'manage-mode', label: '管理', icon: '⚙️', page: 'manage', mode: 'manage' },
+	{ key: 'setting-mode', label: '设置', icon: '🔧', page: 'setting-user', mode: 'setting' },
 ];
+
+export const manageMenu: PreviewNavItem[] = [
+	{ key: 'back-browse', label: '返回浏览', icon: '←', mode: 'browse' },
+	{ key: 'manage', label: '管理概览', icon: '⌘', page: 'manage' },
+	{ key: 'manage-user', label: '用户管理', icon: '👤', page: 'manage-user' },
+	{ key: 'manage-media', label: '媒体库管理', icon: '📚', page: 'manage-media' },
+	{ key: 'manage-manga', label: '漫画管理', icon: '📖', page: 'manage-manga' },
+	{ key: 'manage-path', label: '路径管理', icon: '📁', page: 'manage-path' },
+	{ key: 'manage-chapter', label: '章节管理', icon: '📄', page: 'manage-chapter' },
+	{ key: 'manage-bookmark', label: '书签管理', icon: '🔖', page: 'manage-bookmark' },
+	{ key: 'manage-tag', label: '标签管理', icon: '🏷️', page: 'manage-tag' },
+	{ key: 'manage-compress', label: '解压管理', icon: '🗜️', page: 'manage-compress' },
+	{ key: 'manage-jobs', label: '任务管理', icon: '⏱', page: 'manage-jobs' },
+];
+
+export const settingMenu: PreviewNavItem[] = [
+	{ key: 'back-browse', label: '返回浏览', icon: '←', mode: 'browse' },
+	{ key: 'setting-user', label: '用户设置', icon: '👤', page: 'setting-user' },
+	{ key: 'setting-serve', label: '服务器设置', icon: '🖥️', page: 'setting-serve' },
+];
+
+export const sidebarMenu = browseMenu;
 
 // 封面用纯色占位，避免外网资源
 const palette = [
@@ -132,9 +165,11 @@ export const manageModules = [
 	{ page: 'manage-user', title: '用户管理', desc: '用户、角色、权限和登录状态', metric: '12 users' },
 	{ page: 'manage-media', title: '媒体库管理', desc: '媒体库、新建路径和扫描策略', metric: '4 libraries' },
 	{ page: 'manage-manga', title: '漫画管理', desc: '漫画表格、编辑、删除和批量处理', metric: '1,284 manga' },
+	{ page: 'manage-path', title: '路径管理', desc: '扫描路径、索引规则和目录健康度', metric: '9 paths' },
 	{ page: 'manage-chapter', title: '章节管理', desc: '章节、封面、排序和重扫', metric: '38,562 chapters' },
 	{ page: 'manage-bookmark', title: '书签管理', desc: '书签批量整理和导出', metric: '218 marks' },
 	{ page: 'manage-tag', title: '标签管理', desc: '标签颜色、合并和关联关系', metric: '46 tags' },
+	{ page: 'manage-compress', title: '解压管理', desc: '解压、压缩缓存和失败队列', metric: '3 queued' },
 	{ page: 'manage-jobs', title: '任务管理', desc: '扫描、同步、压缩和队列监控', metric: '7 running' },
 ] as const;
 
