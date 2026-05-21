@@ -8,6 +8,7 @@
 						:class="['sd-dot', { active: currentTheme === t.key }]"
 						:style="{ background: t.primary }" @click="currentTheme = t.key"></button>
 				</div>
+				<button class="sd-btn" @click="emit('navigate', { page: 'setting-serve' })">服务</button>
 				<button class="sd-btn">登出</button>
 			</div>
 		</header>
@@ -76,6 +77,10 @@ const themeVars = computed(() => {
 		'--sd-hover': t.hover,
 	} as any;
 });
+
+const emit = defineEmits<{
+	navigate: [payload: { page: string; params?: Record<string, any> }];
+}>();
 </script>
 
 <style scoped>

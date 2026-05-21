@@ -8,7 +8,7 @@
 			</div>
 
 			<nav class="sb-nav">
-				<div v-for="(item, i) in menu" :key="item.key" :class="['sb-nav-item', { active: i === 0 }]">
+				<div v-for="(item, i) in menu" :key="item.key" :class="['sb-nav-item', { active: i === 0 }]" @click="navigateMenu(item.key)">
 					<span class="sb-nav-icon">{{ item.icon }}</span>
 					<span>{{ item.label }}</span>
 				</div>
@@ -16,7 +16,7 @@
 
 			<div class="sb-sec">
 				<div class="sb-sec-title">✨ 我的书架</div>
-				<div v-for="m in mediaList" :key="m.id" class="sb-sec-item">
+				<div v-for="m in mediaList" :key="m.id" class="sb-sec-item" @click="emit('navigate', { page: 'manga-list', params: { mediaId: m.id } })">
 					<span>{{ m.icon }} {{ m.name }}</span>
 					<span class="sb-sec-count">{{ m.count }}</span>
 				</div>
@@ -40,10 +40,10 @@
 					<span class="sb-top-item">书签</span>
 					<span class="sb-top-item">排行榜</span>
 				</div>
-				<div class="sb-search">
+				<form class="sb-search" @submit.prevent="submitSearch">
 					<span>🔍</span>
-					<input placeholder="搜索你喜欢的漫画…" />
-				</div>
+					<input v-model="keyword" placeholder="搜索你喜欢的漫画…" />
+				</form>
 				<div class="sb-top-actions">
 					<button class="sb-pill">🌙</button>
 					<button class="sb-pill">中/EN</button>
@@ -52,6 +52,7 @@
 			</header>
 
 			<main class="sb-main">
+				<template v-if="activePage === 'home'">
 				<!-- Hero -->
 				<section class="sb-hero">
 					<div class="sb-hero-text">
@@ -77,7 +78,7 @@
 						<a class="sb-link">全部 →</a>
 					</div>
 					<div class="sb-continue">
-						<div v-for="m in continueReading" :key="m.id" class="sb-cont-card">
+						<div v-for="m in continueReading" :key="m.id" class="sb-cont-card" @click="emit('navigate', { page: 'reader', params: { mangaId: m.id, chapterId: m.id * 100 + 1 } })">
 							<div class="sb-cont-cover"
 								:style="{ background: `linear-gradient(135deg, ${m.gradient[0]}, ${m.gradient[1]})` }">
 								<span v-if="m.tag" class="sb-cont-tag">{{ m.tag }}</span>
@@ -99,7 +100,7 @@
 						<a class="sb-link">全部 →</a>
 					</div>
 					<div class="sb-grid">
-						<div v-for="m in recentAdded" :key="m.id" class="sb-grid-card">
+						<div v-for="m in recentAdded" :key="m.id" class="sb-grid-card" @click="emit('navigate', { page: 'manga-info', params: { mangaId: m.id } })">
 							<div class="sb-grid-cover"
 								:style="{ background: `linear-gradient(135deg, ${m.gradient[0]}, ${m.gradient[1]})` }">
 								<span v-if="m.tag" class="sb-grid-tag">{{ m.tag }}</span>
@@ -112,13 +113,70 @@
 						</div>
 					</div>
 				</section>
+				</template>
+				<component
+					v-else
+					:is="contentView"
+					:page="activePage"
+					:style-key="styleKey"
+					:params="params"
+					@navigate="forwardNavigate"
+					@back="emit('back')"
+				/>
 			</main>
 		</div>
 	</div>
 </template>
 
 <script lang="ts" setup>
+import { computed, ref } from 'vue';
 import { sidebarMenu as menu, mediaList, continueReading, recentAdded, stats } from '../mock';
+import PreviewPageView from '../preview-page.vue';
+import ManageB from '../manage/manage-b-manga.vue';
+import SettingB from '../setting/setting-b-manga.vue';
+
+const props = defineProps<{
+	page?: string;
+	styleKey?: 'A' | 'B' | 'C' | 'D';
+	params?: Record<string, any>;
+}>();
+
+const emit = defineEmits<{
+	navigate: [payload: { page: string; params?: Record<string, any>; replace?: boolean }];
+	back: [];
+}>();
+
+const keyword = ref('');
+const activePage = computed(() => props.page || 'home');
+const styleKey = computed(() => props.styleKey || 'B');
+const params = computed(() => props.params || {});
+const contentView = computed(() => {
+	if (activePage.value === 'manage-manga') return ManageB;
+	if (activePage.value === 'setting-user') return SettingB;
+	return PreviewPageView;
+});
+
+function navigateMenu(key: string) {
+	const pageMap: Record<string, string> = {
+		home: 'home',
+		history: 'history',
+		bookmark: 'bookmark',
+		collect: 'collect',
+		search: 'search',
+		tag: 'tag-list',
+		manage: 'manage',
+		setting: 'setting-user',
+	};
+	emit('navigate', { page: pageMap[key] || 'home' });
+}
+
+function submitSearch() {
+	emit('navigate', { page: 'search', params: { keyword: keyword.value.trim() || '芙莉莲' } });
+}
+
+function forwardNavigate(payload: { page: string; params?: Record<string, any>; replace?: boolean }) {
+	emit('navigate', payload);
+}
 </script>
 
 <style scoped>

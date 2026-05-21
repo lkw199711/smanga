@@ -7,6 +7,7 @@
 				<span>Preferences</span>
 			</div>
 			<div class="sc-header-actions">
+				<button class="sc-btn" @click="emit('navigate', { page: 'setting-serve' })">Server</button>
 				<button class="sc-btn">Logout</button>
 				<button class="sc-btn">Fullscreen</button>
 			</div>
@@ -47,6 +48,10 @@
 
 <script lang="ts" setup>
 import { settingMock } from '../mock';
+
+const emit = defineEmits<{
+	navigate: [payload: { page: string; params?: Record<string, any> }];
+}>();
 </script>
 
 <style scoped>

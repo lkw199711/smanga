@@ -18,7 +18,7 @@
 			</div>
 
 			<nav class="sd-nav">
-				<div v-for="(item, i) in menu" :key="item.key" :class="['sd-nav-item', { active: i === 0 }]">
+				<div v-for="(item, i) in menu" :key="item.key" :class="['sd-nav-item', { active: i === 0 }]" @click="navigateMenu(item.key)">
 					<span class="sd-nav-icon">{{ item.icon }}</span>
 					<span>{{ item.label }}</span>
 				</div>
@@ -26,7 +26,7 @@
 
 			<div class="sd-sec-title">媒体库</div>
 			<nav class="sd-nav">
-				<div v-for="m in mediaList" :key="m.id" class="sd-nav-item">
+				<div v-for="m in mediaList" :key="m.id" class="sd-nav-item" @click="emit('navigate', { page: 'manga-list', params: { mediaId: m.id } })">
 					<span class="sd-nav-icon">{{ m.icon }}</span>
 					<span>{{ m.name }}</span>
 					<span class="sd-nav-count">{{ m.count }}</span>
@@ -45,10 +45,10 @@
 		<!-- 右侧 -->
 		<div class="sd-body">
 			<header class="sd-topbar">
-				<div class="sd-search">
+				<form class="sd-search" @submit.prevent="submitSearch">
 					<span>🔍</span>
-					<input placeholder="搜索漫画、章节、标签…" />
-				</div>
+					<input v-model="keyword" placeholder="搜索漫画、章节、标签…" />
+				</form>
 				<div class="sd-top-actions">
 					<button class="sd-btn">视图</button>
 					<button class="sd-btn">排序</button>
@@ -59,6 +59,7 @@
 			</header>
 
 			<main class="sd-main">
+				<template v-if="activePage === 'home'">
 				<section class="sd-stats">
 					<div class="sd-stat-card">
 						<div class="sd-stat-icon" style="background: var(--sd-primary-bg)">📚</div>
@@ -96,7 +97,7 @@
 						<a class="sd-link">查看全部 →</a>
 					</div>
 					<div class="sd-continue">
-						<div v-for="m in continueReading" :key="m.id" class="sd-cont-card">
+						<div v-for="m in continueReading" :key="m.id" class="sd-cont-card" @click="emit('navigate', { page: 'reader', params: { mangaId: m.id, chapterId: m.id * 100 + 1 } })">
 							<div class="sd-cont-cover"
 								:style="{ background: `linear-gradient(135deg, ${m.gradient[0]}, ${m.gradient[1]})` }">
 								<span v-if="m.tag" class="sd-cont-tag">{{ m.tag }}</span>
@@ -119,7 +120,7 @@
 						<a class="sd-link">查看全部 →</a>
 					</div>
 					<div class="sd-grid">
-						<div v-for="m in recentAdded" :key="m.id" class="sd-grid-card">
+						<div v-for="m in recentAdded" :key="m.id" class="sd-grid-card" @click="emit('navigate', { page: 'manga-info', params: { mangaId: m.id } })">
 							<div class="sd-grid-cover"
 								:style="{ background: `linear-gradient(135deg, ${m.gradient[0]}, ${m.gradient[1]})` }">
 								<span v-if="m.tag" class="sd-grid-tag">{{ m.tag }}</span>
@@ -129,6 +130,16 @@
 						</div>
 					</div>
 				</section>
+				</template>
+				<component
+					v-else
+					:is="contentView"
+					:page="activePage"
+					:style-key="styleKey"
+					:params="params"
+					@navigate="forwardNavigate"
+					@back="emit('back')"
+				/>
 			</main>
 		</div>
 	</div>
@@ -137,6 +148,15 @@
 <script lang="ts" setup>
 import { ref, computed } from 'vue';
 import { sidebarMenu as menu, mediaList, continueReading, recentAdded, stats } from '../mock';
+import PreviewPageView from '../preview-page.vue';
+import ManageD from '../manage/manage-d-desat.vue';
+import SettingD from '../setting/setting-d-desat.vue';
+
+const props = defineProps<{
+	page?: string;
+	styleKey?: 'A' | 'B' | 'C' | 'D';
+	params?: Record<string, any>;
+}>();
 
 // 改造思路：9 套主题的 s-back 不再是大色块，而是 50 号浅色
 const themeList = [
@@ -152,8 +172,17 @@ const themeList = [
 ];
 
 const currentTheme = ref('blue');
+const keyword = ref('');
+const activePage = computed(() => props.page || 'home');
+const styleKey = computed(() => props.styleKey || 'D');
+const params = computed(() => props.params || {});
 const theme = computed(() => themeList.find((t) => t.key === currentTheme.value)!);
 const isDark = computed(() => currentTheme.value === 'dark');
+const contentView = computed(() => {
+	if (activePage.value === 'manage-manga') return ManageD;
+	if (activePage.value === 'setting-user') return SettingD;
+	return PreviewPageView;
+});
 
 const themeVars = computed(() => {
 	const t = theme.value;
@@ -169,6 +198,33 @@ const themeVars = computed(() => {
 		'--sd-hover': t.hover,
 	} as any;
 });
+
+const emit = defineEmits<{
+	navigate: [payload: { page: string; params?: Record<string, any>; replace?: boolean }];
+	back: [];
+}>();
+
+function navigateMenu(key: string) {
+	const pageMap: Record<string, string> = {
+		home: 'home',
+		history: 'history',
+		bookmark: 'bookmark',
+		collect: 'collect',
+		search: 'search',
+		tag: 'tag-list',
+		manage: 'manage',
+		setting: 'setting-user',
+	};
+	emit('navigate', { page: pageMap[key] || 'home' });
+}
+
+function submitSearch() {
+	emit('navigate', { page: 'search', params: { keyword: keyword.value.trim() || '芙莉莲' } });
+}
+
+function forwardNavigate(payload: { page: string; params?: Record<string, any>; replace?: boolean }) {
+	emit('navigate', payload);
+}
 </script>
 
 <style scoped>

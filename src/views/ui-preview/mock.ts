@@ -75,6 +75,88 @@ export const stats = {
 	readThisWeek: 312,
 };
 
+export type PreviewManga = MangaMock & {
+	mediaId: number;
+	author: string;
+	status: string;
+	chapterCount: number;
+	tags: string[];
+	desc: string;
+};
+
+export type PreviewChapter = {
+	id: number;
+	mangaId: number;
+	name: string;
+	title: string;
+	pages: number;
+	read: boolean;
+};
+
+export const previewMangas: PreviewManga[] = [...continueReading, ...recentAdded].map((m, i) => ({
+	...m,
+	mediaId: (i % mediaList.length) + 1,
+	author: ['谏山创', '芥见下下', '山田钟人', '远藤达哉', '日向夏', '金城宗幸'][i % 6],
+	status: i % 3 === 0 ? '完结' : '连载中',
+	chapterCount: m.id > 100 ? Number.parseInt(m.chapter.replace(/\D/g, ''), 10) || 42 : 120 + i * 7,
+	tags: [['热血', '剧情'], ['奇幻', '冒险'], ['日常', '治愈'], ['悬疑', '动作']][i % 4],
+	desc: '用于 UI 预览的漫画详情摘要。这里展示题材、阅读进度、章节入口和标签信息，帮助评估真实浏览链路中的信息层级。',
+}));
+
+export const previewChapters: PreviewChapter[] = previewMangas.flatMap((m) =>
+	Array.from({ length: 8 }, (_, i) => ({
+		id: m.id * 100 + i + 1,
+		mangaId: m.id,
+		name: `第 ${i + 1} 话`,
+		title: ['启程', '相遇', '伏线', '追逐', '告白', '夜行', '归途', '新的页码'][i],
+		pages: 18 + (i % 5),
+		read: i < Math.floor(m.progress / 18),
+	})),
+);
+
+export const previewHistory = continueReading.slice(0, 5).map((m, i) => ({
+	mangaId: m.id,
+	chapterId: m.id * 100 + i + 1,
+	time: `${i + 1} 小时前`,
+	progress: m.progress,
+}));
+
+export const previewBookmarks = continueReading.slice(0, 4).map((m, i) => ({
+	mangaId: m.id,
+	chapterId: m.id * 100 + i + 2,
+	page: i * 3 + 4,
+	note: ['战斗分镜', '角色登场', '伏笔位置', '封面页'][i],
+}));
+
+export const manageModules = [
+	{ page: 'manage-user', title: '用户管理', desc: '用户、角色、权限和登录状态', metric: '12 users' },
+	{ page: 'manage-media', title: '媒体库管理', desc: '媒体库、新建路径和扫描策略', metric: '4 libraries' },
+	{ page: 'manage-manga', title: '漫画管理', desc: '漫画表格、编辑、删除和批量处理', metric: '1,284 manga' },
+	{ page: 'manage-chapter', title: '章节管理', desc: '章节、封面、排序和重扫', metric: '38,562 chapters' },
+	{ page: 'manage-bookmark', title: '书签管理', desc: '书签批量整理和导出', metric: '218 marks' },
+	{ page: 'manage-tag', title: '标签管理', desc: '标签颜色、合并和关联关系', metric: '46 tags' },
+	{ page: 'manage-jobs', title: '任务管理', desc: '扫描、同步、压缩和队列监控', metric: '7 running' },
+] as const;
+
+export const serveSettingMock: SettingGroup[] = [
+	{
+		title: '服务配置',
+		items: [
+			{ label: '服务端口', type: 'input', value: '9797' },
+			{ label: '允许局域网访问', type: 'switch', value: true },
+			{ label: '反向代理路径', type: 'input', value: '/smanga' },
+		],
+	},
+	{
+		title: '扫描与缓存',
+		items: [
+			{ label: '自动扫描间隔', type: 'select', value: '6 小时', options: ['关闭', '1 小时', '6 小时', '每天'] },
+			{ label: '压缩队列并发', type: 'input', value: '2' },
+			{ label: '缓存预热', type: 'switch', value: true },
+		],
+	},
+];
+
 // ========== 阅读器场景 mock ==========
 export const readerMock = {
 	mangaName: '葬送的芙莉莲',

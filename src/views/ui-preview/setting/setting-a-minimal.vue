@@ -3,6 +3,7 @@
 		<header class="sa-header">
 			<h1 class="sa-title">用户偏好</h1>
 			<div class="sa-header-actions">
+				<button class="sa-btn" @click="emit('navigate', { page: 'setting-serve' })">服务器设置</button>
 				<button class="sa-btn">登出用户</button>
 				<button class="sa-btn">网页全屏</button>
 			</div>
@@ -50,6 +51,10 @@
 
 <script lang="ts" setup>
 import { settingMock } from '../mock';
+
+const emit = defineEmits<{
+	navigate: [payload: { page: string; params?: Record<string, any> }];
+}>();
 </script>
 
 <style scoped>

@@ -4,31 +4,35 @@
 		<header class="pv-header">
 			<div class="pv-header-left">
 				<span class="pv-badge">UI 预览</span>
-				<span class="pv-title">{{ currentSpec.title }}</span>
+				<div>
+					<div class="pv-title">{{ currentSpec.title }}</div>
+					<div class="pv-crumb">{{ breadcrumb }}</div>
+				</div>
 			</div>
 			<div class="pv-header-center">
-				<!-- 场景切换 -->
+				<!-- 快速跳转仅用于预览调试 -->
 				<div class="pv-scene-tabs">
 					<button v-for="item in scenes" :key="item.key"
-						:class="['pv-scene-tab', { active: activeScene === item.key }]"
-						@click="activeScene = item.key">
+						:class="['pv-scene-tab', { active: currentPage === item.key }]"
+						@click="quickJump(item.key)">
 						{{ item.label }}
 					</button>
 				</div>
 				<!-- 风格切换 -->
 				<div class="pv-tabs">
 					<button v-for="item in tabs" :key="item.key"
-						:class="['pv-tab', { active: active === item.key }]"
-						@click="active = item.key">
+						:class="['pv-tab', { active: activeStyle === item.key }]"
+						@click="activeStyle = item.key">
 						{{ item.label }}
 					</button>
 				</div>
 			</div>
 			<div class="pv-header-right">
+				<button class="pv-tab" :disabled="!pageStack.length" @click="goPreviewBack">返回上一页</button>
 				<button class="pv-tab" @click="showSpec = !showSpec">
 					{{ showSpec ? '隐藏规格' : '查看规格' }}
 				</button>
-				<button class="pv-tab primary" @click="goBack">返回应用</button>
+				<button class="pv-tab primary" @click="goAppBack">返回应用</button>
 			</div>
 		</header>
 
@@ -50,13 +54,20 @@
 
 		<!-- 风格稿 -->
 		<main class="pv-main">
-			<component :is="currentView" />
+			<component
+				:is="currentView"
+				:page="currentPage"
+				:style-key="activeStyle"
+				:params="previewParams"
+				@navigate="navigate"
+				@back="goPreviewBack"
+			/>
 		</main>
 	</div>
 </template>
 
 <script lang="ts" setup>
-import { ref, computed } from 'vue';
+import { reactive, ref, computed } from 'vue';
 import { useRouter } from 'vue-router';
 import { styleSpec } from './mock';
 // 首页风格
@@ -69,24 +80,15 @@ import ReaderA from './reader/reader-a-minimal.vue';
 import ReaderB from './reader/reader-b-manga.vue';
 import ReaderC from './reader/reader-c-dark.vue';
 import ReaderD from './reader/reader-d-desat.vue';
-// 管理风格
-import ManageA from './manage/manage-a-minimal.vue';
-import ManageB from './manage/manage-b-manga.vue';
-import ManageC from './manage/manage-c-dark.vue';
-import ManageD from './manage/manage-d-desat.vue';
-// 设置风格
-import SettingA from './setting/setting-a-minimal.vue';
-import SettingB from './setting/setting-b-manga.vue';
-import SettingC from './setting/setting-c-dark.vue';
-import SettingD from './setting/setting-d-desat.vue';
 
 const router = useRouter();
 
 const scenes = [
 	{ key: 'home', label: '首页' },
+	{ key: 'media', label: '媒体库' },
 	{ key: 'reader', label: '阅读器' },
 	{ key: 'manage', label: '管理' },
-	{ key: 'setting', label: '设置' },
+	{ key: 'setting-user', label: '设置' },
 ] as const;
 
 const tabs = [
@@ -96,21 +98,57 @@ const tabs = [
 	{ key: 'D', label: 'D 降饱和多主题' },
 ] as const;
 
-type SceneKey = 'home' | 'reader' | 'manage' | 'setting';
-type TabKey = 'A' | 'B' | 'C' | 'D';
-const activeScene = ref<SceneKey>('home');
-const active = ref<TabKey>('A');
+type PreviewStyle = 'A' | 'B' | 'C' | 'D';
+type PreviewPage =
+	| 'home' | 'media' | 'manga-list' | 'manga-info' | 'chapter-list' | 'reader' | 'history' | 'bookmark'
+	| 'collect' | 'search' | 'tag-list' | 'manage' | 'manage-user' | 'manage-media' | 'manage-manga'
+	| 'manage-chapter' | 'manage-bookmark' | 'manage-tag' | 'manage-jobs' | 'setting-user' | 'setting-serve';
+type NavigatePayload = { page: PreviewPage; params?: Record<string, any>; replace?: boolean };
+
+const activeStyle = ref<PreviewStyle>('A');
 const showSpec = ref(true);
+const currentPage = ref<PreviewPage>('home');
+const previewParams = reactive({
+	mediaId: undefined as number | undefined,
+	mangaId: undefined as number | undefined,
+	chapterId: undefined as number | undefined,
+	keyword: '',
+});
+const pageStack = ref<Array<{ page: PreviewPage; params: Record<string, any> }>>([]);
 
-const viewMap: Record<SceneKey, Record<TabKey, any>> = {
-	home: { A: StyleA, B: StyleB, C: StyleC, D: StyleD },
-	reader: { A: ReaderA, B: ReaderB, C: ReaderC, D: ReaderD },
-	manage: { A: ManageA, B: ManageB, C: ManageC, D: ManageD },
-	setting: { A: SettingA, B: SettingB, C: SettingC, D: SettingD },
+const shellMap: Record<PreviewStyle, any> = { A: StyleA, B: StyleB, C: StyleC, D: StyleD };
+const readerMap: Record<PreviewStyle, any> = {
+	A: ReaderA,
+	B: ReaderB,
+	C: ReaderC,
+	D: ReaderD,
 };
-
-const currentView = computed(() => viewMap[activeScene.value][active.value]);
-const currentSpec = computed(() => styleSpec[active.value]);
+const currentView = computed(() => currentPage.value === 'reader' ? readerMap[activeStyle.value] : shellMap[activeStyle.value]);
+const currentSpec = computed(() => styleSpec[activeStyle.value]);
+const pageLabelMap: Record<PreviewPage, string> = {
+	home: '首页',
+	media: '媒体库',
+	'manga-list': '漫画列表',
+	'manga-info': '漫画详情',
+	'chapter-list': '章节列表',
+	reader: '阅读器',
+	history: '最近阅读',
+	bookmark: '书签',
+	collect: '收藏',
+	search: '搜索',
+	'tag-list': '标签',
+	manage: '管理入口',
+	'manage-user': '用户管理',
+	'manage-media': '媒体库管理',
+	'manage-manga': '漫画管理',
+	'manage-chapter': '章节管理',
+	'manage-bookmark': '书签管理',
+	'manage-tag': '标签管理',
+	'manage-jobs': '任务管理',
+	'setting-user': '用户设置',
+	'setting-serve': '服务器设置',
+};
+const breadcrumb = computed(() => `UI 预览 / ${activeStyle.value} / ${pageLabelMap[currentPage.value]}`);
 
 function pickColor(v: string) {
 	if (v.includes('→')) {
@@ -121,7 +159,43 @@ function pickColor(v: string) {
 	return '#888';
 }
 
-function goBack() {
+function resetParams() {
+	previewParams.mediaId = undefined;
+	previewParams.mangaId = undefined;
+	previewParams.chapterId = undefined;
+	previewParams.keyword = '';
+}
+
+function navigate(payload: NavigatePayload) {
+	if (!payload.replace) {
+		pageStack.value.push({
+			page: currentPage.value,
+			params: { ...previewParams },
+		});
+	}
+	currentPage.value = payload.page;
+	if (payload.params) Object.assign(previewParams, payload.params);
+}
+
+function goPreviewBack() {
+	const last = pageStack.value.pop();
+	if (!last) {
+		currentPage.value = 'home';
+		resetParams();
+		return;
+	}
+	currentPage.value = last.page;
+	resetParams();
+	Object.assign(previewParams, last.params);
+}
+
+function quickJump(page: PreviewPage) {
+	currentPage.value = page;
+	resetParams();
+	pageStack.value = [];
+}
+
+function goAppBack() {
 	router.push('/');
 }
 </script>
@@ -155,7 +229,7 @@ function goBack() {
 	display: flex;
 	align-items: center;
 	gap: 12px;
-	min-width: 220px;
+	min-width: 280px;
 }
 
 .pv-header-center {
@@ -210,6 +284,13 @@ function goBack() {
 	color: #111827;
 }
 
+.pv-crumb {
+	margin-top: 2px;
+	font-size: 12px;
+	color: #6b7280;
+	white-space: nowrap;
+}
+
 .pv-tabs {
 	display: flex;
 	gap: 6px;
@@ -228,6 +309,11 @@ function goBack() {
 	border-radius: 8px;
 	cursor: pointer;
 	transition: all 0.15s ease;
+}
+
+.pv-tab:disabled {
+	opacity: 0.45;
+	cursor: not-allowed;
 }
 
 .pv-tab:hover {

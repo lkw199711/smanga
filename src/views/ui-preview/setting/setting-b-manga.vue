@@ -3,6 +3,7 @@
 		<header class="sb-header">
 			<h1 class="sb-title">⚙️ 用户偏好</h1>
 			<div class="sb-header-actions">
+				<button class="sb-pill" @click="emit('navigate', { page: 'setting-serve' })">🖧 服务</button>
 				<button class="sb-pill">🚪 登出</button>
 				<button class="sb-pill">🖥 全屏</button>
 			</div>
@@ -47,6 +48,10 @@
 
 <script lang="ts" setup>
 import { settingMock } from '../mock';
+
+const emit = defineEmits<{
+	navigate: [payload: { page: string; params?: Record<string, any> }];
+}>();
 </script>
 
 <style scoped>

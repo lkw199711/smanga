@@ -8,12 +8,12 @@
 				<span class="sc-logo-ver">v4.3</span>
 			</div>
 
-			<div class="sc-search-mini">
-				<span>🔍</span><input placeholder="Quick find…" />
-			</div>
+			<form class="sc-search-mini" @submit.prevent="submitSearch">
+				<span>🔍</span><input v-model="keyword" placeholder="Quick find…" />
+			</form>
 
 			<nav class="sc-nav">
-				<div v-for="(item, i) in menu" :key="item.key" :class="['sc-nav-item', { active: i === 0 }]">
+				<div v-for="(item, i) in menu" :key="item.key" :class="['sc-nav-item', { active: i === 0 }]" @click="navigateMenu(item.key)">
 					<span class="sc-nav-icon">{{ item.icon }}</span>
 					<span>{{ item.label }}</span>
 					<span v-if="i === 1" class="sc-nav-dot"></span>
@@ -22,7 +22,7 @@
 
 			<div class="sc-sec-title">LIBRARIES</div>
 			<nav class="sc-nav">
-				<div v-for="m in mediaList" :key="m.id" class="sc-nav-item">
+				<div v-for="m in mediaList" :key="m.id" class="sc-nav-item" @click="emit('navigate', { page: 'manga-list', params: { mediaId: m.id } })">
 					<span class="sc-nav-icon">{{ m.icon }}</span>
 					<span>{{ m.name }}</span>
 					<span class="sc-nav-count">{{ m.count }}</span>
@@ -60,6 +60,7 @@
 			</header>
 
 			<main class="sc-main">
+				<template v-if="activePage === 'home'">
 				<!-- 顶部欢迎 + 统计条 -->
 				<section class="sc-welcome">
 					<div class="sc-welcome-text">
@@ -93,7 +94,7 @@
 						<a class="sc-link">View all</a>
 					</div>
 					<div class="sc-continue">
-						<div v-for="m in continueReading" :key="m.id" class="sc-cont-card">
+						<div v-for="m in continueReading" :key="m.id" class="sc-cont-card" @click="emit('navigate', { page: 'reader', params: { mangaId: m.id, chapterId: m.id * 100 + 1 } })">
 							<div class="sc-cont-cover"
 								:style="{ background: `linear-gradient(135deg, ${m.gradient[0]}, ${m.gradient[1]})` }">
 								<span v-if="m.tag" class="sc-cont-tag">{{ m.tag }}</span>
@@ -121,7 +122,7 @@
 						<a class="sc-link">View all</a>
 					</div>
 					<div class="sc-grid">
-						<div v-for="m in recentAdded" :key="m.id" class="sc-grid-card">
+						<div v-for="m in recentAdded" :key="m.id" class="sc-grid-card" @click="emit('navigate', { page: 'manga-info', params: { mangaId: m.id } })">
 							<div class="sc-grid-cover"
 								:style="{ background: `linear-gradient(135deg, ${m.gradient[0]}, ${m.gradient[1]})` }">
 								<span v-if="m.tag" class="sc-grid-tag">{{ m.tag }}</span>
@@ -131,13 +132,70 @@
 						</div>
 					</div>
 				</section>
+				</template>
+				<component
+					v-else
+					:is="contentView"
+					:page="activePage"
+					:style-key="styleKey"
+					:params="params"
+					@navigate="forwardNavigate"
+					@back="emit('back')"
+				/>
 			</main>
 		</div>
 	</div>
 </template>
 
 <script lang="ts" setup>
+import { computed, ref } from 'vue';
 import { sidebarMenu as menu, mediaList, continueReading, recentAdded, stats } from '../mock';
+import PreviewPageView from '../preview-page.vue';
+import ManageC from '../manage/manage-c-dark.vue';
+import SettingC from '../setting/setting-c-dark.vue';
+
+const props = defineProps<{
+	page?: string;
+	styleKey?: 'A' | 'B' | 'C' | 'D';
+	params?: Record<string, any>;
+}>();
+
+const emit = defineEmits<{
+	navigate: [payload: { page: string; params?: Record<string, any>; replace?: boolean }];
+	back: [];
+}>();
+
+const keyword = ref('');
+const activePage = computed(() => props.page || 'home');
+const styleKey = computed(() => props.styleKey || 'C');
+const params = computed(() => props.params || {});
+const contentView = computed(() => {
+	if (activePage.value === 'manage-manga') return ManageC;
+	if (activePage.value === 'setting-user') return SettingC;
+	return PreviewPageView;
+});
+
+function navigateMenu(key: string) {
+	const pageMap: Record<string, string> = {
+		home: 'home',
+		history: 'history',
+		bookmark: 'bookmark',
+		collect: 'collect',
+		search: 'search',
+		tag: 'tag-list',
+		manage: 'manage',
+		setting: 'setting-user',
+	};
+	emit('navigate', { page: pageMap[key] || 'home' });
+}
+
+function submitSearch() {
+	emit('navigate', { page: 'search', params: { keyword: keyword.value.trim() || '芙莉莲' } });
+}
+
+function forwardNavigate(payload: { page: string; params?: Record<string, any>; replace?: boolean }) {
+	emit('navigate', payload);
+}
 </script>
 
 <style scoped>

@@ -2,7 +2,7 @@
 	<div class="reader-d" :style="themeVars">
 		<!-- 顶栏 -->
 		<header class="rd-topbar">
-			<button class="rd-btn">← 返回</button>
+			<button class="rd-btn" @click="emit('back')">← 返回</button>
 			<div class="rd-title">
 				<div class="rd-manga-name">{{ readerMock.mangaName }}</div>
 				<div class="rd-chapter-name">{{ readerMock.chapterName }}</div>
@@ -23,7 +23,8 @@
 			<aside v-if="showChapters" class="rd-chapters">
 				<div class="rd-chapters-title">章节目录</div>
 				<div v-for="ch in readerMock.chapters" :key="ch.id"
-					:class="['rd-chapter-item', { active: ch.current, read: ch.read }]">
+					:class="['rd-chapter-item', { active: ch.current, read: ch.read }]"
+					@click="emit('navigate', { page: 'reader', params: { chapterId: ch.id }, replace: true })">
 					<span>{{ ch.name }}</span>
 					<span v-if="ch.current" class="rd-current-dot"></span>
 					<span v-if="ch.read" class="rd-check">✓</span>
@@ -85,6 +86,11 @@ const themeVars = computed(() => {
 const page = ref(readerMock.currentPage);
 const showChapters = ref(false);
 const currentPageData = computed(() => readerMock.pages[(page.value - 1) % readerMock.pages.length]);
+
+const emit = defineEmits<{
+	navigate: [payload: { page: string; params?: Record<string, any>; replace?: boolean }];
+	back: [];
+}>();
 </script>
 
 <style scoped>

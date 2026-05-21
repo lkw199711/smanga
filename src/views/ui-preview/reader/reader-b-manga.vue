@@ -2,7 +2,7 @@
 	<div class="reader-b">
 		<!-- 顶栏 -->
 		<header class="rb-topbar">
-			<button class="rb-btn-back">← 返回</button>
+			<button class="rb-btn-back" @click="emit('back')">← 返回</button>
 			<div class="rb-title">
 				<div class="rb-manga-name">{{ readerMock.mangaName }}</div>
 				<div class="rb-chapter-name">{{ readerMock.chapterName }}</div>
@@ -15,7 +15,8 @@
 			<aside v-if="showChapters" class="rb-chapters">
 				<div class="rb-chapters-title">✨ 章节目录</div>
 				<div v-for="ch in readerMock.chapters" :key="ch.id"
-					:class="['rb-chapter-item', { active: ch.current, read: ch.read }]">
+					:class="['rb-chapter-item', { active: ch.current, read: ch.read }]"
+					@click="emit('navigate', { page: 'reader', params: { chapterId: ch.id }, replace: true })">
 					<span>{{ ch.name }}</span>
 					<span v-if="ch.current" class="rb-current-badge">阅读中</span>
 					<span v-else-if="ch.read" class="rb-read-badge">已读</span>
@@ -56,6 +57,11 @@ import { readerMock } from '../mock';
 const page = ref(readerMock.currentPage);
 const showChapters = ref(false);
 const currentPageData = computed(() => readerMock.pages[(page.value - 1) % readerMock.pages.length]);
+
+const emit = defineEmits<{
+	navigate: [payload: { page: string; params?: Record<string, any>; replace?: boolean }];
+	back: [];
+}>();
 </script>
 
 <style scoped>
