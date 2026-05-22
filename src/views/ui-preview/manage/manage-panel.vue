@@ -401,15 +401,15 @@ const filteredRows = computed(() => {
 }
 
 .preview-d {
-	--mp-bg: #eff6ff;
-	--mp-card: #fff;
-	--mp-border: #dbeafe;
-	--mp-text: #0f172a;
-	--mp-muted: #64748b;
-	--mp-faint: #94a3b8;
-	--mp-hover: #dbeafe;
-	--mp-primary: #2563eb;
-	--mp-primary-soft: rgba(37, 99, 235, 0.1);
+	--mp-bg: var(--sd-back, #eff6ff);
+	--mp-card: var(--sd-card, #fff);
+	--mp-border: var(--sd-border, #dbeafe);
+	--mp-text: var(--sd-text, #0f172a);
+	--mp-muted: var(--sd-text-muted, #64748b);
+	--mp-faint: var(--sd-text-faint, #94a3b8);
+	--mp-hover: var(--sd-hover, #dbeafe);
+	--mp-primary: var(--sd-primary, #2563eb);
+	--mp-primary-soft: var(--sd-primary-bg, rgba(37, 99, 235, 0.1));
 	--mp-radius: 10px;
 }
 
