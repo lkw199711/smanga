@@ -205,6 +205,24 @@ function mangaName(id: number) {
 .preview-c .pp-back, .preview-c .pp-card, .preview-c .pp-manga, .preview-c .pp-row, .preview-c .pp-setting-card {
 	background: #161a20; color: #e6e8eb; border-color: #2a313c;
 }
+.preview-c .pp-card span, .preview-c .pp-card small, .preview-c .pp-manga small, .preview-c .pp-row small, .preview-c .pp-meta {
+	color: #9aa3ae;
+}
+.preview-c .pp-tags span, .preview-c .pp-tags-panel button {
+	background: rgba(245,165,36,.14); color: #f5a524;
+}
+.preview-c .pp-actions .primary {
+	background: #f5a524; color: #0d0f12;
+}
+.preview-c .pp-detail-main p {
+	color: #9aa3ae;
+}
+.preview-c .pp-empty {
+	background: rgba(22,26,32,.9); border-color: #2a313c;
+}
+.preview-c .pp-cover span {
+	background: rgba(13,15,18,.9); color: #e6e8eb;
+}
 .pp-grid, .pp-manga-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 16px; }
 .pp-card, .pp-manga {
 	text-align: left; padding: 18px; border: 1px solid #e5e7eb; border-radius: 12px; background: #fff; cursor: pointer;

@@ -314,6 +314,7 @@ function forwardNavigate(payload: { page: string; params?: Record<string, any>; 
 }
 
 .sc-nav-item {
+	position: relative;
 	display: flex;
 	align-items: center;
 	gap: 10px;

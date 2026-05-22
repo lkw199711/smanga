@@ -145,6 +145,7 @@ const emit = defineEmits<{
 }
 
 .rc-chapter-item {
+	position: relative;
 	display: flex;
 	align-items: center;
 	gap: 8px;
