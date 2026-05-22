@@ -4,12 +4,8 @@ FROM base AS prepare
 
 RUN apk add git python3
 RUN git clone https://github.com/lkw199711/smanga-adonis.git /smanga-adonis
-RUN git clone https://github.com/lkw199711/smanga-express.git /smanga-express
 RUN rm -rf \
-        /smanga-adonis/.git \
-        /smanga-express/.git \
-        /smanga-express/.env
-RUN mv /smanga-express/.env.docker /smanga-express/.env
+        /smanga-adonis/.git
 
 FROM prepare AS builder
 
@@ -33,21 +29,17 @@ COPY --from=builder /smanga-adonis/build /app/adonis
 COPY --from=builder /smanga-adonis/prisma /app/adonis/prisma
 COPY --from=builder /smanga-adonis/data-example/config/smanga.json /app/adonis/smanga.json
 COPY --from=builder /smanga-adonis/data-example/file /app/adonis/file
-COPY --from=prepare /smanga-express /app/express
-COPY ./dist/docker /app/smanga-website
+COPY ./dist/docker /app/adonis/public
 
 RUN apk add --no-cache \
         bash \
         shadow \
         tzdata \
         jq \
-        redis \
         s6-overlay && \
     cd /app/adonis && \
     npm ci && \
     mkdir cache && \
-    cd /app/express && \
-    npm ci && \
     addgroup -S smanga -g 918 && \
     adduser -S smanga -G smanga -h /app -u 918 -s /bin/bash
 

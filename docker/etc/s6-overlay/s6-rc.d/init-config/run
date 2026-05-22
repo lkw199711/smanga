@@ -10,7 +10,6 @@ DB_PASSWORD=${DB_PASSWORD:-smanga}
 DB_DATABASE=${DB_DATABASE:-smanga}
 DB_FILE=${DB_FILE:-./data/smanga.db}
 WEB_PORT=${WEB_PORT:-9797}
-BACKEND_PORT=${BACKEND_PORT:-9798}
 
 # 根据数据库类型设置端口默认值（仅当用户未指定时）
 case "$DB_TYPE" in
@@ -30,7 +29,7 @@ esac
 if [ ! -f /app/adonis/.env ]; then
     cat > /app/adonis/.env << EOF
 TZ=UTC
-PORT=$BACKEND_PORT
+PORT=$WEB_PORT
 HOST=0.0.0.0
 LOG_LEVEL=info
 APP_KEY=0idvSh_Fq0b5rbHGIx7WIXJ5tySdGO-D
@@ -148,22 +147,6 @@ if [ "$DB_TYPE" = "sqlite" ]; then
     mkdir -p "$(dirname "$DB_FILE")"
 fi
 
-# 配置express应用的端口
-echo "Configuring express application port..."
-# 更新WEB_PORT
-if grep -q "^WEB_PORT=" /app/express/.env.docker; then
-    sed -i "s/^WEB_PORT=.*/WEB_PORT=$WEB_PORT/" /app/express/.env.docker
-else
-    echo "WEB_PORT=$WEB_PORT" >> /app/express/.env.docker
-fi
-
-# 更新BACKEND_PORT（如果需要）
-if grep -q "^BACKEND_PORT=" /app/express/.env.docker; then
-    sed -i "s/^BACKEND_PORT=.*/BACKEND_PORT=$BACKEND_PORT/" /app/express/.env.docker
-else
-    echo "BACKEND_PORT=$BACKEND_PORT" >> /app/express/.env.docker
-fi
-
 # 读取配置文件
 CONFIG_FILE="/data/config/smanga.json"
 
@@ -209,10 +192,10 @@ fi
 # 更新PORT
 if grep -q "PORT" "$ENV_FILE"; then
   # 存在则替换
-  sed -i "s|^PORT=.*|PORT=$BACKEND_PORT|" "$ENV_FILE"
+  sed -i "s|^PORT=.*|PORT=$WEB_PORT|" "$ENV_FILE"
 else
   # 如果不存在，则添加
-  echo "PORT=$BACKEND_PORT" >> "$ENV_FILE"
+  echo "PORT=$WEB_PORT" >> "$ENV_FILE"
 fi
 
 echo -e "Change owner to user smanga...\nIt may take a while"

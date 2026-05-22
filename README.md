@@ -169,7 +169,6 @@ services:
     container_name: smanga
     ports:
       - "9797:9797"
-      - "9798:9798"
     environment:
       DB_TYPE: pgsql
       DB_HOST: postgres
@@ -178,7 +177,6 @@ services:
       DB_PASSWORD: smanga
       DB_DATABASE: smanga
       WEB_PORT: 9797
-      BACKEND_PORT: 9798
       PUID: 0
       PGID: 0
       TZ: Asia/Shanghai
@@ -207,7 +205,6 @@ services:
     container_name: smanga
     ports:
       - "9797:9797"
-      - "9798:9798"
     restart: unless-stopped
     networks:
       - smanga-network
@@ -250,10 +247,10 @@ networks:
 
 ```
 Server is running on port 9797
-[16:35:57.537] INFO (188): started HTTP server on 0.0.0.0:9798
+[16:35:57.537] INFO (188): started HTTP server on 0.0.0.0:9797
 ```
 
-当你看到这两行的时候,说明服务启动成功,9797的前端服务与3798的后端服务
+当你看到这两行的时候,说明服务启动成功,前端页面与后端 API 都由 9797 提供
 
 就可以访问页面了.
 
@@ -332,7 +329,7 @@ services:
         reservations:
           memory: 16M
     ports:
-      - 9798:80
+      - 9797:80
     volumes:
       - /route/smanga:/data
       - /route/compress:/compress
@@ -365,7 +362,7 @@ services:
       macvlan_1:
         ipv4_address: 192.168.2.21
     ports:
-      - 9798:80
+      - 9797:80
     volumes:
       - /route/smanga:/data
       - /route/compress:/compress

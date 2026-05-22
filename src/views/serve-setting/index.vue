@@ -262,7 +262,7 @@
               <div class="tracker-list">
                 <div v-for="(_, idx) in p2pTrackerInputs" :key="idx" class="tracker-row">
                   <el-input v-model="p2pTrackerInputs[idx]"
-                    placeholder="http://tracker.example.com:9798"
+                    placeholder="http://tracker.example.com:9797/api"
                     :style="{ width: '500px' }" />
                   <el-button type="danger" link @click="remove_tracker_input(idx)" class="ml-2">移除</el-button>
                 </div>
@@ -278,7 +278,7 @@
           <el-col :span="24" v-if="form.p2p.role.tracker">
             <el-form-item label="Tracker 对外地址">
               <el-input v-model="form.p2p.tracker.publicUrl"
-                placeholder="例如 http://tracker.example.com:9798"
+                placeholder="例如 http://tracker.example.com:9797/api"
                 :style="{ width: '500px' }" />
               <el-button type="primary" @click="comfirm_p2p_tracker_public_url" class="ml-4">确定</el-button>
             </el-form-item>

@@ -20,7 +20,6 @@ services:
     container_name: smanga
     ports:
       - "9797:9797"
-      - "9798:9798"
     environment:
       DB_TYPE: pgsql
       DB_HOST: postgres

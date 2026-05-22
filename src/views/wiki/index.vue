@@ -195,7 +195,7 @@ services:
         reservations:
           memory: 16M
     ports:
-      - 9798:80
+      - 9797:80
     volumes:
       - /route/smanga:/data
       - /route/compress:/compress
