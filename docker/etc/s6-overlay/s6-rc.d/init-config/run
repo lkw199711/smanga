@@ -133,29 +133,8 @@ EOF
     echo "Created new smanga.json configuration file with database settings."
 else
     echo "smanga.json already exists, skipping configuration file creation."
+    echo "Queue worker mode is controlled by the existing smanga.json."
 fi
-
-# Docker uses external queue workers managed by s6. Keep existing configs aligned
-# while still allowing an explicit QUEUE_WORKER_MODE override.
-tmp_config="${CONFIG_FILE}.tmp"
-jq --arg mode "$QUEUE_WORKER_MODE" '
-  .queue = (.queue // {}) |
-  .queue.driver = "sql" |
-  .queue.worker = (.queue.worker // {}) |
-  .queue.worker.mode = $mode |
-  .queue.worker.stalledAfterMs = (.queue.worker.stalledAfterMs // 60000) |
-  .queue.worker.heartbeatIntervalMs = (.queue.worker.heartbeatIntervalMs // 10000) |
-  .queue.worker.gracefulShutdownMs = (.queue.worker.gracefulShutdownMs // 30000) |
-  .queue.workers = (.queue.workers // {}) |
-  .queue.workers.background = (.queue.workers.background // {}) |
-  .queue.workers.background.enabled = (.queue.workers.background.enabled // true) |
-  .queue.workers.background.queues = (.queue.workers.background.queues // ["scan", "sync", "p2p", "default"]) |
-  .queue.workers.background.concurrency = (.queue.workers.background.concurrency // 1) |
-  .queue.workers.compress = (.queue.workers.compress // {}) |
-  .queue.workers.compress.enabled = (.queue.workers.compress.enabled // true) |
-  .queue.workers.compress.queues = (.queue.workers.compress.queues // ["compress"]) |
-  .queue.workers.compress.concurrency = (.queue.workers.compress.concurrency // 1)
-' "$CONFIG_FILE" > "$tmp_config" && mv "$tmp_config" "$CONFIG_FILE"
 
 if [ ! -d /data/db ]; then
     mkdir -p /data/db

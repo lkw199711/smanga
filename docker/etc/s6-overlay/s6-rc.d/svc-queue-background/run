@@ -3,4 +3,11 @@
 
 cd /app/adonis || exit
 
+QUEUE_WORKER_MODE=$(jq -r '.queue.worker.mode // "embedded"' /data/config/smanga.json 2>/dev/null || echo "embedded")
+if [ "$QUEUE_WORKER_MODE" != "external" ]; then
+    echo "queue worker background skipped, mode=${QUEUE_WORKER_MODE}"
+    s6-svc -d /run/service/svc-queue-background 2>/dev/null || true
+    exit 0
+fi
+
 exec s6-setuidgid smanga nodejs bin/queue_worker.js --worker=background
