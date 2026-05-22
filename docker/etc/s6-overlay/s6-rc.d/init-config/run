@@ -96,9 +96,34 @@ if [ ! -f /data/config/smanga.json ]; then
     "bookmark": 300
   },
   "queue": {
+    "driver": "sql",
     "concurrency": 1,
     "attempts": 3,
-    "timeout": 120000
+    "timeout": 120000,
+    "pollIntervalMs": 1000,
+    "retry": {
+      "baseDelayMs": 10000,
+      "maxDelayMs": 120000,
+      "jitter": true
+    },
+    "worker": {
+      "mode": "embedded",
+      "stalledAfterMs": 60000,
+      "heartbeatIntervalMs": 10000,
+      "gracefulShutdownMs": 30000
+    },
+    "workers": {
+      "background": {
+        "enabled": true,
+        "queues": ["scan", "sync", "p2p", "default"],
+        "concurrency": 1
+      },
+      "compress": {
+        "enabled": true,
+        "queues": ["compress"],
+        "concurrency": 1
+      }
+    }
   }
 }
 EOF
