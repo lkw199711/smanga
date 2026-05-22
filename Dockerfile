@@ -36,7 +36,6 @@ RUN apk add --no-cache \
         shadow \
         tzdata \
         jq \
-        redis \
         s6-overlay && \
     cd /app/adonis && \
     npm ci && \
