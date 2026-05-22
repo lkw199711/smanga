@@ -10,6 +10,7 @@ DB_PASSWORD=${DB_PASSWORD:-smanga}
 DB_DATABASE=${DB_DATABASE:-smanga}
 DB_FILE=${DB_FILE:-./data/smanga.db}
 WEB_PORT=${WEB_PORT:-9797}
+QUEUE_WORKER_MODE=${QUEUE_WORKER_MODE:-external}
 
 # 根据数据库类型设置端口默认值（仅当用户未指定时）
 case "$DB_TYPE" in
@@ -48,12 +49,14 @@ if [ ! -d /data/config ]; then
     mkdir -p /data/config
 fi
 
+CONFIG_FILE="/data/config/smanga.json"
+
 # 检查smanga.json文件是否存在
-if [ ! -f /data/config/smanga.json ]; then
+if [ ! -f "$CONFIG_FILE" ]; then
     echo "smanga.json not found, creating new configuration file..."
     
     # 创建新的smanga.json配置文件，包含数据库配置
-    cat > /data/config/smanga.json << EOF
+    cat > "$CONFIG_FILE" << EOF
 {
   "sql": {
     "client": "$DB_TYPE",
@@ -106,7 +109,7 @@ if [ ! -f /data/config/smanga.json ]; then
       "jitter": true
     },
     "worker": {
-      "mode": "embedded",
+      "mode": "$QUEUE_WORKER_MODE",
       "stalledAfterMs": 60000,
       "heartbeatIntervalMs": 10000,
       "gracefulShutdownMs": 30000
@@ -132,6 +135,28 @@ else
     echo "smanga.json already exists, skipping configuration file creation."
 fi
 
+# Docker uses external queue workers managed by s6. Keep existing configs aligned
+# while still allowing an explicit QUEUE_WORKER_MODE override.
+tmp_config="${CONFIG_FILE}.tmp"
+jq --arg mode "$QUEUE_WORKER_MODE" '
+  .queue = (.queue // {}) |
+  .queue.driver = "sql" |
+  .queue.worker = (.queue.worker // {}) |
+  .queue.worker.mode = $mode |
+  .queue.worker.stalledAfterMs = (.queue.worker.stalledAfterMs // 60000) |
+  .queue.worker.heartbeatIntervalMs = (.queue.worker.heartbeatIntervalMs // 10000) |
+  .queue.worker.gracefulShutdownMs = (.queue.worker.gracefulShutdownMs // 30000) |
+  .queue.workers = (.queue.workers // {}) |
+  .queue.workers.background = (.queue.workers.background // {}) |
+  .queue.workers.background.enabled = (.queue.workers.background.enabled // true) |
+  .queue.workers.background.queues = (.queue.workers.background.queues // ["scan", "sync", "p2p", "default"]) |
+  .queue.workers.background.concurrency = (.queue.workers.background.concurrency // 1) |
+  .queue.workers.compress = (.queue.workers.compress // {}) |
+  .queue.workers.compress.enabled = (.queue.workers.compress.enabled // true) |
+  .queue.workers.compress.queues = (.queue.workers.compress.queues // ["compress"]) |
+  .queue.workers.compress.concurrency = (.queue.workers.compress.concurrency // 1)
+' "$CONFIG_FILE" > "$tmp_config" && mv "$tmp_config" "$CONFIG_FILE"
+
 if [ ! -d /data/db ]; then
     mkdir -p /data/db
 fi
@@ -146,9 +171,6 @@ cp -rf /app/adonis/file /data
 if [ "$DB_TYPE" = "sqlite" ]; then
     mkdir -p "$(dirname "$DB_FILE")"
 fi
-
-# 读取配置文件
-CONFIG_FILE="/data/config/smanga.json"
 
 # 使用 jq 获取 sql 部分的变量
 CLIENT=$(jq -r '.sql.client' "$CONFIG_FILE")

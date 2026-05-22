@@ -29,7 +29,7 @@ COPY --from=builder /smanga-adonis/build /app/adonis
 COPY --from=builder /smanga-adonis/prisma /app/adonis/prisma
 COPY --from=builder /smanga-adonis/data-example/config/smanga.json /app/adonis/smanga.json
 COPY --from=builder /smanga-adonis/data-example/file /app/adonis/file
-COPY ./dist/docker /app/adonis/public
+COPY ./dist/docker /app/smanga-website
 
 RUN apk add --no-cache \
         bash \
