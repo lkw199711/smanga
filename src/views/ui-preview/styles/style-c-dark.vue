@@ -788,4 +788,81 @@ function forwardNavigate(payload: { page: string; params?: Record<string, any>; 
 	font-size: 10px;
 	color: #5c6470;
 }
+
+/* 响应式适配 */
+@media (max-width: 768px) {
+	.sc-sidebar {
+		display: none;
+	}
+
+	.sc-body {
+		margin-left: 0;
+	}
+
+	.sc-topbar {
+		flex-direction: column;
+		gap: 10px;
+		padding: 10px 12px;
+	}
+
+	.sc-search {
+		width: 100%;
+	}
+
+	.sc-top-actions {
+		width: 100%;
+		justify-content: space-between;
+	}
+
+	.sc-main {
+		padding: 12px;
+	}
+
+	.sc-stats {
+		grid-template-columns: repeat(2, 1fr);
+		gap: 10px;
+	}
+
+	.sc-continue {
+		grid-template-columns: 1fr;
+	}
+
+	.sc-section {
+		margin-bottom: 20px;
+	}
+
+	.sc-section h2 {
+		font-size: 16px;
+	}
+
+	.sc-grid {
+		grid-template-columns: repeat(2, 1fr);
+		gap: 12px;
+	}
+}
+
+@media (max-width: 480px) {
+	.sc-stats {
+		grid-template-columns: 1fr;
+	}
+
+	.sc-grid {
+		grid-template-columns: repeat(2, 1fr);
+		gap: 10px;
+	}
+
+	.sc-stat-card {
+		padding: 12px;
+	}
+
+	.sc-stat-value {
+		font-size: 20px;
+	}
+
+	.sc-btn-primary,
+	.sc-btn-ghost {
+		padding: 8px 12px;
+		font-size: 12px;
+	}
+}
 </style>

@@ -708,4 +708,81 @@ function forwardNavigate(payload: { page: string; params?: Record<string, any>; 
 	font-size: 11px;
 	color: var(--sd-text-faint);
 }
+
+/* 响应式适配 */
+@media (max-width: 768px) {
+	.sd-sidebar {
+		display: none;
+	}
+
+	.sd-body {
+		margin-left: 0;
+	}
+
+	.sd-topbar {
+		flex-direction: column;
+		gap: 10px;
+		padding: 10px 12px;
+	}
+
+	.sd-search {
+		width: 100%;
+	}
+
+	.sd-top-actions {
+		width: 100%;
+		justify-content: space-between;
+	}
+
+	.sd-main {
+		padding: 12px;
+	}
+
+	.sd-stats {
+		grid-template-columns: repeat(2, 1fr);
+		gap: 10px;
+	}
+
+	.sd-continue {
+		grid-template-columns: 1fr;
+	}
+
+	.sd-section {
+		margin-bottom: 20px;
+	}
+
+	.sd-section h2 {
+		font-size: 16px;
+	}
+
+	.sd-grid {
+		grid-template-columns: repeat(2, 1fr);
+		gap: 12px;
+	}
+}
+
+@media (max-width: 480px) {
+	.sd-stats {
+		grid-template-columns: 1fr;
+	}
+
+	.sd-grid {
+		grid-template-columns: repeat(2, 1fr);
+		gap: 10px;
+	}
+
+	.sd-stat-card {
+		padding: 12px;
+	}
+
+	.sd-stat-value {
+		font-size: 20px;
+	}
+
+	.sd-btn-primary,
+	.sd-btn {
+		padding: 8px 12px;
+		font-size: 12px;
+	}
+}
 </style>

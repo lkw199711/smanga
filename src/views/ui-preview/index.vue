@@ -54,7 +54,18 @@
 
 		<!-- 风格稿 -->
 		<main class="pv-main">
+			<!-- 移动端 -->
+			<PreviewPageMobile
+				v-if="config.isMobile"
+				:page="currentPage"
+				:style-key="activeStyle"
+				:params="previewParams"
+				@navigate="navigate"
+				@back="goPreviewBack"
+			/>
+			<!-- PC 端 -->
 			<component
+				v-else
 				:is="currentView"
 				:page="currentPage"
 				:style-key="activeStyle"
@@ -69,6 +80,7 @@
 <script lang="ts" setup>
 import { reactive, ref, computed } from 'vue';
 import { useRouter } from 'vue-router';
+import { config } from '@/store';
 import { styleSpec } from './mock';
 // 首页风格
 import StyleA from './styles/style-a-minimal.vue';
@@ -80,6 +92,8 @@ import ReaderA from './reader/reader-a-minimal.vue';
 import ReaderB from './reader/reader-b-manga.vue';
 import ReaderC from './reader/reader-c-dark.vue';
 import ReaderD from './reader/reader-d-desat.vue';
+// 移动端页面
+import PreviewPageMobile from './preview-page-mobile.vue';
 
 const router = useRouter();
 

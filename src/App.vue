@@ -105,6 +105,9 @@ function set_screen_type() {
 		config.screenType = '4k';
 	}
 
+	// 设置移动端标识（768px 以下视为移动端）
+	config.isMobile = screen < 768;
+
 	// ElMessage(String(window.screen.height));
 	// ElMessage(String(window.screen.width));
 }

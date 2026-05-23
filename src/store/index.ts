@@ -37,6 +37,7 @@ export const config = reactive({
 	screenType: 'large' as screenType, // mini | small | middle | large | 2k | 4k
 	rightSidebar: false,
 	android: false,
+	isMobile: false, // 移动端环境标识
 	viewType: 'block',
 	enableOperation: true,
 });

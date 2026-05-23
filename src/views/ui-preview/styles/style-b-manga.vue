@@ -758,4 +758,81 @@ function forwardNavigate(payload: { page: string; params?: Record<string, any>; 
 	font-size: 11px;
 	color: #9ca3af;
 }
+
+/* 响应式适配 */
+@media (max-width: 768px) {
+	.sb-sidebar {
+		display: none;
+	}
+
+	.sb-body {
+		margin-left: 0;
+	}
+
+	.sb-topbar {
+		flex-direction: column;
+		gap: 10px;
+		padding: 10px 12px;
+	}
+
+	.sb-search {
+		width: 100%;
+	}
+
+	.sb-top-actions {
+		width: 100%;
+		justify-content: space-between;
+	}
+
+	.sb-main {
+		padding: 12px;
+	}
+
+	.sb-stats {
+		grid-template-columns: repeat(2, 1fr);
+		gap: 10px;
+	}
+
+	.sb-continue {
+		grid-template-columns: 1fr;
+	}
+
+	.sb-section {
+		margin-bottom: 20px;
+	}
+
+	.sb-section h2 {
+		font-size: 16px;
+	}
+
+	.sb-grid {
+		grid-template-columns: repeat(2, 1fr);
+		gap: 12px;
+	}
+}
+
+@media (max-width: 480px) {
+	.sb-stats {
+		grid-template-columns: 1fr;
+	}
+
+	.sb-grid {
+		grid-template-columns: repeat(2, 1fr);
+		gap: 10px;
+	}
+
+	.sb-stat-card {
+		padding: 12px;
+	}
+
+	.sb-stat-value {
+		font-size: 20px;
+	}
+
+	.sb-btn-primary,
+	.sb-btn-glass {
+		padding: 8px 12px;
+		font-size: 12px;
+	}
+}
 </style>
