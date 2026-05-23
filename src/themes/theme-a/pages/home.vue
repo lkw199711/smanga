@@ -455,4 +455,58 @@ function goManga(item: any) {
 	font-size: 11px;
 	color: #9ca3af;
 }
+
+/* 响应式适配 */
+@media (max-width: 768px) {
+	.sa-stats {
+		grid-template-columns: repeat(2, 1fr);
+		gap: 10px;
+	}
+
+	.sa-continue {
+		grid-template-columns: 1fr;
+		gap: 12px;
+	}
+
+	.sa-section {
+		margin-bottom: 20px;
+	}
+
+	.sa-section h2 {
+		font-size: 16px;
+	}
+
+	.sa-grid {
+		grid-template-columns: repeat(3, 1fr);
+		gap: 12px;
+	}
+
+	.sa-cont-card {
+		flex-direction: column;
+	}
+
+	.sa-cont-cover {
+		width: 100%;
+		aspect-ratio: 3 / 4;
+	}
+}
+
+@media (max-width: 480px) {
+	.sa-stats {
+		grid-template-columns: 1fr;
+	}
+
+	.sa-grid {
+		grid-template-columns: repeat(2, 1fr);
+		gap: 10px;
+	}
+
+	.sa-stat-card {
+		padding: 12px;
+	}
+
+	.sa-stat-value {
+		font-size: 20px;
+	}
+}
 </style>

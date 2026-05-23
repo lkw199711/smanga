@@ -1,11 +1,19 @@
 import { defineAsyncComponent, type Component } from 'vue'
 import type { ThemeKey } from './store'
+import { config } from '@/store'
 
 // Layout components
 const layouts: Record<ThemeKey, () => Promise<Component>> = {
   A: () => import('./theme-a/layout/index.vue'),
   B: () => import('./theme-b/layout/index.vue'),
   D: () => import('./theme-d/layout/index.vue'),
+}
+
+// Mobile Layout components
+const mobileLayouts: Record<ThemeKey, () => Promise<Component>> = {
+  A: () => import('./theme-a/layout/mobile.vue'),
+  B: () => import('./theme-b/layout/mobile.vue'),
+  D: () => import('./theme-d/layout/mobile.vue'),
 }
 
 // Reader layout components
@@ -90,7 +98,9 @@ const readers: Record<ThemeKey, Record<string, () => Promise<Component>>> = {
 }
 
 export function resolveLayout(theme: ThemeKey): Component {
-  return defineAsyncComponent(layouts[theme])
+  // 根据移动端标识选择对应的 layout
+  const loader = config.isMobile ? mobileLayouts[theme] : layouts[theme]
+  return defineAsyncComponent(loader)
 }
 
 export function resolveReaderLayout(theme: ThemeKey): Component {

@@ -208,4 +208,43 @@ async function get_poster(item: any) {
   font-size: 13px;
   color: #6b7280;
 }
+
+/* 响应式适配 */
+@media (max-width: 768px) {
+  .ta-page-head {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+
+  .ta-head-actions {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .ta-input,
+  .ta-select {
+    width: 100%;
+  }
+
+  .ta-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+  }
+
+  .ta-manga-name {
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .ta-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+
+  .ta-manga-cover {
+    height: 160px;
+  }
+}
 </style>
