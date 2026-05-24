@@ -184,6 +184,84 @@
       </div>
     </el-card>
 
+    <!-- 队列设置卡片 -->
+    <el-card class="setting-card mt-6" shadow="hover">
+      <template #header>
+        <div class="card-header">
+          <span class="card-title">队列设置</span>
+          <span class="text-sm text-gray-500 ml-2">(修改并发数需重启服务生效)</span>
+        </div>
+      </template>
+
+      <el-form :model="form" label-width="200px" size="default">
+        <el-row :gutter="20">
+          <el-col :span="24">
+            <el-form-item label="Worker 模式">
+              <el-select v-model="form.queue.worker.mode" placeholder="选择模式" :style="{ width: '200px' }">
+                <el-option label="Embedded (内嵌)" value="embedded" />
+                <el-option label="External (独立进程)" value="external" />
+                <el-option label="Disabled (禁用)" value="disabled" />
+              </el-select>
+              <el-button type="primary" @click="confirm_queue_mode" class="ml-4">确定</el-button>
+            </el-form-item>
+          </el-col>
+
+          <el-col :span="24">
+            <el-form-item label="Background 并发数">
+              <el-input v-model="form.queue.workers.background.concurrency" type="number" min="1"
+                :style="{ width: '150px' }"></el-input>
+              <span class="suffix ml-2 text-gray-500">扫描/同步/P2P 等</span>
+              <el-button type="primary" @click="confirm_queue_bg_concurrency" class="ml-4">确定</el-button>
+            </el-form-item>
+          </el-col>
+
+          <el-col :span="24">
+            <el-form-item label="Compress 并发数">
+              <el-input v-model="form.queue.workers.compress.concurrency" type="number" min="1"
+                :style="{ width: '150px' }"></el-input>
+              <span class="suffix ml-2 text-gray-500">压缩与封面处理</span>
+              <el-button type="primary" @click="confirm_queue_cp_concurrency" class="ml-4">确定</el-button>
+            </el-form-item>
+          </el-col>
+
+          <el-col :span="24">
+            <el-form-item label="重试次数">
+              <el-input v-model="form.queue.attempts" type="number" min="1" max="10"
+                :style="{ width: '150px' }"></el-input>
+              <span class="suffix ml-2 text-gray-500">次</span>
+              <el-button type="primary" @click="confirm_queue_attempts" class="ml-4">确定</el-button>
+            </el-form-item>
+          </el-col>
+
+          <el-col :span="24">
+            <el-form-item label="任务超时">
+              <el-input v-model="form.queue.timeout" type="number" min="10000" step="10000"
+                :style="{ width: '200px' }"></el-input>
+              <span class="suffix ml-2 text-gray-500">毫秒 (ms)</span>
+              <el-button type="primary" @click="confirm_queue_timeout" class="ml-4">确定</el-button>
+            </el-form-item>
+          </el-col>
+
+          <el-col :span="24">
+            <el-form-item label="轮询间隔">
+              <el-input v-model="form.queue.pollIntervalMs" type="number" min="100" step="100"
+                :style="{ width: '200px' }"></el-input>
+              <span class="suffix ml-2 text-gray-500">毫秒 (ms)</span>
+              <el-button type="primary" @click="confirm_queue_poll" class="ml-4">确定</el-button>
+            </el-form-item>
+          </el-col>
+        </el-row>
+      </el-form>
+
+      <div class="form-note mt-4 text-gray-500 text-sm">
+        <p>• <b>Embedded</b>: 队列 Worker 内嵌在主进程中运行(默认)。</p>
+        <p>• <b>External</b>: 队列 Worker 作为独立进程运行,主进程仅提供 HTTP 服务。</p>
+        <p>• <b>Disabled</b>: 禁用队列 Worker,任务不会被执行。</p>
+        <p>• 并发数与模式修改后<b>需要重启服务</b>才能生效。</p>
+        <p>• 重试次数、超时、轮询间隔修改后实时生效,无需重启。</p>
+      </div>
+    </el-card>
+
     <!-- P2P 设置卡片 -->
     <el-card class="setting-card mt-6" shadow="hover">
       <template #header>
@@ -446,6 +524,22 @@ const form = reactive({
       requireInviteToRegister: false,
     },
   },
+  queue: {
+    worker: {
+      mode: 'embedded',
+    },
+    workers: {
+      background: {
+        concurrency: 1,
+      },
+      compress: {
+        concurrency: 1,
+      },
+    },
+    attempts: 3,
+    timeout: 120000,
+    pollIntervalMs: 1000,
+  },
 });
 
 // P2P trackers 列表的临时编辑模型(以字符串数组形式绑定输入框)
@@ -583,6 +677,62 @@ async function confirm_cache_limit() {
     await serveSettingApi.set('compress', 'limit', form.compress.limit);
   } catch (error) {
     console.error('Failed to set cache limit:', error);
+  }
+}
+
+
+// ===== 队列设置提交方法 =====
+async function confirm_queue_mode() {
+  try {
+    await serveSettingApi.set('queue', 'worker.mode', form.queue.worker.mode);
+    ElMessage.warning('Worker 模式已保存，需重启服务生效');
+  } catch (error) {
+    console.error('Failed to set queue.worker.mode:', error);
+  }
+}
+
+async function confirm_queue_bg_concurrency() {
+  try {
+    await serveSettingApi.set('queue', 'workers.background.concurrency', form.queue.workers.background.concurrency);
+    ElMessage.warning('Background 并发数已保存，需重启服务生效');
+  } catch (error) {
+    console.error('Failed to set background concurrency:', error);
+  }
+}
+
+async function confirm_queue_cp_concurrency() {
+  try {
+    await serveSettingApi.set('queue', 'workers.compress.concurrency', form.queue.workers.compress.concurrency);
+    ElMessage.warning('Compress 并发数已保存，需重启服务生效');
+  } catch (error) {
+    console.error('Failed to set compress concurrency:', error);
+  }
+}
+
+async function confirm_queue_attempts() {
+  try {
+    await serveSettingApi.set('queue', 'attempts', form.queue.attempts);
+    ElMessage.success('重试次数已保存');
+  } catch (error) {
+    console.error('Failed to set queue.attempts:', error);
+  }
+}
+
+async function confirm_queue_timeout() {
+  try {
+    await serveSettingApi.set('queue', 'timeout', form.queue.timeout);
+    ElMessage.success('任务超时已保存');
+  } catch (error) {
+    console.error('Failed to set queue.timeout:', error);
+  }
+}
+
+async function confirm_queue_poll() {
+  try {
+    await serveSettingApi.set('queue', 'pollIntervalMs', form.queue.pollIntervalMs);
+    ElMessage.success('轮询间隔已保存');
+  } catch (error) {
+    console.error('Failed to set queue.pollIntervalMs:', error);
   }
 }
 
