@@ -99,7 +99,6 @@ if [ ! -f "$CONFIG_FILE" ]; then
   },
   "queue": {
     "driver": "sql",
-    "concurrency": 1,
     "attempts": 3,
     "timeout": 120000,
     "pollIntervalMs": 1000,
