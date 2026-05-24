@@ -310,15 +310,6 @@
             </el-col>
 
             <el-col :span="24">
-              <el-form-item label="本机监听端口">
-                <el-input v-model="form.p2p.node.listenPort" type="number" min="1"
-                  placeholder="P2P HTTP 监听端口" :style="{ width: '180px' }" />
-                <el-button type="primary" @click="comfirm_p2p_listen_port" class="ml-4">确定</el-button>
-                <span class="suffix ml-2 text-gray-500">修改后需要重启服务</span>
-              </el-form-item>
-            </el-col>
-
-            <el-col :span="24">
               <el-form-item label="心跳间隔">
                 <el-input v-model="form.p2p.node.heartbeatInterval" type="number" min="10"
                   :style="{ width: '180px' }" />
@@ -457,10 +448,9 @@
         <p>• <b>启用 P2P</b>:总开关,关闭后本机不参与任何 P2P 通信。</p>
         <p>• <b>作为节点</b>:开启后会向 Tracker 列表注册自身,参与多源下载。</p>
         <p>• <b>作为 Tracker</b>:本机对外提供索引服务,允许其它节点注册并相互发现。</p>
-        <p>• <b>本机公网地址 / 端口</b>:其它节点连过来时使用的地址。Tracker 会反向探测可达性,无法连通将拒绝注册。</p>
+        <p>• <b>本机公网地址</b>:其它节点连过来时使用的完整访问地址。Tracker 会反向探测可达性,无法连通将拒绝注册。</p>
         <p>• 留空公网地址时,Tracker 会用请求来源 IP 自动识别;但若你处于内网,必须显式填写公网信息并做端口映射。</p>
         <p>• <b>Tracker 服务器</b>:本节点要注册到的 Tracker 地址列表,可填多个。修改后会自动用新配置重新注册。</p>
-        <p>• 监听端口变更需要重启服务才能生效。</p>
       </div>
     </el-card>
 
@@ -545,7 +535,6 @@ const form = reactive({
     node: {
       nodeId: '',
       nodeName: '',
-      listenPort: 19798,
       publicUrl: '',
       heartbeatInterval: 30,
       trackers: [] as string[],
@@ -840,15 +829,6 @@ async function comfirm_p2p_public_url() {
     ElMessage.success('公网地址已保存,节点将自动重新注册');
   } catch (error) {
     console.error('Failed to set p2p.node.publicUrl:', error);
-  }
-}
-
-async function comfirm_p2p_listen_port() {
-  try {
-    await serveSettingApi.set('p2p', 'node.listenPort', Number(form.p2p.node.listenPort) || 19798);
-    ElMessage.warning('监听端口已保存,需要重启服务后生效');
-  } catch (error) {
-    console.error('Failed to set p2p.node.listenPort:', error);
   }
 }
 
