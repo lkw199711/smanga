@@ -10,4 +10,6 @@ if [ "$QUEUE_WORKER_MODE" != "external" ]; then
     exit 0
 fi
 
+export NODE_OPTIONS="--max-old-space-size=512 ${NODE_OPTIONS}"
+
 exec s6-setuidgid smanga nodejs bin/queue_worker.js --worker=compress
