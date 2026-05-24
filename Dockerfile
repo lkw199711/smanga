@@ -1,4 +1,4 @@
-FROM node:22.22-alpine3.23 AS base
+FROM node:22-alpine3.22 AS base
 
 FROM base AS prepare
 
@@ -36,11 +36,13 @@ RUN apk add --no-cache \
         shadow \
         tzdata \
         jq \
-        s6-overlay && \
-    cd /app/adonis && \
-    npm ci && \
-    mkdir cache && \
-    addgroup -S smanga -g 918 && \
+        s6-overlay
+
+RUN cd /app/adonis && \
+    npm ci --omit=dev && \
+    mkdir cache
+
+RUN addgroup -S smanga -g 918 && \
     adduser -S smanga -G smanga -h /app -u 918 -s /bin/bash
 
 COPY --chmod=755 ./docker /
