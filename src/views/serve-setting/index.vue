@@ -208,8 +208,8 @@
 
           <el-col :span="24">
             <el-form-item label="Background 并发数">
-              <el-input v-model="form.queue.workers.background.concurrency" type="number" min="1"
-                :style="{ width: '150px' }"></el-input>
+              <el-slider v-model="form.queue.workers.background.concurrency" :min="1" :max="10" show-input
+                :style="{ width: '380px' }" />
               <span class="suffix ml-2 text-gray-500">扫描/同步/P2P 等</span>
               <el-button type="primary" @click="confirm_queue_bg_concurrency" class="ml-4">确定</el-button>
             </el-form-item>
@@ -217,8 +217,8 @@
 
           <el-col :span="24">
             <el-form-item label="Compress 并发数">
-              <el-input v-model="form.queue.workers.compress.concurrency" type="number" min="1"
-                :style="{ width: '150px' }"></el-input>
+              <el-slider v-model="form.queue.workers.compress.concurrency" :min="1" :max="10" show-input
+                :style="{ width: '380px' }" />
               <span class="suffix ml-2 text-gray-500">压缩与封面处理</span>
               <el-button type="primary" @click="confirm_queue_cp_concurrency" class="ml-4">确定</el-button>
             </el-form-item>
@@ -345,13 +345,6 @@
               </el-form-item>
             </el-col>
 
-            <el-col :span="24" v-if="form.p2p.node.nodeId">
-              <el-form-item label="当前节点 ID">
-                <el-input v-model="form.p2p.node.nodeId" readonly :style="{ width: '500px' }" />
-                <span class="suffix ml-2 text-gray-500">由 Tracker 分配,只读</span>
-              </el-form-item>
-            </el-col>
-
             <!-- 手动注册节点 -->
             <el-col :span="24">
               <el-form-item label="手动注册节点">
@@ -374,7 +367,6 @@
                   <template #default>
                     <div class="register-result-content">
                       <div v-if="registerResult.success">
-                        <div><b>节点 ID:</b> {{ registerResult.nodeId || '-' }}</div>
                         <div v-if="registerResult.nodeName"><b>节点名称:</b> {{ registerResult.nodeName }}</div>
                       </div>
                       <div v-else class="register-error-reason">
@@ -949,7 +941,7 @@ async function comfirm_p2p_sync_interval() {
 
 // ===== 手动注册节点 =====
 const registerLoading = ref(false);
-const registerResult = ref<{ success: boolean; nodeId?: string; nodeName?: string; reason?: string } | null>(null);
+const registerResult = ref<{ success: boolean; nodeName?: string; reason?: string } | null>(null);
 // ===== 手动同步 Tracker =====
 const syncLoading = ref(false);
 
@@ -972,10 +964,9 @@ async function click_register_node() {
     if (res) {
       registerResult.value = {
         success: true,
-        nodeId: res.data?.nodeId,
         nodeName: res.data?.nodeName,
       };
-      // 重新拉取配置以刷新 nodeId 显示
+      // 重新拉取配置以刷新显示
       try {
         const latest = await serveSettingApi.get();
         Object.assign(form, latest);
