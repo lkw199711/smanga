@@ -281,7 +281,7 @@
             </el-form-item>
           </el-col>
 
-          <!-- 角色选择 -->
+          <!-- ==================== Node 角色 ==================== -->
           <el-col :span="24">
             <el-form-item label="作为节点(Node)">
               <el-switch v-model="form.p2p.role.node" />
@@ -290,6 +290,108 @@
             </el-form-item>
           </el-col>
 
+          <!-- Node 配置项 -->
+          <template v-if="form.p2p.role.node">
+            <el-col :span="24">
+              <el-form-item label="节点名称">
+                <el-input v-model="form.p2p.node.nodeName" placeholder="自定义节点显示名" :style="{ width: '300px' }" />
+                <el-button type="primary" @click="comfirm_p2p_node_name" class="ml-4">确定</el-button>
+              </el-form-item>
+            </el-col>
+
+            <el-col :span="24">
+              <el-form-item label="本机公网地址">
+                <el-input v-model="form.p2p.node.publicUrl"
+                  placeholder="示例 smanga.com:9797/api"
+                  :style="{ width: '500px' }" />
+                <el-button type="primary" @click="comfirm_p2p_public_url" class="ml-4">确定</el-button>
+                <span class="suffix ml-2 text-gray-500">smanga访问地址+/api</span>
+              </el-form-item>
+            </el-col>
+
+            <el-col :span="24">
+              <el-form-item label="本机监听端口">
+                <el-input v-model="form.p2p.node.listenPort" type="number" min="1"
+                  placeholder="P2P HTTP 监听端口" :style="{ width: '180px' }" />
+                <el-button type="primary" @click="comfirm_p2p_listen_port" class="ml-4">确定</el-button>
+                <span class="suffix ml-2 text-gray-500">修改后需要重启服务</span>
+              </el-form-item>
+            </el-col>
+
+            <el-col :span="24">
+              <el-form-item label="心跳间隔">
+                <el-input v-model="form.p2p.node.heartbeatInterval" type="number" min="10"
+                  :style="{ width: '180px' }" />
+                <span class="suffix ml-2 text-gray-500">秒(最小 10)</span>
+                <el-button type="primary" @click="comfirm_p2p_heartbeat" class="ml-4">确定</el-button>
+              </el-form-item>
+            </el-col>
+
+            <!-- Tracker 列表 -->
+            <el-col :span="24">
+              <el-form-item label="Tracker 服务器">
+                <div class="tracker-list">
+                  <div v-for="(_, idx) in p2pTrackerInputs" :key="idx" class="tracker-row">
+                    <el-input v-model="p2pTrackerInputs[idx]"
+                      placeholder="http://tracker.example.com:9797/api"
+                      :style="{ width: '500px' }" />
+                    <el-button type="danger" link @click="remove_tracker_input(idx)" class="ml-2">移除</el-button>
+                  </div>
+                  <div class="tracker-actions mt-2">
+                    <el-button @click="add_tracker_input">+ 添加 Tracker</el-button>
+                    <el-button type="primary" @click="comfirm_p2p_trackers" class="ml-2">保存 Tracker 列表</el-button>
+                  </div>
+                </div>
+              </el-form-item>
+            </el-col>
+
+            <el-col :span="24" v-if="form.p2p.node.nodeId">
+              <el-form-item label="当前节点 ID">
+                <el-input v-model="form.p2p.node.nodeId" readonly :style="{ width: '500px' }" />
+                <span class="suffix ml-2 text-gray-500">由 Tracker 分配,只读</span>
+              </el-form-item>
+            </el-col>
+
+            <!-- 手动注册节点 -->
+            <el-col :span="24">
+              <el-form-item label="手动注册节点">
+                <el-button type="primary" :loading="registerLoading" @click="click_register_node">
+                  {{ registerLoading ? '注册中...' : '立即注册' }}
+                </el-button>
+                <span class="suffix ml-2 text-gray-500">将当前配置上报到 Tracker 并触发反向可达性检测</span>
+              </el-form-item>
+            </el-col>
+
+            <el-col :span="24" v-if="registerResult">
+              <el-form-item label=" " class="register-result-item">
+                <el-alert
+                  :title="registerResult.success ? '注册成功' : '注册失败'"
+                  :type="registerResult.success ? 'success' : 'error'"
+                  :closable="true"
+                  @close="registerResult = null"
+                  show-icon
+                >
+                  <template #default>
+                    <div class="register-result-content">
+                      <div v-if="registerResult.success">
+                        <div><b>节点 ID:</b> {{ registerResult.nodeId || '-' }}</div>
+                        <div v-if="registerResult.nodeName"><b>节点名称:</b> {{ registerResult.nodeName }}</div>
+                      </div>
+                      <div v-else class="register-error-reason">
+                        <div><b>失败原因:</b></div>
+                        <pre>{{ registerResult.reason }}</pre>
+                      </div>
+                    </div>
+                  </template>
+                </el-alert>
+              </el-form-item>
+            </el-col>
+          </template>
+          <!-- /Node 配置项 -->
+
+          <el-divider />
+
+          <!-- ==================== Tracker 角色 ==================== -->
           <el-col :span="24">
             <el-form-item label="作为 Tracker">
               <el-switch v-model="form.p2p.role.tracker" />
@@ -298,126 +400,64 @@
             </el-form-item>
           </el-col>
 
-          <!-- 节点信息 -->
-          <el-col :span="24">
-            <el-form-item label="节点名称">
-              <el-input v-model="form.p2p.node.nodeName" placeholder="自定义节点显示名" :style="{ width: '300px' }" />
-              <el-button type="primary" @click="comfirm_p2p_node_name" class="ml-4">确定</el-button>
-            </el-form-item>
-          </el-col>
+          <!-- Tracker 配置项 -->
+          <template v-if="form.p2p.role.tracker">
+            <el-col :span="24">
+              <el-form-item label="Tracker 对外地址">
+                <el-input v-model="form.p2p.tracker.publicUrl"
+                  placeholder="例如 http://tracker.example.com:9797/api"
+                  :style="{ width: '500px' }" />
+                <el-button type="primary" @click="comfirm_p2p_tracker_public_url" class="ml-4">确定</el-button>
+              </el-form-item>
+            </el-col>
 
-          <el-col :span="24">
-            <el-form-item label="本机公网地址">
-              <el-input v-model="form.p2p.node.publicUrl"
-                placeholder="示例 smanga.com:9797/api"
-                :style="{ width: '500px' }" />
-              <el-button type="primary" @click="comfirm_p2p_public_url" class="ml-4">确定</el-button>
-              <span class="suffix ml-2 text-gray-500">smanga访问地址+/api</span>
-            </el-form-item>
-          </el-col>
+            <el-col :span="24">
+              <el-form-item label="允许公开注册">
+                <el-switch v-model="form.p2p.tracker.allowPublicRegister" />
+                <el-button type="primary" @click="comfirm_p2p_allow_public_register" class="ml-4">确定</el-button>
+                <span class="suffix ml-2 text-gray-500">关闭后需要邀请码才能注册</span>
+              </el-form-item>
+            </el-col>
 
-          <el-col :span="24">
-            <el-form-item label="本机监听端口">
-              <el-input v-model="form.p2p.node.listenPort" type="number" min="1"
-                placeholder="P2P HTTP 监听端口" :style="{ width: '180px' }" />
-              <el-button type="primary" @click="comfirm_p2p_listen_port" class="ml-4">确定</el-button>
-              <span class="suffix ml-2 text-gray-500">修改后需要重启服务</span>
-            </el-form-item>
-          </el-col>
+            <el-col :span="24">
+              <el-form-item label="强制邀请码">
+                <el-switch v-model="form.p2p.tracker.requireInviteToRegister" />
+                <el-button type="primary" @click="comfirm_p2p_require_invite" class="ml-4">确定</el-button>
+              </el-form-item>
+            </el-col>
 
-          <el-col :span="24">
-            <el-form-item label="心跳间隔">
-              <el-input v-model="form.p2p.node.heartbeatInterval" type="number" min="10"
-                :style="{ width: '180px' }" />
-              <span class="suffix ml-2 text-gray-500">秒(最小 10)</span>
-              <el-button type="primary" @click="comfirm_p2p_heartbeat" class="ml-4">确定</el-button>
-            </el-form-item>
-          </el-col>
-
-          <!-- Tracker 列表 -->
-          <el-col :span="24">
-            <el-form-item label="Tracker 服务器">
-              <div class="tracker-list">
-                <div v-for="(_, idx) in p2pTrackerInputs" :key="idx" class="tracker-row">
-                  <el-input v-model="p2pTrackerInputs[idx]"
-                    placeholder="http://tracker.example.com:9797/api"
-                    :style="{ width: '500px' }" />
-                  <el-button type="danger" link @click="remove_tracker_input(idx)" class="ml-2">移除</el-button>
+            <el-col :span="24">
+              <el-form-item label="同步密钥">
+                <el-input v-model="form.p2p.tracker.syncKey"
+                  placeholder="设置密钥后自动启用 tracker 间数据同步"
+                  :style="{ width: '500px' }"
+                  show-password />
+                <el-button type="primary" @click="comfirm_p2p_sync_key" class="ml-4">确定</el-button>
+                <div class="suffix ml-2 text-gray-500" style="margin-top: 4px;">
+                  所有 tracker 配置相同密钥,留空则不启用同步
                 </div>
-                <div class="tracker-actions mt-2">
-                  <el-button @click="add_tracker_input">+ 添加 Tracker</el-button>
-                  <el-button type="primary" @click="comfirm_p2p_trackers" class="ml-2">保存 Tracker 列表</el-button>
-                </div>
-              </div>
-            </el-form-item>
-          </el-col>
+              </el-form-item>
+            </el-col>
 
-          <!-- 仅在作为 tracker 时显示 -->
-          <el-col :span="24" v-if="form.p2p.role.tracker">
-            <el-form-item label="Tracker 对外地址">
-              <el-input v-model="form.p2p.tracker.publicUrl"
-                placeholder="例如 http://tracker.example.com:9797/api"
-                :style="{ width: '500px' }" />
-              <el-button type="primary" @click="comfirm_p2p_tracker_public_url" class="ml-4">确定</el-button>
-            </el-form-item>
-          </el-col>
+            <el-col :span="24" v-if="form.p2p.tracker.syncKey">
+              <el-form-item label="同步间隔">
+                <el-input v-model="form.p2p.tracker.syncIntervalSec" type="number" min="30"
+                  :style="{ width: '180px' }" />
+                <span class="suffix ml-2 text-gray-500">秒(最小 30, 默认 300)</span>
+                <el-button type="primary" @click="comfirm_p2p_sync_interval" class="ml-4">确定</el-button>
+              </el-form-item>
+            </el-col>
 
-          <el-col :span="24" v-if="form.p2p.role.tracker">
-            <el-form-item label="允许公开注册">
-              <el-switch v-model="form.p2p.tracker.allowPublicRegister" />
-              <el-button type="primary" @click="comfirm_p2p_allow_public_register" class="ml-4">确定</el-button>
-              <span class="suffix ml-2 text-gray-500">关闭后需要邀请码才能注册</span>
-            </el-form-item>
-          </el-col>
-
-          <el-col :span="24" v-if="form.p2p.role.tracker">
-            <el-form-item label="强制邀请码">
-              <el-switch v-model="form.p2p.tracker.requireInviteToRegister" />
-              <el-button type="primary" @click="comfirm_p2p_require_invite" class="ml-4">确定</el-button>
-            </el-form-item>
-          </el-col>
-
-          <el-col :span="24" v-if="form.p2p.node.nodeId">
-            <el-form-item label="当前节点 ID">
-              <el-input v-model="form.p2p.node.nodeId" readonly :style="{ width: '500px' }" />
-              <span class="suffix ml-2 text-gray-500">由 Tracker 分配,只读</span>
-            </el-form-item>
-          </el-col>
-
-          <!-- 手动注册节点 -->
-          <el-col :span="24">
-            <el-form-item label="手动注册节点">
-              <el-button type="primary" :loading="registerLoading" @click="click_register_node">
-                {{ registerLoading ? '注册中...' : '立即注册' }}
-              </el-button>
-              <span class="suffix ml-2 text-gray-500">将当前配置上报到 Tracker 并触发反向可达性检测</span>
-            </el-form-item>
-          </el-col>
-
-          <el-col :span="24" v-if="registerResult">
-            <el-form-item label=" " class="register-result-item">
-              <el-alert
-                :title="registerResult.success ? '注册成功' : '注册失败'"
-                :type="registerResult.success ? 'success' : 'error'"
-                :closable="true"
-                @close="registerResult = null"
-                show-icon
-              >
-                <template #default>
-                  <div class="register-result-content">
-                    <div v-if="registerResult.success">
-                      <div><b>节点 ID:</b> {{ registerResult.nodeId || '-' }}</div>
-                      <div v-if="registerResult.nodeName"><b>节点名称:</b> {{ registerResult.nodeName }}</div>
-                    </div>
-                    <div v-else class="register-error-reason">
-                      <div><b>失败原因:</b></div>
-                      <pre>{{ registerResult.reason }}</pre>
-                    </div>
-                  </div>
-                </template>
-              </el-alert>
-            </el-form-item>
-          </el-col>
+            <el-col :span="24">
+              <el-form-item label="手动同步">
+                <el-button type="primary" :loading="syncLoading" @click="click_trigger_sync">
+                  {{ syncLoading ? '同步中...' : '立即同步' }}
+                </el-button>
+                <span class="suffix ml-2 text-gray-500">立即从所有 peer tracker 拉取最新数据</span>
+              </el-form-item>
+            </el-col>
+          </template>
+          <!-- /Tracker 配置项 -->
         </el-row>
       </el-form>
 
@@ -522,6 +562,8 @@ const form = reactive({
       publicUrl: '',
       allowPublicRegister: true,
       requireInviteToRegister: false,
+      syncKey: '',
+      syncIntervalSec: 300,
     },
   },
   queue: {
@@ -877,9 +919,39 @@ async function comfirm_p2p_require_invite() {
   }
 }
 
+async function comfirm_p2p_sync_key() {
+  try {
+    await serveSettingApi.set('p2p', 'tracker.syncKey', String(form.p2p.tracker.syncKey || '').trim());
+    if (form.p2p.tracker.syncKey) {
+      ElMessage.success('同步密钥已保存,重启服务后 tracker 间数据同步将生效');
+    } else {
+      ElMessage.success('同步密钥已清空,数据同步已关闭');
+    }
+  } catch (error) {
+    console.error('Failed to set p2p.tracker.syncKey:', error);
+  }
+}
+
+async function comfirm_p2p_sync_interval() {
+  try {
+    const val = Number(form.p2p.tracker.syncIntervalSec);
+    if (!Number.isFinite(val) || val < 30) {
+      ElMessage.warning('同步间隔最小为 30 秒');
+      form.p2p.tracker.syncIntervalSec = 300;
+      return;
+    }
+    await serveSettingApi.set('p2p', 'tracker.syncIntervalSec', val);
+    ElMessage.success('同步间隔已保存,重启服务后生效');
+  } catch (error) {
+    console.error('Failed to set p2p.tracker.syncIntervalSec:', error);
+  }
+}
+
 // ===== 手动注册节点 =====
 const registerLoading = ref(false);
 const registerResult = ref<{ success: boolean; nodeId?: string; nodeName?: string; reason?: string } | null>(null);
+// ===== 手动同步 Tracker =====
+const syncLoading = ref(false);
 
 async function click_register_node() {
   // 前置校验
@@ -927,6 +999,23 @@ async function click_register_node() {
     console.error('register_node_now failed:', err);
   } finally {
     registerLoading.value = false;
+  }
+}
+
+async function click_trigger_sync() {
+  syncLoading.value = true;
+  try {
+    const res: any = await serveSettingApi.trigger_tracker_sync();
+    if (res?.code === 200) {
+      ElMessage.success(res?.message || '同步完成');
+    } else {
+      ElMessage.warning(res?.message || '同步失败');
+    }
+  } catch (err: any) {
+    const reason = err?.response?.data?.message || err?.message || '请求失败';
+    ElMessage.error(reason);
+  } finally {
+    syncLoading.value = false;
   }
 }
 

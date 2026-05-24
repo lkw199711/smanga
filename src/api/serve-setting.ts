@@ -64,6 +64,14 @@ const serveSettingApi = {
 		const http = await ajax.post('p2p/node/register-now', {});
 		return http.data;
 	},
+
+	/**
+	 * @description: 手动触发 Tracker 间数据同步
+	 */
+	async trigger_tracker_sync() {
+		const http = await ajax.post('p2p/tracker/sync-now', {});
+		return http.data;
+	},
 };
 
 export default serveSettingApi;
