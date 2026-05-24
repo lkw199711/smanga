@@ -12,4 +12,4 @@ fi
 
 export NODE_OPTIONS="--max-old-space-size=512 ${NODE_OPTIONS}"
 
-exec s6-setuidgid smanga nodejs bin/queue_worker.js --worker=compress
+exec s6-setuidgid smanga node bin/queue_worker.js --worker=compress

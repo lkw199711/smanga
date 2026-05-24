@@ -3,4 +3,4 @@
 
 cd /app/adonis || exit
 
-exec s6-setuidgid smanga nodejs bin/server.js
+exec s6-setuidgid smanga node bin/server.js
