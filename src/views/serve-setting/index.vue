@@ -423,7 +423,7 @@
                 <el-input v-model="form.p2p.tracker.syncKey"
                   placeholder="设置密钥后自动启用 tracker 间数据同步"
                   :style="{ width: '500px' }"
-                  show-password />
+                  />
                 <el-button type="primary" @click="comfirm_p2p_sync_key" class="ml-4">确定</el-button>
                 <div class="suffix ml-2 text-gray-500" style="margin-top: 4px;">
                   所有 tracker 配置相同密钥,留空则不启用同步
