@@ -22,7 +22,7 @@
           </el-tag>
         </template>
       </el-table-column>
-      <el-table-column prop="lastHeartbeat" :label="t('p2pPeers.lastSeen')" width="170"></el-table-column>
+      <el-table-column prop="lastHeartbeat" :label="t('p2pPeers.lastSeen')"></el-table-column>
     </el-table>
 
     <!-- 共享索引 -->
