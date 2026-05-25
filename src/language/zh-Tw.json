@@ -35,7 +35,8 @@
     "p2pShare": "本地共享",
     "p2pPeers": "群內節點",
     "p2pTransfer": "傳輸任務",
-    "trackerGroup": "Tracker 群管理"
+    "trackerGroup": "Tracker 群管理",
+    "trackerNode": "節點管理"
   },
   "mangaBrowser": {
     "allMedia": "媒體庫",
@@ -575,5 +576,37 @@
     "kickConfirm": "確認將成員 {nodeName} 踢出群組?",
     "kickOk": "已移出群組",
     "joinTime": "加入時間"
+  },
+  "trackerNode": {
+    "title": "節點管理",
+    "searchPlaceholder": "搜尋節點ID/名稱/地址/版本",
+    "onlineFilter": "在線狀態",
+    "bannedFilter": "封禁狀態",
+    "banned": "已封禁",
+    "normal": "正常",
+    "publicUrl": "公網地址",
+    "version": "版本",
+    "userAgent": "客戶端",
+    "groupCount": "所在群",
+    "ownedGroupCount": "擁有群",
+    "shareCount": "共享索引",
+    "manifestCount": "Manifest",
+    "traffic": "流量",
+    "ban": "封禁",
+    "unban": "解封",
+    "deregister": "註銷",
+    "detailTitle": "節點詳情",
+    "membershipList": "所在群組",
+    "ownedGroupList": "擁有群組",
+    "banReason": "封禁原因",
+    "banReasonPlaceholder": "可選,記錄封禁原因",
+    "banConfirm": "確認封禁節點 {nodeName} ?封禁後該節點不能繼續訪問 tracker。",
+    "unbanConfirm": "確認解封節點 {nodeName} ?",
+    "banOk": "已封禁節點",
+    "unbanOk": "已解封節點",
+    "deregisterConfirm": "確認註銷節點 {nodeName} ?節點的成員關係、共享索引與 Manifest 將被清理;若該節點擁有群組,這些群組也會被刪除。",
+    "deregisterOk": "已註銷節點",
+    "lastHeartbeat": "最後心跳",
+    "noPublicUrl": "無公網地址"
   }
 }

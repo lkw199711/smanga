@@ -258,4 +258,34 @@ export const trackerAdminGroupApi = {
   },
 };
 
-export default {p2pGroupApi, p2pShareApi, p2pPeerApi, p2pTransferApi, trackerAdminGroupApi};
+/**
+ * Tracker 管理员接口(本机 web 管理 tracker 上的注册节点)
+ * 后端: /api/tracker-admin/node/*
+ */
+export const trackerAdminNodeApi = {
+  /** 节点列表(分页) */
+  async list(params: {page?: number; pageSize?: number; keyword?: string; online?: number; banned?: number} = {}) {
+    const res = await ajax.get('tracker-admin/node', {params});
+    return res.data;
+  },
+
+  /** 节点详情(含所在群组/拥有群组/索引数量) */
+  async detail(nodeId: string) {
+    const res = await ajax.get(`tracker-admin/node/${encodeURIComponent(nodeId)}`);
+    return res.data;
+  },
+
+  /** 封禁/解封节点 */
+  async ban(nodeId: string, params: {banned: 0 | 1; bannedReason?: string}) {
+    const res = await ajax.put(`tracker-admin/node/${encodeURIComponent(nodeId)}/ban`, params);
+    return res.data;
+  },
+
+  /** 注销节点 */
+  async destroy(nodeId: string) {
+    const res = await ajax.delete(`tracker-admin/node/${encodeURIComponent(nodeId)}`);
+    return res.data;
+  },
+};
+
+export default {p2pGroupApi, p2pShareApi, p2pPeerApi, p2pTransferApi, trackerAdminGroupApi, trackerAdminNodeApi};

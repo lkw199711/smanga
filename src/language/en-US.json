@@ -35,7 +35,8 @@
     "p2pShare": "Local Shares",
     "p2pPeers": "Peers",
     "p2pTransfer": "Transfers",
-    "trackerGroup": "Tracker Groups"
+    "trackerGroup": "Tracker Groups",
+    "trackerNode": "Node Management"
   },
   "mangaBrowser": {
     "allMedia": "Libraries",
@@ -598,5 +599,37 @@
     "kickConfirm": "Kick member {nodeName} out of the group?",
     "kickOk": "Member removed",
     "joinTime": "Join Time"
+  },
+  "trackerNode": {
+    "title": "Node Management",
+    "searchPlaceholder": "Search node ID / name / URL / version",
+    "onlineFilter": "Online",
+    "bannedFilter": "Ban Status",
+    "banned": "Banned",
+    "normal": "Normal",
+    "publicUrl": "Public URL",
+    "version": "Version",
+    "userAgent": "User Agent",
+    "groupCount": "Groups",
+    "ownedGroupCount": "Owned",
+    "shareCount": "Share Indexes",
+    "manifestCount": "Manifest",
+    "traffic": "Traffic",
+    "ban": "Ban",
+    "unban": "Unban",
+    "deregister": "Deregister",
+    "detailTitle": "Node Detail",
+    "membershipList": "Groups",
+    "ownedGroupList": "Owned Groups",
+    "banReason": "Ban Reason",
+    "banReasonPlaceholder": "Optional reason",
+    "banConfirm": "Ban node {nodeName}? The node will no longer be able to access the tracker.",
+    "unbanConfirm": "Unban node {nodeName}?",
+    "banOk": "Node banned",
+    "unbanOk": "Node unbanned",
+    "deregisterConfirm": "Deregister node {nodeName}? Its memberships, share indexes, and manifests will be removed. Groups owned by this node will also be deleted.",
+    "deregisterOk": "Node deregistered",
+    "lastHeartbeat": "Last Heartbeat",
+    "noPublicUrl": "No public URL"
   }
 }

@@ -141,3 +141,25 @@ export type P2PPullCreateParams = {
   remoteName: string;
   receivedPath?: string;
 };
+
+// Tracker 端注册节点(对应 tracker_node)
+export type TrackerNodeType = {
+  trackerNodeId: number;
+  nodeId: string;
+  nodeName?: string | null;
+  publicUrl?: string | null;
+  version?: string | null;
+  userAgent?: string | null;
+  online: number;
+  lastHeartbeat?: string | null;
+  totalUpload?: string;
+  totalDownload?: string;
+  banned: number;
+  bannedReason?: string | null;
+  groupCount?: number;
+  ownedGroupCount?: number;
+  shareIndexCount?: number;
+  shareManifestCount?: number;
+  createTime?: string;
+  updateTime?: string;
+};

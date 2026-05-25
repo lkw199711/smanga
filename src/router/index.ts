@@ -397,6 +397,18 @@ const routes: Array<RouteRecordRaw> = [
 				},
 				component: () => import('../views/tracker-group/index.vue'),
 			},
+			{
+				path: '/tracker-node',
+				name: 'tracker-node',
+				meta: {
+					sidebar: true,
+					onlyAdmin: true,
+					title: 'trackerNode',
+					icon: 'person',
+					view: 'setting',
+				},
+				component: () => import('../views/tracker-node/index.vue'),
+			},
 		],
 	},
 
