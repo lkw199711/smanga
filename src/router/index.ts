@@ -29,11 +29,6 @@ export const close = () => {
 
 // deploy 状态缓存：null=未检查，true=已部署，false=未部署
 let deployChecked: boolean | null = null
-// deploy 检查完成信号，供 App.vue 等待
-let resolveDeployReady: () => void
-export const deployReady = new Promise<void>((resolve) => {
-	resolveDeployReady = resolve
-})
 
 const routes: Array<RouteRecordRaw> = [
 	// 系统界面
@@ -607,13 +602,19 @@ router.beforeEach(async (to) => {
 		try {
 			const res = await fetch(`${url}/deploy/status`)
 			const json = await res.json()
-			deployChecked = !!json?.data?.deploy
+			// 严格校验：只有 code=200 且 data.sql 存在才可信
+			// data.sql.deploy 为原始值（0=未部署, 1=已部署）
+			if (res.ok && json?.code === 200 && json?.data?.sql) {
+				deployChecked = !!json.data.sql.deploy
+			} else {
+				close()
+				return '/404'
+			}
 		} catch {
-			// 接口不可达，假定已部署（放行）
-			deployChecked = true
+			// 网络不可达
+			close()
+			return '/404'
 		}
-		// 通知 App.vue 检查完成
-		resolveDeployReady()
 
 		// 未部署且不在 init 页 → 跳转
 		if (!deployChecked && to.path !== '/init') {

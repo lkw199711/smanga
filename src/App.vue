@@ -14,7 +14,6 @@
 import { global_set_json, Cookies } from '@/utils';
 import { config, pageSizeConfig, userConfig } from '@/store';
 import { useRoute, useRouter } from 'vue-router';
-import { deployReady } from '@/router';
 import languages from '@/store/language';
 import { computed, onMounted, onBeforeMount } from 'vue';
 import { useI18n } from 'vue-i18n';
@@ -71,9 +70,6 @@ set_screen_type();
 window.addEventListener('resize', set_screen_type);
 
 async function system_init() {
-	// 等待路由守卫完成 deploy 检查，避免在未初始化时发出业务 API
-	await deployReady
-	console.log('deployReady', route.path);
 	if (['/', '/init', '/login', '/register'].includes(route.path)) return
 
 	// 设置安卓环境
