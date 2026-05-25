@@ -5,6 +5,7 @@ import useBrowseStore from '@/store/browse';
 import ThemeLayout from '@/themes/layout-wrapper.vue';
 import ThemeBridge from '@/themes/bridge.vue';
 import ThemeReaderWrapper from '@/themes/reader-wrapper.vue';
+import { url } from '@/api/index';
 
 import NProgress from 'nprogress';
 import 'nprogress/nprogress.css';
@@ -25,6 +26,14 @@ export const start = () => {
 export const close = () => {
 	NProgress.done();
 };
+
+// deploy 状态缓存：null=未检查，true=已部署，false=未部署
+let deployChecked: boolean | null = null
+// deploy 检查完成信号，供 App.vue 等待
+let resolveDeployReady: () => void
+export const deployReady = new Promise<void>((resolve) => {
+	resolveDeployReady = resolve
+})
 
 const routes: Array<RouteRecordRaw> = [
 	// 系统界面
@@ -475,8 +484,8 @@ const routes: Array<RouteRecordRaw> = [
 	{
 		path: '/init',
 		name: 'init',
-		meta: { sidebar: false, title: 'userSetting' },
-		component: () => import('../views/init/index.vue'),
+		meta: { sidebar: false, title: '初始化' },
+		component: () => import('../themes/theme-a/pages/init.vue'),
 	},
 
 	// 浏览界面
@@ -590,8 +599,28 @@ const router = createRouter({
 	routes,
 });
 
-router.beforeEach((pre, next) => {
+router.beforeEach(async (to) => {
 	start();
+
+	// 首次导航时检查部署状态
+	if (deployChecked === null) {
+		try {
+			const res = await fetch(`${url}/deploy/status`)
+			const json = await res.json()
+			deployChecked = !!json?.data?.deploy
+		} catch {
+			// 接口不可达，假定已部署（放行）
+			deployChecked = true
+		}
+		// 通知 App.vue 检查完成
+		resolveDeployReady()
+
+		// 未部署且不在 init 页 → 跳转
+		if (!deployChecked && to.path !== '/init') {
+			close()
+			return '/init'
+		}
+	}
 });
 
 router.afterEach((to, from) => {

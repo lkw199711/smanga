@@ -24,6 +24,30 @@ const loginApi = {
 	},
 
 	/**
+	 * @description: 首次部署初始化（无鉴权）
+	 * @param data - { client, host?, port?, username?, password?, database?, adminUser, adminPass }
+	 */
+	async init_deploy(data: {
+		client: string
+		host?: string
+		port?: number
+		username?: string
+		password?: string
+		database?: string
+		adminUser: string
+		adminPass: string
+	}) {
+		const res = ajax({
+			timeout: 3 * 60 * 1000,
+			url: 'deploy/init',
+			method: 'POST',
+			data,
+		})
+
+		return (await res).data
+	},
+
+	/**
 	 * @description: 检查数据库连接
 	 * @param {any} data
 	 * @return {*}
