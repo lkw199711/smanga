@@ -342,31 +342,35 @@
                 <el-button type="primary" :loading="registerLoading" @click="click_register_node">
                   {{ registerLoading ? '注册中...' : '立即注册' }}
                 </el-button>
-                <span class="suffix ml-2 text-gray-500">将当前配置上报到 Tracker 并触发反向可达性检测</span>
+                <span class="suffix ml-2 text-gray-500">向所有 Tracker 并行注册并触发反向可达性检测</span>
               </el-form-item>
             </el-col>
 
+            <!-- 注册结果：每个 tracker 一行 -->
             <el-col :span="24" v-if="registerResult">
-              <el-form-item label=" " class="register-result-item">
-                <el-alert
-                  :title="registerResult.success ? '注册成功' : '注册失败'"
-                  :type="registerResult.success ? 'success' : 'error'"
-                  :closable="true"
-                  @close="registerResult = null"
-                  show-icon
-                >
-                  <template #default>
-                    <div class="register-result-content">
-                      <div v-if="registerResult.success">
-                        <div v-if="registerResult.nodeName"><b>节点名称:</b> {{ registerResult.nodeName }}</div>
-                      </div>
-                      <div v-else class="register-error-reason">
-                        <div><b>失败原因:</b></div>
-                        <pre>{{ registerResult.reason }}</pre>
-                      </div>
-                    </div>
-                  </template>
-                </el-alert>
+              <el-form-item label="注册结果">
+                <div class="register-summary mb-3">
+                  <el-tag :type="registerResult.anySuccess ? 'success' : 'danger'" size="default">
+                    {{ registerResult.anySuccess ? '注册完成' : '全部失败' }}
+                  </el-tag>
+                  <span class="ml-2 text-sm text-gray-500" v-if="registerResult.reused">(复用已有身份，仅更新信息)</span>
+                </div>
+                <el-table :data="registerResult.results" size="small" border stripe style="width: 100%; max-width: 700px;">
+                  <el-table-column prop="trackerUrl" label="Tracker 地址" min-width="200" />
+                  <el-table-column label="状态" width="80" align="center">
+                    <template #default="{ row }">
+                      <el-tag :type="row.success ? 'success' : 'danger'" size="small">
+                        {{ row.success ? '成功' : '失败' }}
+                      </el-tag>
+                    </template>
+                  </el-table-column>
+                  <el-table-column label="详情" min-width="180">
+                    <template #default="{ row }">
+                      <span v-if="row.success" class="text-green-600">{{ row.publicUrl || '-' }}</span>
+                      <span v-else class="text-red-500">{{ row.error }}</span>
+                    </template>
+                  </el-table-column>
+                </el-table>
               </el-form-item>
             </el-col>
           </template>
@@ -921,18 +925,38 @@ async function comfirm_p2p_sync_interval() {
 
 // ===== 手动注册节点 =====
 const registerLoading = ref(false);
-const registerResult = ref<{ success: boolean; nodeName?: string; reason?: string } | null>(null);
+
+interface TrackerResultItem {
+  trackerUrl: string
+  success: boolean
+  publicUrl?: string
+  error?: string
+  reused?: boolean
+}
+
+const registerResult = ref<{
+  anySuccess: boolean
+  results: TrackerResultItem[]
+  nodeName?: string
+  reused?: boolean
+} | null>(null);
 // ===== 手动同步 Tracker =====
 const syncLoading = ref(false);
 
 async function click_register_node() {
   // 前置校验
   if (!form.p2p.enable) {
-    registerResult.value = { success: false, reason: '请先开启"启用 P2P"开关' };
+    registerResult.value = {
+      anySuccess: false,
+      results: [{ trackerUrl: '-', success: false, error: '请先开启"启用 P2P"开关' }],
+    };
     return;
   }
   if (!form.p2p.role.node) {
-    registerResult.value = { success: false, reason: '请先开启"作为节点(Node)"角色' };
+    registerResult.value = {
+      anySuccess: false,
+      results: [{ trackerUrl: '-', success: false, error: '请先开启"作为节点(Node)"角色' }],
+    };
     return;
   }
 
@@ -941,10 +965,12 @@ async function click_register_node() {
 
   try {
     const res: any = await serveSettingApi.register_node_now();
-    if (res) {
+    if (res?.code === 200) {
       registerResult.value = {
-        success: true,
+        anySuccess: res.data?.anySuccess ?? false,
+        results: res.data?.results || [],
         nodeName: res.data?.nodeName,
+        reused: res.data?.reused,
       };
       // 重新拉取配置以刷新显示
       try {
@@ -956,17 +982,19 @@ async function click_register_node() {
       }
     } else {
       registerResult.value = {
-        success: false,
-        reason: (res && res.message) || '未知错误',
+        anySuccess: false,
+        results: [{ trackerUrl: '-', success: false, error: res?.message || '未知错误' }],
       };
     }
   } catch (err: any) {
-    // 网络错误或 HTTP 非 2xx
     const reason =
       err?.response?.data?.message ||
       err?.message ||
       '请求失败,请检查网络与服务状态';
-    registerResult.value = { success: false, reason };
+    registerResult.value = {
+      anySuccess: false,
+      results: [{ trackerUrl: '-', success: false, error: reason }],
+    };
     console.error('register_node_now failed:', err);
   } finally {
     registerLoading.value = false;
