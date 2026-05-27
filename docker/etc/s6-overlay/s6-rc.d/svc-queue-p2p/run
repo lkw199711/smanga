@@ -1,0 +1,22 @@
+#!/usr/bin/with-contenv bash
+# shellcheck shell=bash
+
+cd /app/adonis || exit
+
+QUEUE_WORKER_MODE=$(jq -r '.queue.worker.mode // "embedded"' /data/config/smanga.json 2>/dev/null || echo "embedded")
+if [ "$QUEUE_WORKER_MODE" != "external" ]; then
+    echo "queue worker p2p skipped, mode=${QUEUE_WORKER_MODE}"
+    s6-svc -d /run/service/svc-queue-p2p 2>/dev/null || true
+    exit 0
+fi
+
+P2P_ENABLED=$(jq -r '.p2p.enable // false' /data/config/smanga.json 2>/dev/null || echo "false")
+if [ "$P2P_ENABLED" != "true" ]; then
+    echo "queue worker p2p disabled by config"
+    s6-svc -d /run/service/svc-queue-p2p 2>/dev/null || true
+    exit 0
+fi
+
+export NODE_OPTIONS="--max-old-space-size=512 ${NODE_OPTIONS}"
+
+exec s6-setuidgid smanga node bin/queue_worker.js --worker=p2p
