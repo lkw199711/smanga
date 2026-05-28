@@ -165,7 +165,11 @@
           </el-table-column>
           <el-table-column prop="lastHeartbeat" :label="t('p2pPeers.lastSeen')" width="170"></el-table-column>
           <el-table-column prop="joinTime" :label="t('trackerGroup.joinTime')" width="170"></el-table-column>
-          <el-table-column :label="t('account.option')" width="120" fixed="right">
+          <el-table-column
+            v-if="isOwnerOfDetail"
+            :label="t('account.option')"
+            width="120"
+            fixed="right">
             <template v-slot="scope">
               <el-button
                 size="small"
