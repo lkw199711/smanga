@@ -53,9 +53,8 @@
         <el-form-item :label="$t('path.form.add')">
           <el-input v-model="pathForm.pathContent" :placeholder="$t('path.place.add')">
             <template #append>
-              {{ $t('option.add') }}
-              &nbsp;
-              <el-button :icon="Plus" @click="add_path_cache" />
+              <el-button :icon="View" :loading="previewLoading" @click="preview_new_path">试扫描</el-button>
+              <el-button :icon="Plus" @click="add_path_cache">{{ $t('option.add') }}</el-button>
             </template>
           </el-input>
         </el-form-item>
@@ -77,6 +76,9 @@
           <div v-for="i in pathArr" :key="i.pathId" class="path-item">
             {{ i.pathContent }}
             <div class="path-btn-box">
+              <el-button class="path-item-btn" size="small" :icon="View" @click="preview_saved_path(i)">
+                试扫
+              </el-button>
               <el-button class="path-item-btn" size="small" type="success" @click="scan_path(i)">
                 {{ $t('path.button.update') }}
               </el-button>
@@ -106,6 +108,37 @@
         </div>
       </template>
     </el-dialog>
+
+    <el-dialog title="扫描预检" v-model="previewDialog" width="760px">
+      <div v-if="previewResult" class="scan-preview">
+        <el-descriptions :column="4" border>
+          <el-descriptions-item label="漫画">{{ previewResult.summary?.mangaFound ?? 0 }}</el-descriptions-item>
+          <el-descriptions-item label="章节">{{ previewResult.summary?.chapterFound ?? 0 }}</el-descriptions-item>
+          <el-descriptions-item label="跳过">{{ previewResult.summary?.skipped ?? 0 }}</el-descriptions-item>
+          <el-descriptions-item label="警告">{{ previewResult.summary?.warnings ?? 0 }}</el-descriptions-item>
+        </el-descriptions>
+
+        <p class="s-form-title mt-4">样例漫画</p>
+        <el-table :data="previewResult.samples || []" size="small" border max-height="220">
+          <el-table-column prop="mangaName" label="漫画" min-width="160" />
+          <el-table-column prop="parentPath" label="所在目录" min-width="220" show-overflow-tooltip />
+          <el-table-column label="章节" width="80">
+            <template #default="scope">{{ scope.row.chapters?.length || 0 }}</template>
+          </el-table-column>
+        </el-table>
+
+        <p class="s-form-title mt-4">提示与跳过原因</p>
+        <el-table :data="previewImportantItems" size="small" border max-height="260">
+          <el-table-column prop="level" label="级别" width="90" />
+          <el-table-column prop="reasonCode" label="原因" width="180" show-overflow-tooltip />
+          <el-table-column prop="reason" label="说明" min-width="220" show-overflow-tooltip />
+          <el-table-column prop="targetName" label="对象" min-width="140" show-overflow-tooltip />
+        </el-table>
+      </div>
+      <template #footer>
+        <el-button type="primary" @click="previewDialog = false">确定</el-button>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
@@ -116,8 +149,8 @@ export default {
 </script>
 
 <script lang="ts" setup>
-import {Delete, Edit, Plus, FolderOpened, Refresh} from '@element-plus/icons-vue';
-import {ref, reactive, onMounted} from 'vue';
+import {Delete, Edit, Plus, FolderOpened, Refresh, View} from '@element-plus/icons-vue';
+import {ref, reactive, onMounted, computed} from 'vue';
 import mediaApi from '@/api/media';
 import pathApi from '@/api/path';
 import tablePager from '@/components/table-pager.vue';
@@ -157,6 +190,15 @@ const pathForm = reactive({
 });
 const pathArr = ref<pathType[]>([]);
 const multipleSelection = ref<mediaType[]>([]);
+const previewDialog = ref(false);
+const previewLoading = ref(false);
+const previewResult = ref<any>(null);
+const previewImportantItems = computed(() => {
+  const items = previewResult.value?.items || [];
+  return items
+    .filter((item: any) => item.level !== 'info' || item.category === 'skipped')
+    .slice(0, 80);
+});
 
 const {t} = i18n.global;
 
@@ -269,6 +311,37 @@ async function rescan_path(pathInfo: any) {
 async function scan_path(pathInfo: any) {
   await pathApi.scan_path(pathInfo.pathId);
   load_path(pathInfo.mediaId);
+}
+
+async function preview_new_path() {
+  if (!pathForm.pathContent) {
+    ElMessage({message: '请先填写路径', type: 'warning'});
+    return;
+  }
+
+  previewLoading.value = true;
+  try {
+    previewResult.value = await pathApi.preview_path({
+      ...pathForm,
+      mediaId: mediaInfo.mediaId,
+      mediaType: mediaInfo.mediaType,
+      directoryFormat: mediaInfo.directoryFormat,
+      isCloudMedia: mediaInfo.isCloudMedia,
+    });
+    previewDialog.value = true;
+  } finally {
+    previewLoading.value = false;
+  }
+}
+
+async function preview_saved_path(pathInfo: any) {
+  previewLoading.value = true;
+  try {
+    previewResult.value = await pathApi.preview_path_by_id(pathInfo.pathId);
+    previewDialog.value = true;
+  } finally {
+    previewLoading.value = false;
+  }
 }
 
 /**

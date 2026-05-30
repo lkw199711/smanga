@@ -47,6 +47,16 @@ const pathApi = {
 		return (await res).data;
 	},
 
+	async preview_path(pathForm: any) {
+		const http = await ajax.post('path/scan-preview', pathForm);
+		return http.data.data;
+	},
+
+	async preview_path_by_id(pathId: any) {
+		const http = await ajax.get(`path/${pathId}/scan-preview`);
+		return http.data.data;
+	},
+
 	/**
 	 * 删除路径
 	 * @param pathId
