@@ -71,10 +71,31 @@
         <el-form-item :label="$t('path.form.exclude')">
           <el-input v-model="pathForm.exclude" :placeholder="$t('path.place.exclude')" />
         </el-form-item>
+        <el-form-item label="扫描模板">
+          <el-select v-model="pathForm.scanTemplateKey" class="w-full" placeholder="请选择扫描模板">
+            <el-option v-for="item in scanTemplateOptions" :key="item.value" :label="item.label" :value="item.value" />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="元数据识别">
+          <el-select v-model="pathForm.metadataProfileKey" class="w-full" placeholder="请选择元数据识别方式">
+            <el-option v-for="item in metadataProfileOptions" :key="item.value" :label="item.label" :value="item.value" />
+          </el-select>
+        </el-form-item>
 
         <el-form-item :label="$t('path.form.path')">
           <div v-for="i in pathArr" :key="i.pathId" class="path-item">
             {{ i.pathContent }}
+            <div class="path-config-box">
+              <el-select v-model="i.scanTemplateKey" size="small" placeholder="扫描模板">
+                <el-option v-for="item in savedScanTemplateOptions" :key="item.value" :label="item.label" :value="item.value" />
+              </el-select>
+              <el-select v-model="i.metadataProfileKey" size="small" placeholder="元数据识别">
+                <el-option v-for="item in metadataProfileOptions" :key="item.value" :label="item.label" :value="item.value" />
+              </el-select>
+              <el-button class="path-item-btn" size="small" type="primary" @click="save_path_config(i)">
+                保存配置
+              </el-button>
+            </div>
             <div class="path-btn-box">
               <el-button class="path-item-btn" size="small" :icon="View" @click="preview_saved_path(i)">
                 试扫
@@ -112,11 +133,28 @@
     <el-dialog title="扫描预检" v-model="previewDialog" width="760px">
       <div v-if="previewResult" class="scan-preview">
         <el-descriptions :column="4" border>
+          <el-descriptions-item label="模板">{{ previewResult.template?.label || '-' }}</el-descriptions-item>
           <el-descriptions-item label="漫画">{{ previewResult.summary?.mangaFound ?? 0 }}</el-descriptions-item>
           <el-descriptions-item label="章节">{{ previewResult.summary?.chapterFound ?? 0 }}</el-descriptions-item>
           <el-descriptions-item label="跳过">{{ previewResult.summary?.skipped ?? 0 }}</el-descriptions-item>
           <el-descriptions-item label="警告">{{ previewResult.summary?.warnings ?? 0 }}</el-descriptions-item>
         </el-descriptions>
+        <el-descriptions class="mt-4" :column="4" border>
+          <el-descriptions-item label=".smanga">{{ previewResult.metadataSummary?.smanga ?? 0 }}</el-descriptions-item>
+          <el-descriptions-item label="旁挂元数据">{{ previewResult.metadataSummary?.smangaSidecar ?? 0 }}</el-descriptions-item>
+          <el-descriptions-item label="series.json">{{ previewResult.metadataSummary?.seriesJson ?? 0 }}</el-descriptions-item>
+          <el-descriptions-item label="ComicInfo">{{ previewResult.metadataSummary?.comicInfoCandidate ?? 0 }}</el-descriptions-item>
+        </el-descriptions>
+
+        <template v-if="previewResult.templateCandidates?.length">
+          <p class="s-form-title mt-4">模板推荐</p>
+          <el-table :data="previewResult.templateCandidates.slice(0, 6)" size="small" border max-height="220">
+            <el-table-column prop="label" label="模板" min-width="180" />
+            <el-table-column prop="pattern" label="结构" min-width="220" />
+            <el-table-column prop="mangaFound" label="漫画" width="80" />
+            <el-table-column prop="chapterFound" label="章节" width="80" />
+          </el-table>
+        </template>
 
         <p class="s-form-title mt-4">样例漫画</p>
         <el-table :data="previewResult.samples || []" size="small" border max-height="220">
@@ -187,7 +225,31 @@ const pathForm = reactive({
   autoScan: 0,
   include: '',
   exclude: '',
+  scanTemplateKey: 'auto',
+  scanTemplateConfig: '',
+  metadataProfileKey: 'auto',
+  metadataProfileConfig: '',
 });
+const scanTemplateOptions = [
+  {label: '自动推荐', value: 'auto'},
+  {label: '漫画 > 章节 > 图片', value: 'manga_chapter_image'},
+  {label: '漫画 > 图片', value: 'manga_image'},
+  {label: '分类 > 漫画 > 章节 > 图片', value: 'category_manga_chapter_image'},
+  {label: '分类 > 漫画 > 图片', value: 'category_manga_image'},
+  {label: '漫画 > 卷/目录 > 章节 > 图片', value: 'manga_volume_chapter_image'},
+  {label: '分类 > 漫画 > 卷/目录 > 章节 > 图片', value: 'category_manga_volume_chapter_image'},
+];
+const savedScanTemplateOptions = [
+  {label: '兼容旧媒体库设置', value: 'legacy'},
+  ...scanTemplateOptions,
+];
+const metadataProfileOptions = [
+  {label: '自动识别', value: 'auto'},
+  {label: 'SMANGA 元数据', value: 'smanga'},
+  {label: 'series.json', value: 'series-json'},
+  {label: 'ComicInfo.xml', value: 'comicinfo'},
+  {label: '不扫描元数据', value: 'none'},
+];
 const pathArr = ref<pathType[]>([]);
 const multipleSelection = ref<mediaType[]>([]);
 const previewDialog = ref(false);
@@ -214,6 +276,7 @@ onMounted(() => {
  */
 async function path_dialog_open(index: any, row: any) {
   Object.assign(mediaInfo, row);
+  reset_path_form();
   addPathDialog.value = true;
 
   pathArr.value = [];
@@ -227,7 +290,28 @@ async function path_dialog_open(index: any, row: any) {
 async function load_path(mediaId: any) {
   const res = await pathApi.get_path(mediaId, 1, 1000);
 
-  pathArr.value = res.list;
+  pathArr.value = (res.list || []).map((item: pathType) => normalize_path_config(item));
+}
+
+function normalize_path_config(pathInfo: pathType) {
+  return {
+    ...pathInfo,
+    scanTemplateKey: pathInfo.scanTemplateKey || 'legacy',
+    metadataProfileKey: pathInfo.metadataProfileKey || 'auto',
+  };
+}
+
+function reset_path_form() {
+  Object.assign(pathForm, {
+    pathContent: '',
+    autoScan: 0,
+    include: '',
+    exclude: '',
+    scanTemplateKey: 'auto',
+    scanTemplateConfig: '',
+    metadataProfileKey: 'auto',
+    metadataProfileConfig: '',
+  });
 }
 
 /**
@@ -313,6 +397,15 @@ async function scan_path(pathInfo: any) {
   load_path(pathInfo.mediaId);
 }
 
+async function save_path_config(pathInfo: pathType) {
+  await pathApi.update_path(pathInfo.pathId, {
+    scanTemplateKey: pathInfo.scanTemplateKey || 'legacy',
+    metadataProfileKey: pathInfo.metadataProfileKey || 'auto',
+  });
+  ElMessage({message: '扫描配置已保存', type: 'success'});
+  load_path(pathInfo.mediaId);
+}
+
 async function preview_new_path() {
   if (!pathForm.pathContent) {
     ElMessage({message: '请先填写路径', type: 'warning'});
@@ -356,12 +449,7 @@ async function add_path_cache() {
 
   if (res) {
     // 重置表单
-    Object.assign(pathForm, {
-      pathContent: '',
-      autoScan: 0,
-      include: '',
-      exclude: '',
-    });
+    reset_path_form();
     load_path(mediaId);
   }
 }
@@ -394,3 +482,12 @@ async function batch_delete_media() {
 </script>
 
 <style lang="less" scoped src="@/style/manage.less"></style>
+<style lang="less" scoped>
+.path-config-box {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin: 8px 0;
+  flex-wrap: wrap;
+}
+</style>
