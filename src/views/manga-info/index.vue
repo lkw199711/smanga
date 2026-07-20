@@ -71,7 +71,7 @@
       </div>
 
       <el-form-item :label="$t('mangaInfo.reverseOrder')" class="op-range">
-        <el-switch v-model="chapterListDesc" @change="render_chapter_list" />
+        <el-switch v-model="chapterListDesc" />
       </el-form-item>
 
       <div class="chapter-list" v-if="userConfig.simpleChapterView">
@@ -156,7 +156,7 @@
 
 <script lang="ts" setup>
 import {useRoute, useRouter} from 'vue-router';
-import {onMounted, ref, reactive, computed} from 'vue';
+import {onMounted, ref, reactive, computed, watch} from 'vue';
 import mangaApi from '@/api/manga';
 import imageApi from '@/api/image';
 import {config, userConfig} from '@/store';
@@ -215,7 +215,14 @@ let hasManyCover = ref(false);
 let metaWriteJson = ref(true);
 
 let chapterInfo = ref<chapterType>(chapterInit);
-let chapterListDesc = ref(false);
+const chapterListDesc = computed({
+  get: () => userConfig.chapterOrder.endsWith('Desc'),
+  set: (isDesc: boolean) => {
+    const order = userConfig.chapterOrder;
+    const baseOrder = order.endsWith('Desc') ? order.slice(0, -4) : order;
+    userConfig.chapterOrder = isDesc ? `${baseOrder}Desc` : baseOrder;
+  },
+});
 
 let rightSidebarVisible = ref(false);
 
@@ -260,6 +267,12 @@ onMounted(async () => {
 
   get_collect_status();
 });
+
+// 与章节列表页一致：顶栏修改章节排序后立即重新加载详情页章节。
+watch(
+  () => userConfig.chapterOrder,
+  () => render_chapter_list()
+);
 
 /**
  * @description: 获取漫画首个章节
@@ -410,7 +423,7 @@ async function render_chapter_list() {
   const mangaId = mangaInfo.mangaId;
   if (!mangaId) return;
 
-  const chapterListResponse = await chapterApi.get({mangaId, mediaId: mangaInfo.mediaId, order: chapterListDesc.value ? 'numberDesc' : 'number'});
+  const chapterListResponse = await chapterApi.get({mangaId, mediaId: mangaInfo.mediaId, order: browse.orderBy});
   chapterList.value = chapterListResponse.list;
 }
 
