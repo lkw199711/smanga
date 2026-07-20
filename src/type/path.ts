@@ -1,5 +1,8 @@
+import type {MetadataProfileKey, ScanTemplateKey} from './scan';
+
 type pathType = {
     pathId: number;
+    mediaId: number;
     pathName: string;
     pathType: number;
     pathLink: string;
@@ -11,9 +14,9 @@ type pathType = {
     autoScan: number;
     include?: string;
     exclude?: string;
-    scanTemplateKey?: string;
+    scanTemplateKey?: ScanTemplateKey;
     scanTemplateConfig?: string;
-    metadataProfileKey?: string;
+    metadataProfileKey?: MetadataProfileKey;
     metadataProfileConfig?: string;
     pathContent: string;
 }

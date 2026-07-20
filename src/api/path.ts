@@ -1,4 +1,5 @@
 import { ajax } from './index';
+import type {ScanPreviewInput, ScanPreviewResult, ScanTriggerResult} from '@/type/scan';
 
 const pathApi = {
 	/**
@@ -29,7 +30,7 @@ const pathApi = {
 	 */
 	async rescan_path(pathId: any) {
 		const res = ajax.put(`path/${pathId}/rescan`);
-		return (await res).data;
+		return (await res).data.data as ScanTriggerResult;
 	},
 
 	/**
@@ -44,15 +45,15 @@ const pathApi = {
 			url: `path/scan/${pathId}`,
 		});
 
-		return (await res).data;
+		return (await res).data.data as ScanTriggerResult;
 	},
 
-	async preview_path(pathForm: any) {
+	async preview_path(pathForm: ScanPreviewInput): Promise<ScanPreviewResult> {
 		const http = await ajax.post('path/scan-preview', pathForm);
 		return http.data.data;
 	},
 
-	async preview_path_by_id(pathId: any) {
+	async preview_path_by_id(pathId: number): Promise<ScanPreviewResult> {
 		const http = await ajax.get(`path/${pathId}/scan-preview`);
 		return http.data.data;
 	},
