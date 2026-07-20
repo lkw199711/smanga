@@ -2,6 +2,7 @@ import type {MetadataProfileInfo, ScanTemplateCatalog, ScanTemplateInfo} from '@
 
 export const fallbackScanTemplates: ScanTemplateInfo[] = [
   {key: 'auto', label: '自动推荐', pattern: 'auto'},
+  {key: 'custom', label: '自定义模板规则', pattern: 'custom'},
   {key: 'manga_chapter_image', label: '漫画 > 章节 > 图片', pattern: 'manga > chapter > image'},
   {key: 'manga_image', label: '漫画 > 图片', pattern: 'manga > image'},
   {key: 'category_manga_chapter_image', label: '分类 > 漫画 > 章节 > 图片', pattern: 'category > manga > chapter > image'},

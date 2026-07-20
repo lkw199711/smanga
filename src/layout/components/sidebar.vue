@@ -153,7 +153,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted, computed } from 'vue'
+import { ref, onMounted, onUnmounted, computed } from 'vue'
 import router from '@/router';
 import { config, userConfig } from '@/store';
 import Logo from "@/layout/components/logo.vue";
@@ -162,6 +162,7 @@ import { Cookies } from '@/utils';
 import useBrowseStore from '@/store/browse';
 import mediaApi from '@/api/media';
 import { mediaType } from '@/type/media';
+import { onMediaOperation } from '@/utils/cache';
 const browse = useBrowseStore();
 const route = useRoute();
 
@@ -232,9 +233,16 @@ function handle_select() {
   browse.chapterListPageSizeCache = 0;
 }
 
-onMounted(async () => {
+async function load_media_list() {
   const mediaReponse = await mediaApi.get()
   mediaList.value = mediaReponse.list;
+}
+
+const stopMediaOperationListener = onMediaOperation(load_media_list);
+onUnmounted(stopMediaOperationListener);
+
+onMounted(async () => {
+  await load_media_list();
   config.sidebarCollapse = false;
 })
 </script>

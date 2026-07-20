@@ -57,6 +57,13 @@
           <el-descriptions-item label="扫描路径" :span="detailColumns">{{ currentRun.pathContent || '-' }}</el-descriptions-item>
           <el-descriptions-item label="开始时间">{{ formatTime(currentRun.startedAt) }}</el-descriptions-item>
           <el-descriptions-item label="结束时间">{{ formatTime(currentRun.finishedAt) }}</el-descriptions-item>
+          <el-descriptions-item v-if="currentRun.expectedTasks" label="漫画任务进度" :span="detailColumns">
+            <el-progress
+              :percentage="scanProgress(currentRun)"
+              :status="currentRun.failedTasks ? 'exception' : currentRun.status === 'success' ? 'success' : undefined">
+              <span>{{ (currentRun.completedTasks || 0) + (currentRun.failedTasks || 0) }}/{{ currentRun.expectedTasks }}</span>
+            </el-progress>
+          </el-descriptions-item>
           <el-descriptions-item v-if="currentRun.message" label="消息" :span="detailColumns">{{ currentRun.message }}</el-descriptions-item>
         </el-descriptions>
 
@@ -256,6 +263,11 @@ function statusTagType(status: ScanRunStatus) {
   if (status === 'failed') return 'danger';
   if (status === 'running') return 'primary';
   return 'warning';
+}
+
+function scanProgress(run: ScanRun) {
+  if (!run.expectedTasks) return 0;
+  return Math.min(100, Math.round((((run.completedTasks || 0) + (run.failedTasks || 0)) / run.expectedTasks) * 100));
 }
 
 function statusText(status: ScanRunStatus) {

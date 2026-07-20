@@ -1,6 +1,7 @@
 export type ScanTemplateKey =
   | 'legacy'
   | 'auto'
+  | 'custom'
   | 'manga_chapter_image'
   | 'manga_image'
   | 'category_manga_chapter_image'
@@ -29,6 +30,9 @@ export interface MetadataProfileInfo {
 
 export interface ScanTemplateCatalog {
   defaultTemplateKey: ScanTemplateKey;
+  activeEngine?: 'legacy' | 'template-v1' | 'template-v2';
+  engines?: Array<'legacy' | 'template-v1' | 'template-v2'>;
+  configVersion?: number;
   legacyTemplate: ScanTemplateInfo;
   templates: ScanTemplateInfo[];
   metadataProfiles: MetadataProfileInfo[];
@@ -43,7 +47,9 @@ export interface ScanPreviewInput {
   include?: string;
   exclude?: string;
   scanTemplateKey?: ScanTemplateKey;
+  scanTemplateConfig?: string;
   metadataProfileKey?: MetadataProfileKey;
+  metadataProfileConfig?: string;
   isCloudMedia?: number;
 }
 
@@ -122,6 +128,9 @@ export interface ScanRun {
   error?: string | null;
   startedAt?: string | null;
   finishedAt?: string | null;
+  expectedTasks?: number;
+  completedTasks?: number;
+  failedTasks?: number;
   createTime: string;
   updateTime: string;
 }

@@ -73,9 +73,13 @@
           <el-input v-model="pathForm.exclude" :placeholder="$t('path.place.exclude')" />
         </el-form-item>
         <el-form-item label="扫描模板">
-          <el-select v-model="pathForm.scanTemplateKey" class="w-full" placeholder="请选择扫描模板">
+          <el-select v-model="pathForm.scanTemplateKey" class="w-full" placeholder="请选择扫描模板" @change="ensure_new_path_custom_config">
             <el-option v-for="item in scanTemplateOptions" :key="item.key" :label="item.label" :value="item.key" />
           </el-select>
+        </el-form-item>
+        <el-form-item v-if="pathForm.scanTemplateKey === 'custom'" label="模板规则 JSON">
+          <el-input v-model="pathForm.scanTemplateConfig" type="textarea" :rows="7" placeholder="请输入 version=1 的自定义模板规则" />
+          <div class="config-description">支持 single/mixed 策略、目录层级、优先级和目录正则过滤；保存和试扫前会校验 JSON。</div>
         </el-form-item>
         <el-form-item label="元数据识别">
           <el-select v-model="pathForm.metadataProfileKey" class="w-full" placeholder="请选择元数据识别方式">
@@ -83,13 +87,16 @@
           </el-select>
           <div class="config-description">{{ selectedMetadataProfileDescription }}</div>
         </el-form-item>
+        <el-form-item label="元数据高级配置">
+          <el-input v-model="pathForm.metadataProfileConfig" type="textarea" :rows="5" placeholder="可选：配置来源、优先级、覆盖策略和文件大小限制" />
+        </el-form-item>
 
         <el-form-item :label="$t('path.form.path')">
           <div v-for="i in pathArr" :key="i.pathId" class="path-item">
             {{ i.pathContent }}
             <el-tag v-if="is_path_dirty(i)" size="small" type="warning">配置未保存</el-tag>
             <div class="path-config-box">
-              <el-select v-model="i.scanTemplateKey" size="small" placeholder="扫描模板">
+              <el-select v-model="i.scanTemplateKey" size="small" placeholder="扫描模板" @change="ensure_saved_path_custom_config(i)">
                 <el-option v-for="item in savedScanTemplateOptions" :key="item.key" :label="item.label" :value="item.key" />
               </el-select>
               <el-select v-model="i.metadataProfileKey" size="small" placeholder="元数据识别">
@@ -98,6 +105,14 @@
               <el-button class="path-item-btn" size="small" type="primary" :loading="savingPathId === i.pathId" @click="save_path_config(i)">
                 保存配置
               </el-button>
+            </div>
+            <div v-if="i.scanTemplateKey === 'custom'" class="path-config-json">
+              <div class="config-description">模板规则 JSON</div>
+              <el-input v-model="i.scanTemplateConfig" type="textarea" :rows="6" />
+            </div>
+            <div class="path-config-json">
+              <div class="config-description">元数据高级配置（可选）</div>
+              <el-input v-model="i.metadataProfileConfig" type="textarea" :rows="4" />
             </div>
             <div class="path-btn-box">
               <el-button class="path-item-btn" size="small" :icon="View" :loading="previewLoadingPathId === i.pathId" @click="preview_saved_path(i)">
@@ -187,13 +202,34 @@ const formInit = {
   sidebar: 0,
 };
 
+const defaultCustomTemplateConfig = JSON.stringify(
+  {
+    version: 1,
+    strategy: 'mixed',
+    rules: [
+      {
+        id: 'manga-chapter',
+        label: '漫画/章节',
+        priority: 100,
+        mangaIndex: 0,
+        chapterIndex: 1,
+        singleChapter: false,
+      },
+    ],
+  },
+  null,
+  2
+);
+
 const pathForm = reactive<ScanPreviewInput>({
   pathContent: '',
   autoScan: 0,
   include: '',
   exclude: '',
   scanTemplateKey: 'auto',
+  scanTemplateConfig: '',
   metadataProfileKey: 'auto',
+  metadataProfileConfig: '',
 });
 const scanCatalog = ref({...fallbackScanCatalog});
 const scanTemplateOptions = computed(() => scanCatalog.value.templates);
@@ -266,15 +302,53 @@ function reset_path_form() {
     include: '',
     exclude: '',
     scanTemplateKey: 'auto',
+    scanTemplateConfig: '',
     metadataProfileKey: 'auto',
+    metadataProfileConfig: '',
   });
 }
 
-function path_config_signature(pathInfo: Pick<pathType, 'scanTemplateKey' | 'metadataProfileKey'>) {
+function path_config_signature(pathInfo: Pick<pathType, 'scanTemplateKey' | 'scanTemplateConfig' | 'metadataProfileKey' | 'metadataProfileConfig'>) {
   return JSON.stringify({
     scanTemplateKey: pathInfo.scanTemplateKey || 'legacy',
+    scanTemplateConfig: pathInfo.scanTemplateConfig || '',
     metadataProfileKey: pathInfo.metadataProfileKey || 'auto',
+    metadataProfileConfig: pathInfo.metadataProfileConfig || '',
   });
+}
+
+function ensure_new_path_custom_config() {
+  if (pathForm.scanTemplateKey === 'custom' && !pathForm.scanTemplateConfig?.trim()) {
+    pathForm.scanTemplateConfig = defaultCustomTemplateConfig;
+  }
+}
+
+function ensure_saved_path_custom_config(pathInfo: pathType) {
+  if (pathInfo.scanTemplateKey === 'custom' && !pathInfo.scanTemplateConfig?.trim()) {
+    pathInfo.scanTemplateConfig = defaultCustomTemplateConfig;
+  }
+}
+
+function validate_scan_configs(input: Pick<ScanPreviewInput, 'scanTemplateKey' | 'scanTemplateConfig' | 'metadataProfileConfig'>) {
+  const fields = [
+    {label: '模板规则', value: input.scanTemplateConfig, required: input.scanTemplateKey === 'custom'},
+    {label: '元数据高级配置', value: input.metadataProfileConfig, required: false},
+  ];
+  for (const field of fields) {
+    if (field.required && !field.value?.trim()) {
+      ElMessage.error(`${field.label}不能为空`);
+      return false;
+    }
+    if (field.value?.trim()) {
+      try {
+        JSON.parse(field.value);
+      } catch {
+        ElMessage.error(`${field.label}不是有效 JSON`);
+        return false;
+      }
+    }
+  }
+  return true;
 }
 
 function is_path_dirty(pathInfo: pathType) {
@@ -393,11 +467,14 @@ async function scan_path(pathInfo: any) {
 }
 
 async function save_path_config(pathInfo: pathType) {
+  if (!validate_scan_configs(pathInfo)) return;
   savingPathId.value = pathInfo.pathId;
   try {
     await pathApi.update_path(pathInfo.pathId, {
       scanTemplateKey: pathInfo.scanTemplateKey || 'legacy',
+      scanTemplateConfig: pathInfo.scanTemplateConfig || '',
       metadataProfileKey: pathInfo.metadataProfileKey || 'auto',
+      metadataProfileConfig: pathInfo.metadataProfileConfig || '',
     });
     savedPathSignatures[pathInfo.pathId] = path_config_signature(pathInfo);
     ElMessage({message: '扫描配置已保存', type: 'success'});
@@ -412,6 +489,7 @@ async function preview_new_path() {
     ElMessage({message: '请先填写路径', type: 'warning'});
     return;
   }
+  if (!validate_scan_configs(pathForm)) return;
 
   previewLoading.value = true;
   previewTargetPathId.value = null;
@@ -442,7 +520,9 @@ async function preview_saved_path(pathInfo: any) {
       include: pathInfo.include,
       exclude: pathInfo.exclude,
       scanTemplateKey: pathInfo.scanTemplateKey || 'legacy',
+      scanTemplateConfig: pathInfo.scanTemplateConfig || '',
       metadataProfileKey: pathInfo.metadataProfileKey || 'auto',
+      metadataProfileConfig: pathInfo.metadataProfileConfig || '',
       isCloudMedia: mediaInfo.isCloudMedia,
     });
     previewDialog.value = true;
@@ -468,6 +548,7 @@ async function add_path_cache() {
   const pathContent: any = pathForm.pathContent;
   const mediaId = mediaInfo.mediaId;
   if (!pathContent) return;
+  if (!validate_scan_configs(pathForm)) return;
 
   const res = await pathApi.add_path(mediaId, pathForm);
 
@@ -533,6 +614,11 @@ async function batch_delete_media() {
   color: var(--el-text-color-secondary);
   font-size: 12px;
   line-height: 1.5;
+}
+
+.path-config-json {
+  width: 100%;
+  margin: 8px 0;
 }
 
 @media only screen and (max-width: 767px) {
