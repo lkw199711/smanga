@@ -38,9 +38,9 @@ const elLocale = computed(() => {
 	return '';
 });
 
-type Win = {
-	javaObj: string;
-};
+// 此项必须在路由初始化前完成：Android 首屏可能是 /init 或 /login，
+// 不能随着这些页面的业务初始化一同被跳过。
+init_platform();
 
 // 生命周期
 onMounted(async () => {
@@ -72,16 +72,15 @@ window.addEventListener('resize', set_screen_type);
 async function system_init() {
 	if (['/', '/init', '/login', '/register'].includes(route.path)) return
 
-	// 设置安卓环境
-	if ((window as any).javaObj) {
-		config.android = true;
-	}
-
 	// 获取用户设置
 	await get_setting();
 
 	// 获取书签列表
 	browse.load_bookmark_list();
+}
+
+function init_platform() {
+	config.android = Boolean((window as typeof window & { javaObj?: unknown }).javaObj);
 }
 
 /**
