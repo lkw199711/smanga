@@ -20,10 +20,9 @@ initTheme();
 const appVue = createApp(App);
 
 appVue.use(router).use(i18n).use(createPinia());
+registerDirectives(appVue);
 
 appVue.mount('#app');
-
-registerDirectives(appVue);
 
 // 为了Vite兼容性，导出应用实例（可选）
 export default appVue;

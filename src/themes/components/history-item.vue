@@ -1,5 +1,5 @@
 <template>
-	<div :class="['t-history-item', `t-history-item--${variant}`]" @click="emit('click')" @contextmenu="emit('contextmenu', $event)">
+	<div :class="['t-history-item', `t-history-item--${variant}`]" v-long-press="() => openThemeActionSheet('chapter', item)" @click="emit('click')" @contextmenu="emit('contextmenu', $event)">
 		<t-cover
 			class="t-history-item__cover"
 			:variant="variant"
@@ -22,6 +22,7 @@
 <script lang="ts" setup>
 import { computed } from 'vue'
 import TCover from './media-cover.vue'
+import { openThemeActionSheet } from '@/themes/context-menu'
 
 const props = withDefaults(
 	defineProps<{
@@ -65,6 +66,7 @@ const progress = computed(() => {
 
 <style scoped>
 .t-history-item {
+	position: relative;
 	display: flex;
 	align-items: center;
 	gap: 14px;
@@ -74,6 +76,7 @@ const progress = computed(() => {
 	user-select: none;
 	transition: all 0.15s;
 }
+
 
 .t-history-item--A {
 	background: #fff;

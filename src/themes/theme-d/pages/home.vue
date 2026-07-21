@@ -37,7 +37,7 @@
 				<a class="sd-link" @click="router.push('/t/history')">查看全部 →</a>
 			</div>
 			<div class="sd-continue">
-				<div v-for="m in continueReading" :key="m.id" class="sd-cont-card" @click="goRead(m)" @contextmenu="openThemeContextMenu($event, 'chapter', m)">
+				<div v-for="m in continueReading" :key="m.id" class="sd-cont-card" v-long-press="() => openThemeActionSheet('chapter', m)" @click="goRead(m)" @contextmenu="openThemeContextMenu($event, 'chapter', m)">
 					<div class="sd-cont-cover"
 						:style="{ background: `linear-gradient(135deg, ${m.gradient[0]}, ${m.gradient[1]})` }">
 						<img v-if="m.blob" :src="m.blob" alt="" class="sd-cont-cover-img">
@@ -83,7 +83,7 @@ import latestApi from '@/api/latest'
 import chartsApi from '@/api/charts'
 import imageApi from '@/api/image'
 import queue from '@/store/quque'
-import { openThemeContextMenu } from '@/themes/context-menu'
+import { openThemeActionSheet, openThemeContextMenu } from '@/themes/context-menu'
 
 type MangaCard = {
 	id: number

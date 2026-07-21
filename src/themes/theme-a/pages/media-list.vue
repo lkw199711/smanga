@@ -5,13 +5,13 @@
       <button class="ta-btn-primary" @click="showAdd = true">+ 新建媒体库</button>
     </div>
     <div class="ta-grid">
-      <div v-for="m in list" :key="m.mediaId" class="ta-media-card" @click="goMedia(m)" @contextmenu="openThemeContextMenu($event, 'media', m)">
+      <div v-for="m in list" :key="m.mediaId" class="ta-media-card" v-long-press="() => openThemeActionSheet('media', m)" @click="goMedia(m)" @contextmenu="openThemeContextMenu($event, 'media', m)">
         <div class="ta-media-icon">📁</div>
-        <div class="ta-media-info">
+			<div class="ta-media-info">
           <div class="ta-media-name">{{ m.mediaName }}</div>
           <div class="ta-media-meta">{{ m.mangaCount || 0 }} 部漫画</div>
           <div class="ta-media-path">{{ m.mediaPath }}</div>
-        </div>
+			</div>
       </div>
       <div v-if="list.length === 0" class="ta-empty">暂无媒体库，点击右上角添加</div>
     </div>
@@ -39,7 +39,7 @@
 import { onMounted, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import mediaApi from '@/api/media'
-import { openThemeContextMenu } from '@/themes/context-menu'
+import { openThemeActionSheet, openThemeContextMenu } from '@/themes/context-menu'
 
 const router = useRouter()
 const route = useRoute()

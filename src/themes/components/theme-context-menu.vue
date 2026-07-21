@@ -1,6 +1,6 @@
 <template>
   <Teleport to="body">
-    <div v-if="themeContextMenu.visible" class="tcm-backdrop" @mousedown.self="closeThemeContextMenu">
+    <div v-if="themeContextMenu.visible && themeContextMenu.presentation === 'menu'" class="tcm-backdrop" @mousedown.self="closeThemeContextMenu">
       <div ref="menuEl" class="tcm-menu" :style="[positionStyle, skinStyle]" role="menu" @contextmenu.prevent>
         <div class="tcm-title">{{ title }}</div>
         <button v-for="action in actions" :key="action.key" class="tcm-action" :class="{ danger: action.danger }" :disabled="busy"
@@ -9,6 +9,18 @@
           {{ action.label }}
         </button>
       </div>
+    </div>
+    <div v-if="themeContextMenu.visible && themeContextMenu.presentation === 'sheet'" class="tcm-sheet-backdrop" @click.self="closeThemeContextMenu">
+      <section class="tcm-sheet" :style="skinStyle" role="dialog" aria-modal="true" :aria-label="`${title}操作`">
+        <div class="tcm-sheet-handle" />
+        <div class="tcm-sheet-title">{{ title }}</div>
+        <button v-for="action in actions" :key="action.key" class="tcm-sheet-action" :class="{ danger: action.danger }" :disabled="busy"
+          type="button" @click="run(action.key)">
+          <span class="tcm-sheet-action-icon" aria-hidden="true">{{ action.icon }}</span>
+          <span>{{ action.label }}</span>
+        </button>
+        <button class="tcm-sheet-cancel" type="button" @click="closeThemeContextMenu">取消</button>
+      </section>
     </div>
   </Teleport>
 
@@ -211,4 +223,14 @@ onBeforeUnmount(() => { window.removeEventListener('keydown', onKeydown); window
 .tcm-action:hover:not(:disabled) { background: var(--tcm-hover, #f3f4f6); }
 .tcm-action.danger { color: #dc2626; }
 .tcm-action:disabled { cursor: wait; opacity: .55; }
+.tcm-sheet-backdrop { position: fixed; inset: 0; z-index: 3000; display: flex; align-items: flex-end; background: rgba(0, 0, 0, .38); }
+.tcm-sheet { width: 100%; padding: 8px 12px calc(12px + env(safe-area-inset-bottom)); border-radius: 20px 20px 0 0; background: var(--tcm-bg, #fff); color: var(--tcm-text, #1f2937); box-shadow: 0 -8px 24px rgba(0,0,0,.16); animation: tcm-sheet-in .18s ease-out; }
+.tcm-sheet-handle { width: 36px; height: 4px; margin: 2px auto 12px; border-radius: 999px; background: currentColor; opacity: .2; }
+.tcm-sheet-title { padding: 0 10px 10px; overflow: hidden; font-size: 14px; font-weight: 650; text-overflow: ellipsis; white-space: nowrap; }
+.tcm-sheet-action { display: flex; align-items: center; width: 100%; min-height: 52px; padding: 10px 12px; border: 0; border-radius: 12px; background: transparent; color: inherit; font: inherit; font-size: 16px; text-align: left; }
+.tcm-sheet-action:active { background: var(--tcm-hover, #f3f4f6); }
+.tcm-sheet-action-icon { display: inline-flex; align-items: center; justify-content: center; width: 30px; margin-right: 10px; font-size: 20px; }
+.tcm-sheet-action.danger { color: #dc2626; }
+.tcm-sheet-cancel { width: 100%; min-height: 52px; margin-top: 8px; border: 0; border-radius: 12px; background: var(--tcm-hover, #f3f4f6); color: inherit; font: inherit; font-size: 16px; font-weight: 600; }
+@keyframes tcm-sheet-in { from { transform: translateY(100%); } to { transform: translateY(0); } }
 </style>

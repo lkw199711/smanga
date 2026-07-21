@@ -31,7 +31,7 @@
 				<a class="sa-link" @click="router.push('/t/history')">查看全部 →</a>
 			</div>
 			<div class="sa-continue">
-				<div v-for="item in historyList" :key="item.chapterId" class="sa-cont-card" @click="goRead(item)" @contextmenu="openThemeContextMenu($event, 'chapter', item)">
+				<div v-for="item in historyList" :key="item.chapterId" class="sa-cont-card" v-long-press="() => openThemeActionSheet('chapter', item)" @click="goRead(item)" @contextmenu="openThemeContextMenu($event, 'chapter', item)">
 					<div
 						class="sa-cont-cover"
 						:style="coverStyle(item, { kind: 'chapter', fallbackSeed: item.chapterId })"
@@ -82,7 +82,7 @@ import chartsApi from '@/api/charts'
 import imageApi from '@/api/image'
 import { globalData } from '@/store'
 import TMangaCard from '@/themes/components/manga-card.vue'
-import { openThemeContextMenu } from '@/themes/context-menu'
+import { openThemeActionSheet, openThemeContextMenu } from '@/themes/context-menu'
 
 const router = useRouter()
 

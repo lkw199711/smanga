@@ -58,12 +58,15 @@
 				<span class="sa-nav-label">{{ item.label }}</span>
 			</div>
 		</nav>
+
+		<theme-context-menu />
 	</div>
 </template>
 
 <script lang="ts" setup>
 import { ref, computed } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
+import ThemeContextMenu from '@/themes/components/theme-context-menu.vue'
 
 const showSidebar = ref(false)
 const router = useRouter()

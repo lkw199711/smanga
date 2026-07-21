@@ -1,5 +1,5 @@
 <template>
-	<div :class="['t-bookmark-item', `t-bookmark-item--${variant}`]" @click="emit('click')" @contextmenu="emit('contextmenu', $event)">
+	<div :class="['t-bookmark-item', `t-bookmark-item--${variant}`]" v-long-press="() => openThemeActionSheet('chapter', item)" @click="emit('click')" @contextmenu="emit('contextmenu', $event)">
 		<t-cover
 			class="t-bookmark-item__cover"
 			:variant="variant"
@@ -20,6 +20,7 @@
 <script lang="ts" setup>
 import { computed } from 'vue'
 import TCover from './media-cover.vue'
+import { openThemeActionSheet } from '@/themes/context-menu'
 
 const props = withDefaults(
 	defineProps<{
@@ -65,6 +66,7 @@ const coverFile = computed(() => {
 
 <style scoped>
 .t-bookmark-item {
+	position: relative;
 	display: flex;
 	align-items: center;
 	gap: 14px;
@@ -74,6 +76,7 @@ const coverFile = computed(() => {
 	user-select: none;
 	transition: all 0.15s;
 }
+
 
 .t-bookmark-item--A {
 	background: #fff;

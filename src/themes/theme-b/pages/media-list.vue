@@ -2,10 +2,10 @@
   <div class="tb-page">
     <h1>媒体库</h1>
     <div class="tb-grid">
-      <div v-for="m in list" :key="m.mediaId" class="tb-media-card" @click="goMedia(m)" @contextmenu="openThemeContextMenu($event, 'media', m)">
+      <div v-for="m in list" :key="m.mediaId" class="tb-media-card" v-long-press="() => openThemeActionSheet('media', m)" @click="goMedia(m)" @contextmenu="openThemeContextMenu($event, 'media', m)">
         <div class="tb-media-icon">📁</div>
         <div class="tb-media-name">{{ m.mediaName }}</div>
-        <div class="tb-media-count">{{ m.mangaCount || 0 }} 部漫画</div>
+		<div class="tb-media-count">{{ m.mangaCount || 0 }} 部漫画</div>
       </div>
     </div>
   </div>
@@ -15,7 +15,7 @@
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import mediaApi from '@/api/media'
-import { openThemeContextMenu } from '@/themes/context-menu'
+import { openThemeActionSheet, openThemeContextMenu } from '@/themes/context-menu'
 const router = useRouter()
 const list = ref<any[]>([])
 onMounted(async () => { try { list.value = pickMediaList(await mediaApi.get()) } catch(e){} })
@@ -39,4 +39,3 @@ h1 { font-size: 20px; font-weight: 700; margin: 0 0 20px; color: #1f2937; }
 .tb-media-name { font-size: 15px; font-weight: 600; color: #1f2937; }
 .tb-media-count { font-size: 12px; color: rgba(255,255,255,0.5); margin-top: 4px; }
 </style>
-

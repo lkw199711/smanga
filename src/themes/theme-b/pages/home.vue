@@ -25,7 +25,7 @@
 				<a class="sb-link" @click="router.push('/t/history')">全部 →</a>
 			</div>
 			<div class="sb-continue">
-				<div v-for="item in historyList" :key="item.chapterId" class="sb-cont-card" @click="goRead(item)" @contextmenu="openThemeContextMenu($event, 'chapter', item)">
+				<div v-for="item in historyList" :key="item.chapterId" class="sb-cont-card" v-long-press="() => openThemeActionSheet('chapter', item)" @click="goRead(item)" @contextmenu="openThemeContextMenu($event, 'chapter', item)">
 					<div class="sb-cont-cover"
 						:style="{ background: `linear-gradient(135deg, ${getGradient(item.chapterId)[0]}, ${getGradient(item.chapterId)[1]})` }">
 						<img v-if="item.blob" :src="item.blob" alt="" class="continue-cover" />
@@ -74,7 +74,7 @@ import chartsApi from '@/api/charts'
 import imageApi from '@/api/image'
 import { globalData } from '@/store'
 import queue from '@/store/quque'
-import { openThemeContextMenu } from '@/themes/context-menu'
+import { openThemeActionSheet, openThemeContextMenu } from '@/themes/context-menu'
 
 const router = useRouter()
 

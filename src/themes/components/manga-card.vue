@@ -1,5 +1,5 @@
 <template>
-	<div :class="['t-manga-card', `t-manga-card--${variant}`]" @click="emit('click')" @contextmenu="emit('contextmenu', $event)">
+	<div :class="['t-manga-card', `t-manga-card--${variant}`]" v-long-press="() => openThemeActionSheet('manga', item)" @click="emit('click')" @contextmenu="emit('contextmenu', $event)">
 		<t-cover
 			class="t-manga-card__cover"
 			:variant="variant"
@@ -17,6 +17,7 @@
 <script lang="ts" setup>
 import { computed } from 'vue'
 import TCover from './media-cover.vue'
+import { openThemeActionSheet } from '@/themes/context-menu'
 
 const props = withDefaults(
 	defineProps<{
@@ -71,10 +72,12 @@ const metaText = computed(() => {
 
 <style scoped>
 .t-manga-card {
+	position: relative;
 	cursor: pointer;
 	user-select: none;
 	transition: transform 0.15s, box-shadow 0.15s, border-color 0.15s, background 0.15s;
 }
+
 
 .t-manga-card__cover {
 	position: relative;

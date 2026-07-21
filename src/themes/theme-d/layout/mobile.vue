@@ -78,12 +78,15 @@
 			</div>
 		</nav>
 	</div>
+
+	<theme-context-menu />
 </template>
 
 <script lang="ts" setup>
 import { computed, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { userInfo } from '@/store'
+import ThemeContextMenu from '@/themes/components/theme-context-menu.vue'
 
 const showSidebar = ref(false)
 const router = useRouter()

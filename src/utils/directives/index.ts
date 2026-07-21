@@ -1,9 +1,11 @@
 import { App } from 'vue';
 import pullRefresh from './pullRefresh';
+import longPress from './longPress';
 
 // 指令集合
 const directives = {
-  pullRefresh
+  pullRefresh,
+  longPress,
 };
 
 // 批量注册指令
