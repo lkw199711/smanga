@@ -76,6 +76,21 @@
 						</div>
 					</div>
 					<button class="sd-btn" @click="toggleDark">🌙</button>
+					<div class="sd-skin-wrap" ref="skinWrapRef">
+						<button class="sd-btn sd-skin-btn" @click="toggleSkinDropdown">
+							<span>🎨 {{ currentSkinLabel }}</span>
+						</button>
+						<div v-if="showSkinDropdown" class="sd-skin-dropdown">
+							<div
+								v-for="skin in skinList"
+								:key="skin.key"
+								:class="['sd-skin-item', { active: themeState.current === skin.key }]"
+								@click="applySkin(skin.key)"
+							>
+								{{ skin.name }}
+							</div>
+						</div>
+					</div>
 					<button class="sd-btn">中文</button>
 					<button class="sd-btn-primary">+ 新建</button>
 				</div>
@@ -94,6 +109,8 @@ import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import mediaStatsApi from '@/api/media-stats'
 import { userInfo, userConfig, sortOrder, chapterSortOrder } from '@/store'
+import type { ThemeKey } from '@/themes/store'
+import { themeState, setTheme } from '@/themes/store'
 import ThemeContextMenu from '@/themes/components/theme-context-menu.vue'
 
 const refreshKey = ref(0)
@@ -239,7 +256,63 @@ function toggleDark() {
 	currentTheme.value = currentTheme.value === 'dark' ? lastNonDark.value : 'dark'
 }
 
-// ---- 排序 ----
+// ---- 皮肤切换 (A/B/D/Legacy) ----
+const skinList: { key: ThemeKey; name: string }[] = [
+	{ key: 'A', name: 'A - 现代简约' },
+	{ key: 'B', name: 'B - 漫画风' },
+	{ key: 'D', name: 'D - 多主题' },
+	{ key: 'Legacy', name: '经典 (旧版)' },
+]
+
+const showSkinDropdown = ref(false)
+const skinWrapRef = ref<HTMLElement | null>(null)
+
+const currentSkinLabel = computed(() => {
+	const found = skinList.find((s) => s.key === themeState.current)
+	return found?.name || 'D - 多主题'
+})
+
+function toggleSkinDropdown() {
+	showSkinDropdown.value = !showSkinDropdown.value
+}
+
+function mapToLegacyRoute(): string {
+	const rn = route.name as string
+	if (rn === 't-manga-list') return `/manga-list?media=${route.params.mediaId || ''}`
+	if (rn === 't-manga-info') return `/manga-info?mangaId=${route.params.mangaId || ''}`
+	if (rn === 't-chapter-list') return `/chapter-list?mangaId=${route.params.mangaId || ''}`
+	const routeMap: Record<string, string> = {
+		't-home': '/', 't-media-list': '/media-list', 't-history': '/history',
+		't-bookmark': '/bookmark', 't-collect': '/collect', 't-search': '/search',
+		't-tag-list': '/tag-list', 't-user-setting': '/user-setting',
+		't-serve-setting': '/serve-setting', 't-manage': '/manage',
+	}
+	return routeMap[rn] || '/'
+}
+
+function applySkin(key: ThemeKey) {
+	if (key === 'Legacy') {
+		setTheme('Legacy')
+		showSkinDropdown.value = false
+		router.push(mapToLegacyRoute())
+		return
+	}
+	if (themeState.current === 'Legacy') {
+		setTheme(key)
+		showSkinDropdown.value = false
+		window.location.href = '/t'
+		return
+	}
+	setTheme(key)
+	showSkinDropdown.value = false
+}
+
+function onSkinClickOutside(e: MouseEvent) {
+	if (skinWrapRef.value && !skinWrapRef.value.contains(e.target as Node)) {
+		showSkinDropdown.value = false
+	}
+}
+
 const sortOrderLabels: Record<string, string> = {
 	id: 'ID',
 	idDesc: 'ID 倒序',
@@ -299,8 +372,14 @@ function onSortClickOutside(e: MouseEvent) {
 	}
 }
 
-onMounted(() => document.addEventListener('click', onSortClickOutside))
-onBeforeUnmount(() => document.removeEventListener('click', onSortClickOutside))
+onMounted(() => {
+	document.addEventListener('click', onSortClickOutside)
+	document.addEventListener('click', onSkinClickOutside)
+})
+onBeforeUnmount(() => {
+	document.removeEventListener('click', onSortClickOutside)
+	document.removeEventListener('click', onSkinClickOutside)
+})
 </script>
 
 <style scoped>
@@ -622,6 +701,44 @@ onBeforeUnmount(() => document.removeEventListener('click', onSortClickOutside))
 }
 
 .sd-sort-item.active {
+	background: var(--sd-primary-bg);
+	color: var(--sd-primary);
+	font-weight: 600;
+}
+
+/* 皮肤切换下拉 */
+.sd-skin-wrap {
+	position: relative;
+}
+
+.sd-skin-dropdown {
+	position: absolute;
+	top: calc(100% + 6px);
+	right: 0;
+	min-width: 160px;
+	background: var(--sd-card);
+	border: 1px solid var(--sd-border);
+	border-radius: 10px;
+	box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+	z-index: 200;
+	padding: 6px;
+}
+
+.sd-skin-item {
+	padding: 8px 14px;
+	font-size: 13px;
+	color: var(--sd-text-muted);
+	border-radius: 6px;
+	cursor: pointer;
+	transition: all 0.15s;
+}
+
+.sd-skin-item:hover {
+	background: var(--sd-hover);
+	color: var(--sd-text);
+}
+
+.sd-skin-item.active {
 	background: var(--sd-primary-bg);
 	color: var(--sd-primary);
 	font-weight: 600;

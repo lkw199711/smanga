@@ -6,6 +6,7 @@ import ThemeLayout from '@/themes/layout-wrapper.vue';
 import ThemeBridge from '@/themes/bridge.vue';
 import LegacyReaderBridge from '@/themes/legacy-reader-bridge.vue';
 import LegacyMangaInfoBridge from '@/themes/legacy-manga-info-bridge.vue';
+import { themeState } from '@/themes/store';
 import { url } from '@/api/index';
 
 import NProgress from 'nprogress';
@@ -598,6 +599,24 @@ const router = createRouter({
 
 router.beforeEach(async (to) => {
 	start();
+
+	// Legacy 主题重定向：如果 cookie 是 Legacy 但访问 /t 路由，跳转到旧版对应页面
+	if (themeState.current === 'Legacy' && to.path.startsWith('/t')) {
+		// 带参数路由映射
+		if (to.name === 't-manga-list') { close(); return `/manga-list?media=${to.params.mediaId || ''}` }
+		if (to.name === 't-manga-info') { close(); return `/manga-info?mangaId=${to.params.mangaId || ''}` }
+		if (to.name === 't-chapter-list') { close(); return `/chapter-list?mangaId=${to.params.mangaId || ''}` }
+		const legacyMap: Record<string, string> = {
+			't-home': '/', 't-media-list': '/media-list', 't-history': '/history',
+			't-bookmark': '/bookmark', 't-collect': '/collect', 't-search': '/search',
+			't-tag-list': '/tag-list', 't-user-setting': '/user-setting',
+			't-serve-setting': '/serve-setting', 't-manage': '/manage', 't-login': '/login',
+		}
+		const target = legacyMap[to.name as string]
+		if (target) { close(); return target }
+		close()
+		return '/'
+	}
 
 	// 首次导航时检查部署状态
 	if (deployChecked === null) {

@@ -60,6 +60,7 @@ function user_logout() {
 
 function new_theme() {
     Cookies.set('useNewTheme', '1')
+    setTheme('A')
     router.push('/t')
 }
 </script>

@@ -7,6 +7,7 @@ const layouts: Record<ThemeKey, () => Promise<Component>> = {
   A: () => import('./theme-a/layout/index.vue'),
   B: () => import('./theme-b/layout/index.vue'),
   D: () => import('./theme-d/layout/index.vue'),
+  Legacy: () => import('./theme-a/layout/index.vue'), // Legacy 走路由守卫重定向，此处仅做回退
 }
 
 // Mobile Layout components
@@ -14,6 +15,7 @@ const mobileLayouts: Record<ThemeKey, () => Promise<Component>> = {
   A: () => import('./theme-a/layout/mobile.vue'),
   B: () => import('./theme-b/layout/mobile.vue'),
   D: () => import('./theme-d/layout/mobile.vue'),
+  Legacy: () => import('./theme-a/layout/mobile.vue'),
 }
 
 // Reader layout components
@@ -21,6 +23,7 @@ const readerLayouts: Record<ThemeKey, () => Promise<Component>> = {
   A: () => import('./theme-a/reader/layout.vue'),
   B: () => import('./theme-b/reader/layout.vue'),
   D: () => import('./theme-d/reader/layout.vue'),
+  Legacy: () => import('./theme-a/reader/layout.vue'),
 }
 
 // Page component map
@@ -76,6 +79,23 @@ const pages: Record<ThemeKey, Record<string, () => Promise<Component>>> = {
     manage: () => import('./theme-d/pages/manage.vue'),
     login: () => import('./theme-d/pages/login.vue'),
   },
+  Legacy: {
+    home: () => import('./theme-a/pages/home.vue'),
+    'media-list': () => import('./theme-a/pages/media-list.vue'),
+    'manga-list': () => import('./theme-a/pages/manga-list.vue'),
+    media: () => import('./theme-a/pages/media.vue'),
+    'chapter-list': () => import('./theme-a/pages/chapter-list.vue'),
+    'manga-info': () => import('./theme-a/pages/manga-info.vue'),
+    history: () => import('./theme-a/pages/history.vue'),
+    bookmark: () => import('./theme-a/pages/bookmark.vue'),
+    collect: () => import('./theme-a/pages/collect.vue'),
+    search: () => import('./theme-a/pages/search.vue'),
+    'tag-list': () => import('./theme-a/pages/tag-list.vue'),
+    'user-setting': () => import('./theme-a/pages/user-setting.vue'),
+    'serve-setting': () => import('./theme-a/pages/serve-setting.vue'),
+    manage: () => import('./theme-a/pages/manage.vue'),
+    login: () => import('./theme-a/pages/login.vue'),
+  },
 }
 
 // Reader mode components
@@ -94,6 +114,11 @@ const readers: Record<ThemeKey, Record<string, () => Promise<Component>>> = {
     single: () => import('./theme-d/reader/single.vue'),
     flow: () => import('./theme-d/reader/flow.vue'),
     double: () => import('./theme-d/reader/double.vue'),
+  },
+  Legacy: {
+    single: () => import('./theme-a/reader/single.vue'),
+    flow: () => import('./theme-a/reader/flow.vue'),
+    double: () => import('./theme-a/reader/double.vue'),
   },
 }
 

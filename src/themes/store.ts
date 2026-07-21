@@ -1,13 +1,13 @@
 import { reactive, watch } from 'vue'
 import { Cookies } from '@/utils'
 
-export type ThemeKey = 'A' | 'B' | 'D'
+export type ThemeKey = 'A' | 'B' | 'D' | 'Legacy'
 
 const COOKIE_KEY = 'smanga-theme'
 
 function loadTheme(): ThemeKey {
   const saved = Cookies.get(COOKIE_KEY)
-  if (saved === 'A' || saved === 'B' || saved === 'D') return saved
+  if (saved === 'A' || saved === 'B' || saved === 'D' || saved === 'Legacy') return saved
   return 'A'
 }
 
