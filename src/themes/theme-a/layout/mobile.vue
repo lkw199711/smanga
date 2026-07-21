@@ -1,5 +1,6 @@
 <template>
 	<div class="style-a style-a-mobile">
+		<android-seat />
 		<!-- 移动端顶部栏 -->
 		<header class="sa-mobile-header">
 			<button class="sa-menu-toggle" @click="showSidebar = !showSidebar">☰</button>
@@ -67,6 +68,7 @@
 import { ref, computed } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import ThemeContextMenu from '@/themes/components/theme-context-menu.vue'
+import androidSeat from '@/layout/components/android-seat.vue'
 
 const showSidebar = ref(false)
 const router = useRouter()
@@ -159,6 +161,7 @@ function navigateToMedia(mediaId: number) {
 	align-items: center;
 	gap: 12px;
 	padding: 12px 16px;
+	padding-top: calc(12px + env(safe-area-inset-top));
 	background: rgba(255, 255, 255, 0.95);
 	backdrop-filter: blur(10px);
 	border-bottom: 1px solid #eaeaea;

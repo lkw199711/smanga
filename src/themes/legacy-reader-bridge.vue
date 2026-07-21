@@ -1,5 +1,6 @@
 <template>
   <main :class="['theme-legacy-reader', `theme-legacy-reader-${themeState.current.toLowerCase()}`]">
+    <android-seat />
     <template v-if="ready">
       <theme-reader-topbar v-if="config.browseTop" />
       <div v-if="config.browseTop" class="theme-reader-topbar-seat" />
@@ -25,6 +26,7 @@ import { themeState } from '@/themes/store'
 import chapterApi from '@/api/chapter'
 import mangaApi from '@/api/manga'
 import ThemeReaderTopbar from './legacy-reader/topbar.vue'
+import androidSeat from '@/layout/components/android-seat.vue'
 
 const route = useRoute()
 const router = useRouter()
@@ -103,6 +105,7 @@ watch(() => route.params.chapterId, prepareReader)
   --theme-reader-topbar-text: #f8fafc;
   --theme-reader-topbar-accent: #60a5fa;
   min-height: 100vh;
+  padding-top: env(safe-area-inset-top);
   background: #111;
 }
 

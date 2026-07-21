@@ -103,7 +103,7 @@ function button_click() {
 // 展开按钮
 .show-menu-btn {
   position: fixed;
-  top: 10rem;
+  top: calc(10rem + env(safe-area-inset-top));
   left: 4rem;
   width: 5rem;
   height: 5rem;

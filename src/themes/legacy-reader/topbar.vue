@@ -77,19 +77,22 @@ async function handleSelect(key: string) {
   top: 0;
   left: 0;
   width: 100%;
+  padding-top: env(safe-area-inset-top);
   background: var(--theme-reader-topbar-bg, #111827);
   color: var(--theme-reader-topbar-text, #f8fafc);
   box-shadow: 0 1px 10px rgb(0 0 0 / 22%);
 }
 
 .chapter-name {
-  min-height: 2.65rem;
-  padding: 0.5rem 1rem;
+  display: block;
+  width: 100vw;
+  height: 3.6rem;
   overflow: hidden;
   color: var(--theme-reader-topbar-text, #f8fafc);
   background: var(--theme-reader-chapter-bg, #1f2937);
-  font-size: 0.95rem;
+  font-size: 1.8rem;
   text-align: center;
+  line-height: 2;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
@@ -105,8 +108,7 @@ async function handleSelect(key: string) {
 @media (max-width: 767px) {
   :deep(.el-menu-item),
   :deep(.el-sub-menu__title) {
-    padding: 0 0.45rem;
-    font-size: 0.75rem;
+    padding: 0 0.4rem;
   }
 
   :deep(.el-menu-item:first-child) {
