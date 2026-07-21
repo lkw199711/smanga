@@ -13,7 +13,7 @@
       </div>
     </div>
     <div class="ta-grid">
-      <div v-for="m in list" :key="m.mangaId" class="ta-manga-card" v-long-press="() => openThemeActionSheet('manga', m)" @click="goChapters(m)" @contextmenu.prevent="openThemeContextMenu($event, 'manga', m)">
+      <div v-for="m in list" :key="m.mangaId" class="ta-manga-card" v-long-press="() => openThemeActionSheet('manga', m)" @click="goMangaInfo(m)" @contextmenu.prevent="openThemeContextMenu($event, 'manga', m)">
         <div class="ta-manga-cover">
           <img v-if="m.blob" :src="m.blob" alt="" />
           <div v-else class="ta-cover-placeholder">📚</div>
@@ -73,8 +73,8 @@ async function loadData() {
   loading.value = false
 }
 
-function goChapters(m: any) {
-  router.push(`/t/manga/${m.mangaId}/chapters`)
+function goMangaInfo(m: any) {
+	router.push(`/t/manga/${m.mangaId}`)
 }
 
 async function get_poster(item: any) {

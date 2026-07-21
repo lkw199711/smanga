@@ -307,7 +307,8 @@ const useBrowseStore = defineStore('browse', {
 		 */
 		load_route_params(route: any) {
 			if (!route) return;
-			this.browseType = route.name;
+			// 主题阅读器沿用旧阅读内容，但模式存放在 query 中，避免与 /t/reader 路由名耦合。
+			this.browseType = route.name === 't-reader' ? String(route.query.readerMode || 'flow') : route.name;
 			this.mediaId = Number(route.query.mediaId);
 			this.mangaId = Number(route.query.mangaId);
 			this.chapterId = Number(route.query.chapterId);

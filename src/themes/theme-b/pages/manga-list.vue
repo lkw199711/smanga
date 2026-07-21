@@ -25,7 +25,7 @@
         :item="m"
         variant="B"
         :meta="`${m.chapterCount || 0} 章节`"
-        @click="goChapters(m)"
+        @click="goMangaInfo(m)"
         @contextmenu="openThemeContextMenu($event, 'manga', m)"
       />
     </div>
@@ -85,8 +85,8 @@ async function loadData() {
   loading.value = false
 }
 
-function goChapters(m: any) {
-  router.push(`/t/manga/${m.mangaId}/chapters`)
+function goMangaInfo(m: any) {
+	router.push(`/t/manga/${m.mangaId}`)
 }
 
 async function get_poster(item: any) {

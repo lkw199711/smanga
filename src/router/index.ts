@@ -4,7 +4,7 @@ import browse from '@/layout/browse.vue';
 import useBrowseStore from '@/store/browse';
 import ThemeLayout from '@/themes/layout-wrapper.vue';
 import ThemeBridge from '@/themes/bridge.vue';
-import ThemeReaderWrapper from '@/themes/reader-wrapper.vue';
+import LegacyReaderBridge from '@/themes/legacy-reader-bridge.vue';
 import { url } from '@/api/index';
 
 import NProgress from 'nprogress';
@@ -571,7 +571,8 @@ const routes: Array<RouteRecordRaw> = [
 	{
 		path: '/t/reader/:chapterId',
 		name: 't-reader',
-		component: ThemeReaderWrapper,
+		// 主题页面暂时复用成熟的旧阅读器，避免每套皮肤维护一套阅读组件。
+		component: LegacyReaderBridge,
 		meta: { sidebar: false, title: '阅读' },
 	},
 

@@ -67,7 +67,7 @@ const directionTitle = computed(() => {
 });
 
 const idDouble = computed(() => {
-	return route.name === 'double';
+	return browse.browseType === 'double';
 });
 
 const operationText = computed(() => {

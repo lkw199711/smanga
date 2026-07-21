@@ -17,6 +17,14 @@ type chapterGetParamsType = {
 };
 
 const chapterApi = {
+	/**
+	 * @description: 获取单个章节，用于从主题阅读入口恢复旧阅读器所需的路由参数
+	 */
+	async get_by_id(chapterId: number) {
+		const res = await ajax.get(`chapter/${chapterId}`);
+		return res.data?.data || {};
+	},
+
   get: async function ({mangaId, mediaId = 0, page = 0, pageSize = 0, order = 'number', keyWord = ''}: chapterGetParamsType) {
     const res = await ajax.get('chapter', {
       params: {mangaId, mediaId, page, pageSize, order, keyWord},

@@ -287,7 +287,8 @@ async function next_chapter() {
 async function change_chapter(chapterId: number) {
   browseStore.page = 1;
   await router.push({
-    name: route.name as string,
+    name: route.name === 't-reader' ? 't-reader' : route.name as string,
+    params: route.name === 't-reader' ? { chapterId } : {},
     query: {
       ...route.query,
       chapterId: chapterId,
