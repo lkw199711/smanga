@@ -13,6 +13,17 @@
       <el-form :model="form" label-width="160px" size="default">
         <el-row :gutter="20">
           <el-col :span="24">
+            <el-form-item label="扫描引擎">
+              <el-select v-model="form.scan.engine" :style="{ width: '300px' }">
+                <el-option label="模板扫描 v2（混合目录）" value="template-v2" />
+                <el-option label="模板扫描 v1（单模板）" value="template-v1" />
+                <el-option label="旧扫描器（紧急回退）" value="legacy" />
+              </el-select>
+              <el-button type="primary" @click="confirm_scan_engine" class="ml-4">确定</el-button>
+            </el-form-item>
+          </el-col>
+
+          <el-col :span="24">
             <el-form-item label="扫描周期">
               <el-input v-model="form.scan.interval" placeholder="输入cron表达式" :style="{ width: '300px' }"></el-input>
               <span class="suffix ml-2 text-gray-500">cron表达式</span>
@@ -61,6 +72,7 @@
       </el-form>
 
       <div class="form-note mt-4 text-gray-500 text-sm">
+        <p>• 模板扫描 v2 支持混合目录；出现兼容问题时可立即切换到 v1 或旧扫描器，后续扫描任务即时生效。</p>
         <p>• 扫描周期为cron表达式,默认为一天两次</p>
         <p>• cron表达式格式:秒 分 时 日 月 周,为六位表达式,位数错误将不能启动定时任务.</p>
         <p>• 再次扫描媒体库时,是否对已有封面的漫画再次加载封面.开启会增加扫描时间.</p>
@@ -506,6 +518,7 @@ let backRandom = ref(true);
 
 const form = reactive({
   scan: {
+    engine: 'template-v2' as 'legacy' | 'template-v1' | 'template-v2',
     autoCompress: 0,
     interval: 60,
     reloadCover: 0,
@@ -612,6 +625,15 @@ async function comfirm_interval() {
     await serveSettingApi.set('scan', 'interval', form.scan.interval);
   } catch (error) {
     console.error('Failed to set scan interval:', error);
+  }
+}
+
+async function confirm_scan_engine() {
+  try {
+    await serveSettingApi.set('scan', 'engine', form.scan.engine);
+    ElMessage.success('扫描引擎已切换，后续扫描任务即时生效');
+  } catch (error) {
+    console.error('Failed to set scan engine:', error);
   }
 }
 

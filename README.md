@@ -26,6 +26,7 @@
     - [新增媒体库](#新增媒体库)
       - [媒体库管理-\>新增媒体库](#媒体库管理-新增媒体库)
       - [添加路径](#添加路径)
+    - [自定义扫描模板](#自定义扫描模板)
     - [添加书签](#添加书签)
     - [切换浏览模式](#切换浏览模式)
     - [阅读界面的使用](#阅读界面的使用)
@@ -416,6 +417,142 @@ Smanga3版本以上, 新增了数据库以及压缩文件支持, 为此引入了
 为媒体库添加媒体路径, 单个媒体库可以有多条路径 (添加时请注意目录的格式以及确认目录确实存在)
 
 添加路径之后,smanga将开始扫描, 骚后点击logo可前往媒体库列表界面 就可以观看漫画了
+
+### 自定义扫描模板
+
+当同一个扫描路径中的目录结构不属于内置模板，或者同时混合了“连载漫画”和“单行本”等不同结构时，可以为该路径配置自定义扫描模板。模板按路径保存，不会影响其他媒体路径。
+
+#### 使用步骤
+
+1. 进入 **媒体库管理**，打开目标媒体库的 **路径** 设置。
+2. 新增路径时，在“扫描模板”中选择 **自定义模板规则**；已有路径可直接修改其扫描模板。
+3. 在“模板规则 JSON”中填写 `version=1` 的规则。
+4. 点击 **试扫描**，检查识别出的漫画、章节、跳过项和警告。
+5. 结果符合预期后保存配置，再执行扫描更新。修改已有路径时，必须先点击 **保存配置**。
+
+> “扫描更新”用于增量同步；“重新扫描”会先删除该路径下已经入库的漫画，再按新规则建立数据。正式使用新规则前建议先试扫描。
+
+#### 目录层级编号
+
+`mangaIndex` 和 `chapterIndex` 从扫描路径的下一层开始按 `0` 计数：
+
+```text
+扫描路径/漫画/章节/图片       mangaIndex=0, chapterIndex=1
+扫描路径/分类/漫画/章节/图片  mangaIndex=1, chapterIndex=2
+扫描路径/漫画/图片            mangaIndex=0, singleChapter=true
+```
+
+章节可以是包含图片的目录，也可以是 Smanga 支持的压缩包或文档格式。`singleChapter=true` 表示漫画目录本身就是唯一章节，此时可省略 `chapterIndex`（保存后会规范为 `null`）。
+
+#### 单一结构示例
+
+以下规则适用于 `扫描路径/分类/漫画/章节/图片`：
+
+```json
+{
+  "version": 1,
+  "strategy": "single",
+  "rules": [
+    {
+      "id": "category-manga-chapter",
+      "label": "分类/漫画/章节",
+      "priority": 100,
+      "mangaIndex": 1,
+      "chapterIndex": 2,
+      "singleChapter": false
+    }
+  ]
+}
+```
+
+`strategy=single` 只使用 `rules` 中的第一条规则。
+
+#### 混合目录示例
+
+假设一个路径中同时存在以下两种结构：
+
+```text
+扫描路径/连载/漫画名/章节名/图片
+扫描路径/单行本/漫画名/图片
+```
+
+可以使用：
+
+```json
+{
+  "version": 1,
+  "strategy": "mixed",
+  "rules": [
+    {
+      "id": "serial",
+      "label": "连载漫画",
+      "priority": 200,
+      "mangaIndex": 1,
+      "chapterIndex": 2,
+      "singleChapter": false,
+      "directoryInclude": "连载"
+    },
+    {
+      "id": "one-shot",
+      "label": "单行本",
+      "priority": 100,
+      "mangaIndex": 1,
+      "singleChapter": true,
+      "directoryInclude": "单行本"
+    }
+  ]
+}
+```
+
+`strategy=mixed` 会同时应用所有规则。多条规则识别到相同或互相包含的漫画路径时，系统优先选择结构匹配度更高的结果；匹配度相同时使用 `priority` 较高的规则。
+
+#### 模板字段
+
+| 字段 | 是否必填 | 说明 |
+| --- | --- | --- |
+| `version` | 是 | 当前只支持 `1` |
+| `strategy` | 是 | `single` 或 `mixed` |
+| `rules` | 是 | 1～20 条规则 |
+| `rules[].id` | 是 | 规则唯一标识，只能使用字母、数字、`_`、`-`，最多 64 字符 |
+| `rules[].label` | 否 | 页面和扫描报告中显示的名称，默认使用 `id` |
+| `rules[].priority` | 否 | 冲突时的优先级，范围 0～10000 |
+| `rules[].mangaIndex` | 是 | 漫画所在层级，范围 0～8 |
+| `rules[].chapterIndex` | 连载结构必填 | 章节层级，必须大于 `mangaIndex`，最大为 9 |
+| `rules[].singleChapter` | 否 | `true` 表示漫画目录本身作为唯一章节；省略或为 `false` 时使用独立章节层级 |
+| `rules[].directoryInclude` | 否 | 对漫画完整路径执行的 JavaScript 正则表达式；匹配后才采用此规则 |
+| `rules[].directoryExclude` | 否 | 对漫画完整路径执行的 JavaScript 正则表达式；匹配时排除此规则 |
+
+模板 JSON 最大 64 KB。非法 JSON、重复规则 ID、无效正则、越界层级或不支持的字段值会在保存或试扫描时给出明确错误。
+
+#### 元数据高级配置
+
+路径还可以选择元数据识别方式，并在“元数据高级配置”中指定来源、优先级和覆盖策略：
+
+```json
+{
+  "version": 1,
+  "sources": ["smanga", "series-json", "comicinfo"],
+  "precedence": ["smanga", "series-json", "comicinfo"],
+  "overwriteExisting": false,
+  "maxFileBytes": 1048576
+}
+```
+
+| 字段 | 说明 |
+| --- | --- |
+| `sources` | 启用的来源：`smanga`、`series-json`、`comicinfo`；空数组表示不读取元数据 |
+| `precedence` | 来源优先顺序，只能包含 `sources` 中已启用的值；漫画级 `.smanga` 与 `series.json` 冲突时按此顺序选择 |
+| `overwriteExisting` | `true` 允许扫描时覆盖已有元数据；`false` 保留已入库数据 |
+| `maxFileBytes` | 单个元数据文件的读取上限，范围 1024～10485760 字节，默认 1048576（1 MB） |
+
+`ComicInfo.xml` 属于章节级元数据；`.smanga` 和 `series.json` 属于漫画级元数据。高级配置留空时，系统根据所选元数据识别方式生成默认配置。
+
+#### 管理与回退
+
+- 自定义模板和元数据高级配置都保存在具体媒体路径上；当前没有全局模板库，需要复用时可复制 JSON 到其他路径。
+- 修改规则后应重新执行试扫描。只有保存后的配置才会用于正式扫描。
+- 在 **服务器设置** 中可将扫描引擎切换为 `template-v2`（推荐）、`template-v1` 或 `legacy`。
+- `template-v2` 支持自动混合目录识别；`template-v1` 的自动模式只为整条路径选择一个内置模板；`legacy` 完全使用旧扫描器，不应用自定义模板，可用于紧急回退。
 
 ### 添加书签
 

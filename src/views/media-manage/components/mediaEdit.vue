@@ -7,9 +7,6 @@
       </el-form-item>
 
       <!-- 是否为单本漫画 -->
-      <el-form-item :label="$t('mediaManage.singleManga')">
-        <el-switch v-model="form.mediaType" :active-value="1" :inactive-value="0" />
-      </el-form-item>
 
       <!-- 是否为云盘库 -->
       <el-form-item :label="$t('mediaManage.cloudMedia')">
@@ -41,9 +38,6 @@
         </el-form-item>
       </template>
 
-      <el-form-item :label="$t('mediaManage.doubleFolder')">
-        <el-switch v-model="form.directoryFormat" :active-value="1" :inactive-value="0" />
-      </el-form-item>
 
       <el-form-item :label="$t('mediaManage.form.sourceWebsite')">
         <el-select v-model.number="form.sourceWebsite" class="r30">
@@ -69,10 +63,8 @@
 
     <div class="form-note mt-4">
       <p>• {{ $t('mediaManage.note.name') }}</p>
-      <p>• {{ $t('mediaManage.note.type') }}</p>
       <p>• {{ $t('mediaManage.note.browse') }}</p>
       <p>• {{ $t('mediaManage.note.cover') }}</p>
-      <p>• {{ $t('mediaManage.note.directory') }}</p>
       <p>• {{ $t('mediaManage.note.sourceWebsite') }}</p>
       <p>• {{ $t('mediaManage.note.removeFirst') }}</p>
       <p>• {{ $t('mediaManage.note.direction') }}</p>

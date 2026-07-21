@@ -79,7 +79,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted, computed, watch } from 'vue'
+import { ref, onMounted, onUnmounted, computed, watch } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import mediaApi from '@/api/media'
 import mangaApi from '@/api/manga'
@@ -241,9 +241,10 @@ async function submitAdd() {
 }
 
 // 监听媒体库操作，刷新数据
-onMediaOperation(async () => {
+const stopMediaOperationListener = onMediaOperation(async () => {
   await loadMediaData()
 })
+onUnmounted(stopMediaOperationListener)
 </script>
 
 <style scoped>

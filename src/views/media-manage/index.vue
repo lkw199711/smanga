@@ -22,6 +22,7 @@
           <el-button size="small" type="primary" :icon="FolderOpened" @click="path_dialog_open(scope.$index, scope.row)">
             {{ $t('mediaManage.path') }}
           </el-button>
+          <el-button size="small" type="info" @click="open_scan_history(scope.row)">扫描记录</el-button>
           <el-button size="small" type="danger" :icon="Delete" @click="do_delete_media(scope.$index, scope.row)">{{ $t('option.delete') }}</el-button>
         </template>
       </el-table-column>
@@ -71,15 +72,53 @@
         <el-form-item :label="$t('path.form.exclude')">
           <el-input v-model="pathForm.exclude" :placeholder="$t('path.place.exclude')" />
         </el-form-item>
+        <el-form-item label="扫描模板">
+          <el-select v-model="pathForm.scanTemplateKey" class="w-full" placeholder="请选择扫描模板" @change="ensure_new_path_custom_config">
+            <el-option v-for="item in scanTemplateOptions" :key="item.key" :label="item.label" :value="item.key" />
+          </el-select>
+        </el-form-item>
+        <el-form-item v-if="pathForm.scanTemplateKey === 'custom'" label="模板规则 JSON">
+          <el-input v-model="pathForm.scanTemplateConfig" type="textarea" :rows="7" placeholder="请输入 version=1 的自定义模板规则" />
+          <div class="config-description">支持 single/mixed 策略、目录层级、优先级和目录正则过滤；保存和试扫前会校验 JSON。</div>
+        </el-form-item>
+        <el-form-item label="元数据识别">
+          <el-select v-model="pathForm.metadataProfileKey" class="w-full" placeholder="请选择元数据识别方式">
+            <el-option v-for="item in metadataProfileOptions" :key="item.key" :label="item.label" :value="item.key" />
+          </el-select>
+          <div class="config-description">{{ selectedMetadataProfileDescription }}</div>
+        </el-form-item>
+        <el-form-item label="元数据高级配置">
+          <el-input v-model="pathForm.metadataProfileConfig" type="textarea" :rows="5" placeholder="可选：配置来源、优先级、覆盖策略和文件大小限制" />
+        </el-form-item>
 
         <el-form-item :label="$t('path.form.path')">
           <div v-for="i in pathArr" :key="i.pathId" class="path-item">
             {{ i.pathContent }}
+            <el-tag v-if="is_path_dirty(i)" size="small" type="warning">配置未保存</el-tag>
+            <div class="path-config-box">
+              <el-select v-model="i.scanTemplateKey" size="small" placeholder="扫描模板" @change="ensure_saved_path_custom_config(i)">
+                <el-option v-for="item in savedScanTemplateOptions" :key="item.key" :label="item.label" :value="item.key" />
+              </el-select>
+              <el-select v-model="i.metadataProfileKey" size="small" placeholder="元数据识别">
+                <el-option v-for="item in metadataProfileOptions" :key="item.key" :label="item.label" :value="item.key" />
+              </el-select>
+              <el-button class="path-item-btn" size="small" type="primary" :loading="savingPathId === i.pathId" @click="save_path_config(i)">
+                保存配置
+              </el-button>
+            </div>
+            <div v-if="i.scanTemplateKey === 'custom'" class="path-config-json">
+              <div class="config-description">模板规则 JSON</div>
+              <el-input v-model="i.scanTemplateConfig" type="textarea" :rows="6" />
+            </div>
+            <div class="path-config-json">
+              <div class="config-description">元数据高级配置（可选）</div>
+              <el-input v-model="i.metadataProfileConfig" type="textarea" :rows="4" />
+            </div>
             <div class="path-btn-box">
-              <el-button class="path-item-btn" size="small" :icon="View" @click="preview_saved_path(i)">
+              <el-button class="path-item-btn" size="small" :icon="View" :loading="previewLoadingPathId === i.pathId" @click="preview_saved_path(i)">
                 试扫
               </el-button>
-              <el-button class="path-item-btn" size="small" type="success" @click="scan_path(i)">
+              <el-button class="path-item-btn" size="small" type="success" :loading="scanningPathId === i.pathId" @click="scan_path(i)">
                 {{ $t('path.button.update') }}
               </el-button>
               <el-button class="path-item-btn" size="small" type="warning" @click="rescan_path(i)">
@@ -109,36 +148,12 @@
       </template>
     </el-dialog>
 
-    <el-dialog title="扫描预检" v-model="previewDialog" width="760px">
-      <div v-if="previewResult" class="scan-preview">
-        <el-descriptions :column="4" border>
-          <el-descriptions-item label="漫画">{{ previewResult.summary?.mangaFound ?? 0 }}</el-descriptions-item>
-          <el-descriptions-item label="章节">{{ previewResult.summary?.chapterFound ?? 0 }}</el-descriptions-item>
-          <el-descriptions-item label="跳过">{{ previewResult.summary?.skipped ?? 0 }}</el-descriptions-item>
-          <el-descriptions-item label="警告">{{ previewResult.summary?.warnings ?? 0 }}</el-descriptions-item>
-        </el-descriptions>
-
-        <p class="s-form-title mt-4">样例漫画</p>
-        <el-table :data="previewResult.samples || []" size="small" border max-height="220">
-          <el-table-column prop="mangaName" label="漫画" min-width="160" />
-          <el-table-column prop="parentPath" label="所在目录" min-width="220" show-overflow-tooltip />
-          <el-table-column label="章节" width="80">
-            <template #default="scope">{{ scope.row.chapters?.length || 0 }}</template>
-          </el-table-column>
-        </el-table>
-
-        <p class="s-form-title mt-4">提示与跳过原因</p>
-        <el-table :data="previewImportantItems" size="small" border max-height="260">
-          <el-table-column prop="level" label="级别" width="90" />
-          <el-table-column prop="reasonCode" label="原因" width="180" show-overflow-tooltip />
-          <el-table-column prop="reason" label="说明" min-width="220" show-overflow-tooltip />
-          <el-table-column prop="targetName" label="对象" min-width="140" show-overflow-tooltip />
-        </el-table>
-      </div>
-      <template #footer>
-        <el-button type="primary" @click="previewDialog = false">确定</el-button>
-      </template>
-    </el-dialog>
+    <scan-preview-dialog
+      v-model="previewDialog"
+      :result="previewResult"
+      :loading="previewLoading || previewLoadingPathId !== null"
+      @apply-template="apply_preview_template" />
+    <scan-run-dialog v-model="scanRunDialog" :media-id="scanRunMediaId || undefined" :initial-scan-run-id="activeScanRunId" />
   </div>
 </template>
 
@@ -153,12 +168,17 @@ import {Delete, Edit, Plus, FolderOpened, Refresh, View} from '@element-plus/ico
 import {ref, reactive, onMounted, computed} from 'vue';
 import mediaApi from '@/api/media';
 import pathApi from '@/api/path';
+import scanRunApi from '@/api/scan-run';
 import tablePager from '@/components/table-pager.vue';
 import i18n from '@/i18n';
 import useBrowseStore from '@/store/browse';
 import type {pathType} from '@/type/path';
+import type {ScanPreviewInput, ScanPreviewResult, ScanTemplateKey} from '@/type/scan';
+import {fallbackScanCatalog} from '@/constants/scan';
 import {mediaType, mediaInit} from '@/type/media';
 import mediaEdit from './components/mediaEdit.vue';
+import ScanPreviewDialog from './components/ScanPreviewDialog.vue';
+import ScanRunDialog from './components/ScanRunDialog.vue';
 
 const pager = ref();
 const browse = useBrowseStore();
@@ -182,29 +202,62 @@ const formInit = {
   sidebar: 0,
 };
 
-const pathForm = reactive({
+const defaultCustomTemplateConfig = JSON.stringify(
+  {
+    version: 1,
+    strategy: 'mixed',
+    rules: [
+      {
+        id: 'manga-chapter',
+        label: '漫画/章节',
+        priority: 100,
+        mangaIndex: 0,
+        chapterIndex: 1,
+        singleChapter: false,
+      },
+    ],
+  },
+  null,
+  2
+);
+
+const pathForm = reactive<ScanPreviewInput>({
   pathContent: '',
   autoScan: 0,
   include: '',
   exclude: '',
+  scanTemplateKey: 'auto',
+  scanTemplateConfig: '',
+  metadataProfileKey: 'auto',
+  metadataProfileConfig: '',
 });
+const scanCatalog = ref({...fallbackScanCatalog});
+const scanTemplateOptions = computed(() => scanCatalog.value.templates);
+const savedScanTemplateOptions = computed(() => [scanCatalog.value.legacyTemplate, ...scanCatalog.value.templates]);
+const metadataProfileOptions = computed(() => scanCatalog.value.metadataProfiles);
+const selectedMetadataProfileDescription = computed(
+  () => metadataProfileOptions.value.find(item => item.key === pathForm.metadataProfileKey)?.description || ''
+);
 const pathArr = ref<pathType[]>([]);
 const multipleSelection = ref<mediaType[]>([]);
 const previewDialog = ref(false);
 const previewLoading = ref(false);
-const previewResult = ref<any>(null);
-const previewImportantItems = computed(() => {
-  const items = previewResult.value?.items || [];
-  return items
-    .filter((item: any) => item.level !== 'info' || item.category === 'skipped')
-    .slice(0, 80);
-});
+const previewLoadingPathId = ref<number | null>(null);
+const previewResult = ref<ScanPreviewResult | null>(null);
+const previewTargetPathId = ref<number | null>(null);
+const savingPathId = ref<number | null>(null);
+const scanningPathId = ref<number | null>(null);
+const savedPathSignatures = reactive<Record<number, string>>({});
+const scanRunDialog = ref(false);
+const activeScanRunId = ref<number | null>(null);
+const scanRunMediaId = ref<number | null>(null);
 
 const {t} = i18n.global;
 
 onMounted(() => {
   // 初始化表格数据
   load_table();
+  load_scan_catalog();
 });
 
 /**
@@ -214,6 +267,7 @@ onMounted(() => {
  */
 async function path_dialog_open(index: any, row: any) {
   Object.assign(mediaInfo, row);
+  reset_path_form();
   addPathDialog.value = true;
 
   pathArr.value = [];
@@ -227,7 +281,86 @@ async function path_dialog_open(index: any, row: any) {
 async function load_path(mediaId: any) {
   const res = await pathApi.get_path(mediaId, 1, 1000);
 
-  pathArr.value = res.list;
+  pathArr.value = (res.list || []).map((item: pathType) => normalize_path_config(item));
+  for (const item of pathArr.value) {
+    savedPathSignatures[item.pathId] = path_config_signature(item);
+  }
+}
+
+function normalize_path_config(pathInfo: pathType) {
+  return {
+    ...pathInfo,
+    scanTemplateKey: pathInfo.scanTemplateKey || 'legacy',
+    metadataProfileKey: pathInfo.metadataProfileKey || 'auto',
+  };
+}
+
+function reset_path_form() {
+  Object.assign(pathForm, {
+    pathContent: '',
+    autoScan: 0,
+    include: '',
+    exclude: '',
+    scanTemplateKey: 'auto',
+    scanTemplateConfig: '',
+    metadataProfileKey: 'auto',
+    metadataProfileConfig: '',
+  });
+}
+
+function path_config_signature(pathInfo: Pick<pathType, 'scanTemplateKey' | 'scanTemplateConfig' | 'metadataProfileKey' | 'metadataProfileConfig'>) {
+  return JSON.stringify({
+    scanTemplateKey: pathInfo.scanTemplateKey || 'legacy',
+    scanTemplateConfig: pathInfo.scanTemplateConfig || '',
+    metadataProfileKey: pathInfo.metadataProfileKey || 'auto',
+    metadataProfileConfig: pathInfo.metadataProfileConfig || '',
+  });
+}
+
+function ensure_new_path_custom_config() {
+  if (pathForm.scanTemplateKey === 'custom' && !pathForm.scanTemplateConfig?.trim()) {
+    pathForm.scanTemplateConfig = defaultCustomTemplateConfig;
+  }
+}
+
+function ensure_saved_path_custom_config(pathInfo: pathType) {
+  if (pathInfo.scanTemplateKey === 'custom' && !pathInfo.scanTemplateConfig?.trim()) {
+    pathInfo.scanTemplateConfig = defaultCustomTemplateConfig;
+  }
+}
+
+function validate_scan_configs(input: Pick<ScanPreviewInput, 'scanTemplateKey' | 'scanTemplateConfig' | 'metadataProfileConfig'>) {
+  const fields = [
+    {label: '模板规则', value: input.scanTemplateConfig, required: input.scanTemplateKey === 'custom'},
+    {label: '元数据高级配置', value: input.metadataProfileConfig, required: false},
+  ];
+  for (const field of fields) {
+    if (field.required && !field.value?.trim()) {
+      ElMessage.error(`${field.label}不能为空`);
+      return false;
+    }
+    if (field.value?.trim()) {
+      try {
+        JSON.parse(field.value);
+      } catch {
+        ElMessage.error(`${field.label}不是有效 JSON`);
+        return false;
+      }
+    }
+  }
+  return true;
+}
+
+function is_path_dirty(pathInfo: pathType) {
+  return savedPathSignatures[pathInfo.pathId] !== path_config_signature(pathInfo);
+}
+
+async function load_scan_catalog() {
+  try {
+    scanCatalog.value = await scanRunApi.catalog();
+  } catch (error) {
+    console.warn('扫描模板目录加载失败，使用内置定义', error);
+  }
 }
 
 /**
@@ -303,14 +436,52 @@ async function rescan_path(pathInfo: any) {
     type: 'warning',
   })
     .then(async () => {
-      await pathApi.rescan_path(pathInfo.pathId);
+      if (is_path_dirty(pathInfo)) {
+        ElMessage.warning('扫描配置尚未保存，请先保存配置');
+        return;
+      }
+      scanningPathId.value = pathInfo.pathId;
+      const result = await pathApi.rescan_path(pathInfo.pathId);
+      open_scan_run(result.scanRunId, pathInfo.mediaId);
       load_path(pathInfo.mediaId);
+    })
+    .finally(() => {
+      scanningPathId.value = null;
     })
     .catch(() => {});
 }
 async function scan_path(pathInfo: any) {
-  await pathApi.scan_path(pathInfo.pathId);
-  load_path(pathInfo.mediaId);
+  if (is_path_dirty(pathInfo)) {
+    ElMessage.warning('扫描配置尚未保存，请先保存配置');
+    return;
+  }
+
+  scanningPathId.value = pathInfo.pathId;
+  try {
+    const result = await pathApi.scan_path(pathInfo.pathId);
+    open_scan_run(result.scanRunId, pathInfo.mediaId);
+    load_path(pathInfo.mediaId);
+  } finally {
+    scanningPathId.value = null;
+  }
+}
+
+async function save_path_config(pathInfo: pathType) {
+  if (!validate_scan_configs(pathInfo)) return;
+  savingPathId.value = pathInfo.pathId;
+  try {
+    await pathApi.update_path(pathInfo.pathId, {
+      scanTemplateKey: pathInfo.scanTemplateKey || 'legacy',
+      scanTemplateConfig: pathInfo.scanTemplateConfig || '',
+      metadataProfileKey: pathInfo.metadataProfileKey || 'auto',
+      metadataProfileConfig: pathInfo.metadataProfileConfig || '',
+    });
+    savedPathSignatures[pathInfo.pathId] = path_config_signature(pathInfo);
+    ElMessage({message: '扫描配置已保存', type: 'success'});
+    load_path(pathInfo.mediaId);
+  } finally {
+    savingPathId.value = null;
+  }
 }
 
 async function preview_new_path() {
@@ -318,8 +489,10 @@ async function preview_new_path() {
     ElMessage({message: '请先填写路径', type: 'warning'});
     return;
   }
+  if (!validate_scan_configs(pathForm)) return;
 
   previewLoading.value = true;
+  previewTargetPathId.value = null;
   try {
     previewResult.value = await pathApi.preview_path({
       ...pathForm,
@@ -335,13 +508,37 @@ async function preview_new_path() {
 }
 
 async function preview_saved_path(pathInfo: any) {
-  previewLoading.value = true;
+  previewLoadingPathId.value = pathInfo.pathId;
+  previewTargetPathId.value = pathInfo.pathId;
   try {
-    previewResult.value = await pathApi.preview_path_by_id(pathInfo.pathId);
+    previewResult.value = await pathApi.preview_path({
+      pathContent: pathInfo.pathContent,
+      mediaId: pathInfo.mediaId,
+      mediaType: mediaInfo.mediaType,
+      directoryFormat: mediaInfo.directoryFormat,
+      autoScan: pathInfo.autoScan,
+      include: pathInfo.include,
+      exclude: pathInfo.exclude,
+      scanTemplateKey: pathInfo.scanTemplateKey || 'legacy',
+      scanTemplateConfig: pathInfo.scanTemplateConfig || '',
+      metadataProfileKey: pathInfo.metadataProfileKey || 'auto',
+      metadataProfileConfig: pathInfo.metadataProfileConfig || '',
+      isCloudMedia: mediaInfo.isCloudMedia,
+    });
     previewDialog.value = true;
   } finally {
-    previewLoading.value = false;
+    previewLoadingPathId.value = null;
   }
+}
+
+function apply_preview_template(templateKey: ScanTemplateKey) {
+  if (previewTargetPathId.value === null) {
+    pathForm.scanTemplateKey = templateKey;
+  } else {
+    const pathInfo = pathArr.value.find(item => item.pathId === previewTargetPathId.value);
+    if (pathInfo) pathInfo.scanTemplateKey = templateKey;
+  }
+  ElMessage.success('已采用推荐模板，请保存配置后再执行正式扫描');
 }
 
 /**
@@ -351,19 +548,28 @@ async function add_path_cache() {
   const pathContent: any = pathForm.pathContent;
   const mediaId = mediaInfo.mediaId;
   if (!pathContent) return;
+  if (!validate_scan_configs(pathForm)) return;
 
   const res = await pathApi.add_path(mediaId, pathForm);
 
   if (res) {
+    if (res.scanRunId) open_scan_run(res.scanRunId, mediaId);
     // 重置表单
-    Object.assign(pathForm, {
-      pathContent: '',
-      autoScan: 0,
-      include: '',
-      exclude: '',
-    });
+    reset_path_form();
     load_path(mediaId);
   }
+}
+
+function open_scan_run(scanRunId: number, mediaId: number) {
+  activeScanRunId.value = scanRunId;
+  scanRunMediaId.value = mediaId;
+  scanRunDialog.value = true;
+}
+
+function open_scan_history(media: mediaType) {
+  activeScanRunId.value = null;
+  scanRunMediaId.value = media.mediaId;
+  scanRunDialog.value = true;
 }
 
 /**
@@ -394,3 +600,39 @@ async function batch_delete_media() {
 </script>
 
 <style lang="less" scoped src="@/style/manage.less"></style>
+<style lang="less" scoped>
+.path-config-box {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin: 8px 0;
+  flex-wrap: wrap;
+}
+
+.config-description {
+  margin-top: 6px;
+  color: var(--el-text-color-secondary);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.path-config-json {
+  width: 100%;
+  margin: 8px 0;
+}
+
+@media only screen and (max-width: 767px) {
+  .path-config-box,
+  .path-btn-box {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .path-config-box :deep(.el-select),
+  .path-config-box .el-button,
+  .path-btn-box .el-button {
+    width: 100%;
+    margin-left: 0;
+  }
+}
+</style>

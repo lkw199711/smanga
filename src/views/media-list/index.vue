@@ -21,7 +21,7 @@ export default {name: 'media-list'};
 </script>
 
 <script setup lang="ts">
-import {ref, onMounted, reactive} from 'vue';
+import {ref, onMounted, onUnmounted, reactive} from 'vue';
 import mediaApi from '@/api/media';
 import {config, userConfig} from '@/store';
 import {useRoute, useRouter} from 'vue-router';
@@ -30,6 +30,7 @@ import imageApi from '@/api/image';
 import useBrowseStore from '@/store/browse';
 import rightSidebar from './right-sidebar.vue';
 import placeholder from '@/assets/s-blue.png';
+import {onMediaOperation} from '@/utils/cache';
 
 const browse = useBrowseStore();
 const route = useRoute();
@@ -100,6 +101,9 @@ function context_menu(mangaParams: mediaType) {
 onMounted(async () => {
   load_media();
 });
+
+const stopMediaOperationListener = onMediaOperation(load_media);
+onUnmounted(stopMediaOperationListener);
 </script>
 
 <style scoped lang="less">
