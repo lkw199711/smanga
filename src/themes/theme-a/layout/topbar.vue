@@ -7,7 +7,21 @@
 		</div>
 		<div class="sa-top-actions">
 			<button class="sa-btn-ghost" @click="toggleView">{{ config.viewType === 'block' ? '📋 网格' : '📊 列表' }}</button>
-			<button class="sa-btn-ghost">排序 ↓</button>
+			<div class="sa-sort-wrap" ref="sortWrapRef">
+				<button class="sa-btn-ghost sa-sort-btn" @click="toggleSortDropdown">
+					<span>{{ currentSortLabel }} ▾</span>
+				</button>
+				<div v-if="showSortDropdown" class="sa-sort-dropdown">
+					<div
+						v-for="item in currentSortOptions"
+						:key="item.value"
+						:class="['sa-sort-item', { active: item.value === currentSortValue }]"
+						@click="selectSort(item.value)"
+					>
+						{{ item.label }}
+					</div>
+				</div>
+			</div>
 			<button class="sa-btn-ghost" @click="toggleThemeSwitch">主题 {{ themeState.current }}</button>
 			<button class="sa-btn-ghost" @click="toggleLanguage">{{ currentLanguage }}</button>
 			<button class="sa-btn-primary" @click="router.push({ path: '/t/media', query: { add: '1' } })">+ 新建媒体库</button>
@@ -24,12 +38,13 @@
 
 <script lang="ts" setup>
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
-import { useRouter } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { themeState, setTheme } from '@/themes/store'
-import { config, userConfig } from '@/store'
+import { config, userConfig, sortOrder, chapterSortOrder } from '@/store'
 
 const router = useRouter()
+const route = useRoute()
 const { locale } = useI18n()
 const keyword = ref('')
 const showThemeSwitch = ref(false)
@@ -77,17 +92,80 @@ function onGlobalClick(e: MouseEvent) {
 	const target = e.target as HTMLElement | null
 	if (!target) return
 	if (target.closest('.sa-theme-dropdown')) return
+	if (target.closest('.sa-sort-dropdown')) return
 	showThemeSwitch.value = false
+}
+
+// ---- 排序 ----
+const sortOrderLabels: Record<string, string> = {
+	id: 'ID',
+	idDesc: 'ID 倒序',
+	number: '章节号',
+	numberDesc: '章节号 倒序',
+	name: '名称 A-Z',
+	nameDesc: '名称 Z-A',
+	createTime: '入库时间',
+	createTimeDesc: '最近添加',
+	updateTime: '更新时间',
+	updateTimeDesc: '最近更新',
+	chapterUpdate: '章节更新时间',
+	chapterUpdateDesc: '章节更新时间 倒序',
+}
+
+const sortType = computed<'manga' | 'chapter'>(() => {
+	switch (route.name) {
+		case 't-manga-info':
+		case 't-chapter-list':
+		case 't-bookmark':
+			return 'chapter'
+		default:
+			return 'manga'
+	}
+})
+
+const currentSortOptions = computed(() => {
+	const list = sortType.value === 'chapter' ? chapterSortOrder : sortOrder
+	return list.map((v: string) => ({ value: v, label: sortOrderLabels[v] || v }))
+})
+
+const currentSortValue = computed(() =>
+	sortType.value === 'chapter' ? userConfig.chapterOrder : userConfig.order
+)
+
+const currentSortLabel = computed(() => sortOrderLabels[currentSortValue.value] || currentSortValue.value)
+
+const showSortDropdown = ref(false)
+const sortWrapRef = ref<HTMLElement | null>(null)
+
+function toggleSortDropdown() {
+	showSortDropdown.value = !showSortDropdown.value
+}
+
+function selectSort(value: string) {
+	if (sortType.value === 'chapter') {
+		userConfig.chapterOrder = value
+	} else {
+		userConfig.order = value
+	}
+	showSortDropdown.value = false
+}
+
+function onSortClickOutside(e: MouseEvent) {
+	if (sortWrapRef.value && !sortWrapRef.value.contains(e.target as Node)) {
+		showSortDropdown.value = false
+	}
 }
 
 onMounted(() => {
 	window.addEventListener('keydown', onKeydown)
 	window.addEventListener('click', onGlobalClick)
+	document.addEventListener('click', onSortClickOutside)
 })
 
 onBeforeUnmount(() => {
 	window.removeEventListener('keydown', onKeydown)
 	window.removeEventListener('click', onGlobalClick)
+	document.removeEventListener('click', onSortClickOutside)
 })
 
 function applyTheme(key: 'A' | 'B' | 'D') {
@@ -209,5 +287,45 @@ function applyTheme(key: 'A' | 'B' | 'D') {
 	background: #eff6ff;
 	color: #2563eb;
 	font-weight: 500;
+}
+
+/* 排序下拉 */
+.sa-sort-wrap {
+	position: relative;
+}
+
+.sa-sort-dropdown {
+	position: absolute;
+	top: calc(100% + 6px);
+	right: 0;
+	min-width: 180px;
+	background: #fff;
+	border: 1px solid #eaeaea;
+	border-radius: 10px;
+	box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+	z-index: 200;
+	padding: 6px;
+	max-height: 360px;
+	overflow-y: auto;
+}
+
+.sa-sort-item {
+	padding: 8px 14px;
+	font-size: 13px;
+	color: #4b5563;
+	border-radius: 6px;
+	cursor: pointer;
+	white-space: nowrap;
+	transition: all 0.15s;
+}
+
+.sa-sort-item:hover {
+	background: #f3f4f6;
+}
+
+.sa-sort-item.active {
+	background: #eff6ff;
+	color: #2563eb;
+	font-weight: 600;
 }
 </style>

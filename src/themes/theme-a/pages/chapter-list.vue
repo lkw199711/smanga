@@ -6,7 +6,7 @@
         <h1>{{ mangaName || '章节列表' }}</h1>
       </div>
       <div class="ta-head-actions">
-        <select v-model="order" class="ta-select" @change="loadData">
+        <select v-model="order" class="ta-select">
           <option value="number">序号正序</option>
           <option value="numberDesc">序号倒序</option>
           <option value="name">名称 A-Z</option>
@@ -36,20 +36,20 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted, computed } from 'vue'
+import { ref, onMounted, computed, watch } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import chapterApi from '@/api/chapter'
 import mangaApi from '@/api/manga'
 import imageApi from '@/api/image'
 import queue from '@/store/quque'
-import { globalData } from '@/store'
+import { globalData, userConfig } from '@/store'
 import { openThemeContextMenu } from '@/themes/context-menu'
 
 const router = useRouter()
 const route = useRoute()
 
 const list = ref<any[]>([])
-const order = ref('number')
+const order = computed({ get: () => userConfig.chapterOrder, set: (v) => { userConfig.chapterOrder = v } })
 const page = ref(1)
 const pageSize = 50
 const total = ref(0)
@@ -62,6 +62,12 @@ const totalPages = computed(() => Math.ceil(total.value / pageSize))
 const chapterCoverCache = ref<{[key: string]: string}>({})
 
 onMounted(() => { loadData() })
+
+// 监听全局排序变化
+watch(() => userConfig.chapterOrder, () => {
+  page.value = 1
+  loadData()
+})
 
 async function loadData() {
   const mangaId = Number(route.params.mangaId) || 0

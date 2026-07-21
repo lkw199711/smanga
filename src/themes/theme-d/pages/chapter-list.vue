@@ -82,6 +82,7 @@ import collectApi from '@/api/collect'
 import imageApi from '@/api/image'
 import queue from '@/store/quque'
 import useBrowseStore from '@/store/browse'
+import { userConfig } from '@/store'
 import { openThemeContextMenu } from '@/themes/context-menu'
 
 const router = useRouter()
@@ -92,7 +93,7 @@ const mangaInfo = ref<any>({})
 const chapterList = ref<any[]>([])
 const isCollected = ref(false)
 const mangaId = ref<number | null>(null)
-const order = ref('number')
+const order = computed({ get: () => userConfig.chapterOrder, set: (v) => { userConfig.chapterOrder = v } })
 const page = ref(1)
 const pageSize = 50
 const total = ref(0)
@@ -119,6 +120,11 @@ watch(() => route.params.mangaId, async (newMangaId) => {
     await loadChapters()
     await checkCollectStatus()
   }
+})
+
+// 监听全局排序变化
+watch(() => userConfig.chapterOrder, () => {
+  if (mangaId.value) loadChapters()
 })
 
 async function loadMangaInfo() {

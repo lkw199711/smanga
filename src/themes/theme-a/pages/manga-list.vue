@@ -4,7 +4,7 @@
       <h1>{{ mediaName || '漫画列表' }}</h1>
       <div class="ta-head-actions">
         <input v-model="keyword" class="ta-input" placeholder="搜索..." @keydown.enter="loadData" />
-        <select v-model="order" class="ta-select" @change="loadData">
+        <select v-model="order" class="ta-select">
           <option value="updateTimeDesc">最近更新</option>
           <option value="nameDesc">名称 Z-A</option>
           <option value="name">名称 A-Z</option>
@@ -38,6 +38,7 @@ import { useRouter, useRoute } from 'vue-router'
 import mangaApi from '@/api/manga'
 import imageApi from '@/api/image'
 import queue from '@/store/quque'
+import { userConfig } from '@/store'
 import { openThemeActionSheet, openThemeContextMenu } from '@/themes/context-menu'
 
 const router = useRouter()
@@ -45,7 +46,7 @@ const route = useRoute()
 
 const list = ref<any[]>([])
 const keyword = ref('')
-const order = ref('updateTimeDesc')
+const order = computed({ get: () => userConfig.order, set: (v) => { userConfig.order = v } })
 const page = ref(1)
 const pageSize = 32
 const total = ref(0)
@@ -57,9 +58,14 @@ const totalPages = computed(() => Math.ceil(total.value / pageSize))
 watch(() => route.params.mediaId, () => {
   page.value = 1
   keyword.value = ''
-  order.value = 'updateTimeDesc'
   loadData()
 }, { immediate: true })
+
+// 监听全局排序变化
+watch(() => userConfig.order, () => {
+  page.value = 1
+  loadData()
+})
 
 async function loadData() {
   const mediaId = Number(route.params.mediaId) || 0

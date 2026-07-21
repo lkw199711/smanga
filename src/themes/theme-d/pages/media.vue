@@ -30,7 +30,7 @@
         </div>
         <div class="td-head-actions">
           <input v-model="keyword" class="td-input" placeholder="搜索..." @keydown.enter="loadMangaData" />
-          <select v-model="order" class="td-select" @change="loadMangaData">
+          <select v-model="order" class="td-select">
             <option value="updateTimeDesc">最近更新</option>
             <option value="nameDesc">名称 Z-A</option>
             <option value="name">名称 A-Z</option>
@@ -85,6 +85,7 @@ import mediaApi from '@/api/media'
 import mangaApi from '@/api/manga'
 import imageApi from '@/api/image'
 import { mediaType } from '@/type/media'
+import { userConfig } from '@/store'
 import { onMediaOperation } from '@/utils/cache'
 import queue from '@/store/quque'
 
@@ -101,7 +102,7 @@ const form = ref({ mediaName: '', mediaPath: '' })
 // 漫画相关
 const mangaList = ref<any[]>([])
 const keyword = ref('')
-const order = ref('updateTimeDesc')
+const order = computed({ get: () => userConfig.order, set: (v) => { userConfig.order = v } })
 const page = ref(1)
 const pageSize = 32
 const total = ref(0)
@@ -124,6 +125,11 @@ watch(() => route.params.mediaId, (newMediaId) => {
     selectedMediaId.value = null
   }
 }, { immediate: true })
+
+// 监听全局排序变化
+watch(() => userConfig.order, () => {
+  if (selectedMediaId.value) loadMangaData()
+})
 
 onMounted(async () => {
   await loadMediaData()

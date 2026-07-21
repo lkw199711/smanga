@@ -59,7 +59,22 @@
 				</div>
 				<div class="sd-top-actions">
 					<button class="sd-btn">视图</button>
-					<button class="sd-btn">排序</button>
+					<div class="sd-sort-wrap" ref="sortWrapRef">
+						<button class="sd-btn sd-sort-btn" @click="toggleSortDropdown">
+							<span>{{ currentSortLabel }}</span>
+							<span class="sd-sort-arrow" :class="{ open: showSortDropdown }">▾</span>
+						</button>
+						<div v-if="showSortDropdown" class="sd-sort-dropdown">
+							<div
+								v-for="item in currentSortOptions"
+								:key="item.value"
+								:class="['sd-sort-item', { active: item.value === currentSortValue }]"
+								@click="selectSort(item.value)"
+							>
+								{{ item.label }}
+							</div>
+						</div>
+					</div>
 					<button class="sd-btn" @click="toggleDark">🌙</button>
 					<button class="sd-btn">中文</button>
 					<button class="sd-btn-primary">+ 新建</button>
@@ -78,7 +93,7 @@
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import mediaStatsApi from '@/api/media-stats'
-import { userInfo } from '@/store'
+import { userInfo, userConfig, sortOrder, chapterSortOrder } from '@/store'
 import ThemeContextMenu from '@/themes/components/theme-context-menu.vue'
 
 const refreshKey = ref(0)
@@ -223,6 +238,69 @@ watch(
 function toggleDark() {
 	currentTheme.value = currentTheme.value === 'dark' ? lastNonDark.value : 'dark'
 }
+
+// ---- 排序 ----
+const sortOrderLabels: Record<string, string> = {
+	id: 'ID',
+	idDesc: 'ID 倒序',
+	number: '章节号',
+	numberDesc: '章节号 倒序',
+	name: '名称 A-Z',
+	nameDesc: '名称 Z-A',
+	createTime: '入库时间',
+	createTimeDesc: '最近添加',
+	updateTime: '更新时间',
+	updateTimeDesc: '最近更新',
+	chapterUpdate: '章节更新时间',
+	chapterUpdateDesc: '章节更新时间 倒序',
+}
+
+const sortType = computed<'manga' | 'chapter'>(() => {
+	switch (route.name) {
+		case 't-manga-info':
+		case 't-chapter-list':
+		case 't-bookmark':
+			return 'chapter'
+		default:
+			return 'manga'
+	}
+})
+
+const currentSortOptions = computed(() => {
+	const list = sortType.value === 'chapter' ? chapterSortOrder : sortOrder
+	return list.map((v: string) => ({ value: v, label: sortOrderLabels[v] || v }))
+})
+
+const currentSortValue = computed(() =>
+	sortType.value === 'chapter' ? userConfig.chapterOrder : userConfig.order
+)
+
+const currentSortLabel = computed(() => sortOrderLabels[currentSortValue.value] || currentSortValue.value)
+
+const showSortDropdown = ref(false)
+const sortWrapRef = ref<HTMLElement | null>(null)
+
+function toggleSortDropdown() {
+	showSortDropdown.value = !showSortDropdown.value
+}
+
+function selectSort(value: string) {
+	if (sortType.value === 'chapter') {
+		userConfig.chapterOrder = value
+	} else {
+		userConfig.order = value
+	}
+	showSortDropdown.value = false
+}
+
+function onSortClickOutside(e: MouseEvent) {
+	if (sortWrapRef.value && !sortWrapRef.value.contains(e.target as Node)) {
+		showSortDropdown.value = false
+	}
+}
+
+onMounted(() => document.addEventListener('click', onSortClickOutside))
+onBeforeUnmount(() => document.removeEventListener('click', onSortClickOutside))
 </script>
 
 <style scoped>
@@ -488,5 +566,64 @@ function toggleDark() {
 	flex: 1;
 	padding: 28px;
 	overflow: auto;
+}
+
+/* 排序下拉 */
+.sd-sort-wrap {
+	position: relative;
+}
+
+.sd-sort-btn {
+	display: flex;
+	align-items: center;
+	gap: 4px;
+	min-width: 90px;
+	justify-content: space-between;
+}
+
+.sd-sort-arrow {
+	font-size: 10px;
+	transition: transform 0.2s;
+	color: var(--sd-text-faint);
+}
+
+.sd-sort-arrow.open {
+	transform: rotate(180deg);
+}
+
+.sd-sort-dropdown {
+	position: absolute;
+	top: calc(100% + 6px);
+	right: 0;
+	min-width: 180px;
+	background: var(--sd-card);
+	border: 1px solid var(--sd-border);
+	border-radius: 10px;
+	box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+	z-index: 200;
+	padding: 6px;
+	max-height: 360px;
+	overflow-y: auto;
+}
+
+.sd-sort-item {
+	padding: 8px 12px;
+	font-size: 13px;
+	color: var(--sd-text-muted);
+	border-radius: 6px;
+	cursor: pointer;
+	transition: all 0.15s;
+	white-space: nowrap;
+}
+
+.sd-sort-item:hover {
+	background: var(--sd-hover);
+	color: var(--sd-text);
+}
+
+.sd-sort-item.active {
+	background: var(--sd-primary-bg);
+	color: var(--sd-primary);
+	font-weight: 600;
 }
 </style>

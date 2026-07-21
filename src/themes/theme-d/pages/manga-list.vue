@@ -22,6 +22,7 @@
 import { ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import mangaApi from '@/api/manga'
+import { userConfig } from '@/store'
 import { openThemeActionSheet, openThemeContextMenu } from '@/themes/context-menu'
 
 const route = useRoute()
@@ -35,7 +36,7 @@ const total = ref(0)
 async function loadData() {
   try {
     const mediaId = Number(route.params.mediaId) || 0
-    const r = await mangaApi.get(mediaId, page.value, pageSize, '')
+    const r = await mangaApi.get(mediaId, page.value, pageSize, userConfig.order)
     list.value = r?.data?.list || []
     total.value = r?.data?.total || 0
     mediaName.value = r?.data?.mediaName || ''
@@ -45,6 +46,10 @@ watch(() => route.params.mediaId, () => {
   page.value = 1
   loadData()
 }, { immediate: true })
+watch(() => userConfig.order, () => {
+  page.value = 1
+  loadData()
+})
 </script>
 
 <style scoped>
