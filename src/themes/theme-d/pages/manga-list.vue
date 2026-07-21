@@ -19,7 +19,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted } from 'vue'
+import { ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import mangaApi from '@/api/manga'
 import { openThemeActionSheet, openThemeContextMenu } from '@/themes/context-menu'
@@ -34,14 +34,17 @@ const total = ref(0)
 
 async function loadData() {
   try {
-    const mediaId = route.params.mediaId as string
+    const mediaId = Number(route.params.mediaId) || 0
     const r = await mangaApi.get(mediaId, page.value, pageSize, '')
     list.value = r?.data?.list || []
     total.value = r?.data?.total || 0
     mediaName.value = r?.data?.mediaName || ''
   } catch {}
 }
-onMounted(loadData)
+watch(() => route.params.mediaId, () => {
+  page.value = 1
+  loadData()
+}, { immediate: true })
 </script>
 
 <style scoped>

@@ -33,7 +33,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted, computed } from 'vue'
+import { ref, computed, watch } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import mangaApi from '@/api/manga'
 import imageApi from '@/api/image'
@@ -54,9 +54,12 @@ const mediaName = ref('')
 
 const totalPages = computed(() => Math.ceil(total.value / pageSize))
 
-onMounted(() => {
+watch(() => route.params.mediaId, () => {
+  page.value = 1
+  keyword.value = ''
+  order.value = 'updateTimeDesc'
   loadData()
-})
+}, { immediate: true })
 
 async function loadData() {
   const mediaId = Number(route.params.mediaId) || 0
