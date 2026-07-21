@@ -13,7 +13,7 @@
       </div>
     </div>
     <div class="ta-grid">
-      <div v-for="m in list" :key="m.mangaId" class="ta-manga-card" @click="goChapters(m)">
+      <div v-for="m in list" :key="m.mangaId" class="ta-manga-card" @click="goChapters(m)" @contextmenu="openThemeContextMenu($event, 'manga', m)">
         <div class="ta-manga-cover">
           <img v-if="m.blob" :src="m.blob" alt="" />
           <div v-else class="ta-cover-placeholder">📚</div>
@@ -38,6 +38,7 @@ import { useRouter, useRoute } from 'vue-router'
 import mangaApi from '@/api/manga'
 import imageApi from '@/api/image'
 import queue from '@/store/quque'
+import { openThemeContextMenu } from '@/themes/context-menu'
 
 const router = useRouter()
 const route = useRoute()

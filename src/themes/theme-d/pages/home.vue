@@ -37,7 +37,7 @@
 				<a class="sd-link" @click="router.push('/t/history')">查看全部 →</a>
 			</div>
 			<div class="sd-continue">
-				<div v-for="m in continueReading" :key="m.id" class="sd-cont-card" @click="goRead(m)">
+				<div v-for="m in continueReading" :key="m.id" class="sd-cont-card" @click="goRead(m)" @contextmenu="openThemeContextMenu($event, 'chapter', m)">
 					<div class="sd-cont-cover"
 						:style="{ background: `linear-gradient(135deg, ${m.gradient[0]}, ${m.gradient[1]})` }">
 						<img v-if="m.blob" :src="m.blob" alt="" class="sd-cont-cover-img">
@@ -83,9 +83,12 @@ import latestApi from '@/api/latest'
 import chartsApi from '@/api/charts'
 import imageApi from '@/api/image'
 import queue from '@/store/quque'
+import { openThemeContextMenu } from '@/themes/context-menu'
 
 type MangaCard = {
 	id: number
+	chapterId?: number
+	mangaId?: number
 	name: string
 	chapter: string
 	unread?: number
@@ -146,7 +149,10 @@ onMounted(async () => {
 		const r = await historyApi.get_history(1, 6)
 		const list = r?.list || []
 		continueReading.value = list.map((item: any) => ({
+			...item,
 			id: Number(item.chapterId),
+			chapterId: Number(item.chapterId),
+			mangaId: Number(item.mangaId),
 			name: item.mangaName || '未知漫画',
 			chapter: item.chapterName || '未知章节',
 			chapterCover: item.chapterCover,

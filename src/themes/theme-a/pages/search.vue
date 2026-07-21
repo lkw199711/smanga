@@ -22,11 +22,11 @@
       </template>
       <template v-else>
         <div class="ta-grid" v-if="tab === 'manga'">
-          <t-manga-card v-for="item in list" :key="item.mangaId" :item="item" variant="A" @click="go_manga(item)" />
+          <t-manga-card v-for="item in list" :key="item.mangaId" :item="item" variant="A" @click="go_manga(item)" @contextmenu="openThemeContextMenu($event, 'manga', item)" />
         </div>
 
         <div class="ta-chapter-list" v-else>
-          <div v-for="item in list" :key="item.chapterId" class="ta-chapter-item" @click="go_read(item)">
+          <div v-for="item in list" :key="item.chapterId" class="ta-chapter-item" @click="go_read(item)" @contextmenu="openThemeContextMenu($event, 'chapter', item)">
             <t-cover class="ta-chapter-cover" variant="A" :seed="Number(item?.chapterId || 0)" :file="item?.chapterCover || ''" />
             <div class="ta-chapter-info">
               <div class="ta-chapter-title">{{ item.chapterName || '未知章节' }}</div>
@@ -54,6 +54,7 @@ import MediaPager from '@/components/media-pager.vue'
 import listSkeleton from '@/components/list-skeleton.vue'
 import TCover from '@/themes/components/media-cover.vue'
 import TMangaCard from '@/themes/components/manga-card.vue'
+import { openThemeContextMenu } from '@/themes/context-menu'
 
 const router = useRouter()
 const route = useRoute()

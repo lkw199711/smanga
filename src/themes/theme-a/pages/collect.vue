@@ -13,14 +13,14 @@
       </template>
       <template v-else>
         <div class="ta-grid" v-if="tab === 'manga'">
-          <div v-for="item in list" :key="item.collectId" class="ta-grid-card" @click="go_manga(item)">
+          <div v-for="item in list" :key="item.collectId" class="ta-grid-card" @click="go_manga(item)" @contextmenu="openThemeContextMenu($event, 'manga', item)">
             <t-cover class="ta-grid-cover" variant="A" :seed="Number(item?.mangaId || 0)" :file="item?.mangaCover || ''" />
             <div class="ta-grid-name">{{ item.mangaName }}</div>
           </div>
         </div>
 
         <div class="ta-chapter-list" v-else>
-          <div v-for="item in list" :key="item.collectId" class="ta-chapter-item" @click="go_read(item)">
+          <div v-for="item in list" :key="item.collectId" class="ta-chapter-item" @click="go_read(item)" @contextmenu="openThemeContextMenu($event, 'chapter', item)">
             <t-cover
               class="ta-chapter-cover"
               variant="A"
@@ -50,6 +50,7 @@ import { mangaPageSize, chapterPageSize } from '@/store/page-size'
 import MediaPager from '@/components/media-pager.vue'
 import listSkeleton from '@/components/list-skeleton.vue'
 import TCover from '@/themes/components/media-cover.vue'
+import { openThemeContextMenu } from '@/themes/context-menu'
 
 const router = useRouter()
 const tab = ref<'manga' | 'chapter'>('manga')

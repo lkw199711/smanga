@@ -2,7 +2,7 @@
   <div class="td-manga-list">
     <h2 class="td-page-title">{{ mediaName || '漫画列表' }}</h2>
     <div class="td-card-grid">
-      <div class="td-card" v-for="m in list" :key="m.mangaId" @click="router.push(`/manga/${m.mangaId}`)">
+      <div class="td-card" v-for="m in list" :key="m.mangaId" @click="router.push(`/manga/${m.mangaId}`)" @contextmenu="openThemeContextMenu($event, 'manga', m)">
         <div class="td-card-cover"><img :src="m.poster || '/favicon.ico'" /></div>
         <div class="td-card-body">
           <div class="td-card-title">{{ m.mangaName }}</div>
@@ -22,6 +22,7 @@
 import { ref, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import mangaApi from '@/api/manga'
+import { openThemeContextMenu } from '@/themes/context-menu'
 
 const route = useRoute()
 const router = useRouter()

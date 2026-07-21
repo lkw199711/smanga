@@ -67,17 +67,24 @@
 			</header>
 
 			<main class="sd-main">
-				<router-view />
+				<router-view :key="refreshKey" />
 			</main>
 		</div>
+		<theme-context-menu />
 	</div>
 </template>
 
 <script lang="ts" setup>
-import { computed, onMounted, ref, watch } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import mediaStatsApi from '@/api/media-stats'
 import { userInfo } from '@/store'
+import ThemeContextMenu from '@/themes/components/theme-context-menu.vue'
+
+const refreshKey = ref(0)
+function refreshPage() { refreshKey.value += 1 }
+onMounted(() => window.addEventListener('smanga:theme-context-menu-changed', refreshPage))
+onBeforeUnmount(() => window.removeEventListener('smanga:theme-context-menu-changed', refreshPage))
 
 const router = useRouter()
 const route = useRoute()
@@ -220,6 +227,10 @@ function toggleDark() {
 
 <style scoped>
 .style-d {
+	--tcm-bg: var(--sd-card);
+	--tcm-text: var(--sd-text);
+	--tcm-border: var(--sd-border);
+	--tcm-hover: var(--sd-hover);
 	display: flex;
 	height: 100vh;
 	background: var(--sd-back);

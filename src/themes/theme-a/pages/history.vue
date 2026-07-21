@@ -13,6 +13,7 @@
 						:item="item"
 						variant="A"
 						@click="go_read(item)"
+						@contextmenu="openThemeContextMenu($event, 'chapter', item)"
 					/>
 				</div>
 			</template>
@@ -38,6 +39,7 @@ import listSkeleton from '@/components/list-skeleton.vue'
 import { chapterPageSize } from '@/store/page-size'
 import { config } from '@/store'
 import THistoryItem from '@/themes/components/history-item.vue'
+import { openThemeContextMenu } from '@/themes/context-menu'
 
 const router = useRouter()
 

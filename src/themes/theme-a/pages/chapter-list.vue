@@ -15,7 +15,7 @@
       </div>
     </div>
     <div class="ta-chapters">
-      <div v-for="(ch, idx) in list" :key="ch.chapterId" class="ta-ch-item" @click="goRead(ch, idx)">
+      <div v-for="(ch, idx) in list" :key="ch.chapterId" class="ta-ch-item" @click="goRead(ch, idx)" @contextmenu="openThemeContextMenu($event, 'chapter', ch)">
         <div class="ta-ch-cover">
           <img v-if="getChapterCover(ch)" :src="getChapterCover(ch)" alt="" />
           <div v-else class="ta-ch-cover-ph">📄</div>
@@ -43,6 +43,7 @@ import mangaApi from '@/api/manga'
 import imageApi from '@/api/image'
 import queue from '@/store/quque'
 import { globalData } from '@/store'
+import { openThemeContextMenu } from '@/themes/context-menu'
 
 const router = useRouter()
 const route = useRoute()

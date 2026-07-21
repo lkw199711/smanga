@@ -38,6 +38,7 @@
             :key="ch.chapterId"
             class="tb-chapter-item"
             @click="goRead(ch)"
+			@contextmenu="openThemeContextMenu($event, 'chapter', ch)"
             ref="chapterBox"
           >
             <div class="tb-chapter-cover">
@@ -64,6 +65,7 @@ import chapterApi from '@/api/chapter'
 import collectApi from '@/api/collect'
 import imageApi from '@/api/image'
 import queue from '@/store/quque'
+import { openThemeContextMenu } from '@/themes/context-menu'
 
 const router = useRouter()
 const route = useRoute()

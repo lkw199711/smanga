@@ -44,6 +44,7 @@
             :key="ch.chapterId"
             class="td-chapter-item"
             @click="goRead(ch, idx)"
+			@contextmenu="openThemeContextMenu($event, 'chapter', ch)"
             :class="{ 'td-chapter-read': ch.latest?.finish }"
           >
             <div class="td-chapter-cover">
@@ -81,6 +82,7 @@ import collectApi from '@/api/collect'
 import imageApi from '@/api/image'
 import queue from '@/store/quque'
 import useBrowseStore from '@/store/browse'
+import { openThemeContextMenu } from '@/themes/context-menu'
 
 const router = useRouter()
 const route = useRoute()

@@ -1,5 +1,5 @@
 <template>
-	<div :class="['t-manga-card', `t-manga-card--${variant}`]" @click="emit('click')">
+	<div :class="['t-manga-card', `t-manga-card--${variant}`]" @click="emit('click')" @contextmenu="emit('contextmenu', $event)">
 		<t-cover
 			class="t-manga-card__cover"
 			:variant="variant"
@@ -36,6 +36,7 @@ const props = withDefaults(
 
 const emit = defineEmits<{
 	(e: 'click'): void
+	(e: 'contextmenu', event: MouseEvent): void
 }>()
 
 const variant = computed(() => props.variant)

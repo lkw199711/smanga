@@ -26,6 +26,7 @@
         variant="B"
         :meta="`${m.chapterCount || 0} 章节`"
         @click="goChapters(m)"
+        @contextmenu="openThemeContextMenu($event, 'manga', m)"
       />
     </div>
     
@@ -47,6 +48,7 @@ import mangaApi from '@/api/manga'
 import queue from '@/store/quque'
 import imageApi from '@/api/image'
 import TMangaCard from '@/themes/components/manga-card.vue'
+import { openThemeContextMenu } from '@/themes/context-menu'
 
 const router = useRouter()
 const route = useRoute()
@@ -185,4 +187,3 @@ async function get_poster(item: any) {
   font-size: 13px;
 }
 </style>
-
