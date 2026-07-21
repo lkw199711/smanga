@@ -73,10 +73,13 @@ const useBrowseStore = defineStore('browse', {
 
 			switch (routeName) {
 				case 'manga-info':
+				case 't-manga-info':
 					return chapterOrderBy;
 				case 'chapter-list':
+				case 't-chapter-list':
 					return chapterOrderBy;
 				case 'bookmark':
+				case 't-bookmark':
 					return chapterOrderBy;
 				default:
 					return mangaOrderBy;

@@ -5,6 +5,7 @@ import useBrowseStore from '@/store/browse';
 import ThemeLayout from '@/themes/layout-wrapper.vue';
 import ThemeBridge from '@/themes/bridge.vue';
 import LegacyReaderBridge from '@/themes/legacy-reader-bridge.vue';
+import LegacyMangaInfoBridge from '@/themes/legacy-manga-info-bridge.vue';
 import { url } from '@/api/index';
 
 import NProgress from 'nprogress';
@@ -549,7 +550,7 @@ const routes: Array<RouteRecordRaw> = [
 			{ path: '', name: 't-home', component: ThemeBridge, props: { page: 'home' }, meta: { title: '首页' } },
 			{ path: 'media', name: 't-media-list', component: ThemeBridge, props: { page: 'media' }, meta: { title: '媒体库' } },
 			{ path: 'media/:mediaId', name: 't-manga-list', component: ThemeBridge, props: { page: 'manga-list' }, meta: { title: '漫画列表' } },
-			{ path: 'manga/:mangaId', name: 't-manga-info', component: ThemeBridge, props: { page: 'manga-info' }, meta: { title: '漫画详情' } },
+			{ path: 'manga/:mangaId', name: 't-manga-info', component: LegacyMangaInfoBridge, meta: { title: '漫画详情' } },
 			{ path: 'manga/:mangaId/chapters', name: 't-chapter-list', component: ThemeBridge, props: { page: 'chapter-list' }, meta: { title: '章节列表' } },
 			{ path: 'history', name: 't-history', component: ThemeBridge, props: { page: 'history' }, meta: { title: '历史' } },
 			{ path: 'bookmark', name: 't-bookmark', component: ThemeBridge, props: { page: 'bookmark' }, meta: { title: '书签' } },
