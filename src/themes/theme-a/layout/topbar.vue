@@ -274,7 +274,7 @@ onBeforeUnmount(() => {
 <style scoped>
 .sa-topbar {
 	position: relative;
-	z-index: 1;
+	z-index: 100;
 	display: flex;
 	align-items: center;
 	gap: 16px;

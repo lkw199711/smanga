@@ -43,7 +43,6 @@ onBeforeUnmount(() => window.removeEventListener('smanga:theme-context-menu-chan
 	display: flex;
 	flex-direction: column;
 	min-width: 0;
-	overflow: hidden;
 }
 
 .sa-main {
