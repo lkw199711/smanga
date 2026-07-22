@@ -6,12 +6,17 @@
     </div>
     <div class="ta-grid">
       <div v-for="m in list" :key="m.mediaId" class="ta-media-card" v-long-press="() => openThemeActionSheet('media', m)" @click="goMedia(m)" @contextmenu="openThemeContextMenu($event, 'media', m)">
-        <div class="ta-media-icon">📁</div>
-			<div class="ta-media-info">
+        <div class="ta-media-cover">
+          <img v-if="getMediaCover(m)" :src="getMediaCover(m)" alt="" />
+          <div v-else class="ta-media-placeholder">
+            <span class="ta-placeholder-icon">📁</span>
+          </div>
+        </div>
+        <div class="ta-media-body">
           <div class="ta-media-name">{{ m.mediaName }}</div>
           <div class="ta-media-meta">{{ m.mangaCount || 0 }} 部漫画</div>
           <div class="ta-media-path">{{ m.mediaPath }}</div>
-			</div>
+        </div>
       </div>
       <div v-if="list.length === 0" class="ta-empty">暂无媒体库，点击右上角添加</div>
     </div>
@@ -39,6 +44,7 @@
 import { onMounted, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import mediaApi from '@/api/media'
+import imageApi from '@/api/image'
 import { openThemeActionSheet, openThemeContextMenu } from '@/themes/context-menu'
 
 const router = useRouter()
@@ -49,13 +55,38 @@ const submitting = ref(false)
 const error = ref('')
 const form = ref({ mediaName: '', mediaPath: '' })
 
+// 媒体库封面缓存
+const mediaCoverCache = ref<{[key: string]: string}>({})
+
 async function loadData() {
   try {
     const res = await mediaApi.get()
     list.value = pickMediaList(res)
+    // 加载封面
+    list.value.forEach(item => {
+      if (item.mediaCover) {
+        loadMediaCover(item)
+      }
+    })
   } catch {
     list.value = []
   }
+}
+
+async function loadMediaCover(item: any) {
+  if (!item.mediaCover) return
+  try {
+    const blobUrl = await imageApi.get({ file: item.mediaCover })
+    if (blobUrl) {
+      mediaCoverCache.value[item.mediaId] = blobUrl
+    }
+  } catch (e) {
+    console.warn('Failed to load media cover:', item.mediaName, e)
+  }
+}
+
+function getMediaCover(media: any) {
+  return mediaCoverCache.value[media.mediaId] || ''
 }
 
 onMounted(loadData)
@@ -166,25 +197,54 @@ async function submitAdd() {
 }
 
 .ta-media-card {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  padding: 20px;
   background: #fff;
   border: 1px solid #eaeaea;
   border-radius: 12px;
+  overflow: hidden;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all 0.25s ease;
 }
 
 .ta-media-card:hover {
   border-color: #d1d5db;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+  transform: translateY(-3px);
 }
 
-.ta-media-icon {
-  font-size: 32px;
-  flex-shrink: 0;
+.ta-media-cover {
+  width: 100%;
+  aspect-ratio: 246 / 90;
+  overflow: hidden;
+  background: #f3f4f6;
+}
+
+.ta-media-cover img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.ta-media-card:hover .ta-media-cover img {
+  transform: scale(1.05);
+}
+
+.ta-media-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #f3f4f6, #e5e7eb);
+}
+
+.ta-placeholder-icon {
+  font-size: 42px;
+  opacity: 0.7;
+}
+
+.ta-media-body {
+  padding: 14px 16px;
 }
 
 .ta-media-name {

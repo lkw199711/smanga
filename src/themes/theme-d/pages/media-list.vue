@@ -6,12 +6,17 @@
     </div>
     <div class="td-grid">
       <div v-for="m in list" :key="m.mediaId" class="td-media-card" v-long-press="() => openThemeActionSheet('media', m)" @click="goMedia(m)" @contextmenu="openThemeContextMenu($event, 'media', m)">
-        <div class="td-media-icon">📁</div>
-			<div class="td-media-info">
+        <div class="td-media-cover">
+          <img v-if="getMediaCover(m)" :src="getMediaCover(m)" alt="" />
+          <div v-else class="td-media-placeholder">
+            <span class="td-placeholder-icon">📁</span>
+          </div>
+        </div>
+        <div class="td-media-body">
           <div class="td-media-name">{{ m.mediaName }}</div>
           <div class="td-media-meta">{{ m.mangaCount || 0 }} 部漫画</div>
           <div class="td-media-path">{{ m.mediaPath }}</div>
-			</div>
+        </div>
       </div>
       <div v-if="list.length === 0" class="td-empty">暂无媒体库，点击右上角添加</div>
     </div>
@@ -39,6 +44,7 @@
 import { onMounted, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import mediaApi from '@/api/media'
+import imageApi from '@/api/image'
 import { openThemeActionSheet, openThemeContextMenu } from '@/themes/context-menu'
 
 const router = useRouter()
@@ -49,13 +55,38 @@ const submitting = ref(false)
 const error = ref('')
 const form = ref({ mediaName: '', mediaPath: '' })
 
+// 媒体库封面缓存
+const mediaCoverCache = ref<{[key: string]: string}>({})
+
 async function loadData() {
   try {
     const res = await mediaApi.get()
     list.value = pickMediaList(res)
+    // 加载封面
+    list.value.forEach(item => {
+      if (item.mediaCover) {
+        loadMediaCover(item)
+      }
+    })
   } catch {
     list.value = []
   }
+}
+
+async function loadMediaCover(item: any) {
+  if (!item.mediaCover) return
+  try {
+    const blobUrl = await imageApi.get({ file: item.mediaCover })
+    if (blobUrl) {
+      mediaCoverCache.value[item.mediaId] = blobUrl
+    }
+  } catch (e) {
+    console.warn('Failed to load media cover:', item.mediaName, e)
+  }
+}
+
+function getMediaCover(media: any) {
+  return mediaCoverCache.value[media.mediaId] || ''
 }
 
 onMounted(loadData)
@@ -172,58 +203,83 @@ async function submitAdd() {
 
 .td-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-  gap: 16px;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
 }
 
 .td-media-card {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  padding: 20px;
   background: var(--sd-card);
   border: 1px solid var(--sd-border);
   border-radius: 12px;
+  overflow: hidden;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all 0.25s ease;
 }
 
 .td-media-card:hover {
   border-color: var(--sd-primary);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+  transform: translateY(-3px);
 }
 
-.td-media-icon {
-  font-size: 32px;
-  flex-shrink: 0;
-  color: var(--sd-primary);
+.td-media-cover {
+  width: 100%;
+  aspect-ratio: 246 / 90;
+  overflow: hidden;
+  background: var(--sd-hover);
 }
 
-.td-media-info {
-  flex: 1;
-  min-width: 0;
+.td-media-cover img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.td-media-card:hover .td-media-cover img {
+  transform: scale(1.05);
+}
+
+.td-media-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, var(--sd-hover), var(--sd-primary-bg));
+}
+
+.td-placeholder-icon {
+  font-size: 42px;
+  opacity: 0.7;
+}
+
+.td-media-body {
+  padding: 14px 16px;
 }
 
 .td-media-name {
   font-size: 15px;
   font-weight: 600;
   color: var(--sd-text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .td-media-meta {
   font-size: 12px;
   color: var(--sd-text-muted);
-  margin-top: 4px;
+  margin-top: 5px;
 }
 
 .td-media-path {
   font-size: 11px;
   color: var(--sd-text-faint);
-  margin-top: 2px;
+  margin-top: 4px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: 240px;
 }
 
 .td-empty {

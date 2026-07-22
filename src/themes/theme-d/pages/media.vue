@@ -6,10 +6,15 @@
         <h1>媒体库</h1>
         <button class="td-btn-primary" @click="showAdd = true">+ 新建媒体库</button>
       </div>
-      <div class="td-grid">
-        <div v-for="m in mediaList" :key="m.mediaId" class="td-media-card" @click="selectMedia(m)">
-          <div class="td-media-icon">📁</div>
-          <div class="td-media-info">
+      <div class="td-media-grid">
+        <div v-for="m in mediaList" :key="m.mediaId" class="td-media-card" v-long-press="() => openThemeActionSheet('media', m)" @click="selectMedia(m)" @contextmenu="openThemeContextMenu($event, 'media', m)">
+          <div class="td-media-cover">
+            <img v-if="getMediaCover(m)" :src="getMediaCover(m)" alt="" />
+            <div v-else class="td-media-placeholder">
+              <span class="td-placeholder-icon">📁</span>
+            </div>
+          </div>
+          <div class="td-media-body">
             <div class="td-media-name">{{ m.mediaName }}</div>
             <div class="td-media-meta">{{ m.mangaCount || 0 }} 部漫画</div>
             <div class="td-media-path">{{ m.mediaPath }}</div>
@@ -72,6 +77,7 @@ import { mediaType } from '@/type/media'
 import { userConfig } from '@/store'
 import { onMediaOperation } from '@/utils/cache'
 import queue from '@/store/quque'
+import { openThemeActionSheet, openThemeContextMenu } from '@/themes/context-menu'
 import MediaLibraryCreateDialog from '@/themes/components/media-library-create-dialog.vue'
 
 const router = useRouter()
@@ -95,6 +101,9 @@ const selectedMediaName = ref('')
 // 漫画封面图片引用
 const mangaImageBox = ref(null)
 const mangaCoverCache = ref<{[key: string]: string}>({})
+
+// 媒体库封面图片缓存
+const mediaCoverCache = ref<{[key: string]: string}>({})
 
 const totalPages = computed(() => Math.ceil(total.value / pageSize))
 
@@ -147,9 +156,31 @@ async function loadMediaData() {
   try {
     const res = await mediaApi.get(1, 999)
     mediaList.value = pickMediaList(res)
+    // 加载媒体库封面
+    mediaList.value.forEach(item => {
+      if (item.mediaCover) {
+        loadMediaCover(item)
+      }
+    })
   } catch {
     mediaList.value = []
   }
+}
+
+async function loadMediaCover(item: any) {
+  if (!item.mediaCover) return
+  try {
+    const blobUrl = await imageApi.get({ file: item.mediaCover })
+    if (blobUrl) {
+      mediaCoverCache.value[item.mediaId] = blobUrl
+    }
+  } catch (e) {
+    console.warn('Failed to load media cover:', item.mediaName, e)
+  }
+}
+
+function getMediaCover(media: any) {
+  return mediaCoverCache.value[media.mediaId] || ''
 }
 
 async function loadMangaData() {
@@ -274,54 +305,85 @@ onUnmounted(stopMediaOperationListener)
   outline: none;
 }
 
-.td-grid {
+.td-media-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-  gap: 16px;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
 }
 
 .td-media-card {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  padding: 20px;
-  background: #fff;
-  border: 1px solid #eaeaea;
+  background: var(--sd-card);
+  border: 1px solid var(--sd-border);
   border-radius: 12px;
+  overflow: hidden;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all 0.25s ease;
 }
 
 .td-media-card:hover {
-  border-color: #d1d5db;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  border-color: var(--sd-primary);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+  transform: translateY(-3px);
 }
 
-.td-media-icon {
-  font-size: 32px;
-  flex-shrink: 0;
+.td-media-cover {
+  width: 100%;
+  aspect-ratio: 246 / 90;
+  overflow: hidden;
+  background: var(--sd-hover);
+}
+
+.td-media-cover img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.td-media-card:hover .td-media-cover img {
+  transform: scale(1.05);
+}
+
+.td-media-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, var(--sd-hover), var(--sd-primary-bg));
+}
+
+.td-placeholder-icon {
+  font-size: 42px;
+  opacity: 0.7;
+}
+
+.td-media-body {
+  padding: 14px 16px;
 }
 
 .td-media-name {
   font-size: 15px;
   font-weight: 600;
-  color: #111827;
+  color: var(--sd-text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .td-media-meta {
   font-size: 12px;
-  color: #6b7280;
-  margin-top: 4px;
+  color: var(--sd-text-muted);
+  margin-top: 5px;
 }
 
 .td-media-path {
   font-size: 11px;
-  color: #9ca3af;
-  margin-top: 2px;
+  color: var(--sd-text-faint);
+  margin-top: 4px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: 240px;
 }
 
 .td-manga-grid {
