@@ -163,7 +163,7 @@ import share from '@/components/share.vue';
 import useBrowseStore from '@/store/browse';
 import chapter from '@/views/manga-info/components/chapter.vue';
 import chapterSimple from '@/views/manga-info/components/chapter-simple.vue';
-import mangaModify from '@/views/manga-manage/components/mangaModify.vue';
+import mangaModify from '@/themes/components/manga-modify-dialog.vue';
 import ThemeContextMenu from '@/themes/components/theme-context-menu.vue';
 import { openThemeContextMenu } from '@/themes/context-menu';
 const browse: any = useBrowseStore();

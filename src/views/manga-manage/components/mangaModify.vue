@@ -63,7 +63,7 @@
 </template>
 
 <script lang="ts" setup>
-import {defineModel, reactive, watch} from 'vue';
+import {reactive, watch} from 'vue';
 import mangaApi from '@/api/manga';
 import coverUpload from '@/components/cover-upload.vue';
 import { mangaInit } from '@/type/manga';
