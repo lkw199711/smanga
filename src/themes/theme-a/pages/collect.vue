@@ -14,21 +14,23 @@
       <template v-else>
         <div class="ta-grid" v-if="tab === 'manga'">
           <div v-for="item in list" :key="item.collectId" class="ta-grid-card" @click="go_manga(item)" @contextmenu="openThemeContextMenu($event, 'manga', item)">
-            <t-cover class="ta-grid-cover" variant="A" :seed="Number(item?.mangaId || 0)" :file="item?.mangaCover || ''" />
+            <div class="ta-grid-cover">
+              <img v-if="getCoverUrl(item.mangaCover || '')" :src="getCoverUrl(item.mangaCover || '')" alt="" />
+              <div v-else class="ta-cover-placeholder">📚</div>
+            </div>
             <div class="ta-grid-name">{{ item.mangaName }}</div>
           </div>
         </div>
 
         <div class="ta-chapter-list" v-else>
           <div v-for="item in list" :key="item.collectId" class="ta-chapter-item" @click="go_read(item)" @contextmenu="openThemeContextMenu($event, 'chapter', item)">
-            <t-cover
-              class="ta-chapter-cover"
-              variant="A"
-              :seed="Number(item?.chapterId || item?.mangaId || 0)"
-              :file="item?.chapterCover || item?.mangaCover || ''" />
+            <div class="ta-chapter-cover">
+              <img v-if="getCoverUrl(item.pageImage || item.chapterCover || '')" :src="getCoverUrl(item.pageImage || item.chapterCover || '')" alt="" />
+              <div v-else class="ta-cover-placeholder">📖</div>
+            </div>
             <div class="ta-chapter-info">
-              <div class="ta-chapter-title">{{ item.mangaName || '未知漫画' }}</div>
-              <div class="ta-chapter-sub">{{ item.chapterName || '未知章节' }}</div>
+              <div class="ta-chapter-title">{{ item.chapterName || '未知章节' }}</div>
+              <div v-if="item.mangaName" class="ta-chapter-sub">{{ item.mangaName }}</div>
             </div>
           </div>
         </div>
@@ -45,11 +47,11 @@
 import { computed, onMounted, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import collectApi from '@/api/collect'
+import imageApi from '@/api/image'
 import { config, userConfig } from '@/store'
 import { mangaPageSize, chapterPageSize } from '@/store/page-size'
 import MediaPager from '@/components/media-pager.vue'
 import listSkeleton from '@/components/list-skeleton.vue'
-import TCover from '@/themes/components/media-cover.vue'
 import { openThemeContextMenu } from '@/themes/context-menu'
 
 const router = useRouter()
@@ -60,6 +62,7 @@ const count = ref(0)
 const loading = ref(false)
 const pageSizes = ref<number[]>([])
 const defaultPageSize = ref(10)
+const coverCache = ref<Record<string, string>>({})
 
 const orderBy = computed(() => (tab.value === 'manga' ? userConfig.order : userConfig.chapterOrder))
 
@@ -79,6 +82,17 @@ async function page_change(pageParams = 1, pageSize = defaultPageSize.value) {
     const res = await collectApi.get(tab.value, pageParams, pageSize, orderBy.value)
     list.value = res?.list || []
     count.value = Number(res?.count || 0)
+    // 加载封面
+    if (tab.value === 'manga') {
+      for (const item of list.value) {
+        if (item.mangaCover) loadCover(item.mangaCover)
+      }
+    } else {
+      for (const item of list.value) {
+        const key = item.pageImage || item.chapterCover
+        if (key) loadCover(key)
+      }
+    }
   } catch {
     list.value = []
     count.value = 0
@@ -90,6 +104,18 @@ async function page_change(pageParams = 1, pageSize = defaultPageSize.value) {
 function go_manga(item: any) {
   if (!item?.mangaId) return
   router.push(`/t/manga/${item.mangaId}`)
+}
+
+async function loadCover(key: string) {
+  if (!key || coverCache.value[key]) return
+  try {
+    const url = await imageApi.get({ file: key })
+    if (url) coverCache.value[key] = url
+  } catch { /* ignore */ }
+}
+
+function getCoverUrl(key: string) {
+  return coverCache.value[key] || ''
 }
 
 function go_read(item: any) {
@@ -178,6 +204,22 @@ onMounted(() => {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
 }
 
+.ta-grid-cover img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.ta-cover-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32px;
+  background: linear-gradient(135deg, #dbeafe, #bfdbfe);
+}
+
 .ta-grid-name {
   font-size: 13px;
   font-weight: 500;
@@ -216,6 +258,15 @@ onMounted(() => {
   width: 52px;
   height: 70px;
   border-radius: 10px;
+  overflow: hidden;
+  background: #f3f4f6;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+}
+
+.ta-chapter-cover img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .ta-chapter-info {

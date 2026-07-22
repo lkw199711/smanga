@@ -82,8 +82,11 @@ const styleObj = computed<Record<string, string>>(() => {
 <style scoped>
 .t-cover {
 	position: relative;
+	width: 100%;
+	height: 100%;
 	overflow: hidden;
-	background-size: cover;
+	border-radius: inherit;
+	background-size: contain;
 	background-position: center;
 	background-repeat: no-repeat;
 }
