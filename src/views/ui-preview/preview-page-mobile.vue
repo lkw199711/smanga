@@ -60,11 +60,26 @@
 			</section>
 
 			<!-- 历史记录 -->
-			<section v-else-if="page === 'history'" class="ppm-list">
-				<button v-for="h in previewHistory" :key="h.chapterId" class="ppm-row" @click="nav('reader', h)">
-					<span>{{ mangaName(h.mangaId) }}</span>
-					<small>{{ h.time }} · 阅读到 {{ h.progress }}%</small>
-				</button>
+			<section v-else-if="page === 'history'" class="ppm-history">
+				<div v-for="h in previewHistory" :key="h.chapterId" class="ppm-history-card" @click="nav('reader', h)">
+					<div class="ppm-history-cover"
+						:style="{ background: `linear-gradient(135deg, ${h.gradient[0]}, ${h.gradient[1]})` }">
+						<span v-if="h.tag" class="ppm-history-tag">{{ h.tag }}</span>
+						<span v-if="h.unread" class="ppm-history-unread">{{ h.unread }}</span>
+						<span v-if="h.finished" class="ppm-history-done">✓</span>
+						<div class="ppm-history-progress-bar">
+							<div class="ppm-history-progress-fill" :style="{ width: h.progress + '%' }"></div>
+						</div>
+					</div>
+					<div class="ppm-history-info">
+						<div class="ppm-history-name">{{ h.mangaName }}</div>
+						<div class="ppm-history-chapter">{{ h.chapterName }}</div>
+						<div class="ppm-history-meta">
+							<span class="ppm-history-time">{{ h.time }}</span>
+							<span class="ppm-history-pct">{{ h.progress }}%</span>
+						</div>
+					</div>
+				</div>
 			</section>
 
 			<!-- 书签 -->
@@ -588,5 +603,148 @@ function handleNavClick(item: any) {
 	background: #161a20;
 	color: #e6e8eb;
 	border-color: #2a313c;
+}
+
+/* 历史记录卡片 */
+.ppm-history {
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+}
+.ppm-history-card {
+	display: flex;
+	gap: 12px;
+	padding: 12px;
+	background: #fff;
+	border: 1px solid #e5e7eb;
+	border-radius: 14px;
+	cursor: pointer;
+	transition: all 0.2s ease;
+}
+.ppm-history-card:active {
+	transform: scale(0.98);
+	background: #f9fafb;
+}
+.preview-c .ppm-history-card {
+	background: #161a20;
+	border-color: #2a313c;
+}
+.preview-c .ppm-history-card:active {
+	background: #1a1f28;
+}
+.ppm-history-cover {
+	position: relative;
+	flex-shrink: 0;
+	width: 56px;
+	height: 78px;
+	border-radius: 10px;
+	overflow: hidden;
+	box-shadow: 0 2px 8px rgba(0,0,0,.08);
+}
+.ppm-history-tag {
+	position: absolute;
+	top: 4px;
+	left: 4px;
+	padding: 1px 6px;
+	font-size: 9px;
+	font-weight: 600;
+	color: #fff;
+	background: rgba(0,0,0,.55);
+	border-radius: 3px;
+	line-height: 1.4;
+}
+.ppm-history-unread {
+	position: absolute;
+	top: 4px;
+	right: 4px;
+	min-width: 18px;
+	height: 18px;
+	padding: 0 5px;
+	font-size: 10px;
+	font-weight: 700;
+	color: #fff;
+	background: #ef4444;
+	border-radius: 9px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+.ppm-history-done {
+	position: absolute;
+	top: 4px;
+	right: 4px;
+	width: 20px;
+	height: 20px;
+	font-size: 11px;
+	font-weight: 700;
+	color: #fff;
+	background: #10b981;
+	border-radius: 50%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+.ppm-history-progress-bar {
+	position: absolute;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	height: 3px;
+	background: rgba(255,255,255,.45);
+}
+.ppm-history-progress-fill {
+	height: 100%;
+	background: #2563eb;
+	border-radius: 0 2px 2px 0;
+	transition: width 0.3s ease;
+}
+.ppm-history-info {
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	min-width: 0;
+	gap: 1px;
+}
+.ppm-history-name {
+	font-size: 14px;
+	font-weight: 600;
+	color: #111827;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+.preview-c .ppm-history-name {
+	color: #e6e8eb;
+}
+.ppm-history-chapter {
+	font-size: 12px;
+	color: #6b7280;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+.preview-c .ppm-history-chapter {
+	color: #9aa3ae;
+}
+.ppm-history-meta {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+.ppm-history-time {
+	font-size: 11px;
+	color: #9ca3af;
+}
+.preview-c .ppm-history-time {
+	color: #6a7280;
+}
+.ppm-history-pct {
+	font-size: 11px;
+	font-weight: 600;
+	color: #2563eb;
+}
+.preview-c .ppm-history-pct {
+	color: #f5a524;
 }
 </style>

@@ -147,11 +147,17 @@ export const previewChapters: PreviewChapter[] = previewMangas.flatMap((m) =>
 	})),
 );
 
-export const previewHistory = continueReading.slice(0, 5).map((m, i) => ({
+export const previewHistory = continueReading.map((m, i) => ({
 	mangaId: m.id,
+	mangaName: m.name,
 	chapterId: m.id * 100 + i + 1,
-	time: `${i + 1} 小时前`,
+	chapterName: m.chapter,
+	time: ['刚刚', '5 分钟前', '30 分钟前', '1 小时前', '3 小时前', '昨天'][i] || `${i + 1} 天前`,
 	progress: m.progress,
+	unread: m.unread,
+	gradient: m.gradient,
+	tag: m.tag,
+	finished: m.progress >= 100,
 }));
 
 export const previewBookmarks = continueReading.slice(0, 4).map((m, i) => ({

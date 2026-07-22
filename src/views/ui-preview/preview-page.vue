@@ -53,11 +53,26 @@
 			</button>
 		</section>
 
-		<section v-else-if="page === 'history'" class="pp-list">
-			<button v-for="h in previewHistory" :key="h.chapterId" class="pp-row" @click="nav('reader', h)">
-				<span>{{ mangaName(h.mangaId) }}</span>
-				<small>{{ h.time }} · 阅读到 {{ h.progress }}%</small>
-			</button>
+		<section v-else-if="page === 'history'" class="pp-history">
+			<div v-for="h in previewHistory" :key="h.chapterId" class="pp-history-card" @click="nav('reader', h)">
+				<div class="pp-history-cover"
+					:style="{ background: `linear-gradient(135deg, ${h.gradient[0]}, ${h.gradient[1]})` }">
+					<span v-if="h.tag" class="pp-history-tag">{{ h.tag }}</span>
+					<span v-if="h.unread" class="pp-history-unread">{{ h.unread }}</span>
+					<span v-if="h.finished" class="pp-history-done">✓</span>
+					<div class="pp-history-progress-bar">
+						<div class="pp-history-progress-fill" :style="{ width: h.progress + '%' }"></div>
+					</div>
+				</div>
+				<div class="pp-history-info">
+					<div class="pp-history-name">{{ h.mangaName }}</div>
+					<div class="pp-history-chapter">{{ h.chapterName }}</div>
+					<div class="pp-history-meta">
+						<span class="pp-history-time">{{ h.time }}</span>
+						<span class="pp-history-pct">{{ h.progress }}%</span>
+					</div>
+				</div>
+			</div>
 		</section>
 
 		<section v-else-if="page === 'bookmark'" class="pp-list">
@@ -250,8 +265,159 @@ function mangaName(id: number) {
 .pp-setting-card h2 { margin: 0 0 12px; font-size: 18px; }
 .pp-setting-row { display: flex; justify-content: space-between; padding: 10px 0; border-top: 1px solid rgba(128,128,128,.16); }
 .pp-empty { max-width: 620px; padding: 28px; border-radius: 12px; background: rgba(255,255,255,.75); border: 1px solid rgba(128,128,128,.22); }
+
+/* 历史记录卡片 */
+.pp-history {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+	gap: 16px;
+	max-width: 1100px;
+}
+.pp-history-card {
+	display: flex;
+	gap: 14px;
+	padding: 14px;
+	background: #fff;
+	border: 1px solid #e5e7eb;
+	border-radius: 14px;
+	cursor: pointer;
+	transition: all 0.2s ease;
+}
+.pp-history-card:hover {
+	border-color: #d1d5db;
+	box-shadow: 0 4px 16px rgba(0,0,0,.06);
+	transform: translateY(-2px);
+}
+.preview-c .pp-history-card {
+	background: #161a20;
+	border-color: #2a313c;
+}
+.preview-c .pp-history-card:hover {
+	border-color: #3a4658;
+	box-shadow: 0 4px 16px rgba(0,0,0,.25);
+}
+.pp-history-cover {
+	position: relative;
+	flex-shrink: 0;
+	width: 64px;
+	height: 88px;
+	border-radius: 10px;
+	overflow: hidden;
+	box-shadow: 0 2px 8px rgba(0,0,0,.08);
+}
+.pp-history-tag {
+	position: absolute;
+	top: 6px;
+	left: 6px;
+	padding: 2px 7px;
+	font-size: 10px;
+	font-weight: 600;
+	color: #fff;
+	background: rgba(0,0,0,.55);
+	border-radius: 4px;
+	line-height: 1.4;
+}
+.pp-history-unread {
+	position: absolute;
+	top: 6px;
+	right: 6px;
+	min-width: 20px;
+	height: 20px;
+	padding: 0 6px;
+	font-size: 11px;
+	font-weight: 700;
+	color: #fff;
+	background: #ef4444;
+	border-radius: 10px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	box-shadow: 0 2px 6px rgba(239,68,68,.35);
+}
+.pp-history-done {
+	position: absolute;
+	top: 6px;
+	right: 6px;
+	width: 22px;
+	height: 22px;
+	font-size: 12px;
+	font-weight: 700;
+	color: #fff;
+	background: #10b981;
+	border-radius: 50%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	box-shadow: 0 2px 6px rgba(16,185,129,.35);
+}
+.pp-history-progress-bar {
+	position: absolute;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	height: 3px;
+	background: rgba(255,255,255,.45);
+}
+.pp-history-progress-fill {
+	height: 100%;
+	background: #2563eb;
+	border-radius: 0 2px 2px 0;
+	transition: width 0.3s ease;
+}
+.pp-history-info {
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	min-width: 0;
+	gap: 2px;
+}
+.pp-history-name {
+	font-size: 14px;
+	font-weight: 600;
+	color: #111827;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+.preview-c .pp-history-name {
+	color: #e6e8eb;
+}
+.pp-history-chapter {
+	font-size: 12px;
+	color: #6b7280;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+.preview-c .pp-history-chapter {
+	color: #9aa3ae;
+}
+.pp-history-meta {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-top: 2px;
+}
+.pp-history-time {
+	font-size: 11px;
+	color: #9ca3af;
+}
+.preview-c .pp-history-time {
+	color: #6a7280;
+}
+.pp-history-pct {
+	font-size: 11px;
+	font-weight: 600;
+	color: #2563eb;
+}
+.preview-c .pp-history-pct {
+	color: #f5a524;
+}
+
 @media (max-width: 760px) {
 	.pp-header { align-items: stretch; flex-direction: column; }
 	.pp-detail { grid-template-columns: 1fr; }
+	.pp-history { grid-template-columns: 1fr; }
 }
 </style>

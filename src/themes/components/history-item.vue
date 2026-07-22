@@ -1,5 +1,10 @@
 <template>
-	<div :class="['t-history-item', `t-history-item--${variant}`]" v-long-press="() => openThemeActionSheet('chapter', item)" @click="emit('click')" @contextmenu="emit('contextmenu', $event)">
+	<div
+		:class="['t-history-item', `t-history-item--${variant}`]"
+		v-long-press="() => openThemeActionSheet('chapter', item)"
+		@click="emit('click')"
+		@contextmenu="emit('contextmenu', $event)"
+	>
 		<t-cover
 			class="t-history-item__cover"
 			:variant="variant"
@@ -7,15 +12,18 @@
 			:file="coverFile"
 		>
 			<div v-if="isRead" class="t-history-item__read">✓</div>
-			<div v-if="progress > 0 && progress < 100" class="t-history-item__progress">
-				<div class="t-history-item__progress-bar" :style="{ width: `${progress}%` }" />
-			</div>
 		</t-cover>
 
 		<div class="t-history-item__info">
 			<div class="t-history-item__title">{{ title }}</div>
 			<div class="t-history-item__sub">{{ subTitle }}</div>
+			<div v-if="timeText" class="t-history-item__time">{{ timeText }}</div>
 		</div>
+
+		<div v-if="progress > 0 && progress < 100" class="t-history-item__progress">
+			<div class="t-history-item__progress-bar" :style="{ width: `${progress}%` }" />
+		</div>
+		<div v-else-if="progress >= 100" class="t-history-item__finish" />
 	</div>
 </template>
 
@@ -61,6 +69,20 @@ const progress = computed(() => {
 	const count = Number(latest.value.count || 0)
 	if (!page || !count) return 0
 	return Math.min(100, Math.max(0, Math.round((page / count) * 100)))
+})
+
+const timeText = computed(() => {
+	const t = props.item?.createTime
+	if (!t) return ''
+	const diff = Date.now() - new Date(t).getTime()
+	const mins = Math.floor(diff / 60000)
+	if (mins < 1) return '刚刚'
+	if (mins < 60) return `${mins} 分钟前`
+	const hours = Math.floor(mins / 60)
+	if (hours < 24) return `${hours} 小时前`
+	const days = Math.floor(hours / 24)
+	if (days < 7) return `${days} 天前`
+	return new Date(t).toLocaleDateString()
 })
 </script>
 
@@ -159,6 +181,18 @@ const progress = computed(() => {
 	color: var(--fg2);
 }
 
+.t-history-item--A .t-history-item__time {
+	color: #9ca3af;
+}
+
+.t-history-item--B .t-history-item__time {
+	color: rgba(255, 255, 255, 0.45);
+}
+
+.t-history-item--D .t-history-item__time {
+	color: var(--fg3);
+}
+
 .t-history-item__read {
 	position: absolute;
 	top: 6px;
@@ -173,19 +207,46 @@ const progress = computed(() => {
 	font-weight: 800;
 	background: rgba(255, 255, 255, 0.9);
 	color: #10b981;
+	z-index: 2;
 }
 
+/* --- 底部进度条（横跨整个卡片） --- */
 .t-history-item__progress {
 	position: absolute;
 	left: 0;
 	right: 0;
 	bottom: 0;
-	height: 4px;
-	background: rgba(0, 0, 0, 0.35);
+	height: 3px;
+	background: rgba(128, 128, 128, 0.15);
+	z-index: 0;
+	pointer-events: none;
 }
 
 .t-history-item__progress-bar {
+	position: absolute;
+	left: 0;
+	top: 0;
 	height: 100%;
-	background: #2563eb;
+	min-width: 2px;
+	background: #3b82f6;
+	border-radius: 0 2px 2px 0;
+	transition: width 0.4s ease;
+}
+
+.t-history-item__finish {
+	position: absolute;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	height: 3px;
+	background: #10b981;
+	z-index: 0;
+	pointer-events: none;
+}
+
+.t-history-item__time {
+	margin-top: 4px;
+	font-size: 11px;
+	opacity: 0.55;
 }
 </style>
