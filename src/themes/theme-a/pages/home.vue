@@ -462,7 +462,27 @@ function goManga(item: any) {
 @media (max-width: 768px) {
 	.sa-stats {
 		grid-template-columns: repeat(2, 1fr);
-		gap: 10px;
+		gap: 8px;
+		margin-bottom: 16px;
+	}
+
+	.sa-stat-card {
+		padding: 10px 12px;
+		border-radius: 8px;
+	}
+
+	.sa-stat-label {
+		font-size: 11px;
+		margin-bottom: 2px;
+	}
+
+	.sa-stat-value {
+		font-size: 18px;
+	}
+
+	.sa-stat-delta {
+		margin-top: 2px;
+		font-size: 10px;
 	}
 
 	.sa-continue {
@@ -484,18 +504,36 @@ function goManga(item: any) {
 	}
 
 	.sa-cont-card {
-		flex-direction: column;
+		padding: 10px;
+		gap: 10px;
 	}
 
 	.sa-cont-cover {
-		width: 100%;
-		aspect-ratio: 3 / 4;
+		width: 52px;
+		height: 70px;
+	}
+
+	.sa-cont-name {
+		font-size: 13px;
+	}
+
+	.sa-cont-chapter {
+		font-size: 11px;
 	}
 }
 
 @media (max-width: 480px) {
 	.sa-stats {
-		grid-template-columns: 1fr;
+		grid-template-columns: repeat(2, 1fr);
+		gap: 6px;
+	}
+
+	.sa-stat-card {
+		padding: 8px 10px;
+	}
+
+	.sa-stat-value {
+		font-size: 16px;
 	}
 
 	.sa-grid {

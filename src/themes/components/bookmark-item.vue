@@ -14,6 +14,11 @@
 			<div class="t-bookmark-item__title">{{ title }}</div>
 			<div class="t-bookmark-item__sub">{{ subTitle }}</div>
 		</div>
+
+		<div v-if="progress > 0 && progress < 100" class="t-bookmark-item__progress">
+			<div class="t-bookmark-item__progress-bar" :style="{ width: `${progress}%` }" />
+		</div>
+		<div v-else-if="progress >= 100" class="t-bookmark-item__finish" />
 	</div>
 </template>
 
@@ -61,6 +66,17 @@ const coverFile = computed(() => {
 		i.manga_cover ||
 		''
 	)
+})
+
+const latest = computed(() => props.item?.latest || null)
+
+const progress = computed(() => {
+	if (!latest.value) return 0
+	if (latest.value.finish) return 100
+	const page = Number(latest.value.page || 0)
+	const count = Number(latest.value.count || 0)
+	if (!page || !count) return 0
+	return Math.min(100, Math.max(0, Math.round((page / count) * 100)))
 })
 </script>
 
@@ -178,5 +194,38 @@ const coverFile = computed(() => {
 
 .t-bookmark-item--D .t-bookmark-item__sub {
 	color: var(--fg2);
+}
+/* 底部进度条（横跨整个卡片） */
+.t-bookmark-item__progress {
+	position: absolute;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	height: 3px;
+	background: rgba(128, 128, 128, 0.15);
+	z-index: 0;
+	pointer-events: none;
+}
+
+.t-bookmark-item__progress-bar {
+	position: absolute;
+	left: 0;
+	top: 0;
+	height: 100%;
+	min-width: 2px;
+	background: #3b82f6;
+	border-radius: 0 2px 2px 0;
+	transition: width 0.4s ease;
+}
+
+.t-bookmark-item__finish {
+	position: absolute;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	height: 3px;
+	background: #10b981;
+	z-index: 0;
+	pointer-events: none;
 }
 </style>
