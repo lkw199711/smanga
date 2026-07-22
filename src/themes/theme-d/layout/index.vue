@@ -58,7 +58,7 @@
 					<input v-model="keyword" placeholder="搜索漫画、章节、标签…" @keyup.enter="goSearch" />
 				</div>
 				<div class="sd-top-actions">
-					<button class="sd-btn">视图</button>
+					<button class="sd-btn" @click="toggleView">{{ config.viewType === 'block' ? '📋 网格' : '📊 列表' }}</button>
 					<div class="sd-sort-wrap" ref="sortWrapRef">
 						<button class="sd-btn sd-sort-btn" @click="toggleSortDropdown">
 							<span>{{ currentSortLabel }}</span>
@@ -91,8 +91,8 @@
 							</div>
 						</div>
 					</div>
-					<button class="sd-btn">中文</button>
-					<button class="sd-btn-primary">+ 新建</button>
+					<button class="sd-btn" @click="toggleLanguage">{{ currentLanguage }}</button>
+					<button class="sd-btn-primary" @click="openCreateMedia">+ 新建</button>
 				</div>
 			</header>
 
@@ -107,8 +107,10 @@
 <script lang="ts" setup>
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 import mediaStatsApi from '@/api/media-stats'
-import { userInfo, userConfig, sortOrder, chapterSortOrder } from '@/store'
+import { config, userInfo, userConfig, sortOrder, chapterSortOrder } from '@/store'
+import languages from '@/store/language'
 import type { ThemeKey } from '@/themes/store'
 import { themeState, setTheme } from '@/themes/store'
 import ThemeContextMenu from '@/themes/components/theme-context-menu.vue'
@@ -120,6 +122,7 @@ onBeforeUnmount(() => window.removeEventListener('smanga:theme-context-menu-chan
 
 const router = useRouter()
 const route = useRoute()
+const { locale } = useI18n()
 
 const themeList = [
 	{ key: 'blue', name: '蓝', primary: '#2563EB', back: '#EFF6FF', hover: '#DBEAFE' },
@@ -241,6 +244,26 @@ watch(
 function goSearch() {
 	if (!keyword.value.trim()) return
 	router.push({ path: '/t/search', query: { q: keyword.value.trim() } })
+}
+
+function toggleView() {
+	config.viewType = config.viewType === 'block' ? 'list' : 'block'
+}
+
+const currentLanguage = computed(() =>
+	languages.find((language) => language.value === userConfig.language)?.label || languages[0].label
+)
+
+function toggleLanguage() {
+	const currentIndex = languages.findIndex((language) => language.value === userConfig.language)
+	const next = languages[(currentIndex + 1) % languages.length]
+	userConfig.language = next.value
+	locale.value = userConfig.language
+	localStorage.setItem('language', userConfig.language)
+}
+
+function openCreateMedia() {
+	router.push({ path: '/t/media', query: { add: '1' } })
 }
 
 const lastNonDark = ref<ThemeColorKey>('blue')

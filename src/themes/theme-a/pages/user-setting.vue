@@ -12,9 +12,9 @@
         <div class="ta-setting-row">
           <span class="ta-setting-label">语言</span>
           <select v-model="userConfig.language" @change="save" class="ta-select">
-            <option value="zhCn">中文</option>
+            <option value="zhCn">简体中文</option>
+            <option value="zhTw">繁體中文</option>
             <option value="en">English</option>
-            <option value="ja">日本語</option>
           </select>
         </div>
         <div class="ta-setting-row">

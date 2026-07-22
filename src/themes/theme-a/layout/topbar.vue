@@ -61,6 +61,7 @@ import { useI18n } from 'vue-i18n'
 import type { ThemeKey } from '@/themes/store'
 import { themeState, setTheme } from '@/themes/store'
 import { config, userConfig, sortOrder, chapterSortOrder } from '@/store'
+import languages from '@/store/language'
 import themeList from '@/store/theme'
 import { set_theme } from '@/style/theme'
 
@@ -130,12 +131,8 @@ const colorThemeLabel = computed(() => {
 })
 
 const currentLanguage = computed(() => {
-	if (userConfig.language === 'en') return 'English'
-	if (userConfig.language === 'ja') return '日本語'
-	return '中文'
+	return languages.find((language) => language.value === userConfig.language)?.label || languages[0].label
 })
-
-const languages = ['中文', 'English', '日本語']
 
 function doSearch() {
 	if (keyword.value.trim()) {
@@ -179,10 +176,9 @@ function applyColorTheme(value: string) {
 }
 
 function toggleLanguage() {
-	const currentIndex = languages.indexOf(currentLanguage.value)
-	const nextIndex = (currentIndex + 1) % languages.length
-	const next = languages[nextIndex]
-	userConfig.language = next === 'English' ? 'en' : next === '日本語' ? 'ja' : 'zhCn'
+	const currentIndex = languages.findIndex((language) => language.value === userConfig.language)
+	const next = languages[(currentIndex + 1) % languages.length]
+	userConfig.language = next.value
 	locale.value = userConfig.language
 	localStorage.setItem('language', userConfig.language)
 }
