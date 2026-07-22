@@ -58,23 +58,7 @@
       </div>
     </div>
 
-    <!-- 新建媒体库弹<-->
-    <div v-if="showAdd" class="tb-modal" @click.self="closeAdd">
-      <div class="tb-modal-card">
-        <div class="tb-modal-title">新建媒体</div>
-        <div class="tb-form">
-          <label class="tb-label">名称</label>
-          <input v-model="form.mediaName" class="tb-input" placeholder="例如：少年漫"/>
-          <label class="tb-label">路径</label>
-          <input v-model="form.mediaPath" class="tb-input" placeholder="例如：D:\\Manga" />
-        </div>
-        <div class="tb-modal-actions">
-          <button class="tb-btn-ghost" @click="closeAdd">取消</button>
-          <button class="tb-btn-primary" :disabled="submitting" @click="submitAdd">创建</button>
-        </div>
-        <div v-if="error" class="tb-error">{{ error }}</div>
-      </div>
-    </div>
+    <media-library-create-dialog v-model:visible="showAdd" @created="loadMediaData" />
   </div>
 </template>
 
@@ -87,6 +71,7 @@ import imageApi from '@/api/image'
 import { mediaType } from '@/type/media'
 import { onMediaOperation } from '@/utils/cache'
 import queue from '@/store/quque'
+import MediaLibraryCreateDialog from '@/themes/components/media-library-create-dialog.vue'
 
 const router = useRouter()
 const route = useRoute()
@@ -94,9 +79,6 @@ const route = useRoute()
 // 媒体库相<
 const mediaList = ref<mediaType[]>([])
 const showAdd = ref(false)
-const submitting = ref(false)
-const error = ref('')
-const form = ref({ mediaName: '', mediaPath: '' })
 
 // 漫画相关
 const mangaList = ref<any[]>([])
@@ -124,6 +106,22 @@ watch(() => route.params.mediaId, (newMediaId) => {
     selectedMediaId.value = null
   }
 }, { immediate: true })
+
+watch(
+  () => route.query.add,
+  (value) => {
+    if (value === '1') showAdd.value = true
+  },
+  { immediate: true }
+)
+
+watch(showAdd, (open) => {
+  if (!open && route.query.add === '1') {
+    const query = { ...route.query }
+    delete (query as any).add
+    router.replace({ path: route.path, query })
+  }
+})
 
 onMounted(async () => {
   await loadMediaData()
@@ -207,37 +205,6 @@ function backToMediaList() {
 
 function goChapters(m: any) {
   router.push(`/t/manga/${m.mangaId}/chapters`)
-}
-
-function closeAdd() {
-  showAdd.value = false
-  error.value = ''
-  form.value = { mediaName: '', mediaPath: '' }
-}
-
-async function submitAdd() {
-  if (!form.value.mediaName.trim() || !form.value.mediaPath.trim()) {
-    error.value = '请填写名称和路径'
-    return
-  }
-  submitting.value = true
-  error.value = ''
-  try {
-    const res = await mediaApi.add_media({
-      mediaName: form.value.mediaName.trim(),
-      mediaPath: form.value.mediaPath.trim(),
-    })
-    if (res) {
-      closeAdd()
-      await loadMediaData()
-      return
-    }
-    error.value = '创建失败'
-  } catch {
-    error.value = '创建失败'
-  } finally {
-    submitting.value = false
-  }
 }
 
 // 监听媒体库操作，刷新数据
@@ -533,4 +500,3 @@ onUnmounted(stopMediaOperationListener)
   color: #ef4444;
 }
 </style>
-
