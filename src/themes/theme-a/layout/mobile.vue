@@ -36,14 +36,6 @@
 						<div class="sa-logo-mark">S</div>
 						<div class="sa-logo-text">smanga</div>
 					</div>
-					<button
-						v-if="isAdmin"
-						:class="['sa-manage-toggle', { active: manageMode }]"
-						@click="manageMode = !manageMode"
-						:title="manageMode ? '退出管理模式' : '管理模式'"
-					>
-						⚙️
-					</button>
 					<button class="sa-close-sidebar" @click="showSidebar = false">×</button>
 				</div>
 
@@ -51,7 +43,14 @@
 					<template v-if="manageMode">
 						<div class="sa-sec-title">
 							<span>管理菜单</span>
-							<button class="sa-manage-back" @click="manageMode = false">✕ 退出</button>
+							<button
+								v-if="isAdmin"
+								:class="['sa-manage-toggle', { active: manageMode }]"
+								@click="manageMode = !manageMode"
+								:title="manageMode ? '退出管理模式' : '管理模式'"
+							>
+								⚙️
+							</button>
 						</div>
 						<nav class="sa-nav">
 							<div v-for="item in adminMenu" :key="item.key" class="sa-nav-item" @click="navigateTo(item.key)">
@@ -59,10 +58,31 @@
 								<span>{{ item.label }}</span>
 							</div>
 						</nav>
+
+						<div class="sa-sec-title">媒体库</div>
+						<nav class="sa-nav">
+							<div v-for="m in sidebarMediaList" :key="m.mediaId" class="sa-nav-item"
+								@click="navigateToMedia(m.mediaId)">
+								<span class="sa-nav-icon">📁</span>
+								<span>{{ m.mediaName || m.mediaId }}</span>
+								<span class="sa-nav-count">{{ m.mangaCount || 0 }}</span>
+							</div>
+							<div v-if="sidebarMediaList.length === 0" class="sa-nav-empty">暂无媒体库</div>
+						</nav>
 					</template>
 
 					<template v-else>
-						<div class="sa-sec-title">导航</div>
+						<div class="sa-sec-title">
+							<span>导航</span>
+							<button
+								v-if="isAdmin"
+								:class="['sa-manage-toggle', { active: manageMode }]"
+								@click="manageMode = !manageMode"
+								:title="manageMode ? '退出管理模式' : '管理模式'"
+							>
+								⚙️
+							</button>
+						</div>
 						<nav class="sa-nav">
 							<div v-for="item in menu" :key="item.key" class="sa-nav-item" @click="navigateTo(item.key)">
 								<span class="sa-nav-icon">{{ item.icon }}</span>
@@ -477,21 +497,6 @@ onBeforeUnmount(() => {
 	color: #fff;
 }
 
-.sa-manage-back {
-	margin-left: auto;
-	padding: 2px 8px;
-	font-size: 11px;
-	color: #ef4444;
-	background: none;
-	border: 1px solid #fecaca;
-	border-radius: 4px;
-	cursor: pointer;
-}
-
-.sa-manage-back:active {
-	background: #fef2f2;
-}
-
 .sa-close-sidebar {
 	width: 36px;
 	height: 36px;
@@ -529,11 +534,17 @@ onBeforeUnmount(() => {
 /* 导航 */
 .sa-sec-title {
 	padding: 10px 8px 4px;
+	display: flex;
+	align-items: center;
 	font-size: 11px;
 	font-weight: 600;
 	color: #9ca3af;
 	text-transform: uppercase;
 	letter-spacing: 0.04em;
+}
+
+.sa-sec-title span {
+	flex: 1;
 }
 
 .sa-nav {

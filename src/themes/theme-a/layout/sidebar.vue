@@ -3,20 +3,19 @@
 		<div class="sa-logo">
 			<div class="sa-logo-mark">S</div>
 			<div class="sa-logo-text">smanga</div>
-			<button
-				v-if="isAdmin"
-				:class="['sa-manage-toggle', { active: manageMode }]"
-				@click="manageMode = !manageMode"
-				:title="manageMode ? '退出管理模式' : '管理模式'"
-			>
-				⚙️
-			</button>
 		</div>
 
 		<template v-if="manageMode">
 			<div class="sa-sec-title">
 				<span>管理菜单</span>
-				<button class="sa-manage-back" @click="manageMode = false">✕ 退出</button>
+				<button
+					v-if="isAdmin"
+					:class="['sa-manage-toggle', { active: manageMode }]"
+					@click="manageMode = !manageMode"
+					:title="manageMode ? '退出管理模式' : '管理模式'"
+				>
+					⚙️
+				</button>
 			</div>
 			<nav class="sa-nav">
 				<router-link
@@ -30,10 +29,35 @@
 					<span>{{ item.label }}</span>
 				</router-link>
 			</nav>
+
+			<div class="sa-sec-title">媒体库</div>
+			<nav class="sa-nav sa-media-nav">
+				<div
+					v-for="m in mediaListData"
+					:key="m.mediaId"
+					class="sa-nav-item"
+					@click="goMedia(m.mediaId)"
+				>
+					<span class="sa-nav-icon">📁</span>
+					<span class="sa-nav-label">{{ m.mediaName || m.mediaId }}</span>
+					<span class="sa-nav-count">{{ m.mangaCount || 0 }}</span>
+				</div>
+				<div v-if="mediaListData.length === 0" class="sa-nav-empty">暂无媒体库</div>
+			</nav>
 		</template>
 
 		<template v-else>
-			<div class="sa-sec-title">导航</div>
+			<div class="sa-sec-title">
+					<span>导航</span>
+					<button
+						v-if="isAdmin"
+						:class="['sa-manage-toggle', { active: manageMode }]"
+						@click="manageMode = !manageMode"
+						:title="manageMode ? '退出管理模式' : '管理模式'"
+					>
+						⚙️
+					</button>
+				</div>
 			<nav class="sa-nav">
 				<router-link
 					v-for="item in navItems"
@@ -235,21 +259,6 @@ function goMedia(mediaId: number) {
 	color: #fff;
 }
 
-.sa-manage-back {
-	margin-left: auto;
-	padding: 2px 8px;
-	font-size: 11px;
-	color: #ef4444;
-	background: none;
-	border: 1px solid #fecaca;
-	border-radius: 4px;
-	cursor: pointer;
-}
-
-.sa-manage-back:hover {
-	background: #fef2f2;
-}
-
 .sa-logo-mark {
 	width: 28px;
 	height: 28px;
@@ -269,11 +278,17 @@ function goMedia(mediaId: number) {
 
 .sa-sec-title {
 	padding: 12px 8px 6px;
+	display: flex;
+	align-items: center;
 	font-size: 11px;
 	font-weight: 600;
 	color: #9ca3af;
 	text-transform: uppercase;
 	letter-spacing: 0.04em;
+}
+
+.sa-sec-title span {
+	flex: 1;
 }
 
 .sa-nav {
