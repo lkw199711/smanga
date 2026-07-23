@@ -12,6 +12,7 @@
 		<!-- 侧边栏（抽屉式） -->
 		<div v-if="showSidebar" class="sa-mobile-sidebar-backdrop" @click="showSidebar = false">
 			<aside class="sa-mobile-sidebar" @click.stop>
+				<android-seat />
 				<div class="sa-sidebar-header">
 					<div class="sa-logo">
 						<div class="sa-logo-mark">S</div>
@@ -30,18 +31,34 @@
 
 				<div class="sa-sec-title">媒体库</div>
 				<nav class="sa-nav">
-					<div v-for="m in mediaList" :key="m.id" class="sa-nav-item" @click="navigateToMedia(m.id)">
-						<span class="sa-nav-icon">{{ m.icon }}</span>
-						<span>{{ m.name }}</span>
-						<span class="sa-nav-count">{{ m.count }}</span>
+					<div v-for="m in sidebarMediaList" :key="m.mediaId" class="sa-nav-item" @click="navigateToMedia(m.mediaId)">
+						<span class="sa-nav-icon">📁</span>
+						<span>{{ m.mediaName || m.mediaId }}</span>
+						<span class="sa-nav-count">{{ m.mangaCount || 0 }}</span>
 					</div>
+					<div v-if="sidebarMediaList.length === 0" class="sa-nav-empty">暂无媒体库</div>
 				</nav>
 
 				<div class="sa-user">
-					<div class="sa-avatar">U</div>
-					<div class="sa-user-info">
-						<div class="sa-user-name">User</div>
-						<div class="sa-user-role">管理员</div>
+					<div class="sa-user-trigger" @click="toggleMobileUserDropdown">
+						798789
+						<div class="sa-avatar">
+							<img v-if="mobileAvatarBlobUrl" :src="mobileAvatarBlobUrl" class="sa-avatar-img" />
+							<span v-else class="sa-avatar-text">{{ userInfo.userName?.charAt(0) || 'U' }}</span>
+						</div>
+						<div class="sa-user-info">
+							<div class="sa-user-name">{{ userInfo.userName || '未登录' }}</div>
+							<div class="sa-user-role">{{ Cookies.getRole() === 'admin' ? '管理员' : '用户' }}</div>
+						</div>
+						<span class="sa-user-arrow" :class="{ open: showMobileUserDropdown }">▾</span>
+					</div>
+					<div v-if="showMobileUserDropdown" class="sa-user-dropdown">
+						<div class="sa-user-dropdown-item" @click="goMobileSettings">
+							<span>⚙️ 设置</span>
+						</div>
+						<div class="sa-user-dropdown-item sa-user-dropdown-logout" @click="mobileLogout">
+							<span>🚪 登出</span>
+						</div>
 					</div>
 				</div>
 			</aside>
@@ -65,12 +82,19 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted, onBeforeUnmount, watch } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import ThemeContextMenu from '@/themes/components/theme-context-menu.vue'
 import androidSeat from '@/layout/components/android-seat.vue'
+import { userInfo } from '@/store'
+import imageApi from '@/api/image'
+import mediaStatsApi from '@/api/media-stats'
+import { Cookies } from '@/utils'
 
 const showSidebar = ref(false)
+const showMobileUserDropdown = ref(false)
+const mobileAvatarBlobUrl = ref('')
+const sidebarMediaList = ref<any[]>([])
 const router = useRouter()
 const route = useRoute()
 
@@ -83,13 +107,6 @@ const menu = [
 	{ key: 'tag', label: '标签', icon: '🏷️' },
 	{ key: 'manage', label: '管理', icon: '⚙️' },
 	{ key: 'setting', label: '设置', icon: '🔧' },
-]
-
-const mediaList = [
-	{ id: 1, name: '少年漫画', icon: '📚', count: 128 },
-	{ id: 2, name: '少女漫画', icon: '🌸', count: 64 },
-	{ id: 3, name: '青年漫画', icon: '📖', count: 96 },
-	{ id: 4, name: '同人本', icon: '🎨', count: 32 },
 ]
 
 const bottomNav = [
@@ -140,31 +157,90 @@ function navigateToMedia(mediaId: number) {
 	router.push(`/t/media/${mediaId}`)
 	showSidebar.value = false
 }
+
+// ---- 用户下拉 ----
+function toggleMobileUserDropdown() {
+	showMobileUserDropdown.value = !showMobileUserDropdown.value
+}
+
+function goMobileSettings() {
+	showMobileUserDropdown.value = false
+	showSidebar.value = false
+	router.push('/t/setting/user')
+}
+
+function mobileLogout() {
+	document.cookie = 'smanga-userName=; path=/; max-age=0'
+	document.cookie = 'smanga-userId=; path=/; max-age=0'
+	showMobileUserDropdown.value = false
+	showSidebar.value = false
+	router.push('/login')
+}
+
+function onSidebarClick(e: MouseEvent) {
+	const target = e.target as HTMLElement | null
+	if (!target) return
+	if (target.closest('.sa-user-dropdown')) return
+	if (target.closest('.sa-user-trigger')) return
+	showMobileUserDropdown.value = false
+}
+
+// ---- 头像 ----
+async function loadMobileAvatar() {
+	if (!userInfo.avatarPath) {
+		mobileAvatarBlobUrl.value = ''
+		return
+	}
+	const blobUrl = await imageApi.get({ file: userInfo.avatarPath })
+	mobileAvatarBlobUrl.value = blobUrl || ''
+}
+
+watch(() => userInfo.avatarPath, loadMobileAvatar, { immediate: true })
+
+// ---- 生命周期 ----
+onMounted(async () => {
+	try {
+		sidebarMediaList.value = await mediaStatsApi.getMediaWithCounts()
+	} catch (e) {
+		sidebarMediaList.value = []
+	}
+	window.addEventListener('click', onSidebarClick)
+})
+
+onBeforeUnmount(() => {
+	window.removeEventListener('click', onSidebarClick)
+})
 </script>
 
 <style scoped>
 .style-a-mobile {
-	min-height: 100vh;
+	height: 100dvh;
+	height: 100vh;
+	display: flex;
+	flex-direction: column;
+	overflow: hidden;
 	background: #fafafa;
 	color: #171717;
 	font-size: 14px;
 	font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
-	padding-bottom: 70px;
 }
 
 /* 移动端顶部栏 */
 .sa-mobile-header {
-	position: sticky;
-	top: 0;
+	flex-shrink: 0;
 	z-index: 50;
 	display: flex;
 	align-items: center;
 	gap: 12px;
 	padding: 12px 16px;
-	padding-top: calc(12px + env(safe-area-inset-top));
 	background: rgba(255, 255, 255, 0.95);
 	backdrop-filter: blur(10px);
 	border-bottom: 1px solid #eaeaea;
+}
+
+/* 安卓占位符与顶栏背景一致 */
+:deep(.android-seat) {
+	background: rgba(255, 255, 255, 0.95);
 }
 
 .sa-menu-toggle {
@@ -203,9 +279,16 @@ function navigateToMedia(mediaId: number) {
 	max-width: 80vw;
 	height: 100%;
 	background: #fff;
-	padding: 16px 12px;
+	display: flex;
+	flex-direction: column;
 	overflow-y: auto;
 	animation: slideIn 0.3s ease;
+}
+
+/* 安卓占位符 - 侧边栏内与顶栏同色 */
+.sa-mobile-sidebar :deep(.android-seat) {
+	flex-shrink: 0;
+	background: #fff;
 }
 
 @keyframes slideIn {
@@ -221,7 +304,8 @@ function navigateToMedia(mediaId: number) {
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
-	padding: 4px 8px 16px;
+	flex-shrink: 0;
+	padding: 8px 12px 12px;
 }
 
 .sa-close-sidebar {
@@ -260,7 +344,8 @@ function navigateToMedia(mediaId: number) {
 
 /* 导航 */
 .sa-sec-title {
-	padding: 12px 8px 6px;
+	flex-shrink: 0;
+	padding: 10px 12px 4px;
 	font-size: 11px;
 	font-weight: 600;
 	color: #9ca3af;
@@ -269,21 +354,23 @@ function navigateToMedia(mediaId: number) {
 }
 
 .sa-nav {
+	flex-shrink: 0;
 	display: flex;
 	flex-direction: column;
-	gap: 2px;
+	gap: 1px;
+	padding: 0 4px;
 }
 
 .sa-nav-item {
 	display: flex;
 	align-items: center;
-	gap: 10px;
-	padding: 10px 12px;
+	gap: 8px;
+	padding: 8px 12px;
 	color: #4b5563;
 	border-radius: 8px;
 	cursor: pointer;
 	transition: all 0.15s;
-	min-height: 44px;
+	font-size: 14px;
 }
 
 .sa-nav-item:active {
@@ -309,16 +396,27 @@ function navigateToMedia(mediaId: number) {
 /* 用户信息 */
 .sa-user {
 	margin-top: auto;
-	display: flex;
-	align-items: center;
-	gap: 10px;
-	padding: 12px 8px;
+	flex-shrink: 0;
 	border-top: 1px solid #eaeaea;
 }
 
+.sa-user-trigger {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	padding: 10px 12px;
+	cursor: pointer;
+}
+
+.sa-user-trigger:active {
+	background: #f3f4f6;
+}
+
 .sa-avatar {
+	position: relative;
 	width: 36px;
 	height: 36px;
+	flex-shrink: 0;
 	display: flex;
 	align-items: center;
 	justify-content: center;
@@ -326,22 +424,85 @@ function navigateToMedia(mediaId: number) {
 	color: #fff;
 	font-weight: 600;
 	border-radius: 50%;
+	overflow: hidden;
+}
+
+.sa-avatar-img {
+	position: absolute;
+	inset: 0;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+
+.sa-avatar-text {
+	font-size: 15px;
+}
+
+.sa-user-info {
+	flex: 1;
+	min-width: 0;
 }
 
 .sa-user-name {
 	font-weight: 500;
 	font-size: 14px;
+	line-height: 1.3;
 }
 
 .sa-user-role {
+	font-size: 12px;
+	color: #9ca3af;
+	line-height: 1.3;
+}
+
+.sa-user-arrow {
+	color: #9ca3af;
+	font-size: 12px;
+	transition: transform 0.2s;
+}
+
+.sa-user-arrow.open {
+	transform: rotate(180deg);
+}
+
+/* 用户下拉菜单 */
+.sa-user-dropdown {
+	padding: 0 12px 8px;
+	border-top: 1px solid #f3f4f6;
+}
+
+.sa-user-dropdown-item {
+	display: flex;
+	align-items: center;
+	padding: 8px 0;
+	font-size: 13px;
+	color: #4b5563;
+	cursor: pointer;
+}
+
+.sa-user-dropdown-item:active {
+	color: #111827;
+}
+
+.sa-user-dropdown-logout {
+	color: #ef4444;
+}
+
+/* 导航空态 */
+.sa-nav-empty {
+	padding: 8px 12px;
 	font-size: 12px;
 	color: #9ca3af;
 }
 
 /* 主内容区 */
 .sa-mobile-main {
+	flex: 1;
+	overflow-y: auto;
 	padding: 16px;
-	min-height: calc(100vh - 140px);
+	/* 底栏 56px + safe-area */
+	padding-bottom: calc(56px + env(safe-area-inset-bottom, 0px) + 16px);
 }
 
 /* 底部导航栏 */
