@@ -35,23 +35,63 @@
 			<div v-if="mediaListData.length === 0" class="sa-nav-empty">暂无媒体库</div>
 		</nav>
 
-		<div class="sa-user">
-			<div class="sa-avatar">{{ userInfo.userName?.charAt(0) || 'U' }}</div>
-			<div class="sa-user-info">
-				<div class="sa-user-name">{{ userInfo.userName || 'User' }}</div>
-				<div class="sa-user-role">{{ userInfo.editUser ? '管理员' : '用户' }}</div>
+		<div class="sa-user" ref="userWrapRef">
+			<div class="sa-user-trigger" @click="toggleUserDropdown">
+				<div class="sa-avatar">{{ userInfo.userName?.charAt(0) || 'U' }}</div>
+				<div class="sa-user-info">
+					<div class="sa-user-name">{{ userInfo.userName || 'User' }}</div>
+					<div class="sa-user-role">{{ userInfo.editUser ? '管理员' : '用户' }}</div>
+				</div>
+				<span class="sa-user-arrow" :class="{ open: showUserDropdown }">▾</span>
+			</div>
+			<div v-if="showUserDropdown" class="sa-user-dropdown">
+				<div class="sa-user-dropdown-item" @click="goSettings">
+					<span class="sa-user-dropdown-icon">⚙️</span>
+					<span>设置</span>
+				</div>
+				<div class="sa-user-dropdown-item sa-user-dropdown-logout" @click="userLogout">
+					<span class="sa-user-dropdown-icon">🚪</span>
+					<span>登出</span>
+				</div>
 			</div>
 		</div>
 	</aside>
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, onBeforeUnmount } from 'vue'
 import { useRouter } from 'vue-router'
 import { userInfo } from '@/store'
 import mediaStatsApi from '@/api/media-stats'
 
 const router = useRouter()
+
+const showUserDropdown = ref(false)
+const userWrapRef = ref<HTMLElement | null>(null)
+
+function toggleUserDropdown() {
+	showUserDropdown.value = !showUserDropdown.value
+}
+
+function goSettings() {
+	showUserDropdown.value = false
+	router.push('/t/setting/user')
+}
+
+function userLogout() {
+	document.cookie = 'smanga-userName=; path=/; max-age=0'
+	document.cookie = 'smanga-userId=; path=/; max-age=0'
+	showUserDropdown.value = false
+	router.push('/login')
+}
+
+function onGlobalClick(e: MouseEvent) {
+	const target = e.target as HTMLElement | null
+	if (!target) return
+	if (target.closest('.sa-user-dropdown')) return
+	if (target.closest('.sa-user-trigger')) return
+	showUserDropdown.value = false
+}
 
 const navItems = [
 	{ path: '/t', icon: '🏠', label: '首页', exact: true },
@@ -72,6 +112,11 @@ onMounted(async () => {
 	} catch (e) {
 		mediaListData.value = []
 	}
+	window.addEventListener('click', onGlobalClick)
+})
+
+onBeforeUnmount(() => {
+	window.removeEventListener('click', onGlobalClick)
 })
 
 function goMedia(mediaId: number) {
@@ -193,11 +238,22 @@ function goMedia(mediaId: number) {
 
 .sa-user {
 	margin-top: auto;
+	border-top: 1px solid #eaeaea;
+	position: relative;
+}
+
+.sa-user-trigger {
 	display: flex;
 	align-items: center;
 	gap: 10px;
 	padding: 10px 8px;
-	border-top: 1px solid #eaeaea;
+	cursor: pointer;
+	border-radius: 8px;
+	transition: background 0.15s;
+}
+
+.sa-user-trigger:hover {
+	background: #f3f4f6;
 }
 
 .sa-avatar {
@@ -211,6 +267,60 @@ function goMedia(mediaId: number) {
 	font-weight: 600;
 	border-radius: 50%;
 	font-size: 14px;
+}
+
+.sa-user-arrow {
+	margin-left: auto;
+	font-size: 12px;
+	color: #9ca3af;
+	transition: transform 0.2s;
+}
+
+.sa-user-arrow.open {
+	transform: rotate(180deg);
+}
+
+.sa-user-dropdown {
+	position: absolute;
+	bottom: calc(100% + 8px);
+	left: 8px;
+	right: 8px;
+	background: #fff;
+	border: 1px solid #eaeaea;
+	border-radius: 10px;
+	box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.08);
+	z-index: 300;
+	padding: 6px;
+}
+
+.sa-user-dropdown-item {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	padding: 9px 12px;
+	font-size: 13px;
+	color: #4b5563;
+	border-radius: 6px;
+	cursor: pointer;
+	transition: all 0.15s;
+}
+
+.sa-user-dropdown-item:hover {
+	background: #f3f4f6;
+}
+
+.sa-user-dropdown-logout {
+	color: #dc2626;
+}
+
+.sa-user-dropdown-logout:hover {
+	background: #fef2f2;
+}
+
+.sa-user-dropdown-icon {
+	font-size: 14px;
+	width: 18px;
+	text-align: center;
 }
 
 .sa-user-name {

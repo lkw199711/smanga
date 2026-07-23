@@ -239,6 +239,7 @@ const currentSortLabel = computed(() => sortOrderLabels[currentSortValue.value] 
 const showSortDropdown = ref(false)
 const sortWrapRef = ref<HTMLElement | null>(null)
 
+
 function toggleSortDropdown() {
 	showSortDropdown.value = !showSortDropdown.value
 }
@@ -458,4 +459,6 @@ onBeforeUnmount(() => {
 	color: #2563eb;
 	font-weight: 600;
 }
+
+
 </style>

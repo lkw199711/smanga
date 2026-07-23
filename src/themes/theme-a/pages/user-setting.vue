@@ -2,7 +2,6 @@
   <div class="ta-setting">
     <div class="ta-page-head">
       <h1>用户设置</h1>
-      <button class="ta-btn-logout" @click="userLogout">登出</button>
     </div>
     
     <div class="ta-setting-groups">
@@ -413,13 +412,6 @@ async function saveAll() {
   }
 }
 
-// 登出
-function userLogout() {
-  Cookies.remove('smanga-userName')
-  Cookies.remove('smanga-userId')
-  router.push('/login')
-}
-
 // 全屏切换
 function toggleFullscreen() {
   if (document.fullscreenElement) {
@@ -446,9 +438,6 @@ function back_old_theme(){
 }
 
 .ta-page-head {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
   margin-bottom: 32px;
 }
 
@@ -457,21 +446,6 @@ function back_old_theme(){
   font-weight: 700;
   margin: 0;
   color: #1f2937;
-}
-
-.ta-btn-logout {
-  padding: 8px 16px;
-  font-size: 14px;
-  color: #dc2626;
-  background: #fef2f2;
-  border: 1px solid #fecaca;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.ta-btn-logout:hover {
-  background: #fee2e2;
 }
 
 .ta-setting-groups {
