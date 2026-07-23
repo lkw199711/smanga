@@ -60,7 +60,7 @@
 					<div class="sd-avatar">{{ userInfo.userName?.charAt(0) || 'U' }}</div>
 					<div>
 						<div class="sd-user-name">{{ userInfo.userName || 'User' }}</div>
-						<div class="sd-user-role">{{ userInfo.editUser ? '管理员' : '用户' }}</div>
+						<div class="sd-user-role">{{ Cookies.getRole() === 'admin' ? '管理员' : '用户' }}</div>
 					</div>
 				</div>
 			</aside>
@@ -87,6 +87,7 @@
 import { computed, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { userInfo } from '@/store'
+import { Cookies } from '@/utils'
 import ThemeContextMenu from '@/themes/components/theme-context-menu.vue'
 import androidSeat from '@/layout/components/android-seat.vue'
 

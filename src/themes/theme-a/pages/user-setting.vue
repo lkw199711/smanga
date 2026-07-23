@@ -334,7 +334,30 @@
         <div class="ta-setting-row">
           <span class="ta-setting-label">用户头像</span>
           <div class="ta-avatar-container">
-            <div class="ta-avatar">{{ userInfo.userName?.charAt(0) || 'U' }}</div>
+            <div
+              class="ta-avatar"
+              :class="{ 'ta-avatar-uploading': uploadingAvatar }"
+              @click="triggerAvatarUpload"
+              :title="'点击更换头像'"
+            >
+              <img
+                v-if="avatarBlobUrl"
+                :src="avatarBlobUrl"
+                class="ta-avatar-img"
+              />
+              <span v-else class="ta-avatar-text">{{ userInfo.userName?.charAt(0) || 'U' }}</span>
+              <div class="ta-avatar-overlay">
+                <span v-if="uploadingAvatar">⏳</span>
+                <span v-else>📷</span>
+              </div>
+            </div>
+            <input
+              ref="avatarInputRef"
+              type="file"
+              accept="image/*"
+              class="ta-avatar-input-hidden"
+              @change="handleAvatarUpload"
+            />
           </div>
         </div>
       </div>
@@ -347,11 +370,12 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { userConfig, userInfo, sortOrder, chapterSortOrder } from '@/store'
 import { themeState, setTheme } from '@/themes/store'
 import userApi from '@/api/account'
+import imageApi from '@/api/image'
 import { Cookies } from '@/utils'
 
 const router = useRouter()
@@ -360,11 +384,58 @@ const router = useRouter()
 const mangaPageSize = ref(0)
 const chapterPageSize = ref(0)
 
+// 头像上传
+const avatarInputRef = ref<HTMLInputElement>()
+const uploadingAvatar = ref(false)
+const avatarKey = ref(0)
+const avatarBlobUrl = ref('')
+
+// 加载头像 blob
+async function loadAvatar() {
+  if (!userInfo.avatarPath) {
+    avatarBlobUrl.value = ''
+    return
+  }
+  const url = await imageApi.get({ file: userInfo.avatarPath })
+  avatarBlobUrl.value = url || ''
+}
+
+watch(() => userInfo.avatarPath, loadAvatar, { immediate: true })
+
 onMounted(() => {
   // 初始化本地页面容量设置
   mangaPageSize.value = Number(Cookies.get('mangaPageSize')) || 0
   chapterPageSize.value = Number(Cookies.get('chapterPageSize')) || 0
 })
+
+// 头像上传方法
+function triggerAvatarUpload() {
+  avatarInputRef.value?.click()
+}
+
+async function handleAvatarUpload(e: Event) {
+  const target = e.target as HTMLInputElement
+  const file = target.files?.[0]
+  if (!file) return
+
+  uploadingAvatar.value = true
+  try {
+    const res = await userApi.upload_avatar(file)
+    if (res?.code === 200 && res?.data?.avatarPath) {
+      userInfo.header = res.data.header
+      userInfo.avatarPath = res.data.avatarPath
+      Cookies.set('header', res.data.header || '')
+      Cookies.set('avatarPath', res.data.avatarPath || '')
+      avatarKey.value++
+      await loadAvatar()
+    }
+  } catch (err) {
+    console.error('头像上传失败:', err)
+  } finally {
+    uploadingAvatar.value = false
+    target.value = ''
+  }
+}
 
 // 获取排序标签
 function getSortLabel(sort: string): string {
@@ -635,6 +706,51 @@ function back_old_theme(){
   font-weight: 600;
   font-size: 20px;
   border-radius: 50%;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: opacity 0.2s;
+}
+
+.ta-avatar:hover .ta-avatar-overlay {
+  opacity: 1;
+}
+
+.ta-avatar.ta-avatar-uploading {
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+.ta-avatar-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.ta-avatar-text {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ta-avatar-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.35);
+  border-radius: 50%;
+  opacity: 0;
+  transition: opacity 0.2s;
+  font-size: 18px;
+}
+
+.ta-avatar-input-hidden {
+  display: none;
 }
 
 .ta-btn-primary {

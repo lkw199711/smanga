@@ -87,7 +87,7 @@ export const Cookies = {
     set: function (key: string, value: string, time = 365) {
         // return localStorage.setItem(key, value);
         const cookiesTime = new Date(Date.now() + time * 365 * 24 * 60 * 60 * 1000).toUTCString();
-        document.cookie = key + '=' + value + ';expires=' + cookiesTime + ';path=/';
+        document.cookie = key + '=' + encodeURIComponent(value) + ';expires=' + cookiesTime + ';path=/';
         return value;
     },
     /**
@@ -97,7 +97,7 @@ export const Cookies = {
     get: function (key: string) {
         // return localStorage.getItem(key);
         const arr = document.cookie.match(new RegExp("\\b" + key + "=([^;]+)(;|$)"));
-        return arr ? arr[1] : '';
+        return arr ? decodeURIComponent(arr[1]) : ''
     },
     /**
      * 移除cookie
@@ -189,7 +189,7 @@ export const Cookies = {
 
 export function get_cookie(key: string) {
     const arr = document.cookie.match(new RegExp("\\b" + key + "=([^;]+)(;|$)"));
-    return arr ? arr[1] : '';
+    return arr ? decodeURIComponent(arr[1]) : '';
 }
 
 

@@ -127,6 +127,10 @@ async function do_login() {
 	if (!loginResponse) return;
 	// 缓存用户信息
 	Object.assign(userInfo, loginResponse);
+	Cookies.set('userId', String(loginResponse.userId || ''))
+	Cookies.set('userName', loginResponse.userName || '')
+	Cookies.set('header', loginResponse.header || '')
+	Cookies.set('avatarPath', loginResponse.avatarPath || '')
 	Cookies.set('smanga-server-key', loginResponse.serverKey);
 	Cookies.setToken(loginResponse.token)
 	Cookies.setRole(loginResponse.userRole)

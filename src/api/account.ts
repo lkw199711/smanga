@@ -45,7 +45,34 @@ const userApi = {
 		const http = await ajax.put('user-config', data);
 		const response = http.data;
 		return response.data;
-	}
+	},
+
+	async get_me() {
+		const http = await ajax.get('user/me');
+		const response = http.data;
+		return response.data;
+	},
+
+	/**
+	 * @description: 上传用户头像
+	 * @param {File} file 图片文件
+	 * @return {*} 返回 { header: 'avatars/user_1.png' }
+	 */
+	async upload_avatar(file: File) {
+		const formData = new FormData();
+		formData.append('avatar', file);
+
+		const res = ajax({
+			url: 'user/avatar',
+			method: 'post',
+			data: formData,
+			headers: {
+				'Content-Type': 'multipart/form-data',
+			},
+		});
+
+		return (await res).data;
+	},
 };
 
 export default userApi;

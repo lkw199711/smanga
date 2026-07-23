@@ -46,7 +46,7 @@
 				<div class="sd-avatar">{{ userInfo.userName?.charAt(0) || 'U' }}</div>
 				<div>
 					<div class="sd-user-name">{{ userInfo.userName || 'User' }}</div>
-					<div class="sd-user-role">{{ userInfo.editUser ? '管理员' : '用户' }}</div>
+					<div class="sd-user-role">{{ Cookies.getRole() === 'admin' ? '管理员' : '用户' }}</div>
 				</div>
 			</div>
 		</aside>
@@ -110,6 +110,7 @@ import { useRoute, useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import mediaStatsApi from '@/api/media-stats'
 import { config, userInfo, userConfig, sortOrder, chapterSortOrder } from '@/store'
+import { Cookies } from '@/utils'
 import languages from '@/store/language'
 import type { ThemeKey } from '@/themes/store'
 import { themeState, setTheme } from '@/themes/store'

@@ -28,6 +28,10 @@ export const globalData: GlobalData = reactive({
 
 const editUser = get_cookie('editUser');
 const editMedia = get_cookie('editMedia');
+const cookieUserId = Number(get_cookie('userId')) || 0
+const cookieUserName = get_cookie('userName')
+const cookieHeader = get_cookie('header')
+const cookieAvatarPath = get_cookie('avatarPath')
 
 export const config = reactive({
 	sidebarCollapse: false,
@@ -48,9 +52,10 @@ export const power = reactive({
 });
 
 export const userInfo = reactive({
-	userName: '',
-	userId: 0,
-	editUser: editUser == '1',
+	userName: cookieUserName,
+	userId: cookieUserId,
+	header: cookieHeader,
+	avatarPath: cookieAvatarPath,
 	editMedia: editMedia == '1',
 });
 

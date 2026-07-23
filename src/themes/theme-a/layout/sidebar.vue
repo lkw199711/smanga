@@ -37,10 +37,13 @@
 
 		<div class="sa-user" ref="userWrapRef">
 			<div class="sa-user-trigger" @click="toggleUserDropdown">
-				<div class="sa-avatar">{{ userInfo.userName?.charAt(0) || 'U' }}</div>
+				<div class="sa-avatar">
+					<img v-if="avatarBlobUrl" :src="avatarBlobUrl" class="sa-avatar-img" />
+					<span v-else class="sa-avatar-text">{{ userInfo.userName?.charAt(0) || 'U' }}</span>
+				</div>
 				<div class="sa-user-info">
 					<div class="sa-user-name">{{ userInfo.userName || 'User' }}</div>
-					<div class="sa-user-role">{{ userInfo.editUser ? '管理员' : '用户' }}</div>
+					<div class="sa-user-role">{{ Cookies.getRole() === 'admin' ? '管理员' : '用户' }}</div>
 				</div>
 				<span class="sa-user-arrow" :class="{ open: showUserDropdown }">▾</span>
 			</div>
@@ -59,15 +62,29 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted, onBeforeUnmount } from 'vue'
+import { ref, onMounted, onBeforeUnmount, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { userInfo } from '@/store'
 import mediaStatsApi from '@/api/media-stats'
+import imageApi from '@/api/image'
+import { Cookies } from '@/utils'
 
 const router = useRouter()
 
 const showUserDropdown = ref(false)
 const userWrapRef = ref<HTMLElement | null>(null)
+const avatarBlobUrl = ref('')
+
+async function loadAvatar() {
+  if (!userInfo.avatarPath) {
+    avatarBlobUrl.value = ''
+    return
+  }
+  const blobUrl = await imageApi.get({ file: userInfo.avatarPath })
+  avatarBlobUrl.value = blobUrl || ''
+}
+
+watch(() => userInfo.avatarPath, loadAvatar, { immediate: true })
 
 function toggleUserDropdown() {
 	showUserDropdown.value = !showUserDropdown.value
@@ -267,6 +284,23 @@ function goMedia(mediaId: number) {
 	font-weight: 600;
 	border-radius: 50%;
 	font-size: 14px;
+	overflow: hidden;
+	flex-shrink: 0;
+}
+
+.sa-avatar-img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	border-radius: 50%;
+}
+
+.sa-avatar-text {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 100%;
+	height: 100%;
 }
 
 .sa-user-arrow {
