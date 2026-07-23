@@ -87,6 +87,7 @@ const bottomNav = [
 	{ key: 'history', label: '历史', icon: '🕘' },
 	{ key: 'bookmark', label: '书签', icon: '🔖' },
 	{ key: 'collect', label: '收藏', icon: '⭐' },
+	{ key: 'media', label: '媒体', icon: '📁' },
 	{ key: 'search', label: '搜索', icon: '🔍' },
 ]
 
@@ -115,6 +116,7 @@ function navigateTo(key: string) {
 		history: '/t/history',
 		bookmark: '/t/bookmark',
 		collect: '/t/collect',
+		media: '/t/media',
 		search: '/t/search',
 		tag: '/t/tags',
 		manage: '/t/manage',
@@ -257,6 +259,9 @@ function navigateToMedia(mediaId: number) {
 	cursor: pointer;
 	transition: all 0.15s;
 	min-height: 44px;
+	user-select: none;
+	-webkit-user-select: none;
+	-webkit-tap-highlight-color: transparent;
 }
 
 .sb-nav-item:active {

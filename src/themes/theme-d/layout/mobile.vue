@@ -158,6 +158,7 @@ const bottomNav = [
 	{ key: 'history', label: '历史', icon: '🕘', path: '/t/history' },
 	{ key: 'bookmark', label: '书签', icon: '🔖', path: '/t/bookmark' },
 	{ key: 'collect', label: '收藏', icon: '⭐', path: '/t/collect' },
+	{ key: 'media', label: '媒体', icon: '📁', path: '/t/media' },
 	{ key: 'search', label: '搜索', icon: '🔍', path: '/t/search' },
 ]
 
@@ -359,6 +360,9 @@ function goMedia(mediaId: number) {
 	cursor: pointer;
 	transition: all 0.15s;
 	min-height: 44px;
+	user-select: none;
+	-webkit-user-select: none;
+	-webkit-tap-highlight-color: transparent;
 }
 
 .sd-nav-item:active,

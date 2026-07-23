@@ -149,7 +149,7 @@ function nextPage() {
 .tb-reader-top{display:flex;align-items:center;justify-content:space-between;padding:10px 16px;background:rgba(30,15,60,0.9);backdrop-filter:blur(12px)}
 .tb-reader-top button{padding:6px 14px;background:rgba(255,255,255,0.1);border:none;border-radius:16px;color:#fff;cursor:pointer;font-size:12px}
 .tb-reader-top span{font-size:13px;color:rgba(255,255,255,0.7);max-width:50%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.tb-reader-body{flex:1;overflow:auto;display:flex;align-items:center;justify-content:center}
+.tb-reader-body{flex:1;overflow:auto;overscroll-behavior:none;display:flex;align-items:center;justify-content:center}
 .tb-reader-bottom{display:flex;align-items:center;gap:12px;padding:12px 16px;background:rgba(30,15,60,0.9);backdrop-filter:blur(12px)}
 .tb-reader-bottom button{padding:6px 14px;background:rgba(255,255,255,0.1);border:none;border-radius:16px;color:#fff;cursor:pointer;font-size:12px}
 .tb-reader-bottom button:disabled{opacity:0.35;cursor:default}

@@ -206,6 +206,7 @@ onMounted(() => {
 .td-reader-body {
   flex: 1;
   overflow: auto;
+  overscroll-behavior: none;
   display: flex;
   align-items: center;
   justify-content: center;

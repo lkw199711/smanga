@@ -109,6 +109,7 @@ const menu = [
 
 const bottomNav = [
 	{ key: 'home', label: '首页', icon: '🏠' },
+	{ key: 'media', label: '媒体', icon: '📁' },
 	{ key: 'history', label: '历史', icon: '🕘' },
 	{ key: 'bookmark', label: '书签', icon: '🔖' },
 	{ key: 'collect', label: '收藏', icon: '⭐' },
@@ -140,6 +141,7 @@ function navigateTo(key: string) {
 		history: '/t/history',
 		bookmark: '/t/bookmark',
 		collect: '/t/collect',
+		media: '/t/media',
 		search: '/t/search',
 		tag: '/t/tags',
 		manage: '/t/manage',
@@ -439,6 +441,9 @@ onBeforeUnmount(() => {
 	cursor: pointer;
 	transition: all 0.15s;
 	font-size: 14px;
+	user-select: none;
+	-webkit-user-select: none;
+	-webkit-tap-highlight-color: transparent;
 }
 
 .sa-nav-item:active {
