@@ -6,9 +6,7 @@
         <div class="ta-search-box">
           <input v-model="searchMangaId" placeholder="漫画ID" type="number" style="width:120px" @keydown.enter="search" />
           <input v-model="keyword" placeholder="章节名称..." @keydown.enter="search" />
-          <select v-model="orderBy" class="ta-select" @change="search" style="width:130px">
-            <option v-for="s in chapterSortOrder" :key="s" :value="s">{{ sortLabels[s] || s }}</option>
-          </select>
+          <SortSelector v-model="orderBy" model="chapter" class="ta-select" style="width:130px" @change="search" />
           <button class="ta-btn-ghost" @click="search">🔍</button>
         </div>
         <button class="ta-btn-ghost" @click="reload">🔄 刷新</button>
@@ -61,7 +59,7 @@
 import { ref, computed, onMounted } from 'vue'
 import chapterApi from '@/api/chapter'
 import ChapterModifyDialog from '@/themes/components/chapter-modify-dialog.vue'
-import { chapterSortOrder } from '@/store'
+import SortSelector from '@/themes/components/sort-selector.vue'
 
 const list = ref<any[]>([])
 const total = ref(0)
@@ -73,14 +71,6 @@ const keyword = ref('')
 const orderBy = ref('updateTimeDesc')
 const editDialog = ref(false)
 const editingChapter = ref<any>(null)
-
-const sortLabels: Record<string, string> = {
-  id: 'ID正序', idDesc: 'ID倒序',
-  name: '名称正序', nameDesc: '名称倒序',
-  number: '章节号正序', numberDesc: '章节号倒序',
-  createTime: '创建时间正序', createTimeDesc: '创建时间倒序',
-  updateTime: '更新时间正序', updateTimeDesc: '更新时间倒序',
-}
 
 const allSelected = computed(() => list.value.length > 0 && selected.value.length === list.value.length)
 

@@ -109,7 +109,7 @@ import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import mediaStatsApi from '@/api/media-stats'
-import { config, userInfo, userConfig, sortOrder, chapterSortOrder } from '@/store'
+import { config, userInfo, userConfig, mangaSortOrder, chapterSortOrder } from '@/store'
 import { Cookies } from '@/utils'
 import languages from '@/store/language'
 import type { ThemeKey } from '@/themes/store'
@@ -364,7 +364,7 @@ const sortType = computed<'manga' | 'chapter'>(() => {
 })
 
 const currentSortOptions = computed(() => {
-	const list = sortType.value === 'chapter' ? chapterSortOrder : sortOrder
+	const list = sortType.value === 'chapter' ? chapterSortOrder : mangaSortOrder
 	return list.map((v: string) => ({ value: v, label: sortOrderLabels[v] || v }))
 })
 

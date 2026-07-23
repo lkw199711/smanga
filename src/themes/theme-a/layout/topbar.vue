@@ -60,7 +60,7 @@ import { useRoute, useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import type { ThemeKey } from '@/themes/store'
 import { themeState, setTheme } from '@/themes/store'
-import { config, userConfig, sortOrder, chapterSortOrder } from '@/store'
+import { config, userConfig, mangaSortOrder, chapterSortOrder } from '@/store'
 import languages from '@/store/language'
 import themeList from '@/store/theme'
 import { set_theme } from '@/style/theme'
@@ -226,7 +226,7 @@ const sortType = computed<'manga' | 'chapter'>(() => {
 })
 
 const currentSortOptions = computed(() => {
-	const list = sortType.value === 'chapter' ? chapterSortOrder : sortOrder
+	const list = sortType.value === 'chapter' ? chapterSortOrder : mangaSortOrder
 	return list.map((v: string) => ({ value: v, label: sortOrderLabels[v] || v }))
 })
 

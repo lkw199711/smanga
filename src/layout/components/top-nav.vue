@@ -54,7 +54,7 @@
 			<div class="sort" v-show="layoutLimit('sort')" v-else>
 				<i :class="['sort-label', 'iconfont', 'icon-paixu']" @click="switch_view_type" />
 				<el-select v-model="userConfig.order" class="sort-select" size="default" @change="sort_order_change">
-					<el-option v-for="item in sortOrder" :key="item" :label="$t(`sortOrder.${item}`)" :value="item">
+					<el-option v-for="item in mangaSortOrder" :key="item" :label="$t(`sortOrder.${item}`)" :value="item">
 						<span class="op-text">{{ $t(`sortOrder.${item}`) }}</span>
 					</el-option>
 				</el-select>
@@ -85,7 +85,7 @@
 </template>
 
 <script lang="ts" setup>
-import { config, userConfig, sortOrder, chapterSortOrder, pageSizeConfig } from '@/store';
+import { config, userConfig, mangaSortOrder, chapterSortOrder, pageSizeConfig } from '@/store';
 import languages from '@/store/language';
 import theme from '@/store/theme';
 import { computed, ref } from 'vue';

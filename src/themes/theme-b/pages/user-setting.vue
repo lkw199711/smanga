@@ -60,7 +60,7 @@
         <div class="tb-setting-row">
           <span class="tb-setting-label">漫画默认排序</span>
           <select v-model="userConfig.order" @change="save" class="tb-select">
-            <option v-for="item in sortOrder" :key="item" :value="item">
+            <option v-for="item in mangaSortOrder" :key="item" :value="item">
               {{ getSortLabel(item) }}
             </option>
           </select>
@@ -350,7 +350,7 @@
 <script lang="ts" setup>
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import { userConfig, userInfo, sortOrder, chapterSortOrder } from '@/store'
+import { userConfig, userInfo, mangaSortOrder, chapterSortOrder } from '@/store'
 import { themeState, setTheme } from '@/themes/store'
 import userApi from '@/api/account'
 import { Cookies } from '@/utils'

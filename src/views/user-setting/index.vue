@@ -44,7 +44,7 @@
         </template>
         <el-form-item label="漫画默认排序" class="setting-item">
           <el-select v-model="userConfig.order" class="setting-select" size="default" @change="sort_order_change">
-            <el-option v-for="item in sortOrder" :key="item" :label="$t(`sortOrder.${item}`)" :value="item">
+            <el-option v-for="item in mangaSortOrder" :key="item" :label="$t(`sortOrder.${item}`)" :value="item">
               <span class="op-text">{{ $t(`sortOrder.${item}`) }}</span>
             </el-option>
           </el-select>
@@ -226,7 +226,7 @@
 </template>
 
 <script setup lang="ts">
-import {userConfig, sortOrder, chapterSortOrder} from '@/store';
+import {userConfig, mangaSortOrder, chapterSortOrder} from '@/store';
 import {useI18n} from 'vue-i18n';
 import {set_theme, themes} from '@/style/theme';
 import theme from '@/store/theme';

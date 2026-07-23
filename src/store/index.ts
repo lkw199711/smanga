@@ -111,7 +111,7 @@ export const pageSizeConfig = reactive({
 });
 
 // 排序方式
-export const sortOrder = ['id', 'idDesc', 'name', 'nameDesc', 'createTime', 'createTimeDesc', 'updateTime', 'updateTimeDesc', 'chapterUpdate', 'chapterUpdateDesc'];
+export const mangaSortOrder = ['id', 'idDesc', 'name', 'nameDesc', 'createTime', 'createTimeDesc', 'updateTime', 'updateTimeDesc', 'chapterUpdate', 'chapterUpdateDesc'];
 export const chapterSortOrder = ['id', 'idDesc', 'name', 'nameDesc', 'number', 'numberDesc', 'createTime', 'createTimeDesc', 'updateTime', 'updateTimeDesc'];
 
 

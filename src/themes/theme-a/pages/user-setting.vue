@@ -101,7 +101,7 @@
         <div class="ta-setting-row">
           <span class="ta-setting-label">漫画默认排序</span>
           <select v-model="userConfig.order" @change="save" class="ta-select">
-            <option v-for="item in sortOrder" :key="item" :value="item">
+            <option v-for="item in mangaSortOrder" :key="item" :value="item">
               {{ getSortLabel(item) }}
             </option>
           </select>
@@ -372,7 +372,7 @@
 <script lang="ts" setup>
 import { ref, onMounted, watch } from 'vue'
 import { useRouter } from 'vue-router'
-import { userConfig, userInfo, sortOrder, chapterSortOrder } from '@/store'
+import { userConfig, userInfo, mangaSortOrder, chapterSortOrder } from '@/store'
 import { themeState, setTheme } from '@/themes/store'
 import userApi from '@/api/account'
 import imageApi from '@/api/image'
