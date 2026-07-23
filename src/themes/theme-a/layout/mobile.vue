@@ -7,6 +7,24 @@
 			<div class="sa-mobile-title">
 				<h1>{{ pageTitle }}</h1>
 			</div>
+			<div class="sa-header-user">
+				<div class="sa-header-user-trigger" @click="toggleMobileUserDropdown">
+					<div class="sa-avatar sa-avatar-sm">
+						<img v-if="mobileAvatarBlobUrl" :src="mobileAvatarBlobUrl" class="sa-avatar-img" />
+						<span v-else class="sa-avatar-text">{{ userInfo.userName?.charAt(0) || 'U' }}</span>
+					</div>
+					<span class="sa-header-user-name">{{ userInfo.userName || '未登录' }}</span>
+					<span class="sa-user-arrow" :class="{ open: showMobileUserDropdown }">▾</span>
+				</div>
+				<div v-if="showMobileUserDropdown" class="sa-header-user-dropdown">
+					<div class="sa-user-dropdown-item" @click="goMobileSettings">
+						<span>⚙️ 设置</span>
+					</div>
+					<div class="sa-user-dropdown-item sa-user-dropdown-logout" @click="mobileLogout">
+						<span>🚪 登出</span>
+					</div>
+				</div>
+			</div>
 		</header>
 
 		<!-- 侧边栏（抽屉式） -->
@@ -21,45 +39,25 @@
 					<button class="sa-close-sidebar" @click="showSidebar = false">×</button>
 				</div>
 
-				<div class="sa-sec-title">导航</div>
-				<nav class="sa-nav">
-					<div v-for="item in menu" :key="item.key" class="sa-nav-item" @click="navigateTo(item.key)">
-						<span class="sa-nav-icon">{{ item.icon }}</span>
-						<span>{{ item.label }}</span>
-					</div>
-				</nav>
+				<div class="sa-sidebar-scroll">
+					<div class="sa-sec-title">导航</div>
+					<nav class="sa-nav">
+						<div v-for="item in menu" :key="item.key" class="sa-nav-item" @click="navigateTo(item.key)">
+							<span class="sa-nav-icon">{{ item.icon }}</span>
+							<span>{{ item.label }}</span>
+						</div>
+					</nav>
 
-				<div class="sa-sec-title">媒体库</div>
-				<nav class="sa-nav">
-					<div v-for="m in sidebarMediaList" :key="m.mediaId" class="sa-nav-item" @click="navigateToMedia(m.mediaId)">
-						<span class="sa-nav-icon">📁</span>
-						<span>{{ m.mediaName || m.mediaId }}</span>
-						<span class="sa-nav-count">{{ m.mangaCount || 0 }}</span>
-					</div>
-					<div v-if="sidebarMediaList.length === 0" class="sa-nav-empty">暂无媒体库</div>
-				</nav>
-
-				<div class="sa-user">
-					<div class="sa-user-trigger" @click="toggleMobileUserDropdown">
-						798789
-						<div class="sa-avatar">
-							<img v-if="mobileAvatarBlobUrl" :src="mobileAvatarBlobUrl" class="sa-avatar-img" />
-							<span v-else class="sa-avatar-text">{{ userInfo.userName?.charAt(0) || 'U' }}</span>
+					<div class="sa-sec-title">媒体库</div>
+					<nav class="sa-nav">
+						<div v-for="m in sidebarMediaList" :key="m.mediaId" class="sa-nav-item"
+							@click="navigateToMedia(m.mediaId)">
+							<span class="sa-nav-icon">📁</span>
+							<span>{{ m.mediaName || m.mediaId }}</span>
+							<span class="sa-nav-count">{{ m.mangaCount || 0 }}</span>
 						</div>
-						<div class="sa-user-info">
-							<div class="sa-user-name">{{ userInfo.userName || '未登录' }}</div>
-							<div class="sa-user-role">{{ Cookies.getRole() === 'admin' ? '管理员' : '用户' }}</div>
-						</div>
-						<span class="sa-user-arrow" :class="{ open: showMobileUserDropdown }">▾</span>
-					</div>
-					<div v-if="showMobileUserDropdown" class="sa-user-dropdown">
-						<div class="sa-user-dropdown-item" @click="goMobileSettings">
-							<span>⚙️ 设置</span>
-						</div>
-						<div class="sa-user-dropdown-item sa-user-dropdown-logout" @click="mobileLogout">
-							<span>🚪 登出</span>
-						</div>
-					</div>
+						<div v-if="sidebarMediaList.length === 0" class="sa-nav-empty">暂无媒体库</div>
+					</nav>
 				</div>
 			</aside>
 		</div>
@@ -180,8 +178,8 @@ function mobileLogout() {
 function onSidebarClick(e: MouseEvent) {
 	const target = e.target as HTMLElement | null
 	if (!target) return
-	if (target.closest('.sa-user-dropdown')) return
-	if (target.closest('.sa-user-trigger')) return
+	if (target.closest('.sa-header-user-dropdown')) return
+	if (target.closest('.sa-header-user-trigger')) return
 	showMobileUserDropdown.value = false
 }
 
@@ -238,6 +236,75 @@ onBeforeUnmount(() => {
 	border-bottom: 1px solid #eaeaea;
 }
 
+.sa-mobile-title {
+	flex: 1;
+	min-width: 0;
+}
+
+.sa-mobile-title h1 {
+	margin: 0;
+	font-size: 18px;
+	font-weight: 600;
+}
+
+/* Header 用户区 */
+.sa-header-user {
+	position: relative;
+	flex-shrink: 0;
+}
+
+.sa-header-user-trigger {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+	cursor: pointer;
+	padding: 4px 8px;
+	border-radius: 8px;
+}
+
+.sa-header-user-trigger:active {
+	background: #f3f4f6;
+}
+
+.sa-avatar-sm {
+	width: 28px;
+	height: 28px;
+}
+
+.sa-header-user-name {
+	font-size: 13px;
+	font-weight: 500;
+	max-width: 80px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	color: #171717;
+}
+
+/* Header 用户下拉 */
+.sa-header-user-dropdown {
+	position: absolute;
+	top: 100%;
+	right: 0;
+	min-width: 140px;
+	margin-top: 4px;
+	background: #fff;
+	border: 1px solid #eaeaea;
+	border-radius: 8px;
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+	padding: 4px;
+	z-index: 60;
+}
+
+.sa-header-user-dropdown .sa-user-dropdown-item {
+	padding: 8px 12px;
+	border-radius: 6px;
+}
+
+.sa-header-user-dropdown .sa-user-dropdown-item:active {
+	background: #f3f4f6;
+}
+
 /* 安卓占位符与顶栏背景一致 */
 :deep(.android-seat) {
 	background: rgba(255, 255, 255, 0.95);
@@ -251,16 +318,11 @@ onBeforeUnmount(() => {
 	font-size: 20px;
 	cursor: pointer;
 	border-radius: 8px;
+	flex-shrink: 0;
 }
 
 .sa-menu-toggle:active {
 	background: #f3f4f6;
-}
-
-.sa-mobile-title h1 {
-	margin: 0;
-	font-size: 18px;
-	font-weight: 600;
 }
 
 /* 侧边栏抽屉 */
@@ -281,7 +343,7 @@ onBeforeUnmount(() => {
 	background: #fff;
 	display: flex;
 	flex-direction: column;
-	overflow-y: auto;
+	overflow: hidden;
 	animation: slideIn 0.3s ease;
 }
 
@@ -291,10 +353,19 @@ onBeforeUnmount(() => {
 	background: #fff;
 }
 
+/* 导航滚动区 */
+.sa-sidebar-scroll {
+	flex: 1;
+	min-height: 0;
+	overflow-y: auto;
+	padding: 0 4px;
+}
+
 @keyframes slideIn {
 	from {
 		transform: translateX(-100%);
 	}
+
 	to {
 		transform: translateX(0);
 	}
@@ -344,8 +415,7 @@ onBeforeUnmount(() => {
 
 /* 导航 */
 .sa-sec-title {
-	flex-shrink: 0;
-	padding: 10px 12px 4px;
+	padding: 10px 8px 4px;
 	font-size: 11px;
 	font-weight: 600;
 	color: #9ca3af;
@@ -354,11 +424,9 @@ onBeforeUnmount(() => {
 }
 
 .sa-nav {
-	flex-shrink: 0;
 	display: flex;
 	flex-direction: column;
 	gap: 1px;
-	padding: 0 4px;
 }
 
 .sa-nav-item {
@@ -393,25 +461,7 @@ onBeforeUnmount(() => {
 	border-radius: 10px;
 }
 
-/* 用户信息 */
-.sa-user {
-	margin-top: auto;
-	flex-shrink: 0;
-	border-top: 1px solid #eaeaea;
-}
-
-.sa-user-trigger {
-	display: flex;
-	align-items: center;
-	gap: 10px;
-	padding: 10px 12px;
-	cursor: pointer;
-}
-
-.sa-user-trigger:active {
-	background: #f3f4f6;
-}
-
+/* 通用：头像 */
 .sa-avatar {
 	position: relative;
 	width: 36px;
@@ -439,23 +489,7 @@ onBeforeUnmount(() => {
 	font-size: 15px;
 }
 
-.sa-user-info {
-	flex: 1;
-	min-width: 0;
-}
-
-.sa-user-name {
-	font-weight: 500;
-	font-size: 14px;
-	line-height: 1.3;
-}
-
-.sa-user-role {
-	font-size: 12px;
-	color: #9ca3af;
-	line-height: 1.3;
-}
-
+/* 通用：箭头与下拉 */
 .sa-user-arrow {
 	color: #9ca3af;
 	font-size: 12px;
@@ -466,12 +500,7 @@ onBeforeUnmount(() => {
 	transform: rotate(180deg);
 }
 
-/* 用户下拉菜单 */
-.sa-user-dropdown {
-	padding: 0 12px 8px;
-	border-top: 1px solid #f3f4f6;
-}
-
+/* 通用：下拉菜单项 */
 .sa-user-dropdown-item {
 	display: flex;
 	align-items: center;

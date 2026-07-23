@@ -5,6 +5,48 @@
     </div>
     
     <div class="ta-setting-groups">
+      <!-- 账户信息 -->
+      <div class="ta-setting-card">
+        <h3>账户信息</h3>
+        <div class="ta-setting-row">
+          <span class="ta-setting-label">用户名</span>
+          <span class="ta-setting-value">{{ userInfo.userName }}</span>
+        </div>
+        <div class="ta-setting-row">
+          <span class="ta-setting-label">用户ID</span>
+          <span class="ta-setting-value">{{ userInfo.userId }}</span>
+        </div>
+        <div class="ta-setting-row">
+          <span class="ta-setting-label">用户头像</span>
+          <div class="ta-avatar-container">
+            <div
+              class="ta-avatar"
+              :class="{ 'ta-avatar-uploading': uploadingAvatar }"
+              @click="triggerAvatarUpload"
+              :title="'点击更换头像'"
+            >
+              <img
+                v-if="avatarBlobUrl"
+                :src="avatarBlobUrl"
+                class="ta-avatar-img"
+              />
+              <span v-else class="ta-avatar-text">{{ userInfo.userName?.charAt(0) || 'U' }}</span>
+              <div class="ta-avatar-overlay">
+                <span v-if="uploadingAvatar">⏳</span>
+                <span v-else>📷</span>
+              </div>
+            </div>
+            <input
+              ref="avatarInputRef"
+              type="file"
+              accept="image/*"
+              class="ta-avatar-input-hidden"
+              @change="handleAvatarUpload"
+            />
+          </div>
+        </div>
+      </div>
+
       <!-- 界面设置 -->
       <div class="ta-setting-card">
         <h3>界面设置</h3>
@@ -317,48 +359,6 @@
         <div class="ta-setting-row">
           <span class="ta-setting-label">全屏模式</span>
           <button class="ta-btn-secondary" @click="toggleFullscreen">切换全屏</button>
-        </div>
-      </div>
-
-      <!-- 账户信息 -->
-      <div class="ta-setting-card">
-        <h3>账户信息</h3>
-        <div class="ta-setting-row">
-          <span class="ta-setting-label">用户名</span>
-          <span class="ta-setting-value">{{ userInfo.userName }}</span>
-        </div>
-        <div class="ta-setting-row">
-          <span class="ta-setting-label">用户ID</span>
-          <span class="ta-setting-value">{{ userInfo.userId }}</span>
-        </div>
-        <div class="ta-setting-row">
-          <span class="ta-setting-label">用户头像</span>
-          <div class="ta-avatar-container">
-            <div
-              class="ta-avatar"
-              :class="{ 'ta-avatar-uploading': uploadingAvatar }"
-              @click="triggerAvatarUpload"
-              :title="'点击更换头像'"
-            >
-              <img
-                v-if="avatarBlobUrl"
-                :src="avatarBlobUrl"
-                class="ta-avatar-img"
-              />
-              <span v-else class="ta-avatar-text">{{ userInfo.userName?.charAt(0) || 'U' }}</span>
-              <div class="ta-avatar-overlay">
-                <span v-if="uploadingAvatar">⏳</span>
-                <span v-else>📷</span>
-              </div>
-            </div>
-            <input
-              ref="avatarInputRef"
-              type="file"
-              accept="image/*"
-              class="ta-avatar-input-hidden"
-              @change="handleAvatarUpload"
-            />
-          </div>
         </div>
       </div>
     </div>
