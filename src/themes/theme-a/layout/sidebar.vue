@@ -3,37 +3,66 @@
 		<div class="sa-logo">
 			<div class="sa-logo-mark">S</div>
 			<div class="sa-logo-text">smanga</div>
+			<button
+				v-if="isAdmin"
+				:class="['sa-manage-toggle', { active: manageMode }]"
+				@click="manageMode = !manageMode"
+				:title="manageMode ? '退出管理模式' : '管理模式'"
+			>
+				⚙️
+			</button>
 		</div>
 
-		<div class="sa-sec-title">导航</div>
-		<nav class="sa-nav">
-			<router-link
-				v-for="item in navItems"
-				:key="item.path"
-				:to="item.path"
-				class="sa-nav-item"
-				:active-class="item.exact ? '' : 'active'"
-				exact-active-class="active"
-			>
-				<span class="sa-nav-icon">{{ item.icon }}</span>
-				<span>{{ item.label }}</span>
-			</router-link>
-		</nav>
-
-		<div class="sa-sec-title">媒体库</div>
-		<nav class="sa-nav sa-media-nav">
-			<div
-				v-for="m in mediaListData"
-				:key="m.mediaId"
-				class="sa-nav-item"
-				@click="goMedia(m.mediaId)"
-			>
-				<span class="sa-nav-icon">📁</span>
-				<span class="sa-nav-label">{{ m.mediaName || m.mediaId }}</span>
-				<span class="sa-nav-count">{{ m.mangaCount || 0 }}</span>
+		<template v-if="manageMode">
+			<div class="sa-sec-title">
+				<span>管理菜单</span>
+				<button class="sa-manage-back" @click="manageMode = false">✕ 退出</button>
 			</div>
-			<div v-if="mediaListData.length === 0" class="sa-nav-empty">暂无媒体库</div>
-		</nav>
+			<nav class="sa-nav">
+				<router-link
+					v-for="item in adminNavItems"
+					:key="item.path"
+					:to="item.path"
+					class="sa-nav-item"
+					active-class="active"
+				>
+					<span class="sa-nav-icon">{{ item.icon }}</span>
+					<span>{{ item.label }}</span>
+				</router-link>
+			</nav>
+		</template>
+
+		<template v-else>
+			<div class="sa-sec-title">导航</div>
+			<nav class="sa-nav">
+				<router-link
+					v-for="item in navItems"
+					:key="item.path"
+					:to="item.path"
+					class="sa-nav-item"
+					:active-class="item.exact ? '' : 'active'"
+					exact-active-class="active"
+				>
+					<span class="sa-nav-icon">{{ item.icon }}</span>
+					<span>{{ item.label }}</span>
+				</router-link>
+			</nav>
+
+			<div class="sa-sec-title">媒体库</div>
+			<nav class="sa-nav sa-media-nav">
+				<div
+					v-for="m in mediaListData"
+					:key="m.mediaId"
+					class="sa-nav-item"
+					@click="goMedia(m.mediaId)"
+				>
+					<span class="sa-nav-icon">📁</span>
+					<span class="sa-nav-label">{{ m.mediaName || m.mediaId }}</span>
+					<span class="sa-nav-count">{{ m.mangaCount || 0 }}</span>
+				</div>
+				<div v-if="mediaListData.length === 0" class="sa-nav-empty">暂无媒体库</div>
+			</nav>
+		</template>
 
 		<div class="sa-user" ref="userWrapRef">
 			<div class="sa-user-trigger" @click="toggleUserDropdown">
@@ -62,7 +91,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted, onBeforeUnmount, watch } from 'vue'
+import { ref, computed, onMounted, onBeforeUnmount, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { userInfo } from '@/store'
 import mediaStatsApi from '@/api/media-stats'
@@ -74,6 +103,9 @@ const router = useRouter()
 const showUserDropdown = ref(false)
 const userWrapRef = ref<HTMLElement | null>(null)
 const avatarBlobUrl = ref('')
+const manageMode = ref(false)
+
+const isAdmin = computed(() => Cookies.getRole() === 'admin')
 
 async function loadAvatar() {
   if (!userInfo.avatarPath) {
@@ -117,8 +149,25 @@ const navItems = [
 	{ path: '/t/collect', icon: '⭐', label: '收藏' },
 	{ path: '/t/search', icon: '🔍', label: '搜索' },
 	{ path: '/t/tags', icon: '🏷️', label: '标签' },
-	{ path: '/t/manage', icon: '⚙️', label: '管理' },
+	{ path: '/t/media', icon: '📁', label: '媒体库' },
 	{ path: '/t/setting/user', icon: '🔧', label: '设置' },
+]
+
+const adminNavItems = [
+	{ path: '/t/manage/users', icon: '👤', label: '用户管理' },
+	{ path: '/t/manage/media', icon: '📁', label: '媒体库管理' },
+	{ path: '/t/manage/manga', icon: '📚', label: '漫画管理' },
+	{ path: '/t/manage/chapters', icon: '📑', label: '章节管理' },
+	{ path: '/t/manage/paths', icon: '📂', label: '路径管理' },
+	{ path: '/t/manage/bookmarks', icon: '🔖', label: '书签管理' },
+	{ path: '/t/manage/tags', icon: '🏷️', label: '标签管理' },
+	{ path: '/t/manage/compress', icon: '🗜️', label: '解压管理' },
+	{ path: '/t/manage/jobs', icon: '📋', label: '任务管理' },
+	{ path: '/t/manage/sync', icon: '🔄', label: '漫画同步' },
+	{ path: '/t/manage/share', icon: '📤', label: '漫画分享' },
+	{ path: '/t/manage/p2p', icon: '🌐', label: 'P2P管理' },
+	{ path: '/t/manage/server', icon: '🖥️', label: '服务器设置' },
+	{ path: '/t/manage/wiki', icon: '📖', label: '帮助文档' },
 ]
 
 const mediaListData = ref<any[]>([])
@@ -158,6 +207,47 @@ function goMedia(mediaId: number) {
 	align-items: center;
 	gap: 10px;
 	padding: 4px 8px 20px;
+}
+
+.sa-manage-toggle {
+	margin-left: auto;
+	width: 32px;
+	height: 32px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	border: 1px solid #eaeaea;
+	border-radius: 8px;
+	background: #fff;
+	cursor: pointer;
+	font-size: 16px;
+	transition: all 0.15s;
+	flex-shrink: 0;
+}
+
+.sa-manage-toggle:hover {
+	background: #f3f4f6;
+}
+
+.sa-manage-toggle.active {
+	background: #2563eb;
+	border-color: #2563eb;
+	color: #fff;
+}
+
+.sa-manage-back {
+	margin-left: auto;
+	padding: 2px 8px;
+	font-size: 11px;
+	color: #ef4444;
+	background: none;
+	border: 1px solid #fecaca;
+	border-radius: 4px;
+	cursor: pointer;
+}
+
+.sa-manage-back:hover {
+	background: #fef2f2;
 }
 
 .sa-logo-mark {

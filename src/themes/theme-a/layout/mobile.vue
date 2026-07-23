@@ -36,28 +36,51 @@
 						<div class="sa-logo-mark">S</div>
 						<div class="sa-logo-text">smanga</div>
 					</div>
+					<button
+						v-if="isAdmin"
+						:class="['sa-manage-toggle', { active: manageMode }]"
+						@click="manageMode = !manageMode"
+						:title="manageMode ? '退出管理模式' : '管理模式'"
+					>
+						⚙️
+					</button>
 					<button class="sa-close-sidebar" @click="showSidebar = false">×</button>
 				</div>
 
 				<div class="sa-sidebar-scroll">
-					<div class="sa-sec-title">导航</div>
-					<nav class="sa-nav">
-						<div v-for="item in menu" :key="item.key" class="sa-nav-item" @click="navigateTo(item.key)">
-							<span class="sa-nav-icon">{{ item.icon }}</span>
-							<span>{{ item.label }}</span>
+					<template v-if="manageMode">
+						<div class="sa-sec-title">
+							<span>管理菜单</span>
+							<button class="sa-manage-back" @click="manageMode = false">✕ 退出</button>
 						</div>
-					</nav>
+						<nav class="sa-nav">
+							<div v-for="item in adminMenu" :key="item.key" class="sa-nav-item" @click="navigateTo(item.key)">
+								<span class="sa-nav-icon">{{ item.icon }}</span>
+								<span>{{ item.label }}</span>
+							</div>
+						</nav>
+					</template>
 
-					<div class="sa-sec-title">媒体库</div>
-					<nav class="sa-nav">
-						<div v-for="m in sidebarMediaList" :key="m.mediaId" class="sa-nav-item"
-							@click="navigateToMedia(m.mediaId)">
-							<span class="sa-nav-icon">📁</span>
-							<span>{{ m.mediaName || m.mediaId }}</span>
-							<span class="sa-nav-count">{{ m.mangaCount || 0 }}</span>
-						</div>
-						<div v-if="sidebarMediaList.length === 0" class="sa-nav-empty">暂无媒体库</div>
-					</nav>
+					<template v-else>
+						<div class="sa-sec-title">导航</div>
+						<nav class="sa-nav">
+							<div v-for="item in menu" :key="item.key" class="sa-nav-item" @click="navigateTo(item.key)">
+								<span class="sa-nav-icon">{{ item.icon }}</span>
+								<span>{{ item.label }}</span>
+							</div>
+						</nav>
+
+						<div class="sa-sec-title">媒体库</div>
+						<nav class="sa-nav">
+							<div v-for="m in sidebarMediaList" :key="m.mediaId" class="sa-nav-item"
+								@click="navigateToMedia(m.mediaId)">
+								<span class="sa-nav-icon">📁</span>
+								<span>{{ m.mediaName || m.mediaId }}</span>
+								<span class="sa-nav-count">{{ m.mangaCount || 0 }}</span>
+							</div>
+							<div v-if="sidebarMediaList.length === 0" class="sa-nav-empty">暂无媒体库</div>
+						</nav>
+					</template>
 				</div>
 			</aside>
 		</div>
@@ -95,6 +118,9 @@ const mobileAvatarBlobUrl = ref('')
 const sidebarMediaList = ref<any[]>([])
 const router = useRouter()
 const route = useRoute()
+const manageMode = ref(false)
+
+const isAdmin = computed(() => Cookies.getRole() === 'admin')
 
 const menu = [
 	{ key: 'home', label: '首页', icon: '🏠' },
@@ -103,8 +129,25 @@ const menu = [
 	{ key: 'collect', label: '收藏', icon: '⭐' },
 	{ key: 'search', label: '搜索', icon: '🔍' },
 	{ key: 'tag', label: '标签', icon: '🏷️' },
-	{ key: 'manage', label: '管理', icon: '⚙️' },
+	{ key: 'media', label: '媒体库', icon: '📁' },
 	{ key: 'setting', label: '设置', icon: '🔧' },
+]
+
+const adminMenu = [
+	{ key: 'manage-users', label: '用户管理', icon: '👤' },
+	{ key: 'manage-media', label: '媒体库管理', icon: '📁' },
+	{ key: 'manage-manga', label: '漫画管理', icon: '📚' },
+	{ key: 'manage-chapters', label: '章节管理', icon: '📑' },
+	{ key: 'manage-paths', label: '路径管理', icon: '📂' },
+	{ key: 'manage-bookmarks', label: '书签管理', icon: '🔖' },
+	{ key: 'manage-tags', label: '标签管理', icon: '🏷️' },
+	{ key: 'manage-compress', label: '解压管理', icon: '🗜️' },
+	{ key: 'manage-jobs', label: '任务管理', icon: '📋' },
+	{ key: 'manage-sync', label: '漫画同步', icon: '🔄' },
+	{ key: 'manage-share', label: '漫画分享', icon: '📤' },
+	{ key: 'manage-p2p', label: 'P2P管理', icon: '🌐' },
+	{ key: 'manage-server', label: '服务器设置', icon: '🖥️' },
+	{ key: 'manage-wiki', label: '帮助文档', icon: '📖' },
 ]
 
 const bottomNav = [
@@ -128,9 +171,22 @@ const pageTitle = computed(() => {
 		't-collect': '收藏',
 		't-search': '搜索',
 		't-tag-list': '标签',
-		't-manage': '管理',
 		't-user-setting': '用户设置',
 		't-serve-setting': '服务器设置',
+		't-manage-users': '用户管理',
+		't-manage-media': '媒体库管理',
+		't-manage-manga': '漫画管理',
+		't-manage-chapters': '章节管理',
+		't-manage-paths': '路径管理',
+		't-manage-bookmarks': '书签管理',
+		't-manage-tags': '标签管理',
+		't-manage-compress': '解压管理',
+		't-manage-jobs': '任务管理',
+		't-manage-sync': '漫画同步',
+		't-manage-share': '漫画分享',
+		't-manage-p2p': 'P2P管理',
+		't-manage-server': '服务器设置',
+		't-manage-wiki': '帮助文档',
 	}
 	return titleMap[route.name as string] || 'smanga'
 })
@@ -144,8 +200,21 @@ function navigateTo(key: string) {
 		media: '/t/media',
 		search: '/t/search',
 		tag: '/t/tags',
-		manage: '/t/manage',
 		setting: '/t/setting/user',
+		'manage-users': '/t/manage/users',
+		'manage-media': '/t/manage/media',
+		'manage-manga': '/t/manage/manga',
+		'manage-chapters': '/t/manage/chapters',
+		'manage-paths': '/t/manage/paths',
+		'manage-bookmarks': '/t/manage/bookmarks',
+		'manage-tags': '/t/manage/tags',
+		'manage-compress': '/t/manage/compress',
+		'manage-jobs': '/t/manage/jobs',
+		'manage-sync': '/t/manage/sync',
+		'manage-share': '/t/manage/share',
+		'manage-p2p': '/t/manage/p2p',
+		'manage-server': '/t/manage/server',
+		'manage-wiki': '/t/manage/wiki',
 	}
 	if (routeMap[key]) {
 		router.push(routeMap[key])
@@ -379,6 +448,48 @@ onBeforeUnmount(() => {
 	justify-content: space-between;
 	flex-shrink: 0;
 	padding: 8px 12px 12px;
+	gap: 8px;
+}
+
+.sa-manage-toggle {
+	width: 32px;
+	height: 32px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	border: 1px solid #eaeaea;
+	border-radius: 8px;
+	background: #fff;
+	cursor: pointer;
+	font-size: 16px;
+	transition: all 0.15s;
+	flex-shrink: 0;
+	order: 1;
+}
+
+.sa-manage-toggle:hover {
+	background: #f3f4f6;
+}
+
+.sa-manage-toggle.active {
+	background: #2563eb;
+	border-color: #2563eb;
+	color: #fff;
+}
+
+.sa-manage-back {
+	margin-left: auto;
+	padding: 2px 8px;
+	font-size: 11px;
+	color: #ef4444;
+	background: none;
+	border: 1px solid #fecaca;
+	border-radius: 4px;
+	cursor: pointer;
+}
+
+.sa-manage-back:active {
+	background: #fef2f2;
 }
 
 .sa-close-sidebar {

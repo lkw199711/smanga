@@ -121,7 +121,7 @@ async function load_table(page = 1, pageSize = browse.manageListPageSize) {
     mediaId: 0,
     page,
     pageSize,
-    order: userConfig.order,
+    order: 'updateTimeDesc',
     keyWord: keyWord.value,
   });
   count.value = Number(res.count);
