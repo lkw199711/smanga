@@ -105,7 +105,7 @@ onMounted(() => {
 
 <style scoped lang="less">
 .media-pager {
-	margin-top: 1.4rem;
+	margin-top: 8rem;
 	width: 100%;
 	overflow-x: auto;
 }

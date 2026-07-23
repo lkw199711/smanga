@@ -3,8 +3,14 @@
     <div class="ta-page-head"><h1>搜索</h1></div>
 
     <div class="ta-tabs">
-      <button class="ta-tab" :class="{ active: tab === 'manga' }" @click="tab = 'manga'">漫画</button>
-      <button class="ta-tab" :class="{ active: tab === 'chapter' }" @click="tab = 'chapter'">章节</button>
+      <button class="ta-tab" :class="{ active: tab === 'manga' }" @click="tab = 'manga'">
+        漫画
+        <span class="ta-tab-badge" v-if="tab === 'manga' && count">{{ count }}</span>
+      </button>
+      <button class="ta-tab" :class="{ active: tab === 'chapter' }" @click="tab = 'chapter'">
+        章节
+        <span class="ta-tab-badge" v-if="tab === 'chapter' && count">{{ count }}</span>
+      </button>
     </div>
 
     <div class="ta-search-bar">
@@ -155,9 +161,62 @@ onMounted(() => {
 .ta-page-head { margin-bottom: 24px; }
 .ta-page-head h1 { font-size: 20px; font-weight: 700; margin: 0; }
 .ta-search-bar { display: flex; gap: 10px; margin-bottom: 24px; }
-.ta-tabs { display: flex; gap: 10px; margin: 0 0 14px; }
-.ta-tab { padding: 8px 14px; font-size: 13px; border: 1px solid #eaeaea; border-radius: 999px; background: #fff; cursor: pointer; }
-.ta-tab.active { border-color: #2563eb; color: #2563eb; font-weight: 600; }
+.ta-tabs {
+  display: flex;
+  gap: 4px;
+  margin: 0 0 24px;
+  border-bottom: 2px solid #f3f4f6;
+}
+
+.ta-tab {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 12px 22px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #9ca3af;
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -2px;
+  cursor: pointer;
+  transition: color 0.2s, border-color 0.2s;
+  outline: none;
+  white-space: nowrap;
+
+  &:hover {
+    color: #6b7280;
+  }
+
+  &.active {
+    color: #2563eb;
+    font-weight: 600;
+    border-bottom-color: #2563eb;
+  }
+}
+
+.ta-tab-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 6px;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1;
+  border-radius: 10px;
+  background: #f3f4f6;
+  color: #9ca3af;
+  transition: background 0.2s, color 0.2s;
+
+  .ta-tab.active & {
+    background: #dbeafe;
+    color: #2563eb;
+  }
+}
 .ta-input { flex: 1; max-width: 480px; padding: 10px 14px; font-size: 14px; border: 1px solid #eaeaea; border-radius: 8px; outline: none; background: #fff; }
 .ta-btn-primary { padding: 10px 20px; font-size: 14px; font-weight: 500; color: #fff; background: #2563eb; border: none; border-radius: 8px; cursor: pointer; }
 .ta-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 18px; }
