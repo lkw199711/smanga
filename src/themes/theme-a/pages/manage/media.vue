@@ -64,15 +64,13 @@
           <button class="ta-dialog-close" @click="pathDialog = false">×</button>
         </div>
         <div class="ta-dialog-body">
-          <div class="ta-path-add">
-            <input v-model="newPath" placeholder="输入新路径..." class="ta-field-input" @keydown.enter="addPath" />
-            <button class="ta-btn-primary" @click="addPath">添加</button>
-          </div>
+          <button class="ta-btn-primary" style="align-self:flex-start" @click="openPathAdd">+ 添加路径</button>
           <div v-if="paths.length === 0" class="ta-empty">暂无路径</div>
           <div v-for="p in paths" :key="p.pathId" class="ta-path-item">
             <span class="ta-path-content">{{ p.pathContent }}</span>
-            <button class="ta-btn-sm" @click="scanPath(p)">🔍 扫描</button>
-            <button class="ta-btn-sm" @click="rescanPath(p)">🔄 重扫</button>
+            <button class="ta-btn-sm" @click="openPathEdit(p)">✏️</button>
+            <button class="ta-btn-sm" @click="scanPath(p)">🔍</button>
+            <button class="ta-btn-sm" @click="rescanPath(p)">🔄</button>
             <button class="ta-btn-sm ta-btn-sm-danger" @click="deletePath(p)">🗑</button>
           </div>
         </div>
@@ -81,6 +79,20 @@
         </div>
       </div>
     </div>
+
+    <!-- 路径新增/编辑 (共享组件) -->
+    <PathEditDialog
+      v-model="pathAddDialog"
+      mode="add"
+      :media-id="pathMedia?.mediaId"
+      @saved="onPathSaved"
+    />
+    <PathEditDialog
+      v-model="pathEditDialog"
+      mode="edit"
+      :path-info="editingPath"
+      @saved="onPathSaved"
+    />
   </div>
 </template>
 
@@ -90,6 +102,7 @@ import mediaApi from '@/api/media'
 import pathApi from '@/api/path'
 import MediaEditDialog from '@/themes/components/media-edit-dialog.vue'
 import MediaLibraryCreateDialog from '@/themes/components/media-library-create-dialog.vue'
+import PathEditDialog from '@/themes/components/path-edit-dialog.vue'
 
 const list = ref<any[]>([])
 const total = ref(0)
@@ -102,7 +115,9 @@ const editingMedia = ref<any>(null)
 const pathDialog = ref(false)
 const pathMedia = ref<any>(null)
 const paths = ref<any[]>([])
-const newPath = ref('')
+const pathAddDialog = ref(false)
+const pathEditDialog = ref(false)
+const editingPath = ref<any>(null)
 
 const allSelected = computed(() => list.value.length > 0 && selected.value.length === list.value.length)
 
@@ -153,21 +168,27 @@ async function loadPaths(mediaId: number) {
   } catch { paths.value = [] }
 }
 
-async function addPath() {
-  if (!newPath.value || !pathMedia.value) return
-  try {
-    await pathApi.add_path(pathMedia.value.mediaId, { pathContent: newPath.value, autoScan: 0 })
-    newPath.value = ''
-    await loadPaths(pathMedia.value.mediaId)
-  } catch (e: any) { alert(e?.message || '添加失败') }
+async function openPathAdd() {
+  pathAddDialog.value = true
+}
+
+function openPathEdit(p: any) {
+  editingPath.value = { ...p }
+  pathEditDialog.value = true
+}
+
+async function onPathSaved() {
+  if (pathMedia.value) await loadPaths(pathMedia.value.mediaId)
 }
 
 async function scanPath(p: any) {
-  try { await pathApi.scan_path(p.pathId); alert('扫描任务已提交') } catch (e: any) { alert(e?.message || '扫描失败') }
+  if (!confirm('确定要增量扫描该路径吗？')) return
+  try { await pathApi.scan_path(p.pathId); alert('扫描任务已提交'); await loadPaths(p.mediaId) } catch (e: any) { alert(e?.message || '扫描失败') }
 }
 
 async function rescanPath(p: any) {
-  try { await pathApi.rescan_path(p.pathId); alert('重扫任务已提交') } catch (e: any) { alert(e?.message || '重扫失败') }
+  if (!confirm('确定要重新扫描该路径吗？这将重新索引所有漫画。')) return
+  try { await pathApi.rescan_path(p.pathId); alert('重扫任务已提交'); await loadPaths(p.mediaId) } catch (e: any) { alert(e?.message || '重扫失败') }
 }
 
 async function deletePath(p: any) {
