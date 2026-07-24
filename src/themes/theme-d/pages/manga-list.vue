@@ -22,6 +22,8 @@
 import { ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import mangaApi from '@/api/manga'
+import imageApi from '@/api/image'
+import queue from '@/store/quque'
 import { userConfig } from '@/store'
 import { openThemeActionSheet, openThemeContextMenu } from '@/themes/context-menu'
 
@@ -37,9 +39,15 @@ async function loadData() {
   try {
     const mediaId = Number(route.params.mediaId) || 0
     const r = await mangaApi.get(mediaId, page.value, pageSize, userConfig.order)
-    list.value = r?.data?.list || []
-    total.value = r?.data?.total || 0
-    mediaName.value = r?.data?.mediaName || ''
+    list.value = r?.list || r?.data?.list || []
+    total.value = r?.count || r?.data?.total || 0
+    mediaName.value = r?.mediaName || r?.data?.mediaName || ''
+    // 加载封面
+    list.value.forEach((item: any) => {
+      queue.mangaQueue.add(async () => {
+        item.poster = await imageApi.get({ file: item.mangaCover })
+      })
+    })
   } catch {}
 }
 watch(() => route.params.mediaId, () => {
@@ -53,7 +61,7 @@ watch(() => userConfig.order, () => {
 </script>
 
 <style scoped>
-.td-manga-list { max-width: 1200px; margin: 0 auto; }
+.td-manga-list { margin: 0 auto; }
 .td-page-title { font-size: 20px; font-weight: 700; color: var(--fg); margin-bottom: 20px; }
 .td-card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 16px; }
 .td-card { position: relative; background: var(--bg2); border-radius: 10px; overflow: hidden; cursor: pointer; border: 1px solid var(--border); transition: all .2s; }

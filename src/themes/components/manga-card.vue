@@ -147,12 +147,15 @@ const metaText = computed(() => {
 
 .t-manga-card--B .t-manga-card__name {
 	color: #111827;
+	padding: 0 8px;
 }
 .t-manga-card--B .t-manga-card__meta {
 	color: #6b7280;
+	padding: 0 8px;
 }
 .t-manga-card--B:hover {
 	transform: translateY(-3px);
+	box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
 }
 
 .t-manga-card--D .t-manga-card__name {

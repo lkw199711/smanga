@@ -146,7 +146,8 @@ async function get_poster(item: any) {
 .tb-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-  gap: 16px;
+  column-gap: 16px;
+  row-gap: 50px;
 }
 
 .tb-empty {
