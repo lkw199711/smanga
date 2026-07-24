@@ -253,3 +253,236 @@
 .sa-dark ::-webkit-scrollbar-thumb:hover {
 	background: var(--sa-text-muted);
 }
+
+/* ==========================================================================
+ * 共享组件覆盖(src/themes/components/*)
+ * ========================================================================== */
+
+/* 漫画卡 t-manga-card / 章节 t-chapter-item / 历史 t-history-item / 书签 t-bookmark-item */
+.sa-dark .t-manga-card,
+.sa-dark .t-chapter-item,
+.sa-dark .t-history-item,
+.sa-dark .t-bookmark-item {
+	background: var(--sa-card) !important;
+	border-color: var(--sa-border) !important;
+	color: var(--sa-text);
+}
+.sa-dark .t-manga-card:hover,
+.sa-dark .t-chapter-item:hover,
+.sa-dark .t-history-item:hover,
+.sa-dark .t-bookmark-item:hover {
+	background: var(--sa-bg-elev) !important;
+	border-color: var(--sa-primary) !important;
+}
+/* 注意:__cover 元素通过内联 style 承载 background-image(封面图/兜底渐变),
+   这里绝对不能用 background 简写或 !important 覆盖,否则会清空封面图。
+   如需暗色兜底,请使用 background-color 且不加 !important。 */
+.sa-dark .t-manga-card__cover,
+.sa-dark .t-history-item__cover,
+.sa-dark .t-chapter-item__cover,
+.sa-dark .t-bookmark-item__cover {
+	background-color: var(--sa-bg-hover);
+}
+.sa-dark .t-manga-card__name,
+.sa-dark .t-history-item__title,
+.sa-dark .t-chapter-item__title,
+.sa-dark .t-bookmark-item__title {
+	color: var(--sa-text) !important;
+}
+.sa-dark .t-manga-card__meta,
+.sa-dark .t-history-item__sub,
+.sa-dark .t-history-item__chapter,
+.sa-dark .t-history-item__time,
+.sa-dark .t-chapter-item__sub,
+.sa-dark .t-bookmark-item__sub {
+	color: var(--sa-text-3) !important;
+}
+.sa-dark .t-history-item__progress,
+.sa-dark .t-bookmark-item__progress {
+	background: var(--sa-bg-hover) !important;
+}
+.sa-dark .t-history-item__progress-bar,
+.sa-dark .t-bookmark-item__progress-bar {
+	background: var(--sa-primary) !important;
+}
+.sa-dark .t-manga-card__tag:not(.has-color),
+.sa-dark .t-manga-card__unread,
+.sa-dark .t-bookmark-item__page,
+.sa-dark .t-history-item__read {
+	background: var(--sa-bg-hover) !important;
+	color: var(--sa-text-2) !important;
+}
+
+/* 标签页切换 t-tab */
+.sa-dark .t-tabs,
+.sa-dark .t-tab {
+	background: transparent !important;
+	color: var(--sa-text-2) !important;
+	border-color: var(--sa-border) !important;
+}
+.sa-dark .t-tab:hover {
+	background: var(--sa-bg-hover) !important;
+	color: var(--sa-text) !important;
+}
+.sa-dark .t-tab.active,
+.sa-dark .t-tab--active {
+	background: var(--sa-primary-bg) !important;
+	color: #dbeafe !important;
+	border-color: var(--sa-primary) !important;
+}
+.sa-dark .t-tab__badge {
+	background: var(--sa-bg-hover) !important;
+	color: var(--sa-text-3) !important;
+}
+
+/* 响应式表格 rt-table */
+.sa-dark .rt-table-wrap {
+	background: var(--sa-card) !important;
+	border-color: var(--sa-border) !important;
+}
+.sa-dark .rt-table,
+.sa-dark .rt-table th,
+.sa-dark .rt-table td {
+	color: var(--sa-text);
+	border-color: var(--sa-border) !important;
+}
+.sa-dark .rt-table thead,
+.sa-dark .rt-table th {
+	background: var(--sa-bg-elev) !important;
+	color: var(--sa-text-2) !important;
+}
+.sa-dark .rt-table tbody tr:hover,
+.sa-dark .rt-table tbody tr:nth-child(even) {
+	background: var(--sa-bg-elev) !important;
+}
+
+/* 排序选择 sort-selector / 过滤条 tag-filter-bar */
+.sa-dark .sort-selector,
+.sa-dark .tm-tag-filter-bar {
+	background: var(--sa-card) !important;
+	border-color: var(--sa-border) !important;
+	color: var(--sa-text);
+}
+.sa-dark .tm-tag-filter-bar__clear,
+.sa-dark .tm-tag-filter-bar__hint {
+	color: var(--sa-text-3) !important;
+}
+
+/* 标签芯片 tm-tag-chip */
+.sa-dark .tm-tag-chip {
+	background: var(--sa-bg-hover) !important;
+	color: var(--sa-text-2) !important;
+	border-color: var(--sa-border) !important;
+}
+.sa-dark .tm-tag-chip:hover {
+	background: var(--sa-bg-elev) !important;
+	color: var(--sa-text) !important;
+}
+.sa-dark .tm-tag-chip__count {
+	color: var(--sa-text-3) !important;
+}
+
+/* 标签编辑器 tm-tag-editor */
+.sa-dark .tm-tag-editor,
+.sa-dark .tm-tag-editor__section,
+.sa-dark .tm-tag-editor__toolbar,
+.sa-dark .tm-tag-editor__create,
+.sa-dark .tm-tag-editor__footer {
+	background: var(--sa-card) !important;
+	border-color: var(--sa-border) !important;
+	color: var(--sa-text);
+}
+.sa-dark .tm-tag-editor__title,
+.sa-dark .tm-tag-editor__section-head {
+	color: var(--sa-text) !important;
+}
+.tm-tag-editor__count,
+.sa-dark .tm-tag-editor__count,
+.sa-dark .tm-tag-editor__empty,
+.sa-dark .tm-tag-editor__hint {
+	color: var(--sa-text-3) !important;
+}
+.sa-dark .tm-tag-editor__search,
+.sa-dark .tm-tag-editor__search-input,
+.sa-dark .tm-tag-editor__create-name {
+	background: var(--sa-bg-elev) !important;
+	color: var(--sa-text) !important;
+	border-color: var(--sa-border) !important;
+}
+.sa-dark .tm-tag-editor__link {
+	color: var(--sa-primary) !important;
+}
+.sa-dark .tm-tag-editor__link--danger {
+	color: var(--sa-danger) !important;
+}
+.sa-dark .tm-tag-editor__kbd {
+	background: var(--sa-bg-hover) !important;
+	color: var(--sa-text-3) !important;
+	border-color: var(--sa-border) !important;
+}
+
+/* 通用对话框 tm-edit-dialog / tm-create-dialog / tag-editor-dialog / ta-dialog */
+.sa-dark .tm-edit-dialog,
+.sa-dark .tm-create-dialog,
+.sa-dark .tag-editor-dialog,
+.sa-dark .ta-dialog,
+.sa-dark .ta-dialog-head,
+.sa-dark .ta-dialog-body,
+.sa-dark .ta-dialog-foot {
+	background: var(--sa-card) !important;
+	color: var(--sa-text);
+	border-color: var(--sa-border) !important;
+}
+.sa-dark .ta-dialog-overlay {
+	background: rgba(0, 0, 0, 0.6) !important;
+}
+.sa-dark .ta-dialog-close {
+	color: var(--sa-text-3) !important;
+}
+.sa-dark .ta-dialog-close:hover {
+	color: var(--sa-text) !important;
+}
+.sa-dark .tm-edit-dialog label,
+.sa-dark .tm-create-dialog label {
+	color: var(--sa-text-2) !important;
+}
+
+/* media-cover 底色(同上,避免覆盖 background-image) */
+.sa-dark .t-media-cover,
+.sa-dark .media-cover,
+.sa-dark .t-cover {
+	background-color: var(--sa-bg-hover);
+}
+
+/* ==========================================================================
+ * 首页 home.vue 专项适配
+ * ========================================================================== */
+/* 统计卡 */
+.sa-dark .sa-stat-card {
+	background: var(--sa-card) !important;
+	border-color: var(--sa-border) !important;
+	box-shadow: 0 1px 2px rgba(0, 0, 0, 0.4) !important;
+}
+.sa-dark .sa-stat-label,
+.sa-dark .sa-stat-delta {
+	color: var(--sa-text-3) !important;
+}
+.sa-dark .sa-stat-value {
+	color: var(--sa-text) !important;
+}
+.sa-dark .sa-section-head h2 {
+	color: var(--sa-text) !important;
+}
+.sa-dark .sa-link {
+	color: var(--sa-primary) !important;
+}
+/* 首页老网格样式(sa-grid-cover 用 background-color 兜底) */
+.sa-dark .sa-grid-cover {
+	background-color: var(--sa-bg-hover);
+}
+.sa-dark .sa-grid-name {
+	color: var(--sa-text) !important;
+}
+.sa-dark .sa-grid-meta {
+	color: var(--sa-text-3) !important;
+}

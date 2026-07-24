@@ -282,3 +282,223 @@
 .tb-dark ::-webkit-scrollbar-thumb:hover {
 	background: var(--sb-text-muted);
 }
+
+/* ==========================================================================
+ * 共享组件覆盖(src/themes/components/*)
+ * ========================================================================== */
+
+/* 漫画卡 / 章节 / 历史 / 书签 */
+.tb-dark .t-manga-card,
+.tb-dark .t-chapter-item,
+.tb-dark .t-history-item,
+.tb-dark .t-bookmark-item {
+	background: var(--sb-card) !important;
+	border-color: var(--sb-border) !important;
+	color: var(--sb-text);
+}
+.tb-dark .t-manga-card:hover,
+.tb-dark .t-chapter-item:hover,
+.tb-dark .t-history-item:hover,
+.tb-dark .t-bookmark-item:hover {
+	background: var(--sb-bg-elev) !important;
+	border-color: var(--sb-accent-2) !important;
+}
+/* 注意:__cover 元素通过内联 style 承载 background-image(封面图/兜底渐变),
+   这里绝对不能用 background 简写或 !important 覆盖,否则会清空封面图。
+   如需暗色兜底,请使用 background-color 且不加 !important。 */
+.tb-dark .t-manga-card__cover,
+.tb-dark .t-history-item__cover,
+.tb-dark .t-chapter-item__cover,
+.tb-dark .t-bookmark-item__cover {
+	background-color: var(--sb-bg-hover);
+}
+.tb-dark .t-manga-card__name,
+.tb-dark .t-history-item__title,
+.tb-dark .t-chapter-item__title,
+.tb-dark .t-bookmark-item__title {
+	color: var(--sb-text) !important;
+}
+.tb-dark .t-manga-card__meta,
+.tb-dark .t-history-item__sub,
+.tb-dark .t-history-item__chapter,
+.tb-dark .t-history-item__time,
+.tb-dark .t-chapter-item__sub,
+.tb-dark .t-bookmark-item__sub {
+	color: var(--sb-text-3) !important;
+}
+.tb-dark .t-history-item__progress,
+.tb-dark .t-bookmark-item__progress {
+	background: var(--sb-bg-hover) !important;
+}
+.tb-dark .t-history-item__progress-bar,
+.tb-dark .t-bookmark-item__progress-bar {
+	background: var(--sb-accent) !important;
+}
+.tb-dark .t-manga-card__tag:not(.has-color),
+.tb-dark .t-manga-card__unread,
+.tb-dark .t-bookmark-item__page,
+.tb-dark .t-history-item__read {
+	background: var(--sb-bg-hover) !important;
+	color: var(--sb-text-2) !important;
+}
+
+/* 标签页切换 */
+.tb-dark .t-tabs,
+.tb-dark .t-tab {
+	background: transparent !important;
+	color: var(--sb-text-2) !important;
+	border-color: var(--sb-border) !important;
+}
+.tb-dark .t-tab:hover {
+	background: var(--sb-bg-hover) !important;
+	color: var(--sb-text) !important;
+}
+.tb-dark .t-tab.active,
+.tb-dark .t-tab--active {
+	background: var(--sb-active-bg) !important;
+	color: #ede9fe !important;
+	border-color: var(--sb-accent-2) !important;
+}
+.tb-dark .t-tab__badge {
+	background: var(--sb-bg-hover) !important;
+	color: var(--sb-text-3) !important;
+}
+
+/* 响应式表格 */
+.tb-dark .rt-table-wrap {
+	background: var(--sb-card) !important;
+	border-color: var(--sb-border) !important;
+}
+.tb-dark .rt-table,
+.tb-dark .rt-table th,
+.tb-dark .rt-table td {
+	color: var(--sb-text);
+	border-color: var(--sb-border) !important;
+}
+.tb-dark .rt-table thead,
+.tb-dark .rt-table th {
+	background: var(--sb-bg-elev) !important;
+	color: var(--sb-text-2) !important;
+}
+.tb-dark .rt-table tbody tr:hover,
+.tb-dark .rt-table tbody tr:nth-child(even) {
+	background: var(--sb-bg-elev) !important;
+}
+
+/* 排序选择 / 过滤条 */
+.tb-dark .sort-selector,
+.tb-dark .tm-tag-filter-bar {
+	background: var(--sb-card) !important;
+	border-color: var(--sb-border) !important;
+	color: var(--sb-text);
+}
+.tb-dark .tm-tag-filter-bar__clear,
+.tb-dark .tm-tag-filter-bar__hint {
+	color: var(--sb-text-3) !important;
+}
+
+/* 标签芯片 */
+.tb-dark .tm-tag-chip {
+	background: var(--sb-bg-hover) !important;
+	color: var(--sb-text-2) !important;
+	border-color: var(--sb-border) !important;
+}
+.tb-dark .tm-tag-chip:hover {
+	background: var(--sb-bg-elev) !important;
+	color: var(--sb-text) !important;
+}
+.tb-dark .tm-tag-chip__count {
+	color: var(--sb-text-3) !important;
+}
+
+/* 标签编辑器 */
+.tb-dark .tm-tag-editor,
+.tb-dark .tm-tag-editor__section,
+.tb-dark .tm-tag-editor__toolbar,
+.tb-dark .tm-tag-editor__create,
+.tb-dark .tm-tag-editor__footer {
+	background: var(--sb-card) !important;
+	border-color: var(--sb-border) !important;
+	color: var(--sb-text);
+}
+.tb-dark .tm-tag-editor__title,
+.tb-dark .tm-tag-editor__section-head {
+	color: var(--sb-text) !important;
+}
+.tb-dark .tm-tag-editor__count,
+.tb-dark .tm-tag-editor__empty,
+.tb-dark .tm-tag-editor__hint {
+	color: var(--sb-text-3) !important;
+}
+.tb-dark .tm-tag-editor__search,
+.tb-dark .tm-tag-editor__search-input,
+.tb-dark .tm-tag-editor__create-name {
+	background: var(--sb-bg-elev) !important;
+	color: var(--sb-text) !important;
+	border-color: var(--sb-border) !important;
+}
+.tb-dark .tm-tag-editor__link {
+	color: var(--sb-accent-2) !important;
+}
+.tb-dark .tm-tag-editor__link--danger {
+	color: #fca5a5 !important;
+}
+.tb-dark .tm-tag-editor__kbd {
+	background: var(--sb-bg-hover) !important;
+	color: var(--sb-text-3) !important;
+	border-color: var(--sb-border) !important;
+}
+
+/* 通用对话框 */
+.tb-dark .tm-edit-dialog,
+.tb-dark .tm-create-dialog,
+.tb-dark .tag-editor-dialog,
+.tb-dark .ta-dialog,
+.tb-dark .ta-dialog-head,
+.tb-dark .ta-dialog-body,
+.tb-dark .ta-dialog-foot {
+	background: var(--sb-card) !important;
+	color: var(--sb-text);
+	border-color: var(--sb-border) !important;
+}
+.tb-dark .ta-dialog-overlay {
+	background: rgba(0, 0, 0, 0.6) !important;
+}
+.tb-dark .ta-dialog-close {
+	color: var(--sb-text-3) !important;
+}
+.tb-dark .ta-dialog-close:hover {
+	color: var(--sb-text) !important;
+}
+.tb-dark .tm-edit-dialog label,
+.tb-dark .tm-create-dialog label {
+	color: var(--sb-text-2) !important;
+}
+
+/* media-cover(避免覆盖 background-image) */
+.tb-dark .t-media-cover,
+.tb-dark .media-cover,
+.tb-dark .t-cover {
+	background-color: var(--sb-bg-hover);
+}
+
+/* ==========================================================================
+ * 首页 home.vue 专项适配
+ * ========================================================================== */
+.tb-dark .sb-hero {
+	background: linear-gradient(135deg, rgba(255, 111, 163, 0.18), rgba(108, 141, 255, 0.22)) !important;
+	border-color: var(--sb-border) !important;
+}
+.tb-dark .sb-hero-title {
+	color: var(--sb-text) !important;
+}
+.tb-dark .sb-hero-chip {
+	background: rgba(255, 255, 255, 0.08) !important;
+	color: var(--sb-text-2) !important;
+}
+.tb-dark .sb-section-head h2 {
+	color: var(--sb-text) !important;
+}
+.tb-dark .sb-link {
+	color: var(--sb-accent-2, #6c8dff) !important;
+}
