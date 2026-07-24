@@ -9,50 +9,27 @@
       </div>
     </div>
 
-    <!-- 用户表格 -->
-    <div class="ta-table-wrap">
-      <table class="ta-table">
-        <thead>
-          <tr>
-            <th class="ta-col-check"><input type="checkbox" @change="toggleAll" :checked="allSelected" /></th>
-            <th class="ta-col-idx">#</th>
-            <th>ID</th>
-            <th>用户名</th>
-            <th>角色</th>
-            <th>注册时间</th>
-            <th>操作</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="(row, idx) in list" :key="row.userId">
-            <td><input type="checkbox" :value="row.userId" v-model="selected" /></td>
-            <td>{{ (page - 1) * pageSize + idx + 1 }}</td>
-            <td>{{ row.userId }}</td>
-            <td>{{ row.userName }}</td>
-            <td>
-              <span :class="['ta-badge', row.role === 'admin' ? 'ta-badge-admin' : 'ta-badge-user']">
-                {{ row.role === 'admin' ? '管理员' : '用户' }}
-              </span>
-            </td>
-            <td>{{ row.createTime }}</td>
-            <td class="ta-col-actions">
-              <button class="ta-btn-sm" @click="openEdit(row)">✏️ 编辑</button>
-              <button class="ta-btn-sm ta-btn-sm-danger" @click="doDelete(row)">🗑 删除</button>
-            </td>
-          </tr>
-          <tr v-if="list.length === 0">
-            <td colspan="7" class="ta-empty">暂无用户数据</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-    <!-- 分页 -->
-    <div class="ta-pager" v-if="total > pageSize">
-      <button :disabled="page <= 1" @click="page--; load()">‹ 上一页</button>
-      <span>第 {{ page }} / {{ Math.ceil(total / pageSize) }} 页 (共 {{ total }} 条)</span>
-      <button :disabled="page >= Math.ceil(total / pageSize)" @click="page++; load()">下一页 ›</button>
-    </div>
+    <ResponsiveTable
+      :columns="columns"
+      :items="list"
+      row-key="userId"
+      :total="total"
+      v-model:page="page"
+      :page-size="pageSize"
+      selectable
+      v-model:selected="selected"
+      empty-text="暂无用户数据"
+    >
+      <template #cell-role="{ value }">
+        <span :class="['ta-badge', value === 'admin' ? 'ta-badge-admin' : 'ta-badge-user']">
+          {{ value === 'admin' ? '管理员' : '用户' }}
+        </span>
+      </template>
+      <template #actions="{ item }">
+        <button class="ta-btn-sm" @click="openEdit(item)">✏️ 编辑</button>
+        <button class="ta-btn-sm ta-btn-sm-danger" @click="doDelete(item)">🗑 删除</button>
+      </template>
+    </ResponsiveTable>
 
     <!-- 添加/编辑弹窗 -->
     <div v-if="dialogShow" class="ta-dialog-overlay" @click.self="dialogShow = false">
@@ -111,9 +88,19 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, watch, onMounted } from 'vue'
 import userApi from '@/api/account'
 import mediaApi from '@/api/media'
+import ResponsiveTable from '@/themes/components/responsive-table.vue'
+import type { RtColumn } from '@/themes/components/responsive-table.vue'
+
+const columns: RtColumn[] = [
+  { key: '_idx', label: '#', type: 'index', hideOnMobile: true },
+  { key: 'userId', label: 'ID' },
+  { key: 'userName', label: '用户名' },
+  { key: 'role', label: '角色', type: 'badge' },
+  { key: 'createTime', label: '注册时间', hideOnMobile: true },
+]
 
 const list = ref<any[]>([])
 const total = ref(0)
@@ -133,24 +120,12 @@ const form = ref({
   mediaPermit: 'all' as string,
 })
 
-const allSelected = computed(() => {
-  return list.value.length > 0 && selected.value.length === list.value.length
-})
-
-function toggleAll(e: Event) {
-  const checked = (e.target as HTMLInputElement).checked
-  if (checked) {
-    selected.value = list.value.map((r) => r.userId)
-  } else {
-    selected.value = []
-  }
-}
-
 async function load() {
   try {
     const res = await userApi.get_account(page.value, pageSize.value)
     total.value = Number(res.count) || 0
     list.value = res.list || []
+    selected.value = []
   } catch { list.value = [] }
 }
 
@@ -163,9 +138,11 @@ async function loadMedias() {
 
 function reload() {
   page.value = 1
-  selected.value = []
   load()
 }
+
+// 翻页时自动加载
+watch(page, () => load())
 
 function openAdd() {
   editingUser.value = null
@@ -246,6 +223,7 @@ onMounted(() => {
 .ta-page-head h1 { font-size: 20px; font-weight: 700; margin: 0; }
 .ta-page-actions { display: flex; gap: 8px; flex-wrap: wrap; }
 
+/* 按钮 */
 .ta-btn-primary, .ta-btn-ghost, .ta-btn-danger, .ta-btn-sm, .ta-btn-sm-danger { cursor: pointer; font-size: 13px; border-radius: 8px; }
 .ta-btn-primary { padding: 8px 16px; color: #fff; background: #2563eb; border: none; font-weight: 500; }
 .ta-btn-primary:hover { background: #1d4ed8; }
@@ -260,24 +238,10 @@ onMounted(() => {
 .ta-btn-sm-danger { color: #ef4444; background: #fef2f2; border-color: #fecaca; }
 .ta-btn-sm-danger:hover { background: #fee2e2; }
 
-.ta-table-wrap { background: #fff; border: 1px solid #eaeaea; border-radius: 12px; overflow-x: auto; }
-.ta-table { width: 100%; border-collapse: collapse; font-size: 13px; }
-.ta-table th { text-align: left; padding: 10px 12px; color: #6b7280; font-weight: 600; font-size: 12px; border-bottom: 1px solid #eaeaea; white-space: nowrap; background: #fafafa; }
-.ta-table td { padding: 10px 12px; border-bottom: 1px solid #f3f4f6; color: #374151; }
-.ta-table tr:last-child td { border-bottom: none; }
-.ta-table tr:hover td { background: #fafafa; }
-.ta-col-check { width: 40px; text-align: center; }
-.ta-col-idx { width: 40px; text-align: center; }
-.ta-col-actions { white-space: nowrap; display: flex; gap: 6px; }
-.ta-empty { text-align: center; color: #9ca3af; padding: 32px 0 !important; }
-.ta-badge { padding: 2px 8px; border-radius: 10px; font-size: 11px; font-weight: 500; }
+/* Badge */
+.ta-badge { padding: 2px 8px; border-radius: 10px; font-size: 11px; font-weight: 500; white-space: nowrap; }
 .ta-badge-admin { background: #fef3c7; color: #92400e; }
 .ta-badge-user { background: #e0e7ff; color: #3730a3; }
-
-.ta-pager { display: flex; align-items: center; justify-content: center; gap: 16px; margin-top: 16px; font-size: 13px; color: #6b7280; }
-.ta-pager button { padding: 6px 14px; font-size: 13px; border: 1px solid #eaeaea; border-radius: 8px; background: #fff; cursor: pointer; }
-.ta-pager button:disabled { opacity: .4; cursor: not-allowed; }
-.ta-pager button:hover:not(:disabled) { background: #f3f4f6; }
 
 /* Dialog */
 .ta-dialog-overlay { position: fixed; inset: 0; z-index: 200; background: rgba(0,0,0,.45); display: flex; align-items: center; justify-content: center; }
@@ -307,4 +271,10 @@ onMounted(() => {
 .ta-checkbox { display: flex; align-items: center; gap: 8px; font-size: 13px; color: #4b5563; cursor: pointer; }
 .ta-form-note { font-size: 12px; color: #9ca3af; line-height: 1.6; }
 .ta-form-note p { margin: 2px 0; }
+
+/* 移动端适配 */
+@media (max-width: 768px) {
+  .ta-page-head { flex-direction: column; align-items: flex-start; }
+  .ta-page-actions { width: 100%; justify-content: flex-start; }
+}
 </style>

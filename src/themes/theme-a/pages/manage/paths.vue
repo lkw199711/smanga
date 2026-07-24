@@ -11,29 +11,26 @@
       </div>
     </div>
 
-    <div class="ta-table-wrap">
-      <table class="ta-table">
-        <thead>
-          <tr><th>#</th><th>路径ID</th><th>路径</th><th>自动扫描</th><th>创建时间</th><th>操作</th></tr>
-        </thead>
-        <tbody>
-          <tr v-for="(row, idx) in list" :key="row.pathId">
-            <td>{{ idx + 1 }}</td><td>{{ row.pathId }}</td>
-            <td class="ta-path-cell">{{ row.pathContent }}</td>
-            <td>{{ row.autoScan ? '是' : '否' }}</td><td>{{ row.createTime }}</td>
-            <td class="ta-col-actions">
-              <button class="ta-btn-sm" @click="openEdit(row)">✏️ 编辑</button>
-              <button class="ta-btn-sm" @click="scanPath(row)">🔍 扫描</button>
-              <button class="ta-btn-sm" @click="rescanPath(row)">🔄 重扫</button>
-              <button class="ta-btn-sm ta-btn-sm-danger" @click="doDelete(row)">🗑 删除</button>
-            </td>
-          </tr>
-          <tr v-if="list.length === 0"><td colspan="6" class="ta-empty">暂无路径</td></tr>
-        </tbody>
-      </table>
-    </div>
+    <ResponsiveTable
+      :columns="columns"
+      :items="list"
+      row-key="pathId"
+      :total="list.length"
+      :page="1"
+      :page-size="99999"
+      empty-text="暂无路径"
+    >
+      <template #cell-pathContent="{ value }">
+        <span class="ta-path-cell">{{ value }}</span>
+      </template>
+      <template #actions="{ item }">
+        <button class="ta-btn-sm" @click="openEdit(item)">✏️ 编辑</button>
+        <button class="ta-btn-sm" @click="scanPath(item)">🔍 扫描</button>
+        <button class="ta-btn-sm" @click="rescanPath(item)">🔄 重扫</button>
+        <button class="ta-btn-sm ta-btn-sm-danger" @click="doDelete(item)">🗑 删除</button>
+      </template>
+    </ResponsiveTable>
 
-    <!-- 编辑路径弹窗 (共享组件) -->
     <PathEditDialog
       v-model="editDialog"
       mode="edit"
@@ -47,6 +44,16 @@
 import { ref, onMounted } from 'vue'
 import pathApi from '@/api/path'
 import PathEditDialog from '@/themes/components/path-edit-dialog.vue'
+import ResponsiveTable from '@/themes/components/responsive-table.vue'
+import type { RtColumn } from '@/themes/components/responsive-table.vue'
+
+const columns: RtColumn[] = [
+  { key: '_idx', label: '#', type: 'index', hideOnMobile: true },
+  { key: 'pathId', label: '路径ID' },
+  { key: 'pathContent', label: '路径' },
+  { key: 'autoScan', label: '自动扫描', hideOnMobile: true },
+  { key: 'createTime', label: '创建时间', hideOnMobile: true },
+]
 
 const list = ref<any[]>([])
 const searchMediaId = ref('')
@@ -63,13 +70,11 @@ function reload() { searchMediaId.value = ''; load() }
 
 onMounted(() => load())
 
-// ---------- 编辑路径 ----------
 function openEdit(row: any) {
   editingPath.value = { ...row }
   editDialog.value = true
 }
 
-// ---------- 扫描 / 重扫 ----------
 async function scanPath(row: any) {
   if (!confirm('确定要增量扫描该路径吗？')) return
   try { await pathApi.scan_path(row.pathId); alert('扫描任务已提交'); load() } catch (e: any) { alert(e?.message || '失败') }
@@ -103,13 +108,5 @@ async function doDelete(row: any) {
 .ta-btn-sm:hover { background: #dbeafe; }
 .ta-btn-sm-danger { color: #ef4444; background: #fef2f2; border-color: #fecaca; }
 .ta-btn-sm-danger:hover { background: #fee2e2; }
-.ta-table-wrap { background: #fff; border: 1px solid #eaeaea; border-radius: 12px; overflow-x: auto; }
-.ta-table { width: 100%; border-collapse: collapse; font-size: 13px; }
-.ta-table th { text-align: left; padding: 10px 12px; color: #6b7280; font-weight: 600; font-size: 12px; border-bottom: 1px solid #eaeaea; background: #fafafa; }
-.ta-table td { padding: 10px 12px; border-bottom: 1px solid #f3f4f6; color: #374151; }
-.ta-table tr:last-child td { border-bottom: none; }
-.ta-table tr:hover td { background: #fafafa; }
-.ta-path-cell { max-width: 400px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.ta-col-actions { white-space: nowrap; display: flex; gap: 6px; }
-.ta-empty { text-align: center; color: #9ca3af; padding: 32px 0 !important; }
+.ta-path-cell { max-width: 400px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; display: block; }
 </style>

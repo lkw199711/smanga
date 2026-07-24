@@ -9,46 +9,26 @@
       </div>
     </div>
 
-    <div class="ta-table-wrap">
-      <table class="ta-table">
-        <thead>
-          <tr>
-            <th class="ta-col-check"><input type="checkbox" @change="toggleAll" :checked="allSelected" /></th>
-            <th>ID</th>
-            <th>名称</th>
-            <th>创建时间</th>
-            <th>操作</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="row in list" :key="row.mediaId">
-            <td><input type="checkbox" :value="row.mediaId" v-model="selected" /></td>
-            <td>{{ row.mediaId }}</td>
-            <td>{{ row.mediaName }}</td>
-            <td>{{ row.createTime }}</td>
-            <td class="ta-col-actions">
-              <button class="ta-btn-sm" @click="openEdit(row)">✏️ 编辑</button>
-              <button class="ta-btn-sm" @click="openPaths(row)">📂 路径</button>
-              <button class="ta-btn-sm ta-btn-sm-danger" @click="doDelete(row)">🗑 删除</button>
-            </td>
-          </tr>
-          <tr v-if="list.length === 0">
-            <td colspan="5" class="ta-empty">暂无媒体库</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+    <ResponsiveTable
+      :columns="columns"
+      :items="list"
+      row-key="mediaId"
+      :total="total"
+      v-model:page="page"
+      :page-size="pageSize"
+      selectable
+      v-model:selected="selected"
+      empty-text="暂无媒体库"
+    >
+      <template #actions="{ item }">
+        <button class="ta-btn-sm" @click="openEdit(item)">✏️ 编辑</button>
+        <button class="ta-btn-sm" @click="openPaths(item)">📂 路径</button>
+        <button class="ta-btn-sm ta-btn-sm-danger" @click="doDelete(item)">🗑 删除</button>
+      </template>
+    </ResponsiveTable>
 
-    <div class="ta-pager" v-if="total > pageSize">
-      <button :disabled="page <= 1" @click="page--; load()">‹ 上一页</button>
-      <span>第 {{ page }} / {{ Math.ceil(total / pageSize) }} 页 (共 {{ total }} 条)</span>
-      <button :disabled="page >= Math.ceil(total / pageSize)" @click="page++; load()">下一页 ›</button>
-    </div>
-
-    <!-- 新建媒体库 (专用组件) -->
     <MediaLibraryCreateDialog v-model:visible="createDialog" @created="reload" />
 
-    <!-- 编辑媒体库 (使用公用组件) -->
     <MediaEditDialog
       v-model:editMediaDialog="editDialog"
       edit-model="modify"
@@ -80,29 +60,26 @@
       </div>
     </div>
 
-    <!-- 路径新增/编辑 (共享组件) -->
-    <PathEditDialog
-      v-model="pathAddDialog"
-      mode="add"
-      :media-id="pathMedia?.mediaId"
-      @saved="onPathSaved"
-    />
-    <PathEditDialog
-      v-model="pathEditDialog"
-      mode="edit"
-      :path-info="editingPath"
-      @saved="onPathSaved"
-    />
+    <PathEditDialog v-model="pathAddDialog" mode="add" :media-id="pathMedia?.mediaId" @saved="onPathSaved" />
+    <PathEditDialog v-model="pathEditDialog" mode="edit" :path-info="editingPath" @saved="onPathSaved" />
   </div>
 </template>
 
 <script lang="ts" setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, watch, onMounted } from 'vue'
 import mediaApi from '@/api/media'
 import pathApi from '@/api/path'
 import MediaEditDialog from '@/themes/components/media-edit-dialog.vue'
 import MediaLibraryCreateDialog from '@/themes/components/media-library-create-dialog.vue'
 import PathEditDialog from '@/themes/components/path-edit-dialog.vue'
+import ResponsiveTable from '@/themes/components/responsive-table.vue'
+import type { RtColumn } from '@/themes/components/responsive-table.vue'
+
+const columns: RtColumn[] = [
+  { key: 'mediaId', label: 'ID' },
+  { key: 'mediaName', label: '名称' },
+  { key: 'createTime', label: '创建时间', hideOnMobile: true },
+]
 
 const list = ref<any[]>([])
 const total = ref(0)
@@ -119,13 +96,6 @@ const pathAddDialog = ref(false)
 const pathEditDialog = ref(false)
 const editingPath = ref<any>(null)
 
-const allSelected = computed(() => list.value.length > 0 && selected.value.length === list.value.length)
-
-function toggleAll(e: Event) {
-  const checked = (e.target as HTMLInputElement).checked
-  selected.value = checked ? list.value.map((r) => r.mediaId) : []
-}
-
 async function load() {
   try {
     const res = await mediaApi.get(page.value, pageSize.value)
@@ -136,9 +106,9 @@ async function load() {
 
 function reload() { page.value = 1; selected.value = []; load() }
 
-function openAdd() {
-  createDialog.value = true
-}
+watch(page, () => load())
+
+function openAdd() { createDialog.value = true }
 
 function openEdit(row: any) {
   editingMedia.value = { ...row }
@@ -168,9 +138,7 @@ async function loadPaths(mediaId: number) {
   } catch { paths.value = [] }
 }
 
-async function openPathAdd() {
-  pathAddDialog.value = true
-}
+function openPathAdd() { pathAddDialog.value = true }
 
 function openPathEdit(p: any) {
   editingPath.value = { ...p }
@@ -216,19 +184,8 @@ onMounted(() => load())
 .ta-btn-sm:hover { background: #dbeafe; }
 .ta-btn-sm-danger { color: #ef4444; background: #fef2f2; border-color: #fecaca; }
 .ta-btn-sm-danger:hover { background: #fee2e2; }
-.ta-table-wrap { background: #fff; border: 1px solid #eaeaea; border-radius: 12px; overflow-x: auto; }
-.ta-table { width: 100%; border-collapse: collapse; font-size: 13px; }
-.ta-table th { text-align: left; padding: 10px 12px; color: #6b7280; font-weight: 600; font-size: 12px; border-bottom: 1px solid #eaeaea; background: #fafafa; }
-.ta-table td { padding: 10px 12px; border-bottom: 1px solid #f3f4f6; color: #374151; }
-.ta-table tr:last-child td { border-bottom: none; }
-.ta-table tr:hover td { background: #fafafa; }
-.ta-col-check { width: 40px; text-align: center; }
-.ta-col-actions { white-space: nowrap; display: flex; gap: 6px; }
 .ta-empty { text-align: center; color: #9ca3af; padding: 32px 0 !important; }
-.ta-pager { display: flex; align-items: center; justify-content: center; gap: 16px; margin-top: 16px; font-size: 13px; color: #6b7280; }
-.ta-pager button { padding: 6px 14px; font-size: 13px; border: 1px solid #eaeaea; border-radius: 8px; background: #fff; cursor: pointer; }
-.ta-pager button:disabled { opacity: .4; cursor: not-allowed; }
-.ta-pager button:hover:not(:disabled) { background: #f3f4f6; }
+
 .ta-dialog-overlay { position: fixed; inset: 0; z-index: 200; background: rgba(0,0,0,.45); display: flex; align-items: center; justify-content: center; }
 .ta-dialog { background: #fff; border-radius: 14px; width: 480px; max-width: 90vw; max-height: 85vh; overflow-y: auto; box-shadow: 0 8px 32px rgba(0,0,0,.12); }
 .ta-dialog-head { display: flex; align-items: center; justify-content: space-between; padding: 16px 20px; border-bottom: 1px solid #eaeaea; }
@@ -242,9 +199,6 @@ onMounted(() => load())
 .ta-field input, .ta-select { padding: 8px 12px; border: 1px solid #eaeaea; border-radius: 8px; font-size: 13px; outline: none; }
 .ta-field input:focus, .ta-select:focus { border-color: #2563eb; }
 .ta-select { background: #fff; }
-.ta-path-add { display: flex; gap: 8px; }
-.ta-field-input { flex: 1; padding: 8px 12px; border: 1px solid #eaeaea; border-radius: 8px; font-size: 13px; outline: none; }
-.ta-field-input:focus { border-color: #2563eb; }
 .ta-path-item { display: flex; align-items: center; gap: 8px; padding: 10px 12px; background: #f9fafb; border-radius: 8px; border: 1px solid #f3f4f6; }
 .ta-path-content { flex: 1; font-size: 13px; color: #374151; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
 </style>

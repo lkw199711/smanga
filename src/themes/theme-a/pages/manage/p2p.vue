@@ -4,7 +4,6 @@
       <h1>P2P 管理</h1>
     </div>
 
-    <!-- 标签切换 -->
     <div class="ta-tabs">
       <button :class="['ta-tab', { active: activeTab === 'groups' }]" @click="activeTab = 'groups'">群组管理</button>
       <button :class="['ta-tab', { active: activeTab === 'shares' }]" @click="activeTab = 'shares'">共享管理</button>
@@ -19,22 +18,22 @@
         <button class="ta-btn-primary" @click="showGroupAdd = true">+ 创建群组</button>
         <button class="ta-btn-ghost" @click="showGroupJoin = true">🔗 加入群组</button>
       </div>
-      <div class="ta-table-wrap">
-        <table class="ta-table">
-          <thead><tr><th>#</th><th>群组号</th><th>名称</th><th>描述</th><th>状态</th><th>操作</th></tr></thead>
-          <tbody>
-            <tr v-for="(row, idx) in groupList" :key="row.groupNo || idx">
-              <td>{{ idx + 1 }}</td><td>{{ row.groupNo }}</td><td>{{ row.groupName || '-' }}</td>
-              <td>{{ row.description || '-' }}</td>
-              <td><span :class="['ta-badge', row.active ? 'ta-badge-success' : 'ta-badge-wait']">{{ row.active ? '活跃' : '离线' }}</span></td>
-              <td class="ta-col-actions">
-                <button class="ta-btn-sm ta-btn-sm-danger" @click="leaveGroup(row)">退出</button>
-              </td>
-            </tr>
-            <tr v-if="groupList.length === 0"><td colspan="6" class="ta-empty">暂无群组</td></tr>
-          </tbody>
-        </table>
-      </div>
+      <ResponsiveTable
+        :columns="groupColumns"
+        :items="groupList"
+        :row-key="(item) => item.groupNo"
+        :total="groupList.length"
+        :page="1"
+        :page-size="99999"
+        empty-text="暂无群组"
+      >
+        <template #cell-active="{ item }">
+          <span :class="['ta-badge', item.active ? 'ta-badge-success' : 'ta-badge-wait']">{{ item.active ? '活跃' : '离线' }}</span>
+        </template>
+        <template #actions="{ item }">
+          <button class="ta-btn-sm ta-btn-sm-danger" @click="leaveGroup(item)">退出</button>
+        </template>
+      </ResponsiveTable>
     </div>
 
     <!-- 共享管理 -->
@@ -42,22 +41,22 @@
       <div class="ta-page-actions" style="margin-bottom:16px">
         <button class="ta-btn-ghost" @click="loadShares">🔄 刷新</button>
       </div>
-      <div class="ta-table-wrap">
-        <table class="ta-table">
-          <thead><tr><th>#</th><th>ID</th><th>群组号</th><th>类型</th><th>目标ID</th><th>创建时间</th><th>操作</th></tr></thead>
-          <tbody>
-            <tr v-for="(row, idx) in shareList" :key="row.id || idx">
-              <td>{{ idx + 1 }}</td><td>{{ row.id }}</td><td>{{ row.groupNo || '-' }}</td>
-              <td>{{ row.shareType || '-' }}</td><td>{{ row.mediaId || row.mangaId || '-' }}</td>
-              <td>{{ row.createTime }}</td>
-              <td class="ta-col-actions">
-                <button class="ta-btn-sm ta-btn-sm-danger" @click="deleteShare(row)">删除</button>
-              </td>
-            </tr>
-            <tr v-if="shareList.length === 0"><td colspan="7" class="ta-empty">暂无共享配置</td></tr>
-          </tbody>
-        </table>
-      </div>
+      <ResponsiveTable
+        :columns="shareColumns"
+        :items="shareList"
+        :row-key="(item) => item.id"
+        :total="shareList.length"
+        :page="1"
+        :page-size="99999"
+        empty-text="暂无共享配置"
+      >
+        <template #cell-_targetId="{ item }">
+          {{ item.mediaId || item.mangaId || '-' }}
+        </template>
+        <template #actions="{ item }">
+          <button class="ta-btn-sm ta-btn-sm-danger" @click="deleteShare(item)">删除</button>
+        </template>
+      </ResponsiveTable>
     </div>
 
     <!-- 传输任务 -->
@@ -66,30 +65,26 @@
         <button class="ta-btn-ghost" @click="loadTransfers">🔄 刷新</button>
         <button class="ta-btn-ghost" @click="clearTransfers">🧹 清理已完成</button>
       </div>
-      <div class="ta-table-wrap">
-        <table class="ta-table">
-          <thead><tr><th>#</th><th>ID</th><th>群组号</th><th>类型</th><th>状态</th><th>进度</th><th>创建时间</th><th>操作</th></tr></thead>
-          <tbody>
-            <tr v-for="(row, idx) in transferList" :key="row.id || idx">
-              <td>{{ idx + 1 }}</td><td>{{ row.id }}</td><td>{{ row.groupNo || '-' }}</td>
-              <td>{{ row.shareType || '-' }}</td>
-              <td>
-                <span v-if="row.status === 'success'" class="ta-badge ta-badge-success">成功</span>
-                <span v-else-if="row.status === 'failed'" class="ta-badge ta-badge-danger">失败</span>
-                <span v-else-if="row.status === 'canceled'" class="ta-badge ta-badge-wait">已取消</span>
-                <span v-else class="ta-badge ta-badge-active">进行中</span>
-              </td>
-              <td>{{ row.progress || '-' }}</td>
-              <td>{{ row.createTime }}</td>
-              <td class="ta-col-actions">
-                <button v-if="row.status !== 'success' && row.status !== 'canceled'" class="ta-btn-sm ta-btn-sm-danger" @click="cancelTransfer(row)">取消</button>
-                <button class="ta-btn-sm ta-btn-sm-danger" @click="deleteTransfer(row)">删除</button>
-              </td>
-            </tr>
-            <tr v-if="transferList.length === 0"><td colspan="8" class="ta-empty">暂无传输任务</td></tr>
-          </tbody>
-        </table>
-      </div>
+      <ResponsiveTable
+        :columns="transferColumns"
+        :items="transferList"
+        :row-key="(item) => item.id"
+        :total="transferList.length"
+        :page="1"
+        :page-size="99999"
+        empty-text="暂无传输任务"
+      >
+        <template #cell-status="{ item }">
+          <span v-if="item.status === 'success'" class="ta-badge ta-badge-success">成功</span>
+          <span v-else-if="item.status === 'failed'" class="ta-badge ta-badge-danger">失败</span>
+          <span v-else-if="item.status === 'canceled'" class="ta-badge ta-badge-wait">已取消</span>
+          <span v-else class="ta-badge ta-badge-active">进行中</span>
+        </template>
+        <template #actions="{ item }">
+          <button v-if="item.status !== 'success' && item.status !== 'canceled'" class="ta-btn-sm ta-btn-sm-danger" @click="cancelTransfer(item)">取消</button>
+          <button class="ta-btn-sm ta-btn-sm-danger" @click="deleteTransfer(item)">删除</button>
+        </template>
+      </ResponsiveTable>
     </div>
 
     <!-- Tracker 管理 -->
@@ -98,43 +93,47 @@
         <button class="ta-btn-ghost" @click="loadTrackerGroups">🔄 刷新群组</button>
       </div>
       <h3 style="margin-bottom:12px;font-size:15px;font-weight:600">Tracker 群组</h3>
-      <div class="ta-table-wrap" style="margin-bottom:24px">
-        <table class="ta-table">
-          <thead><tr><th>#</th><th>群组号</th><th>名称</th><th>状态</th><th>操作</th></tr></thead>
-          <tbody>
-            <tr v-for="(row, idx) in trackerGroupList" :key="row.groupNo || idx">
-              <td>{{ idx + 1 }}</td><td>{{ row.groupNo }}</td><td>{{ row.groupName || '-' }}</td>
-              <td><span :class="['ta-badge', row.enable ? 'ta-badge-success' : 'ta-badge-danger']">{{ row.enable ? '启用' : '禁用' }}</span></td>
-              <td class="ta-col-actions">
-                <button class="ta-btn-sm ta-btn-sm-danger" @click="dismissTrackerGroup(row)">解散</button>
-              </td>
-            </tr>
-            <tr v-if="trackerGroupList.length === 0"><td colspan="5" class="ta-empty">暂无 Tracker 群组</td></tr>
-          </tbody>
-        </table>
-      </div>
+      <ResponsiveTable
+        :columns="trackerGroupColumns"
+        :items="trackerGroupList"
+        :row-key="(item) => item.groupNo"
+        :total="trackerGroupList.length"
+        :page="1"
+        :page-size="99999"
+        empty-text="暂无 Tracker 群组"
+      >
+        <template #cell-enable="{ item }">
+          <span :class="['ta-badge', item.enable ? 'ta-badge-success' : 'ta-badge-danger']">{{ item.enable ? '启用' : '禁用' }}</span>
+        </template>
+        <template #actions="{ item }">
+          <button class="ta-btn-sm ta-btn-sm-danger" @click="dismissTrackerGroup(item)">解散</button>
+        </template>
+      </ResponsiveTable>
 
-      <div class="ta-page-actions" style="margin-bottom:16px">
+      <div class="ta-page-actions" style="margin-bottom:16px;margin-top:24px">
         <button class="ta-btn-ghost" @click="loadTrackerNodes">🔄 刷新节点</button>
       </div>
       <h3 style="margin-bottom:12px;font-size:15px;font-weight:600">Tracker 节点</h3>
-      <div class="ta-table-wrap">
-        <table class="ta-table">
-          <thead><tr><th>#</th><th>节点ID</th><th>名称</th><th>在线</th><th>封禁</th><th>操作</th></tr></thead>
-          <tbody>
-            <tr v-for="(row, idx) in trackerNodeList" :key="row.nodeId || idx">
-              <td>{{ idx + 1 }}</td><td>{{ row.nodeId }}</td><td>{{ row.nodeName || '-' }}</td>
-              <td><span :class="['ta-badge', row.online ? 'ta-badge-success' : 'ta-badge-wait']">{{ row.online ? '在线' : '离线' }}</span></td>
-              <td><span :class="['ta-badge', row.banned ? 'ta-badge-danger' : 'ta-badge-success']">{{ row.banned ? '是' : '否' }}</span></td>
-              <td class="ta-col-actions">
-                <button class="ta-btn-sm" @click="toggleBanNode(row)">{{ row.banned ? '解封' : '封禁' }}</button>
-                <button class="ta-btn-sm ta-btn-sm-danger" @click="destroyNode(row)">注销</button>
-              </td>
-            </tr>
-            <tr v-if="trackerNodeList.length === 0"><td colspan="6" class="ta-empty">暂无节点</td></tr>
-          </tbody>
-        </table>
-      </div>
+      <ResponsiveTable
+        :columns="trackerNodeColumns"
+        :items="trackerNodeList"
+        :row-key="(item) => item.nodeId"
+        :total="trackerNodeList.length"
+        :page="1"
+        :page-size="99999"
+        empty-text="暂无节点"
+      >
+        <template #cell-online="{ item }">
+          <span :class="['ta-badge', item.online ? 'ta-badge-success' : 'ta-badge-wait']">{{ item.online ? '在线' : '离线' }}</span>
+        </template>
+        <template #cell-banned="{ item }">
+          <span :class="['ta-badge', item.banned ? 'ta-badge-danger' : 'ta-badge-success']">{{ item.banned ? '是' : '否' }}</span>
+        </template>
+        <template #actions="{ item }">
+          <button class="ta-btn-sm" @click="toggleBanNode(item)">{{ item.banned ? '解封' : '封禁' }}</button>
+          <button class="ta-btn-sm ta-btn-sm-danger" @click="destroyNode(item)">注销</button>
+        </template>
+      </ResponsiveTable>
     </div>
 
     <!-- 创建群组弹窗 -->
@@ -171,6 +170,8 @@
 <script lang="ts" setup>
 import { ref, onMounted } from 'vue'
 import { p2pGroupApi, p2pShareApi, p2pTransferApi, trackerAdminGroupApi, trackerAdminNodeApi } from '@/api/p2p'
+import ResponsiveTable from '@/themes/components/responsive-table.vue'
+import type { RtColumn } from '@/themes/components/responsive-table.vue'
 
 const activeTab = ref('groups')
 const groupList = ref<any[]>([])
@@ -181,6 +182,48 @@ const trackerNodeList = ref<any[]>([])
 const showGroupAdd = ref(false)
 const showGroupJoin = ref(false)
 const groupForm = ref({ groupName: '', description: '', groupNo: '' })
+
+const groupColumns: RtColumn[] = [
+  { key: '_idx', label: '#', type: 'index', hideOnMobile: true },
+  { key: 'groupNo', label: '群组号' },
+  { key: 'groupName', label: '名称' },
+  { key: 'description', label: '描述', hideOnMobile: true },
+  { key: 'active', label: '状态' },
+]
+
+const shareColumns: RtColumn[] = [
+  { key: '_idx', label: '#', type: 'index', hideOnMobile: true },
+  { key: 'id', label: 'ID' },
+  { key: 'groupNo', label: '群组号' },
+  { key: 'shareType', label: '类型' },
+  { key: '_targetId', label: '目标ID', hideOnMobile: true },
+  { key: 'createTime', label: '创建时间', hideOnMobile: true },
+]
+
+const transferColumns: RtColumn[] = [
+  { key: '_idx', label: '#', type: 'index', hideOnMobile: true },
+  { key: 'id', label: 'ID' },
+  { key: 'groupNo', label: '群组号' },
+  { key: 'shareType', label: '类型' },
+  { key: 'status', label: '状态' },
+  { key: 'progress', label: '进度', hideOnMobile: true },
+  { key: 'createTime', label: '创建时间', hideOnMobile: true },
+]
+
+const trackerGroupColumns: RtColumn[] = [
+  { key: '_idx', label: '#', type: 'index', hideOnMobile: true },
+  { key: 'groupNo', label: '群组号' },
+  { key: 'groupName', label: '名称' },
+  { key: 'enable', label: '状态' },
+]
+
+const trackerNodeColumns: RtColumn[] = [
+  { key: '_idx', label: '#', type: 'index', hideOnMobile: true },
+  { key: 'nodeId', label: '节点ID' },
+  { key: 'nodeName', label: '名称' },
+  { key: 'online', label: '在线' },
+  { key: 'banned', label: '封禁' },
+]
 
 // Groups
 async function loadGroups() {
@@ -278,14 +321,6 @@ onMounted(() => {
 .ta-badge-danger { color: #dc2626; background: #fef2f2; }
 .ta-badge-active { color: #2563eb; background: #eff6ff; }
 .ta-badge-wait { color: #d97706; background: #fffbeb; }
-.ta-table-wrap { background: #fff; border: 1px solid #eaeaea; border-radius: 12px; overflow-x: auto; margin-bottom: 16px; }
-.ta-table { width: 100%; border-collapse: collapse; font-size: 13px; }
-.ta-table th { text-align: left; padding: 10px 12px; color: #6b7280; font-weight: 600; font-size: 12px; border-bottom: 1px solid #eaeaea; background: #fafafa; }
-.ta-table td { padding: 10px 12px; border-bottom: 1px solid #f3f4f6; color: #374151; }
-.ta-table tr:last-child td { border-bottom: none; }
-.ta-table tr:hover td { background: #fafafa; }
-.ta-col-actions { white-space: nowrap; display: flex; gap: 6px; }
-.ta-empty { text-align: center; color: #9ca3af; padding: 32px 0 !important; }
 .ta-dialog-overlay { position: fixed; inset: 0; z-index: 200; background: rgba(0,0,0,.45); display: flex; align-items: center; justify-content: center; }
 .ta-dialog { background: #fff; border-radius: 14px; width: 480px; max-width: 90vw; max-height: 85vh; overflow-y: auto; box-shadow: 0 8px 32px rgba(0,0,0,.12); }
 .ta-dialog-head { display: flex; align-items: center; justify-content: space-between; padding: 16px 20px; border-bottom: 1px solid #eaeaea; }

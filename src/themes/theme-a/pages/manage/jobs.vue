@@ -7,46 +7,35 @@
         <button class="ta-btn-danger" :disabled="selected.length === 0" @click="batchDelete">🗑 批量删除</button>
       </div>
     </div>
-    <div class="ta-table-wrap">
-      <table class="ta-table">
-        <thead>
-          <tr>
-            <th class="ta-col-check"><input type="checkbox" @change="toggleAll" :checked="allSelected" /></th>
-            <th>#</th>
-            <th>ID</th>
-            <th>队列</th>
-            <th>状态</th>
-            <th>创建时间</th>
-            <th>操作</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="(row, idx) in list" :key="row.id">
-            <td><input type="checkbox" :value="row.id" v-model="selected" /></td>
-            <td>{{ (page - 1) * pageSize + idx + 1 }}</td>
-            <td>{{ row.id }}</td>
-            <td>{{ row.name || '-' }}</td>
-            <td>
-              <span v-if="row.failedReason" class="ta-badge ta-badge-danger">失败</span>
-              <span v-else-if="row.finishedOn" class="ta-badge ta-badge-success">已完成</span>
-              <span v-else-if="row.processedOn" class="ta-badge ta-badge-active">处理中</span>
-              <span v-else class="ta-badge ta-badge-wait">等待中</span>
-            </td>
-            <td>{{ row.timestamp ? new Date(row.timestamp).toLocaleString() : '-' }}</td>
-            <td class="ta-col-actions">
-              <button class="ta-btn-sm" @click="showDetail(row)">📋 详情</button>
-              <button class="ta-btn-sm ta-btn-sm-danger" @click="doDelete(row)">🗑 删除</button>
-            </td>
-          </tr>
-          <tr v-if="list.length === 0"><td colspan="7" class="ta-empty">暂无任务</td></tr>
-        </tbody>
-      </table>
-    </div>
-    <div class="ta-pager" v-if="total > pageSize">
-      <button :disabled="page <= 1" @click="page--; loadPage()">‹ 上一页</button>
-      <span>第 {{ page }} / {{ Math.ceil(total / pageSize) }} 页 (共 {{ total }} 条)</span>
-      <button :disabled="page >= Math.ceil(total / pageSize)" @click="page++; loadPage()">下一页 ›</button>
-    </div>
+
+    <ResponsiveTable
+      :columns="columns"
+      :items="list"
+      row-key="id"
+      :total="total"
+      v-model:page="page"
+      :page-size="pageSize"
+      selectable
+      v-model:selected="selected"
+      empty-text="暂无任务"
+    >
+      <template #cell-name="{ value }">
+        {{ value || '-' }}
+      </template>
+      <template #cell-_status="{ item }">
+        <span v-if="item.failedReason" class="ta-badge ta-badge-danger">失败</span>
+        <span v-else-if="item.finishedOn" class="ta-badge ta-badge-success">已完成</span>
+        <span v-else-if="item.processedOn" class="ta-badge ta-badge-active">处理中</span>
+        <span v-else class="ta-badge ta-badge-wait">等待中</span>
+      </template>
+      <template #cell-timestamp="{ value }">
+        {{ value ? new Date(value).toLocaleString() : '-' }}
+      </template>
+      <template #actions="{ item }">
+        <button class="ta-btn-sm" @click="showDetail(item)">📋 详情</button>
+        <button class="ta-btn-sm ta-btn-sm-danger" @click="doDelete(item)">🗑 删除</button>
+      </template>
+    </ResponsiveTable>
 
     <div v-if="detailShow" class="ta-dialog-overlay" @click.self="detailShow = false">
       <div class="ta-dialog" style="width:680px">
@@ -64,8 +53,18 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, watch, onMounted } from 'vue'
 import jobsApi from '@/api/jobs'
+import ResponsiveTable from '@/themes/components/responsive-table.vue'
+import type { RtColumn } from '@/themes/components/responsive-table.vue'
+
+const columns: RtColumn[] = [
+  { key: '_idx', label: '#', type: 'index', hideOnMobile: true },
+  { key: 'id', label: 'ID' },
+  { key: 'name', label: '队列' },
+  { key: '_status', label: '状态' },
+  { key: 'timestamp', label: '创建时间', hideOnMobile: true },
+]
 
 const allTasks = ref<any[]>([])
 const list = ref<any[]>([])
@@ -76,8 +75,12 @@ const selected = ref<string[]>([])
 const detailShow = ref(false)
 const detailJson = ref('')
 
-const allSelected = computed(() => list.value.length > 0 && selected.value.length === list.value.length)
-function toggleAll(e: Event) { selected.value = (e.target as HTMLInputElement).checked ? list.value.map(r => r.id) : [] }
+function loadPage() {
+  const start = (page.value - 1) * pageSize.value
+  list.value = allTasks.value.slice(start, start + pageSize.value)
+}
+
+watch(page, () => loadPage())
 
 async function load() {
   try {
@@ -86,10 +89,6 @@ async function load() {
     total.value = res.count || allTasks.value.length
     loadPage()
   } catch { allTasks.value = []; list.value = [] }
-}
-function loadPage() {
-  const start = (page.value - 1) * pageSize.value
-  list.value = allTasks.value.slice(start, start + pageSize.value)
 }
 function reload() { page.value = 1; selected.value = []; load() }
 
@@ -134,18 +133,6 @@ onMounted(() => load())
 .ta-badge-success { color: #16a34a; background: #f0fdf4; }
 .ta-badge-active { color: #2563eb; background: #eff6ff; }
 .ta-badge-wait { color: #d97706; background: #fffbeb; }
-.ta-table-wrap { background: #fff; border: 1px solid #eaeaea; border-radius: 12px; overflow-x: auto; }
-.ta-table { width: 100%; border-collapse: collapse; font-size: 13px; }
-.ta-table th { text-align: left; padding: 10px 12px; color: #6b7280; font-weight: 600; font-size: 12px; border-bottom: 1px solid #eaeaea; background: #fafafa; }
-.ta-table td { padding: 10px 12px; border-bottom: 1px solid #f3f4f6; color: #374151; }
-.ta-table tr:last-child td { border-bottom: none; }
-.ta-table tr:hover td { background: #fafafa; }
-.ta-col-check { width: 40px; text-align: center; }
-.ta-col-actions { white-space: nowrap; display: flex; gap: 6px; }
-.ta-empty { text-align: center; color: #9ca3af; padding: 32px 0 !important; }
-.ta-pager { display: flex; align-items: center; justify-content: center; gap: 16px; margin-top: 16px; font-size: 13px; color: #6b7280; }
-.ta-pager button { padding: 6px 14px; font-size: 13px; border: 1px solid #eaeaea; border-radius: 8px; background: #fff; cursor: pointer; }
-.ta-pager button:disabled { opacity: .4; cursor: not-allowed; }
 .ta-code-block { background: #f8f9fa; border: 1px solid #eaeaea; border-radius: 8px; padding: 16px; overflow-x: auto; max-height: 400px; font-size: 12px; line-height: 1.6; white-space: pre-wrap; word-break: break-all; }
 .ta-dialog-overlay { position: fixed; inset: 0; z-index: 200; background: rgba(0,0,0,.45); display: flex; align-items: center; justify-content: center; }
 .ta-dialog { background: #fff; border-radius: 14px; width: 480px; max-width: 90vw; max-height: 85vh; overflow-y: auto; box-shadow: 0 8px 32px rgba(0,0,0,.12); }
