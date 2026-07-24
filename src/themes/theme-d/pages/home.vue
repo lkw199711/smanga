@@ -37,7 +37,7 @@
 				<a class="sd-link" @click="router.push('/t/history')">查看全部 →</a>
 			</div>
 			<div class="sd-continue">
-				<div v-for="m in continueReading" :key="m.id" class="sd-cont-card" v-long-press="() => openThemeActionSheet('chapter', m)" @click="goRead(m)" @contextmenu="openThemeContextMenu($event, 'chapter', m)">
+				<div v-for="m in continueReading" :key="m.id" class="sd-cont-card no-select" v-long-press="() => openThemeActionSheet('chapter', m)" @click="goRead(m)" @contextmenu="openThemeContextMenu($event, 'chapter', m)">
 					<div class="sd-cont-cover"
 						:style="coverStyle(m, { kind: 'chapter', fallbackSeed: m.id })">
 						<span v-if="m.tag" class="sd-cont-tag">{{ m.tag }}</span>
@@ -223,13 +223,24 @@ function coverStyle(
 </script>
 
 <style scoped>
-.sd-home {}
+.sd-home {
+	min-width: 0;
+}
 
 .sd-stats {
 	display: grid;
-	grid-template-columns: repeat(4, 1fr);
+	grid-template-columns: repeat(4, minmax(0, 1fr));
 	gap: 14px;
 	margin-bottom: 28px;
+}
+
+/* 窄屏改 2×2 布局，避免 4 列在 <=640px 撑爆容器 */
+@media (max-width: 640px) {
+	.sd-stats {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: 10px;
+		margin-bottom: 20px;
+	}
 }
 
 .sd-stat-card {
@@ -241,6 +252,20 @@ function coverStyle(
 	border: 1px solid var(--sd-border);
 	border-radius: 12px;
 	box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+	min-width: 0;
+	overflow: hidden;
+}
+
+.sd-stat-info {
+	min-width: 0;
+	flex: 1;
+}
+
+@media (max-width: 640px) {
+	.sd-stat-card {
+		padding: 12px 12px;
+		gap: 10px;
+	}
 }
 
 .sd-stat-icon {
@@ -251,11 +276,30 @@ function coverStyle(
 	justify-content: center;
 	font-size: 20px;
 	border-radius: 10px;
+	flex-shrink: 0;
+}
+
+@media (max-width: 640px) {
+	.sd-stat-icon {
+		width: 36px;
+		height: 36px;
+		font-size: 18px;
+		border-radius: 8px;
+	}
 }
 
 .sd-stat-value {
 	font-size: 20px;
 	font-weight: 700;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+@media (max-width: 640px) {
+	.sd-stat-value {
+		font-size: 16px;
+	}
 }
 
 .sd-stat-label {

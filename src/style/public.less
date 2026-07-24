@@ -8,6 +8,7 @@
  * .no-select
  * 禁止长按弹出系统菜单 / 文本选中抹蓝效果
  * 适用：所有带长按菜单 (v-long-press / @contextmenu) 的卡片类组件
+ * 同时对内部所有子元素生效，避免子文本被抹蓝
  */
 .no-select {
 	-webkit-user-select: none;
@@ -16,6 +17,15 @@
 	user-select: none;
 	-webkit-touch-callout: none;
 	-webkit-tap-highlight-color: transparent;
+
+	&,
+	& * {
+		-webkit-user-select: none;
+		-moz-user-select: none;
+		-ms-user-select: none;
+		user-select: none;
+		-webkit-touch-callout: none;
+	}
 }
 
 .main {

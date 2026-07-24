@@ -565,6 +565,17 @@ function onSidebarClick(e: MouseEvent) {
 	color: #fff;
 	font-weight: 600;
 	border-radius: 50%;
+	flex-shrink: 0;
+	overflow: hidden;
+	font-size: 14px;
+}
+
+.sd-avatar-img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	border-radius: 50%;
+	display: block;
 }
 
 .sd-user-name {

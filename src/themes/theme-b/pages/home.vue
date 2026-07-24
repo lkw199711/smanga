@@ -25,7 +25,7 @@
 				<a class="sb-link" @click="router.push('/t/history')">查看全部 →</a>
 			</div>
 			<div class="sb-continue">
-				<div v-for="item in historyList" :key="item.chapterId" class="sb-cont-card" v-long-press="() => openThemeActionSheet('chapter', item)" @click="goRead(item)" @contextmenu="openThemeContextMenu($event, 'chapter', item)">
+				<div v-for="item in historyList" :key="item.chapterId" class="sb-cont-card no-select" v-long-press="() => openThemeActionSheet('chapter', item)" @click="goRead(item)" @contextmenu="openThemeContextMenu($event, 'chapter', item)">
 					<div
 						class="sb-cont-cover"
 						:style="coverStyle(item, { kind: 'chapter', fallbackSeed: item.chapterId })"
