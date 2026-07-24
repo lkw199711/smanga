@@ -39,16 +39,34 @@
 				</div>
 			</div>
 			<button class="sb-pill" @click="toggleLanguage">{{ currentLanguage }}</button>
-			<div class="sb-avatar">U</div>
+			<div class="sb-user-wrap" ref="userWrapRef">
+				<div class="sb-user-trigger" @click="toggleUserDropdown">
+					<div class="sb-avatar">
+						<img v-if="avatarBlobUrl" :src="avatarBlobUrl" class="sb-avatar-img" />
+						<span v-else>{{ userInfo.userName?.charAt(0) || 'U' }}</span>
+					</div>
+					<div class="sb-user-info">
+						<span class="sb-user-name">{{ userInfo.userName || 'User' }}</span>
+						<span class="sb-user-role">{{ Cookies.getRole() === 'admin' ? '管理员' : '用户' }}</span>
+					</div>
+					<span class="sb-user-arrow" :class="{ open: showUserDropdown }">▾</span>
+				</div>
+				<div v-if="showUserDropdown" class="sb-user-dropdown">
+					<div class="sb-user-dropdown-item" @click="goSettings">⚙️ 设置</div>
+					<div class="sb-user-dropdown-item sb-user-dropdown-logout" @click="userLogout">🚪 登出</div>
+				</div>
+			</div>
 		</div>
 	</header>
 </template>
 
 <script lang="ts" setup>
-import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
-import { userConfig } from '@/store'
+import { userConfig, userInfo } from '@/store'
+import imageApi from '@/api/image'
+import { Cookies } from '@/utils'
 import type { ThemeKey } from '@/themes/store'
 import { themeState, setTheme } from '@/themes/store'
 import languages from '@/store/language'
@@ -61,6 +79,37 @@ const { locale } = useI18n()
 const keyword = ref('')
 const showThemeSwitch = ref(false)
 const searchInputRef = ref<HTMLInputElement>()
+
+// ---- 用户信息 ----
+const showUserDropdown = ref(false)
+const avatarBlobUrl = ref('')
+const userWrapRef = ref<HTMLElement | null>(null)
+
+function toggleUserDropdown() {
+	showUserDropdown.value = !showUserDropdown.value
+}
+
+function goSettings() {
+	showUserDropdown.value = false
+	router.push('/t/setting/user')
+}
+
+function userLogout() {
+	document.cookie = 'smanga-userName=; path=/; max-age=0'
+	document.cookie = 'smanga-userId=; path=/; max-age=0'
+	showUserDropdown.value = false
+	router.push('/login')
+}
+
+async function loadAvatar() {
+	if (!userInfo.avatarPath) {
+		avatarBlobUrl.value = ''
+		return
+	}
+	avatarBlobUrl.value = await imageApi.get({ file: userInfo.avatarPath }) || ''
+}
+
+watch(() => userInfo.avatarPath, loadAvatar, { immediate: true })
 
 // ---- 皮肤列表 ----
 const skinList: { key: ThemeKey; name: string }[] = [
@@ -172,6 +221,8 @@ function onGlobalClick(e: MouseEvent) {
 	if (!target) return
 	if (target.closest('.sb-theme-dropdown')) return
 	showThemeSwitch.value = false
+	if (target.closest('.sb-user-wrap')) return
+	showUserDropdown.value = false
 }
 
 onMounted(() => {
@@ -284,7 +335,108 @@ onBeforeUnmount(() => {
 	color: #fff;
 	font-weight: 600;
 	border-radius: 50%;
+	flex-shrink: 0;
+	overflow: hidden;
+	font-size: 14px;
+}
+
+.sb-avatar-img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	border-radius: 50%;
+}
+
+.sb-user-wrap {
+	position: relative;
+}
+
+.sb-user-trigger {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	padding: 4px 6px;
+	border-radius: 10px;
 	cursor: pointer;
+	transition: background 0.2s;
+}
+
+.sb-user-trigger:hover {
+	background: rgba(255, 255, 255, 0.6);
+}
+
+.sb-user-info {
+	display: flex;
+	flex-direction: column;
+	gap: 1px;
+	min-width: 0;
+}
+
+.sb-user-name {
+	font-size: 12px;
+	font-weight: 600;
+	color: #1f2937;
+	line-height: 1.2;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	max-width: 80px;
+}
+
+.sb-user-role {
+	font-size: 10px;
+	color: #9ca3af;
+	line-height: 1.2;
+}
+
+.sb-user-arrow {
+	font-size: 11px;
+	color: #9ca3af;
+	transition: transform 0.2s;
+}
+
+.sb-user-arrow.open {
+	transform: rotate(180deg);
+}
+
+.sb-user-dropdown {
+	position: absolute;
+	top: calc(100% + 8px);
+	right: 0;
+	min-width: 140px;
+	background: rgba(255, 255, 255, 0.96);
+	backdrop-filter: blur(16px);
+	border: 1px solid rgba(255, 255, 255, 0.8);
+	border-radius: 12px;
+	padding: 6px;
+	box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+	z-index: 300;
+}
+
+.sb-user-dropdown-item {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	padding: 9px 12px;
+	font-size: 13px;
+	color: #4b5563;
+	border-radius: 8px;
+	cursor: pointer;
+	transition: all 0.2s;
+}
+
+.sb-user-dropdown-item:hover {
+	background: rgba(255, 111, 163, 0.1);
+	color: #ff6fa3;
+}
+
+.sb-user-dropdown-logout {
+	color: #ef4444;
+}
+
+.sb-user-dropdown-logout:hover {
+	background: #fef2f2;
+	color: #dc2626;
 }
 
 .sb-theme-wrap {

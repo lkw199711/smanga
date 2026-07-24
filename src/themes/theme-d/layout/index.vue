@@ -20,6 +20,18 @@
 				</div>
 			</div>
 
+			<div class="sd-sec-title">
+				<span>{{ manageMode ? '管理菜单' : '导航' }}</span>
+				<button
+					v-if="isAdmin"
+					:class="['sd-manage-toggle', { active: manageMode }]"
+					@click="manageMode = !manageMode"
+					:title="manageMode ? '退出管理模式' : '管理模式'"
+				>
+					⚙️
+				</button>
+			</div>
+
 			<nav class="sd-nav">
 				<div
 					v-for="item in menu"
@@ -33,7 +45,7 @@
 			</nav>
 
 			<div class="sd-sec-title">媒体库</div>
-			<nav class="sd-nav">
+			<nav class="sd-nav sd-media-nav">
 				<div v-for="m in mediaListData" :key="m.id" class="sd-nav-item" @click="goMedia(m.id)">
 					<span class="sd-nav-icon">📁</span>
 					<span class="sd-nav-label">{{ m.name }}</span>
@@ -42,11 +54,21 @@
 				<div v-if="mediaListData.length === 0" class="sd-nav-empty">暂无媒体库</div>
 			</nav>
 
-			<div class="sd-user">
-				<div class="sd-avatar">{{ userInfo.userName?.charAt(0) || 'U' }}</div>
-				<div>
-					<div class="sd-user-name">{{ userInfo.userName || 'User' }}</div>
-					<div class="sd-user-role">{{ Cookies.getRole() === 'admin' ? '管理员' : '用户' }}</div>
+			<div class="sd-user" ref="userWrapRef">
+				<div class="sd-user-trigger" @click="toggleUserDropdown">
+					<div class="sd-avatar">
+						<img v-if="avatarBlobUrl" :src="avatarBlobUrl" class="sd-avatar-img" />
+						<span v-else>{{ userInfo.userName?.charAt(0) || 'U' }}</span>
+					</div>
+					<div class="sd-user-info">
+						<div class="sd-user-name">{{ userInfo.userName || 'User' }}</div>
+						<div class="sd-user-role">{{ Cookies.getRole() === 'admin' ? '管理员' : '用户' }}</div>
+					</div>
+					<span class="sd-user-arrow" :class="{ open: showUserDropdown }">▾</span>
+				</div>
+				<div v-if="showUserDropdown" class="sd-user-dropdown">
+					<div class="sd-user-dropdown-item" @click="goSettings">⚙️ 设置</div>
+					<div class="sd-user-dropdown-item sd-user-dropdown-logout" @click="userLogout">🚪 登出</div>
 				</div>
 			</div>
 		</aside>
@@ -121,6 +143,7 @@ import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import mediaStatsApi from '@/api/media-stats'
+import imageApi from '@/api/image'
 import { config, userInfo, userConfig, mangaSortOrder, chapterSortOrder } from '@/store'
 import { Cookies } from '@/utils'
 import languages from '@/store/language'
@@ -200,23 +223,42 @@ const themeVars = computed(() => {
 	} as any
 })
 
-const menu = [
+const navItems = [
 	{ key: 'home', label: '首页', icon: '🏠', path: '/t' },
 	{ key: 'history', label: '最近阅读', icon: '🕘', path: '/t/history' },
 	{ key: 'bookmark', label: '书签', icon: '🔖', path: '/t/bookmark' },
 	{ key: 'collect', label: '收藏', icon: '⭐', path: '/t/collect' },
 	{ key: 'search', label: '搜索', icon: '🔍', path: '/t/search' },
 	{ key: 'tag', label: '标签', icon: '🏷️', path: '/t/tags' },
-	{ key: 'manage', label: '管理', icon: '⚙️', path: '/t/manage' },
+	{ key: 'media', label: '媒体库', icon: '📁', path: '/t/media' },
 	{ key: 'setting', label: '设置', icon: '🔧', path: '/t/setting/user' },
 ]
+
+const adminNavItems = [
+	{ key: 'manage-users', label: '用户管理', icon: '👤', path: '/t/manage/users' },
+	{ key: 'manage-media', label: '媒体库管理', icon: '📁', path: '/t/manage/media' },
+	{ key: 'manage-manga', label: '漫画管理', icon: '📚', path: '/t/manage/manga' },
+	{ key: 'manage-chapters', label: '章节管理', icon: '📑', path: '/t/manage/chapters' },
+	{ key: 'manage-paths', label: '路径管理', icon: '📂', path: '/t/manage/paths' },
+	{ key: 'manage-bookmarks', label: '书签管理', icon: '🔖', path: '/t/manage/bookmarks' },
+	{ key: 'manage-tags', label: '标签管理', icon: '🏷️', path: '/t/manage/tags' },
+	{ key: 'manage-compress', label: '解压管理', icon: '🗜️', path: '/t/manage/compress' },
+	{ key: 'manage-jobs', label: '任务管理', icon: '📋', path: '/t/manage/jobs' },
+	{ key: 'manage-sync', label: '漫画同步', icon: '🔄', path: '/t/manage/sync' },
+	{ key: 'manage-share', label: '漫画分享', icon: '📤', path: '/t/manage/share' },
+	{ key: 'manage-p2p', label: 'P2P管理', icon: '🌐', path: '/t/manage/p2p' },
+	{ key: 'manage-server', label: '服务器设置', icon: '🖥️', path: '/t/manage/server' },
+	{ key: 'manage-wiki', label: '帮助文档', icon: '📖', path: '/t/manage/wiki' },
+]
+
+const menu = computed(() => manageMode.value ? adminNavItems : navItems)
 
 function normalizePath(p: string) {
 	if (p === '/t') return '/t'
 	return p.replace(/\/+$/, '')
 }
 
-function isActive(item: (typeof menu)[number]) {
+function isActive(item: { path: string }) {
 	const cur = normalizePath(route.path)
 	const base = normalizePath(item.path)
 	if (base === '/t') return cur === '/t'
@@ -245,6 +287,48 @@ onMounted(async () => {
 
 function goMedia(mediaId: number) {
 	router.push(`/t/media/${mediaId}`)
+}
+
+// ---- 用户信息 ----
+const showUserDropdown = ref(false)
+const avatarBlobUrl = ref('')
+const userWrapRef = ref<HTMLElement | null>(null)
+const manageMode = ref(false)
+
+const isAdmin = computed(() => Cookies.getRole() === 'admin')
+
+function toggleUserDropdown() {
+	showUserDropdown.value = !showUserDropdown.value
+}
+
+function goSettings() {
+	showUserDropdown.value = false
+	router.push('/t/setting/user')
+}
+
+function userLogout() {
+	document.cookie = 'smanga-userName=; path=/; max-age=0'
+	document.cookie = 'smanga-userId=; path=/; max-age=0'
+	showUserDropdown.value = false
+	router.push('/login')
+}
+
+async function loadAvatar() {
+	if (!userInfo.avatarPath) {
+		avatarBlobUrl.value = ''
+		return
+	}
+	avatarBlobUrl.value = await imageApi.get({ file: userInfo.avatarPath }) || ''
+}
+
+watch(() => userInfo.avatarPath, loadAvatar, { immediate: true })
+
+function onUserClickOutside(e: MouseEvent) {
+	const target = e.target as HTMLElement | null
+	if (!target) return
+	if (target.closest('.sd-user-dropdown')) return
+	if (target.closest('.sd-user-trigger')) return
+	showUserDropdown.value = false
 }
 
 const keyword = ref((route.query.q as string) || '')
@@ -412,10 +496,12 @@ function onSortClickOutside(e: MouseEvent) {
 onMounted(() => {
 	document.addEventListener('click', onSortClickOutside)
 	document.addEventListener('click', onSkinClickOutside)
+	document.addEventListener('click', onUserClickOutside)
 })
 onBeforeUnmount(() => {
 	document.removeEventListener('click', onSortClickOutside)
 	document.removeEventListener('click', onSkinClickOutside)
+	document.removeEventListener('click', onUserClickOutside)
 })
 </script>
 
@@ -554,6 +640,40 @@ onBeforeUnmount(() => {
 	color: var(--sd-text-faint);
 }
 
+.sd-manage-toggle {
+	margin-left: auto;
+	width: 32px;
+	height: 32px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	border: 1px solid var(--sd-border);
+	border-radius: 8px;
+	background: var(--sd-card);
+	color: var(--sd-text-muted);
+	cursor: pointer;
+	font-size: 16px;
+	transition: all 0.15s;
+	flex-shrink: 0;
+}
+
+.sd-manage-toggle:hover {
+	background: var(--sd-hover);
+	color: var(--sd-text);
+}
+
+.sd-manage-toggle.active {
+	background: var(--sd-primary);
+	border-color: var(--sd-primary);
+	color: #fff;
+}
+
+.sd-media-nav {
+	flex: 1;
+	min-height: 0;
+	overflow-y: auto;
+}
+
 .sd-nav-empty {
 	padding: 9px 10px;
 	font-size: 12px;
@@ -561,7 +681,9 @@ onBeforeUnmount(() => {
 }
 
 .sd-sec-title {
-	padding: 14px 10px 6px;
+	padding: 12px 8px 6px;
+	display: flex;
+	align-items: center;
 	font-size: 11px;
 	font-weight: 600;
 	color: var(--sd-text-faint);
@@ -569,13 +691,28 @@ onBeforeUnmount(() => {
 	letter-spacing: 0.05em;
 }
 
+.sd-sec-title span {
+	flex: 1;
+}
+
 .sd-user {
 	margin-top: auto;
+	border-top: 1px solid var(--sd-border);
+	position: relative;
+}
+
+.sd-user-trigger {
 	display: flex;
 	align-items: center;
 	gap: 10px;
 	padding: 10px 8px;
-	border-top: 1px solid var(--sd-border);
+	cursor: pointer;
+	border-radius: 8px;
+	transition: background 0.15s;
+}
+
+.sd-user-trigger:hover {
+	background: var(--sd-hover);
 }
 
 .sd-avatar {
@@ -588,16 +725,82 @@ onBeforeUnmount(() => {
 	color: #fff;
 	font-weight: 600;
 	border-radius: 50%;
+	flex-shrink: 0;
+	overflow: hidden;
+	font-size: 14px;
+}
+
+.sd-avatar-img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	border-radius: 50%;
+}
+
+.sd-user-info {
+	min-width: 0;
 }
 
 .sd-user-name {
 	font-weight: 500;
 	font-size: 13px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
 }
 
 .sd-user-role {
 	font-size: 11px;
 	color: var(--sd-text-faint);
+}
+
+.sd-user-arrow {
+	margin-left: auto;
+	font-size: 12px;
+	color: var(--sd-text-faint);
+	transition: transform 0.2s;
+}
+
+.sd-user-arrow.open {
+	transform: rotate(180deg);
+}
+
+.sd-user-dropdown {
+	position: absolute;
+	bottom: calc(100% + 8px);
+	left: 8px;
+	right: 8px;
+	background: var(--sd-card);
+	border: 1px solid var(--sd-border);
+	border-radius: 10px;
+	box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.08);
+	z-index: 300;
+	padding: 6px;
+}
+
+.sd-user-dropdown-item {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	padding: 9px 12px;
+	font-size: 13px;
+	color: var(--sd-text-muted);
+	border-radius: 6px;
+	cursor: pointer;
+	transition: all 0.15s;
+}
+
+.sd-user-dropdown-item:hover {
+	background: var(--sd-hover);
+	color: var(--sd-text);
+}
+
+.sd-user-dropdown-logout {
+	color: #dc2626;
+}
+
+.sd-user-dropdown-logout:hover {
+	background: #fef2f2;
 }
 
 .sd-body {

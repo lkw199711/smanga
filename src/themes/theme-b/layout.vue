@@ -15,11 +15,12 @@
 			</nav>
 
 			<div class="sb-sec">
-				<div class="sb-sec-title">✨ 我的书架</div>
-				<div v-for="m in mediaList" :key="m.id" class="sb-sec-item">
-					<span>{{ m.icon }} {{ m.name }}</span>
-					<span class="sb-sec-count">{{ m.count }}</span>
+				<div class="sb-sec-title">媒体库</div>
+				<div v-for="m in mediaListData" :key="m.mediaId" class="sb-sec-item" @click="goMedia(m.mediaId)">
+					<span>📁 {{ m.mediaName || m.mediaId }}</span>
+					<span class="sb-sec-count">{{ m.mangaCount || 0 }}</span>
 				</div>
+				<div v-if="mediaListData.length === 0" class="sb-sec-empty">暂无媒体库</div>
 			</div>
 
 			<div class="sb-card-hint">
@@ -47,7 +48,20 @@
 				<div class="sb-top-actions">
 					<button class="sb-pill">🌙</button>
 					<button class="sb-pill">中/EN</button>
-					<div class="sb-avatar">U</div>
+					<div class="sb-user-wrap" ref="userWrapRef">
+						<div class="sb-user-trigger" @click="toggleUserDropdown">
+							<div class="sb-avatar">
+								<img v-if="avatarBlobUrl" :src="avatarBlobUrl" class="sb-avatar-img" />
+								<span v-else>{{ userInfo.userName?.charAt(0) || 'U' }}</span>
+							</div>
+							<span class="sb-user-name">{{ userInfo.userName || 'User' }}</span>
+							<span class="sb-user-arrow" :class="{ open: showUserDropdown }">▾</span>
+						</div>
+						<div v-if="showUserDropdown" class="sb-user-dropdown">
+							<div class="sb-user-dropdown-item" @click="goSettings">⚙️ 设置</div>
+							<div class="sb-user-dropdown-item sb-user-dropdown-logout" @click="userLogout">🚪 登出</div>
+						</div>
+					</div>
 				</div>
 			</header>
 
@@ -59,23 +73,87 @@
 </template>
 
 <script lang="ts" setup>
+import { ref, onMounted, onBeforeUnmount, watch } from 'vue'
+import { useRouter } from 'vue-router'
+import mediaStatsApi from '@/api/media-stats'
+import { userInfo } from '@/store'
+import { Cookies } from '@/utils'
+import imageApi from '@/api/image'
+
+const router = useRouter()
+
 const menu = [
 	{ key: 'home', label: '首页', icon: '🏠' },
 	{ key: 'history', label: '最近阅读', icon: '🕘' },
 	{ key: 'bookmark', label: '书签', icon: '🔖' },
 	{ key: 'collect', label: '收藏', icon: '⭐' },
+	{ key: 'media', label: '媒体库', icon: '📁' },
 	{ key: 'search', label: '搜索', icon: '🔍' },
 	{ key: 'tag', label: '标签', icon: '🏷️' },
 	{ key: 'manage', label: '管理', icon: '⚙️' },
 	{ key: 'setting', label: '设置', icon: '🔧' },
 ]
 
-const mediaList = [
-	{ id: 1, name: '少年漫画', icon: '📚', count: 128 },
-	{ id: 2, name: '少女漫画', icon: '🌸', count: 64 },
-	{ id: 3, name: '青年漫画', icon: '📖', count: 96 },
-	{ id: 4, name: '同人本', icon: '🎨', count: 32 },
-]
+const mediaListData = ref<any[]>([])
+
+onMounted(async () => {
+	try {
+		mediaListData.value = await mediaStatsApi.getMediaWithCounts()
+	} catch {
+		mediaListData.value = []
+	}
+})
+
+function goMedia(mediaId: number) {
+	router.push(`/t/media/${mediaId}`)
+}
+
+// ---- 用户信息 ----
+const showUserDropdown = ref(false)
+const avatarBlobUrl = ref('')
+const userWrapRef = ref<HTMLElement | null>(null)
+
+function toggleUserDropdown() {
+	showUserDropdown.value = !showUserDropdown.value
+}
+
+function goSettings() {
+	showUserDropdown.value = false
+	router.push('/t/setting/user')
+}
+
+function userLogout() {
+	document.cookie = 'smanga-userName=; path=/; max-age=0'
+	document.cookie = 'smanga-userId=; path=/; max-age=0'
+	showUserDropdown.value = false
+	router.push('/login')
+}
+
+async function loadAvatar() {
+	if (!userInfo.avatarPath) {
+		avatarBlobUrl.value = ''
+		return
+	}
+	avatarBlobUrl.value = await imageApi.get({ file: userInfo.avatarPath }) || ''
+}
+
+watch(() => userInfo.avatarPath, loadAvatar, { immediate: true })
+
+function onClickOutside(e: MouseEvent) {
+	const target = e.target as HTMLElement | null
+	if (!target) return
+	if (target.closest('.sb-user-dropdown')) return
+	if (target.closest('.sb-user-trigger')) return
+	showUserDropdown.value = false
+}
+
+onMounted(() => {
+	document.addEventListener('click', onClickOutside)
+})
+
+onBeforeUnmount(() => {
+	document.removeEventListener('click', onClickOutside)
+})
 </script>
 
 <style scoped>
@@ -340,6 +418,87 @@ const mediaList = [
 	font-weight: 600;
 	border-radius: 50%;
 	border: 2px solid #fff;
+	flex-shrink: 0;
+	overflow: hidden;
+}
+
+.sb-avatar-img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	border-radius: 50%;
+}
+
+/* 顶栏用户区 */
+.sb-user-wrap {
+	position: relative;
+}
+
+.sb-user-trigger {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+	padding: 2px 6px;
+	cursor: pointer;
+	border-radius: 999px;
+	transition: background 0.15s;
+}
+
+.sb-user-trigger:hover {
+	background: rgba(255, 255, 255, 0.5);
+}
+
+.sb-user-name {
+	font-size: 13px;
+	font-weight: 500;
+	color: #1f2937;
+}
+
+.sb-user-arrow {
+	font-size: 12px;
+	color: #9ca3af;
+	transition: transform 0.2s;
+}
+
+.sb-user-arrow.open {
+	transform: rotate(180deg);
+}
+
+.sb-user-dropdown {
+	position: absolute;
+	top: calc(100% + 8px);
+	right: 0;
+	min-width: 140px;
+	background: #fff;
+	border: 1px solid rgba(0, 0, 0, 0.08);
+	border-radius: 14px;
+	box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+	z-index: 300;
+	padding: 6px;
+}
+
+.sb-user-dropdown-item {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	padding: 8px 12px;
+	font-size: 13px;
+	color: #4b5563;
+	border-radius: 10px;
+	cursor: pointer;
+	transition: all 0.15s;
+}
+
+.sb-user-dropdown-item:hover {
+	background: #f3f4f6;
+}
+
+.sb-user-dropdown-logout {
+	color: #ef4444;
+}
+
+.sb-user-dropdown-logout:hover {
+	background: #fef2f2;
 }
 
 /* 主区 */

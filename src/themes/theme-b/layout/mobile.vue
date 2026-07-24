@@ -7,6 +7,19 @@
 			<div class="sb-mobile-title">
 				<h1>{{ pageTitle }}</h1>
 			</div>
+			<div class="sb-header-user">
+				<div class="sb-header-user-trigger" @click="toggleMobileUserDropdown">
+					<div class="sb-avatar sb-avatar-sm">
+						<img v-if="mobileAvatarBlobUrl" :src="mobileAvatarBlobUrl" class="sb-avatar-img" />
+						<span v-else>{{ userInfo.userName?.charAt(0) || 'U' }}</span>
+					</div>
+					<span class="sb-header-user-arrow" :class="{ open: showMobileUserDropdown }">▾</span>
+				</div>
+				<div v-if="showMobileUserDropdown" class="sb-header-user-dropdown">
+					<div class="sb-user-dropdown-item" @click="goMobileSettings">⚙️ 设置</div>
+					<div class="sb-user-dropdown-item sb-user-dropdown-logout" @click="mobileLogout">🚪 登出</div>
+				</div>
+			</div>
 		</header>
 
 		<!-- 侧边栏抽屉 -->
@@ -28,11 +41,12 @@
 				</nav>
 
 				<div class="sb-sec">
-					<div class="sb-sec-title">✨ 我的书架</div>
-					<div v-for="m in mediaList" :key="m.id" class="sb-sec-item" @click="navigateToMedia(m.id)">
-						<span>{{ m.icon }} {{ m.name }}</span>
-						<span class="sb-sec-count">{{ m.count }}</span>
+					<div class="sb-sec-title">媒体库</div>
+					<div v-for="m in mediaListData" :key="m.mediaId" class="sb-sec-item" @click="navigateToMedia(m.mediaId)">
+						<span>📁 {{ m.mediaName || m.mediaId }}</span>
+						<span class="sb-sec-count">{{ m.mangaCount || 0 }}</span>
 					</div>
+					<div v-if="mediaListData.length === 0" class="sb-nav-empty">暂无媒体库</div>
 				</div>
 			</aside>
 		</div>
@@ -55,10 +69,14 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted, onBeforeUnmount, watch } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import ThemeContextMenu from '@/themes/components/theme-context-menu.vue'
 import androidSeat from '@/layout/components/android-seat.vue'
+import mediaStatsApi from '@/api/media-stats'
+import { userInfo } from '@/store'
+import imageApi from '@/api/image'
+import { Cookies } from '@/utils'
 
 const showSidebar = ref(false)
 const router = useRouter()
@@ -69,18 +87,27 @@ const menu = [
 	{ key: 'history', label: '最近阅读', icon: '🕘' },
 	{ key: 'bookmark', label: '书签', icon: '🔖' },
 	{ key: 'collect', label: '收藏', icon: '⭐' },
+	{ key: 'media', label: '媒体库', icon: '📁' },
 	{ key: 'search', label: '搜索', icon: '🔍' },
 	{ key: 'tag', label: '标签', icon: '🏷️' },
 	{ key: 'manage', label: '管理', icon: '⚙️' },
 	{ key: 'setting', label: '设置', icon: '🔧' },
 ]
 
-const mediaList = [
-	{ id: 1, name: '少年漫画', icon: '📚', count: 128 },
-	{ id: 2, name: '少女漫画', icon: '🌸', count: 64 },
-	{ id: 3, name: '青年漫画', icon: '📖', count: 96 },
-	{ id: 4, name: '同人本', icon: '🎨', count: 32 },
-]
+const mediaListData = ref<any[]>([])
+
+onMounted(async () => {
+	try {
+		mediaListData.value = await mediaStatsApi.getMediaWithCounts()
+	} catch {
+		mediaListData.value = []
+	}
+	window.addEventListener('click', onSidebarClick)
+})
+
+onBeforeUnmount(() => {
+	window.removeEventListener('click', onSidebarClick)
+})
 
 const bottomNav = [
 	{ key: 'home', label: '首页', icon: '🏠' },
@@ -132,6 +159,47 @@ function navigateToMedia(mediaId: number) {
 	router.push(`/t/media/${mediaId}`)
 	showSidebar.value = false
 }
+
+// ---- 用户信息 ----
+const showMobileUserDropdown = ref(false)
+const mobileAvatarBlobUrl = ref('')
+
+function toggleMobileUserDropdown() {
+	showMobileUserDropdown.value = !showMobileUserDropdown.value
+}
+
+function goMobileSettings() {
+	showMobileUserDropdown.value = false
+	showSidebar.value = false
+	router.push('/t/setting/user')
+}
+
+function mobileLogout() {
+	document.cookie = 'smanga-userName=; path=/; max-age=0'
+	document.cookie = 'smanga-userId=; path=/; max-age=0'
+	showMobileUserDropdown.value = false
+	showSidebar.value = false
+	router.push('/login')
+}
+
+async function loadMobileAvatar() {
+	if (!userInfo.avatarPath) {
+		mobileAvatarBlobUrl.value = ''
+		return
+	}
+	const blobUrl = await imageApi.get({ file: userInfo.avatarPath })
+	mobileAvatarBlobUrl.value = blobUrl || ''
+}
+
+watch(() => userInfo.avatarPath, loadMobileAvatar, { immediate: true })
+
+function onSidebarClick(e: MouseEvent) {
+	const target = e.target as HTMLElement | null
+	if (!target) return
+	if (target.closest('.sb-header-user-dropdown')) return
+	if (target.closest('.sb-header-user-trigger')) return
+	showMobileUserDropdown.value = false
+}
 </script>
 
 <style scoped>
@@ -172,10 +240,96 @@ function navigateToMedia(mediaId: number) {
 	background: rgba(255, 111, 163, 0.1);
 }
 
+.sb-mobile-title {
+	flex: 1;
+	min-width: 0;
+}
+
 .sb-mobile-title h1 {
 	margin: 0;
 	font-size: 18px;
 	font-weight: 600;
+}
+
+/* Header 用户区 */
+.sb-header-user {
+	position: relative;
+	flex-shrink: 0;
+}
+
+.sb-header-user-trigger {
+	display: flex;
+	align-items: center;
+	gap: 4px;
+	cursor: pointer;
+	padding: 4px 6px;
+	border-radius: 8px;
+}
+
+.sb-header-user-trigger:active {
+	background: rgba(255, 111, 163, 0.08);
+}
+
+.sb-avatar-sm {
+	width: 28px;
+	height: 28px;
+	font-size: 13px;
+	flex-shrink: 0;
+	overflow: hidden;
+}
+
+.sb-avatar-img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	border-radius: 50%;
+}
+
+.sb-header-user-arrow {
+	font-size: 10px;
+	color: #9ca3af;
+	transition: transform 0.2s;
+}
+
+.sb-header-user-arrow.open {
+	transform: rotate(180deg);
+}
+
+.sb-header-user-dropdown {
+	position: absolute;
+	top: calc(100% + 6px);
+	right: 0;
+	min-width: 140px;
+	background: #fff;
+	border: 1px solid rgba(0, 0, 0, 0.08);
+	border-radius: 14px;
+	box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+	z-index: 300;
+	padding: 6px;
+}
+
+.sb-user-dropdown-item {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	padding: 10px 14px;
+	font-size: 14px;
+	color: #4b5563;
+	border-radius: 10px;
+	cursor: pointer;
+	transition: all 0.15s;
+}
+
+.sb-user-dropdown-item:active {
+	background: #f3f4f6;
+}
+
+.sb-user-dropdown-logout {
+	color: #ef4444;
+}
+
+.sb-user-dropdown-logout:active {
+	background: #fef2f2;
 }
 
 .sb-mobile-sidebar-backdrop {
@@ -192,9 +346,8 @@ function navigateToMedia(mediaId: number) {
 	width: 280px;
 	max-width: 80vw;
 	height: 100%;
-	background: rgba(255, 255, 255, 0.95);
-	backdrop-filter: blur(20px);
-	padding: 16px 12px;
+	background: rgba(255, 255, 255, 0.96);
+	padding: 12px;
 	overflow-y: auto;
 	animation: slideIn 0.3s ease;
 }
@@ -212,7 +365,7 @@ function navigateToMedia(mediaId: number) {
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
-	padding: 4px 8px 16px;
+	padding: 4px 4px 12px;
 }
 
 .sb-logo {
@@ -246,19 +399,19 @@ function navigateToMedia(mediaId: number) {
 .sb-nav {
 	display: flex;
 	flex-direction: column;
-	gap: 4px;
+	gap: 2px;
 }
 
 .sb-nav-item {
 	display: flex;
 	align-items: center;
-	gap: 10px;
-	padding: 10px 12px;
+	gap: 8px;
+	padding: 8px 12px;
 	color: #4b5563;
-	border-radius: 12px;
+	border-radius: 8px;
 	cursor: pointer;
 	transition: all 0.15s;
-	min-height: 44px;
+	font-size: 14px;
 	user-select: none;
 	-webkit-user-select: none;
 	-webkit-tap-highlight-color: transparent;
@@ -276,24 +429,24 @@ function navigateToMedia(mediaId: number) {
 }
 
 .sb-sec {
-	margin-top: 16px;
-	padding: 12px;
-	background: rgba(255, 255, 255, 0.7);
-	border-radius: 16px;
+	margin-top: 8px;
 }
 
 .sb-sec-title {
-	font-size: 12px;
+	font-size: 11px;
 	font-weight: 600;
-	color: #ff6fa3;
-	margin-bottom: 8px;
+	color: #9ca3af;
+	text-transform: uppercase;
+	letter-spacing: 0.04em;
+	padding: 8px 12px 4px;
 }
 
 .sb-sec-item {
 	display: flex;
 	justify-content: space-between;
-	padding: 8px;
+	padding: 8px 12px;
 	font-size: 13px;
+	color: #4b5563;
 	cursor: pointer;
 	border-radius: 8px;
 }

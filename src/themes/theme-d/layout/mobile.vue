@@ -7,6 +7,19 @@
 			<div class="sd-mobile-title">
 				<h1>{{ pageTitle }}</h1>
 			</div>
+			<div class="sd-header-user">
+				<div class="sd-header-user-trigger" @click="toggleMobileUserDropdown">
+					<div class="sd-avatar sd-avatar-sm">
+						<img v-if="mobileAvatarBlobUrl" :src="mobileAvatarBlobUrl" class="sd-avatar-img" />
+						<span v-else>{{ userInfo.userName?.charAt(0) || 'U' }}</span>
+					</div>
+					<span class="sd-header-user-arrow" :class="{ open: showMobileUserDropdown }">▾</span>
+				</div>
+				<div v-if="showMobileUserDropdown" class="sd-header-user-dropdown">
+					<div class="sd-user-dropdown-item" @click="goMobileSettings">⚙️ 设置</div>
+					<div class="sd-user-dropdown-item sd-user-dropdown-logout" @click="mobileLogout">🚪 登出</div>
+				</div>
+			</div>
 		</header>
 
 		<!-- 侧边栏抽屉 -->
@@ -49,11 +62,12 @@
 
 				<div class="sd-sec-title">媒体库</div>
 				<nav class="sd-nav">
-					<div v-for="m in mediaListData" :key="m.id" class="sd-nav-item" @click="goMedia(m.id)">
+					<div v-for="m in mediaListData" :key="m.mediaId" class="sd-nav-item" @click="goMedia(m.mediaId)">
 						<span class="sd-nav-icon">📁</span>
-						<span class="sd-nav-label">{{ m.name }}</span>
-						<span class="sd-nav-count">{{ m.count }}</span>
+						<span class="sd-nav-label">{{ m.mediaName || m.mediaId }}</span>
+						<span class="sd-nav-count">{{ m.mangaCount || 0 }}</span>
 					</div>
+					<div v-if="mediaListData.length === 0" class="sd-nav-empty">暂无媒体库</div>
 				</nav>
 
 				<div class="sd-user">
@@ -84,10 +98,12 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, ref } from 'vue'
+import { computed, ref, onMounted, onBeforeUnmount, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { userInfo } from '@/store'
 import { Cookies } from '@/utils'
+import mediaStatsApi from '@/api/media-stats'
+import imageApi from '@/api/image'
 import ThemeContextMenu from '@/themes/components/theme-context-menu.vue'
 import androidSeat from '@/layout/components/android-seat.vue'
 
@@ -140,18 +156,27 @@ const menu = [
 	{ key: 'history', label: '最近阅读', icon: '🕘', path: '/t/history' },
 	{ key: 'bookmark', label: '书签', icon: '🔖', path: '/t/bookmark' },
 	{ key: 'collect', label: '收藏', icon: '⭐', path: '/t/collect' },
+	{ key: 'media', label: '媒体库', icon: '📁', path: '/t/media' },
 	{ key: 'search', label: '搜索', icon: '🔍', path: '/t/search' },
 	{ key: 'tag', label: '标签', icon: '🏷️', path: '/t/tags' },
 	{ key: 'manage', label: '管理', icon: '⚙️', path: '/t/manage' },
 	{ key: 'setting', label: '设置', icon: '🔧', path: '/t/setting/user' },
 ]
 
-const mediaListData = ref([
-	{ id: 1, name: '少年漫画', icon: '📚', count: 128 },
-	{ id: 2, name: '少女漫画', icon: '🌸', count: 64 },
-	{ id: 3, name: '青年漫画', icon: '📖', count: 96 },
-	{ id: 4, name: '同人本', icon: '🎨', count: 32 },
-])
+const mediaListData = ref<any[]>([])
+
+onMounted(async () => {
+	try {
+		mediaListData.value = await mediaStatsApi.getMediaWithCounts()
+	} catch {
+		mediaListData.value = []
+	}
+	window.addEventListener('click', onSidebarClick)
+})
+
+onBeforeUnmount(() => {
+	window.removeEventListener('click', onSidebarClick)
+})
 
 const bottomNav = [
 	{ key: 'home', label: '首页', icon: '🏠', path: '/t' },
@@ -194,6 +219,47 @@ function goMedia(mediaId: number) {
 	router.push(`/t/media/${mediaId}`)
 	showSidebar.value = false
 }
+
+// ---- 用户信息 ----
+const showMobileUserDropdown = ref(false)
+const mobileAvatarBlobUrl = ref('')
+
+function toggleMobileUserDropdown() {
+	showMobileUserDropdown.value = !showMobileUserDropdown.value
+}
+
+function goMobileSettings() {
+	showMobileUserDropdown.value = false
+	showSidebar.value = false
+	router.push('/t/setting/user')
+}
+
+function mobileLogout() {
+	document.cookie = 'smanga-userName=; path=/; max-age=0'
+	document.cookie = 'smanga-userId=; path=/; max-age=0'
+	showMobileUserDropdown.value = false
+	showSidebar.value = false
+	router.push('/login')
+}
+
+async function loadMobileAvatar() {
+	if (!userInfo.avatarPath) {
+		mobileAvatarBlobUrl.value = ''
+		return
+	}
+	const blobUrl = await imageApi.get({ file: userInfo.avatarPath })
+	mobileAvatarBlobUrl.value = blobUrl || ''
+}
+
+watch(() => userInfo.avatarPath, loadMobileAvatar, { immediate: true })
+
+function onSidebarClick(e: MouseEvent) {
+	const target = e.target as HTMLElement | null
+	if (!target) return
+	if (target.closest('.sd-header-user-dropdown')) return
+	if (target.closest('.sd-header-user-trigger')) return
+	showMobileUserDropdown.value = false
+}
 </script>
 
 <style scoped>
@@ -234,10 +300,88 @@ function goMedia(mediaId: number) {
 	background: var(--sd-hover, #dbeafe);
 }
 
+.sd-mobile-title {
+	flex: 1;
+	min-width: 0;
+}
+
 .sd-mobile-title h1 {
 	margin: 0;
 	font-size: 18px;
 	font-weight: 600;
+}
+
+/* Header 用户区 */
+.sd-header-user {
+	position: relative;
+	flex-shrink: 0;
+}
+
+.sd-header-user-trigger {
+	display: flex;
+	align-items: center;
+	gap: 4px;
+	cursor: pointer;
+	padding: 4px 6px;
+	border-radius: 8px;
+}
+
+.sd-header-user-trigger:active {
+	background: var(--sd-hover, #dbeafe);
+}
+
+.sd-avatar-sm {
+	width: 28px;
+	height: 28px;
+	font-size: 12px;
+	flex-shrink: 0;
+}
+
+.sd-header-user-arrow {
+	font-size: 10px;
+	color: var(--sd-text-muted, #64748b);
+	transition: transform 0.2s;
+}
+
+.sd-header-user-arrow.open {
+	transform: rotate(180deg);
+}
+
+.sd-header-user-dropdown {
+	position: absolute;
+	top: calc(100% + 6px);
+	right: 0;
+	min-width: 140px;
+	background: var(--sd-card, #fff);
+	border: 1px solid var(--sd-border, #dbeafe);
+	border-radius: 10px;
+	box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+	z-index: 300;
+	padding: 6px;
+}
+
+.sd-user-dropdown-item {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	padding: 10px 14px;
+	font-size: 14px;
+	color: var(--sd-text-muted, #64748b);
+	border-radius: 6px;
+	cursor: pointer;
+	transition: all 0.15s;
+}
+
+.sd-user-dropdown-item:active {
+	background: var(--sd-hover, #f1f5f9);
+}
+
+.sd-user-dropdown-logout {
+	color: #dc2626;
+}
+
+.sd-user-dropdown-logout:active {
+	background: #fef2f2;
 }
 
 .sd-mobile-sidebar-backdrop {
@@ -255,7 +399,7 @@ function goMedia(mediaId: number) {
 	max-width: 80vw;
 	height: 100%;
 	background: var(--sd-card, #fff);
-	padding: 16px 12px;
+	padding: 12px;
 	overflow-y: auto;
 	animation: slideIn 0.3s ease;
 }
@@ -273,7 +417,7 @@ function goMedia(mediaId: number) {
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
-	padding: 4px 8px 16px;
+	padding: 4px 4px 12px;
 }
 
 .sd-logo {
@@ -347,19 +491,19 @@ function goMedia(mediaId: number) {
 .sd-nav {
 	display: flex;
 	flex-direction: column;
-	gap: 2px;
+	gap: 1px;
 }
 
 .sd-nav-item {
 	display: flex;
 	align-items: center;
-	gap: 10px;
-	padding: 10px 12px;
+	gap: 8px;
+	padding: 8px 12px;
 	color: var(--sd-text-muted, #64748b);
-	border-radius: 10px;
+	border-radius: 8px;
 	cursor: pointer;
 	transition: all 0.15s;
-	min-height: 44px;
+	font-size: 14px;
 	user-select: none;
 	-webkit-user-select: none;
 	-webkit-tap-highlight-color: transparent;
@@ -389,8 +533,14 @@ function goMedia(mediaId: number) {
 	border-radius: 10px;
 }
 
+.sd-nav-empty {
+	padding: 8px 12px;
+	font-size: 12px;
+	color: var(--sd-text-muted, #64748b);
+}
+
 .sd-sec-title {
-	padding: 12px 8px 6px;
+	padding: 10px 8px 4px;
 	font-size: 11px;
 	font-weight: 600;
 	color: var(--sd-text-muted, #64748b);

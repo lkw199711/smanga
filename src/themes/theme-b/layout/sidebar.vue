@@ -5,6 +5,18 @@
 			<span class="sb-logo-text">smanga</span>
 		</div>
 
+		<div class="sb-sec-title sb-nav-title">
+			<span>{{ manageMode ? '管理菜单' : '导航' }}</span>
+			<button
+				v-if="isAdmin"
+				:class="['sb-manage-toggle', { active: manageMode }]"
+				@click="manageMode = !manageMode"
+				:title="manageMode ? '退出管理模式' : '管理模式'"
+			>
+				⚙️
+			</button>
+		</div>
+
 		<nav class="sb-nav">
 			<div v-for="item in menu" :key="item.key" :class="['sb-nav-item', { active: isActive(item.path) }]" @click="go(item.path)">
 				<span class="sb-nav-icon">{{ item.icon }}</span>
@@ -29,20 +41,42 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import mediaStatsApi from '@/api/media-stats'
+import { Cookies } from '@/utils'
 
-const menu = [
+const manageMode = ref(false)
+const isAdmin = computed(() => Cookies.getRole() === 'admin')
+
+const navItems = [
 	{ key: 'home', label: '首页', icon: '🏠', path: '/t' },
 	{ key: 'history', label: '最近阅读', icon: '🕘', path: '/t/history' },
 	{ key: 'bookmark', label: '书签', icon: '🔖', path: '/t/bookmark' },
 	{ key: 'collect', label: '收藏', icon: '⭐', path: '/t/collect' },
 	{ key: 'search', label: '搜索', icon: '🔍', path: '/t/search' },
 	{ key: 'tag', label: '标签', icon: '🏷️', path: '/t/tags' },
-	{ key: 'manage', label: '管理', icon: '⚙️', path: '/t/manage' },
 	{ key: 'setting', label: '设置', icon: '🔧', path: '/t/setting/user' },
 ]
+
+const adminNavItems = [
+	{ key: 'manage-users', label: '用户管理', icon: '👤', path: '/t/manage/users' },
+	{ key: 'manage-media', label: '媒体库管理', icon: '📁', path: '/t/manage/media' },
+	{ key: 'manage-manga', label: '漫画管理', icon: '📚', path: '/t/manage/manga' },
+	{ key: 'manage-chapters', label: '章节管理', icon: '📑', path: '/t/manage/chapters' },
+	{ key: 'manage-paths', label: '路径管理', icon: '📂', path: '/t/manage/paths' },
+	{ key: 'manage-bookmarks', label: '书签管理', icon: '🔖', path: '/t/manage/bookmarks' },
+	{ key: 'manage-tags', label: '标签管理', icon: '🏷️', path: '/t/manage/tags' },
+	{ key: 'manage-compress', label: '解压管理', icon: '🗜️', path: '/t/manage/compress' },
+	{ key: 'manage-jobs', label: '任务管理', icon: '📋', path: '/t/manage/jobs' },
+	{ key: 'manage-sync', label: '漫画同步', icon: '🔄', path: '/t/manage/sync' },
+	{ key: 'manage-share', label: '漫画分享', icon: '📤', path: '/t/manage/share' },
+	{ key: 'manage-p2p', label: 'P2P管理', icon: '🌐', path: '/t/manage/p2p' },
+	{ key: 'manage-server', label: '服务器设置', icon: '🖥️', path: '/t/manage/server' },
+	{ key: 'manage-wiki', label: '帮助文档', icon: '📖', path: '/t/manage/wiki' },
+]
+
+const menu = computed(() => manageMode.value ? adminNavItems : navItems)
 
 const mediaList = ref([
 	{ id: 1, name: '少年漫画', icon: '📚', count: 128 },
@@ -155,19 +189,69 @@ onMounted(async () => {
 	color: #1f2937;
 }
 
+.sb-nav-item.active:hover {
+	transform: translateX(2px);
+}
+
 .sb-nav-icon {
 	font-size: 15px;
 }
 
 .sb-sec {
+	flex: 1;
+	min-height: 0;
+	overflow-y: auto;
 	margin-top: 16px;
 }
 
 .sb-sec-title {
-	padding: 8px 12px 6px;
-	font-size: 12px;
+	padding: 12px 8px 6px;
+	display: flex;
+	align-items: center;
+	font-size: 11px;
 	font-weight: 600;
 	color: #9ca3af;
+	text-transform: uppercase;
+	letter-spacing: 0.04em;
+}
+
+.sb-sec-title span {
+	flex: 1;
+}
+
+.sb-nav-title {
+	padding: 10px 12px 6px;
+	color: #9ca3af;
+	text-transform: none;
+	letter-spacing: normal;
+}
+
+.sb-manage-toggle {
+	margin-left: auto;
+	width: 32px;
+	height: 32px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	border: 1px solid rgba(0, 0, 0, 0.1);
+	border-radius: 8px;
+	background: rgba(255, 255, 255, 0.6);
+	color: #9ca3af;
+	cursor: pointer;
+	font-size: 16px;
+	transition: all 0.15s;
+	flex-shrink: 0;
+}
+
+.sb-manage-toggle:hover {
+	background: rgba(255, 255, 255, 0.9);
+	color: #4b5563;
+}
+
+.sb-manage-toggle.active {
+	background: linear-gradient(135deg, #ff6fa3, #6c8dff);
+	border-color: transparent;
+	color: #fff;
 }
 
 .sb-sec-item {
@@ -190,6 +274,7 @@ onMounted(async () => {
 }
 
 .sb-card-hint {
+	flex-shrink: 0;
 	margin-top: auto;
 	padding: 14px;
 	background: linear-gradient(135deg, #ff6fa3, #6c8dff);
