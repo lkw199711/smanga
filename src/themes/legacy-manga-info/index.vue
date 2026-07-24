@@ -809,7 +809,6 @@ function update_tags(tagsParams: tagItemType[]) {
 }
 
 .meta-description {
-  max-width: 84rem;
   margin: 1.8rem 0 0;
   color: @s-back-text-secondary;
   font-size: 1.4rem;

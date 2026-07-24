@@ -2,16 +2,18 @@
   <div :class="['chapter', sourceWebsite]">
     <div class="chapter-image-box" ref="chapterImageBox">
       <!-- 封面图片 -->
-      <el-image ref="chapterCoverImg" class="anim chapter-cover-img" :src="chapterCoverSrc" :fit="fit" :alt="chapterName" />
+      <el-image ref="chapterCoverImg" class="anim chapter-cover-img" :src="chapterCoverSrc" :fit="chapterCoverFit" :alt="chapterName" />
       <!-- 顶通封面二 -->
-      <el-image v-if="blobLink1" class="anim chapter-cover-img" :src="blobLink1" :fit="fit" :alt="chapterName" />
+      <el-image v-if="blobLink1" class="anim chapter-cover-img" :src="blobLink1" :fit="chapterCoverFit" :alt="chapterName" />
     </div>
 
-    <!-- 章节序号 -->
-    <p class="chapter-index">{{ chapterInfo.chapterNumber }}</p>
+    <div class="chapter-info">
+      <!-- 章节序号 -->
+      <p class="chapter-index">{{ chapterInfo.chapterNumber }}</p>
 
-    <!--章节名称-->
-    <p class="chapter-name single-line-text-overflow">{{ chapterName }}</p>
+      <!--章节名称-->
+      <p class="chapter-name">{{ chapterName }}</p>
+    </div>
 
     <!--已读图标-->
     <i :class="['iconfont', 'icon-success-fill', 'icon-is-read', {'is-show': isRead}]" />
@@ -35,6 +37,7 @@ import placeholder from '@/assets/s-blue.png';
 type chapterItemType = chapterType & {blob: string; chapterCover: string; pageImage: string};
 const props = defineProps(['chapterInfo', 'bookmark', 'sourceWebsite']);
 const fit = 'cover';
+const chapterCoverFit = computed(() => (props.sourceWebsite === 'toptoon' ? 'contain' : fit));
 let blobLink = ref('');
 let blobLink1 = ref('');
 
@@ -150,38 +153,67 @@ async function get_poster(item: chapterItemType) {
     z-index: 1;
   }
 
-  .chapter-index,
-  .chapter-name {
-    margin: 0;
-    line-height: 1.5;
-    font-size: 1.6rem;
-  }
+}
 
-  .chapter-index {
-    flex: 0 0 5.6rem;
-    color: @s-back-text-tertiary;
-    text-align: center;
-  }
+.chapter-info {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  flex-direction: column;
+  gap: 0.4rem;
+  min-width: 0;
+  height: 100%;
+  flex: 1;
+}
 
-  .chapter-name {
-    min-width: 0;
-    flex: 1;
-    color: @s-back-text;
-    font-weight: 600;
-    white-space: nowrap;
-  }
+.chapter-index,
+.chapter-name {
+  margin: 0;
+  font-size: 1.6rem;
+  line-height: 1.5;
+}
+
+.chapter-index {
+  max-width: 100%;
+  color: @s-back-text-tertiary;
+  font-size: 1.2rem;
+  font-weight: 500;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.chapter-name {
+  display: -webkit-box;
+  min-width: 0;
+  overflow: hidden;
+  color: @s-back-text;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+  text-overflow: ellipsis;
+  white-space: normal;
+  word-break: break-word;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
 }
 
 .chapter.toptoon {
   .chapter-image-box {
     display: flex;
-    flex-basis: 21.2rem;
-    min-width: 21.2rem;
+    min-width: 0;
+    flex: 0 0 auto;
+    aspect-ratio: 13 / 9;
+    background: @s-back-soft;
   }
 
   .chapter-cover-img {
     width: 50%;
-    flex: 1 1 50%;
+    flex: 0 0 50%;
+  }
+
+  .chapter-name {
+    -webkit-line-clamp: 3;
+    line-clamp: 3;
   }
 }
 
@@ -284,11 +316,6 @@ async function get_poster(item: chapterItemType) {
 
   .chapter.toptoon {
     height: 11rem;
-
-    .chapter-image-box {
-      flex-basis: 17rem;
-      min-width: 17rem;
-    }
   }
 
   .chapter {
@@ -300,15 +327,20 @@ async function get_poster(item: chapterItemType) {
       flex-basis: 6.5rem;
     }
 
-    .chapter-index,
-    .chapter-name {
-      line-height: 1.4;
-      font-size: 1.4rem;
-    }
+  }
 
-    .chapter-index {
-      flex-basis: 4rem;
-    }
+  .chapter-info {
+    gap: 0.2rem;
+  }
+
+  .chapter-index {
+    font-size: 1.1rem;
+    line-height: 1.3;
+  }
+
+  .chapter-name {
+    font-size: 1.4rem;
+    line-height: 1.4;
   }
 
   .icon-is-read {

@@ -88,7 +88,14 @@ const form = reactive({ ...props.mangaInfo })
 const error = ref('')
 const submitting = ref(false)
 
-watch(() => props.mangaInfo, (v) => Object.assign(form, v))
+function syncForm() {
+  Object.assign(form, mangaInit, props.mangaInfo)
+}
+
+watch(() => props.mangaInfo, syncForm, { deep: true, immediate: true })
+watch(() => editMangaDialog.value, (open) => {
+  if (open) syncForm()
+})
 
 async function submit() {
   error.value = ''
