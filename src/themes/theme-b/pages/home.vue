@@ -22,21 +22,24 @@
 		<section class="sb-section">
 			<div class="sb-section-head">
 				<h2>🌟 继续阅读</h2>
-				<a class="sb-link" @click="router.push('/t/history')">全部 →</a>
+				<a class="sb-link" @click="router.push('/t/history')">查看全部 →</a>
 			</div>
 			<div class="sb-continue">
 				<div v-for="item in historyList" :key="item.chapterId" class="sb-cont-card" v-long-press="() => openThemeActionSheet('chapter', item)" @click="goRead(item)" @contextmenu="openThemeContextMenu($event, 'chapter', item)">
-					<div class="sb-cont-cover"
-						:style="{ background: `linear-gradient(135deg, ${getGradient(item.chapterId)[0]}, ${getGradient(item.chapterId)[1]})` }">
-						<img v-if="item.blob" :src="item.blob" alt="" class="continue-cover" />
+					<div
+						class="sb-cont-cover"
+						:style="coverStyle(item, { kind: 'chapter', fallbackSeed: item.chapterId })"
+					>
 						<span v-if="item.tag" class="sb-cont-tag">{{ item.tag }}</span>
 						<span v-if="item.unread" class="sb-cont-unread">{{ item.unread }}</span>
+					</div>
+					<div class="sb-cont-info">
+						<div class="sb-cont-name">{{ item.mangaName || '未知漫画' }}</div>
+						<div class="sb-cont-chapter">{{ item.chapterName || '未知章节' }}</div>
 						<div class="sb-cont-progress">
 							<div class="sb-cont-progress-bar" :style="{ width: getProgress(item) + '%' }"></div>
 						</div>
 					</div>
-					<div class="sb-cont-name">{{ item.mangaName || '未知漫画' }}</div>
-					<div class="sb-cont-chapter">{{ item.chapterName || '未知章节' }}</div>
 				</div>
 			</div>
 		</section>
@@ -50,8 +53,7 @@
 			<div class="sb-grid">
 				<div v-for="item in latestList" :key="item.mangaId" class="sb-grid-card" @click="goManga(item)">
 					<div class="sb-grid-cover"
-						:style="{ background: `linear-gradient(135deg, ${getGradient(item.mangaId)[0]}, ${getGradient(item.mangaId)[1]})` }">
-						<img v-if="item.blob" :src="item.blob" alt="" class="continue-cover" />
+						:style="coverStyle(item, { kind: 'manga', fallbackSeed: item.mangaId })">
 						<span v-if="item.tag" class="sb-grid-tag">{{ item.tag }}</span>
 						<div class="sb-grid-hover">
 							<button class="sb-grid-play">▶ 立即阅读</button>
@@ -73,7 +75,6 @@ import latestApi from '@/api/latest'
 import chartsApi from '@/api/charts'
 import imageApi from '@/api/image'
 import { globalData } from '@/store'
-import queue from '@/store/quque'
 import { openThemeActionSheet, openThemeContextMenu } from '@/themes/context-menu'
 
 const router = useRouter()
@@ -88,6 +89,7 @@ const statsData = ref({
 })
 const historyList = ref<any[]>([])
 const latestList = ref<any[]>([])
+const coverCache = ref<Record<string, string>>({})
 
 // 渐变色彩板
 const palette = [
@@ -122,12 +124,9 @@ onMounted(async () => {
 		if (latestRes.status === 'fulfilled') {
 			latestList.value = Array.isArray(latestRes.value) ? latestRes.value : (latestRes.value?.list || [])
 		}
-		historyList.value.forEach((item) => {
-			queue.mangaQueue.add(() => get_poster(item))
-		})
-		latestList.value.forEach((item) => {
-			queue.mangaQueue.add(() => get_poster(item))
-		})
+
+		await warmCovers(historyList.value, { kind: 'chapter' })
+		await warmCovers(latestList.value, { kind: 'manga' })
 	} catch (e) {
 		// fallback
 	}
@@ -138,8 +137,13 @@ function getGradient(id: number) {
 }
 
 function getProgress(item: any) {
-	if (!item.page || !item.pageCount) return 0
-	return Math.round((item.page / item.pageCount) * 100)
+	const latest = item?.latest
+	if (!latest) return 0
+	if (latest.finish) return 100
+	const page = Number(latest.page || 0)
+	const count = Number(latest.count || 0)
+	if (!page || !count) return 0
+	return Math.min(100, Math.max(0, Math.round((page / count) * 100)))
 }
 
 function goRead(item: any) {
@@ -152,8 +156,35 @@ function goManga(item: any) {
 	router.push({ path: '/t/manga/' + item.mangaId })
 }
 
-async function get_poster(item: any) {
-	item.blob = await imageApi.get({file: item.mangaCover || item.chapterCover});
+async function warmCovers(list: any[], opt: { kind: 'manga' | 'chapter' }) {
+	const files = Array.from(
+		new Set(
+			list
+				.map((it) => (opt.kind === 'manga' ? it?.mangaCover : it?.pageImage || it?.chapterCover))
+				.filter(Boolean)
+		)
+	) as string[]
+
+	await Promise.allSettled(
+		files.map(async (file) => {
+			if (coverCache.value[file]) return
+			const src = await imageApi.get({ file })
+			coverCache.value[file] = src
+		})
+	)
+}
+
+function coverStyle(
+	item: any,
+	opt: { kind: 'manga' | 'chapter'; fallbackSeed: number }
+): Record<string, string> {
+	const file = opt.kind === 'manga' ? item?.mangaCover : item?.pageImage || item?.chapterCover
+	const src = file ? coverCache.value[file] : ''
+	if (src) {
+		return { backgroundImage: `url("${src}")` }
+	}
+	const g = getGradient(Number(opt.fallbackSeed) || 0)
+	return { backgroundImage: `linear-gradient(135deg, ${g[0]}, ${g[1]})` }
 }
 </script>
 
@@ -267,30 +298,39 @@ async function get_poster(item: any) {
 
 .sb-continue {
 	display: grid;
-	grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+	grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
 	gap: 14px;
 }
 
 .sb-cont-card {
-	cursor: pointer;
+	display: flex;
+	gap: 12px;
+	padding: 12px;
+	background: #fff;
+	border: 1px solid #eaeaea;
+	border-radius: 16px;
+	box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
 	transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+	cursor: pointer;
 }
 
 .sb-cont-card:hover {
-	transform: translateY(-4px);
+	border-color: #d1d5db;
+	box-shadow: 0 8px 24px rgba(255, 111, 163, 0.12);
+	transform: translateY(-1px);
 }
 
 .sb-cont-cover {
 	position: relative;
-	aspect-ratio: 3 / 4;
-	border-radius: 16px;
+	flex-shrink: 0;
+	width: 70px;
+	height: 96px;
+	border-radius: 10px;
 	overflow: hidden;
-	margin-bottom: 10px;
-	box-shadow: 0 6px 20px rgba(108, 141, 255, 0.18);
-}
-
-.sb-cont-card:hover .sb-cont-cover {
-	box-shadow: 0 12px 28px rgba(255, 111, 163, 0.28);
+	background-size: cover;
+	background-position: center;
+	background-repeat: no-repeat;
+	background-color: #f3f4f6;
 }
 
 .sb-cont-tag {
@@ -325,12 +365,8 @@ async function get_poster(item: any) {
 }
 
 .sb-cont-progress {
-	position: absolute;
-	left: 8px;
-	right: 8px;
-	bottom: 8px;
 	height: 4px;
-	background: rgba(255, 255, 255, 0.6);
+	background: rgba(0, 0, 0, 0.06);
 	border-radius: 2px;
 	overflow: hidden;
 }
@@ -341,11 +377,18 @@ async function get_poster(item: any) {
 	border-radius: 2px;
 }
 
+.sb-cont-info {
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	min-width: 0;
+}
+
 .sb-cont-name {
 	font-size: 14px;
 	font-weight: 700;
 	color: #1f2937;
-	padding: 0 4px;
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;
@@ -354,8 +397,9 @@ async function get_poster(item: any) {
 .sb-cont-chapter {
 	font-size: 12px;
 	color: #6b7280;
-	padding: 0 4px;
-	margin-top: 2px;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
 }
 
 .sb-grid {
@@ -376,6 +420,10 @@ async function get_poster(item: any) {
 	box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
 	overflow: hidden;
 	transition: all 0.25s;
+	background-size: cover;
+	background-position: center;
+	background-repeat: no-repeat;
+	background-color: #f3f4f6;
 }
 
 .sb-grid-card:hover .sb-grid-cover {
@@ -438,10 +486,4 @@ async function get_poster(item: any) {
 	color: #9ca3af;
 }
 
-.continue-cover {
-	width: 100%;
-	height: 100%;
-	object-fit: cover;
-	border-radius: 16px;
-}
 </style>
