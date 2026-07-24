@@ -631,5 +631,29 @@
     "deregisterOk": "Node deregistered",
     "lastHeartbeat": "Last Heartbeat",
     "noPublicUrl": "No public URL"
+  },
+  "tagEditor": {
+    "searchPlaceholder": "Search tags...",
+    "clearSearch": "Clear search",
+    "createTag": "New tag",
+    "newTagName": "Tag name",
+    "assignedTitle": "Assigned",
+    "availableTitle": "Available",
+    "emptyAssigned": "No tags assigned yet. Click a tag below to add.",
+    "allAssigned": "All tags are already assigned",
+    "noMatch": "No matching tags",
+    "loading": "Loading...",
+    "clearAll": "Clear all",
+    "undo": "Undo",
+    "saveAsJson": "Write to metadata JSON",
+    "jsonHint": "When enabled, tags are also written to metadata.json for export and external tools.",
+    "saving": "Saving...",
+    "savedTip": "Tags saved",
+    "saveFailed": "Save failed",
+    "createdTip": "Tag created",
+    "createFailed": "Failed to create tag",
+    "dupWarn": "A tag with the same name already exists; it has been selected.",
+    "discardTitle": "Discard unsaved changes?",
+    "discardConfirm": "You have unsaved changes. Are you sure you want to close?"
   }
 }

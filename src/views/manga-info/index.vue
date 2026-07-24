@@ -96,9 +96,7 @@
 
     <div class="bottom"></div>
 
-    <el-dialog :title="$t('rightSidebar.editTags')" v-model="editTagsDialog">
-      <mangaTagBox :mangaId="mangaInfo.mangaId" :tags="mangaInfo.tags" @update_tags="update_tags" @close_dialog="editTagsDialog = false" />
-    </el-dialog>
+    <TagEditorDialog v-model="editTagsDialog" :manga-id="mangaInfo.mangaId" :tags="mangaInfo.tags" @update:tags="update_tags" />
 
     <manga-modify v-model:editMangaDialog="editMangaDialog" @reload="render_meta" :mangaInfo="mangaInfo" />
 
@@ -167,7 +165,7 @@ import {chapterInit, chapterType} from '@/type/chapter';
 import chapterApi from '@/api/chapter';
 import lastesApi from '@/api/latest';
 import collectApi from '@/api/collect';
-import mangaTagBox from '@/views/manga-info/components/manga-tag-box.vue';
+import TagEditorDialog from '@/themes/components/tag-editor-dialog.vue';
 import share from '@/components/share.vue';
 import useBrowseStore from '@/store/browse';
 import chapter from './components/chapter.vue';

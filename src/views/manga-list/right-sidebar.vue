@@ -48,10 +48,8 @@
 
 		<manga-modify v-model:editMangaDialog="editMangaDialog" :mangaInfo="props.mangaInfo" @reload="emit('reload')" />
 
-		<el-dialog :title="$t('rightSidebar.editTags')" v-model="editTagsDialog">
-			<mangaTagBox :mangaId="mangaInfo.mangaId" :tags="mangaInfo.tags" @update_tags="update_tags"
-				@close_dialog="editTagsDialog = false" />
-		</el-dialog>
+		<TagEditorDialog v-model="editTagsDialog" :manga-id="mangaInfo.mangaId" :tags="mangaInfo.tags"
+			@update:tags="update_tags" />
 
 
 		<el-dialog :title="$t('mangaInfo.mangaShareDialogTitle')" v-model="mangaShareDialog">
@@ -72,7 +70,7 @@ import useBrowseStore from '@/store/browse';
 import androidSeat from '@/layout/components/android-seat.vue';
 import mangaShare from '@/components/share.vue';
 import { Cookies } from '@/utils';
-import mangaTagBox from '../manga-info/components/manga-tag-box.vue';
+import TagEditorDialog from '@/themes/components/tag-editor-dialog.vue';
 import mangaModify from '../manga-manage/components/mangaModify.vue';
 import { mangaType } from '@/type/manga';
 import placeholder from '@/assets/s-blue.png';

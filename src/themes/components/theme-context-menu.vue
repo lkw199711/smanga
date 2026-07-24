@@ -28,9 +28,7 @@
   <chapter-modify v-if="themeContextMenu.target === 'chapter'" v-model:editChapterDialog="editChapterDialog" :chapter-info="item" @close="editChapterDialog = false" @reload="finishDialog" />
   <media-edit v-if="themeContextMenu.target === 'media'" v-model:editMediaDialog="editMediaDialog" edit-model="modify" :media-info="item" @reload="finishDialog" />
 
-  <el-dialog v-model="editTagsDialog" title="编辑标签" width="min(92vw, 680px)">
-    <manga-tag-box :key="tagsDialogKey" :manga-id="item.mangaId" :tags="item.tags || []" @update_tags="updateTags" @close_dialog="editTagsDialog = false" />
-  </el-dialog>
+  <TagEditorDialog v-if="item.mangaId" v-model="editTagsDialog" :manga-id="item.mangaId" :tags="item.tags || []" @update:tags="updateTags" />
   <el-dialog v-model="shareDialog" title="创建分享链接" width="min(92vw, 680px)">
     <manga-share :manga-info="themeContextMenu.target === 'manga' ? item : undefined" :media-info="themeContextMenu.target === 'media' ? item : undefined" @close_dialog="finishDialog" />
   </el-dialog>
@@ -50,7 +48,7 @@ import { themeState } from '@/themes/store'
 import MangaModify from '@/themes/components/manga-modify-dialog.vue'
 import ChapterModify from '@/themes/components/chapter-modify-dialog.vue'
 import MediaEdit from '@/themes/components/media-edit-dialog.vue'
-import MangaTagBox from '@/views/manga-info/components/manga-tag-box.vue'
+import TagEditorDialog from '@/themes/components/tag-editor-dialog.vue'
 import MangaShare from '@/components/share.vue'
 
 type Action = { key: string; label: string; icon: string; danger?: boolean }

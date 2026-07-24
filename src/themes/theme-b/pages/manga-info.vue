@@ -27,13 +27,14 @@
   <div v-if="editTagsDialog" class="tb-dialog-overlay" @click.self="editTagsDialog = false">
     <div class="tb-dialog">
       <div class="tb-dialog-head">
-        <h3>编辑标签</h3>
+        <h3>{{$t('rightSidebar.editTags') }}</h3>
         <button class="tb-dialog-close" @click="editTagsDialog = false">×</button>
       </div>
       <div class="tb-dialog-body">
         <TagEditor
           :manga-id="mangaId"
           :tags="info.tags || []"
+          allow-create
           @update:tags="updateTags"
           @close="editTagsDialog = false"
         />

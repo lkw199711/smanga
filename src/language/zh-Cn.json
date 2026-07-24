@@ -635,5 +635,29 @@
     "deregisterOk": "已注销节点",
     "lastHeartbeat": "最后心跳",
     "noPublicUrl": "无公网地址"
+  },
+  "tagEditor": {
+    "searchPlaceholder": "搜索标签...",
+    "clearSearch": "清空搜索",
+    "createTag": "新建标签",
+    "newTagName": "输入标签名",
+    "assignedTitle": "已选标签",
+    "availableTitle": "可选标签",
+    "emptyAssigned": "暂未选择标签,从下方点击添加",
+    "allAssigned": "所有标签均已添加",
+    "noMatch": "没有匹配的标签",
+    "loading": "加载中...",
+    "clearAll": "清空全部",
+    "undo": "撤销",
+    "saveAsJson": "同步写入元数据 JSON",
+    "jsonHint": "开启后会将标签同步写入 metadata.json,便于导出与外部工具读取",
+    "saving": "保存中...",
+    "savedTip": "标签已保存",
+    "saveFailed": "保存失败",
+    "createdTip": "标签已创建",
+    "createFailed": "创建标签失败",
+    "dupWarn": "已存在同名标签,已直接选中",
+    "discardTitle": "放弃未保存的修改?",
+    "discardConfirm": "当前修改尚未保存,确定要关闭吗?"
   }
 }

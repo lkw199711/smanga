@@ -608,5 +608,29 @@
     "deregisterOk": "已註銷節點",
     "lastHeartbeat": "最後心跳",
     "noPublicUrl": "無公網地址"
+  },
+  "tagEditor": {
+    "searchPlaceholder": "搜索標簽...",
+    "clearSearch": "清空搜索",
+    "createTag": "新建標簽",
+    "newTagName": "輸入標簽名",
+    "assignedTitle": "已選標簽",
+    "availableTitle": "可選標簽",
+    "emptyAssigned": "暫未選擇標簽,從下方點擊添加",
+    "allAssigned": "所有標簽均已添加",
+    "noMatch": "沒有匹配的標簽",
+    "loading": "加載中...",
+    "clearAll": "清空全部",
+    "undo": "撤銷",
+    "saveAsJson": "同步寫入元數據 JSON",
+    "jsonHint": "開啟後會將標簽同步寫入 metadata.json,便於導出與外部工具讀取",
+    "saving": "保存中...",
+    "savedTip": "標簽已保存",
+    "saveFailed": "保存失敗",
+    "createdTip": "標簽已創建",
+    "createFailed": "創建標簽失敗",
+    "dupWarn": "已存在同名標簽,已直接選中",
+    "discardTitle": "放棄未保存的修改?",
+    "discardConfirm": "當前修改尚未保存,確定要關閉嗎?"
   }
 }
