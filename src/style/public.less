@@ -3,6 +3,21 @@
 @import 'table.less';
 @import 'scrollbar.less';
 
+/* ============== 通用工具类 ============== */
+/**
+ * .no-select
+ * 禁止长按弹出系统菜单 / 文本选中抹蓝效果
+ * 适用：所有带长按菜单 (v-long-press / @contextmenu) 的卡片类组件
+ */
+.no-select {
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+	-webkit-touch-callout: none;
+	-webkit-tap-highlight-color: transparent;
+}
+
 .main {
 	// background-color: @app-back;
 	// background-color: #f5f7fa;

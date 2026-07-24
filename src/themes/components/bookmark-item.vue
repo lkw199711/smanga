@@ -89,8 +89,20 @@ const progress = computed(() => {
 	padding: 12px;
 	border-radius: 12px;
 	cursor: pointer;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
 	user-select: none;
+	/* 阻止 iOS 长按弹出预览菜单 / Android 抹蓝高亮 */
+	-webkit-touch-callout: none;
+	-webkit-tap-highlight-color: transparent;
 	transition: all 0.15s;
+}
+
+.t-bookmark-item * {
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	user-select: none;
 }
 
 

@@ -81,8 +81,20 @@ const metaText = computed(() => {
 .t-manga-card {
 	position: relative;
 	cursor: pointer;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
 	user-select: none;
+	/* 阻止 iOS 长按弹出预览菜单 / Android 抹蓝高亮 */
+	-webkit-touch-callout: none;
+	-webkit-tap-highlight-color: transparent;
 	transition: transform 0.15s, box-shadow 0.15s, border-color 0.15s, background 0.15s;
+}
+
+.t-manga-card * {
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	user-select: none;
 }
 
 
