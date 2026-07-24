@@ -1,8 +1,8 @@
 <template>
   <div class="tb-page">
-    <h1>收藏</h1>
+    <div class="tb-page-head"><h1>收藏</h1></div>
 
-    <t-tabs-switcher v-model="tab" variant="B" :tabs="[{label:'漫画',value:'manga'},{label:'章节',value:'chapter'}]" />
+    <t-tabs-switcher v-model="tab" variant="B" :tabs="[{label:'漫画',value:'manga',count},{label:'章节',value:'chapter',count}]" />
 
     <div class="touch-dom">
       <template v-if="loading">
@@ -11,7 +11,7 @@
       <template v-else>
         <div class="tb-grid" v-if="tab === 'manga'">
           <div v-for="item in list" :key="item.collectId" class="tb-card" @click="go_manga(item)" @contextmenu="openThemeContextMenu($event, 'manga', item)">
-            <t-cover class="tb-card-cover" variant="B" :seed="Number(item?.mangaId || 0)" :file="item?.mangaCover || ''" />
+            <t-cover class="tb-card-cover" variant="B" :seed="Number(item?.mangaId || 0)" :file="item?.mangaCover || ''" fit="cover" />
             <div class="tb-card-name">{{ item.mangaName }}</div>
           </div>
         </div>
@@ -114,10 +114,12 @@ onMounted(() => {
 })
 </script>
 <style scoped>
-h1{font-size:20px;font-weight:700;margin:0 0 20px;color:#1f2937}
+.tb-page{max-width:980px;margin:0 auto}
+.tb-page-head{margin-bottom:18px}
+.tb-page-head h1{font-size:20px;font-weight:700;margin:0;color:#1f2937}
 .tb-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:16px}
 .tb-card{cursor:pointer;transition:transform .2s}.tb-card:hover{transform:translateY(-3px)}
-.tb-card-cover{aspect-ratio:3/4;border-radius:14px;overflow:hidden;background:rgba(255,255,255,0.8);box-shadow:0 4px 16px rgba(0,0,0,0.08);margin-bottom:8px}
+.tb-card-cover{aspect-ratio:3/4;border-radius:14px;overflow:hidden;box-shadow:0 4px 16px rgba(0,0,0,0.08);margin-bottom:8px}
 .tb-card-name{font-size:13px;font-weight:500;color:#1f2937;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .tb-chapter-list{display:flex;flex-direction:column;gap:10px;margin-bottom:18px}
 .tb-empty{text-align:center;padding:60px;color:#6b7280;grid-column:1/-1}

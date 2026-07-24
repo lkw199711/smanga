@@ -5,6 +5,7 @@
 			:variant="variant"
 			:seed="Number(item?.mangaId || 0)"
 			:file="coverFile"
+			fit="cover"
 		>
 			<div v-if="tagText" class="t-manga-card__tag">{{ tagText }}</div>
 			<div v-if="unreadCount > 0" class="t-manga-card__unread">{{ unreadCount }}</div>

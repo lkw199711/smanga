@@ -13,11 +13,13 @@ const props = withDefaults(
 		file?: string
 		seed?: number
 		variant?: 'A' | 'B' | 'D'
+		fit?: 'contain' | 'cover'
 	}>(),
 	{
 		file: '',
 		seed: 0,
 		variant: 'A',
+		fit: 'contain',
 	}
 )
 
@@ -74,8 +76,8 @@ const gradient = computed(() => {
 })
 
 const styleObj = computed<Record<string, string>>(() => {
-	if (src.value) return { backgroundImage: `url("${src.value}")` }
-	return { backgroundImage: `linear-gradient(135deg, ${gradient.value[0]}, ${gradient.value[1]})` }
+	if (src.value) return { backgroundImage: `url("${src.value}")`, backgroundSize: props.fit }
+	return { backgroundImage: `linear-gradient(135deg, ${gradient.value[0]}, ${gradient.value[1]})`, backgroundSize: props.fit }
 })
 </script>
 

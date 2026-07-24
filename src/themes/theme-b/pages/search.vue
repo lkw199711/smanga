@@ -2,7 +2,7 @@
   <div class="tb-page">
     <h1>搜索</h1>
 
-    <t-tabs-switcher v-model="tab" variant="B" :tabs="[{label:'漫画',value:'manga'},{label:'章节',value:'chapter'}]" />
+    <t-tabs-switcher v-model="tab" variant="B" :tabs="[{label:'漫画',value:'manga',count},{label:'章节',value:'chapter',count}]" />
 
     <div class="tb-search-bar">
       <input

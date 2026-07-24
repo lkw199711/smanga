@@ -1,7 +1,7 @@
 <template>
   <div class="td-search">
     <h2 class="td-page-title">搜索</h2>
-    <t-tabs-switcher v-model="tab" variant="D" :tabs="[{label:'漫画',value:'manga'},{label:'章节',value:'chapter'}]" />
+    <t-tabs-switcher v-model="tab" variant="D" :tabs="[{label:'漫画',value:'manga',count},{label:'章节',value:'chapter',count}]" />
 
     <div class="td-search-bar">
       <input

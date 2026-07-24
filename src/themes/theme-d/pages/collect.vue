@@ -2,7 +2,7 @@
   <div class="td-collect">
     <h2 class="td-page-title">收藏</h2>
 
-    <t-tabs-switcher v-model="tab" variant="D" :tabs="[{label:'漫画',value:'manga'},{label:'章节',value:'chapter'}]" />
+    <t-tabs-switcher v-model="tab" variant="D" :tabs="[{label:'漫画',value:'manga',count},{label:'章节',value:'chapter',count}]" />
 
     <div class="touch-dom">
       <template v-if="loading">
@@ -11,7 +11,7 @@
       <template v-else>
         <div class="td-card-grid" v-if="tab === 'manga'">
           <div class="td-card" v-for="item in list" :key="item.collectId" @click="go_manga(item)" @contextmenu="openThemeContextMenu($event, 'manga', item)">
-            <t-cover class="td-card-cover" variant="D" :seed="Number(item?.mangaId || 0)" :file="item?.mangaCover || ''" />
+            <t-cover class="td-card-cover" variant="D" :seed="Number(item?.mangaId || 0)" :file="item?.mangaCover || ''" fit="cover" />
             <div class="td-card-title">{{ item.mangaName }}</div>
           </div>
         </div>
@@ -122,17 +122,8 @@ onMounted(() => {
 .td-card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 16px; }
 .td-card { background: var(--bg2); border-radius: 10px; overflow: hidden; cursor: pointer; border: 1px solid var(--border); transition: all .2s; }
 .td-card:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.06); }
-.td-card-cover { aspect-ratio: 3/4; overflow: hidden; background: var(--bg); }
+.td-card-cover { aspect-ratio: 3/4; overflow: hidden; border-radius: 8px; }
 .td-card-title { padding: 8px 10px; font-size: 13px; font-weight: 500; color: var(--fg); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .td-chapter-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 18px; }
 .td-empty { text-align: center; color: var(--fg2); margin-top: 40px; }
-.td-card-cover {
-	width: 100%;
-	height: 100%;
-	object-fit: cover;
-	border-radius: 8px;
-  background-size: cover;
-	background-position: center;
-	background-repeat: no-repeat;
-}
 </style>
