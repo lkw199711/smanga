@@ -122,6 +122,25 @@ const tagApi = {
 	batch_delete: async function (tagIds: number[]) {
 		await ajax.delete(`tag/${tagIds.join(',')}/batch`, { data: { tagIds } });
 	},
+
+	/**
+	 * @description: 根据标签ID获取漫画列表
+	 * @param {string} tagIds 逗号分隔的标签ID
+	 * @param {number} page
+	 * @param {number} pageSize
+	 * @param {string} order
+	 * @return {*}
+	 */
+	get_manga_by_tags: async function (
+		tagIds: string,
+		page: number,
+		pageSize: number,
+		order = ''
+	) {
+		const res = await ajax.get('tags-manga', { params: { tagIds, page, pageSize, order } });
+		return res.data;
+	},
+
 };
 
 export default tagApi;

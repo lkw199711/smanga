@@ -26,8 +26,8 @@ const readerLayouts: Record<ThemeKey, () => Promise<Component>> = {
   Legacy: () => import('./theme-a/reader/layout.vue'),
 }
 
-// 设置页属于跨主题的账户/服务配置能力，A、B 共用同一份实现，
-// 避免主题切换后出现字段、头像上传等功能不一致。
+// 设置页属于跨主题的账�?服务配置能力，A、B 共用同一份实现，
+// 避免主题切换后出现字段、头像上传等功能不一致�?
 const sharedSettingsPages = {
   'user-setting': () => import('./pages/user-setting.vue'),
   'serve-setting': () => import('./pages/serve-setting.vue'),
@@ -46,7 +46,7 @@ const pages: Record<ThemeKey, Record<string, () => Promise<Component>>> = {
     bookmark: () => import('./theme-a/pages/bookmark.vue'),
     collect: () => import('./theme-a/pages/collect.vue'),
     search: () => import('./theme-a/pages/search.vue'),
-    'tag-list': () => import('./theme-a/pages/tag-list.vue'),
+    'tag-list': () => import('./pages/tag-list.vue'),
     ...sharedSettingsPages,
     manage: () => import('./theme-a/pages/manage.vue'),
     'manage-users': () => import('./theme-a/pages/manage/users.vue'),
@@ -76,7 +76,7 @@ const pages: Record<ThemeKey, Record<string, () => Promise<Component>>> = {
     bookmark: () => import('./theme-b/pages/bookmark.vue'),
     collect: () => import('./theme-b/pages/collect.vue'),
     search: () => import('./theme-b/pages/search.vue'),
-    'tag-list': () => import('./theme-b/pages/tag-list.vue'),
+    'tag-list': () => import('./pages/tag-list.vue'),
     ...sharedSettingsPages,
     manage: () => import('./theme-b/pages/manage.vue'),
     'manage-users': () => import('./theme-a/pages/manage/users.vue'),
@@ -106,7 +106,7 @@ const pages: Record<ThemeKey, Record<string, () => Promise<Component>>> = {
     bookmark: () => import('./theme-d/pages/bookmark.vue'),
     collect: () => import('./theme-d/pages/collect.vue'),
     search: () => import('./theme-d/pages/search.vue'),
-    'tag-list': () => import('./theme-d/pages/tag-list.vue'),
+    'tag-list': () => import('./pages/tag-list.vue'),
     ...sharedSettingsPages,
     manage: () => import('./theme-d/pages/manage.vue'),
     'manage-users': () => import('./theme-a/pages/manage/users.vue'),
@@ -136,7 +136,7 @@ const pages: Record<ThemeKey, Record<string, () => Promise<Component>>> = {
     bookmark: () => import('./theme-a/pages/bookmark.vue'),
     collect: () => import('./theme-a/pages/collect.vue'),
     search: () => import('./theme-a/pages/search.vue'),
-    'tag-list': () => import('./theme-a/pages/tag-list.vue'),
+    'tag-list': () => import('./pages/tag-list.vue'),
     ...sharedSettingsPages,
     manage: () => import('./theme-a/pages/manage.vue'),
     'manage-users': () => import('./theme-a/pages/manage/users.vue'),
@@ -182,7 +182,7 @@ const readers: Record<ThemeKey, Record<string, () => Promise<Component>>> = {
 }
 
 export function resolveLayout(theme: ThemeKey): Component {
-  // 根据移动端标识选择对应的 layout
+  // 根据移动端标识选择对应�?layout
   const loader = config.isMobile ? mobileLayouts[theme] : layouts[theme]
   return defineAsyncComponent(loader)
 }

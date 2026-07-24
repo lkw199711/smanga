@@ -11,7 +11,7 @@
     <div class="ta-table-wrap">
       <table class="ta-table">
         <thead>
-          <tr><th class="ta-col-check"><input type="checkbox" @change="toggleAll" :checked="allSelected" /></th><th>#</th><th>标签ID</th><th>名称</th><th>颜色</th><th>描述</th><th>操作</th></tr>
+          <tr><th class="ta-col-check"><input type="checkbox" @change="toggleAll" :checked="allSelected" /></th><th>#</th><th>标签ID</th><th>名称</th><th>颜色</th><th>描述</th><th>关联漫画</th><th>操作</th></tr>
         </thead>
         <tbody>
           <tr v-for="(row, idx) in list" :key="row.tagId">
@@ -21,12 +21,13 @@
             <td><span class="ta-tag-chip" :style="{ background: row.tagColor || '#e5e7eb' }">{{ row.tagName }}</span></td>
             <td>{{ row.tagColor || '-' }}</td>
             <td>{{ row.description || '-' }}</td>
+            <td>{{ row.mangaCount ?? '-' }}</td>
             <td class="ta-col-actions">
               <button class="ta-btn-sm" @click="openEdit(row)">✏️ 编辑</button>
               <button class="ta-btn-sm ta-btn-sm-danger" @click="doDelete(row)">🗑 删除</button>
             </td>
           </tr>
-          <tr v-if="list.length === 0"><td colspan="7" class="ta-empty">暂无标签</td></tr>
+          <tr v-if="list.length === 0"><td colspan="8" class="ta-empty">暂无标签</td></tr>
         </tbody>
       </table>
     </div>
@@ -41,7 +42,11 @@
         <div class="ta-dialog-head"><h3>{{ editingTag ? '编辑标签' : '添加标签' }}</h3><button class="ta-dialog-close" @click="dialogShow = false">×</button></div>
         <div class="ta-dialog-body">
           <label class="ta-field"><span>名称</span><input v-model="form.tagName" /></label>
-          <label class="ta-field"><span>颜色</span><input v-model="form.tagColor" type="color" style="height:40px;padding:4px" /></label>
+          <label class="ta-field"><span>颜色</span><input v-model="form.tagColor" type="color" style="height:40px;padding:4px" />
+            <div class="ta-color-presets">
+              <button v-for="c in presetColors" :key="c" class="ta-color-dot" :style="{ background: c }" :class="{ 'ta-color-dot-active': form.tagColor === c }" @click="form.tagColor = c" :title="c"></button>
+            </div>
+          </label>
           <label class="ta-field"><span>描述</span><input v-model="form.description" /></label>
         </div>
         <div class="ta-dialog-foot">
@@ -65,6 +70,7 @@ const selected = ref<number[]>([])
 const dialogShow = ref(false)
 const editingTag = ref<any>(null)
 const form = ref({ tagName: '', tagColor: '#6366f1', description: '' })
+const presetColors = ['#6366f1','#ec4899','#ef4444','#f97316','#eab308','#22c55e','#14b8a6','#06b6d4','#3b82f6','#8b5cf6','#6b7280','#1f2937']
 
 const allSelected = computed(() => list.value.length > 0 && selected.value.length === list.value.length)
 function toggleAll(e: Event) { selected.value = (e.target as HTMLInputElement).checked ? list.value.map(r => r.tagId) : [] }
@@ -88,7 +94,8 @@ async function doSave() {
   } catch (e: any) { alert(e?.message || '操作失败') }
 }
 async function doDelete(row: any) {
-  if (!confirm(`确定删除标签「${row.tagName}」吗？`)) return
+  const countMsg = row.mangaCount ? `（关联 ${row.mangaCount} 部漫画）` : ''
+  if (!confirm(`确定删除标签「${row.tagName}」${countMsg}吗？`)) return
   try { await tagApi.delete(row.tagId); reload() } catch (e: any) { alert(e?.message || '删除失败') }
 }
 async function batchDelete() {
@@ -140,4 +147,8 @@ onMounted(() => load())
 .ta-field span { font-size: 13px; font-weight: 500; color: #374151; }
 .ta-field input { padding: 8px 12px; border: 1px solid #eaeaea; border-radius: 8px; font-size: 13px; outline: none; }
 .ta-field input:focus { border-color: #2563eb; }
+.ta-color-presets { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 4px; }
+.ta-color-dot { width: 24px; height: 24px; border-radius: 50%; border: 2px solid transparent; cursor: pointer; padding: 0; transition: all 0.15s; }
+.ta-color-dot:hover { transform: scale(1.15); }
+.ta-color-dot-active { border-color: #1f2937; box-shadow: 0 0 0 2px #fff, 0 0 0 4px #1f2937; }
 </style>

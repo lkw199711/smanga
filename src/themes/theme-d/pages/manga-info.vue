@@ -96,17 +96,18 @@
             <span class="td-meta-label">评分</span>
             <span class="td-meta-value">{{ mangaInfo.star || '-' }}</span>
           </div>
-          <div class="td-meta-item td-meta-tags" v-if="mangaInfo.tags?.length">
+          <div class="td-meta-item td-meta-tags">
             <span class="td-meta-label">标签</span>
-            <div class="td-meta-value">
-              <span 
-                v-for="tag in mangaInfo.tags" 
+            <div class="td-meta-value td-meta-value-tags">
+              <TagChip
+                v-for="tag in mangaInfo.tags"
                 :key="tag.tagId"
-                class="td-tag"
-                :style="{ backgroundColor: tag.tagColor }"
-              >
-                {{ tag.tagName }}
-              </span>
+                :name="tag.tagName"
+                :color="tag.tagColor"
+              />
+              <button class="td-btn-edit-tag" @click="editTagsDialog = true" v-if="mangaInfo.mangaId">
+                {{ mangaInfo.tags?.length ? '编辑标签' : '添加标签' }}
+              </button>
             </div>
           </div>
         </div>
@@ -148,6 +149,24 @@
         </div>
       </div>
     </div>
+
+    <!-- 标签编辑弹窗 -->
+    <div v-if="editTagsDialog" class="td-dialog-overlay" @click.self="editTagsDialog = false">
+      <div class="td-dialog">
+        <div class="td-dialog-head">
+          <h3>编辑标签</h3>
+          <button class="td-dialog-close" @click="editTagsDialog = false">×</button>
+        </div>
+        <div class="td-dialog-body">
+          <TagEditor
+            :manga-id="mangaId"
+            :tags="mangaInfo.tags || []"
+            @update:tags="updateTags"
+            @close="editTagsDialog = false"
+          />
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -161,6 +180,8 @@ import imageApi from '@/api/image'
 import lastesApi from '@/api/latest'
 import useBrowseStore from '@/store/browse'
 import { openThemeContextMenu } from '@/themes/context-menu'
+import TagChip from '@/themes/components/tag-chip.vue'
+import TagEditor from '@/themes/components/tag-editor.vue'
 
 const router = useRouter()
 const route = useRoute()
@@ -172,6 +193,7 @@ const chapterList = ref<any[]>([])
 const isCollected = ref(false)
 const hasLatest = ref(false)
 const chapterListDesc = ref(false)
+const editTagsDialog = ref(false)
 
 // 元数据
 const banner = ref<any[]>([])
@@ -333,6 +355,10 @@ function goChapterList() {
     query: { mangaId: mangaId.value },
     params: { browseType: mangaInfo.value.browseType, clear: '1' }
   })
+}
+
+function updateTags(tags: any[]) {
+  mangaInfo.value.tags = tags
 }
 
 function goToChapter(chapter: any) {
@@ -636,14 +662,75 @@ function goToChapter(chapter: any) {
   grid-column: 1 / -1;
 }
 
-.td-tag {
-  display: inline-block;
+.td-meta-value-tags {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+}
+
+.td-btn-edit-tag {
   padding: 4px 12px;
+  font-size: 12px;
+  color: var(--sd-primary, #2563eb);
+  background: none;
+  border: 1px dashed var(--sd-primary, #2563eb);
   border-radius: 999px;
-  font-size: 13px;
-  margin-right: 8px;
-  margin-bottom: 8px;
+  cursor: pointer;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+.td-btn-edit-tag:hover {
+  background: var(--sd-primary, #2563eb);
   color: #fff;
+}
+
+/* dialog */
+.td-dialog-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.td-dialog {
+  background: var(--sd-card);
+  border-radius: 14px;
+  width: 520px;
+  max-width: 90vw;
+  max-height: 85vh;
+  overflow-y: auto;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+}
+.td-dialog-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--sd-border);
+}
+.td-dialog-head h3 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+}
+.td-dialog-close {
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: none;
+  font-size: 20px;
+  cursor: pointer;
+  color: #9ca3af;
+  border-radius: 6px;
+}
+.td-dialog-close:hover {
+  background: var(--sd-hover);
+}
+.td-dialog-body {
+  padding: 20px;
 }
 
 .td-chapter-section {

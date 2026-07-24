@@ -7,7 +7,7 @@
 			:file="coverFile"
 			fit="cover"
 		>
-			<div v-if="tagText" class="t-manga-card__tag">{{ tagText }}</div>
+			<div v-if="tagText" class="t-manga-card__tag" :class="{ 'has-color': tagColor }" :style="tagColor ? { background: tagColor } : {}">{{ tagText }}</div>
 			<div v-if="unreadCount > 0" class="t-manga-card__unread">{{ unreadCount }}</div>
 		</t-cover>
 		<div class="t-manga-card__name">{{ name }}</div>
@@ -43,8 +43,6 @@ const emit = defineEmits<{
 
 const variant = computed(() => props.variant)
 
-console.log('MangaCard', props.item)
-
 const name = computed(() => String(props.item?.mangaName || props.item?.title || '未知漫画'))
 
 const coverFile = computed(() => {
@@ -59,8 +57,16 @@ const unreadCount = computed(() => {
 })
 
 const tagText = computed(() => {
-	const t = String(props.tag || '')
-	return t.trim() ? t : ''
+	const tag = props.tag
+	if (!tag) return ''
+	if (typeof tag === 'string') return tag.trim()
+	return (tag as any).name || (tag as any).tagName || ''
+})
+
+const tagColor = computed(() => {
+	const tag = props.tag
+	if (!tag || typeof tag === 'string') return ''
+	return (tag as any).color || (tag as any).tagColor || ''
 })
 
 const metaText = computed(() => {
