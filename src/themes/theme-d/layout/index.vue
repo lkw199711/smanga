@@ -81,6 +81,7 @@
 							<span>🎨 {{ currentSkinLabel }}</span>
 						</button>
 						<div v-if="showSkinDropdown" class="sd-skin-dropdown">
+							<div class="sd-theme-section-title">界面风格</div>
 							<div
 								v-for="skin in skinList"
 								:key="skin.key"
@@ -88,6 +89,17 @@
 								@click="applySkin(skin.key)"
 							>
 								{{ skin.name }}
+							</div>
+							<div class="sd-theme-divider"></div>
+							<div class="sd-theme-section-title">配色方案</div>
+							<div
+								v-for="t in themeList"
+								:key="t.key"
+								:class="['sd-skin-item', { active: currentTheme === t.key }]"
+								@click="setThemeColor(t.key)"
+							>
+								<span class="sd-theme-swatch-dot" :style="{ background: t.primary }"></span>
+								{{ t.name }}
 							</div>
 						</div>
 					</div>
@@ -156,6 +168,7 @@ watch(
 
 function setThemeColor(key: ThemeColorKey) {
 	currentTheme.value = key
+	showSkinDropdown.value = false
 }
 
 const theme = computed(() => themeList.find((t) => t.key === currentTheme.value)!)
@@ -746,9 +759,14 @@ onBeforeUnmount(() => {
 	box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
 	z-index: 200;
 	padding: 6px;
+	max-height: 420px;
+	overflow-y: auto;
 }
 
 .sd-skin-item {
+	display: flex;
+	align-items: center;
+	gap: 8px;
 	padding: 8px 14px;
 	font-size: 13px;
 	color: var(--sd-text-muted);
@@ -766,5 +784,26 @@ onBeforeUnmount(() => {
 	background: var(--sd-primary-bg);
 	color: var(--sd-primary);
 	font-weight: 600;
+}
+
+.sd-theme-section-title {
+	padding: 6px 14px 4px;
+	font-size: 11px;
+	font-weight: 600;
+	color: var(--sd-text-faint);
+	letter-spacing: 0.05em;
+}
+
+.sd-theme-divider {
+	margin: 6px 10px;
+	border-top: 1px solid var(--sd-border);
+}
+
+.sd-theme-swatch-dot {
+	flex-shrink: 0;
+	width: 14px;
+	height: 14px;
+	border-radius: 50%;
+	border: 1.5px solid rgba(0, 0, 0, 0.1);
 }
 </style>
