@@ -51,7 +51,7 @@
 				<a class="sb-link" @click="router.push('/t/media')">全部 →</a>
 			</div>
 			<div class="sb-grid">
-				<div v-for="item in latestList" :key="item.mangaId" class="sb-grid-card" @click="goManga(item)">
+				<div v-for="item in latestList" :key="item.mangaId" class="sb-grid-card" @click="goManga(item)" @contextmenu="openThemeContextMenu($event, 'manga', item)">
 					<div class="sb-grid-cover"
 						:style="coverStyle(item, { kind: 'manga', fallbackSeed: item.mangaId })">
 						<span v-if="item.tag" class="sb-grid-tag">{{ item.tag }}</span>

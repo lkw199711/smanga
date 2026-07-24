@@ -39,8 +39,7 @@
 			<div class="sd-continue">
 				<div v-for="m in continueReading" :key="m.id" class="sd-cont-card" v-long-press="() => openThemeActionSheet('chapter', m)" @click="goRead(m)" @contextmenu="openThemeContextMenu($event, 'chapter', m)">
 					<div class="sd-cont-cover"
-						:style="{ background: `linear-gradient(135deg, ${m.gradient[0]}, ${m.gradient[1]})` }">
-						<img v-if="m.blob" :src="m.blob" alt="" class="sd-cont-cover-img">
+						:style="coverStyle(m, { kind: 'chapter', fallbackSeed: m.id })">
 						<span v-if="m.tag" class="sd-cont-tag">{{ m.tag }}</span>
 						<span v-if="m.unread" class="sd-cont-unread">{{ m.unread }}</span>
 					</div>
@@ -61,10 +60,9 @@
 				<a class="sd-link" @click="router.push('/t/media')">查看全部 →</a>
 			</div>
 			<div class="sd-grid">
-				<div v-for="m in recentAdded" :key="m.id" class="sd-grid-card" @click="goManga(m)">
+				<div v-for="m in recentAdded" :key="m.id" class="sd-grid-card" @click="goManga(m)" @contextmenu="openThemeContextMenu($event, 'manga', m)">
 					<div class="sd-grid-cover"
-						:style="{ background: `linear-gradient(135deg, ${m.gradient[0]}, ${m.gradient[1]})` }">
-						<img v-if="m.blob" :src="m.blob" alt="" class="sd-grid-cover-img">
+						:style="coverStyle(m, { kind: 'manga', fallbackSeed: m.id })">
 						<span v-if="m.tag" class="sd-grid-tag">{{ m.tag }}</span>
 					</div>
 					<div class="sd-grid-name">{{ m.name }}</div>
@@ -82,7 +80,6 @@ import historyApi from '@/api/history'
 import latestApi from '@/api/latest'
 import chartsApi from '@/api/charts'
 import imageApi from '@/api/image'
-import queue from '@/store/quque'
 import { openThemeActionSheet, openThemeContextMenu } from '@/themes/context-menu'
 
 type MangaCard = {
@@ -108,6 +105,7 @@ const stats = ref({
 
 const continueReading = ref<MangaCard[]>([])
 const recentAdded = ref<MangaCard[]>([])
+const coverCache = ref<Record<string, string>>({})
 
 const palette: [string, string][] = [
 	['#FFB5A7', '#FEC89A'],
@@ -129,8 +127,13 @@ function getGradient(id: number) {
 }
 
 function getProgress(item: any) {
-	if (!item.page || !item.pageCount) return 0
-	return Math.round((item.page / item.pageCount) * 100)
+	const latest = item?.latest
+	if (!latest) return 0
+	if (latest.finish) return 100
+	const page = Number(latest.page || 0)
+	const count = Number(latest.count || 0)
+	if (!page || !count) return 0
+	return Math.min(100, Math.max(0, Math.round((page / count) * 100)))
 }
 
 onMounted(async () => {
@@ -165,6 +168,7 @@ onMounted(async () => {
 		const list = await latestApi.get(1, 12)
 		recentAdded.value = (list || []).map((item: any) => ({
 			id: Number(item.mangaId),
+			mangaId: Number(item.mangaId),
 			name: item.mangaName || '未知漫画',
 			mangaCover: item.mangaCover,
 			chapter: `${Number(item.chapterCount || 0)} 章节`,
@@ -174,13 +178,8 @@ onMounted(async () => {
 	} catch { }
 
 	console.log('continueReading', continueReading.value)
-	continueReading.value.forEach((item) => {
-		queue.mangaQueue.add(() => get_poster(item))
-		// get_poster(item)
-	})
-	recentAdded.value.forEach((item) => {
-		queue.mangaQueue.add(() => get_poster(item))
-	})
+	await warmCovers(continueReading.value, { kind: 'chapter' })
+	await warmCovers(recentAdded.value, { kind: 'manga' })
 })
 
 function goRead(item: MangaCard) {
@@ -191,8 +190,35 @@ function goManga(item: MangaCard) {
 	router.push(`/t/manga/${item.id}`)
 }
 
-async function get_poster(item: any) {
-	item.blob = await imageApi.get({ file: item.mangaCover || item.chapterCover });
+async function warmCovers(list: any[], opt: { kind: 'manga' | 'chapter' }) {
+	const files = Array.from(
+		new Set(
+			list
+				.map((it) => (opt.kind === 'manga' ? it?.mangaCover : it?.chapterCover || it?.pageImage))
+				.filter(Boolean)
+		)
+	) as string[]
+
+	await Promise.allSettled(
+		files.map(async (file) => {
+			if (coverCache.value[file]) return
+			const src = await imageApi.get({ file })
+			coverCache.value[file] = src
+		})
+	)
+}
+
+function coverStyle(
+	item: any,
+	opt: { kind: 'manga' | 'chapter'; fallbackSeed: number }
+): Record<string, string> {
+	const file = opt.kind === 'manga' ? item?.mangaCover : item?.chapterCover || item?.pageImage
+	const src = file ? coverCache.value[file] : ''
+	if (src) {
+		return { backgroundImage: `url("${src}")` }
+	}
+	const g = getGradient(Number(opt.fallbackSeed) || 0)
+	return { backgroundImage: `linear-gradient(135deg, ${g[0]}, ${g[1]})` }
 }
 </script>
 
@@ -291,6 +317,10 @@ async function get_poster(item: any) {
 	height: 96px;
 	border-radius: 8px;
 	overflow: hidden;
+	background-size: cover;
+	background-position: center;
+	background-repeat: no-repeat;
+	background-color: var(--sd-hover);
 }
 
 .sd-cont-tag {
@@ -377,6 +407,10 @@ async function get_poster(item: any) {
 	border-radius: 10px;
 	margin-bottom: 8px;
 	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+	background-size: cover;
+	background-position: center;
+	background-repeat: no-repeat;
+	background-color: var(--sd-hover);
 }
 
 .sd-grid-tag {
@@ -405,10 +439,4 @@ async function get_poster(item: any) {
 	color: var(--sd-text-faint);
 }
 
-.sd-cont-cover-img, .sd-grid-cover-img {
-	width: 100%;
-	height: 100%;
-	object-fit: cover;
-	border-radius: 8px;
-}
 </style>
