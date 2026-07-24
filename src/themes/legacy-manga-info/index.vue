@@ -1,6 +1,6 @@
 <template>
   <div class="manga-info">
-    <div class="top" :style="[bannerModel === 'toomics' && {marginTop: 0}]">
+    <div :class="['top', {'top--cover-only': !banner.length}]" :style="[bannerModel === 'toomics' && {marginTop: 0}]">
       <template v-if="banner.length">
         <el-carousel class="carousel" :interval="interval" :type="carouselType" v-if="bannerModel === 'toptoon'">
           <el-carousel-item class="banner-box" v-for="item in banner" :key="item.metaId">
@@ -32,7 +32,11 @@
         </div>
       </div>
 
-      <div class="detail-overview">
+      <div :class="['detail-overview', {'detail-overview--with-cover': !banner.length}]">
+        <aside class="overview-cover" v-if="!banner.length" aria-label="漫画封面">
+          <el-image class="overview-cover-img" :src="mangaCover" fit="contain" :alt="mangaInfo.mangaName"></el-image>
+        </aside>
+
         <section class="meta-info" aria-labelledby="manga-info-title">
         <header class="meta-heading">
           <div class="meta-title-block">
@@ -1174,6 +1178,23 @@ function update_tags(tagsParams: tagItemType[]) {
   text-align: center;
 }
 
+.overview-cover {
+  display: none;
+  box-sizing: border-box;
+  padding: 1rem;
+  border: 1px solid color-mix(in srgb, @s-border 78%, transparent);
+  border-radius: 1.6rem;
+  background: var(--s-back-soft-original, #f9f9f9);
+  box-shadow: 0 0.8rem 2.8rem fade(#000000, 6%);
+}
+
+.overview-cover-img {
+  display: block;
+  width: 100%;
+  height: 40rem;
+  border-radius: 1rem;
+}
+
 .cover-img {
   display: block;
   margin: 0 auto;
@@ -1185,6 +1206,44 @@ function update_tags(tagsParams: tagItemType[]) {
   .action-primary {
     grid-template-columns: minmax(26rem, 34rem) max-content;
     justify-content: start;
+  }
+
+  .top--cover-only {
+    display: none;
+  }
+
+  .detail-overview--with-cover {
+    display: grid;
+    grid-template-areas:
+      'cover meta'
+      'cover actions';
+    grid-template-columns: minmax(22rem, 28rem) minmax(0, 1fr);
+    align-items: start;
+    gap: 1.6rem;
+    width: calc(100% - 4rem);
+    max-width: 140rem;
+    margin: 2rem auto 2rem 2rem;
+  }
+
+  .detail-overview--with-cover > .overview-cover {
+    display: block;
+    grid-area: cover;
+  }
+
+  .detail-overview--with-cover > .meta-info {
+    grid-area: meta;
+  }
+
+  .detail-overview--with-cover > .action-panel {
+    grid-area: actions;
+  }
+
+  .detail-overview--with-cover > .meta-info,
+  .detail-overview--with-cover > .action-panel {
+    box-sizing: border-box;
+    width: 100%;
+    max-width: none;
+    margin: 0;
   }
 }
 
@@ -1205,6 +1264,13 @@ function update_tags(tagsParams: tagItemType[]) {
     width: 100%;
     max-width: none;
     margin: 0;
+  }
+
+  .detail-overview--with-cover {
+    grid-template-areas:
+      'cover meta'
+      'cover actions';
+    grid-template-columns: minmax(24rem, 30rem) minmax(0, 1fr);
   }
 }
 
