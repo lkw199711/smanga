@@ -10,7 +10,7 @@
       </template>
       <template v-else>
         <div class="td-card-grid" v-if="tab === 'manga'">
-          <div class="td-card" v-for="item in list" :key="item.collectId" @click="go_manga(item)">
+          <div class="td-card" v-for="item in list" :key="item.collectId" @click="go_manga(item)" @contextmenu="openThemeContextMenu($event, 'manga', item)">
             <t-cover class="td-card-cover" variant="D" :seed="Number(item?.mangaId || 0)" :file="item?.mangaCover || ''" />
             <div class="td-card-title">{{ item.mangaName }}</div>
           </div>
@@ -25,6 +25,7 @@
             :title="item.mangaName || '未知漫画'"
             :sub="item.chapterName || '未知章节'"
             @click="go_read(item)"
+            @contextmenu="openThemeContextMenu($event, 'chapter', item)"
           />
         </div>
       </template>
@@ -47,6 +48,7 @@ import listSkeleton from '@/components/list-skeleton.vue'
 import TCover from '@/themes/components/media-cover.vue'
 import TChapterItem from '@/themes/components/chapter-item.vue'
 import TTabsSwitcher from '@/themes/components/tabs-switcher.vue'
+import { openThemeContextMenu } from '@/themes/context-menu'
 
 const router = useRouter()
 const tab = ref<'manga' | 'chapter'>('manga')

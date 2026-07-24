@@ -18,7 +18,7 @@
       </template>
       <template v-else>
         <div class="td-card-grid" v-if="tab === 'manga' && list.length">
-          <t-manga-card v-for="item in list" :key="item.mangaId" :item="item" variant="D" @click="go_manga(item)" />
+          <t-manga-card v-for="item in list" :key="item.mangaId" :item="item" variant="D" @click="go_manga(item)" @contextmenu="openThemeContextMenu($event, 'manga', item)" />
         </div>
 
         <div class="td-chapter-list" v-if="tab === 'chapter' && list.length">
@@ -29,6 +29,7 @@
             variant="D"
             :sub="(item.latest && item.latest.page) ? `上次看到第 ${item.latest.page} 页` : '未读'"
             @click="go_read(item)"
+            @contextmenu="openThemeContextMenu($event, 'chapter', item)"
           />
         </div>
       </template>
@@ -52,6 +53,7 @@ import TCover from '@/themes/components/media-cover.vue'
 import TMangaCard from '@/themes/components/manga-card.vue'
 import TChapterItem from '@/themes/components/chapter-item.vue'
 import TTabsSwitcher from '@/themes/components/tabs-switcher.vue'
+import { openThemeContextMenu } from '@/themes/context-menu'
 
 const route = useRoute()
 const router = useRouter()

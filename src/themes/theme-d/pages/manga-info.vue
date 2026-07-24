@@ -133,6 +133,7 @@
             class="td-chapter-item"
             :class="{ 'td-chapter-read': chapter.latest?.finish }"
             @click="goToChapter(chapter)"
+            @contextmenu="openThemeContextMenu($event, 'chapter', chapter)"
           >
             <div class="td-chapter-info">
               <span class="td-chapter-number">第 {{ chapter.chapterNumber }} 话</span>
@@ -159,6 +160,7 @@ import collectApi from '@/api/collect'
 import imageApi from '@/api/image'
 import lastesApi from '@/api/latest'
 import useBrowseStore from '@/store/browse'
+import { openThemeContextMenu } from '@/themes/context-menu'
 
 const router = useRouter()
 const route = useRoute()
