@@ -615,7 +615,7 @@ router.beforeEach(async (to) => {
 	start();
 
 	// Legacy 主题重定向：如果 cookie 是 Legacy 但访问 /t 路由，跳转到旧版对应页面
-	if (themeState.current === 'Legacy' && to.path.startsWith('/t')) {
+	if (themeState.current === 'Legacy' && to.path.startsWith('/t') && !to.path.startsWith('/tag-')) {
 		// 带参数路由映射
 		if (to.name === 't-manga-list') { close(); return `/manga-list?media=${to.params.mediaId || ''}` }
 		if (to.name === 't-manga-info') { close(); return `/manga-info?mangaId=${to.params.mangaId || ''}` }
@@ -625,6 +625,13 @@ router.beforeEach(async (to) => {
 			't-bookmark': '/bookmark', 't-collect': '/collect', 't-search': '/search',
 			't-tag-list': '/tag-list', 't-user-setting': '/user-setting',
 			't-serve-setting': '/serve-setting', 't-manage': '/manage', 't-login': '/login',
+			't-manage-users': '/account', 't-manage-media': '/media-setting',
+			't-manage-manga': '/manga-setting', 't-manage-chapters': '/chapter-setting',
+			't-manage-paths': '/path-setting', 't-manage-bookmarks': '/bookmark-setting',
+			't-manage-tags': '/tag-setting', 't-manage-compress': '/compress-setting',
+			't-manage-jobs': '/jobs-setting', 't-manage-sync': '/manga-sync',
+			't-manage-share': '/manga-share', 't-manage-p2p': '/p2p-group',
+			't-manage-server': '/serve-setting', 't-manage-wiki': '/wiki',
 		}
 		const target = legacyMap[to.name as string]
 		if (target) { close(); return target }

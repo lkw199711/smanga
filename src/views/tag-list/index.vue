@@ -99,8 +99,12 @@ async function onChange(tagItem: tagItemType, status: boolean) {
     page_change(page.value, browse.mangaListPageSize);
 }
 
-onMounted(async () => {
-    tagList.value = await tagApi.get_nopage();
+onMounted(() => {
+    tagApi.get_nopage().then((list: tagItemType[]) => {
+        tagList.value = list;
+    }).catch(() => {
+        tagList.value = [];
+    });
 })
 
 /**
