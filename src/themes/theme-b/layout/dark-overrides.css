@@ -1,0 +1,284 @@
+/* ==========================================================================
+ * Theme-B 夜间模式覆盖样式
+ * 根节点 (.tb-layout) 添加 .tb-dark 类,统一反转 sb-* 系列组件的浅色。
+ * ========================================================================== */
+
+.tb-dark {
+	color-scheme: dark;
+
+	--sb-bg: #0f172a;
+	--sb-bg-soft: #111827;
+	--sb-bg-elev: #1f2937;
+	--sb-bg-hover: #374151;
+	--sb-card: #1e293b;
+	--sb-border: #334155;
+	--sb-glass: rgba(30, 41, 59, 0.72);
+	--sb-glass-strong: rgba(30, 41, 59, 0.88);
+	--sb-text: #e5e7eb;
+	--sb-text-2: #cbd5e1;
+	--sb-text-3: #94a3b8;
+	--sb-text-muted: #64748b;
+	--sb-accent: #f0abfc;
+	--sb-accent-2: #a5b4fc;
+	--sb-active-bg: #4c1d95;
+}
+
+/* ---- 侧边栏 ---- */
+.tb-dark .sb-sidebar {
+	background: var(--sb-glass) !important;
+	backdrop-filter: blur(20px);
+	border-right-color: var(--sb-border) !important;
+	color: var(--sb-text);
+}
+.tb-dark .sb-logo,
+.tb-dark .sb-logo-text {
+	color: var(--sb-text) !important;
+}
+.tb-dark .sb-sec-title {
+	color: var(--sb-text-muted) !important;
+}
+.tb-dark .sb-nav-item,
+.tb-dark .sb-sec-item {
+	color: var(--sb-text-2) !important;
+}
+.tb-dark .sb-nav-item:hover,
+.tb-dark .sb-sec-item:hover {
+	background: var(--sb-bg-hover) !important;
+	color: var(--sb-text) !important;
+}
+.tb-dark .sb-nav-item.active,
+.tb-dark .sb-nav-item.router-link-active {
+	background: var(--sb-active-bg) !important;
+	color: #ede9fe !important;
+}
+.tb-dark .sb-sec-count {
+	background: var(--sb-bg-hover) !important;
+	color: var(--sb-text-3) !important;
+}
+.tb-dark .sb-sec-empty {
+	color: var(--sb-text-muted) !important;
+}
+.tb-dark .sb-card-hint {
+	background: linear-gradient(135deg, #4c1d95 0%, #1e40af 100%) !important;
+	color: var(--sb-text) !important;
+	border-color: var(--sb-border) !important;
+}
+
+/* ---- 顶栏(玻璃拟态) ---- */
+.tb-dark .sb-topbar {
+	background: var(--sb-glass) !important;
+	backdrop-filter: blur(20px);
+	border-color: var(--sb-border) !important;
+	color: var(--sb-text);
+}
+.tb-dark .sb-top-item {
+	color: var(--sb-text-2) !important;
+}
+.tb-dark .sb-top-item:hover,
+.tb-dark .sb-top-item.active {
+	color: var(--sb-accent) !important;
+}
+
+.tb-dark .sb-search {
+	background: var(--sb-card) !important;
+	border-color: var(--sb-border) !important;
+}
+.tb-dark .sb-search input {
+	color: var(--sb-text) !important;
+	background: transparent !important;
+}
+.tb-dark .sb-search input::placeholder {
+	color: var(--sb-text-muted) !important;
+}
+
+.tb-dark .sb-pill {
+	background: var(--sb-bg-elev) !important;
+	color: var(--sb-text-2) !important;
+	border-color: var(--sb-border) !important;
+}
+.tb-dark .sb-pill:hover {
+	background: var(--sb-bg-hover) !important;
+	color: var(--sb-text) !important;
+}
+
+.tb-dark .sb-avatar,
+.tb-dark .sb-user-trigger {
+	background: var(--sb-bg-elev) !important;
+	color: var(--sb-text) !important;
+	border-color: var(--sb-border) !important;
+}
+.tb-dark .sb-user-name {
+	color: var(--sb-text) !important;
+}
+.tb-dark .sb-user-arrow {
+	color: var(--sb-text-3) !important;
+}
+.tb-dark .sb-user-dropdown {
+	background: var(--sb-card) !important;
+	border-color: var(--sb-border) !important;
+	box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5) !important;
+}
+.tb-dark .sb-user-dropdown-item {
+	color: var(--sb-text-2) !important;
+}
+.tb-dark .sb-user-dropdown-item:hover {
+	background: var(--sb-bg-hover) !important;
+	color: var(--sb-text) !important;
+}
+.tb-dark .sb-user-dropdown-logout {
+	color: #fca5a5 !important;
+}
+
+/* ---- 主题/排序下拉(如果有) ---- */
+.tb-dark .sb-theme-dropdown,
+.tb-dark .sb-sort-dropdown {
+	background: var(--sb-card) !important;
+	border-color: var(--sb-border) !important;
+	box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5) !important;
+}
+.tb-dark .sb-theme-option,
+.tb-dark .sb-sort-item {
+	color: var(--sb-text-2) !important;
+}
+.tb-dark .sb-theme-option:hover,
+.tb-dark .sb-sort-item:hover {
+	background: var(--sb-bg-hover) !important;
+	color: var(--sb-text) !important;
+}
+.tb-dark .sb-theme-option.active,
+.tb-dark .sb-sort-item.active {
+	background: var(--sb-active-bg) !important;
+	color: #ede9fe !important;
+}
+
+/* ---- 主内容 & 卡片 ---- */
+.tb-dark .sb-main,
+.tb-dark .sb-body {
+	color: var(--sb-text);
+}
+.tb-dark .sb-card,
+.tb-dark .sb-panel,
+.tb-dark .sb-section,
+.tb-dark .sb-manga-card,
+.tb-dark .sb-list-item,
+.tb-dark .sb-row,
+.tb-dark .sb-item,
+.tb-dark .sb-media-card,
+.tb-dark .sb-chapter-item,
+.tb-dark .sb-history-item,
+.tb-dark .sb-bookmark-item,
+.tb-dark .sb-tile {
+	background: var(--sb-card) !important;
+	border-color: var(--sb-border) !important;
+	color: var(--sb-text);
+}
+.tb-dark .sb-card:hover,
+.tb-dark .sb-panel:hover,
+.tb-dark .sb-manga-card:hover,
+.tb-dark .sb-list-item:hover,
+.tb-dark .sb-tile:hover {
+	background: var(--sb-bg-elev) !important;
+	border-color: var(--sb-accent-2) !important;
+}
+
+/* ---- 文本层级 ---- */
+.tb-dark h1,
+.tb-dark h2,
+.tb-dark h3,
+.tb-dark h4,
+.tb-dark .sb-title,
+.tb-dark .sb-page-title,
+.tb-dark .sb-heading,
+.tb-dark .sb-h {
+	color: var(--sb-text) !important;
+}
+.tb-dark .sb-sub,
+.tb-dark .sb-subtitle,
+.tb-dark .sb-desc,
+.tb-dark .sb-meta,
+.tb-dark .sb-hint,
+.tb-dark .sb-caption {
+	color: var(--sb-text-3) !important;
+}
+.tb-dark .sb-muted {
+	color: var(--sb-text-muted) !important;
+}
+
+/* ---- 分隔线 ---- */
+.tb-dark .sb-divider,
+.tb-dark .sb-hr,
+.tb-dark hr {
+	border-color: var(--sb-border) !important;
+	background: var(--sb-border) !important;
+}
+
+/* ---- 表单元素 ---- */
+.tb-dark input:not([type='checkbox']):not([type='radio']):not([type='range']),
+.tb-dark textarea,
+.tb-dark select {
+	background: var(--sb-card) !important;
+	color: var(--sb-text) !important;
+	border-color: var(--sb-border) !important;
+}
+.tb-dark input::placeholder,
+.tb-dark textarea::placeholder {
+	color: var(--sb-text-muted) !important;
+}
+
+/* ---- 标签、徽章 ---- */
+.tb-dark .sb-tag,
+.tb-dark .sb-badge,
+.tb-dark .sb-chip {
+	background: var(--sb-bg-hover) !important;
+	color: var(--sb-text-2) !important;
+	border-color: var(--sb-border) !important;
+}
+
+/* ---- 移动端 ---- */
+.tb-dark .sb-mobile-header,
+.tb-dark .sb-mobile-drawer {
+	background: var(--sb-glass-strong) !important;
+	backdrop-filter: blur(20px);
+	color: var(--sb-text);
+	border-color: var(--sb-border) !important;
+}
+.tb-dark .sb-menu-toggle {
+	color: var(--sb-text) !important;
+}
+
+/* ---- 弹窗/对话框(共享组件) ---- */
+.tb-dark .sm-dialog,
+.tb-dark .sm-modal,
+.tb-dark .sm-popup,
+.tb-dark .theme-context-menu {
+	background: var(--sb-card) !important;
+	color: var(--sb-text) !important;
+	border-color: var(--sb-border) !important;
+}
+
+/* ---- 表格 ---- */
+.tb-dark table {
+	color: var(--sb-text);
+}
+.tb-dark th,
+.tb-dark td {
+	border-color: var(--sb-border) !important;
+}
+.tb-dark thead {
+	background: var(--sb-bg-elev) !important;
+}
+.tb-dark tbody tr:hover {
+	background: var(--sb-bg-hover) !important;
+}
+
+/* ---- 滚动条 ---- */
+.tb-dark ::-webkit-scrollbar-track {
+	background: var(--sb-bg-soft);
+}
+.tb-dark ::-webkit-scrollbar-thumb {
+	background: var(--sb-border);
+	border-radius: 4px;
+}
+.tb-dark ::-webkit-scrollbar-thumb:hover {
+	background: var(--sb-text-muted);
+}

@@ -1,0 +1,255 @@
+/* ==========================================================================
+ * Theme-A 夜间模式覆盖样式
+ * 通过在根节点 (.style-a) 添加 .sa-dark 类,统一反转组件内硬编码的浅色。
+ * 全局(非 scoped)注入,因此可以匹配到子组件 scoped 样式中的类名。
+ * ========================================================================== */
+
+/* ---- 基础色彩变量 ---- */
+.sa-dark {
+	color-scheme: dark;
+
+	--sa-bg: #0f172a;
+	--sa-bg-soft: #111827;
+	--sa-bg-elev: #1f2937;
+	--sa-bg-hover: #374151;
+	--sa-card: #1e293b;
+	--sa-border: #334155;
+	--sa-border-soft: #1f2937;
+	--sa-text: #e5e7eb;
+	--sa-text-2: #cbd5e1;
+	--sa-text-3: #94a3b8;
+	--sa-text-muted: #64748b;
+	--sa-primary: #60a5fa;
+	--sa-primary-bg: #1e3a8a;
+	--sa-danger: #f87171;
+}
+
+/* ---- 全局背景 & 文字 ---- */
+.sa-dark,
+.sa-dark .sa-main,
+.sa-dark .sa-body {
+	background: var(--sa-bg) !important;
+	color: var(--sa-text);
+}
+
+/* ---- 顶栏 ---- */
+.sa-dark .sa-topbar {
+	background: var(--sa-bg-elev) !important;
+	border-bottom-color: var(--sa-border) !important;
+	color: var(--sa-text);
+}
+
+.sa-dark .sa-search {
+	background: var(--sa-card) !important;
+	border-color: var(--sa-border) !important;
+}
+.sa-dark .sa-search input {
+	color: var(--sa-text) !important;
+	background: transparent !important;
+}
+.sa-dark .sa-search input::placeholder {
+	color: var(--sa-text-muted) !important;
+}
+.sa-dark .sa-search-icon,
+.sa-dark .sa-search-kbd {
+	color: var(--sa-text-3) !important;
+	background: var(--sa-bg-elev) !important;
+	border-color: var(--sa-border) !important;
+}
+
+.sa-dark .sa-btn-ghost {
+	color: var(--sa-text-2) !important;
+	background: transparent !important;
+}
+.sa-dark .sa-btn-ghost:hover {
+	background: var(--sa-bg-hover) !important;
+	border-color: var(--sa-border) !important;
+	color: var(--sa-text) !important;
+}
+.sa-dark .sa-btn-primary {
+	background: var(--sa-primary) !important;
+	color: #0b1220 !important;
+}
+.sa-dark .sa-btn-primary:hover {
+	background: #3b82f6 !important;
+}
+
+/* ---- 下拉菜单 (主题/排序) ---- */
+.sa-dark .sa-theme-dropdown,
+.sa-dark .sa-sort-dropdown {
+	background: var(--sa-card) !important;
+	border-color: var(--sa-border) !important;
+	box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5) !important;
+}
+.sa-dark .sa-theme-section-title {
+	color: var(--sa-text-muted) !important;
+}
+.sa-dark .sa-theme-divider {
+	border-top-color: var(--sa-border) !important;
+}
+.sa-dark .sa-theme-option,
+.sa-dark .sa-sort-item {
+	color: var(--sa-text-2) !important;
+}
+.sa-dark .sa-theme-option:hover,
+.sa-dark .sa-sort-item:hover {
+	background: var(--sa-bg-hover) !important;
+	color: var(--sa-text) !important;
+}
+.sa-dark .sa-theme-option.active,
+.sa-dark .sa-sort-item.active {
+	background: var(--sa-primary-bg) !important;
+	color: #dbeafe !important;
+}
+
+/* ---- 侧边栏 ---- */
+.sa-dark .sa-sidebar {
+	background: var(--sa-bg-soft) !important;
+	border-right-color: var(--sa-border) !important;
+	color: var(--sa-text);
+}
+.sa-dark .sa-logo,
+.sa-dark .sa-logo-text,
+.sa-dark .sa-user-name,
+.sa-dark .sa-user-role {
+	color: var(--sa-text) !important;
+}
+.sa-dark .sa-sec-title {
+	color: var(--sa-text-muted) !important;
+}
+.sa-dark .sa-nav-item {
+	color: var(--sa-text-2) !important;
+}
+.sa-dark .sa-nav-item:hover {
+	background: var(--sa-bg-hover) !important;
+	color: var(--sa-text) !important;
+}
+.sa-dark .sa-nav-item.active,
+.sa-dark .sa-nav-item.router-link-active {
+	background: var(--sa-primary-bg) !important;
+	color: #dbeafe !important;
+}
+.sa-dark .sa-nav-count {
+	background: var(--sa-bg-hover) !important;
+	color: var(--sa-text-3) !important;
+}
+.sa-dark .sa-user {
+	background: var(--sa-card) !important;
+	border-top-color: var(--sa-border) !important;
+}
+
+/* ---- 卡片/内容区通用 ---- */
+.sa-dark .sa-card,
+.sa-dark .sa-panel,
+.sa-dark .sa-section,
+.sa-dark .sa-manga-card,
+.sa-dark .sa-list-item,
+.sa-dark .sa-row,
+.sa-dark .sa-item,
+.sa-dark .sa-media-card,
+.sa-dark .sa-chapter-item,
+.sa-dark .sa-history-item,
+.sa-dark .sa-bookmark-item {
+	background: var(--sa-card) !important;
+	border-color: var(--sa-border) !important;
+	color: var(--sa-text);
+}
+.sa-dark .sa-card:hover,
+.sa-dark .sa-panel:hover,
+.sa-dark .sa-manga-card:hover,
+.sa-dark .sa-list-item:hover,
+.sa-dark .sa-row:hover,
+.sa-dark .sa-item:hover {
+	background: var(--sa-bg-elev) !important;
+	border-color: var(--sa-primary) !important;
+}
+
+/* ---- 文本层级 ---- */
+.sa-dark h1,
+.sa-dark h2,
+.sa-dark h3,
+.sa-dark h4,
+.sa-dark .sa-title,
+.sa-dark .sa-h,
+.sa-dark .sa-page-title,
+.sa-dark .sa-heading {
+	color: var(--sa-text) !important;
+}
+.sa-dark .sa-sub,
+.sa-dark .sa-subtitle,
+.sa-dark .sa-desc,
+.sa-dark .sa-meta,
+.sa-dark .sa-hint,
+.sa-dark .sa-caption {
+	color: var(--sa-text-3) !important;
+}
+.sa-dark .sa-muted {
+	color: var(--sa-text-muted) !important;
+}
+
+/* ---- 分隔线 & 边框 ---- */
+.sa-dark .sa-divider,
+.sa-dark .sa-hr,
+.sa-dark hr {
+	border-color: var(--sa-border) !important;
+	background: var(--sa-border) !important;
+}
+
+/* ---- 表单元素 ---- */
+.sa-dark input:not([type='checkbox']):not([type='radio']):not([type='range']),
+.sa-dark textarea,
+.sa-dark select {
+	background: var(--sa-card) !important;
+	color: var(--sa-text) !important;
+	border-color: var(--sa-border) !important;
+}
+.sa-dark input::placeholder,
+.sa-dark textarea::placeholder {
+	color: var(--sa-text-muted) !important;
+}
+
+/* ---- 标签、徽章 ---- */
+.sa-dark .sa-tag,
+.sa-dark .sa-badge,
+.sa-dark .sa-chip {
+	background: var(--sa-bg-hover) !important;
+	color: var(--sa-text-2) !important;
+	border-color: var(--sa-border) !important;
+}
+
+/* ---- 弹窗/对话框(共享组件) ---- */
+.sa-dark .sm-dialog,
+.sa-dark .sm-modal,
+.sa-dark .sm-popup,
+.sa-dark .theme-context-menu {
+	background: var(--sa-card) !important;
+	color: var(--sa-text) !important;
+	border-color: var(--sa-border) !important;
+}
+
+/* ---- 表格 ---- */
+.sa-dark table {
+	color: var(--sa-text);
+}
+.sa-dark th,
+.sa-dark td {
+	border-color: var(--sa-border) !important;
+}
+.sa-dark thead {
+	background: var(--sa-bg-elev) !important;
+}
+.sa-dark tbody tr:hover {
+	background: var(--sa-bg-hover) !important;
+}
+
+/* ---- 滚动条 ---- */
+.sa-dark ::-webkit-scrollbar-track {
+	background: var(--sa-bg-soft);
+}
+.sa-dark ::-webkit-scrollbar-thumb {
+	background: var(--sa-border);
+	border-radius: 4px;
+}
+.sa-dark ::-webkit-scrollbar-thumb:hover {
+	background: var(--sa-text-muted);
+}

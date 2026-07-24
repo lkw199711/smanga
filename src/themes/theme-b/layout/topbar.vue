@@ -13,7 +13,7 @@
 		</div>
 		<div class="sb-top-actions">
 			<div class="sb-theme-wrap">
-				<button class="sb-pill" @click.stop="toggleThemeSwitch">🎨 {{ colorThemeLabel }}</button>
+				<button class="sb-pill" :title="`当前皮肤:${currentSkinLabel} · 配色:${colorThemeLabel}`" @click.stop="toggleThemeSwitch">🎨 {{ currentSkinLabel }}</button>
 				<!-- 主题切换下拉 -->
 				<div v-if="showThemeSwitch" class="sb-theme-dropdown">
 					<div class="sb-theme-section-title">界面风格</div>
@@ -38,6 +38,9 @@
 					</div>
 				</div>
 			</div>
+			<button class="sb-pill" :title="isDarkMode ? '切换到亮色' : '切换到暗色'" @click="toggleDarkMode">
+				{{ isDarkMode ? '☀️ 亮色' : '🌙 暗色' }}
+			</button>
 			<button class="sb-pill" @click="toggleLanguage">{{ currentLanguage }}</button>
 			<div class="sb-user-wrap" ref="userWrapRef">
 				<div class="sb-user-trigger" @click="toggleUserDropdown">
@@ -163,6 +166,11 @@ const colorThemeLabel = computed(() => {
 	return found?.label || activeColorTheme.value
 })
 
+const currentSkinLabel = computed(() => {
+	const found = skinList.find((s) => s.key === themeState.current)
+	return found?.name || String(themeState.current)
+})
+
 const currentLanguage = computed(() => {
 	return languages.find((language) => language.value === userConfig.language)?.label || languages[0].label
 })
@@ -199,6 +207,27 @@ function applyColorTheme(value: string) {
 	set_theme(value)
 	userConfig.theme = value
 	showThemeSwitch.value = false
+	window.dispatchEvent(new CustomEvent('smanga:color-theme-changed', { detail: value }))
+}
+
+// ---- 夜间模式切换 ----
+const lastNonDarkTheme = ref<string>(activeColorTheme.value === 'dark' ? 'light' : activeColorTheme.value)
+const isDarkMode = computed(() => activeColorTheme.value === 'dark')
+
+function toggleDarkMode() {
+	if (activeColorTheme.value === 'dark') {
+		const target = lastNonDarkTheme.value || 'light'
+		activeColorTheme.value = target
+		set_theme(target)
+		userConfig.theme = target
+		window.dispatchEvent(new CustomEvent('smanga:color-theme-changed', { detail: target }))
+	} else {
+		lastNonDarkTheme.value = activeColorTheme.value
+		activeColorTheme.value = 'dark'
+		set_theme('dark')
+		userConfig.theme = 'dark'
+		window.dispatchEvent(new CustomEvent('smanga:color-theme-changed', { detail: 'dark' }))
+	}
 }
 
 function toggleLanguage() {

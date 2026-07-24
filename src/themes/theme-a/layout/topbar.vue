@@ -6,7 +6,6 @@
 			<span class="sa-search-kbd">Ctrl K</span>
 		</div>
 		<div class="sa-top-actions">
-			<button class="sa-btn-ghost" @click="toggleView">{{ config.viewType === 'block' ? '📋 网格' : '📊 列表' }}</button>
 			<div class="sa-sort-wrap" ref="sortWrapRef">
 				<button class="sa-btn-ghost sa-sort-btn" @click="toggleSortDropdown">
 					<span>{{ currentSortLabel }} ▾</span>
@@ -23,7 +22,7 @@
 				</div>
 			</div>
 			<div class="sa-theme-wrap">
-				<button class="sa-btn-ghost" @click.stop="toggleThemeSwitch">🎨 {{ colorThemeLabel }}</button>
+				<button class="sa-btn-ghost" :title="`当前皮肤:${currentSkinLabel} · 配色:${colorThemeLabel}`" @click.stop="toggleThemeSwitch">🎨 {{ currentSkinLabel }}</button>
 				<!-- 主题切换下拉 -->
 				<div v-if="showThemeSwitch" class="sa-theme-dropdown">
 					<div class="sa-theme-section-title">界面风格</div>
@@ -48,6 +47,9 @@
 					</div>
 				</div>
 			</div>
+			<button class="sa-btn-ghost" :title="isDarkMode ? '切换到亮色' : '切换到暗色'" @click="toggleDarkMode">
+				{{ isDarkMode ? '☀️ 亮色' : '🌙 暗色' }}
+			</button>
 			<button class="sa-btn-ghost" @click="toggleLanguage">{{ currentLanguage }}</button>
 			<button class="sa-btn-primary" @click="router.push({ path: '/t/media', query: { add: '1' } })">+ 新建媒体库</button>
 		</div>
@@ -60,7 +62,7 @@ import { useRoute, useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import type { ThemeKey } from '@/themes/store'
 import { themeState, setTheme } from '@/themes/store'
-import { config, userConfig, mangaSortOrder, chapterSortOrder } from '@/store'
+import { userConfig, mangaSortOrder, chapterSortOrder } from '@/store'
 import languages from '@/store/language'
 import themeList from '@/store/theme'
 import { set_theme } from '@/style/theme'
@@ -130,6 +132,11 @@ const colorThemeLabel = computed(() => {
 	return found?.label || activeColorTheme.value
 })
 
+const currentSkinLabel = computed(() => {
+	const found = skinList.find((s) => s.key === themeState.current)
+	return found?.name || String(themeState.current)
+})
+
 const currentLanguage = computed(() => {
 	return languages.find((language) => language.value === userConfig.language)?.label || languages[0].label
 })
@@ -138,10 +145,6 @@ function doSearch() {
 	if (keyword.value.trim()) {
 		router.push({ path: '/t/search', query: { q: keyword.value.trim() } })
 	}
-}
-
-function toggleView() {
-	config.viewType = config.viewType === 'block' ? 'list' : 'block'
 }
 
 // 主题按钮
@@ -173,6 +176,29 @@ function applyColorTheme(value: string) {
 	set_theme(value)
 	userConfig.theme = value
 	showThemeSwitch.value = false
+	window.dispatchEvent(new CustomEvent('smanga:color-theme-changed', { detail: value }))
+}
+
+// ---- 夜间模式切换 ----
+const lastNonDarkTheme = ref<string>(activeColorTheme.value === 'dark' ? 'light' : activeColorTheme.value)
+const isDarkMode = computed(() => activeColorTheme.value === 'dark')
+
+function toggleDarkMode() {
+	if (activeColorTheme.value === 'dark') {
+		// 切回上一次的亮色主题
+		const target = lastNonDarkTheme.value || 'light'
+		activeColorTheme.value = target
+		set_theme(target)
+		userConfig.theme = target
+		window.dispatchEvent(new CustomEvent('smanga:color-theme-changed', { detail: target }))
+	} else {
+		// 记住当前亮色主题,然后切到暗色
+		lastNonDarkTheme.value = activeColorTheme.value
+		activeColorTheme.value = 'dark'
+		set_theme('dark')
+		userConfig.theme = 'dark'
+		window.dispatchEvent(new CustomEvent('smanga:color-theme-changed', { detail: 'dark' }))
+	}
 }
 
 function toggleLanguage() {
