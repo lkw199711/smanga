@@ -1,6 +1,6 @@
 <template>
 	<div class="tb-page">
-		<h1>书签</h1>
+		<div class="tb-page-head"><h1>书签</h1></div>
 		<div class="touch-dom">
 			<template v-if="loading">
 				<list-skeleton />
@@ -79,7 +79,9 @@ onMounted(() => {
 })
 </script>
 <style scoped>
-h1{font-size:20px;font-weight:700;margin:0 0 20px;color:#1f2937}
+.tb-page{max-width:980px;margin:0 auto}
+.tb-page-head{margin-bottom:24px}
+.tb-page-head h1{font-size:20px;font-weight:700;margin:0;color:#1f2937}
 .tb-bookmark-list{display:flex;flex-direction:column;gap:10px}
 .tb-empty{text-align:center;padding:60px;color:#6b7280}
 </style>

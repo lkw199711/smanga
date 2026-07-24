@@ -23,8 +23,7 @@
     <div class="td-content">
       <div class="td-manga-info">
         <div class="td-cover">
-          <img v-if="mangaInfo.mangaCover" :src="getMangaCover(mangaInfo)" alt="" />
-          <div v-else class="td-cover-placeholder">📚</div>
+          <t-cover variant="D" :seed="Number(mangaId)" :file="mangaInfo.mangaCover || ''" />
         </div>
         <div class="td-info">
           <div class="td-author" v-if="mangaInfo.author">作者：{{ mangaInfo.author }}</div>
@@ -39,27 +38,14 @@
       <div class="td-chapters">
         <div class="td-section-title">章节列表</div>
         <div class="td-chapter-grid">
-          <div
+          <t-chapter-item
             v-for="(ch, idx) in chapterList"
             :key="ch.chapterId"
-            class="td-chapter-item"
+            :item="ch"
+            variant="D"
             @click="goRead(ch, idx)"
-			@contextmenu="openThemeContextMenu($event, 'chapter', ch)"
-            :class="{ 'td-chapter-read': ch.latest?.finish }"
-          >
-            <div class="td-chapter-cover">
-              <img v-if="getChapterCover(ch)" :src="getChapterCover(ch)" alt="" />
-              <div v-else class="td-cover-placeholder">📖</div>
-            </div>
-            <div class="td-chapter-info">
-              <div class="td-chapter-name">{{ ch.chapterName }}</div>
-              <div class="td-chapter-meta">{{ ch.pageCount || '?' }} 页</div>
-              <div class="td-chapter-status" v-if="ch.latest">
-                <span v-if="ch.latest.finish">✓ 已读</span>
-                <span v-else>读至第 {{ ch.latest.page }} 页</span>
-              </div>
-            </div>
-          </div>
+            @contextmenu="openThemeContextMenu($event, 'chapter', ch)"
+          />
         </div>
         <div v-if="chapterList.length === 0 && !loading" class="td-empty">暂无章节</div>
         
@@ -79,10 +65,10 @@ import { useRouter, useRoute } from 'vue-router'
 import mangaApi from '@/api/manga'
 import chapterApi from '@/api/chapter'
 import collectApi from '@/api/collect'
-import imageApi from '@/api/image'
-import queue from '@/store/quque'
+import TCover from '@/themes/components/media-cover.vue'
+import TChapterItem from '@/themes/components/chapter-item.vue'
 import useBrowseStore from '@/store/browse'
-import { userConfig } from '@/store'
+import { userConfig, globalData } from '@/store'
 import { openThemeContextMenu } from '@/themes/context-menu'
 
 const router = useRouter()
@@ -98,9 +84,6 @@ const page = ref(1)
 const pageSize = 50
 const total = ref(0)
 const loading = ref(false)
-
-// 章节封面缓存
-const chapterCoverCache = ref<{[key: string]: string}>({})
 
 const totalPages = computed(() => Math.ceil(total.value / pageSize))
 
@@ -149,41 +132,11 @@ async function loadChapters() {
     })
     chapterList.value = res?.list || []
     total.value = res?.count || 0
-    
-    // 异步加载章节封面
-    chapterList.value.forEach(ch => {
-      if (ch.chapterCover || ch.pageImage) {
-        queue.mangaQueue.add(() => loadChapterCover(ch))
-      }
-    })
   } catch (e) {
     chapterList.value = []
     total.value = 0
   }
   loading.value = false
-}
-
-async function loadChapterCover(chapter: any) {
-  const coverFile = chapter.pageImage || chapter.chapterCover
-  if (!coverFile) return
-  
-  try {
-    const blobUrl = await imageApi.get({ file: coverFile })
-    if (blobUrl) {
-      chapterCoverCache.value[chapter.chapterId] = blobUrl
-    }
-  } catch (e) {
-    console.warn('Failed to load chapter cover:', chapter.chapterName, e)
-  }
-}
-
-function getChapterCover(chapter: any) {
-  return chapterCoverCache.value[chapter.chapterId] || chapter.chapterCover || chapter.pageImage
-}
-
-function getMangaCover(manga: any) {
-  if (!manga.mangaCover) return ''
-  return imageApi.getUrl({ file: manga.mangaCover })
 }
 
 async function checkCollectStatus() {
@@ -363,66 +316,6 @@ function goRead(ch: any, idx: number) {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: 12px;
-}
-
-.td-chapter-item {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 12px;
-  border: 1px solid #eaeaea;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: all 0.15s;
-}
-
-.td-chapter-item:hover {
-  border-color: #d1d5db;
-  background: #f9fafb;
-}
-
-.td-chapter-cover {
-  width: 60px;
-  height: 60px;
-  border-radius: 6px;
-  overflow: hidden;
-  flex-shrink: 0;
-}
-
-.td-chapter-cover img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.td-cover-placeholder {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 24px;
-  background: linear-gradient(135deg, #f3f4f6, #e5e7eb);
-}
-
-.td-chapter-info {
-  flex: 1;
-  min-width: 0;
-}
-
-.td-chapter-name {
-  font-size: 13px;
-  font-weight: 500;
-  color: #111827;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.td-chapter-meta {
-  font-size: 11px;
-  color: #9ca3af;
-  margin-top: 2px;
 }
 
 .td-empty {

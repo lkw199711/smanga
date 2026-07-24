@@ -111,12 +111,13 @@ const timeText = computed(() => {
 }
 
 .t-history-item--B {
-	background: rgba(255, 255, 255, 0.06);
-	border: 1px solid rgba(255, 255, 255, 0.06);
+	background: #fff;
+	border: 1px solid #eaeaea;
 }
 
 .t-history-item--B:hover {
-	background: rgba(255, 255, 255, 0.1);
+	border-color: #d1d5db;
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
 }
 
 .t-history-item--D {
@@ -166,11 +167,11 @@ const timeText = computed(() => {
 }
 
 .t-history-item--B .t-history-item__title {
-	color: #fff;
+	color: #111827;
 }
 
 .t-history-item--B .t-history-item__sub {
-	color: rgba(255, 255, 255, 0.7);
+	color: #6b7280;
 }
 
 .t-history-item--D .t-history-item__title {
@@ -186,7 +187,7 @@ const timeText = computed(() => {
 }
 
 .t-history-item--B .t-history-item__time {
-	color: rgba(255, 255, 255, 0.45);
+	color: #9ca3af;
 }
 
 .t-history-item--D .t-history-item__time {

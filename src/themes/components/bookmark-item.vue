@@ -105,12 +105,13 @@ const progress = computed(() => {
 }
 
 .t-bookmark-item--B {
-	background: rgba(255, 255, 255, 0.06);
-	border: 1px solid rgba(255, 255, 255, 0.06);
+	background: #fff;
+	border: 1px solid #eaeaea;
 }
 
 .t-bookmark-item--B:hover {
-	background: rgba(255, 255, 255, 0.1);
+	border-color: #d1d5db;
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
 }
 
 .t-bookmark-item--D {
@@ -181,11 +182,11 @@ const progress = computed(() => {
 }
 
 .t-bookmark-item--B .t-bookmark-item__title {
-	color: #fff;
+	color: #111827;
 }
 
 .t-bookmark-item--B .t-bookmark-item__sub {
-	color: rgba(255, 255, 255, 0.7);
+	color: #6b7280;
 }
 
 .t-bookmark-item--D .t-bookmark-item__title {

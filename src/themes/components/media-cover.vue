@@ -96,7 +96,7 @@ const styleObj = computed<Record<string, string>>(() => {
 }
 
 .t-cover--B {
-	background-color: rgba(255, 255, 255, 0.06);
+	background-color: #f3f4f6;
 }
 
 .t-cover--D {

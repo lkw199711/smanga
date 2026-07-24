@@ -2,16 +2,14 @@
   <div class="ta-collect">
     <div class="ta-page-head"><h1>收藏</h1></div>
 
-    <div class="ta-tabs">
-      <button class="ta-tab" :class="{ active: tab === 'manga' }" @click="tab = 'manga'">
-        漫画
-        <span class="ta-tab-badge" v-if="tab === 'manga' && count">{{ count }}</span>
-      </button>
-      <button class="ta-tab" :class="{ active: tab === 'chapter' }" @click="tab = 'chapter'">
-        章节
-        <span class="ta-tab-badge" v-if="tab === 'chapter' && count">{{ count }}</span>
-      </button>
-    </div>
+    <t-tabs-switcher
+      v-model="tab"
+      variant="A"
+      :tabs="[
+        { label: '漫画', value: 'manga', count },
+        { label: '章节', value: 'chapter', count }
+      ]"
+    />
 
     <div class="touch-dom">
       <template v-if="loading">
@@ -29,16 +27,14 @@
         </div>
 
         <div class="ta-chapter-list" v-else>
-          <div v-for="item in list" :key="item.collectId" class="ta-chapter-item" @click="go_read(item)" @contextmenu="openThemeContextMenu($event, 'chapter', item)">
-            <div class="ta-chapter-cover">
-              <img v-if="getCoverUrl(item.pageImage || item.chapterCover || '')" :src="getCoverUrl(item.pageImage || item.chapterCover || '')" alt="" />
-              <div v-else class="ta-cover-placeholder">📖</div>
-            </div>
-            <div class="ta-chapter-info">
-              <div class="ta-chapter-title">{{ item.chapterName || '未知章节' }}</div>
-              <div v-if="item.mangaName" class="ta-chapter-sub">{{ item.mangaName }}</div>
-            </div>
-          </div>
+          <t-chapter-item
+            v-for="item in list"
+            :key="item.collectId"
+            :item="item"
+            variant="A"
+            @click="go_read(item)"
+            @contextmenu="openThemeContextMenu($event, 'chapter', item)"
+          />
         </div>
       </template>
     </div>
@@ -58,6 +54,8 @@ import { config, userConfig } from '@/store'
 import { mangaPageSize, chapterPageSize } from '@/store/page-size'
 import MediaPager from '@/components/media-pager.vue'
 import listSkeleton from '@/components/list-skeleton.vue'
+import TChapterItem from '@/themes/components/chapter-item.vue'
+import TTabsSwitcher from '@/themes/components/tabs-switcher.vue'
 import { openThemeContextMenu } from '@/themes/context-menu'
 
 const router = useRouter()
@@ -165,63 +163,6 @@ onMounted(() => {
   }
 }
 
-.ta-tabs {
-  display: flex;
-  gap: 4px;
-  margin-bottom: 24px;
-  border-bottom: 2px solid #f3f4f6;
-}
-
-.ta-tab {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 12px 22px;
-  font-size: 14px;
-  font-weight: 500;
-  color: #9ca3af;
-  background: none;
-  border: none;
-  border-bottom: 2px solid transparent;
-  margin-bottom: -2px;
-  cursor: pointer;
-  transition: color 0.2s, border-color 0.2s;
-  outline: none;
-  white-space: nowrap;
-
-  &:hover {
-    color: #6b7280;
-  }
-
-  &.active {
-    color: #2563eb;
-    font-weight: 600;
-    border-bottom-color: #2563eb;
-  }
-}
-
-.ta-tab-badge {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 20px;
-  height: 20px;
-  padding: 0 6px;
-  font-size: 11px;
-  font-weight: 600;
-  line-height: 1;
-  border-radius: 10px;
-  background: #f3f4f6;
-  color: #9ca3af;
-  transition: background 0.2s, color 0.2s;
-
-  .ta-tab.active & {
-    background: #dbeafe;
-    color: #2563eb;
-  }
-}
-
 .ta-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
@@ -276,62 +217,6 @@ onMounted(() => {
   flex-direction: column;
   gap: 10px;
   margin-bottom: 18px;
-}
-
-.ta-chapter-item {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  padding: 12px;
-  border-radius: 12px;
-  background: #fff;
-  border: 1px solid #eaeaea;
-  cursor: pointer;
-  transition: all 0.15s;
-
-  &:hover {
-    border-color: #d1d5db;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-  }
-}
-
-.ta-chapter-cover {
-  flex-shrink: 0;
-  width: 52px;
-  height: 70px;
-  border-radius: 10px;
-  overflow: hidden;
-  background: #f3f4f6;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
-}
-
-.ta-chapter-cover img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.ta-chapter-info {
-  min-width: 0;
-  flex: 1;
-}
-
-.ta-chapter-title {
-  font-size: 14px;
-  font-weight: 600;
-  color: #111827;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.ta-chapter-sub {
-  margin-top: 4px;
-  font-size: 12px;
-  color: #6b7280;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
 
 .ta-empty {

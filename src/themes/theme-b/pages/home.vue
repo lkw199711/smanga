@@ -51,17 +51,17 @@
 				<a class="sb-link" @click="router.push('/t/media')">全部 →</a>
 			</div>
 			<div class="sb-grid">
-				<div v-for="item in latestList" :key="item.mangaId" class="sb-grid-card" @click="goManga(item)" @contextmenu="openThemeContextMenu($event, 'manga', item)">
-					<div class="sb-grid-cover"
-						:style="coverStyle(item, { kind: 'manga', fallbackSeed: item.mangaId })">
-						<span v-if="item.tag" class="sb-grid-tag">{{ item.tag }}</span>
-						<div class="sb-grid-hover">
-							<button class="sb-grid-play">▶ 立即阅读</button>
-						</div>
-					</div>
-					<div class="sb-grid-name">{{ item.mangaName }}</div>
-					<div class="sb-grid-meta">{{ item.chapterCount || 0 }} 章节</div>
-				</div>
+				<t-manga-card
+					v-for="item in latestList"
+					:key="item.mangaId"
+					:item="item"
+					variant="B"
+					:tag="tagText(item)"
+					:unread="unreadCount(item)"
+					:meta="`${item.chapterCount || 0} 章节`"
+					@click="goManga(item)"
+					@contextmenu="openThemeContextMenu($event, 'manga', item)"
+				/>
 			</div>
 		</section>
 	</div>
@@ -75,6 +75,7 @@ import latestApi from '@/api/latest'
 import chartsApi from '@/api/charts'
 import imageApi from '@/api/image'
 import { globalData } from '@/store'
+import TMangaCard from '@/themes/components/manga-card.vue'
 import { openThemeActionSheet, openThemeContextMenu } from '@/themes/context-menu'
 
 const router = useRouter()
@@ -90,6 +91,7 @@ const statsData = ref({
 const historyList = ref<any[]>([])
 const latestList = ref<any[]>([])
 const coverCache = ref<Record<string, string>>({})
+const hotMangaIdSet = ref<Set<number>>(new Set())
 
 // 渐变色彩板
 const palette = [
@@ -109,10 +111,11 @@ const palette = [
 
 onMounted(async () => {
 	try {
-		const [statsRes, historyRes, latestRes] = await Promise.allSettled([
+		const [statsRes, historyRes, latestRes, rankingRes] = await Promise.allSettled([
 			chartsApi.get_count(),
 			historyApi.get(1, 6),
 			latestApi.get(1, 12),
+			chartsApi.ranking(30),
 		])
 		if (statsRes.status === 'fulfilled') {
 			statsData.value = {
@@ -123,6 +126,12 @@ onMounted(async () => {
 		if (historyRes.status === 'fulfilled') historyList.value = historyRes.value?.list || []
 		if (latestRes.status === 'fulfilled') {
 			latestList.value = Array.isArray(latestRes.value) ? latestRes.value : (latestRes.value?.list || [])
+		}
+		if (rankingRes.status === 'fulfilled') {
+			const ids = Array.isArray(rankingRes.value)
+				? rankingRes.value.map((x: any) => Number(x?.mangaId)).filter((n: any) => Number.isFinite(n))
+				: []
+			hotMangaIdSet.value = new Set(ids)
 		}
 
 		await warmCovers(historyList.value, { kind: 'chapter' })
@@ -144,6 +153,19 @@ function getProgress(item: any) {
 	const count = Number(latest.count || 0)
 	if (!page || !count) return 0
 	return Math.min(100, Math.max(0, Math.round((page / count) * 100)))
+}
+
+function unreadCount(item: any): number {
+	const n = Number(item?.unWatched || item?.unread || 0)
+	return Number.isFinite(n) ? n : 0
+}
+
+function tagText(item: any): string {
+	const mangaId = Number(item?.mangaId)
+	if (Number.isFinite(mangaId) && hotMangaIdSet.value.has(mangaId)) return '热门'
+	const unread = unreadCount(item)
+	if (unread === 0 && Number.isFinite(mangaId)) return '完结'
+	return ''
 }
 
 function goRead(item: any) {
@@ -404,86 +426,8 @@ function coverStyle(
 
 .sb-grid {
 	display: grid;
-	grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-	gap: 20px;
-}
-
-.sb-grid-card {
-	cursor: pointer;
-}
-
-.sb-grid-cover {
-	position: relative;
-	aspect-ratio: 3 / 4;
-	border-radius: 16px;
-	margin-bottom: 8px;
-	box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
-	overflow: hidden;
-	transition: all 0.25s;
-	background-size: cover;
-	background-position: center;
-	background-repeat: no-repeat;
-	background-color: #f3f4f6;
-}
-
-.sb-grid-card:hover .sb-grid-cover {
-	transform: translateY(-4px) scale(1.02);
-	box-shadow: 0 12px 28px rgba(255, 111, 163, 0.3);
-}
-
-.sb-grid-tag {
-	position: absolute;
-	top: 8px;
-	left: 8px;
-	padding: 3px 8px;
-	font-size: 10px;
-	font-weight: 700;
-	color: #fff;
-	background: #ffb020;
-	border-radius: 999px;
-}
-
-.sb-grid-hover {
-	position: absolute;
-	inset: 0;
-	display: flex;
-	align-items: flex-end;
-	justify-content: center;
-	padding-bottom: 14px;
-	background: linear-gradient(180deg, transparent 50%, rgba(0, 0, 0, 0.5));
-	opacity: 0;
-	transition: opacity 0.25s;
-}
-
-.sb-grid-card:hover .sb-grid-hover {
-	opacity: 1;
-}
-
-.sb-grid-play {
-	padding: 7px 16px;
-	font-size: 12px;
-	font-weight: 600;
-	color: #ff6fa3;
-	background: #fff;
-	border: none;
-	border-radius: 999px;
-	cursor: pointer;
-	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-}
-
-.sb-grid-name {
-	font-size: 13px;
-	font-weight: 600;
-	color: #1f2937;
-	white-space: nowrap;
-	overflow: hidden;
-	text-overflow: ellipsis;
-}
-
-.sb-grid-meta {
-	margin-top: 2px;
-	font-size: 11px;
-	color: #9ca3af;
+	grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+	gap: 18px;
 }
 
 </style>

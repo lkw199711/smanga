@@ -15,16 +15,14 @@
       </div>
     </div>
     <div class="ta-chapters">
-      <div v-for="(ch, idx) in list" :key="ch.chapterId" class="ta-ch-item" @click="goRead(ch, idx)" @contextmenu="openThemeContextMenu($event, 'chapter', ch)">
-        <div class="ta-ch-cover">
-          <img v-if="getChapterCover(ch)" :src="getChapterCover(ch)" alt="" />
-          <div v-else class="ta-ch-cover-ph">📄</div>
-        </div>
-        <div class="ta-ch-info">
-          <div class="ta-ch-name">{{ ch.chapterName }}</div>
-          <div class="ta-ch-meta">{{ ch.pageCount || '?' }} 页</div>
-        </div>
-      </div>
+      <t-chapter-item
+        v-for="(ch, idx) in list"
+        :key="ch.chapterId"
+        :item="ch"
+        variant="A"
+        @click="goRead(ch, idx)"
+        @contextmenu="openThemeContextMenu($event, 'chapter', ch)"
+      />
     </div>
     <div v-if="list.length === 0 && !loading" class="ta-empty">暂无章节</div>
     <div v-if="totalPages > 1" class="ta-pagination">
@@ -40,9 +38,8 @@ import { ref, onMounted, computed, watch } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import chapterApi from '@/api/chapter'
 import mangaApi from '@/api/manga'
-import imageApi from '@/api/image'
-import queue from '@/store/quque'
 import { globalData, userConfig } from '@/store'
+import TChapterItem from '@/themes/components/chapter-item.vue'
 import { openThemeContextMenu } from '@/themes/context-menu'
 
 const router = useRouter()
@@ -57,9 +54,6 @@ const loading = ref(false)
 const mangaName = ref('')
 
 const totalPages = computed(() => Math.ceil(total.value / pageSize))
-
-// 章节封面缓存
-const chapterCoverCache = ref<{[key: string]: string}>({})
 
 onMounted(() => { loadData() })
 
@@ -78,37 +72,12 @@ async function loadData() {
     list.value = res?.list || []
     total.value = res?.count || 0
     
-    // 加载章节封面
-    list.value.forEach(chapter => {
-      if (chapter.chapterCover || chapter.pageImage) {
-        queue.mangaQueue.add(() => loadChapterCover(chapter))
-      }
-    })
-    
     if (!mangaName.value) {
       const info = await mangaApi.get_manga_info(mangaId)
       mangaName.value = info?.mangaName || ''
     }
   } catch (e) { /* empty */ }
   loading.value = false
-}
-
-async function loadChapterCover(chapter: any) {
-  const coverFile = chapter.pageImage || chapter.chapterCover
-  if (!coverFile) return
-  
-  try {
-    const blobUrl = await imageApi.get({ file: coverFile })
-    if (blobUrl) {
-      chapterCoverCache.value[chapter.chapterId] = blobUrl
-    }
-  } catch (e) {
-    console.warn('Failed to load chapter cover:', chapter.chapterName, e)
-  }
-}
-
-function getChapterCover(chapter: any) {
-  return chapterCoverCache.value[chapter.chapterId] || chapter.chapterCover || chapter.pageImage
 }
 
 function goRead(ch: any, idx: number) {
@@ -161,67 +130,6 @@ function goRead(ch: any, idx: number) {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: 12px;
-}
-
-.ta-ch-item {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 12px;
-  background: #fff;
-  border: 1px solid #eaeaea;
-  border-radius: 10px;
-  cursor: pointer;
-  transition: all 0.15s;
-}
-
-.ta-ch-item:hover {
-  border-color: #d1d5db;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-}
-
-.ta-ch-cover {
-  flex-shrink: 0;
-  width: 48px;
-  height: 64px;
-  border-radius: 6px;
-  overflow: hidden;
-  background: #f3f4f6;
-}
-
-.ta-ch-cover img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.ta-ch-cover-ph {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 18px;
-  background: linear-gradient(135deg, #e0e7ff, #c7d2fe);
-}
-
-.ta-ch-info {
-  min-width: 0;
-}
-
-.ta-ch-name {
-  font-size: 13px;
-  font-weight: 500;
-  color: #111827;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.ta-ch-meta {
-  font-size: 11px;
-  color: #9ca3af;
-  margin-top: 4px;
 }
 
 .ta-empty {

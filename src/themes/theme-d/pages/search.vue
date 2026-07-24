@@ -1,10 +1,7 @@
 <template>
   <div class="td-search">
     <h2 class="td-page-title">搜索</h2>
-    <div class="td-tabs">
-      <button class="td-tab" :class="{ active: tab === 'manga' }" @click="tab = 'manga'">漫画</button>
-      <button class="td-tab" :class="{ active: tab === 'chapter' }" @click="tab = 'chapter'">章节</button>
-    </div>
+    <t-tabs-switcher v-model="tab" variant="D" :tabs="[{label:'漫画',value:'manga'},{label:'章节',value:'chapter'}]" />
 
     <div class="td-search-bar">
       <input
@@ -25,14 +22,14 @@
         </div>
 
         <div class="td-chapter-list" v-if="tab === 'chapter' && list.length">
-          <div class="td-chapter-item" v-for="item in list" :key="item.chapterId" @click="go_read(item)">
-            <t-cover class="td-chapter-cover" variant="D" :seed="Number(item?.chapterId || 0)" :file="item?.chapterCover || ''" />
-            <div class="td-chapter-info">
-              <div class="td-chapter-title">{{ item.chapterName || '未知章节' }}</div>
-              <div class="td-chapter-sub" v-if="item.latest && item.latest.page">上次看到第 {{ item.latest.page }} 页</div>
-              <div class="td-chapter-sub" v-else>未读</div>
-            </div>
-          </div>
+          <t-chapter-item
+            v-for="item in list"
+            :key="item.chapterId"
+            :item="item"
+            variant="D"
+            :sub="(item.latest && item.latest.page) ? `上次看到第 ${item.latest.page} 页` : '未读'"
+            @click="go_read(item)"
+          />
         </div>
       </template>
     </div>
@@ -53,6 +50,8 @@ import MediaPager from '@/components/media-pager.vue'
 import listSkeleton from '@/components/list-skeleton.vue'
 import TCover from '@/themes/components/media-cover.vue'
 import TMangaCard from '@/themes/components/manga-card.vue'
+import TChapterItem from '@/themes/components/chapter-item.vue'
+import TTabsSwitcher from '@/themes/components/tabs-switcher.vue'
 
 const route = useRoute()
 const router = useRouter()
@@ -151,9 +150,6 @@ onMounted(() => {
 <style scoped>
 .td-search { max-width: 1200px; margin: 0 auto; }
 .td-page-title { font-size: 20px; font-weight: 700; color: var(--fg); margin-bottom: 20px; }
-.td-tabs { display: flex; gap: 10px; margin-bottom: 14px; }
-.td-tab { padding: 8px 14px; font-size: 13px; border-radius: 999px; border: 1px solid var(--border); background: var(--bg2); color: var(--fg2); cursor: pointer; transition: all .15s; }
-.td-tab.active { border-color: var(--accent); color: var(--fg); }
 .td-search-bar { display: flex; gap: 10px; margin-bottom: 18px; }
 .td-search-box { width: 100%; max-width: 400px; height: 40px; padding: 0 16px; border-radius: 20px; border: 1px solid var(--border); background: var(--bg2); color: var(--fg); font-size: 14px; outline: none; transition: border-color .2s; }
 .td-search-box:focus { border-color: var(--accent); }
@@ -165,11 +161,5 @@ onMounted(() => {
 .td-card-cover { aspect-ratio: 3/4; overflow: hidden; background: var(--bg); }
 .td-card-title { padding: 8px 10px; font-size: 13px; font-weight: 500; color: var(--fg); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .td-chapter-list { display: flex; flex-direction: column; gap: 10px; margin: 0 0 18px; }
-.td-chapter-item { display: flex; align-items: center; gap: 14px; padding: 12px; border-radius: 12px; background: var(--bg2); border: 1px solid var(--border); cursor: pointer; transition: all .15s; }
-.td-chapter-item:hover { border-color: var(--accent); }
-.td-chapter-cover { flex-shrink: 0; width: 52px; height: 70px; border-radius: 10px; overflow: hidden; }
-.td-chapter-info { min-width: 0; flex: 1; }
-.td-chapter-title { font-size: 14px; font-weight: 600; color: var(--fg); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.td-chapter-sub { margin-top: 4px; font-size: 12px; color: var(--fg2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .td-empty { text-align: center; color: var(--fg2); margin-top: 40px; }
 </style>

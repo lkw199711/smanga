@@ -2,10 +2,7 @@
   <div class="td-collect">
     <h2 class="td-page-title">收藏</h2>
 
-    <div class="td-tabs">
-      <button class="td-tab" :class="{ active: tab === 'manga' }" @click="tab = 'manga'">漫画</button>
-      <button class="td-tab" :class="{ active: tab === 'chapter' }" @click="tab = 'chapter'">章节</button>
-    </div>
+    <t-tabs-switcher v-model="tab" variant="D" :tabs="[{label:'漫画',value:'manga'},{label:'章节',value:'chapter'}]" />
 
     <div class="touch-dom">
       <template v-if="loading">
@@ -20,17 +17,15 @@
         </div>
 
         <div class="td-chapter-list" v-else>
-          <div class="td-chapter-item" v-for="item in list" :key="item.collectId" @click="go_read(item)">
-            <t-cover
-              class="td-chapter-cover"
-              variant="D"
-              :seed="Number(item?.chapterId || item?.mangaId || 0)"
-              :file="item?.chapterCover || item?.mangaCover || ''" />
-            <div class="td-chapter-info">
-              <div class="td-chapter-title">{{ item.mangaName || '未知漫画' }}</div>
-              <div class="td-chapter-sub">{{ item.chapterName || '未知章节' }}</div>
-            </div>
-          </div>
+          <t-chapter-item
+            v-for="item in list"
+            :key="item.collectId"
+            :item="item"
+            variant="D"
+            :title="item.mangaName || '未知漫画'"
+            :sub="item.chapterName || '未知章节'"
+            @click="go_read(item)"
+          />
         </div>
       </template>
     </div>
@@ -50,6 +45,8 @@ import { mangaPageSize, chapterPageSize } from '@/store/page-size'
 import MediaPager from '@/components/media-pager.vue'
 import listSkeleton from '@/components/list-skeleton.vue'
 import TCover from '@/themes/components/media-cover.vue'
+import TChapterItem from '@/themes/components/chapter-item.vue'
+import TTabsSwitcher from '@/themes/components/tabs-switcher.vue'
 
 const router = useRouter()
 const tab = ref<'manga' | 'chapter'>('manga')
@@ -120,21 +117,12 @@ onMounted(() => {
 <style scoped>
 .td-collect { max-width: 1200px; margin: 0 auto; }
 .td-page-title { font-size: 20px; font-weight: 700; color: var(--fg); margin-bottom: 20px; }
-.td-tabs { display: flex; gap: 10px; margin-bottom: 16px; }
-.td-tab { padding: 8px 14px; font-size: 13px; border-radius: 999px; border: 1px solid var(--border); background: var(--bg2); color: var(--fg2); cursor: pointer; transition: all .15s; }
-.td-tab.active { border-color: var(--accent); color: var(--fg); }
 .td-card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 16px; }
 .td-card { background: var(--bg2); border-radius: 10px; overflow: hidden; cursor: pointer; border: 1px solid var(--border); transition: all .2s; }
 .td-card:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.06); }
 .td-card-cover { aspect-ratio: 3/4; overflow: hidden; background: var(--bg); }
 .td-card-title { padding: 8px 10px; font-size: 13px; font-weight: 500; color: var(--fg); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .td-chapter-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 18px; }
-.td-chapter-item { display: flex; align-items: center; gap: 14px; padding: 12px; border-radius: 12px; background: var(--bg2); border: 1px solid var(--border); cursor: pointer; transition: all .15s; }
-.td-chapter-item:hover { border-color: var(--accent); }
-.td-chapter-cover { flex-shrink: 0; width: 52px; height: 70px; border-radius: 10px; overflow: hidden; }
-.td-chapter-info { min-width: 0; flex: 1; }
-.td-chapter-title { font-size: 14px; font-weight: 600; color: var(--fg); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.td-chapter-sub { margin-top: 4px; font-size: 12px; color: var(--fg2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .td-empty { text-align: center; color: var(--fg2); margin-top: 40px; }
 .td-card-cover {
 	width: 100%;

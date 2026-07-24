@@ -17,8 +17,7 @@
     <div class="tb-content">
       <div class="tb-manga-info">
         <div class="tb-cover">
-          <img v-if="mangaInfo.mangaCover" :src="getMangaCover(mangaInfo)" alt="" />
-          <div v-else class="tb-cover-placeholder">📚</div>
+          <t-cover variant="B" :seed="Number(mangaId)" :file="mangaInfo.mangaCover || ''" />
         </div>
         <div class="tb-info">
           <div class="tb-author" v-if="mangaInfo.mangaAuthor">作者：{{ mangaInfo.mangaAuthor }}</div>
@@ -33,23 +32,14 @@
       <div class="tb-chapters">
         <div class="tb-section-title">章节列表</div>
         <div class="tb-chapter-grid">
-          <div
+          <t-chapter-item
             v-for="ch in chapterList"
             :key="ch.chapterId"
-            class="tb-chapter-item"
+            :item="ch"
+            variant="B"
             @click="goRead(ch)"
-			@contextmenu="openThemeContextMenu($event, 'chapter', ch)"
-            ref="chapterBox"
-          >
-            <div class="tb-chapter-cover">
-              <img v-if="ch.chapterImage" :src="getChapterCover(ch)" alt="" />
-              <div v-else class="tb-cover-placeholder">📖</div>
-            </div>
-            <div class="tb-chapter-info">
-              <div class="tb-chapter-name">{{ ch.chapterName }}</div>
-              <div class="tb-chapter-meta">{{ ch.chapterPath }}</div>
-            </div>
-          </div>
+            @contextmenu="openThemeContextMenu($event, 'chapter', ch)"
+          />
         </div>
         <div v-if="chapterList.length === 0" class="tb-empty">暂无章节</div>
       </div>
@@ -63,8 +53,8 @@ import { useRouter, useRoute } from 'vue-router'
 import mangaApi from '@/api/manga'
 import chapterApi from '@/api/chapter'
 import collectApi from '@/api/collect'
-import imageApi from '@/api/image'
-import queue from '@/store/quque'
+import TCover from '@/themes/components/media-cover.vue'
+import TChapterItem from '@/themes/components/chapter-item.vue'
 import { openThemeContextMenu } from '@/themes/context-menu'
 
 const router = useRouter()
@@ -74,9 +64,6 @@ const mangaInfo = ref<any>({})
 const chapterList = ref<any[]>([])
 const isCollected = ref(false)
 const mangaId = ref<number | null>(null)
-
-// 章节封面缓存
-const chapterCoverCache = ref<{[key: string]: string}>({})
 
 onMounted(async () => {
   mangaId.value = Number(route.params.mangaId)
@@ -111,38 +98,9 @@ async function loadChapters() {
   try {
     const res = await chapterApi.get(mangaId.value, 1, 999)
     chapterList.value = res?.list || res?.data?.list || []
-    
-    // 异步加载章节封面
-    chapterList.value.forEach(ch => {
-      if (ch.chapterImage) {
-        queue.chapterQueue.add(() => loadChapterCover(ch))
-      }
-    })
   } catch (e) {
     chapterList.value = []
   }
-}
-
-async function loadChapterCover(chapter: any) {
-  if (!chapter.chapterImage) return
-  
-  try {
-    const blobUrl = await imageApi.get({ file: chapter.chapterImage })
-    if (blobUrl) {
-      chapterCoverCache.value[chapter.chapterId] = blobUrl
-    }
-  } catch (e) {
-    console.warn('Failed to load chapter cover:', chapter.chapterName, e)
-  }
-}
-
-function getChapterCover(chapter: any) {
-  return chapterCoverCache.value[chapter.chapterId] || chapter.chapterImage
-}
-
-function getMangaCover(manga: any) {
-  if (!manga.mangaCover) return ''
-  return imageApi.getUrl({ file: manga.mangaCover })
 }
 
 async function checkCollectStatus() {
@@ -313,66 +271,6 @@ function goRead(chapter: any) {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: 12px;
-}
-
-.tb-chapter-item {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 12px;
-  border: 1px solid #eaeaea;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: all 0.15s;
-}
-
-.tb-chapter-item:hover {
-  border-color: #d1d5db;
-  background: #f9fafb;
-}
-
-.tb-chapter-cover {
-  width: 60px;
-  height: 60px;
-  border-radius: 6px;
-  overflow: hidden;
-  flex-shrink: 0;
-}
-
-.tb-chapter-cover img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.tb-cover-placeholder {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 24px;
-  background: linear-gradient(135deg, #f3f4f6, #e5e7eb);
-}
-
-.tb-chapter-info {
-  flex: 1;
-  min-width: 0;
-}
-
-.tb-chapter-name {
-  font-size: 13px;
-  font-weight: 500;
-  color: #111827;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.tb-chapter-meta {
-  font-size: 11px;
-  color: #9ca3af;
-  margin-top: 2px;
 }
 
 .tb-empty {
