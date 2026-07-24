@@ -3,7 +3,7 @@
 		<!-- 侧边栏 -->
 		<aside class="sd-sidebar">
 			<div class="sd-logo">
-				<div class="sd-logo-mark">s</div>
+				<SmangaLogoMark :variant="logoVariant" class="sd-logo-mark" />
 				<div class="sd-logo-text">smanga</div>
 			</div>
 
@@ -161,12 +161,17 @@ import PreviewPageView from '../preview-page.vue';
 import ManageD from '../manage/manage-d-desat.vue';
 import ManagePanel from '../manage/manage-panel.vue';
 import SettingD from '../setting/setting-d-desat.vue';
+import SmangaLogoMark from '../components/smanga-logo-mark.vue';
+import type { LogoVariant } from '../components/logo-options';
 
 const props = defineProps<{
 	page?: string;
 	styleKey?: 'A' | 'B' | 'C' | 'D';
+	logoVariant?: LogoVariant;
 	params?: Record<string, any>;
 }>();
+
+const logoVariant = computed(() => props.logoVariant || 'twin-pages');
 
 // 改造思路：9 套主题的 s-back 不再是大色块，而是 50 号浅色
 const themeList = [
@@ -285,13 +290,7 @@ function forwardNavigate(payload: { page: string; params?: Record<string, any>; 
 .sd-logo-mark {
 	width: 28px;
 	height: 28px;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	background: var(--sd-primary);
-	color: #fff;
-	font-weight: 800;
-	border-radius: 8px;
+	color: var(--sd-primary);
 }
 
 .sd-logo-text {

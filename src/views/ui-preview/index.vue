@@ -18,13 +18,31 @@
 						{{ item.label }}
 					</button>
 				</div>
-				<!-- 风格切换 -->
-				<div class="pv-tabs">
-					<button v-for="item in tabs" :key="item.key"
-						:class="['pv-tab', { active: activeStyle === item.key }]"
-						@click="activeStyle = item.key">
-						{{ item.label }}
-					</button>
+				<div class="pv-control-row">
+					<!-- 风格切换 -->
+					<div class="pv-tabs">
+						<button v-for="item in tabs" :key="item.key"
+							:class="['pv-tab', { active: activeStyle === item.key }]"
+							@click="activeStyle = item.key">
+							{{ item.label }}
+						</button>
+					</div>
+					<!-- Logo 切换 -->
+					<div class="pv-logo-picker" aria-label="Logo 方案">
+						<span class="pv-logo-label">Logo</span>
+						<button
+							v-for="item in logoOptions"
+							:key="item.key"
+							:class="['pv-logo-option', { active: activeLogo === item.key }]"
+							:title="`${item.shortLabel}. ${item.label}`"
+							:aria-label="`选择 Logo：${item.label}`"
+							:aria-pressed="activeLogo === item.key"
+							@click="activeLogo = item.key"
+						>
+							<SmangaLogoMark :variant="item.key" />
+							<span>{{ item.shortLabel }}</span>
+						</button>
+					</div>
 				</div>
 			</div>
 			<div class="pv-header-right">
@@ -59,6 +77,7 @@
 				v-if="config.isMobile"
 				:page="currentPage"
 				:style-key="activeStyle"
+				:logo-variant="activeLogo"
 				:params="previewParams"
 				@navigate="navigate"
 				@back="goPreviewBack"
@@ -69,6 +88,7 @@
 				:is="currentView"
 				:page="currentPage"
 				:style-key="activeStyle"
+				:logo-variant="activeLogo"
 				:params="previewParams"
 				@navigate="navigate"
 				@back="goPreviewBack"
@@ -94,6 +114,9 @@ import ReaderC from './reader/reader-c-dark.vue';
 import ReaderD from './reader/reader-d-desat.vue';
 // 移动端页面
 import PreviewPageMobile from './preview-page-mobile.vue';
+import SmangaLogoMark from './components/smanga-logo-mark.vue';
+import { logoOptions } from './components/logo-options';
+import type { LogoVariant } from './components/logo-options';
 
 const router = useRouter();
 
@@ -121,6 +144,7 @@ type PreviewPage =
 type NavigatePayload = { page: PreviewPage | 'browse-return'; params?: Record<string, any>; replace?: boolean };
 
 const activeStyle = ref<PreviewStyle>('A');
+const activeLogo = ref<LogoVariant>('twin-pages');
 const showSpec = ref(true);
 const currentPage = ref<PreviewPage>('home');
 const previewParams = reactive({
@@ -283,6 +307,12 @@ function goAppBack() {
 	gap: 6px;
 }
 
+.pv-control-row {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+}
+
 .pv-scene-tabs {
 	display: flex;
 	gap: 4px;
@@ -341,6 +371,60 @@ function goAppBack() {
 	padding: 4px;
 	background: #f3f4f6;
 	border-radius: 10px;
+}
+
+.pv-logo-picker {
+	display: flex;
+	align-items: center;
+	gap: 3px;
+	padding: 4px;
+	background: #eef2ff;
+	border-radius: 10px;
+}
+
+.pv-logo-label {
+	padding: 0 5px 0 4px;
+	font-size: 10px;
+	font-weight: 700;
+	letter-spacing: .06em;
+	color: #6366f1;
+	text-transform: uppercase;
+}
+
+.pv-logo-option {
+	display: flex;
+	align-items: center;
+	gap: 3px;
+	min-width: 41px;
+	height: 32px;
+	padding: 4px 6px;
+	color: #64748b;
+	background: transparent;
+	border: 0;
+	border-radius: 7px;
+	cursor: pointer;
+	transition: all .15s ease;
+}
+
+.pv-logo-option :deep(svg) {
+	width: 20px;
+	height: 20px;
+}
+
+.pv-logo-option span {
+	font-size: 10px;
+	font-weight: 700;
+}
+
+.pv-logo-option:hover {
+	color: #312e81;
+	background: rgba(255, 255, 255, .65);
+}
+
+.pv-logo-option.active {
+	color: #4f46e5;
+	background: #fff;
+	box-shadow: 0 1px 3px rgba(0, 0, 0, .1);
 }
 
 .pv-tab {

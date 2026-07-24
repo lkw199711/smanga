@@ -3,7 +3,7 @@
 		<!-- 侧边栏 -->
 		<aside class="sc-sidebar">
 			<div class="sc-logo">
-				<div class="sc-logo-mark">s</div>
+				<SmangaLogoMark :variant="logoVariant" class="sc-logo-mark" />
 				<div class="sc-logo-text">smanga</div>
 				<span class="sc-logo-ver">v4.3</span>
 			</div>
@@ -163,12 +163,17 @@ import PreviewPageView from '../preview-page.vue';
 import ManageC from '../manage/manage-c-dark.vue';
 import ManagePanel from '../manage/manage-panel.vue';
 import SettingC from '../setting/setting-c-dark.vue';
+import SmangaLogoMark from '../components/smanga-logo-mark.vue';
+import type { LogoVariant } from '../components/logo-options';
 
 const props = defineProps<{
 	page?: string;
 	styleKey?: 'A' | 'B' | 'C' | 'D';
+	logoVariant?: LogoVariant;
 	params?: Record<string, any>;
 }>();
+
+const logoVariant = computed(() => props.logoVariant || 'twin-pages');
 
 const emit = defineEmits<{
 	navigate: [payload: { page: string; params?: Record<string, any>; replace?: boolean }];
@@ -257,13 +262,7 @@ function forwardNavigate(payload: { page: string; params?: Record<string, any>; 
 .sc-logo-mark {
 	width: 26px;
 	height: 26px;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	background: #f5a524;
-	color: #0d0f12;
-	font-weight: 800;
-	border-radius: 6px;
+	color: #f5a524;
 }
 
 .sc-logo-text {

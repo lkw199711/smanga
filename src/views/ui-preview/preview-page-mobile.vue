@@ -3,6 +3,7 @@
 		<!-- 移动端顶部栏 -->
 		<header class="ppm-header">
 			<button v-if="showBack" class="ppm-back" @click="emit('back')">←</button>
+			<SmangaLogoMark :variant="logoVariant" class="ppm-logo-mark" />
 			<div class="ppm-title">
 				<h1>{{ title }}</h1>
 			</div>
@@ -131,6 +132,8 @@
 <script lang="ts" setup>
 import { computed } from 'vue';
 import MobileNavBar from './components/mobile/mobile-nav-bar.vue';
+import SmangaLogoMark from './components/smanga-logo-mark.vue';
+import type { LogoVariant } from './components/logo-options';
 import {
 	mediaList,
 	previewMangas,
@@ -152,8 +155,11 @@ type PreviewPage =
 const props = defineProps<{
 	page: PreviewPage;
 	styleKey: PreviewStyle;
+	logoVariant?: LogoVariant;
 	params: { mediaId?: number; mangaId?: number; chapterId?: number; keyword?: string };
 }>();
+
+const logoVariant = computed(() => props.logoVariant || 'twin-pages');
 
 const emit = defineEmits<{
 	navigate: [payload: { page: string; params?: Record<string, any>; replace?: boolean }];
@@ -262,6 +268,24 @@ function handleNavClick(item: any) {
 .preview-c .ppm-header {
 	background: rgba(22, 26, 32, 0.95);
 	border-color: #2a313c;
+}
+
+.ppm-logo-mark {
+	width: 26px;
+	height: 26px;
+	color: #171717;
+}
+
+.preview-b .ppm-logo-mark {
+	color: #ff6fa3;
+}
+
+.preview-c .ppm-logo-mark {
+	color: #f5a524;
+}
+
+.preview-d .ppm-logo-mark {
+	color: #2563eb;
 }
 
 .ppm-back {

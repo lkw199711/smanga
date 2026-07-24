@@ -3,7 +3,7 @@
 		<!-- 侧边栏 -->
 		<aside class="sb-sidebar">
 			<div class="sb-logo">
-				<span class="sb-logo-emoji">🌸</span>
+				<SmangaLogoMark :variant="logoVariant" class="sb-logo-mark" />
 				<span class="sb-logo-text">smanga</span>
 			</div>
 
@@ -142,12 +142,17 @@ import PreviewPageView from '../preview-page.vue';
 import ManageB from '../manage/manage-b-manga.vue';
 import ManagePanel from '../manage/manage-panel.vue';
 import SettingB from '../setting/setting-b-manga.vue';
+import SmangaLogoMark from '../components/smanga-logo-mark.vue';
+import type { LogoVariant } from '../components/logo-options';
 
 const props = defineProps<{
 	page?: string;
 	styleKey?: 'A' | 'B' | 'C' | 'D';
+	logoVariant?: LogoVariant;
 	params?: Record<string, any>;
 }>();
+
+const logoVariant = computed(() => props.logoVariant || 'twin-pages');
 
 const emit = defineEmits<{
 	navigate: [payload: { page: string; params?: Record<string, any>; replace?: boolean }];
@@ -265,8 +270,10 @@ function forwardNavigate(payload: { page: string; params?: Record<string, any>; 
 	padding: 4px 8px 16px;
 }
 
-.sb-logo-emoji {
-	font-size: 24px;
+.sb-logo-mark {
+	width: 28px;
+	height: 28px;
+	color: #ff6fa3;
 }
 
 .sb-logo-text {

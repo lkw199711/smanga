@@ -3,7 +3,7 @@
 		<!-- 侧边栏 -->
 		<aside class="sa-sidebar">
 			<div class="sa-logo">
-				<div class="sa-logo-mark">S</div>
+				<SmangaLogoMark :variant="logoVariant" class="sa-logo-mark" />
 				<div class="sa-logo-text">smanga</div>
 			</div>
 
@@ -148,12 +148,17 @@ import PreviewPageView from '../preview-page.vue';
 import ManageA from '../manage/manage-a-minimal.vue';
 import ManagePanel from '../manage/manage-panel.vue';
 import SettingA from '../setting/setting-a-minimal.vue';
+import SmangaLogoMark from '../components/smanga-logo-mark.vue';
+import type { LogoVariant } from '../components/logo-options';
 
 const props = defineProps<{
 	page?: string;
 	styleKey?: 'A' | 'B' | 'C' | 'D';
+	logoVariant?: LogoVariant;
 	params?: Record<string, any>;
 }>();
+
+const logoVariant = computed(() => props.logoVariant || 'twin-pages');
 
 const emit = defineEmits<{
 	navigate: [payload: { page: string; params?: Record<string, any>; replace?: boolean }];
@@ -242,13 +247,7 @@ function forwardNavigate(payload: { page: string; params?: Record<string, any>; 
 .sa-logo-mark {
 	width: 28px;
 	height: 28px;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	background: #171717;
-	color: #fff;
-	font-weight: 700;
-	border-radius: 8px;
+	color: #171717;
 }
 
 .sa-logo-text {
