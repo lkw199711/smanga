@@ -97,31 +97,47 @@ async function get_poster(item: chapterItemType) {
 
 <style scoped lang="less">
 .chapter {
+  box-sizing: border-box;
   position: relative;
   overflow: hidden;
   cursor: pointer;
   display: flex;
-  justify-content: space-between;
+  align-items: center;
   gap: 1rem;
-  padding: 0.6rem;
-  padding-right: 1.4rem;
-  border: 2px solid #ccc;
-  border-radius: 1rem;
-
   width: 100%;
   max-width: 100%;
   height: 9rem;
+  padding: 0.8rem 1.2rem 0.8rem 0.8rem;
+  border: 1px solid color-mix(in srgb, @s-border 82%, transparent);
+  border-radius: 1.2rem;
+  background: var(--s-back-soft-original, #f9f9f9);
+  color: @s-back-text;
+  transition:
+    transform 160ms ease,
+    border-color 160ms ease,
+    background-color 160ms ease,
+    box-shadow 160ms ease;
+
+  &:hover {
+    transform: translateY(-1px);
+    border-color: color-mix(in srgb, @s-primary 38%, transparent);
+    background: color-mix(in srgb, @s-primary 5%, var(--s-back-soft-original, #f9f9f9));
+    box-shadow: 0 0.5rem 1.6rem fade(#000000, 7%);
+  }
 
   &-cover-img {
-    margin-right: 0.4rem;
+    width: 100%;
     height: 100%;
     position: relative;
-    background-color: #f0f0f0;
+    background-color: @s-back-soft;
   }
 
   &-image-box {
     position: relative;
-    border-radius: 8px;
+    flex: 0 0 10rem;
+    align-self: stretch;
+    overflow: hidden;
+    border-radius: 0.8rem;
   }
 
   .progress {
@@ -136,17 +152,36 @@ async function get_poster(item: chapterItemType) {
 
   .chapter-index,
   .chapter-name {
-    margin-top: 0.6rem;
-    line-height: 1.6;
+    margin: 0;
+    line-height: 1.5;
     font-size: 1.6rem;
-    max-width: 42%;
-    white-space: normal;
+  }
+
+  .chapter-index {
+    flex: 0 0 5.6rem;
+    color: @s-back-text-tertiary;
+    text-align: center;
+  }
+
+  .chapter-name {
+    min-width: 0;
+    flex: 1;
+    color: @s-back-text;
+    font-weight: 600;
+    white-space: nowrap;
   }
 }
 
 .chapter.toptoon {
   .chapter-image-box {
+    display: flex;
+    flex-basis: 21.2rem;
     min-width: 21.2rem;
+  }
+
+  .chapter-cover-img {
+    width: 50%;
+    flex: 1 1 50%;
   }
 }
 
@@ -171,14 +206,14 @@ async function get_poster(item: chapterItemType) {
 
 .icon-is-read {
   color: @s-isread;
-  height: 4rem;
-  font-size: 4rem;
+  flex: none;
+  height: 3rem;
+  font-size: 3rem;
   overflow: hidden;
   border-radius: 100%;
-  background-color: #fff;
+  background-color: var(--s-back-soft-original, #f9f9f9);
   z-index: 1;
   opacity: 0;
-  transform: translateY(2rem);
 
   &.is-show {
     opacity: 1;
@@ -211,10 +246,6 @@ async function get_poster(item: chapterItemType) {
 }
 
 @media only screen and (min-width: 1920px) {
-  .chapter {
-    width: 70rem;
-  }
-
   .chapter.toomics {
     height: 9.6rem;
   }
@@ -225,10 +256,6 @@ async function get_poster(item: chapterItemType) {
 }
 
 @media only screen and (max-width: 1919px) and (min-width: 1200px) {
-  .chapter {
-    width: 49rem;
-  }
-
   .chapter.toomics {
     height: 9.6rem;
   }
@@ -237,11 +264,6 @@ async function get_poster(item: chapterItemType) {
     height: 14.1rem;
   }
 
-  .icon-is-read {
-    height: 3.4rem;
-    font-size: 3.4rem;
-    transform: translateY(2.6rem);
-  }
 }
 
 @media only screen and (max-width: 1199px) and (min-width: 768px) {
@@ -253,18 +275,6 @@ async function get_poster(item: chapterItemType) {
     height: 14.1rem;
   }
 
-  .chapter {
-    .chapter-index,
-    .chapter-name {
-      margin-top: 0.6rem;
-      line-height: 1.6;
-      font-size: 1.6rem;
-    }
-  }
-
-  .icon-is-read {
-    transform: translateY(3rem);
-  }
 }
 
 @media only screen and (max-width: 767px) {
@@ -276,26 +286,34 @@ async function get_poster(item: chapterItemType) {
     height: 11rem;
 
     .chapter-image-box {
+      flex-basis: 17rem;
       min-width: 17rem;
     }
   }
 
   .chapter {
     height: 6rem;
-    padding-right: 1rem;
+    gap: 0.6rem;
+    padding: 0.5rem 0.8rem 0.5rem 0.5rem;
+
+    .chapter-image-box {
+      flex-basis: 6.5rem;
+    }
 
     .chapter-index,
     .chapter-name {
-      margin-top: 0.4rem;
       line-height: 1.4;
       font-size: 1.4rem;
+    }
+
+    .chapter-index {
+      flex-basis: 4rem;
     }
   }
 
   .icon-is-read {
     height: 2.4rem;
     font-size: 2.4rem;
-    transform: translateY(1.6rem);
   }
 }
 </style>

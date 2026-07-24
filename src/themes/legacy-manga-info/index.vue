@@ -32,25 +32,47 @@
         </div>
       </div>
 
-      <el-descriptions class="meta-info" title="漫画信息" :column="infoColum">
-        <el-descriptions-item label="漫画名称">{{ mangaInfo.mangaName }}</el-descriptions-item>
-        <el-descriptions-item label="作者">{{ mangaInfo.author }}</el-descriptions-item>
-        <el-descriptions-item label="发布时间">{{ mangaInfo.publishDate }}</el-descriptions-item>
-        <el-descriptions-item label="章节总数">{{ mangaInfo.chapterCount }}</el-descriptions-item>
-        <el-descriptions-item label="阅读方式">{{ mangaInfo.browseType }}</el-descriptions-item>
-        <el-descriptions-item label="所属媒体库">{{ mangaInfo.media?.mediaName }}</el-descriptions-item>
-        <el-descriptions-item label="漫画路径">{{ mangaInfo.mangaPath }}</el-descriptions-item>
-        <el-descriptions-item label="入库时间">{{ mangaInfo.createTime }}</el-descriptions-item>
-        <el-descriptions-item label="更新时间">{{ mangaInfo.updateTime }}</el-descriptions-item>
-        <el-descriptions-item label="评分">{{ mangaInfo.star }}</el-descriptions-item>
-        <el-descriptions-item label="标签">
-          <el-tag v-for="item in mangaInfo.tags" :key="item.tagId" class="tag" size="small" :color="item.tagColor">{{ item.tagName }}</el-tag>
-        </el-descriptions-item>
-        <el-descriptions-item label="简介">{{ mangaInfo.describe }}</el-descriptions-item>
-      </el-descriptions>
+      <div class="detail-overview">
+        <section class="meta-info" aria-labelledby="manga-info-title">
+        <header class="meta-heading">
+          <div class="meta-title-block">
+            <p class="section-eyebrow">漫画信息</p>
+            <h1 id="manga-info-title">{{ mangaInfo.mangaName }}</h1>
+            <p class="meta-author" v-if="mangaInfo.author">作者：{{ mangaInfo.author }}</p>
+          </div>
 
-      <div class="action-panel" aria-label="漫画操作">
-        <section class="action-reading">
+          <div class="meta-tags" v-if="mangaInfo.tags?.length">
+            <el-tag v-for="item in mangaInfo.tags" :key="item.tagId" class="tag" size="small" :color="item.tagColor">
+              {{ item.tagName }}
+            </el-tag>
+          </div>
+        </header>
+
+        <p class="meta-description" v-if="mangaInfo.describe">{{ mangaInfo.describe }}</p>
+
+        <el-descriptions class="meta-summary" :column="summaryInfoColumn">
+          <el-descriptions-item label="发布时间">{{ mangaInfo.publishDate || '—' }}</el-descriptions-item>
+          <el-descriptions-item label="章节总数">{{ mangaInfo.chapterCount || 0 }}</el-descriptions-item>
+          <el-descriptions-item label="评分">{{ mangaInfo.star || '—' }}</el-descriptions-item>
+          <el-descriptions-item label="阅读方式">{{ mangaInfo.browseType || '—' }}</el-descriptions-item>
+        </el-descriptions>
+
+        <details class="technical-info">
+          <summary>
+            <span>文件与收录信息</span>
+            <small>媒体库、路径及更新时间</small>
+          </summary>
+          <el-descriptions class="technical-summary" :column="infoColum">
+            <el-descriptions-item label="所属媒体库">{{ mangaInfo.media?.mediaName || '—' }}</el-descriptions-item>
+            <el-descriptions-item label="漫画路径">{{ mangaInfo.mangaPath || '—' }}</el-descriptions-item>
+            <el-descriptions-item label="入库时间">{{ mangaInfo.createTime || '—' }}</el-descriptions-item>
+            <el-descriptions-item label="更新时间">{{ mangaInfo.updateTime || '—' }}</el-descriptions-item>
+          </el-descriptions>
+        </details>
+        </section>
+
+        <div class="action-panel" aria-label="漫画操作">
+          <section class="action-reading">
           <div class="action-heading">
             <div>
               <p class="action-eyebrow">阅读</p>
@@ -94,9 +116,9 @@
               <span>分享漫画</span>
             </el-button>
           </div>
-        </section>
+          </section>
 
-        <section class="action-management">
+          <section class="action-management">
           <div class="action-heading">
             <div>
               <p class="action-eyebrow">管理</p>
@@ -123,31 +145,66 @@
               <span>编辑元数据</span>
             </el-button>
           </div>
-        </section>
+          </section>
+        </div>
       </div>
 
-      <el-form-item :label="$t('mangaInfo.reverseOrder')" class="op-range">
-        <el-switch v-model="chapterListDesc" />
-      </el-form-item>
+      <section class="chapter-section" aria-labelledby="chapter-section-title">
+        <header class="chapter-toolbar">
+          <div>
+            <p class="section-eyebrow">目录</p>
+            <div class="chapter-title-line">
+              <h2 id="chapter-section-title">章节目录</h2>
+              <span>{{ chapterList.length }} 章</span>
+            </div>
+          </div>
 
-      <div class="chapter-list" v-if="userConfig.simpleChapterView">
-        <chapterSimple
-          v-for="(i, k) in chapterList"
-          :key="k"
-          :chapterInfo="i"
-          :sourceWebsite="sourceWebsite"
-          @click="go_browse(i)"
-          @contextmenu.prevent="context_menu($event, i)" />
-      </div>
-      <div class="chapter-list" v-else>
-        <chapter
-          v-for="(i, k) in chapterList"
-          :key="k"
-          :chapterInfo="i"
-          :sourceWebsite="sourceWebsite"
-          @click="go_browse(i)"
-          @contextmenu.prevent="context_menu($event, i)" />
-      </div>
+          <div class="chapter-controls">
+            <div class="view-switch" aria-label="章节显示方式">
+              <button
+                type="button"
+                :class="{active: userConfig.simpleChapterView}"
+                :aria-pressed="userConfig.simpleChapterView"
+                @click="userConfig.simpleChapterView = true">
+                简洁
+              </button>
+              <button
+                type="button"
+                :class="{active: !userConfig.simpleChapterView}"
+                :aria-pressed="!userConfig.simpleChapterView"
+                @click="userConfig.simpleChapterView = false">
+                图文
+              </button>
+            </div>
+
+            <label class="order-switch">
+              <span>{{ chapterListDesc ? '倒序' : '正序' }}</span>
+              <el-switch v-model="chapterListDesc" :aria-label="$t('mangaInfo.reverseOrder')" />
+            </label>
+          </div>
+        </header>
+
+        <div class="chapter-list chapter-list--simple" v-if="userConfig.simpleChapterView">
+          <chapterSimple
+            v-for="(i, k) in chapterList"
+            :key="k"
+            :chapterInfo="i"
+            :sourceWebsite="sourceWebsite"
+            @click="go_browse(i)"
+            @contextmenu.prevent="context_menu($event, i)" />
+        </div>
+        <div class="chapter-list" v-else>
+          <chapter
+            v-for="(i, k) in chapterList"
+            :key="k"
+            :chapterInfo="i"
+            :sourceWebsite="sourceWebsite"
+            @click="go_browse(i)"
+            @contextmenu.prevent="context_menu($event, i)" />
+        </div>
+
+        <div class="chapter-empty" v-if="!chapterList.length">暂无章节</div>
+      </section>
     </div>
 
     <div class="bottom"></div>
@@ -292,6 +349,8 @@ const infoColum = computed(() => {
       return 4;
   }
 });
+
+const summaryInfoColumn = computed(() => Math.min(infoColum.value, 4));
 
 // 从路由 params 获取 mangaId（主题路由使用 params，同时也兼容 query）
 const mangaId = computed(() => Number(route.params.mangaId) || Number(route.query.mangaId) || 0);
@@ -552,11 +611,13 @@ function update_tags(tagsParams: tagItemType[]) {
   background-color: transparent;
 }
 
-.chapter-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
-  margin: 1rem 2rem 0;
+.meta-info,
+.action-panel {
+  box-sizing: border-box;
+  width: calc(100% - 4rem);
+  max-width: 112rem;
+  margin-right: auto;
+  margin-left: 2rem;
 }
 
 .banner-toomics {
@@ -694,23 +755,133 @@ function update_tags(tagsParams: tagItemType[]) {
   }
 }
 
+.section-eyebrow {
+  margin: 0;
+  color: @s-back-text-tertiary;
+  font-size: 1.1rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+}
+
 .meta-info {
-  margin: 2rem 2rem 0 2rem;
+  margin-top: 2rem;
+  padding: 2rem;
+  border: 1px solid color-mix(in srgb, @s-border 78%, transparent);
+  border-radius: 1.6rem;
+  background: var(--s-back-soft-original, #f9f9f9);
   color: @s-back-text;
 }
 
-:deep(.el-descriptions__body) {
-  border-radius: 2rem;
+.meta-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 2rem;
+}
+
+.meta-title-block {
+  min-width: 0;
+
+  h1 {
+    margin: 0.4rem 0 0;
+    font-size: clamp(2rem, 2.2vw, 3rem);
+    font-weight: 700;
+    line-height: 1.25;
+    word-break: break-word;
+  }
+}
+
+.meta-author {
+  margin: 0.6rem 0 0;
+  color: @s-back-text-secondary;
+}
+
+.meta-tags {
+  display: flex;
+  max-width: 45%;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 0.6rem;
+}
+
+.meta-description {
+  max-width: 84rem;
+  margin: 1.8rem 0 0;
+  color: @s-back-text-secondary;
+  font-size: 1.4rem;
+  line-height: 1.75;
+  white-space: pre-wrap;
+}
+
+.meta-summary {
+  margin-top: 2rem;
+}
+
+:deep(.meta-summary .el-descriptions__body),
+:deep(.technical-summary .el-descriptions__body) {
   background-color: transparent;
+}
+
+:deep(.meta-info .el-descriptions__table) {
+  width: 100%;
+  table-layout: fixed;
+}
+
+:deep(.meta-info .el-descriptions__cell),
+:deep(.meta-info .el-descriptions__content) {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.technical-info {
+  margin-top: 1.2rem;
+  border-top: 1px solid color-mix(in srgb, @s-border 72%, transparent);
+
+  summary {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.4rem 0 0.2rem;
+    cursor: pointer;
+    color: @s-back-text-secondary;
+    font-weight: 600;
+    list-style: none;
+
+    &::-webkit-details-marker {
+      display: none;
+    }
+
+    small {
+      color: @s-back-text-tertiary;
+      font-size: 1.1rem;
+      font-weight: 400;
+    }
+
+    &::after {
+      margin-left: auto;
+      color: @s-primary;
+      content: '展开';
+      font-size: 1.2rem;
+      font-weight: 500;
+    }
+  }
+
+  &[open] summary::after {
+    content: '收起';
+  }
+}
+
+.technical-summary {
+  margin-top: 1.4rem;
 }
 
 .action-panel {
   display: grid;
   grid-template-columns: minmax(0, 1.25fr) minmax(32rem, 0.75fr);
   gap: 1px;
-  width: calc(100% - 4rem);
-  max-width: 112rem;
-  margin: 1rem auto 2rem 2rem;
+  margin-top: 1rem;
+  margin-bottom: 2rem;
   overflow: hidden;
   border: 1px solid color-mix(in srgb, @s-border 78%, transparent);
   border-radius: 1.6rem;
@@ -897,8 +1068,110 @@ function update_tags(tagsParams: tagItemType[]) {
   margin-bottom: 6rem;
 }
 
-.op-range {
+.chapter-section {
+  width: calc(100% - 4rem);
+  margin-top: 1rem;
+  margin-right: auto;
+  margin-bottom: 2rem;
   margin-left: 2rem;
+}
+
+.chapter-toolbar {
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+  width: 100%;
+  max-width: 112rem;
+  padding: 1.6rem 2rem;
+  border: 1px solid color-mix(in srgb, @s-border 78%, transparent);
+  border-radius: 1.4rem;
+  background: var(--s-back-soft-original, #f9f9f9);
+}
+
+.chapter-title-line {
+  display: flex;
+  align-items: baseline;
+  gap: 0.8rem;
+  margin-top: 0.3rem;
+
+  h2 {
+    margin: 0;
+    color: @s-back-text;
+    font-size: 1.8rem;
+  }
+
+  span {
+    color: @s-back-text-tertiary;
+    font-size: 1.2rem;
+  }
+}
+
+.chapter-controls {
+  display: flex;
+  align-items: center;
+  gap: 1.6rem;
+}
+
+.view-switch {
+  display: flex;
+  padding: 0.3rem;
+  border: 1px solid color-mix(in srgb, @s-border 80%, transparent);
+  border-radius: 0.9rem;
+  background: color-mix(in srgb, @s-border 18%, transparent);
+
+  button {
+    min-width: 5.2rem;
+    padding: 0.5rem 1rem;
+    border: 0;
+    border-radius: 0.6rem;
+    background: transparent;
+    color: @s-back-text-tertiary;
+    cursor: pointer;
+    font: inherit;
+    font-size: 1.2rem;
+    transition:
+      background-color 160ms ease,
+      color 160ms ease,
+      box-shadow 160ms ease;
+
+    &.active {
+      background: var(--s-back-soft-original, #f9f9f9);
+      color: @s-primary;
+      font-weight: 600;
+      box-shadow: 0 0.2rem 0.8rem fade(#000000, 8%);
+    }
+  }
+}
+
+.order-switch {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  color: @s-back-text-secondary;
+  font-size: 1.2rem;
+}
+
+.chapter-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(42rem, 1fr));
+  gap: 1rem;
+  margin-top: 1rem;
+
+  > * {
+    min-width: 0;
+  }
+
+  &--simple {
+    grid-template-columns: repeat(auto-fill, minmax(24rem, 1fr));
+  }
+}
+
+.chapter-empty {
+  padding: 5rem 2rem;
+  color: @s-back-text-tertiary;
+  text-align: center;
 }
 
 .cover-img {
@@ -912,6 +1185,26 @@ function update_tags(tagsParams: tagItemType[]) {
   .action-primary {
     grid-template-columns: minmax(26rem, 34rem) max-content;
     justify-content: start;
+  }
+}
+
+@media only screen and (min-width: 1920px) {
+  .detail-overview {
+    display: grid;
+    grid-template-columns: minmax(48rem, 0.9fr) minmax(78rem, 1.1fr);
+    align-items: start;
+    gap: 1.6rem;
+    width: calc(100% - 4rem);
+    max-width: 180rem;
+    margin: 2rem auto 2rem 2rem;
+  }
+
+  .detail-overview > .meta-info,
+  .detail-overview > .action-panel {
+    box-sizing: border-box;
+    width: 100%;
+    max-width: none;
+    margin: 0;
   }
 }
 
@@ -949,7 +1242,12 @@ function update_tags(tagsParams: tagItemType[]) {
   }
 
   .chapter-list {
+    grid-template-columns: 1fr;
     gap: 0.6rem;
+
+    &--simple {
+      grid-template-columns: repeat(auto-fill, minmax(24rem, 1fr));
+    }
   }
 
   .character {
@@ -987,6 +1285,7 @@ function update_tags(tagsParams: tagItemType[]) {
   }
 
   .chapter-list {
+    grid-template-columns: 1fr;
     gap: 0.4rem;
   }
 
@@ -1008,10 +1307,34 @@ function update_tags(tagsParams: tagItemType[]) {
     }
   }
 
-  .action-panel {
-    grid-template-columns: 1fr;
+  .meta-info,
+  .action-panel,
+  .chapter-section {
     width: calc(100% - 2rem);
     margin-left: 1rem;
+  }
+
+  .meta-info {
+    padding: 1.5rem;
+    border-radius: 1.2rem;
+  }
+
+  .meta-heading {
+    flex-direction: column;
+    gap: 1.2rem;
+  }
+
+  .meta-tags {
+    max-width: none;
+    justify-content: flex-start;
+  }
+
+  .technical-info summary small {
+    display: none;
+  }
+
+  .action-panel {
+    grid-template-columns: 1fr;
     border-radius: 1.2rem;
   }
 
@@ -1040,6 +1363,18 @@ function update_tags(tagsParams: tagItemType[]) {
 
   .action-hint {
     display: none;
+  }
+
+  .chapter-toolbar {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 1.4rem;
+    padding: 1.5rem;
+  }
+
+  .chapter-controls {
+    width: 100%;
+    justify-content: space-between;
   }
 
   .banner-toomics {

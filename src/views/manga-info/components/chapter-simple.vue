@@ -19,16 +19,33 @@ const chapterName = ref(props.chapterInfo.chapterName);
 
 <style scoped lang="less">
 .chapter {
+	box-sizing: border-box;
 	position: relative;
 	overflow: hidden;
 	cursor: pointer;
-	padding: .6rem;
-	padding-right: 1.4rem;
-	border: 2px solid #ccc;
+	width: 100%;
+	padding: 1rem 1.4rem;
+	border: 1px solid color-mix(in srgb, @s-border 82%, transparent);
 	border-radius: 1rem;
-	text-align: center;
-	width: 30rem;
+	background: var(--s-back-soft-original, #f9f9f9);
+	color: @s-back-text;
 	line-height: 2rem;
+	transition:
+		transform 160ms ease,
+		border-color 160ms ease,
+		background-color 160ms ease,
+		box-shadow 160ms ease;
+
+	&:hover {
+		transform: translateY(-1px);
+		border-color: color-mix(in srgb, @s-primary 38%, transparent);
+		background: color-mix(in srgb, @s-primary 5%, var(--s-back-soft-original, #f9f9f9));
+		box-shadow: 0 .4rem 1.2rem fade(#000000, 6%);
+	}
+
+	.chapter-name {
+		margin: 0;
+	}
 }
 
 .anim {
@@ -73,6 +90,7 @@ const chapterName = ref(props.chapterInfo.chapterName);
 @media only screen and (max-width: 767px) {
 	.chapter {
 		width: 100%;
+		padding: .8rem 1rem;
 	}
 }
 </style>
