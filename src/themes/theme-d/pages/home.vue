@@ -37,20 +37,14 @@
 				<a class="sd-link" @click="router.push('/t/history')">查看全部 →</a>
 			</div>
 			<div class="sd-continue">
-				<div v-for="m in continueReading" :key="m.id" class="sd-cont-card no-select" v-long-press="() => openThemeActionSheet('chapter', m)" @click="goRead(m)" @contextmenu="openThemeContextMenu($event, 'chapter', m)">
-					<div class="sd-cont-cover"
-						:style="coverStyle(m, { kind: 'chapter', fallbackSeed: m.id })">
-						<span v-if="m.tag" class="sd-cont-tag">{{ m.tag }}</span>
-						<span v-if="m.unread" class="sd-cont-unread">{{ m.unread }}</span>
-					</div>
-					<div class="sd-cont-info">
-						<div class="sd-cont-name">{{ m.name }}</div>
-						<div class="sd-cont-chapter">{{ m.chapter }}</div>
-						<div class="sd-cont-progress">
-							<div class="sd-cont-progress-bar" :style="{ width: m.progress + '%' }"></div>
-						</div>
-					</div>
-				</div>
+				<t-history-item
+					v-for="item in continueReading"
+					:key="item.chapterId"
+					:item="item"
+					variant="D"
+					@click="goRead(item)"
+					@contextmenu="openThemeContextMenu($event, 'chapter', item)"
+				/>
 			</div>
 		</section>
 
@@ -80,7 +74,8 @@ import historyApi from '@/api/history'
 import latestApi from '@/api/latest'
 import chartsApi from '@/api/charts'
 import imageApi from '@/api/image'
-import { openThemeActionSheet, openThemeContextMenu } from '@/themes/context-menu'
+import THistoryItem from '@/themes/components/history-item.vue'
+import { openThemeContextMenu } from '@/themes/context-menu'
 
 type MangaCard = {
 	id: number
@@ -103,7 +98,7 @@ const stats = ref({
 	readThisWeek: 0,
 })
 
-const continueReading = ref<MangaCard[]>([])
+const continueReading = ref<any[]>([])
 const recentAdded = ref<MangaCard[]>([])
 const coverCache = ref<Record<string, string>>({})
 
@@ -150,18 +145,7 @@ onMounted(async () => {
 
 	try {
 		const r = await historyApi.get_history(1, 6)
-		const list = r?.list || []
-		continueReading.value = list.map((item: any) => ({
-			...item,
-			id: Number(item.chapterId),
-			chapterId: Number(item.chapterId),
-			mangaId: Number(item.mangaId),
-			name: item.mangaName || '未知漫画',
-			chapter: item.chapterName || '未知章节',
-			chapterCover: item.chapterCover,
-			progress: getProgress(item),
-			gradient: getGradient(Number(item.chapterId)),
-		}))
+		continueReading.value = r?.list || []
 	} catch { }
 
 	try {
@@ -178,12 +162,11 @@ onMounted(async () => {
 	} catch { }
 
 	console.log('continueReading', continueReading.value)
-	await warmCovers(continueReading.value, { kind: 'chapter' })
 	await warmCovers(recentAdded.value, { kind: 'manga' })
 })
 
-function goRead(item: MangaCard) {
-	router.push(`/t/reader/${item.id}`)
+function goRead(item: any) {
+	router.push(`/t/reader/${item.chapterId}`)
 }
 
 function goManga(item: MangaCard) {
@@ -336,98 +319,6 @@ function coverStyle(
 	display: grid;
 	grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
 	gap: 14px;
-}
-
-.sd-cont-card {
-	display: flex;
-	gap: 12px;
-	padding: 12px;
-	background: var(--sd-card);
-	border: 1px solid var(--sd-border);
-	border-radius: 12px;
-	cursor: pointer;
-	transition: all 0.2s;
-}
-
-.sd-cont-card:hover {
-	border-color: var(--sd-primary);
-	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-}
-
-.sd-cont-cover {
-	position: relative;
-	flex-shrink: 0;
-	width: 70px;
-	height: 96px;
-	border-radius: 8px;
-	overflow: hidden;
-	background-size: cover;
-	background-position: center;
-	background-repeat: no-repeat;
-	background-color: var(--sd-hover);
-}
-
-.sd-cont-tag {
-	position: absolute;
-	top: 6px;
-	left: 6px;
-	padding: 2px 6px;
-	font-size: 10px;
-	font-weight: 600;
-	color: #fff;
-	background: rgba(0, 0, 0, 0.6);
-	border-radius: 4px;
-}
-
-.sd-cont-unread {
-	position: absolute;
-	top: 6px;
-	right: 6px;
-	min-width: 18px;
-	height: 18px;
-	padding: 0 5px;
-	font-size: 11px;
-	font-weight: 600;
-	color: #fff;
-	background: var(--sd-primary);
-	border-radius: 9px;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-}
-
-.sd-cont-info {
-	flex: 1;
-	display: flex;
-	flex-direction: column;
-	justify-content: space-between;
-	min-width: 0;
-}
-
-.sd-cont-name {
-	font-size: 14px;
-	font-weight: 600;
-	white-space: nowrap;
-	overflow: hidden;
-	text-overflow: ellipsis;
-}
-
-.sd-cont-chapter {
-	font-size: 12px;
-	color: var(--sd-text-muted);
-}
-
-.sd-cont-progress {
-	height: 4px;
-	background: var(--sd-hover);
-	border-radius: 2px;
-	overflow: hidden;
-}
-
-.sd-cont-progress-bar {
-	height: 100%;
-	background: var(--sd-primary);
-	border-radius: 2px;
 }
 
 .sd-grid {

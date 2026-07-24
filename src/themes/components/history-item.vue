@@ -1,6 +1,6 @@
 <template>
 	<div
-		:class="['t-history-item', `t-history-item--${variant}`]"
+		:class="['t-history-item', `t-history-item--${variant}`, 'no-select']"
 		v-long-press="() => openThemeActionSheet('chapter', item)"
 		@click="emit('click')"
 		@contextmenu="emit('contextmenu', $event)"
@@ -10,20 +10,25 @@
 			:variant="variant"
 			:seed="Number(item?.chapterId || item?.mangaId || 0)"
 			:file="coverFile"
+			fit="cover"
 		>
 			<div v-if="isRead" class="t-history-item__read">✓</div>
 		</t-cover>
 
 		<div class="t-history-item__info">
 			<div class="t-history-item__title">{{ title }}</div>
-			<div class="t-history-item__sub">{{ subTitle }}</div>
-			<div v-if="timeText" class="t-history-item__time">{{ timeText }}</div>
+			<div class="t-history-item__sub">
+				<span class="t-history-item__chapter">{{ subTitle }}</span>
+				<span v-if="timeText" class="t-history-item__time">· {{ timeText }}</span>
+			</div>
+			<div class="t-history-item__progress">
+				<div
+					class="t-history-item__progress-bar"
+					:class="{ 'is-finish': progress >= 100 }"
+					:style="{ width: `${Math.max(progress, 2)}%` }"
+				/>
+			</div>
 		</div>
-
-		<div v-if="progress > 0 && progress < 100" class="t-history-item__progress">
-			<div class="t-history-item__progress-bar" :style="{ width: `${progress}%` }" />
-		</div>
-		<div v-else-if="progress >= 100" class="t-history-item__finish" />
 	</div>
 </template>
 
@@ -90,19 +95,18 @@ const timeText = computed(() => {
 .t-history-item {
 	position: relative;
 	display: flex;
-	align-items: center;
-	gap: 14px;
+	gap: 12px;
 	padding: 12px;
 	border-radius: 12px;
 	cursor: pointer;
+	min-width: 0;
+	transition: all 0.2s;
 	-webkit-user-select: none;
 	-moz-user-select: none;
 	-ms-user-select: none;
 	user-select: none;
-	/* 阻止 iOS 长按弹出预览菜单 / Android 抹蓝高亮 */
 	-webkit-touch-callout: none;
 	-webkit-tap-highlight-color: transparent;
-	transition: all 0.15s;
 }
 
 .t-history-item * {
@@ -111,99 +115,89 @@ const timeText = computed(() => {
 	user-select: none;
 }
 
-
+/* ---------- 变体 A ---------- */
 .t-history-item--A {
 	background: #fff;
 	border: 1px solid #eaeaea;
 }
-
 .t-history-item--A:hover {
 	border-color: #d1d5db;
-	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+.t-history-item--A .t-history-item__title {
+	color: #111827;
+}
+.t-history-item--A .t-history-item__sub {
+	color: #6b7280;
+}
+.t-history-item--A .t-history-item__progress {
+	background: #f3f4f6;
+}
+.t-history-item--A .t-history-item__progress-bar {
+	background: #3b82f6;
+}
+.t-history-item--A .t-history-item__progress-bar.is-finish {
+	background: #10b981;
 }
 
+/* ---------- 变体 B ---------- */
 .t-history-item--B {
 	background: #fff;
 	border: 1px solid #eaeaea;
 }
-
 .t-history-item--B:hover {
 	border-color: #d1d5db;
-	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+.t-history-item--B .t-history-item__title {
+	color: #111827;
+}
+.t-history-item--B .t-history-item__sub {
+	color: #6b7280;
+}
+.t-history-item--B .t-history-item__progress {
+	background: #f3f4f6;
+}
+.t-history-item--B .t-history-item__progress-bar {
+	background: #3b82f6;
+}
+.t-history-item--B .t-history-item__progress-bar.is-finish {
+	background: #10b981;
 }
 
+/* ---------- 变体 D ---------- */
 .t-history-item--D {
 	background: var(--bg2);
 	border: 1px solid var(--border);
 }
-
 .t-history-item--D:hover {
 	border-color: var(--accent);
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 }
-
-.t-history-item__cover {
-	flex-shrink: 0;
-	width: 52px;
-	height: 70px;
-	border-radius: 10px;
-}
-
-.t-history-item__info {
-	min-width: 0;
-	flex: 1;
-}
-
-.t-history-item__title {
-	font-size: 14px;
-	font-weight: 600;
-	white-space: nowrap;
-	overflow: hidden;
-	text-overflow: ellipsis;
-}
-
-.t-history-item__sub {
-	margin-top: 4px;
-	font-size: 12px;
-	white-space: nowrap;
-	overflow: hidden;
-	text-overflow: ellipsis;
-	opacity: 0.7;
-}
-
-.t-history-item--A .t-history-item__title {
-	color: #111827;
-}
-
-.t-history-item--A .t-history-item__sub {
-	color: #6b7280;
-}
-
-.t-history-item--B .t-history-item__title {
-	color: #111827;
-}
-
-.t-history-item--B .t-history-item__sub {
-	color: #6b7280;
-}
-
 .t-history-item--D .t-history-item__title {
 	color: var(--fg);
 }
-
 .t-history-item--D .t-history-item__sub {
 	color: var(--fg2);
 }
-
-.t-history-item--A .t-history-item__time {
-	color: #9ca3af;
+.t-history-item--D .t-history-item__progress {
+	background: var(--bg3, rgba(128, 128, 128, 0.15));
+}
+.t-history-item--D .t-history-item__progress-bar {
+	background: var(--accent);
+}
+.t-history-item--D .t-history-item__progress-bar.is-finish {
+	background: #10b981;
 }
 
-.t-history-item--B .t-history-item__time {
-	color: #9ca3af;
-}
-
-.t-history-item--D .t-history-item__time {
-	color: var(--fg3);
+/* ---------- 封面 ---------- */
+.t-history-item__cover {
+	position: relative;
+	flex-shrink: 0;
+	width: 70px;
+	height: 96px;
+	border-radius: 8px;
+	overflow: hidden;
 }
 
 .t-history-item__read {
@@ -223,43 +217,54 @@ const timeText = computed(() => {
 	z-index: 2;
 }
 
-/* --- 底部进度条（横跨整个卡片） --- */
-.t-history-item__progress {
-	position: absolute;
-	left: 0;
-	right: 0;
-	bottom: 0;
-	height: 3px;
-	background: rgba(128, 128, 128, 0.15);
-	z-index: 0;
-	pointer-events: none;
+/* ---------- 右侧信息 ---------- */
+.t-history-item__info {
+	flex: 1;
+	min-width: 0;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	gap: 6px;
 }
 
-.t-history-item__progress-bar {
-	position: absolute;
-	left: 0;
-	top: 0;
-	height: 100%;
-	min-width: 2px;
-	background: #3b82f6;
-	border-radius: 0 2px 2px 0;
-	transition: width 0.4s ease;
+.t-history-item__title {
+	font-size: 14px;
+	font-weight: 600;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	line-height: 1.3;
 }
 
-.t-history-item__finish {
-	position: absolute;
-	left: 0;
-	right: 0;
-	bottom: 0;
-	height: 3px;
-	background: #10b981;
-	z-index: 0;
-	pointer-events: none;
+.t-history-item__sub {
+	font-size: 12px;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	line-height: 1.3;
+}
+
+.t-history-item__chapter {
+	overflow: hidden;
+	text-overflow: ellipsis;
 }
 
 .t-history-item__time {
-	margin-top: 4px;
-	font-size: 11px;
-	opacity: 0.55;
+	margin-left: 4px;
+	opacity: 0.75;
+}
+
+/* ---------- 底部进度条（信息区内） ---------- */
+.t-history-item__progress {
+	height: 4px;
+	border-radius: 2px;
+	overflow: hidden;
+	margin-top: 2px;
+}
+
+.t-history-item__progress-bar {
+	height: 100%;
+	border-radius: 2px;
+	transition: width 0.4s ease;
 }
 </style>

@@ -31,22 +31,14 @@
 				<a class="sa-link" @click="router.push('/t/history')">查看全部 →</a>
 			</div>
 			<div class="sa-continue">
-				<div v-for="item in historyList" :key="item.chapterId" class="sa-cont-card no-select" v-long-press="() => openThemeActionSheet('chapter', item)" @click="goRead(item)" @contextmenu="openThemeContextMenu($event, 'chapter', item)">
-					<div
-						class="sa-cont-cover"
-						:style="coverStyle(item, { kind: 'chapter', fallbackSeed: item.chapterId })"
-					>
-						<span v-if="item.tag" class="sa-cont-tag">{{ item.tag }}</span>
-						<span v-if="item.unread" class="sa-cont-unread">{{ item.unread }}</span>
-					</div>
-					<div class="sa-cont-info">
-						<div class="sa-cont-name">{{ item.mangaName || '未知漫画' }}</div>
-						<div class="sa-cont-chapter">{{ item.chapterName || '未知章节' }}</div>
-						<div class="sa-cont-progress">
-							<div class="sa-cont-progress-bar" :style="{ width: getProgress(item) + '%' }"></div>
-						</div>
-					</div>
-				</div>
+				<t-history-item
+					v-for="item in historyList"
+					:key="item.chapterId"
+					:item="item"
+					variant="A"
+					@click="goRead(item)"
+					@contextmenu="openThemeContextMenu($event, 'chapter', item)"
+				/>
 			</div>
 		</section>
 
@@ -79,10 +71,10 @@ import { useRouter } from 'vue-router'
 import historyApi from '@/api/history'
 import latestApi from '@/api/latest'
 import chartsApi from '@/api/charts'
-import imageApi from '@/api/image'
 import { globalData } from '@/store'
 import TMangaCard from '@/themes/components/manga-card.vue'
-import { openThemeActionSheet, openThemeContextMenu } from '@/themes/context-menu'
+import THistoryItem from '@/themes/components/history-item.vue'
+import { openThemeContextMenu } from '@/themes/context-menu'
 
 const router = useRouter()
 
@@ -96,24 +88,7 @@ const statsData = ref({
 })
 const historyList = ref<any[]>([])
 const latestList = ref<any[]>([])
-const coverCache = ref<Record<string, string>>({})
 const hotMangaIdSet = ref<Set<number>>(new Set())
-
-// 渐变色彩板
-const palette = [
-	['#FFB5A7', '#FEC89A'],
-	['#A0C4FF', '#BDB2FF'],
-	['#B9FBC0', '#A0E8AF'],
-	['#FDCB82', '#F7B267'],
-	['#C5DEDD', '#F0EFEB'],
-	['#FCD5CE', '#F8EDEB'],
-	['#CDB4DB', '#FFC8DD'],
-	['#BEE1E6', '#FAF3DD'],
-	['#F1C0E8', '#CFBAF0'],
-	['#90DBF4', '#8EECF5'],
-	['#F7AEF8', '#B388EB'],
-	['#FF9F1C', '#FFBF69'],
-]
 
 onMounted(async () => {
 	try {
@@ -139,26 +114,10 @@ onMounted(async () => {
 				: []
 			hotMangaIdSet.value = new Set(ids)
 		}
-
-		await warmCovers(historyList.value, { kind: 'chapter' })
 	} catch (e) {
 		// fallback
 	}
 })
-
-function getGradient(id: number) {
-	return palette[id % palette.length]
-}
-
-function getProgress(item: any) {
-	const latest = item?.latest
-	if (!latest) return 0
-	if (latest.finish) return 100
-	const page = Number(latest.page || 0)
-	const count = Number(latest.count || 0)
-	if (!page || !count) return 0
-	return Math.min(100, Math.max(0, Math.round((page / count) * 100)))
-}
 
 function unreadCount(item: any): number {
 	const n = Number(item?.unWatched || item?.unread || 0)
@@ -171,37 +130,6 @@ function tagText(item: any): string {
 	const unread = unreadCount(item)
 	if (unread === 0 && Number.isFinite(mangaId)) return '完结'
 	return ''
-}
-
-async function warmCovers(list: any[], opt: { kind: 'manga' | 'chapter' }) {
-	const files = Array.from(
-		new Set(
-			list
-				.map((it) => (opt.kind === 'manga' ? it?.mangaCover : it?.pageImage || it?.chapterCover))
-				.filter(Boolean)
-		)
-	) as string[]
-
-	await Promise.allSettled(
-		files.map(async (file) => {
-			if (coverCache.value[file]) return
-			const src = await imageApi.get({ file })
-			coverCache.value[file] = src
-		})
-	)
-}
-
-function coverStyle(
-	item: any,
-	opt: { kind: 'manga' | 'chapter'; fallbackSeed: number }
-): Record<string, string> {
-	const file = opt.kind === 'manga' ? item?.mangaCover : item?.pageImage || item?.chapterCover
-	const src = file ? coverCache.value[file] : ''
-	if (src) {
-		return { backgroundImage: `url("${src}")` }
-	}
-	const g = getGradient(Number(opt.fallbackSeed) || 0)
-	return { backgroundImage: `linear-gradient(135deg, ${g[0]}, ${g[1]})` }
 }
 
 function goRead(item: any) {
@@ -286,104 +214,6 @@ function goManga(item: any) {
 	display: grid;
 	grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
 	gap: 14px;
-}
-
-.sa-cont-card {
-	display: flex;
-	gap: 12px;
-	padding: 12px;
-	background: #fff;
-	border: 1px solid #eaeaea;
-	border-radius: 12px;
-	box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
-	transition: all 0.2s;
-	cursor: pointer;
-}
-
-.sa-cont-card:hover {
-	border-color: #d1d5db;
-	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
-	transform: translateY(-1px);
-}
-
-.sa-cont-cover {
-	position: relative;
-	flex-shrink: 0;
-	width: 70px;
-	height: 96px;
-	border-radius: 8px;
-	overflow: hidden;
-	background-size: cover;
-	background-position: center;
-	background-repeat: no-repeat;
-	background-color: #f3f4f6;
-}
-
-.sa-cont-tag {
-	position: absolute;
-	top: 6px;
-	left: 6px;
-	padding: 2px 6px;
-	font-size: 10px;
-	font-weight: 600;
-	color: #fff;
-	background: rgba(0, 0, 0, 0.6);
-	border-radius: 4px;
-}
-
-.sa-cont-unread {
-	position: absolute;
-	top: 6px;
-	right: 6px;
-	min-width: 18px;
-	height: 18px;
-	padding: 0 5px;
-	font-size: 11px;
-	font-weight: 600;
-	color: #fff;
-	background: #ef4444;
-	border-radius: 9px;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-}
-
-.sa-cont-info {
-	flex: 1;
-	display: flex;
-	flex-direction: column;
-	justify-content: space-between;
-	min-width: 0;
-}
-
-.sa-cont-name {
-	font-size: 14px;
-	font-weight: 600;
-	color: #111827;
-	white-space: nowrap;
-	overflow: hidden;
-	text-overflow: ellipsis;
-}
-
-.sa-cont-chapter {
-	font-size: 12px;
-	color: #6b7280;
-	white-space: nowrap;
-	overflow: hidden;
-	text-overflow: ellipsis;
-}
-
-.sa-cont-progress {
-	height: 4px;
-	background: #f3f4f6;
-	border-radius: 2px;
-	overflow: hidden;
-}
-
-.sa-cont-progress-bar {
-	height: 100%;
-	background: #2563eb;
-	border-radius: 2px;
 }
 
 .sa-grid {
@@ -501,24 +331,6 @@ function goManga(item: any) {
 	.sa-grid {
 		grid-template-columns: repeat(3, 1fr);
 		gap: 12px;
-	}
-
-	.sa-cont-card {
-		padding: 10px;
-		gap: 10px;
-	}
-
-	.sa-cont-cover {
-		width: 52px;
-		height: 70px;
-	}
-
-	.sa-cont-name {
-		font-size: 13px;
-	}
-
-	.sa-cont-chapter {
-		font-size: 11px;
 	}
 }
 
