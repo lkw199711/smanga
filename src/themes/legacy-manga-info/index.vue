@@ -49,24 +49,81 @@
         <el-descriptions-item label="简介">{{ mangaInfo.describe }}</el-descriptions-item>
       </el-descriptions>
 
-      <div class="btn-box">
-        <el-button class="btn" type="primary" @click="go_chapter_list">章节列表</el-button>
+      <div class="action-panel" aria-label="漫画操作">
+        <section class="action-reading">
+          <div class="action-heading">
+            <div>
+              <p class="action-eyebrow">阅读</p>
+              <h3>从这里开始</h3>
+            </div>
+            <span class="action-summary">{{ mangaInfo.chapterCount || 0 }} 章</span>
+          </div>
 
-        <el-button class="btn continue-read" type="warning" @click="go_chapter" v-if="hasLatest">
-          {{ userConfig.continueReadButtonShowChapterNumberOnly ? continueRead.chapterNumber : continueRead.chapterName }}
-          第{{ continueRead.page }}页
-        </el-button>
-        <el-button class="btn" type="success" @click="go_chapter" v-else>开始阅读</el-button>
+          <div class="action-primary">
+            <el-button class="action-button action-button--primary" @click="go_chapter">
+              <el-icon><Reading /></el-icon>
+              <span class="action-button-copy">
+                <strong>{{ hasLatest ? '继续阅读' : '开始阅读' }}</strong>
+                <small v-if="hasLatest">
+                  {{ userConfig.continueReadButtonShowChapterNumberOnly ? `第 ${continueRead.chapterNumber} 章` : continueRead.chapterName }}
+                  · 第 {{ continueRead.page }} 页
+                </small>
+                <small v-else>从第一章开始</small>
+              </span>
+            </el-button>
 
-        <el-button class="btn" type="warning" @click="remove_collect" v-if="isCollect">取消收藏</el-button>
-        <el-button class="btn" type="success" @click="collect_manga" v-else>收藏漫画</el-button>
+            <el-button class="action-button action-button--outline" @click="go_chapter_list">
+              <el-icon><Tickets /></el-icon>
+              <span>章节列表</span>
+            </el-button>
+          </div>
 
-        <el-button class="btn" type="success" @click="mangaShareDialog = true">分享漫画</el-button>
+          <div class="action-quick">
+            <el-button
+              :class="['action-button', 'action-button--quiet', {'is-selected': isCollect}]"
+              @click="isCollect ? remove_collect() : collect_manga()">
+              <el-icon>
+                <StarFilled v-if="isCollect" />
+                <Star v-else />
+              </el-icon>
+              <span>{{ isCollect ? '取消收藏' : '收藏漫画' }}</span>
+            </el-button>
 
-        <el-button class="btn" type="primary" @click="editMangaDialog = true">编辑漫画</el-button>
-        <el-button class="btn" type="primary" @click="editTagsDialog = true">编辑标签</el-button>
-        <el-button class="btn" type="primary" @click="open_covers_edit" v-if="hasManyCover">编辑封面</el-button>
-        <el-button class="btn" type="primary" @click="open_metas_edit">编辑元数据</el-button>
+            <el-button class="action-button action-button--quiet" @click="mangaShareDialog = true">
+              <el-icon><Share /></el-icon>
+              <span>分享漫画</span>
+            </el-button>
+          </div>
+        </section>
+
+        <section class="action-management">
+          <div class="action-heading">
+            <div>
+              <p class="action-eyebrow">管理</p>
+              <h3>内容与资料</h3>
+            </div>
+            <span class="action-hint">仅影响当前漫画</span>
+          </div>
+
+          <div class="action-tool-grid">
+            <el-button class="action-tool" @click="editMangaDialog = true">
+              <el-icon><EditPen /></el-icon>
+              <span>编辑漫画</span>
+            </el-button>
+            <el-button class="action-tool" @click="editTagsDialog = true">
+              <el-icon><PriceTag /></el-icon>
+              <span>编辑标签</span>
+            </el-button>
+            <el-button class="action-tool" @click="open_covers_edit" v-if="hasManyCover">
+              <el-icon><Picture /></el-icon>
+              <span>编辑封面</span>
+            </el-button>
+            <el-button class="action-tool" @click="open_metas_edit">
+              <el-icon><Document /></el-icon>
+              <span>编辑元数据</span>
+            </el-button>
+          </div>
+        </section>
       </div>
 
       <el-form-item :label="$t('mangaInfo.reverseOrder')" class="op-range">
@@ -166,6 +223,7 @@ import chapterSimple from '@/views/manga-info/components/chapter-simple.vue';
 import mangaModify from '@/themes/components/manga-modify-dialog.vue';
 import ThemeContextMenu from '@/themes/components/theme-context-menu.vue';
 import { openThemeContextMenu } from '@/themes/context-menu';
+import {Document, EditPen, Picture, PriceTag, Reading, Share, Star, StarFilled, Tickets} from '@element-plus/icons-vue';
 const browse: any = useBrowseStore();
 const router = useRouter();
 const route = useRoute();
@@ -530,11 +588,6 @@ function update_tags(tagsParams: tagItemType[]) {
   }
 }
 
-.continue-read {
-  white-space: normal;
-  overflow: hidden;
-}
-
 .cover-setting {
   display: flex;
   flex-wrap: wrap;
@@ -651,19 +704,192 @@ function update_tags(tagsParams: tagItemType[]) {
   background-color: transparent;
 }
 
-.btn-box {
-  display: flex;
-  margin: 0 2rem;
-  flex-wrap: wrap;
-  gap: 1rem;
+.action-panel {
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(32rem, 0.75fr);
+  gap: 1px;
+  width: calc(100% - 4rem);
+  max-width: 112rem;
+  margin: 1rem auto 2rem 2rem;
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, @s-border 78%, transparent);
+  border-radius: 1.6rem;
+  background: color-mix(in srgb, @s-border 78%, transparent);
+  box-shadow: 0 0.8rem 2.8rem fade(#000000, 7%);
+}
 
-  .el-button + .el-button {
-    margin-left: 0;
+.action-reading,
+.action-management {
+  min-width: 0;
+  padding: 2rem;
+  background: var(--s-back-soft-original, #f9f9f9);
+}
+
+.action-heading {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.6rem;
+
+  h3 {
+    margin: 0.3rem 0 0;
+    color: @s-back-text;
+    font-size: 1.7rem;
+    font-weight: 650;
+    line-height: 1.3;
+  }
+}
+
+.action-eyebrow {
+  margin: 0;
+  color: @s-back-text-tertiary;
+  font-size: 1.1rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+}
+
+.action-summary,
+.action-hint {
+  flex: none;
+  color: @s-back-text-tertiary;
+  font-size: 1.2rem;
+}
+
+.action-summary {
+  padding: 0.4rem 0.8rem;
+  border-radius: 999px;
+  background: color-mix(in srgb, @s-primary 10%, transparent);
+  color: @s-primary;
+  font-weight: 600;
+}
+
+.action-primary {
+  display: grid;
+  grid-template-columns: minmax(18rem, 1fr) auto;
+  gap: 1rem;
+}
+
+.action-quick {
+  display: flex;
+  gap: 0.8rem;
+  margin-top: 1rem;
+}
+
+.action-button,
+.action-tool {
+  margin: 0 !important;
+  border-radius: 1rem;
+  font-weight: 600;
+  transition:
+    transform 160ms ease,
+    border-color 160ms ease,
+    background-color 160ms ease,
+    box-shadow 160ms ease;
+
+  &:hover {
+    transform: translateY(-1px);
   }
 
-  .btn {
-    width: 24%;
-    margin-bottom: 1rem;
+  :deep(.el-icon) {
+    flex: none;
+    font-size: 1.7rem;
+  }
+}
+
+.action-button {
+  min-height: 5.2rem;
+  padding: 0 1.6rem;
+
+  &--primary {
+    justify-content: flex-start;
+    border-color: @s-button;
+    background: @s-button;
+    color: #ffffff;
+    box-shadow: 0 0.6rem 1.8rem color-mix(in srgb, @s-button 22%, transparent);
+
+    &:hover,
+    &:focus {
+      border-color: @s-button-hover;
+      background: @s-button-hover;
+      color: #ffffff;
+    }
+  }
+
+  &--outline {
+    border-color: color-mix(in srgb, @s-primary 42%, transparent);
+    background: transparent;
+    color: @s-primary;
+
+    &:hover,
+    &:focus {
+      border-color: @s-primary;
+      background: color-mix(in srgb, @s-primary 9%, transparent);
+      color: @s-primary;
+    }
+  }
+
+  &--quiet {
+    min-height: 4rem;
+    padding: 0 1.2rem;
+    border-color: color-mix(in srgb, @s-border 88%, transparent);
+    background: transparent;
+    color: @s-back-text-secondary;
+
+    &:hover,
+    &:focus,
+    &.is-selected {
+      border-color: color-mix(in srgb, @s-primary 35%, transparent);
+      background: color-mix(in srgb, @s-primary 9%, transparent);
+      color: @s-primary;
+    }
+  }
+}
+
+.action-button-copy {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-left: 0.2rem;
+  line-height: 1.3;
+
+  strong {
+    font-size: 1.5rem;
+  }
+
+  small {
+    display: block;
+    max-width: 100%;
+    overflow: hidden;
+    margin-top: 0.2rem;
+    opacity: 0.8;
+    font-size: 1.1rem;
+    font-weight: 400;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
+
+.action-tool-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.8rem;
+}
+
+.action-tool {
+  justify-content: flex-start;
+  min-height: 4.5rem;
+  padding: 0 1.2rem;
+  border-color: color-mix(in srgb, @s-border 88%, transparent);
+  background: transparent;
+  color: @s-back-text-secondary;
+
+  &:hover,
+  &:focus {
+    border-color: color-mix(in srgb, @s-primary 35%, transparent);
+    background: color-mix(in srgb, @s-primary 8%, transparent);
+    color: @s-primary;
   }
 }
 
@@ -680,6 +906,13 @@ function update_tags(tagsParams: tagItemType[]) {
   margin: 0 auto;
   min-width: 14rem;
   height: 40rem;
+}
+
+@media only screen and (min-width: 1200px) {
+  .action-primary {
+    grid-template-columns: minmax(26rem, 34rem) max-content;
+    justify-content: start;
+  }
 }
 
 @media only screen and (min-width: 4096px) {
@@ -742,6 +975,10 @@ function update_tags(tagsParams: tagItemType[]) {
   .banner-toomics {
     height: 20rem;
   }
+
+  .action-panel {
+    grid-template-columns: 1fr;
+  }
 }
 
 @media only screen and (max-width: 767px) {
@@ -771,8 +1008,38 @@ function update_tags(tagsParams: tagItemType[]) {
     }
   }
 
-  .btn-box .btn {
-    width: 48%;
+  .action-panel {
+    grid-template-columns: 1fr;
+    width: calc(100% - 2rem);
+    margin-left: 1rem;
+    border-radius: 1.2rem;
+  }
+
+  .action-reading,
+  .action-management {
+    padding: 1.5rem;
+  }
+
+  .action-primary {
+    grid-template-columns: 1fr;
+  }
+
+  .action-button--outline {
+    min-height: 4.4rem;
+  }
+
+  .action-quick {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .action-button--quiet,
+  .action-tool {
+    padding: 0 1rem;
+  }
+
+  .action-hint {
+    display: none;
   }
 
   .banner-toomics {
