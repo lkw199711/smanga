@@ -48,13 +48,16 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, onMounted, ref, watch } from 'vue'
+import { computed, onMounted, provide, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { globalData } from '@/store'
 import chapterApi from '@/api/chapter'
 import TdSingle from './single.vue'
 import TdDouble from './double.vue'
 import TdFlow from './flow.vue'
+import { READER_BODY_CLASS_KEY } from '@/themes/composables'
+
+provide(READER_BODY_CLASS_KEY, 'td-reader-body')
 
 const route = useRoute()
 const router = useRouter()

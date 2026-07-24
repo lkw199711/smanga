@@ -12,7 +12,7 @@
 						:key="item.chapterId"
 						:item="item"
 						variant="B"
-						@click="go_read(item)"
+						@click="goRead(item)"
 						@contextmenu="openThemeContextMenu($event, 'chapter', item)"
 					/>
 				</div>
@@ -23,58 +23,27 @@
 			:page="page"
 			:count="count"
 			:page-size-config="pageSizes"
-			@page-change="page_change"
+			@page-change="pageChange"
 		/>
 
 		<div v-if="!loading && !list.length" class="tb-empty">暂无记录</div>
 	</div>
 </template>
 <script lang="ts" setup>
-import { ref, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
 import historyApi from '@/api/history'
 import MediaPager from '@/components/media-pager.vue'
 import listSkeleton from '@/components/list-skeleton.vue'
-import { chapterPageSize } from '@/store/page-size'
-import { config, globalData } from '@/store'
 import THistoryItem from '@/themes/components/history-item.vue'
 import { openThemeContextMenu } from '@/themes/context-menu'
+import { useListPage, useGoRead } from '@/themes/composables'
 
-const router = useRouter()
-
-const page = ref(1)
-const list = ref<any[]>([])
-const count = ref(0)
-const loading = ref(false)
-const pageSizes = ref<number[]>([])
-const defaultPageSize = ref(10)
-
-function setupPageSize() {
-	const screen = config.screenType
-	pageSizes.value = chapterPageSize[screen]
-	defaultPageSize.value = chapterPageSize[screen][0]
-}
-
-async function go_read(item: any) {
-	if (!item?.chapterId) return
-	await router.push(`/t/reader/${item.chapterId}`)
-}
-
-async function page_change(pageParams = 1, pageSize = defaultPageSize.value) {
-	if (pageParams < 1) return
-	page.value = pageParams
-	loading.value = true
-	list.value = []
-
-	const res = await historyApi.get_history(pageParams, pageSize)
-	list.value = res?.list || []
-	count.value = Number(res?.count || 0)
-	loading.value = false
-}
-
-onMounted(() => {
-	setupPageSize()
-	page_change()
+const { goRead } = useGoRead()
+const { page, list, count, loading, pageSizes, pageChange } = useListPage<any>({
+	kind: 'chapter',
+	loader: async ({ page, pageSize }) => {
+		const res = await historyApi.get_history(page, pageSize)
+		return { list: res?.list || [], count: Number(res?.count || 0) }
+	},
 })
 </script>
 <style scoped>
@@ -84,4 +53,3 @@ onMounted(() => {
 .tb-history-list{display:flex;flex-direction:column;gap:10px}
 .tb-empty{text-align:center;padding:60px;color:#6b7280}
 </style>
-

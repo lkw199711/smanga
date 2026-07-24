@@ -10,7 +10,7 @@
       </template>
       <template v-else>
         <div class="tb-grid" v-if="tab === 'manga'">
-          <div v-for="item in list" :key="item.collectId" class="tb-card" @click="go_manga(item)" @contextmenu="openThemeContextMenu($event, 'manga', item)">
+          <div v-for="item in list" :key="item.collectId" class="tb-card" @click="goManga(item)" @contextmenu="openThemeContextMenu($event, 'manga', item)">
             <t-cover class="tb-card-cover" variant="B" :seed="Number(item?.mangaId || 0)" :file="item?.mangaCover || ''" fit="cover" />
             <div class="tb-card-name">{{ item.mangaName }}</div>
           </div>
@@ -24,94 +24,49 @@
             variant="B"
             :title="item.mangaName || '未知漫画'"
             :sub="item.chapterName || '未知章节'"
-            @click="go_read(item)"
+            @click="goRead(item)"
             @contextmenu="openThemeContextMenu($event, 'chapter', item)"
           />
         </div>
       </template>
     </div>
 
-    <media-pager :page="page" :count="count" :page-size-config="pageSizes" @page-change="page_change" />
+    <media-pager :page="page" :count="count" :page-size-config="pageSizes" @page-change="pageChange" />
 
     <div v-if="!loading && !list.length" class="tb-empty">暂无收藏</div>
   </div>
 </template>
 <script lang="ts" setup>
-import { computed, onMounted, ref, watch } from 'vue'
+import { computed, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import collectApi from '@/api/collect'
-import { config, userConfig } from '@/store'
-import { mangaPageSize, chapterPageSize } from '@/store/page-size'
+import { userConfig } from '@/store'
 import MediaPager from '@/components/media-pager.vue'
 import listSkeleton from '@/components/list-skeleton.vue'
 import TCover from '@/themes/components/media-cover.vue'
 import TChapterItem from '@/themes/components/chapter-item.vue'
 import TTabsSwitcher from '@/themes/components/tabs-switcher.vue'
 import { openThemeContextMenu } from '@/themes/context-menu'
+import { useListPage, useGoRead } from '@/themes/composables'
+
 const router = useRouter()
 const tab = ref<'manga' | 'chapter'>('manga')
-const page = ref(1)
-const list = ref<any[]>([])
-const count = ref(0)
-const loading = ref(false)
-const pageSizes = ref<number[]>([])
-const defaultPageSize = ref(10)
-
 const orderBy = computed(() => (tab.value === 'manga' ? userConfig.order : userConfig.chapterOrder))
 
-function setup_page_size() {
-  const screen = config.screenType
-  const sizes = tab.value === 'manga' ? mangaPageSize[screen] : chapterPageSize[screen]
-  pageSizes.value = sizes
-  defaultPageSize.value = sizes[0] || 10
-}
+const { goRead } = useGoRead()
+const { page, list, count, loading, pageSizes, pageChange } = useListPage<any>({
+  kind: computed(() => (tab.value === 'manga' ? 'manga' : 'chapter')),
+  resetDeps: [() => tab.value, () => orderBy.value],
+  loader: async ({ page, pageSize }) => {
+    const res = await collectApi.get(tab.value, page, pageSize, orderBy.value)
+    return { list: res?.list || [], count: Number(res?.count || 0) }
+  },
+})
 
-async function page_change(pageParams = 1, pageSize = defaultPageSize.value) {
-  if (pageParams < 1) return
-  page.value = pageParams
-  loading.value = true
-  list.value = []
-  try {
-    const res = await collectApi.get(tab.value, pageParams, pageSize, orderBy.value)
-    list.value = res?.list || []
-    count.value = Number(res?.count || 0)
-  } catch {
-    list.value = []
-    count.value = 0
-  } finally {
-    loading.value = false
-  }
-}
-
-function go_manga(item: any) {
+function goManga(item: any) {
   if (!item?.mangaId) return
   router.push(`/t/manga/${item.mangaId}`)
 }
-
-function go_read(item: any) {
-  if (!item?.chapterId) return
-  router.push(`/t/reader/${item.chapterId}`)
-}
-
-watch(
-  () => tab.value,
-  () => {
-    setup_page_size()
-    page_change(1)
-  }
-)
-
-watch(
-  () => orderBy.value,
-  () => {
-    page_change(1)
-  }
-)
-
-onMounted(() => {
-  setup_page_size()
-  page_change(1)
-})
 </script>
 <style scoped>
 .tb-page{max-width:980px;margin:0 auto}
@@ -124,4 +79,3 @@ onMounted(() => {
 .tb-chapter-list{display:flex;flex-direction:column;gap:10px;margin-bottom:18px}
 .tb-empty{text-align:center;padding:60px;color:#6b7280;grid-column:1/-1}
 </style>
-

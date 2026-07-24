@@ -7,7 +7,7 @@
       </div>
       <div class="td-title">{{ mangaInfo.mangaName || '章节列表' }}</div>
       <div class="td-actions">
-        <select v-model="order" class="td-select" @change="loadChapters">
+        <select v-model="order" class="td-select" @change="onPageChange(1)">
           <option value="number">序号正序</option>
           <option value="numberDesc">序号倒序</option>
           <option value="name">名称 A-Z</option>
@@ -48,12 +48,8 @@
           />
         </div>
         <div v-if="chapterList.length === 0 && !loading" class="td-empty">暂无章节</div>
-        
-        <div v-if="totalPages > 1" class="td-pagination">
-          <button :disabled="page <= 1" @click="page--; loadChapters()">上一页</button>
-          <span>{{ page }} / {{ totalPages }}</span>
-          <button :disabled="page >= totalPages" @click="page++; loadChapters()">下一页</button>
-        </div>
+
+        <media-pager :page="page" :count="total" :page-size-config="pageSizes" @page-change="onPageChange" />
       </div>
     </div>
   </div>
@@ -66,10 +62,12 @@ import mangaApi from '@/api/manga'
 import chapterApi from '@/api/chapter'
 import collectApi from '@/api/collect'
 import TCover from '@/themes/components/media-cover.vue'
-import TChapterItem from '@/themes/components/chapter-item.vue'
+import TChapterItem from'@/themes/components/chapter-item.vue'
+import MediaPager from '@/components/media-pager.vue'
 import useBrowseStore from '@/store/browse'
 import { userConfig, globalData } from '@/store'
 import { openThemeContextMenu } from '@/themes/context-menu'
+import { usePageSize } from '@/themes/composables'
 
 const router = useRouter()
 const route = useRoute()
@@ -81,11 +79,16 @@ const isCollected = ref(false)
 const mangaId = ref<number | null>(null)
 const order = computed({ get: () => userConfig.chapterOrder, set: (v) => { userConfig.chapterOrder = v } })
 const page = ref(1)
-const pageSize = 50
+const { pageSizes, defaultPageSize } = usePageSize('chapter')
+const pageSize = ref(defaultPageSize.value)
 const total = ref(0)
 const loading = ref(false)
 
-const totalPages = computed(() => Math.ceil(total.value / pageSize))
+function onPageChange(p = 1, size = pageSize.value) {
+  page.value = p
+  pageSize.value = size
+  loadChapters()
+}
 
 onMounted(async () => {
   mangaId.value = Number(route.params.mangaId)
@@ -107,7 +110,7 @@ watch(() => route.params.mangaId, async (newMangaId) => {
 
 // 监听全局排序变化
 watch(() => userConfig.chapterOrder, () => {
-  if (mangaId.value) loadChapters()
+  if (mangaId.value) onPageChange(1)
 })
 
 async function loadMangaInfo() {
@@ -127,7 +130,7 @@ async function loadChapters() {
     const res = await chapterApi.get({
       mangaId: mangaId.value,
       page: page.value,
-      pageSize,
+      pageSize: pageSize.value,
       order: order.value
     })
     chapterList.value = res?.list || []

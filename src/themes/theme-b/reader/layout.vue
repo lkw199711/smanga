@@ -43,13 +43,16 @@
   </div>
 </template>
 <script lang="ts" setup>
-import { computed, ref, watch } from 'vue'
+import { computed, provide, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { globalData } from '@/store'
 import chapterApi from '@/api/chapter'
 import TbSingle from './single.vue'
 import TbDouble from './double.vue'
 import TbFlow from './flow.vue'
+import { READER_BODY_CLASS_KEY } from '@/themes/composables'
+
+provide(READER_BODY_CLASS_KEY, 'tb-reader-body')
 const route = useRoute()
 const router = useRouter()
 const showControls = ref(true)

@@ -17,11 +17,14 @@
       </template>
       <template v-else>
         <div class="ta-grid" v-if="tab === 'manga'">
-          <div v-for="item in list" :key="item.collectId" class="ta-grid-card" @click="go_manga(item)" @contextmenu="openThemeContextMenu($event, 'manga', item)">
-            <div class="ta-grid-cover">
-              <img v-if="getCoverUrl(item.mangaCover || '')" :src="getCoverUrl(item.mangaCover || '')" alt="" />
-              <div v-else class="ta-cover-placeholder">📚</div>
-            </div>
+          <div
+            v-for="item in list"
+            :key="item.collectId"
+            class="ta-grid-card"
+            @click="goManga(item)"
+            @contextmenu="openThemeContextMenu($event, 'manga', item)"
+          >
+            <t-cover class="ta-grid-cover" variant="A" :seed="Number(item?.mangaId || 0)" :file="item?.mangaCover || ''" fit="cover" />
             <div class="ta-grid-name">{{ item.mangaName }}</div>
           </div>
         </div>
@@ -32,120 +35,50 @@
             :key="item.collectId"
             :item="item"
             variant="A"
-            @click="go_read(item)"
+            @click="goRead(item)"
             @contextmenu="openThemeContextMenu($event, 'chapter', item)"
           />
         </div>
       </template>
     </div>
 
-    <media-pager :page="page" :count="count" :page-size-config="pageSizes" @page-change="page_change" />
+    <media-pager :page="page" :count="count" :page-size-config="pageSizes" @page-change="pageChange" />
 
     <div v-if="!loading && list.length === 0" class="ta-empty">暂无收藏</div>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { computed, onMounted, ref, watch } from 'vue'
+import { computed, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import collectApi from '@/api/collect'
-import imageApi from '@/api/image'
-import { config, userConfig } from '@/store'
-import { mangaPageSize, chapterPageSize } from '@/store/page-size'
+import { userConfig } from '@/store'
 import MediaPager from '@/components/media-pager.vue'
 import listSkeleton from '@/components/list-skeleton.vue'
+import TCover from '@/themes/components/media-cover.vue'
 import TChapterItem from '@/themes/components/chapter-item.vue'
 import TTabsSwitcher from '@/themes/components/tabs-switcher.vue'
 import { openThemeContextMenu } from '@/themes/context-menu'
+import { useListPage, useGoRead } from '@/themes/composables'
 
 const router = useRouter()
 const tab = ref<'manga' | 'chapter'>('manga')
-const page = ref(1)
-const list = ref<any[]>([])
-const count = ref(0)
-const loading = ref(false)
-const pageSizes = ref<number[]>([])
-const defaultPageSize = ref(10)
-const coverCache = ref<Record<string, string>>({})
-
 const orderBy = computed(() => (tab.value === 'manga' ? userConfig.order : userConfig.chapterOrder))
 
-function setup_page_size() {
-  const screen = config.screenType
-  const sizes = tab.value === 'manga' ? mangaPageSize[screen] : chapterPageSize[screen]
-  pageSizes.value = sizes
-  defaultPageSize.value = sizes[0] || 10
-}
+const { goRead } = useGoRead()
+const { page, list, count, loading, pageSizes, pageChange } = useListPage<any>({
+  kind: computed(() => (tab.value === 'manga' ? 'manga' : 'chapter')),
+  resetDeps: [() => tab.value, () => orderBy.value],
+  loader: async ({ page, pageSize }) => {
+    const res = await collectApi.get(tab.value, page, pageSize, orderBy.value)
+    return { list: res?.list || [], count: Number(res?.count || 0) }
+  },
+})
 
-async function page_change(pageParams = 1, pageSize = defaultPageSize.value) {
-  if (pageParams < 1) return
-  page.value = pageParams
-  loading.value = true
-  list.value = []
-  try {
-    const res = await collectApi.get(tab.value, pageParams, pageSize, orderBy.value)
-    list.value = res?.list || []
-    count.value = Number(res?.count || 0)
-    // 加载封面
-    if (tab.value === 'manga') {
-      for (const item of list.value) {
-        if (item.mangaCover) loadCover(item.mangaCover)
-      }
-    } else {
-      for (const item of list.value) {
-        const key = item.pageImage || item.chapterCover
-        if (key) loadCover(key)
-      }
-    }
-  } catch {
-    list.value = []
-    count.value = 0
-  } finally {
-    loading.value = false
-  }
-}
-
-function go_manga(item: any) {
+function goManga(item: any) {
   if (!item?.mangaId) return
   router.push(`/t/manga/${item.mangaId}`)
 }
-
-async function loadCover(key: string) {
-  if (!key || coverCache.value[key]) return
-  try {
-    const url = await imageApi.get({ file: key })
-    if (url) coverCache.value[key] = url
-  } catch { /* ignore */ }
-}
-
-function getCoverUrl(key: string) {
-  return coverCache.value[key] || ''
-}
-
-function go_read(item: any) {
-  if (!item?.chapterId) return
-  router.push(`/t/reader/${item.chapterId}`)
-}
-
-watch(
-  () => tab.value,
-  () => {
-    setup_page_size()
-    page_change(1)
-  }
-)
-
-watch(
-  () => orderBy.value,
-  () => {
-    page_change(1)
-  }
-)
-
-onMounted(() => {
-  setup_page_size()
-  page_change(1)
-})
 </script>
 
 <style scoped lang="less">
@@ -187,22 +120,6 @@ onMounted(() => {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
 }
 
-.ta-grid-cover img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.ta-cover-placeholder {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 32px;
-  background: linear-gradient(135deg, #dbeafe, #bfdbfe);
-}
-
 .ta-grid-name {
   font-size: 13px;
   font-weight: 500;
@@ -225,55 +142,12 @@ onMounted(() => {
   color: #9ca3af;
 }
 
-/* 响应式适配 */
 @media (max-width: 768px) {
-  .ta-collect {
-    padding: 0 4px;
-  }
-
-  .ta-tab {
-    padding: 10px 16px;
-    font-size: 13px;
-  }
-
-  .ta-grid {
-    grid-template-columns: repeat(3, 1fr);
-    gap: 12px;
-  }
-
-  .ta-chapter-item {
-    padding: 10px;
-  }
+  .ta-collect { padding: 0 4px; }
+  .ta-grid { grid-template-columns: repeat(3, 1fr); gap: 12px; }
 }
 
 @media (max-width: 480px) {
-  .ta-tabs {
-    gap: 0;
-  }
-
-  .ta-tab {
-    flex: 1;
-    justify-content: center;
-    padding: 10px 12px;
-    font-size: 13px;
-  }
-
-  .ta-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 10px;
-  }
-
-  .ta-chapter-cover {
-    width: 44px;
-    height: 60px;
-  }
-
-  .ta-chapter-title {
-    font-size: 13px;
-  }
-
-  .ta-chapter-sub {
-    font-size: 11px;
-  }
+  .ta-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
 }
 </style>

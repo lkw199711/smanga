@@ -24,61 +24,46 @@
         @contextmenu="openThemeContextMenu($event, 'chapter', ch)"
       />
     </div>
-    <div v-if="list.length === 0 && !loading" class="ta-empty">暂无章节</div>
-    <div v-if="totalPages > 1" class="ta-pagination">
-      <button :disabled="page <= 1" @click="page--; loadData()">上一页</button>
-      <span>{{ page }} / {{ totalPages }}</span>
-      <button :disabled="page >= totalPages" @click="page++; loadData()">下一页</button>
-    </div>
+    <div v-if="!loading && list.length === 0" class="ta-empty">暂无章节</div>
+    <media-pager :page="page" :count="count" :page-size-config="pageSizes" @page-change="pageChange" />
   </div>
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted, computed, watch } from 'vue'
+import { computed, ref, onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import chapterApi from '@/api/chapter'
 import mangaApi from '@/api/manga'
 import { globalData, userConfig } from '@/store'
+import MediaPager from '@/components/media-pager.vue'
 import TChapterItem from '@/themes/components/chapter-item.vue'
 import { openThemeContextMenu } from '@/themes/context-menu'
+import { useListPage } from '@/themes/composables'
 
 const router = useRouter()
 const route = useRoute()
 
-const list = ref<any[]>([])
+const mangaId = computed(() => Number(route.params.mangaId) || 0)
 const order = computed({ get: () => userConfig.chapterOrder, set: (v) => { userConfig.chapterOrder = v } })
-const page = ref(1)
-const pageSize = 50
-const total = ref(0)
-const loading = ref(false)
 const mangaName = ref('')
 
-const totalPages = computed(() => Math.ceil(total.value / pageSize))
-
-onMounted(() => { loadData() })
-
-// 监听全局排序变化
-watch(() => userConfig.chapterOrder, () => {
-  page.value = 1
-  loadData()
+const { page, list, count, loading, pageSizes, pageChange } = useListPage<any>({
+  kind: 'chapter',
+  resetDeps: [() => order.value],
+  loader: async ({ page, pageSize }) => {
+    if (!mangaId.value) return { list: [], count: 0 }
+    const res = await chapterApi.get({ mangaId: mangaId.value, page, pageSize, order: order.value })
+    return { list: res?.list || [], count: Number(res?.count || 0) }
+  },
 })
 
-async function loadData() {
-  const mangaId = Number(route.params.mangaId) || 0
-  if (!mangaId) return
-  loading.value = true
+onMounted(async () => {
+  if (!mangaId.value) return
   try {
-    const res = await chapterApi.get({ mangaId, page: page.value, pageSize, order: order.value })
-    list.value = res?.list || []
-    total.value = res?.count || 0
-    
-    if (!mangaName.value) {
-      const info = await mangaApi.get_manga_info(mangaId)
-      mangaName.value = info?.mangaName || ''
-    }
-  } catch (e) { /* empty */ }
-  loading.value = false
-}
+    const info = await mangaApi.get_manga_info(mangaId.value)
+    mangaName.value = info?.mangaName || ''
+  } catch { /* empty */ }
+})
 
 function goRead(ch: any, idx: number) {
   globalData.chapterList = list.value
@@ -90,73 +75,11 @@ function goRead(ch: any, idx: number) {
 </script>
 
 <style scoped>
-.ta-page-head {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 24px;
-}
-
-.ta-head-left {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.ta-head-left h1 {
-  font-size: 20px;
-  font-weight: 700;
-  margin: 0;
-}
-
-.ta-btn-back {
-  padding: 6px 12px;
-  font-size: 13px;
-  border: 1px solid #eaeaea;
-  border-radius: 6px;
-  background: #fff;
-  cursor: pointer;
-}
-
-.ta-select {
-  padding: 7px 12px;
-  font-size: 13px;
-  border: 1px solid #eaeaea;
-  border-radius: 8px;
-  background: #fff;
-}
-
-.ta-chapters {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 12px;
-}
-
-.ta-empty {
-  text-align: center;
-  padding: 60px;
-  color: #9ca3af;
-}
-
-.ta-pagination {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 16px;
-  margin-top: 32px;
-}
-
-.ta-pagination button {
-  padding: 6px 14px;
-  font-size: 13px;
-  border: 1px solid #eaeaea;
-  border-radius: 6px;
-  background: #fff;
-  cursor: pointer;
-}
-
-.ta-pagination button:disabled {
-  opacity: 0.4;
-  cursor: not-allowed;
-}
+.ta-page-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; }
+.ta-head-left { display: flex; align-items: center; gap: 12px; }
+.ta-head-left h1 { font-size: 20px; font-weight: 700; margin: 0; }
+.ta-btn-back { padding: 6px 12px; font-size: 13px; border: 1px solid #eaeaea; border-radius: 6px; background: #fff; cursor: pointer; }
+.ta-select { padding: 7px 12px; font-size: 13px; border: 1px solid #eaeaea; border-radius: 8px; background: #fff; }
+.ta-chapters { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 12px; }
+.ta-empty { text-align: center; padding: 60px; color: #9ca3af; }
 </style>
