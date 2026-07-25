@@ -102,13 +102,13 @@ async function get_poster(item: any) {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 24px;
+  margin-bottom: 2.4rem;
   flex-wrap: wrap;
-  gap: 12px;
+  gap: 1.2rem;
 }
 
 .tb-page-head h1 {
-  font-size: 20px;
+  font-size: 2rem;
   font-weight: 700;
   margin: 0;
   color: #1f2937;
@@ -116,14 +116,14 @@ async function get_poster(item: any) {
 
 .tb-head-actions {
   display: flex;
-  gap: 8px;
+  gap: 0.8rem;
 }
 
 .tb-input {
-  padding: 8px 12px;
-  font-size: 13px;
+  padding: 0.8rem 1.2rem;
+  font-size: 1.3rem;
   border: 1px solid rgba(0, 0, 0, 0.1);
-  border-radius: 8px;
+  border-radius: 0.8rem;
   outline: none;
   background: rgba(255, 255, 255, 0.8);
   color: #1f2937;
@@ -134,10 +134,10 @@ async function get_poster(item: any) {
 }
 
 .tb-select {
-  padding: 8px 12px;
-  font-size: 13px;
+  padding: 0.8rem 1.2rem;
+  font-size: 1.3rem;
   border: 1px solid rgba(0, 0, 0, 0.1);
-  border-radius: 8px;
+  border-radius: 0.8rem;
   background: rgba(255, 255, 255, 0.8);
   color: #1f2937;
   outline: none;
@@ -145,14 +145,14 @@ async function get_poster(item: any) {
 
 .tb-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-  column-gap: 16px;
-  row-gap: 50px;
+  grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr));
+  column-gap: 1.6rem;
+  row-gap: 5rem;
 }
 
 .tb-empty {
   text-align: center;
-  padding: 60px;
+  padding: 6rem;
   color: #6b7280;
 }
 
@@ -160,25 +160,25 @@ async function get_poster(item: any) {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 16px;
-  margin-top: 32px;
-  padding: 16px;
+  gap: 1.6rem;
+  margin-top: 3.2rem;
+  padding: 1.6rem;
 }
 
 .tb-pagination button {
-  padding: 8px 16px;
+  padding: 0.8rem 1.6rem;
   background: rgba(255, 255, 255, 0.8);
   border: 1px solid rgba(0, 0, 0, 0.1);
-  border-radius: 20px;
+  border-radius: 2rem;
   color: #1f2937;
   cursor: pointer;
   transition: background 0.2s;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 0.2rem 0.8rem rgba(0, 0, 0, 0.05);
 }
 
 .tb-pagination button:hover:not(:disabled) {
   background: rgba(255, 255, 255, 1);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 0.4rem 1.2rem rgba(0, 0, 0, 0.1);
 }
 
 .tb-pagination button:disabled {
@@ -188,6 +188,6 @@ async function get_poster(item: any) {
 
 .tb-pagination span {
   color: #6b7280;
-  font-size: 13px;
+  font-size: 1.3rem;
 }
 </style>

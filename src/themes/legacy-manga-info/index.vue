@@ -231,7 +231,7 @@
     </el-dialog>
 
     <el-dialog :title="$t('rightSidebar.editMetas')" v-model="editMetasDialog">
-      <el-form :model="metaForm" label-width="auto" style="max-width: 600px">
+      <el-form :model="metaForm" label-width="auto" style="max-width: 60rem">
         <el-form-item label="漫画名称">
           <el-input v-model="metaForm.title" placeholder="请输入漫画名称"></el-input>
         </el-form-item>
@@ -652,7 +652,7 @@ function update_tags(tagsParams: tagItemType[]) {
     width: 100%;
     height: 100%;
     z-index: 0;
-    filter: blur(2px);
+    filter: blur(0.2rem);
   }
 }
 
@@ -678,12 +678,12 @@ function update_tags(tagsParams: tagItemType[]) {
 
     &:hover {
       cursor: pointer;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+      box-shadow: 0 0 1rem rgba(0, 0, 0, 0.5);
     }
 
     &.active {
       border-color: var(--el-color-primary);
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.8);
+      box-shadow: 0 0 1rem rgba(0, 0, 0, 0.8);
     }
   }
 }
@@ -935,7 +935,7 @@ function update_tags(tagsParams: tagItemType[]) {
 
 .action-summary {
   padding: 0.4rem 0.8rem;
-  border-radius: 999px;
+  border-radius: 99.9rem;
   background: color-mix(in srgb, @s-primary 10%, transparent);
   color: @s-primary;
   font-weight: 600;
@@ -1204,7 +1204,7 @@ function update_tags(tagsParams: tagItemType[]) {
   height: 40rem;
 }
 
-@media only screen and (min-width: 1200px) {
+@media only screen and (min-width: 120rem) {
   .action-primary {
     grid-template-columns: minmax(26rem, 34rem) max-content;
     justify-content: start;
@@ -1249,7 +1249,7 @@ function update_tags(tagsParams: tagItemType[]) {
   }
 }
 
-@media only screen and (min-width: 1920px) {
+@media only screen and (min-width: 192rem) {
   .detail-overview {
     display: grid;
     grid-template-columns: minmax(48rem, 0.9fr) minmax(78rem, 1.1fr);
@@ -1276,25 +1276,25 @@ function update_tags(tagsParams: tagItemType[]) {
   }
 }
 
-@media only screen and (min-width: 4096px) {
+@media only screen and (min-width: 409.6rem) {
   .banner {
     width: 100rem;
   }
 }
 
-@media only screen and (max-width: 4095px) and (min-width: 2560px) {
+@media only screen and (max-width: 409.5rem) and (min-width: 256rem) {
   .banner {
     width: 80rem;
   }
 }
 
-@media only screen and (max-width: 2559px) and (min-width: 1920px) {
+@media only screen and (max-width: 255.9rem) and (min-width: 192rem) {
   .banner {
     width: 60rem;
   }
 }
 
-@media only screen and (max-width: 1919px) and (min-width: 1200px) {
+@media only screen and (max-width: 191.9rem) and (min-width: 120rem) {
   .banner {
     width: 50rem;
   }
@@ -1304,7 +1304,7 @@ function update_tags(tagsParams: tagItemType[]) {
   }
 }
 
-@media only screen and (max-width: 1199px) and (min-width: 768px) {
+@media only screen and (max-width: 119.9rem) and (min-width: 76.8rem) {
   .top {
     margin-top: 0;
   }
@@ -1347,7 +1347,7 @@ function update_tags(tagsParams: tagItemType[]) {
   }
 }
 
-@media only screen and (max-width: 767px) {
+@media only screen and (max-width: 76.7rem) {
   .top {
     margin-top: 0;
   }

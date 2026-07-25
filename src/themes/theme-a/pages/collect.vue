@@ -83,14 +83,14 @@ function goManga(item: any) {
 
 <style scoped lang="less">
 .ta-collect {
-  max-width: 980px;
+  max-width: 98rem;
   margin: 0 auto;
 }
 
 .ta-page-head {
-  margin-bottom: 16px;
+  margin-bottom: 1.6rem;
   h1 {
-    font-size: 20px;
+    font-size: 2rem;
     font-weight: 700;
     margin: 0;
   }
@@ -98,30 +98,30 @@ function goManga(item: any) {
 
 .ta-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-  gap: 18px;
-  margin-bottom: 18px;
+  grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
+  gap: 1.8rem;
+  margin-bottom: 1.8rem;
 }
 
 .ta-grid-card {
   cursor: pointer;
   transition: transform 0.15s;
   &:hover {
-    transform: translateY(-2px);
+    transform: translateY(-0.2rem);
   }
 }
 
 .ta-grid-cover {
   aspect-ratio: 3 / 4;
-  border-radius: 10px;
+  border-radius: 1rem;
   overflow: hidden;
-  margin-bottom: 8px;
+  margin-bottom: 0.8rem;
   background: #f3f4f6;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 0.2rem 0.8rem rgba(0, 0, 0, 0.06);
 }
 
 .ta-grid-name {
-  font-size: 13px;
+  font-size: 1.3rem;
   font-weight: 500;
   color: #111827;
   white-space: nowrap;
@@ -132,22 +132,22 @@ function goManga(item: any) {
 .ta-chapter-list {
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  margin-bottom: 18px;
+  gap: 1rem;
+  margin-bottom: 1.8rem;
 }
 
 .ta-empty {
   text-align: center;
-  padding: 60px;
+  padding: 6rem;
   color: #9ca3af;
 }
 
-@media (max-width: 768px) {
-  .ta-collect { padding: 0 4px; }
-  .ta-grid { grid-template-columns: repeat(3, 1fr); gap: 12px; }
+@media (max-width: 76.8rem) {
+  .ta-collect { padding: 0 0.4rem; }
+  .ta-grid { grid-template-columns: repeat(3, 1fr); gap: 1.2rem; }
 }
 
-@media (max-width: 480px) {
-  .ta-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+@media (max-width: 48rem) {
+  .ta-grid { grid-template-columns: repeat(2, 1fr); gap: 1rem; }
 }
 </style>

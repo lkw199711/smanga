@@ -96,44 +96,44 @@ async function get_poster(item: any) {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 24px;
+  margin-bottom: 2.4rem;
   flex-wrap: wrap;
-  gap: 12px;
+  gap: 1.2rem;
 }
 
 .ta-page-head h1 {
-  font-size: 20px;
+  font-size: 2rem;
   font-weight: 700;
   margin: 0;
 }
 
 .ta-head-actions {
   display: flex;
-  gap: 8px;
+  gap: 0.8rem;
 }
 
 .ta-input {
-  padding: 7px 12px;
-  font-size: 13px;
+  padding: 0.7rem 1.2rem;
+  font-size: 1.3rem;
   border: 1px solid #eaeaea;
-  border-radius: 8px;
+  border-radius: 0.8rem;
   outline: none;
   background: #fff;
 }
 
 .ta-select {
-  padding: 7px 12px;
-  font-size: 13px;
+  padding: 0.7rem 1.2rem;
+  font-size: 1.3rem;
   border: 1px solid #eaeaea;
-  border-radius: 8px;
+  border-radius: 0.8rem;
   background: #fff;
   outline: none;
 }
 
 .ta-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-  gap: 18px;
+  grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
+  gap: 1.8rem;
 }
 
 .ta-manga-card {
@@ -144,16 +144,16 @@ async function get_poster(item: any) {
 
 
 .ta-manga-card:hover {
-  transform: translateY(-2px);
+  transform: translateY(-0.2rem);
 }
 
 .ta-manga-cover {
   aspect-ratio: 3 / 4;
-  border-radius: 10px;
+  border-radius: 1rem;
   overflow: hidden;
-  margin-bottom: 8px;
+  margin-bottom: 0.8rem;
   background: #f3f4f6;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  box-shadow: 0 0.2rem 0.8rem rgba(0,0,0,0.06);
 }
 
 .ta-manga-cover img {
@@ -168,12 +168,12 @@ async function get_poster(item: any) {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 32px;
+  font-size: 3.2rem;
   background: linear-gradient(135deg, #dbeafe, #bfdbfe);
 }
 
 .ta-manga-name {
-  font-size: 13px;
+  font-size: 1.3rem;
   font-weight: 500;
   color: #111827;
   white-space: nowrap;
@@ -182,14 +182,14 @@ async function get_poster(item: any) {
 }
 
 .ta-manga-meta {
-  font-size: 11px;
+  font-size: 1.1rem;
   color: #9ca3af;
-  margin-top: 2px;
+  margin-top: 0.2rem;
 }
 
 .ta-empty {
   text-align: center;
-  padding: 60px;
+  padding: 6rem;
   color: #9ca3af;
 }
 
@@ -197,16 +197,16 @@ async function get_poster(item: any) {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 16px;
-  margin-top: 32px;
-  padding: 16px;
+  gap: 1.6rem;
+  margin-top: 3.2rem;
+  padding: 1.6rem;
 }
 
 .ta-pagination button {
-  padding: 6px 14px;
-  font-size: 13px;
+  padding: 0.6rem 1.4rem;
+  font-size: 1.3rem;
   border: 1px solid #eaeaea;
-  border-radius: 6px;
+  border-radius: 0.6rem;
   background: #fff;
   cursor: pointer;
 }
@@ -217,21 +217,21 @@ async function get_poster(item: any) {
 }
 
 .ta-pagination span {
-  font-size: 13px;
+  font-size: 1.3rem;
   color: #6b7280;
 }
 
 /* 响应式适配 */
-@media (max-width: 768px) {
+@media (max-width: 76.8rem) {
   .ta-page-head {
     flex-direction: column;
     align-items: stretch;
-    gap: 12px;
+    gap: 1.2rem;
   }
 
   .ta-head-actions {
     flex-direction: column;
-    gap: 8px;
+    gap: 0.8rem;
   }
 
   .ta-input,
@@ -241,22 +241,22 @@ async function get_poster(item: any) {
 
   .ta-grid {
     grid-template-columns: repeat(3, 1fr);
-    gap: 12px;
+    gap: 1.2rem;
   }
 
   .ta-manga-name {
-    font-size: 12px;
+    font-size: 1.2rem;
   }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 48rem) {
   .ta-grid {
     grid-template-columns: repeat(2, 1fr);
-    gap: 10px;
+    gap: 1rem;
   }
 
   .ta-manga-cover {
-    height: 160px;
+    height: 16rem;
   }
 }
 </style>

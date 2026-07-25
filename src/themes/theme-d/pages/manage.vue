@@ -45,14 +45,14 @@ function go(path: string) {
 </script>
 
 <style scoped>
-.td-page-head { margin-bottom: 24px; }
-.td-page-head h1 { font-size: 20px; font-weight: 700; margin: 0; }
-.td-manage-nav { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 24px; }
-.td-tab { padding: 7px 14px; font-size: 13px; border: 1px solid #eaeaea; border-radius: 8px; background: #fff; cursor: pointer; color: #4b5563; }
+.td-page-head { margin-bottom: 2.4rem; }
+.td-page-head h1 { font-size: 2rem; font-weight: 700; margin: 0; }
+.td-manage-nav { display: flex; flex-wrap: wrap; gap: 0.6rem; margin-bottom: 2.4rem; }
+.td-tab { padding: 0.7rem 1.4rem; font-size: 1.3rem; border: 1px solid #eaeaea; border-radius: 0.8rem; background: #fff; cursor: pointer; color: #4b5563; }
 .td-tab.active { background: #2563eb; color: #fff; border-color: #2563eb; }
-.td-manage-content { background: #fff; border: 1px solid #eaeaea; border-radius: 12px; padding: 24px; }
-.td-manage-card { display: flex; flex-direction: column; gap: 10px; padding: 18px; border: 1px solid #eaeaea; border-radius: 12px; background: #fff; }
-.td-manage-card-title { font-size: 16px; font-weight: 700; color: #111827; }
-.td-manage-card-desc { font-size: 13px; color: #6b7280; }
-.td-btn-primary { padding: 8px 16px; font-size: 13px; font-weight: 500; color: #fff; background: #2563eb; border: none; border-radius: 8px; cursor: pointer; width: fit-content; }
+.td-manage-content { background: #fff; border: 1px solid #eaeaea; border-radius: 1.2rem; padding: 2.4rem; }
+.td-manage-card { display: flex; flex-direction: column; gap: 1rem; padding: 1.8rem; border: 1px solid #eaeaea; border-radius: 1.2rem; background: #fff; }
+.td-manage-card-title { font-size: 1.6rem; font-weight: 700; color: #111827; }
+.td-manage-card-desc { font-size: 1.3rem; color: #6b7280; }
+.td-btn-primary { padding: 0.8rem 1.6rem; font-size: 1.3rem; font-weight: 500; color: #fff; background: #2563eb; border: none; border-radius: 0.8rem; cursor: pointer; width: fit-content; }
 </style>

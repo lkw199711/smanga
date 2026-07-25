@@ -21,7 +21,7 @@ useFlowReader(rootEl, {
 </script>
 
 <style scoped>
-.ta-flow { width: 100%; max-width: 900px; margin: 0 auto; display: flex; flex-direction: column; align-items: center; }
+.ta-flow { width: 100%; max-width: 90rem; margin: 0 auto; display: flex; flex-direction: column; align-items: center; }
 .ta-flow-img { width: 100%; display: block; }
-.ta-flow-empty { padding: 60px; color: #9ca3af; font-size: 14px; }
+.ta-flow-empty { padding: 6rem; color: #9ca3af; font-size: 1.4rem; }
 </style>

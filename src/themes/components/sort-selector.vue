@@ -35,10 +35,10 @@ const options = computed(() => {
 
 <style scoped>
 .tm-sort-select {
-  padding: 7px 10px;
+  padding: 0.7rem 1rem;
   border: 1px solid var(--sd-border, #eaeaea);
-  border-radius: 8px;
-  font-size: 13px;
+  border-radius: 0.8rem;
+  font-size: 1.3rem;
   outline: none;
   background: #fff;
   color: var(--sd-text, #172033);

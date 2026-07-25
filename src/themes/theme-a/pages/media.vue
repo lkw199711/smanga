@@ -253,68 +253,68 @@ onUnmounted(stopMediaOperationListener)
 
 <style scoped>
 .ta-media {
-  padding: 24px;
+  padding: 2.4rem;
   min-height: 100vh;
 }
 
 .ta-section {
-  margin-bottom: 32px;
+  margin-bottom: 3.2rem;
 }
 
 .ta-page-head {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 24px;
+  margin-bottom: 2.4rem;
   flex-wrap: wrap;
-  gap: 12px;
+  gap: 1.2rem;
 }
 
 .ta-head-left {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 1.6rem;
 }
 
 .ta-head-left h1 {
-  font-size: 20px;
+  font-size: 2rem;
   font-weight: 700;
   margin: 0;
 }
 
 .ta-head-actions {
   display: flex;
-  gap: 8px;
+  gap: 0.8rem;
 }
 
 .ta-input {
-  padding: 7px 12px;
-  font-size: 13px;
+  padding: 0.7rem 1.2rem;
+  font-size: 1.3rem;
   border: 1px solid #eaeaea;
-  border-radius: 8px;
+  border-radius: 0.8rem;
   outline: none;
   background: #fff;
 }
 
 .ta-select {
-  padding: 7px 12px;
-  font-size: 13px;
+  padding: 0.7rem 1.2rem;
+  font-size: 1.3rem;
   border: 1px solid #eaeaea;
-  border-radius: 8px;
+  border-radius: 0.8rem;
   background: #fff;
   outline: none;
 }
 
 .ta-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-  gap: 16px;
+  grid-template-columns: repeat(auto-fill, minmax(32rem, 1fr));
+  gap: 1.6rem;
 }
 
 .ta-media-card {
   background: #fff;
   border: 1px solid #eaeaea;
-  border-radius: 12px;
+  border-radius: 1.2rem;
   overflow: hidden;
   cursor: pointer;
   transition: all 0.25s ease;
@@ -322,8 +322,8 @@ onUnmounted(stopMediaOperationListener)
 
 .ta-media-card:hover {
   border-color: #d1d5db;
-  box-shadow: 0 6px 20px rgba(0,0,0,0.08);
-  transform: translateY(-3px);
+  box-shadow: 0 0.6rem 2rem rgba(0,0,0,0.08);
+  transform: translateY(-0.3rem);
 }
 
 .ta-media-cover {
@@ -354,45 +354,45 @@ onUnmounted(stopMediaOperationListener)
 }
 
 .ta-placeholder-icon {
-  font-size: 42px;
+  font-size: 4.2rem;
   opacity: 0.7;
 }
 
 .ta-media-body {
-  padding: 14px 16px;
+  padding: 1.4rem 1.6rem;
 }
 
 .ta-media-icon {
-  font-size: 32px;
+  font-size: 3.2rem;
   flex-shrink: 0;
 }
 
 .ta-media-name {
-  font-size: 15px;
+  font-size: 1.5rem;
   font-weight: 600;
   color: #111827;
 }
 
 .ta-media-meta {
-  font-size: 12px;
+  font-size: 1.2rem;
   color: #6b7280;
-  margin-top: 4px;
+  margin-top: 0.4rem;
 }
 
 .ta-media-path {
-  font-size: 11px;
+  font-size: 1.1rem;
   color: #9ca3af;
-  margin-top: 2px;
+  margin-top: 0.2rem;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: 240px;
+  max-width: 24rem;
 }
 
 .ta-manga-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-  gap: 18px;
+  grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
+  gap: 1.8rem;
 }
 
 .ta-manga-card {
@@ -401,16 +401,16 @@ onUnmounted(stopMediaOperationListener)
 }
 
 .ta-manga-card:hover {
-  transform: translateY(-2px);
+  transform: translateY(-0.2rem);
 }
 
 .ta-manga-cover {
   aspect-ratio: 3 / 4;
-  border-radius: 10px;
+  border-radius: 1rem;
   overflow: hidden;
-  margin-bottom: 8px;
+  margin-bottom: 0.8rem;
   background: #f3f4f6;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  box-shadow: 0 0.2rem 0.8rem rgba(0,0,0,0.06);
 }
 
 .ta-manga-cover img {
@@ -425,12 +425,12 @@ onUnmounted(stopMediaOperationListener)
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 32px;
+  font-size: 3.2rem;
   background: linear-gradient(135deg, #dbeafe, #bfdbfe);
 }
 
 .ta-manga-name {
-  font-size: 13px;
+  font-size: 1.3rem;
   font-weight: 500;
   color: #111827;
   white-space: nowrap;
@@ -439,14 +439,14 @@ onUnmounted(stopMediaOperationListener)
 }
 
 .ta-manga-meta {
-  font-size: 11px;
+  font-size: 1.1rem;
   color: #9ca3af;
-  margin-top: 2px;
+  margin-top: 0.2rem;
 }
 
 .ta-empty {
   text-align: center;
-  padding: 60px;
+  padding: 6rem;
   color: #9ca3af;
 }
 
@@ -454,16 +454,16 @@ onUnmounted(stopMediaOperationListener)
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 16px;
-  margin-top: 32px;
-  padding: 16px;
+  gap: 1.6rem;
+  margin-top: 3.2rem;
+  padding: 1.6rem;
 }
 
 .ta-pagination button {
-  padding: 6px 14px;
-  font-size: 13px;
+  padding: 0.6rem 1.4rem;
+  font-size: 1.3rem;
   border: 1px solid #eaeaea;
-  border-radius: 6px;
+  border-radius: 0.6rem;
   background: #fff;
   cursor: pointer;
 }
@@ -474,18 +474,18 @@ onUnmounted(stopMediaOperationListener)
 }
 
 .ta-pagination span {
-  font-size: 13px;
+  font-size: 1.3rem;
   color: #6b7280;
 }
 
 .ta-btn-primary {
-  padding: 8px 16px;
-  font-size: 13px;
+  padding: 0.8rem 1.6rem;
+  font-size: 1.3rem;
   font-weight: 500;
   color: #fff;
   background: #2563eb;
   border: none;
-  border-radius: 8px;
+  border-radius: 0.8rem;
   cursor: pointer;
 }
 
@@ -495,13 +495,13 @@ onUnmounted(stopMediaOperationListener)
 }
 
 .ta-btn-ghost {
-  padding: 8px 16px;
-  font-size: 13px;
+  padding: 0.8rem 1.6rem;
+  font-size: 1.3rem;
   font-weight: 500;
   color: #4b5563;
   background: transparent;
   border: 1px solid #eaeaea;
-  border-radius: 8px;
+  border-radius: 0.8rem;
   cursor: pointer;
 }
 
@@ -516,41 +516,41 @@ onUnmounted(stopMediaOperationListener)
 }
 
 .ta-modal-card {
-  width: min(520px, calc(100vw - 32px));
+  width: min(52rem, calc(100vw - 3.2rem));
   background: #fff;
   border: 1px solid #eaeaea;
-  border-radius: 14px;
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12);
-  padding: 20px;
+  border-radius: 1.4rem;
+  box-shadow: 0 1.2rem 4rem rgba(0, 0, 0, 0.12);
+  padding: 2rem;
 }
 
 .ta-modal-title {
-  font-size: 16px;
+  font-size: 1.6rem;
   font-weight: 700;
   color: #111827;
-  margin-bottom: 14px;
+  margin-bottom: 1.4rem;
 }
 
 .ta-form {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 8px;
+  gap: 0.8rem;
 }
 
 .ta-label {
-  font-size: 12px;
+  font-size: 1.2rem;
   font-weight: 600;
   color: #6b7280;
-  margin-top: 6px;
+  margin-top: 0.6rem;
 }
 
 .ta-input {
-  height: 40px;
-  padding: 0 12px;
+  height: 4rem;
+  padding: 0 1.2rem;
   border: 1px solid #eaeaea;
-  border-radius: 10px;
+  border-radius: 1rem;
   outline: none;
-  font-size: 13px;
+  font-size: 1.3rem;
   background: #fff;
 }
 
@@ -561,13 +561,13 @@ onUnmounted(stopMediaOperationListener)
 .ta-modal-actions {
   display: flex;
   justify-content: flex-end;
-  gap: 10px;
-  margin-top: 16px;
+  gap: 1rem;
+  margin-top: 1.6rem;
 }
 
 .ta-error {
-  margin-top: 10px;
-  font-size: 12px;
+  margin-top: 1rem;
+  font-size: 1.2rem;
   color: #ef4444;
 }
 </style>

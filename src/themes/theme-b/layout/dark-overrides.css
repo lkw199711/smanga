@@ -26,7 +26,7 @@
 /* ---- 侧边栏 ---- */
 .tb-dark .sb-sidebar {
 	background: var(--sb-glass) !important;
-	backdrop-filter: blur(20px);
+	backdrop-filter: blur(2rem);
 	border-right-color: var(--sb-border) !important;
 	color: var(--sb-text);
 }
@@ -67,7 +67,7 @@
 /* ---- 顶栏(玻璃拟态) ---- */
 .tb-dark .sb-topbar {
 	background: var(--sb-glass) !important;
-	backdrop-filter: blur(20px);
+	backdrop-filter: blur(2rem);
 	border-color: var(--sb-border) !important;
 	color: var(--sb-text);
 }
@@ -116,7 +116,7 @@
 .tb-dark .sb-user-dropdown {
 	background: var(--sb-card) !important;
 	border-color: var(--sb-border) !important;
-	box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5) !important;
+	box-shadow: 0 0.8rem 2.4rem rgba(0, 0, 0, 0.5) !important;
 }
 .tb-dark .sb-user-dropdown-item {
 	color: var(--sb-text-2) !important;
@@ -134,7 +134,7 @@
 .tb-dark .sb-sort-dropdown {
 	background: var(--sb-card) !important;
 	border-color: var(--sb-border) !important;
-	box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5) !important;
+	box-shadow: 0 0.8rem 2.4rem rgba(0, 0, 0, 0.5) !important;
 }
 .tb-dark .sb-theme-option,
 .tb-dark .sb-sort-item {
@@ -238,7 +238,7 @@
 .tb-dark .sb-mobile-header,
 .tb-dark .sb-mobile-drawer {
 	background: var(--sb-glass-strong) !important;
-	backdrop-filter: blur(20px);
+	backdrop-filter: blur(2rem);
 	color: var(--sb-text);
 	border-color: var(--sb-border) !important;
 }
@@ -277,7 +277,7 @@
 }
 .tb-dark ::-webkit-scrollbar-thumb {
 	background: var(--sb-border);
-	border-radius: 4px;
+	border-radius: 0.4rem;
 }
 .tb-dark ::-webkit-scrollbar-thumb:hover {
 	background: var(--sb-text-muted);

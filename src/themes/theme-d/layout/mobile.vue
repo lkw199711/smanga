@@ -304,7 +304,7 @@ function onSidebarClick(e: MouseEvent) {
 	overflow: hidden;
 	background: var(--sd-back, #eff6ff);
 	color: var(--sd-text, #0f172a);
-	font-size: 14px;
+	font-size: 1.4rem;
 	font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
 }
 
@@ -313,10 +313,10 @@ function onSidebarClick(e: MouseEvent) {
 	z-index: 50;
 	display: flex;
 	align-items: center;
-	gap: 12px;
-	padding: 12px 16px;
+	gap: 1.2rem;
+	padding: 1.2rem 1.6rem;
 	background: rgba(255, 255, 255, 0.9);
-	backdrop-filter: blur(10px);
+	backdrop-filter: blur(1rem);
 	border-bottom: 1px solid var(--sd-border, #dbeafe);
 }
 
@@ -326,13 +326,13 @@ function onSidebarClick(e: MouseEvent) {
 }
 
 .sd-menu-toggle {
-	width: 40px;
-	height: 40px;
+	width: 4rem;
+	height: 4rem;
 	border: none;
 	background: transparent;
-	font-size: 20px;
+	font-size: 2rem;
 	cursor: pointer;
-	border-radius: 10px;
+	border-radius: 1rem;
 }
 
 .sd-menu-toggle:active {
@@ -346,7 +346,7 @@ function onSidebarClick(e: MouseEvent) {
 
 .sd-mobile-title h1 {
 	margin: 0;
-	font-size: 18px;
+	font-size: 1.8rem;
 	font-weight: 600;
 }
 
@@ -359,10 +359,10 @@ function onSidebarClick(e: MouseEvent) {
 .sd-header-user-trigger {
 	display: flex;
 	align-items: center;
-	gap: 4px;
+	gap: 0.4rem;
 	cursor: pointer;
-	padding: 4px 6px;
-	border-radius: 8px;
+	padding: 0.4rem 0.6rem;
+	border-radius: 0.8rem;
 }
 
 .sd-header-user-trigger:active {
@@ -370,14 +370,14 @@ function onSidebarClick(e: MouseEvent) {
 }
 
 .sd-avatar-sm {
-	width: 28px;
-	height: 28px;
-	font-size: 12px;
+	width: 2.8rem;
+	height: 2.8rem;
+	font-size: 1.2rem;
 	flex-shrink: 0;
 }
 
 .sd-header-user-arrow {
-	font-size: 10px;
+	font-size: 1rem;
 	color: var(--sd-text-muted, #64748b);
 	transition: transform 0.2s;
 }
@@ -388,25 +388,25 @@ function onSidebarClick(e: MouseEvent) {
 
 .sd-header-user-dropdown {
 	position: absolute;
-	top: calc(100% + 6px);
+	top: calc(100% + 0.6rem);
 	right: 0;
-	min-width: 140px;
+	min-width: 14rem;
 	background: var(--sd-card, #fff);
 	border: 1px solid var(--sd-border, #dbeafe);
-	border-radius: 10px;
-	box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+	border-radius: 1rem;
+	box-shadow: 0 0.8rem 2.4rem rgba(0, 0, 0, 0.08);
 	z-index: 300;
-	padding: 6px;
+	padding: 0.6rem;
 }
 
 .sd-user-dropdown-item {
 	display: flex;
 	align-items: center;
-	gap: 8px;
-	padding: 10px 14px;
-	font-size: 14px;
+	gap: 0.8rem;
+	padding: 1rem 1.4rem;
+	font-size: 1.4rem;
 	color: var(--sd-text-muted, #64748b);
-	border-radius: 6px;
+	border-radius: 0.6rem;
 	cursor: pointer;
 	transition: all 0.15s;
 }
@@ -434,11 +434,11 @@ function onSidebarClick(e: MouseEvent) {
 	position: absolute;
 	top: 0;
 	left: 0;
-	width: 280px;
+	width: 28rem;
 	max-width: 80vw;
 	height: 100%;
 	background: var(--sd-card, #fff);
-	padding: 12px;
+	padding: 1.2rem;
 	overflow-y: auto;
 	overscroll-behavior: contain;
 	animation: slideIn 0.3s ease;
@@ -449,7 +449,7 @@ function onSidebarClick(e: MouseEvent) {
 .sd-mobile-sidebar::after {
 	content: '';
 	display: block;
-	height: calc(80px + env(safe-area-inset-bottom));
+	height: calc(8rem + env(safe-area-inset-bottom));
 	flex-shrink: 0;
 }
 
@@ -457,7 +457,7 @@ function onSidebarClick(e: MouseEvent) {
 .sd-mobile-sidebar :deep(.android-seat) {
 	flex-shrink: 0;
 	background: var(--sd-card, #fff);
-	margin: -12px -12px 0;
+	margin: -1.2rem -1.2rem 0;
 }
 
 @keyframes slideIn {
@@ -473,67 +473,67 @@ function onSidebarClick(e: MouseEvent) {
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
-	padding: 4px 4px 12px;
+	padding: 0.4rem 0.4rem 1.2rem;
 }
 
 .sd-logo {
 	display: flex;
 	align-items: center;
-	gap: 8px;
+	gap: 0.8rem;
 	cursor: pointer;
 }
 
 .sd-logo-mark {
-	width: 28px;
-	height: 28px;
+	width: 2.8rem;
+	height: 2.8rem;
 	display: flex;
 	align-items: center;
 	justify-content: center;
 	background: var(--sd-primary, #2563eb);
 	color: #fff;
 	font-weight: 700;
-	border-radius: 8px;
+	border-radius: 0.8rem;
 }
 
 .sd-logo-text {
-	font-size: 16px;
+	font-size: 1.6rem;
 	font-weight: 700;
 }
 
 .sd-close-sidebar {
-	width: 36px;
-	height: 36px;
+	width: 3.6rem;
+	height: 3.6rem;
 	border: none;
 	background: transparent;
-	font-size: 28px;
+	font-size: 2.8rem;
 	cursor: pointer;
 	color: var(--sd-text-muted, #64748b);
 }
 
 .sd-theme-switcher {
-	padding: 12px;
-	margin-bottom: 12px;
+	padding: 1.2rem;
+	margin-bottom: 1.2rem;
 	background: var(--sd-hover, #f1f5f9);
-	border-radius: 12px;
+	border-radius: 1.2rem;
 }
 
 .sd-theme-label {
-	font-size: 11px;
+	font-size: 1.1rem;
 	font-weight: 600;
 	color: var(--sd-text-muted, #64748b);
-	margin-bottom: 8px;
+	margin-bottom: 0.8rem;
 }
 
 .sd-theme-options {
 	display: flex;
-	gap: 6px;
+	gap: 0.6rem;
 	flex-wrap: wrap;
 }
 
 .sd-theme-swatch {
-	width: 28px;
-	height: 28px;
-	border: 2px solid transparent;
+	width: 2.8rem;
+	height: 2.8rem;
+	border: 0.2rem solid transparent;
 	border-radius: 50%;
 	cursor: pointer;
 	transition: all 0.2s;
@@ -553,13 +553,13 @@ function onSidebarClick(e: MouseEvent) {
 .sd-nav-item {
 	display: flex;
 	align-items: center;
-	gap: 8px;
-	padding: 8px 12px;
+	gap: 0.8rem;
+	padding: 0.8rem 1.2rem;
 	color: var(--sd-text-muted, #64748b);
-	border-radius: 8px;
+	border-radius: 0.8rem;
 	cursor: pointer;
 	transition: all 0.15s;
-	font-size: 14px;
+	font-size: 1.4rem;
 	user-select: none;
 	-webkit-user-select: none;
 	-webkit-tap-highlight-color: transparent;
@@ -572,8 +572,8 @@ function onSidebarClick(e: MouseEvent) {
 }
 
 .sd-nav-icon {
-	width: 18px;
-	font-size: 16px;
+	width: 1.8rem;
+	font-size: 1.6rem;
 	text-align: center;
 }
 
@@ -582,22 +582,22 @@ function onSidebarClick(e: MouseEvent) {
 }
 
 .sd-nav-count {
-	padding: 2px 8px;
-	font-size: 11px;
+	padding: 0.2rem 0.8rem;
+	font-size: 1.1rem;
 	color: var(--sd-text-muted, #64748b);
 	background: var(--sd-hover, #f1f5f9);
-	border-radius: 10px;
+	border-radius: 1rem;
 }
 
 .sd-nav-empty {
-	padding: 8px 12px;
-	font-size: 12px;
+	padding: 0.8rem 1.2rem;
+	font-size: 1.2rem;
 	color: var(--sd-text-muted, #64748b);
 }
 
 .sd-sec-title {
-	padding: 10px 8px 4px;
-	font-size: 11px;
+	padding: 1rem 0.8rem 0.4rem;
+	font-size: 1.1rem;
 	font-weight: 600;
 	color: var(--sd-text-muted, #64748b);
 }
@@ -605,7 +605,7 @@ function onSidebarClick(e: MouseEvent) {
 .sd-nav-title {
 	display: flex;
 	align-items: center;
-	gap: 8px;
+	gap: 0.8rem;
 }
 
 .sd-nav-title span {
@@ -613,17 +613,17 @@ function onSidebarClick(e: MouseEvent) {
 }
 
 .sd-manage-toggle {
-	width: 28px;
-	height: 28px;
+	width: 2.8rem;
+	height: 2.8rem;
 	display: flex;
 	align-items: center;
 	justify-content: center;
 	border: 1px solid var(--sd-border, #dbeafe);
-	border-radius: 8px;
+	border-radius: 0.8rem;
 	background: var(--sd-card, #fff);
 	color: var(--sd-text-muted, #64748b);
 	cursor: pointer;
-	font-size: 14px;
+	font-size: 1.4rem;
 	transition: all 0.15s;
 	flex-shrink: 0;
 }
@@ -643,14 +643,14 @@ function onSidebarClick(e: MouseEvent) {
 	margin-top: auto;
 	display: flex;
 	align-items: center;
-	gap: 10px;
-	padding: 12px 8px;
+	gap: 1rem;
+	padding: 1.2rem 0.8rem;
 	border-top: 1px solid var(--sd-border, #e5e7eb);
 }
 
 .sd-avatar {
-	width: 36px;
-	height: 36px;
+	width: 3.6rem;
+	height: 3.6rem;
 	display: flex;
 	align-items: center;
 	justify-content: center;
@@ -660,7 +660,7 @@ function onSidebarClick(e: MouseEvent) {
 	border-radius: 50%;
 	flex-shrink: 0;
 	overflow: hidden;
-	font-size: 14px;
+	font-size: 1.4rem;
 }
 
 .sd-avatar-img {
@@ -673,20 +673,20 @@ function onSidebarClick(e: MouseEvent) {
 
 .sd-user-name {
 	font-weight: 500;
-	font-size: 14px;
+	font-size: 1.4rem;
 }
 
 .sd-user-role {
-	font-size: 12px;
+	font-size: 1.2rem;
 	color: var(--sd-text-muted, #64748b);
 }
 
 .sd-mobile-main {
 	flex: 1;
 	overflow-y: auto;
-	padding: 16px;
-	/* 底栏 56px + safe-area */
-	padding-bottom: calc(56px + env(safe-area-inset-bottom, 0px) + 16px);
+	padding: 1.6rem;
+	/* 底栏 5.6rem + safe-area */
+	padding-bottom: calc(5.6rem + env(safe-area-inset-bottom, 0px) + 1.6rem);
 }
 
 .sd-mobile-nav-bar {
@@ -696,7 +696,7 @@ function onSidebarClick(e: MouseEvent) {
 	right: 0;
 	display: flex;
 	justify-content: space-around;
-	padding: 8px 0;
+	padding: 0.8rem 0;
 	background: var(--sd-card, #fff);
 	border-top: 1px solid var(--sd-border, #dbeafe);
 	z-index: 100;
@@ -706,13 +706,13 @@ function onSidebarClick(e: MouseEvent) {
 	display: flex;
 	flex-direction: column;
 	align-items: center;
-	gap: 4px;
-	padding: 6px 12px;
+	gap: 0.4rem;
+	padding: 0.6rem 1.2rem;
 	min-height: auto;
 }
 
 .sd-mobile-nav-bar .sd-nav-label {
-	font-size: 11px;
+	font-size: 1.1rem;
 	font-weight: 500;
 }
 </style>

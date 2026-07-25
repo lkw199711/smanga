@@ -150,18 +150,18 @@ onMounted(() => {
 </script>
 
 <style scoped>
-.td-search { max-width: 1200px; margin: 0 auto; }
-.td-page-title { font-size: 20px; font-weight: 700; color: var(--fg); margin-bottom: 20px; }
-.td-search-bar { display: flex; gap: 10px; margin-bottom: 18px; }
-.td-search-box { width: 100%; max-width: 400px; height: 40px; padding: 0 16px; border-radius: 20px; border: 1px solid var(--border); background: var(--bg2); color: var(--fg); font-size: 14px; outline: none; transition: border-color .2s; }
+.td-search { max-width: 120rem; margin: 0 auto; }
+.td-page-title { font-size: 2rem; font-weight: 700; color: var(--fg); margin-bottom: 2rem; }
+.td-search-bar { display: flex; gap: 1rem; margin-bottom: 1.8rem; }
+.td-search-box { width: 100%; max-width: 40rem; height: 4rem; padding: 0 1.6rem; border-radius: 2rem; border: 1px solid var(--border); background: var(--bg2); color: var(--fg); font-size: 1.4rem; outline: none; transition: border-color .2s; }
 .td-search-box:focus { border-color: var(--accent); }
-.td-btn { padding: 10px 18px; border-radius: 20px; border: 1px solid var(--border); background: var(--bg2); color: var(--fg); cursor: pointer; transition: all .15s; }
+.td-btn { padding: 1rem 1.8rem; border-radius: 2rem; border: 1px solid var(--border); background: var(--bg2); color: var(--fg); cursor: pointer; transition: all .15s; }
 .td-btn:hover { border-color: var(--accent); }
-.td-card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 16px; }
-.td-card { background: var(--bg2); border-radius: 10px; overflow: hidden; cursor: pointer; border: 1px solid var(--border); transition: all .2s; }
-.td-card:hover { transform: translateY(-2px); }
+.td-card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr)); gap: 1.6rem; }
+.td-card { background: var(--bg2); border-radius: 1rem; overflow: hidden; cursor: pointer; border: 1px solid var(--border); transition: all .2s; }
+.td-card:hover { transform: translateY(-0.2rem); }
 .td-card-cover { aspect-ratio: 3/4; overflow: hidden; background: var(--bg); }
-.td-card-title { padding: 8px 10px; font-size: 13px; font-weight: 500; color: var(--fg); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.td-chapter-list { display: flex; flex-direction: column; gap: 10px; margin: 0 0 18px; }
-.td-empty { text-align: center; color: var(--fg2); margin-top: 40px; }
+.td-card-title { padding: 0.8rem 1rem; font-size: 1.3rem; font-weight: 500; color: var(--fg); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.td-chapter-list { display: flex; flex-direction: column; gap: 1rem; margin: 0 0 1.8rem; }
+.td-empty { text-align: center; color: var(--fg2); margin-top: 4rem; }
 </style>

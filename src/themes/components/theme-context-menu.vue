@@ -29,7 +29,7 @@
   <media-edit v-if="themeContextMenu.target === 'media'" v-model:editMediaDialog="editMediaDialog" edit-model="modify" :media-info="item" @reload="finishDialog" />
 
   <TagEditorDialog v-if="item.mangaId" v-model="editTagsDialog" :manga-id="item.mangaId" :tags="item.tags || []" @update:tags="updateTags" />
-  <el-dialog v-model="shareDialog" title="创建分享链接" width="min(92vw, 680px)">
+  <el-dialog v-model="shareDialog" title="创建分享链接" width="min(92vw, 68rem)">
     <manga-share :manga-info="themeContextMenu.target === 'manga' ? item : undefined" :media-info="themeContextMenu.target === 'media' ? item : undefined" @close_dialog="finishDialog" />
   </el-dialog>
 </template>
@@ -214,21 +214,21 @@ onBeforeUnmount(() => { window.removeEventListener('keydown', onKeydown); window
 
 <style scoped>
 .tcm-backdrop { position: fixed; inset: 0; z-index: 3000; }
-.tcm-menu { position: fixed; width: 196px; padding: 6px; overflow: hidden; border: 1px solid var(--tcm-border, rgba(0,0,0,.12)); border-radius: 12px; background: var(--tcm-bg, #fff); color: var(--tcm-text, #1f2937); box-shadow: 0 12px 30px rgba(0,0,0,.18); }
-.tcm-title { padding: 8px 10px; overflow: hidden; font-size: 12px; font-weight: 600; text-overflow: ellipsis; white-space: nowrap; opacity: .65; }
-.tcm-action { display: flex; align-items: center; width: 100%; padding: 9px 10px; border: 0; border-radius: 8px; background: transparent; color: inherit; text-align: left; font: inherit; font-size: 13px; cursor: pointer; }
-.tcm-action-icon { display: inline-flex; align-items: center; justify-content: center; width: 20px; margin-right: 7px; font-size: 16px; line-height: 1; }
+.tcm-menu { position: fixed; width: 19.6rem; padding: 0.6rem; overflow: hidden; border: 1px solid var(--tcm-border, rgba(0,0,0,.12)); border-radius: 1.2rem; background: var(--tcm-bg, #fff); color: var(--tcm-text, #1f2937); box-shadow: 0 1.2rem 3rem rgba(0,0,0,.18); }
+.tcm-title { padding: 0.8rem 1rem; overflow: hidden; font-size: 1.2rem; font-weight: 600; text-overflow: ellipsis; white-space: nowrap; opacity: .65; }
+.tcm-action { display: flex; align-items: center; width: 100%; padding: 0.9rem 1rem; border: 0; border-radius: 0.8rem; background: transparent; color: inherit; text-align: left; font: inherit; font-size: 1.3rem; cursor: pointer; }
+.tcm-action-icon { display: inline-flex; align-items: center; justify-content: center; width: 2rem; margin-right: 0.7rem; font-size: 1.6rem; line-height: 1; }
 .tcm-action:hover:not(:disabled) { background: var(--tcm-hover, #f3f4f6); }
 .tcm-action.danger { color: #dc2626; }
 .tcm-action:disabled { cursor: wait; opacity: .55; }
 .tcm-sheet-backdrop { position: fixed; inset: 0; z-index: 3000; display: flex; align-items: flex-end; background: rgba(0, 0, 0, .38); }
-.tcm-sheet { width: 100%; padding: 8px 12px calc(12px + env(safe-area-inset-bottom)); border-radius: 20px 20px 0 0; background: var(--tcm-bg, #fff); color: var(--tcm-text, #1f2937); box-shadow: 0 -8px 24px rgba(0,0,0,.16); animation: tcm-sheet-in .18s ease-out; }
-.tcm-sheet-handle { width: 36px; height: 4px; margin: 2px auto 12px; border-radius: 999px; background: currentColor; opacity: .2; }
-.tcm-sheet-title { padding: 0 10px 10px; overflow: hidden; font-size: 14px; font-weight: 650; text-overflow: ellipsis; white-space: nowrap; }
-.tcm-sheet-action { display: flex; align-items: center; width: 100%; min-height: 52px; padding: 10px 12px; border: 0; border-radius: 12px; background: transparent; color: inherit; font: inherit; font-size: 16px; text-align: left; }
+.tcm-sheet { width: 100%; padding: 0.8rem 1.2rem calc(1.2rem + env(safe-area-inset-bottom)); border-radius: 2rem 2rem 0 0; background: var(--tcm-bg, #fff); color: var(--tcm-text, #1f2937); box-shadow: 0 -0.8rem 2.4rem rgba(0,0,0,.16); animation: tcm-sheet-in .18s ease-out; }
+.tcm-sheet-handle { width: 3.6rem; height: 0.4rem; margin: 0.2rem auto 1.2rem; border-radius: 99.9rem; background: currentColor; opacity: .2; }
+.tcm-sheet-title { padding: 0 1rem 1rem; overflow: hidden; font-size: 1.4rem; font-weight: 650; text-overflow: ellipsis; white-space: nowrap; }
+.tcm-sheet-action { display: flex; align-items: center; width: 100%; min-height: 5.2rem; padding: 1rem 1.2rem; border: 0; border-radius: 1.2rem; background: transparent; color: inherit; font: inherit; font-size: 1.6rem; text-align: left; }
 .tcm-sheet-action:active { background: var(--tcm-hover, #f3f4f6); }
-.tcm-sheet-action-icon { display: inline-flex; align-items: center; justify-content: center; width: 30px; margin-right: 10px; font-size: 20px; }
+.tcm-sheet-action-icon { display: inline-flex; align-items: center; justify-content: center; width: 3rem; margin-right: 1rem; font-size: 2rem; }
 .tcm-sheet-action.danger { color: #dc2626; }
-.tcm-sheet-cancel { width: 100%; min-height: 52px; margin-top: 8px; border: 0; border-radius: 12px; background: var(--tcm-hover, #f3f4f6); color: inherit; font: inherit; font-size: 16px; font-weight: 600; }
+.tcm-sheet-cancel { width: 100%; min-height: 5.2rem; margin-top: 0.8rem; border: 0; border-radius: 1.2rem; background: var(--tcm-hover, #f3f4f6); color: inherit; font: inherit; font-size: 1.6rem; font-weight: 600; }
 @keyframes tcm-sheet-in { from { transform: translateY(100%); } to { transform: translateY(0); } }
 </style>

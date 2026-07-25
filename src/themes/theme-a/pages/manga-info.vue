@@ -393,19 +393,19 @@ function goToChapter(chapter: any) {
 
 <style scoped>
 .ta-manga-info {
-  padding: 20px;
-  max-width: 1200px;
+  padding: 2rem;
+  max-width: 120rem;
   margin: 0 auto;
 }
 
 .ta-btn-back {
-  padding: 8px 16px;
-  font-size: 14px;
+  padding: 0.8rem 1.6rem;
+  font-size: 1.4rem;
   border: 1px solid #eaeaea;
-  border-radius: 8px;
+  border-radius: 0.8rem;
   background: #fff;
   cursor: pointer;
-  margin-bottom: 24px;
+  margin-bottom: 2.4rem;
   display: inline-block;
   transition: all 0.2s;
 }
@@ -415,15 +415,15 @@ function goToChapter(chapter: any) {
 }
 
 .ta-banner {
-  margin-bottom: 32px;
-  border-radius: 16px;
+  margin-bottom: 3.2rem;
+  border-radius: 1.6rem;
   overflow: hidden;
 }
 
 .ta-banner-toomics {
   position: relative;
   width: 100%;
-  height: 300px;
+  height: 30rem;
 }
 
 .ta-banner-fore {
@@ -444,42 +444,42 @@ function goToChapter(chapter: any) {
   width: 100%;
   height: 100%;
   z-index: 0;
-  filter: blur(4px);
+  filter: blur(0.4rem);
   object-fit: cover;
 }
 
 .ta-carousel {
-  border-radius: 16px;
+  border-radius: 1.6rem;
   overflow: hidden;
 }
 
 .ta-banner-img {
   width: 100%;
-  height: 300px;
+  height: 30rem;
   object-fit: cover;
 }
 
 .ta-info-content {
   background: #fff;
-  border-radius: 16px;
-  padding: 32px;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+  border-radius: 1.6rem;
+  padding: 3.2rem;
+  box-shadow: 0 0.2rem 1.2rem rgba(0, 0, 0, 0.04);
 }
 
 .ta-info-header {
   display: flex;
-  gap: 32px;
-  margin-bottom: 40px;
+  gap: 3.2rem;
+  margin-bottom: 4rem;
 }
 
 .ta-info-cover {
   flex-shrink: 0;
-  width: 240px;
-  height: 336px;
-  border-radius: 12px;
+  width: 24rem;
+  height: 33.6rem;
+  border-radius: 1.2rem;
   overflow: hidden;
   background: #f3f4f6;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 0.8rem 2.4rem rgba(0, 0, 0, 0.12);
 }
 
 .ta-info-cover img {
@@ -494,7 +494,7 @@ function goToChapter(chapter: any) {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 64px;
+  font-size: 6.4rem;
   background: linear-gradient(135deg, #dbeafe, #bfdbfe);
 }
 
@@ -504,41 +504,41 @@ function goToChapter(chapter: any) {
 }
 
 .ta-info-detail h1 {
-  font-size: 32px;
+  font-size: 3.2rem;
   font-weight: 700;
-  margin: 0 0 16px;
+  margin: 0 0 1.6rem;
   color: #1f2937;
 }
 
 .ta-info-meta {
   display: flex;
-  gap: 20px;
-  font-size: 15px;
+  gap: 2rem;
+  font-size: 1.5rem;
   color: #6b7280;
-  margin-bottom: 20px;
+  margin-bottom: 2rem;
   flex-wrap: wrap;
 }
 
 .ta-info-desc {
-  font-size: 16px;
+  font-size: 1.6rem;
   color: #4b5563;
   line-height: 1.7;
-  margin-bottom: 28px;
+  margin-bottom: 2.8rem;
 }
 
 .ta-info-actions {
   display: flex;
-  gap: 12px;
+  gap: 1.2rem;
   flex-wrap: wrap;
 }
 
 .ta-btn-primary,
 .ta-btn-ghost,
 .ta-btn-secondary {
-  padding: 12px 24px;
-  font-size: 15px;
+  padding: 1.2rem 2.4rem;
+  font-size: 1.5rem;
   font-weight: 500;
-  border-radius: 8px;
+  border-radius: 0.8rem;
   cursor: pointer;
   transition: all 0.2s;
   border: none;
@@ -580,74 +580,74 @@ function goToChapter(chapter: any) {
 }
 
 .ta-section-title {
-  font-size: 24px;
+  font-size: 2.4rem;
   font-weight: 600;
   color: #1f2937;
-  margin: 0 0 24px;
+  margin: 0 0 2.4rem;
 }
 
 .ta-character-section {
-  margin-bottom: 40px;
+  margin-bottom: 4rem;
 }
 
 .ta-character-list {
   display: flex;
-  gap: 20px;
+  gap: 2rem;
   overflow-x: auto;
-  padding: 4px 0 20px;
+  padding: 0.4rem 0 2rem;
 }
 
 .ta-character-item {
   display: flex;
   flex-direction: column;
   align-items: center;
-  min-width: 120px;
+  min-width: 12rem;
 }
 
 .ta-character-item img {
-  width: 96px;
-  height: 96px;
+  width: 9.6rem;
+  height: 9.6rem;
   border-radius: 50%;
   object-fit: cover;
-  margin-bottom: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  margin-bottom: 1.2rem;
+  box-shadow: 0 0.4rem 1.2rem rgba(0, 0, 0, 0.1);
 }
 
 .ta-character-name {
   font-weight: 600;
   color: #1f2937;
-  margin: 0 0 4px;
+  margin: 0 0 0.4rem;
   text-align: center;
 }
 
 .ta-character-desc {
-  font-size: 13px;
+  font-size: 1.3rem;
   color: #6b7280;
   text-align: center;
   margin: 0;
 }
 
 .ta-meta-section {
-  margin-bottom: 40px;
+  margin-bottom: 4rem;
 }
 
 .ta-meta-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 16px;
+  grid-template-columns: repeat(auto-fill, minmax(30rem, 1fr));
+  gap: 1.6rem;
 }
 
 .ta-meta-item {
   display: flex;
-  padding: 12px 0;
+  padding: 1.2rem 0;
   border-bottom: 1px solid #f3f4f6;
 }
 
 .ta-meta-label {
   font-weight: 600;
   color: #374151;
-  min-width: 100px;
-  margin-right: 16px;
+  min-width: 10rem;
+  margin-right: 1.6rem;
 }
 
 .ta-meta-value {
@@ -663,16 +663,16 @@ function goToChapter(chapter: any) {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 6px;
+  gap: 0.6rem;
 }
 
 .ta-btn-edit-tag {
-  padding: 4px 12px;
-  font-size: 12px;
+  padding: 0.4rem 1.2rem;
+  font-size: 1.2rem;
   color: var(--sd-primary, #2563eb);
   background: none;
   border: 1px dashed var(--sd-primary, #2563eb);
-  border-radius: 999px;
+  border-radius: 99.9rem;
   cursor: pointer;
   transition: all 0.15s;
   white-space: nowrap;
@@ -694,66 +694,66 @@ function goToChapter(chapter: any) {
 }
 .ta-dialog {
   background: #fff;
-  border-radius: 14px;
-  width: 520px;
+  border-radius: 1.4rem;
+  width: 52rem;
   max-width: 90vw;
   max-height: 85vh;
   overflow-y: auto;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 0.8rem 3.2rem rgba(0, 0, 0, 0.12);
 }
 .ta-dialog-head {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 16px 20px;
+  padding: 1.6rem 2rem;
   border-bottom: 1px solid #eaeaea;
 }
 .ta-dialog-head h3 {
   margin: 0;
-  font-size: 16px;
+  font-size: 1.6rem;
   font-weight: 600;
 }
 .ta-dialog-close {
-  width: 32px;
-  height: 32px;
+  width: 3.2rem;
+  height: 3.2rem;
   border: none;
   background: none;
-  font-size: 20px;
+  font-size: 2rem;
   cursor: pointer;
   color: #9ca3af;
-  border-radius: 6px;
+  border-radius: 0.6rem;
 }
 .ta-dialog-close:hover {
   background: #f3f4f6;
 }
 .ta-dialog-body {
-  padding: 20px;
+  padding: 2rem;
 }
 
 .ta-chapter-section {
-  margin-bottom: 40px;
+  margin-bottom: 4rem;
 }
 
 .ta-chapter-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 20px;
+  margin-bottom: 2rem;
 }
 
 .ta-chapter-list {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 0.8rem;
 }
 
 .ta-chapter-item {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 16px;
+  padding: 1.6rem;
   background: #f9fafb;
-  border-radius: 8px;
+  border-radius: 0.8rem;
   cursor: pointer;
   transition: all 0.2s;
 }
@@ -765,13 +765,13 @@ function goToChapter(chapter: any) {
 
 .ta-chapter-item.ta-chapter-read {
   background: #eff6ff;
-  border-left: 4px solid #2563eb;
+  border-left: 0.4rem solid #2563eb;
 }
 
 .ta-chapter-info {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 0.4rem;
 }
 
 .ta-chapter-number {
@@ -781,41 +781,41 @@ function goToChapter(chapter: any) {
 
 .ta-chapter-name {
   color: #6b7280;
-  font-size: 14px;
+  font-size: 1.4rem;
 }
 
 .ta-chapter-date {
-  font-size: 13px;
+  font-size: 1.3rem;
   color: #9ca3af;
 }
 
 .ta-chapter-status {
-  font-size: 13px;
+  font-size: 1.3rem;
   color: #2563eb;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 76.8rem) {
   .ta-manga-info {
-    padding: 16px;
+    padding: 1.6rem;
   }
   
   .ta-info-content {
-    padding: 20px;
+    padding: 2rem;
   }
   
   .ta-info-header {
     flex-direction: column;
-    gap: 24px;
+    gap: 2.4rem;
   }
   
   .ta-info-cover {
-    width: 200px;
-    height: 280px;
+    width: 20rem;
+    height: 28rem;
     margin: 0 auto;
   }
   
   .ta-info-detail h1 {
-    font-size: 24px;
+    font-size: 2.4rem;
   }
   
   .ta-info-actions {
@@ -828,7 +828,7 @@ function goToChapter(chapter: any) {
   
   .ta-chapter-header {
     flex-direction: column;
-    gap: 16px;
+    gap: 1.6rem;
     align-items: flex-start;
   }
 }

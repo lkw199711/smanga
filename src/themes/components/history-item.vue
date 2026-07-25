@@ -95,9 +95,9 @@ const timeText = computed(() => {
 .t-history-item {
 	position: relative;
 	display: flex;
-	gap: 12px;
-	padding: 12px;
-	border-radius: 12px;
+	gap: 1.2rem;
+	padding: 1.2rem;
+	border-radius: 1.2rem;
 	cursor: pointer;
 	min-width: 0;
 	transition: all 0.2s;
@@ -122,7 +122,7 @@ const timeText = computed(() => {
 }
 .t-history-item--A:hover {
 	border-color: #d1d5db;
-	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+	box-shadow: 0 0.4rem 1.2rem rgba(0, 0, 0, 0.05);
 }
 .t-history-item--A .t-history-item__title {
 	color: #111827;
@@ -147,7 +147,7 @@ const timeText = computed(() => {
 }
 .t-history-item--B:hover {
 	border-color: #d1d5db;
-	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+	box-shadow: 0 0.4rem 1.2rem rgba(0, 0, 0, 0.05);
 }
 .t-history-item--B .t-history-item__title {
 	color: #111827;
@@ -172,7 +172,7 @@ const timeText = computed(() => {
 }
 .t-history-item--D:hover {
 	border-color: var(--accent);
-	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+	box-shadow: 0 0.4rem 1.2rem rgba(0, 0, 0, 0.05);
 }
 .t-history-item--D .t-history-item__title {
 	color: var(--fg);
@@ -194,23 +194,23 @@ const timeText = computed(() => {
 .t-history-item__cover {
 	position: relative;
 	flex-shrink: 0;
-	width: 70px;
-	height: 96px;
-	border-radius: 8px;
+	width: 7rem;
+	height: 9.6rem;
+	border-radius: 0.8rem;
 	overflow: hidden;
 }
 
 .t-history-item__read {
 	position: absolute;
-	top: 6px;
-	right: 6px;
-	width: 20px;
-	height: 20px;
-	border-radius: 999px;
+	top: 0.6rem;
+	right: 0.6rem;
+	width: 2rem;
+	height: 2rem;
+	border-radius: 99.9rem;
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	font-size: 12px;
+	font-size: 1.2rem;
 	font-weight: 800;
 	background: rgba(255, 255, 255, 0.9);
 	color: #10b981;
@@ -224,11 +224,11 @@ const timeText = computed(() => {
 	display: flex;
 	flex-direction: column;
 	justify-content: space-between;
-	gap: 6px;
+	gap: 0.6rem;
 }
 
 .t-history-item__title {
-	font-size: 14px;
+	font-size: 1.4rem;
 	font-weight: 600;
 	white-space: nowrap;
 	overflow: hidden;
@@ -237,7 +237,7 @@ const timeText = computed(() => {
 }
 
 .t-history-item__sub {
-	font-size: 12px;
+	font-size: 1.2rem;
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;
@@ -250,21 +250,21 @@ const timeText = computed(() => {
 }
 
 .t-history-item__time {
-	margin-left: 4px;
+	margin-left: 0.4rem;
 	opacity: 0.75;
 }
 
 /* ---------- 底部进度条（信息区内） ---------- */
 .t-history-item__progress {
-	height: 4px;
-	border-radius: 2px;
+	height: 0.4rem;
+	border-radius: 0.2rem;
 	overflow: hidden;
-	margin-top: 2px;
+	margin-top: 0.2rem;
 }
 
 .t-history-item__progress-bar {
 	height: 100%;
-	border-radius: 2px;
+	border-radius: 0.2rem;
 	transition: width 0.4s ease;
 }
 </style>

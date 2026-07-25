@@ -271,27 +271,27 @@ onBeforeUnmount(() => {
 	z-index: 100;
 	display: flex;
 	align-items: center;
-	gap: 16px;
-	padding: 12px 20px;
-	margin-bottom: 16px;
+	gap: 1.6rem;
+	padding: 1.2rem 2rem;
+	margin-bottom: 1.6rem;
 	background: rgba(255, 255, 255, 0.72);
-	backdrop-filter: blur(16px);
+	backdrop-filter: blur(1.6rem);
 	border: 1px solid rgba(255, 255, 255, 0.8);
-	border-radius: 20px;
-	box-shadow: 0 4px 16px rgba(108, 141, 255, 0.08);
+	border-radius: 2rem;
+	box-shadow: 0 0.4rem 1.6rem rgba(108, 141, 255, 0.08);
 }
 
 .sb-top-nav {
 	display: flex;
-	gap: 6px;
+	gap: 0.6rem;
 }
 
 .sb-top-item {
-	padding: 7px 14px;
-	font-size: 13px;
+	padding: 0.7rem 1.4rem;
+	font-size: 1.3rem;
 	font-weight: 500;
 	color: #6b7280;
-	border-radius: 12px;
+	border-radius: 1.2rem;
 	cursor: pointer;
 	transition: all 0.2s;
 }
@@ -309,14 +309,14 @@ onBeforeUnmount(() => {
 
 .sb-search {
 	flex: 1;
-	max-width: 400px;
+	max-width: 40rem;
 	display: flex;
 	align-items: center;
-	gap: 8px;
-	padding: 8px 16px;
+	gap: 0.8rem;
+	padding: 0.8rem 1.6rem;
 	background: rgba(255, 255, 255, 0.6);
 	border: 1px solid rgba(255, 255, 255, 0.9);
-	border-radius: 999px;
+	border-radius: 99.9rem;
 }
 
 .sb-search input {
@@ -324,7 +324,7 @@ onBeforeUnmount(() => {
 	border: none;
 	outline: none;
 	background: transparent;
-	font-size: 13px;
+	font-size: 1.3rem;
 	color: #1f2937;
 }
 
@@ -335,15 +335,15 @@ onBeforeUnmount(() => {
 .sb-top-actions {
 	display: flex;
 	align-items: center;
-	gap: 10px;
+	gap: 1rem;
 }
 
 .sb-pill {
-	padding: 7px 12px;
-	font-size: 13px;
+	padding: 0.7rem 1.2rem;
+	font-size: 1.3rem;
 	background: rgba(255, 255, 255, 0.6);
 	border: 1px solid rgba(255, 255, 255, 0.9);
-	border-radius: 10px;
+	border-radius: 1rem;
 	color: #4b5563;
 	cursor: pointer;
 	transition: all 0.2s;
@@ -355,8 +355,8 @@ onBeforeUnmount(() => {
 }
 
 .sb-avatar {
-	width: 32px;
-	height: 32px;
+	width: 3.2rem;
+	height: 3.2rem;
 	display: flex;
 	align-items: center;
 	justify-content: center;
@@ -366,7 +366,7 @@ onBeforeUnmount(() => {
 	border-radius: 50%;
 	flex-shrink: 0;
 	overflow: hidden;
-	font-size: 14px;
+	font-size: 1.4rem;
 }
 
 .sb-avatar-img {
@@ -383,9 +383,9 @@ onBeforeUnmount(() => {
 .sb-user-trigger {
 	display: flex;
 	align-items: center;
-	gap: 8px;
-	padding: 4px 6px;
-	border-radius: 10px;
+	gap: 0.8rem;
+	padding: 0.4rem 0.6rem;
+	border-radius: 1rem;
 	cursor: pointer;
 	transition: background 0.2s;
 }
@@ -402,24 +402,24 @@ onBeforeUnmount(() => {
 }
 
 .sb-user-name {
-	font-size: 12px;
+	font-size: 1.2rem;
 	font-weight: 600;
 	color: #1f2937;
 	line-height: 1.2;
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;
-	max-width: 80px;
+	max-width: 8rem;
 }
 
 .sb-user-role {
-	font-size: 10px;
+	font-size: 1rem;
 	color: #9ca3af;
 	line-height: 1.2;
 }
 
 .sb-user-arrow {
-	font-size: 11px;
+	font-size: 1.1rem;
 	color: #9ca3af;
 	transition: transform 0.2s;
 }
@@ -430,26 +430,26 @@ onBeforeUnmount(() => {
 
 .sb-user-dropdown {
 	position: absolute;
-	top: calc(100% + 8px);
+	top: calc(100% + 0.8rem);
 	right: 0;
-	min-width: 140px;
+	min-width: 14rem;
 	background: rgba(255, 255, 255, 0.96);
-	backdrop-filter: blur(16px);
+	backdrop-filter: blur(1.6rem);
 	border: 1px solid rgba(255, 255, 255, 0.8);
-	border-radius: 12px;
-	padding: 6px;
-	box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+	border-radius: 1.2rem;
+	padding: 0.6rem;
+	box-shadow: 0 0.8rem 2.4rem rgba(0, 0, 0, 0.1);
 	z-index: 300;
 }
 
 .sb-user-dropdown-item {
 	display: flex;
 	align-items: center;
-	gap: 8px;
-	padding: 9px 12px;
-	font-size: 13px;
+	gap: 0.8rem;
+	padding: 0.9rem 1.2rem;
+	font-size: 1.3rem;
 	color: #4b5563;
-	border-radius: 8px;
+	border-radius: 0.8rem;
 	cursor: pointer;
 	transition: all 0.2s;
 }
@@ -474,23 +474,23 @@ onBeforeUnmount(() => {
 
 .sb-theme-dropdown {
 	position: absolute;
-	top: calc(100% + 8px);
+	top: calc(100% + 0.8rem);
 	right: 0;
 	background: rgba(255, 255, 255, 0.96);
-	backdrop-filter: blur(16px);
+	backdrop-filter: blur(1.6rem);
 	border: 1px solid rgba(255, 255, 255, 0.8);
-	border-radius: 16px;
-	padding: 8px;
-	box-shadow: 0 12px 36px rgba(0, 0, 0, 0.12);
+	border-radius: 1.6rem;
+	padding: 0.8rem;
+	box-shadow: 0 1.2rem 3.6rem rgba(0, 0, 0, 0.12);
 	z-index: 300;
-	min-width: 180px;
-	max-height: 480px;
+	min-width: 18rem;
+	max-height: 48rem;
 	overflow-y: auto;
 }
 
 .sb-theme-section-title {
-	padding: 6px 10px 4px;
-	font-size: 11px;
+	padding: 0.6rem 1rem 0.4rem;
+	font-size: 1.1rem;
 	font-weight: 600;
 	color: #9ca3af;
 	text-transform: uppercase;
@@ -498,17 +498,17 @@ onBeforeUnmount(() => {
 }
 
 .sb-theme-divider {
-	margin: 6px 10px;
+	margin: 0.6rem 1rem;
 	border-top: 1px solid rgba(0, 0, 0, 0.06);
 }
 
 .sb-theme-option {
 	display: flex;
 	align-items: center;
-	gap: 8px;
-	padding: 10px 14px;
-	font-size: 13px;
-	border-radius: 12px;
+	gap: 0.8rem;
+	padding: 1rem 1.4rem;
+	font-size: 1.3rem;
+	border-radius: 1.2rem;
 	cursor: pointer;
 	color: #4b5563;
 	transition: all 0.2s;
@@ -527,9 +527,9 @@ onBeforeUnmount(() => {
 
 .sb-theme-swatch {
 	flex-shrink: 0;
-	width: 14px;
-	height: 14px;
+	width: 1.4rem;
+	height: 1.4rem;
 	border-radius: 50%;
-	border: 1.5px solid rgba(0, 0, 0, 0.1);
+	border: 0.15rem solid rgba(0, 0, 0, 0.1);
 }
 </style>

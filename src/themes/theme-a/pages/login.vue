@@ -57,61 +57,61 @@ async function doLogin() {
 }
 
 .ta-login-card {
-  width: 360px;
-  padding: 40px;
+  width: 36rem;
+  padding: 4rem;
   background: #fff;
   border: 1px solid #eaeaea;
-  border-radius: 16px;
-  box-shadow: 0 4px 24px rgba(0,0,0,0.04);
+  border-radius: 1.6rem;
+  box-shadow: 0 0.4rem 2.4rem rgba(0,0,0,0.04);
 }
 
 .ta-login-logo {
   display: flex;
   align-items: center;
-  gap: 10px;
-  margin-bottom: 24px;
+  gap: 1rem;
+  margin-bottom: 2.4rem;
 }
 
 .ta-logo-mark {
-  width: 32px;
-  height: 32px;
+  width: 3.2rem;
+  height: 3.2rem;
   display: flex;
   align-items: center;
   justify-content: center;
   background: #171717;
   color: #fff;
   font-weight: 700;
-  border-radius: 8px;
+  border-radius: 0.8rem;
 }
 
 .ta-logo-text {
-  font-size: 18px;
+  font-size: 1.8rem;
   font-weight: 700;
 }
 
 .ta-login-card h2 {
-  font-size: 20px;
+  font-size: 2rem;
   font-weight: 700;
-  margin: 0 0 24px;
+  margin: 0 0 2.4rem;
 }
 
 .ta-form-group {
-  margin-bottom: 16px;
+  margin-bottom: 1.6rem;
 }
 
 .ta-form-group label {
   display: block;
-  font-size: 13px;
+  font-size: 1.3rem;
   color: #4b5563;
-  margin-bottom: 6px;
+  margin-bottom: 0.6rem;
 }
 
 .ta-form-group input {
   width: 100%;
-  padding: 10px 12px;
-  font-size: 14px;
+  padding: 1rem 1.2rem;
+  font-size: 1.4rem;
   border: 1px solid #eaeaea;
-  border-radius: 8px;
+  border-radius: 0.8rem;
   outline: none;
   box-sizing: border-box;
 }
@@ -122,15 +122,15 @@ async function doLogin() {
 
 .ta-btn-login {
   width: 100%;
-  padding: 11px;
-  font-size: 14px;
+  padding: 1.1rem;
+  font-size: 1.4rem;
   font-weight: 500;
   color: #fff;
   background: #2563eb;
   border: none;
-  border-radius: 8px;
+  border-radius: 0.8rem;
   cursor: pointer;
-  margin-top: 8px;
+  margin-top: 0.8rem;
 }
 
 .ta-btn-login:hover {
@@ -138,8 +138,8 @@ async function doLogin() {
 }
 
 .ta-error {
-  margin-top: 12px;
-  font-size: 13px;
+  margin-top: 1.2rem;
+  font-size: 1.3rem;
   color: #ef4444;
   text-align: center;
 }

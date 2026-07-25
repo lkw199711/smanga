@@ -31,7 +31,7 @@ const rightFile = computed(() => {
   justify-content: center;
   width: 100%;
   height: 100%;
-  gap: 4px;
+  gap: 0.4rem;
 }
 
 .td-double-img {
@@ -42,6 +42,6 @@ const rightFile = computed(() => {
 
 .td-double-empty {
   color: #9ca3af;
-  font-size: 14px;
+  font-size: 1.4rem;
 }
 </style>

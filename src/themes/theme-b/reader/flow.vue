@@ -14,7 +14,7 @@ const rootEl = ref<HTMLElement | null>(null)
 useFlowReader(rootEl, { imgSelector: '.tb-flow-img', filesLength: () => files.value.length })
 </script>
 <style scoped>
-.tb-flow{width:100%;max-width:900px;margin:0 auto;display:flex;flex-direction:column;align-items:center}
+.tb-flow{width:100%;max-width:90rem;margin:0 auto;display:flex;flex-direction:column;align-items:center}
 .tb-flow img{width:100%;display:block}
-.tb-empty{padding:60px;color:rgba(255,255,255,0.4)}
+.tb-empty{padding:6rem;color:rgba(255,255,255,0.4)}
 </style>

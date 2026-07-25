@@ -217,8 +217,8 @@ function goMedia(mediaId: number) {
 <style scoped>
 .sa-sidebar {
 	flex-shrink: 0;
-	width: 240px;
-	padding: 20px 12px;
+	width: 24rem;
+	padding: 2rem 1.2rem;
 	background: #ffffff;
 	border-right: 1px solid #eaeaea;
 	display: flex;
@@ -229,22 +229,22 @@ function goMedia(mediaId: number) {
 .sa-logo {
 	display: flex;
 	align-items: center;
-	gap: 10px;
-	padding: 4px 8px 20px;
+	gap: 1rem;
+	padding: 0.4rem 0.8rem 2rem;
 }
 
 .sa-manage-toggle {
 	margin-left: auto;
-	width: 32px;
-	height: 32px;
+	width: 3.2rem;
+	height: 3.2rem;
 	display: flex;
 	align-items: center;
 	justify-content: center;
 	border: 1px solid #eaeaea;
-	border-radius: 8px;
+	border-radius: 0.8rem;
 	background: #fff;
 	cursor: pointer;
-	font-size: 16px;
+	font-size: 1.6rem;
 	transition: all 0.15s;
 	flex-shrink: 0;
 }
@@ -260,27 +260,27 @@ function goMedia(mediaId: number) {
 }
 
 .sa-logo-mark {
-	width: 28px;
-	height: 28px;
+	width: 2.8rem;
+	height: 2.8rem;
 	display: flex;
 	align-items: center;
 	justify-content: center;
 	background: #171717;
 	color: #fff;
 	font-weight: 700;
-	border-radius: 8px;
+	border-radius: 0.8rem;
 }
 
 .sa-logo-text {
-	font-size: 16px;
+	font-size: 1.6rem;
 	font-weight: 700;
 }
 
 .sa-sec-title {
-	padding: 12px 8px 6px;
+	padding: 1.2rem 0.8rem 0.6rem;
 	display: flex;
 	align-items: center;
-	font-size: 11px;
+	font-size: 1.1rem;
 	font-weight: 600;
 	color: #9ca3af;
 	text-transform: uppercase;
@@ -294,7 +294,7 @@ function goMedia(mediaId: number) {
 .sa-nav {
 	display: flex;
 	flex-direction: column;
-	gap: 2px;
+	gap: 0.2rem;
 }
 
 .sa-media-nav {
@@ -305,10 +305,10 @@ function goMedia(mediaId: number) {
 .sa-nav-item {
 	display: flex;
 	align-items: center;
-	gap: 10px;
-	padding: 8px 10px;
+	gap: 1rem;
+	padding: 0.8rem 1rem;
 	color: #4b5563;
-	border-radius: 8px;
+	border-radius: 0.8rem;
 	cursor: pointer;
 	transition: all 0.15s;
 	text-decoration: none;
@@ -326,8 +326,8 @@ function goMedia(mediaId: number) {
 }
 
 .sa-nav-icon {
-	width: 18px;
-	font-size: 14px;
+	width: 1.8rem;
+	font-size: 1.4rem;
 	text-align: center;
 }
 
@@ -340,11 +340,11 @@ function goMedia(mediaId: number) {
 
 .sa-nav-count {
 	margin-left: auto;
-	padding: 1px 7px;
-	font-size: 11px;
+	padding: 1px 0.7rem;
+	font-size: 1.1rem;
 	color: #6b7280;
 	background: #f3f4f6;
-	border-radius: 10px;
+	border-radius: 1rem;
 }
 
 .sa-nav-item.active .sa-nav-count,
@@ -353,8 +353,8 @@ function goMedia(mediaId: number) {
 }
 
 .sa-nav-empty {
-	padding: 8px 10px;
-	font-size: 12px;
+	padding: 0.8rem 1rem;
+	font-size: 1.2rem;
 	color: #9ca3af;
 }
 
@@ -367,10 +367,10 @@ function goMedia(mediaId: number) {
 .sa-user-trigger {
 	display: flex;
 	align-items: center;
-	gap: 10px;
-	padding: 10px 8px;
+	gap: 1rem;
+	padding: 1rem 0.8rem;
 	cursor: pointer;
-	border-radius: 8px;
+	border-radius: 0.8rem;
 	transition: background 0.15s;
 }
 
@@ -379,8 +379,8 @@ function goMedia(mediaId: number) {
 }
 
 .sa-avatar {
-	width: 32px;
-	height: 32px;
+	width: 3.2rem;
+	height: 3.2rem;
 	display: flex;
 	align-items: center;
 	justify-content: center;
@@ -388,7 +388,7 @@ function goMedia(mediaId: number) {
 	color: #fff;
 	font-weight: 600;
 	border-radius: 50%;
-	font-size: 14px;
+	font-size: 1.4rem;
 	overflow: hidden;
 	flex-shrink: 0;
 }
@@ -410,7 +410,7 @@ function goMedia(mediaId: number) {
 
 .sa-user-arrow {
 	margin-left: auto;
-	font-size: 12px;
+	font-size: 1.2rem;
 	color: #9ca3af;
 	transition: transform 0.2s;
 }
@@ -421,25 +421,25 @@ function goMedia(mediaId: number) {
 
 .sa-user-dropdown {
 	position: absolute;
-	bottom: calc(100% + 8px);
-	left: 8px;
-	right: 8px;
+	bottom: calc(100% + 0.8rem);
+	left: 0.8rem;
+	right: 0.8rem;
 	background: #fff;
 	border: 1px solid #eaeaea;
-	border-radius: 10px;
-	box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.08);
+	border-radius: 1rem;
+	box-shadow: 0 -0.4rem 1.6rem rgba(0, 0, 0, 0.08);
 	z-index: 300;
-	padding: 6px;
+	padding: 0.6rem;
 }
 
 .sa-user-dropdown-item {
 	display: flex;
 	align-items: center;
-	gap: 8px;
-	padding: 9px 12px;
-	font-size: 13px;
+	gap: 0.8rem;
+	padding: 0.9rem 1.2rem;
+	font-size: 1.3rem;
 	color: #4b5563;
-	border-radius: 6px;
+	border-radius: 0.6rem;
 	cursor: pointer;
 	transition: all 0.15s;
 }
@@ -457,18 +457,18 @@ function goMedia(mediaId: number) {
 }
 
 .sa-user-dropdown-icon {
-	font-size: 14px;
-	width: 18px;
+	font-size: 1.4rem;
+	width: 1.8rem;
 	text-align: center;
 }
 
 .sa-user-name {
 	font-weight: 500;
-	font-size: 13px;
+	font-size: 1.3rem;
 }
 
 .sa-user-role {
-	font-size: 11px;
+	font-size: 1.1rem;
 	color: #9ca3af;
 }
 </style>

@@ -58,7 +58,7 @@ onBeforeUnmount(() => {
 	overflow: hidden;
 	background: #fafafa;
 	color: #171717;
-	font-size: 14px;
+	font-size: 1.4rem;
 	font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
 }
 
@@ -80,7 +80,7 @@ onBeforeUnmount(() => {
 
 .sa-main {
 	flex: 1;
-	padding: 28px;
+	padding: 2.8rem;
 	overflow: auto;
 }
 </style>

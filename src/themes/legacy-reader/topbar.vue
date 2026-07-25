@@ -80,7 +80,7 @@ async function handleSelect(key: string) {
   padding-top: env(safe-area-inset-top);
   background: var(--theme-reader-topbar-bg, #111827);
   color: var(--theme-reader-topbar-text, #f8fafc);
-  box-shadow: 0 1px 10px rgb(0 0 0 / 22%);
+  box-shadow: 0 1px 1rem rgb(0 0 0 / 22%);
 }
 
 .chapter-name {
@@ -105,7 +105,7 @@ async function handleSelect(key: string) {
   border-bottom: 0;
 }
 
-@media (max-width: 767px) {
+@media (max-width: 76.7rem) {
   :deep(.el-menu-item),
   :deep(.el-sub-menu__title) {
     padding: 0 0.4rem;

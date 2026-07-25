@@ -47,9 +47,9 @@ const { page, list, count, loading, pageSizes, pageChange } = useListPage<any>({
 })
 </script>
 <style scoped>
-.tb-page{max-width:980px;margin:0 auto}
-.tb-page-head{margin-bottom:24px}
-.tb-page-head h1{font-size:20px;font-weight:700;margin:0;color:#1f2937}
-.tb-history-list{display:flex;flex-direction:column;gap:10px}
-.tb-empty{text-align:center;padding:60px;color:#6b7280}
+.tb-page{max-width:98rem;margin:0 auto}
+.tb-page-head{margin-bottom:2.4rem}
+.tb-page-head h1{font-size:2rem;font-weight:700;margin:0;color:#1f2937}
+.tb-history-list{display:flex;flex-direction:column;gap:1rem}
+.tb-empty{text-align:center;padding:6rem;color:#6b7280}
 </style>

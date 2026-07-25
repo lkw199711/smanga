@@ -144,102 +144,102 @@ function goManga(item: any) {
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
-	padding: 32px 36px;
-	margin-bottom: 28px;
+	padding: 3.2rem 3.6rem;
+	margin-bottom: 2.8rem;
 	background: linear-gradient(135deg, rgba(255, 111, 163, 0.14), rgba(108, 141, 255, 0.14));
 	border: 1px solid rgba(255, 255, 255, 0.7);
-	border-radius: 24px;
+	border-radius: 2.4rem;
 	overflow: hidden;
 }
 
 .sb-hero-sub {
-	font-size: 12px;
+	font-size: 1.2rem;
 	font-weight: 700;
 	color: #ff6fa3;
 	letter-spacing: 0.15em;
-	margin-bottom: 8px;
+	margin-bottom: 0.8rem;
 }
 
 .sb-hero-title {
-	font-size: 28px;
+	font-size: 2.8rem;
 	font-weight: 800;
 	line-height: 1.3;
 	color: #1f2937;
-	margin-bottom: 16px;
+	margin-bottom: 1.6rem;
 }
 
 .sb-hero-meta {
 	display: flex;
-	gap: 10px;
+	gap: 1rem;
 }
 
 .sb-hero-chip {
-	padding: 6px 14px;
+	padding: 0.6rem 1.4rem;
 	background: rgba(255, 255, 255, 0.8);
-	border-radius: 999px;
-	font-size: 12px;
+	border-radius: 99.9rem;
+	font-size: 1.2rem;
 	font-weight: 500;
 	color: #4b5563;
 }
 
 .sb-hero-deco {
 	position: relative;
-	width: 180px;
-	height: 140px;
+	width: 18rem;
+	height: 14rem;
 	flex-shrink: 0;
 }
 
 .sb-hero-blob {
 	position: absolute;
 	border-radius: 50%;
-	filter: blur(2px);
+	filter: blur(0.2rem);
 }
 
 .sb-hero-blob-1 {
 	top: 0;
-	right: 20px;
-	width: 80px;
-	height: 80px;
+	right: 2rem;
+	width: 8rem;
+	height: 8rem;
 	background: linear-gradient(135deg, #ffb5a7, #fec89a);
 }
 
 .sb-hero-blob-2 {
-	bottom: 10px;
-	right: 80px;
-	width: 60px;
-	height: 60px;
+	bottom: 1rem;
+	right: 8rem;
+	width: 6rem;
+	height: 6rem;
 	background: linear-gradient(135deg, #a0c4ff, #bdb2ff);
 }
 
 .sb-hero-blob-3 {
-	top: 30px;
-	right: 110px;
-	width: 50px;
-	height: 50px;
+	top: 3rem;
+	right: 11rem;
+	width: 5rem;
+	height: 5rem;
 	background: linear-gradient(135deg, #f1c0e8, #cfbaf0);
 }
 
 .sb-section {
-	margin-bottom: 28px;
+	margin-bottom: 2.8rem;
 }
 
 .sb-section-head {
 	display: flex;
 	align-items: baseline;
 	justify-content: space-between;
-	margin-bottom: 14px;
-	padding: 0 4px;
+	margin-bottom: 1.4rem;
+	padding: 0 0.4rem;
 }
 
 .sb-section-head h2 {
 	margin: 0;
-	font-size: 18px;
+	font-size: 1.8rem;
 	font-weight: 700;
 	color: #1f2937;
 }
 
 .sb-link {
-	font-size: 13px;
+	font-size: 1.3rem;
 	color: #6c8dff;
 	font-weight: 500;
 	cursor: pointer;
@@ -247,14 +247,14 @@ function goManga(item: any) {
 
 .sb-continue {
 	display: grid;
-	grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-	gap: 14px;
+	grid-template-columns: repeat(auto-fill, minmax(28rem, 1fr));
+	gap: 1.4rem;
 }
 
 .sb-grid {
 	display: grid;
-	grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-	gap: 18px;
+	grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
+	gap: 1.8rem;
 }
 
 </style>

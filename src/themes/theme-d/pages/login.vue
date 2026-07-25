@@ -35,12 +35,12 @@ async function login() {
 
 <style scoped>
 .td-login { display: flex; align-items: center; justify-content: center; height: 100vh; background: var(--bg); }
-.td-login-card { width: 340px; background: var(--bg2); border: 1px solid var(--border); border-radius: 16px; padding: 40px 32px; text-align: center; }
-.td-login-title { font-size: 24px; font-weight: 700; color: var(--accent); margin: 0 0 4px; }
-.td-login-sub { font-size: 13px; color: var(--fg2); margin: 0 0 24px; }
-.td-form-group { margin-bottom: 14px; }
-.td-input { width: 100%; height: 40px; padding: 0 14px; border-radius: 10px; border: 1px solid var(--border); background: var(--bg); color: var(--fg); font-size: 14px; outline: none; box-sizing: border-box; }
+.td-login-card { width: 34rem; background: var(--bg2); border: 1px solid var(--border); border-radius: 1.6rem; padding: 4rem 3.2rem; text-align: center; }
+.td-login-title { font-size: 2.4rem; font-weight: 700; color: var(--accent); margin: 0 0 0.4rem; }
+.td-login-sub { font-size: 1.3rem; color: var(--fg2); margin: 0 0 2.4rem; }
+.td-form-group { margin-bottom: 1.4rem; }
+.td-input { width: 100%; height: 4rem; padding: 0 1.4rem; border-radius: 1rem; border: 1px solid var(--border); background: var(--bg); color: var(--fg); font-size: 1.4rem; outline: none; box-sizing: border-box; }
 .td-input:focus { border-color: var(--accent); }
-.td-btn-login { width: 100%; height: 40px; border-radius: 10px; background: var(--accent); color: #fff; border: none; font-size: 15px; font-weight: 600; cursor: pointer; margin-top: 8px; transition: opacity .2s; }
+.td-btn-login { width: 100%; height: 4rem; border-radius: 1rem; background: var(--accent); color: #fff; border: none; font-size: 1.5rem; font-weight: 600; cursor: pointer; margin-top: 0.8rem; transition: opacity .2s; }
 .td-btn-login:hover { opacity: 0.85; }
 </style>

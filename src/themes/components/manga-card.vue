@@ -101,13 +101,13 @@ const metaText = computed(() => {
 .t-manga-card__cover {
 	position: relative;
 	aspect-ratio: 3 / 4;
-	border-radius: 14px;
+	border-radius: 1.4rem;
 	overflow: hidden;
 }
 
 .t-manga-card__name {
-	margin-top: 8px;
-	font-size: 13px;
+	margin-top: 0.8rem;
+	font-size: 1.3rem;
 	font-weight: 600;
 	white-space: nowrap;
 	overflow: hidden;
@@ -115,8 +115,8 @@ const metaText = computed(() => {
 }
 
 .t-manga-card__meta {
-	margin-top: 4px;
-	font-size: 12px;
+	margin-top: 0.4rem;
+	font-size: 1.2rem;
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;
@@ -125,29 +125,29 @@ const metaText = computed(() => {
 
 .t-manga-card__tag {
 	position: absolute;
-	top: 8px;
-	left: 8px;
-	padding: 3px 8px;
-	font-size: 11px;
+	top: 0.8rem;
+	left: 0.8rem;
+	padding: 0.3rem 0.8rem;
+	font-size: 1.1rem;
 	font-weight: 800;
-	border-radius: 999px;
+	border-radius: 99.9rem;
 	background: rgba(0, 0, 0, 0.55);
 	color: #fff;
-	backdrop-filter: blur(6px);
+	backdrop-filter: blur(0.6rem);
 }
 
 .t-manga-card__unread {
 	position: absolute;
-	top: 8px;
-	right: 8px;
-	min-width: 22px;
-	height: 22px;
-	padding: 0 6px;
+	top: 0.8rem;
+	right: 0.8rem;
+	min-width: 2.2rem;
+	height: 2.2rem;
+	padding: 0 0.6rem;
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	border-radius: 999px;
-	font-size: 12px;
+	border-radius: 99.9rem;
+	font-size: 1.2rem;
 	font-weight: 800;
 	background: rgba(255, 255, 255, 0.92);
 	color: #ef4444;
@@ -160,20 +160,20 @@ const metaText = computed(() => {
 	color: #6b7280;
 }
 .t-manga-card--A:hover {
-	transform: translateY(-2px);
+	transform: translateY(-0.2rem);
 }
 
 .t-manga-card--B .t-manga-card__name {
 	color: #111827;
-	padding: 0 8px;
+	padding: 0 0.8rem;
 }
 .t-manga-card--B .t-manga-card__meta {
 	color: #6b7280;
-	padding: 0 8px;
+	padding: 0 0.8rem;
 }
 .t-manga-card--B:hover {
-	transform: translateY(-3px);
-	box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+	transform: translateY(-0.3rem);
+	box-shadow: 0 0.6rem 2rem rgba(0, 0, 0, 0.1);
 }
 
 .t-manga-card--D .t-manga-card__name {
@@ -183,6 +183,6 @@ const metaText = computed(() => {
 	color: var(--fg2);
 }
 .t-manga-card--D:hover {
-	transform: translateY(-2px);
+	transform: translateY(-0.2rem);
 }
 </style>

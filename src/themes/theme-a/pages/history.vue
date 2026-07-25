@@ -50,29 +50,29 @@ const { page, list, count, loading, pageSizes, pageChange } = useListPage<any>({
 
 <style scoped lang="less">
 .ta-history {
-	max-width: 980px;
+	max-width: 98rem;
 	margin: 0 auto;
 }
 
 .ta-page-head {
-	margin-bottom: 24px;
+	margin-bottom: 2.4rem;
 }
 
 .ta-page-head h1 {
-	font-size: 20px;
+	font-size: 2rem;
 	font-weight: 700;
 	margin: 0;
 }
 
 .ta-empty {
 	text-align: center;
-	padding: 60px;
+	padding: 6rem;
 	color: #9ca3af;
 }
 
 .ta-history-list {
 	display: flex;
 	flex-direction: column;
-	gap: 10px;
+	gap: 1rem;
 }
 </style>

@@ -369,72 +369,72 @@ function startCountdown() {
   justify-content: center;
   min-height: 100vh;
   background: #fafafa;
-  padding: 24px 16px;
+  padding: 2.4rem 1.6rem;
   box-sizing: border-box;
 }
 
 .ta-init-card {
-  width: 440px;
+  width: 44rem;
   max-width: 100%;
-  padding: 40px;
+  padding: 4rem;
   background: #fff;
   border: 1px solid #eaeaea;
-  border-radius: 16px;
-  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.04);
+  border-radius: 1.6rem;
+  box-shadow: 0 0.4rem 2.4rem rgba(0, 0, 0, 0.04);
 }
 
 .ta-init-logo {
   display: flex;
   align-items: center;
-  gap: 10px;
-  margin-bottom: 24px;
+  gap: 1rem;
+  margin-bottom: 2.4rem;
 }
 
 .ta-logo-mark {
-  width: 32px;
-  height: 32px;
+  width: 3.2rem;
+  height: 3.2rem;
   display: flex;
   align-items: center;
   justify-content: center;
   background: #171717;
   color: #fff;
   font-weight: 700;
-  border-radius: 8px;
+  border-radius: 0.8rem;
 }
 
 .ta-logo-text {
-  font-size: 18px;
+  font-size: 1.8rem;
   font-weight: 700;
 }
 
 .ta-init-card h2 {
-  font-size: 20px;
+  font-size: 2rem;
   font-weight: 700;
-  margin: 0 0 20px;
+  margin: 0 0 2rem;
 }
 
 .ta-steps {
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 24px;
+  margin-bottom: 2.4rem;
   gap: 0;
 }
 
 .ta-step {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 0.8rem;
 }
 
 .ta-step-dot {
-  width: 24px;
-  height: 24px;
+  width: 2.4rem;
+  height: 2.4rem;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 12px;
+  font-size: 1.2rem;
   font-weight: 600;
   background: #e5e7eb;
   color: #9ca3af;
@@ -452,7 +452,7 @@ function startCountdown() {
 }
 
 .ta-step-label {
-  font-size: 13px;
+  font-size: 1.3rem;
   color: #9ca3af;
   transition: color 0.2s;
 }
@@ -467,38 +467,38 @@ function startCountdown() {
 }
 
 .ta-step-line {
-  width: 40px;
-  height: 2px;
+  width: 4rem;
+  height: 0.2rem;
   background: #e5e7eb;
-  margin: 0 8px;
+  margin: 0 0.8rem;
 }
 
 .ta-step-desc {
-  font-size: 13px;
+  font-size: 1.3rem;
   color: #6b7280;
   text-align: center;
-  margin: 0 0 20px;
-  padding: 10px 12px;
+  margin: 0 0 2rem;
+  padding: 1rem 1.2rem;
   background: #f0fdf4;
   border: 1px solid #bbf7d0;
-  border-radius: 8px;
+  border-radius: 0.8rem;
 }
 
 .ta-db-tabs {
   display: flex;
-  gap: 8px;
-  margin-bottom: 20px;
+  gap: 0.8rem;
+  margin-bottom: 2rem;
 }
 
 .ta-db-tab {
   flex: 1;
-  padding: 8px 12px;
-  font-size: 13px;
+  padding: 0.8rem 1.2rem;
+  font-size: 1.3rem;
   font-weight: 500;
   color: #6b7280;
   background: #f3f4f6;
   border: 1px solid #e5e7eb;
-  border-radius: 8px;
+  border-radius: 0.8rem;
   cursor: pointer;
   transition: all 0.15s;
 }
@@ -515,38 +515,38 @@ function startCountdown() {
 }
 
 .ta-db-form {
-  margin-bottom: 8px;
+  margin-bottom: 0.8rem;
 }
 
 .ta-db-hint {
-  font-size: 13px;
+  font-size: 1.3rem;
   color: #6b7280;
-  margin: 0 0 16px;
-  padding: 10px 12px;
+  margin: 0 0 1.6rem;
+  padding: 1rem 1.2rem;
   background: #f9fafb;
-  border-radius: 8px;
+  border-radius: 0.8rem;
   text-align: center;
 }
 
 .ta-test-btn-wrap {
-  margin-bottom: 16px;
+  margin-bottom: 1.6rem;
 }
 
 .ta-test-btn {
   width: 100%;
-  padding: 10px 0;
-  font-size: 13px;
+  padding: 1rem 0;
+  font-size: 1.3rem;
   font-weight: 500;
   color: #2563eb;
   background: #eff6ff;
   border: 1px solid #bfdbfe;
-  border-radius: 8px;
+  border-radius: 0.8rem;
   cursor: pointer;
   transition: all 0.15s;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
+  gap: 0.8rem;
 }
 
 .ta-test-btn:hover:not(:disabled) {
@@ -559,10 +559,10 @@ function startCountdown() {
 }
 
 .ta-test-result {
-  font-size: 13px;
-  margin: 8px 0 0;
-  padding: 8px 12px;
-  border-radius: 6px;
+  font-size: 1.3rem;
+  margin: 0.8rem 0 0;
+  padding: 0.8rem 1.2rem;
+  border-radius: 0.6rem;
   text-align: center;
 }
 
@@ -579,31 +579,31 @@ function startCountdown() {
 }
 
 .ta-section-title {
-  font-size: 14px;
+  font-size: 1.4rem;
   font-weight: 600;
   color: #374151;
-  margin: 20px 0 12px;
-  padding-top: 16px;
+  margin: 2rem 0 1.2rem;
+  padding-top: 1.6rem;
   border-top: 1px solid #f3f4f6;
 }
 
 .ta-form-group {
-  margin-bottom: 14px;
+  margin-bottom: 1.4rem;
 }
 
 .ta-form-group label {
   display: block;
-  font-size: 13px;
+  font-size: 1.3rem;
   color: #4b5563;
-  margin-bottom: 6px;
+  margin-bottom: 0.6rem;
 }
 
 .ta-form-group input {
   width: 100%;
-  padding: 10px 12px;
-  font-size: 14px;
+  padding: 1rem 1.2rem;
+  font-size: 1.4rem;
   border: 1px solid #eaeaea;
-  border-radius: 8px;
+  border-radius: 0.8rem;
   outline: none;
   box-sizing: border-box;
   transition: border-color 0.15s;
@@ -615,7 +615,7 @@ function startCountdown() {
 
 /* el-input 在密码框中的样式适配 */
 .ta-form-group :deep(.el-input__wrapper) {
-  border-radius: 8px;
+  border-radius: 0.8rem;
   box-shadow: 0 0 0 1px #eaeaea;
   transition: box-shadow 0.15s;
 }
@@ -635,19 +635,19 @@ function startCountdown() {
 
 .ta-btn-submit {
   width: 100%;
-  padding: 11px;
-  font-size: 14px;
+  padding: 1.1rem;
+  font-size: 1.4rem;
   font-weight: 500;
   color: #fff;
   background: #2563eb;
   border: none;
-  border-radius: 8px;
+  border-radius: 0.8rem;
   cursor: pointer;
-  margin-top: 8px;
+  margin-top: 0.8rem;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
+  gap: 0.8rem;
   transition: background 0.15s;
 }
 
@@ -661,9 +661,9 @@ function startCountdown() {
 }
 
 .ta-spinner {
-  width: 16px;
-  height: 16px;
-  border: 2px solid rgba(255, 255, 255, 0.3);
+  width: 1.6rem;
+  height: 1.6rem;
+  border: 0.2rem solid rgba(255, 255, 255, 0.3);
   border-top-color: #fff;
   border-radius: 50%;
   animation: ta-spin 0.6s linear infinite;
@@ -676,14 +676,14 @@ function startCountdown() {
 }
 
 .ta-error {
-  margin-top: 12px;
-  font-size: 13px;
+  margin-top: 1.2rem;
+  font-size: 1.3rem;
   color: #ef4444;
   text-align: center;
 }
 
 .ta-success {
-  margin-top: 24px;
+  margin-top: 2.4rem;
   text-align: center;
 }
 
@@ -691,26 +691,26 @@ function startCountdown() {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 48px;
-  height: 48px;
-  font-size: 24px;
+  width: 4.8rem;
+  height: 4.8rem;
+  font-size: 2.4rem;
   color: #fff;
   background: #22c55e;
   border-radius: 50%;
-  margin-bottom: 12px;
+  margin-bottom: 1.2rem;
 }
 
 .ta-success p {
-  font-size: 14px;
+  font-size: 1.4rem;
   color: #374151;
-  margin: 4px 0;
+  margin: 0.4rem 0;
 }
 
 .ta-countdown-ring {
   position: relative;
-  width: 80px;
-  height: 80px;
-  margin: 16px auto 8px;
+  width: 8rem;
+  height: 8rem;
+  margin: 1.6rem auto 0.8rem;
 }
 
 .ta-countdown-ring svg {
@@ -739,7 +739,7 @@ function startCountdown() {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  font-size: 26px;
+  font-size: 2.6rem;
   font-weight: 700;
   color: #2563eb;
   animation: ta-count-pulse 1s ease-in-out infinite;
@@ -751,7 +751,7 @@ function startCountdown() {
 }
 
 .ta-countdown-label {
-  font-size: 13px;
+  font-size: 1.3rem;
   color: #9ca3af;
 }
 
@@ -759,19 +759,19 @@ function startCountdown() {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 40px 0;
-  gap: 12px;
+  padding: 4rem 0;
+  gap: 1.2rem;
 }
 
 .ta-loading p {
-  font-size: 13px;
+  font-size: 1.3rem;
   color: #9ca3af;
 }
 
 .ta-spinner-dark {
-  width: 28px;
-  height: 28px;
-  border: 3px solid #e5e7eb;
+  width: 2.8rem;
+  height: 2.8rem;
+  border: 0.3rem solid #e5e7eb;
   border-top-color: #2563eb;
   border-radius: 50%;
   animation: ta-spin 0.6s linear infinite;

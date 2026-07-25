@@ -43,7 +43,7 @@ const props = withDefaults(
   }>(),
   {
     allowCreate: true,
-    width: 'min(92vw, 720px)',
+    width: 'min(92vw, 72rem)',
   }
 )
 
@@ -58,14 +58,14 @@ const isMobile = ref(false)
 // Detect mobile viewport — used to switch to a compact card layout with visible backdrop.
 // We DO NOT use el-dialog fullscreen because it hides the surrounding backdrop and pushes
 // the close button into the notch/safe-area, making it hard to tap.
-const mql = typeof window !== 'undefined' ? window.matchMedia('(max-width: 640px)') : null
+const mql = typeof window !== 'undefined' ? window.matchMedia('(max-width: 64rem)') : null
 const updateMobile = () => { isMobile.value = !!mql?.matches }
 updateMobile()
 mql?.addEventListener?.('change', updateMobile)
 onBeforeUnmount(() => mql?.removeEventListener?.('change', updateMobile))
 
-// Mobile: leave 12px on each side so the backdrop is tappable to dismiss.
-const dialogWidth = computed(() => (isMobile.value ? 'calc(100vw - 24px)' : props.width))
+// Mobile: leave 1.2rem on each side so the backdrop is tappable to dismiss.
+const dialogWidth = computed(() => (isMobile.value ? 'calc(100vw - 2.4rem)' : props.width))
 // Push down slightly on mobile to keep clear of any browser status bar overlays.
 const dialogTop = computed(() => (isMobile.value ? '6vh' : '15vh'))
 
@@ -83,26 +83,26 @@ function onClosed() {
 <style>
 /* Global (unscoped) — reach into el-dialog body since it's teleported outside our scope */
 .tag-editor-dialog {
-  border-radius: 14px;
+  border-radius: 1.4rem;
   overflow: hidden;
 }
 .tag-editor-dialog .el-dialog__body {
-  padding: 16px 20px 20px;
+  padding: 1.6rem 2rem 2rem;
 }
 .tag-editor-dialog .el-dialog__header {
-  padding: 16px 20px;
+  padding: 1.6rem 2rem;
   margin-right: 0; /* element-plus default reserves space for close btn — keep alignment tidy */
 }
 .tag-editor-dialog .el-dialog__title {
-  font-size: 16px;
+  font-size: 1.6rem;
   font-weight: 600;
 }
 /* Enlarge close button hit target for both desktop & mobile */
 .tag-editor-dialog .el-dialog__headerbtn {
-  top: 8px;
-  right: 8px;
-  width: 40px;
-  height: 40px;
+  top: 0.8rem;
+  right: 0.8rem;
+  width: 4rem;
+  height: 4rem;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -113,32 +113,32 @@ function onClosed() {
   background: var(--sd-bg-hover, rgba(0, 0, 0, .06));
 }
 .tag-editor-dialog .el-dialog__headerbtn .el-dialog__close {
-  font-size: 20px;
+  font-size: 2rem;
 }
 
 /* Mobile card layout — NOT fullscreen: keep backdrop visible so user can tap outside to close. */
 .tag-editor-dialog.is-mobile {
-  border-radius: 16px;
-  max-height: calc(100vh - 12vh - 24px);
+  border-radius: 1.6rem;
+  max-height: calc(100vh - 12vh - 2.4rem);
   display: flex;
   flex-direction: column;
 }
 .tag-editor-dialog.is-mobile .el-dialog__header {
-  padding: 12px 14px;
-  padding-right: 52px; /* leave room for the enlarged close button */
+  padding: 1.2rem 1.4rem;
+  padding-right: 5.2rem; /* leave room for the enlarged close button */
   border-bottom: 1px solid var(--sd-border, #eaeaea);
 }
 .tag-editor-dialog.is-mobile .el-dialog__title {
-  font-size: 15px;
+  font-size: 1.5rem;
 }
 .tag-editor-dialog.is-mobile .el-dialog__headerbtn {
-  top: 4px;
-  right: 4px;
-  width: 44px;
-  height: 44px;
+  top: 0.4rem;
+  right: 0.4rem;
+  width: 4.4rem;
+  height: 4.4rem;
 }
 .tag-editor-dialog.is-mobile .el-dialog__body {
-  padding: 12px 14px calc(12px + env(safe-area-inset-bottom, 0px));
+  padding: 1.2rem 1.4rem calc(1.2rem + env(safe-area-inset-bottom, 0px));
   display: flex;
   flex-direction: column;
   min-height: 0;

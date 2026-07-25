@@ -149,29 +149,29 @@ function nextPage() {
 </script>
 <style scoped>
 .tb-reader-layout{display:flex;flex-direction:column;height:100vh;background:#0a0515;color:#fff}
-.tb-reader-top{display:flex;align-items:center;justify-content:space-between;padding:10px 16px;background:rgba(30,15,60,0.9);backdrop-filter:blur(12px)}
-.tb-reader-top button{padding:6px 14px;background:rgba(255,255,255,0.1);border:none;border-radius:16px;color:#fff;cursor:pointer;font-size:12px}
-.tb-reader-top span{font-size:13px;color:rgba(255,255,255,0.7);max-width:50%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tb-reader-top{display:flex;align-items:center;justify-content:space-between;padding:1rem 1.6rem;background:rgba(30,15,60,0.9);backdrop-filter:blur(1.2rem)}
+.tb-reader-top button{padding:0.6rem 1.4rem;background:rgba(255,255,255,0.1);border:none;border-radius:1.6rem;color:#fff;cursor:pointer;font-size:1.2rem}
+.tb-reader-top span{font-size:1.3rem;color:rgba(255,255,255,0.7);max-width:50%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .tb-reader-body{flex:1;overflow:auto;overscroll-behavior:none;display:flex;align-items:center;justify-content:center}
-.tb-reader-bottom{display:flex;align-items:center;gap:12px;padding:12px 16px;background:rgba(30,15,60,0.9);backdrop-filter:blur(12px)}
-.tb-reader-bottom button{padding:6px 14px;background:rgba(255,255,255,0.1);border:none;border-radius:16px;color:#fff;cursor:pointer;font-size:12px}
+.tb-reader-bottom{display:flex;align-items:center;gap:1.2rem;padding:1.2rem 1.6rem;background:rgba(30,15,60,0.9);backdrop-filter:blur(1.2rem)}
+.tb-reader-bottom button{padding:0.6rem 1.4rem;background:rgba(255,255,255,0.1);border:none;border-radius:1.6rem;color:#fff;cursor:pointer;font-size:1.2rem}
 .tb-reader-bottom button:disabled{opacity:0.35;cursor:default}
-.tb-progress{flex:1;height:4px;background:rgba(255,255,255,0.1);border-radius:2px;overflow:hidden}
-.tb-progress-bar{height:100%;background:linear-gradient(90deg,#a855f7,#ec4899);border-radius:2px;transition:width .2s}
-.tb-page-num{font-size:12px;color:rgba(255,255,255,0.5)}
+.tb-progress{flex:1;height:0.4rem;background:rgba(255,255,255,0.1);border-radius:0.2rem;overflow:hidden}
+.tb-progress-bar{height:100%;background:linear-gradient(90deg,#a855f7,#ec4899);border-radius:0.2rem;transition:width .2s}
+.tb-page-num{font-size:1.2rem;color:rgba(255,255,255,0.5)}
 
-.tb-reader-right{display:flex;align-items:center;gap:8px}
-.tb-modes{display:flex;gap:4px}
-.tb-mode{padding:6px 10px;background:rgba(255,255,255,0.1);border:none;border-radius:16px;color:rgba(255,255,255,0.75);cursor:pointer;font-size:12px}
+.tb-reader-right{display:flex;align-items:center;gap:0.8rem}
+.tb-modes{display:flex;gap:0.4rem}
+.tb-mode{padding:0.6rem 1rem;background:rgba(255,255,255,0.1);border:none;border-radius:1.6rem;color:rgba(255,255,255,0.75);cursor:pointer;font-size:1.2rem}
 .tb-mode.active{background:rgba(255,255,255,0.18);color:#fff}
 
-.tb-drawer{position:fixed;inset:0;background:rgba(0,0,0,0.35);backdrop-filter:blur(10px);display:flex;justify-content:flex-end;z-index:100}
-.tb-panel{width:min(420px,90vw);height:100%;background:rgba(30,15,60,0.92);border-left:1px solid rgba(255,255,255,0.12);display:flex;flex-direction:column}
-.tb-panel-head{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 12px;border-bottom:1px solid rgba(255,255,255,0.12)}
-.tb-panel-title{font-size:13px;font-weight:600;color:rgba(255,255,255,0.9)}
-.tb-chapter-list{padding:10px 10px 14px;overflow:auto;display:flex;flex-direction:column;gap:6px}
-.tb-chapter-item{width:100%;text-align:left;padding:10px 10px;border-radius:14px;border:1px solid rgba(255,255,255,0.12);background:rgba(255,255,255,0.08);cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:10px}
+.tb-drawer{position:fixed;inset:0;background:rgba(0,0,0,0.35);backdrop-filter:blur(1rem);display:flex;justify-content:flex-end;z-index:100}
+.tb-panel{width:min(42rem,90vw);height:100%;background:rgba(30,15,60,0.92);border-left:1px solid rgba(255,255,255,0.12);display:flex;flex-direction:column}
+.tb-panel-head{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:1.2rem 1.2rem;border-bottom:1px solid rgba(255,255,255,0.12)}
+.tb-panel-title{font-size:1.3rem;font-weight:600;color:rgba(255,255,255,0.9)}
+.tb-chapter-list{padding:1rem 1rem 1.4rem;overflow:auto;display:flex;flex-direction:column;gap:0.6rem}
+.tb-chapter-item{width:100%;text-align:left;padding:1rem 1rem;border-radius:1.4rem;border:1px solid rgba(255,255,255,0.12);background:rgba(255,255,255,0.08);cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:1rem}
 .tb-chapter-item.active{border-color:rgba(236,72,153,0.5);background:linear-gradient(135deg,rgba(168,85,247,0.25),rgba(236,72,153,0.18))}
-.tb-chapter-name{font-size:13px;color:rgba(255,255,255,0.92);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.tb-chapter-meta{font-size:12px;color:rgba(255,255,255,0.55);flex-shrink:0}
+.tb-chapter-name{font-size:1.3rem;color:rgba(255,255,255,0.92);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tb-chapter-meta{font-size:1.2rem;color:rgba(255,255,255,0.55);flex-shrink:0}
 </style>

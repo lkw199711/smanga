@@ -74,29 +74,29 @@ function clearAll() {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 10px;
+  gap: 1rem;
 }
 
 .tm-tag-filter-bar__chips {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: 0.8rem;
 }
 
 .tm-tag-filter-bar__actions {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 1rem;
   flex-shrink: 0;
 }
 
 .tm-tag-filter-bar__clear {
-  padding: 4px 10px;
-  font-size: 12px;
+  padding: 0.4rem 1rem;
+  font-size: 1.2rem;
   color: var(--sd-text-secondary, #9ca3af);
   background: none;
   border: 1px solid var(--sd-border, #eaeaea);
-  border-radius: 6px;
+  border-radius: 0.6rem;
   cursor: pointer;
   transition: all 0.15s;
 }
@@ -107,7 +107,7 @@ function clearAll() {
 }
 
 .tm-tag-filter-bar__hint {
-  font-size: 12px;
+  font-size: 1.2rem;
   color: var(--sd-text-secondary, #9ca3af);
 }
 </style>

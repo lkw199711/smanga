@@ -78,9 +78,9 @@ const displaySub = computed(() => {
 	position: relative;
 	display: flex;
 	align-items: center;
-	gap: 14px;
-	padding: 12px;
-	border-radius: 12px;
+	gap: 1.4rem;
+	padding: 1.2rem;
+	border-radius: 1.2rem;
 	cursor: pointer;
 	-webkit-user-select: none;
 	-moz-user-select: none;
@@ -106,7 +106,7 @@ const displaySub = computed(() => {
 
 .t-chapter-item--A:hover {
 	border-color: #d1d5db;
-	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+	box-shadow: 0 0.2rem 0.8rem rgba(0, 0, 0, 0.04);
 }
 
 .t-chapter-item--A .t-chapter-item__title {
@@ -125,7 +125,7 @@ const displaySub = computed(() => {
 
 .t-chapter-item--B:hover {
 	border-color: #d1d5db;
-	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+	box-shadow: 0 0.2rem 0.8rem rgba(0, 0, 0, 0.04);
 }
 
 .t-chapter-item--B .t-chapter-item__title {
@@ -157,9 +157,9 @@ const displaySub = computed(() => {
 /* ===== 内部元素 ===== */
 .t-chapter-item__cover {
 	flex-shrink: 0;
-	width: 52px;
-	height: 70px;
-	border-radius: 10px;
+	width: 5.2rem;
+	height: 7rem;
+	border-radius: 1rem;
 }
 
 .t-chapter-item__info {
@@ -168,7 +168,7 @@ const displaySub = computed(() => {
 }
 
 .t-chapter-item__title {
-	font-size: 14px;
+	font-size: 1.4rem;
 	font-weight: 600;
 	white-space: nowrap;
 	overflow: hidden;
@@ -176,8 +176,8 @@ const displaySub = computed(() => {
 }
 
 .t-chapter-item__sub {
-	margin-top: 4px;
-	font-size: 12px;
+	margin-top: 0.4rem;
+	font-size: 1.2rem;
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;

@@ -1,6 +1,6 @@
 <template>
   <div v-if="visible" class="ta-dialog-overlay" @click.self="close">
-    <div class="ta-dialog" style="width:560px">
+    <div class="ta-dialog" style="width:56rem">
       <div class="ta-dialog-head">
         <h3>{{ isAdd ? '添加路径' : '编辑路径' }}</h3>
         <button class="ta-dialog-close" @click="close">×</button>
@@ -248,40 +248,40 @@ function close() { emit('update:modelValue', false) }
 
 <style scoped>
 .ta-dialog-overlay { position: fixed; inset: 0; z-index: 200; background: rgba(0,0,0,.45); display: flex; align-items: center; justify-content: center; }
-.ta-dialog { background: #fff; border-radius: 14px; width: 560px; max-width: 90vw; max-height: 85vh; overflow-y: auto; box-shadow: 0 8px 32px rgba(0,0,0,.12); }
-.ta-dialog-head { display: flex; align-items: center; justify-content: space-between; padding: 16px 20px; border-bottom: 1px solid #eaeaea; }
-.ta-dialog-head h3 { margin: 0; font-size: 16px; font-weight: 600; }
-.ta-dialog-close { width: 32px; height: 32px; border: none; background: none; font-size: 20px; cursor: pointer; color: #9ca3af; border-radius: 6px; }
+.ta-dialog { background: #fff; border-radius: 1.4rem; width: 56rem; max-width: 90vw; max-height: 85vh; overflow-y: auto; box-shadow: 0 0.8rem 3.2rem rgba(0,0,0,.12); }
+.ta-dialog-head { display: flex; align-items: center; justify-content: space-between; padding: 1.6rem 2rem; border-bottom: 1px solid #eaeaea; }
+.ta-dialog-head h3 { margin: 0; font-size: 1.6rem; font-weight: 600; }
+.ta-dialog-close { width: 3.2rem; height: 3.2rem; border: none; background: none; font-size: 2rem; cursor: pointer; color: #9ca3af; border-radius: 0.6rem; }
 .ta-dialog-close:hover { background: #f3f4f6; }
-.ta-dialog-body { padding: 20px; display: flex; flex-direction: column; gap: 16px; }
-.ta-dialog-foot { display: flex; justify-content: flex-end; gap: 8px; padding: 12px 20px; border-top: 1px solid #eaeaea; }
+.ta-dialog-body { padding: 2rem; display: flex; flex-direction: column; gap: 1.6rem; }
+.ta-dialog-foot { display: flex; justify-content: flex-end; gap: 0.8rem; padding: 1.2rem 2rem; border-top: 1px solid #eaeaea; }
 
-.ta-field { display: flex; flex-direction: column; gap: 6px; }
-.ta-field span { font-size: 13px; font-weight: 500; color: #374151; }
-.ta-field input, .ta-select { padding: 8px 12px; border: 1px solid #eaeaea; border-radius: 8px; font-size: 13px; outline: none; }
+.ta-field { display: flex; flex-direction: column; gap: 0.6rem; }
+.ta-field span { font-size: 1.3rem; font-weight: 500; color: #374151; }
+.ta-field input, .ta-select { padding: 0.8rem 1.2rem; border: 1px solid #eaeaea; border-radius: 0.8rem; font-size: 1.3rem; outline: none; }
 .ta-field input:focus, .ta-select:focus { border-color: #2563eb; }
 .ta-field input:disabled { background: #f9fafb; color: #6b7280; cursor: not-allowed; }
-.ta-field textarea { padding: 8px 12px; border: 1px solid #eaeaea; border-radius: 8px; font-size: 13px; outline: none; resize: vertical; font-family: monospace; }
+.ta-field textarea { padding: 0.8rem 1.2rem; border: 1px solid #eaeaea; border-radius: 0.8rem; font-size: 1.3rem; outline: none; resize: vertical; font-family: monospace; }
 .ta-field textarea:focus { border-color: #2563eb; }
 .ta-field-switch { flex-direction: row; align-items: center; justify-content: space-between; }
 .ta-select { background: #fff; }
 
-.ta-switch { position: relative; display: inline-block; width: 44px; height: 24px; }
+.ta-switch { position: relative; display: inline-block; width: 4.4rem; height: 2.4rem; }
 .ta-switch input { display: none; }
-.ta-switch-slider { position: absolute; inset: 0; border-radius: 12px; background: #d1d5db; cursor: pointer; transition: .2s; }
-.ta-switch-slider::after { content: ''; position: absolute; top: 2px; left: 2px; width: 20px; height: 20px; border-radius: 50%; background: #fff; transition: .2s; }
+.ta-switch-slider { position: absolute; inset: 0; border-radius: 1.2rem; background: #d1d5db; cursor: pointer; transition: .2s; }
+.ta-switch-slider::after { content: ''; position: absolute; top: 0.2rem; left: 0.2rem; width: 2rem; height: 2rem; border-radius: 50%; background: #fff; transition: .2s; }
 .ta-switch input:checked + .ta-switch-slider { background: #2563eb; }
-.ta-switch input:checked + .ta-switch-slider::after { transform: translateX(20px); }
+.ta-switch input:checked + .ta-switch-slider::after { transform: translateX(2rem); }
 
-.pe-path-add-row { display: flex; gap: 8px; }
+.pe-path-add-row { display: flex; gap: 0.8rem; }
 .pe-flex-input { flex: 1; }
 
-.ta-btn-primary, .ta-btn-ghost { cursor: pointer; font-size: 13px; border-radius: 8px; }
-.ta-btn-primary { padding: 8px 16px; color: #fff; background: #2563eb; border: none; font-weight: 500; }
+.ta-btn-primary, .ta-btn-ghost { cursor: pointer; font-size: 1.3rem; border-radius: 0.8rem; }
+.ta-btn-primary { padding: 0.8rem 1.6rem; color: #fff; background: #2563eb; border: none; font-weight: 500; }
 .ta-btn-primary:hover { background: #1d4ed8; }
-.ta-btn-ghost { padding: 8px 16px; color: #4b5563; background: #fff; border: 1px solid #eaeaea; }
+.ta-btn-ghost { padding: 0.8rem 1.6rem; color: #4b5563; background: #fff; border: 1px solid #eaeaea; }
 .ta-btn-ghost:hover { background: #f3f4f6; }
 .ta-btn-ghost:disabled,.ta-btn-primary:disabled { opacity: .5; cursor: not-allowed; }
 
-.s-form-title { font-size: 14px; font-weight: 600; color: #374151; margin: 4px 0 0; padding-top: 8px; border-top: 1px solid #eaeaea; }
+.s-form-title { font-size: 1.4rem; font-weight: 600; color: #374151; margin: 0.4rem 0 0; padding-top: 0.8rem; border-top: 1px solid #eaeaea; }
 </style>

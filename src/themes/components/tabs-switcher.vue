@@ -30,28 +30,28 @@ const emit = defineEmits<{
 /* ===== 容器 ===== */
 .t-tabs {
 	display: flex;
-	gap: 4px;
-	margin-bottom: 18px;
+	gap: 0.4rem;
+	margin-bottom: 1.8rem;
 }
 
 /* ===== Theme A: 下划线风格 ===== */
 .t-tabs--A {
-	border-bottom: 2px solid #f3f4f6;
+	border-bottom: 0.2rem solid #f3f4f6;
 }
 
 .t-tabs--A .t-tab {
 	position: relative;
 	display: inline-flex;
 	align-items: center;
-	gap: 6px;
-	padding: 12px 22px;
-	font-size: 14px;
+	gap: 0.6rem;
+	padding: 1.2rem 2.2rem;
+	font-size: 1.4rem;
 	font-weight: 500;
 	color: #9ca3af;
 	background: none;
 	border: none;
-	border-bottom: 2px solid transparent;
-	margin-bottom: -2px;
+	border-bottom: 0.2rem solid transparent;
+	margin-bottom: -0.2rem;
 	cursor: pointer;
 	transition: color 0.2s, border-color 0.2s;
 	outline: none;
@@ -72,35 +72,35 @@ const emit = defineEmits<{
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
-	min-width: 20px;
-	height: 20px;
-	padding: 0 6px;
-	font-size: 11px;
+	min-width: 2rem;
+	height: 2rem;
+	padding: 0 0.6rem;
+	font-size: 1.1rem;
 	font-weight: 600;
 	line-height: 1;
-	border-radius: 10px;
+	border-radius: 1rem;
 	background: #dbeafe;
 	color: #2563eb;
 }
 
 /* ===== Theme B: 下划线风格（同 A） ===== */
 .t-tabs--B {
-	border-bottom: 2px solid rgba(0, 0, 0, 0.08);
+	border-bottom: 0.2rem solid rgba(0, 0, 0, 0.08);
 }
 
 .t-tabs--B .t-tab {
 	position: relative;
 	display: inline-flex;
 	align-items: center;
-	gap: 6px;
-	padding: 12px 22px;
-	font-size: 14px;
+	gap: 0.6rem;
+	padding: 1.2rem 2.2rem;
+	font-size: 1.4rem;
 	font-weight: 500;
 	color: #9ca3af;
 	background: none;
 	border: none;
-	border-bottom: 2px solid transparent;
-	margin-bottom: -2px;
+	border-bottom: 0.2rem solid transparent;
+	margin-bottom: -0.2rem;
 	cursor: pointer;
 	transition: color 0.2s, border-color 0.2s;
 	outline: none;
@@ -121,35 +121,35 @@ const emit = defineEmits<{
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
-	min-width: 20px;
-	height: 20px;
-	padding: 0 6px;
-	font-size: 11px;
+	min-width: 2rem;
+	height: 2rem;
+	padding: 0 0.6rem;
+	font-size: 1.1rem;
 	font-weight: 600;
 	line-height: 1;
-	border-radius: 10px;
+	border-radius: 1rem;
 	background: rgba(168, 85, 247, 0.15);
 	color: #a855f7;
 }
 
 /* ===== Theme D: 下划线风格 + CSS变量 ===== */
 .t-tabs--D {
-	border-bottom: 2px solid var(--border);
+	border-bottom: 0.2rem solid var(--border);
 }
 
 .t-tabs--D .t-tab {
 	position: relative;
 	display: inline-flex;
 	align-items: center;
-	gap: 6px;
-	padding: 12px 22px;
-	font-size: 14px;
+	gap: 0.6rem;
+	padding: 1.2rem 2.2rem;
+	font-size: 1.4rem;
 	font-weight: 500;
 	color: var(--fg2);
 	background: none;
 	border: none;
-	border-bottom: 2px solid transparent;
-	margin-bottom: -2px;
+	border-bottom: 0.2rem solid transparent;
+	margin-bottom: -0.2rem;
 	cursor: pointer;
 	transition: color 0.2s, border-color 0.2s;
 	outline: none;
@@ -170,13 +170,13 @@ const emit = defineEmits<{
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
-	min-width: 20px;
-	height: 20px;
-	padding: 0 6px;
-	font-size: 11px;
+	min-width: 2rem;
+	height: 2rem;
+	padding: 0 0.6rem;
+	font-size: 1.1rem;
 	font-weight: 600;
 	line-height: 1;
-	border-radius: 10px;
+	border-radius: 1rem;
 	background: var(--bg2);
 	color: var(--accent);
 }

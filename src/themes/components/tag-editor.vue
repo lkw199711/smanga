@@ -295,56 +295,56 @@ function onKeydown(e: KeyboardEvent) {
 
   display: flex;
   flex-direction: column;
-  gap: clamp(10px, 2.5cqi, 16px);
+  gap: clamp(1rem, 2.5cqi, 1.6rem);
   min-width: 0;
   width: 100%;
   color: var(--sd-text, #374151);
 
   /* Local variables used to keep chip / control sizing consistent */
-  --tm-control-h: 36px;
-  --tm-chip-min-h: 28px;
-  --tm-scroll-max: min(48vh, 320px);
-  --tm-radius: 10px;
-  --tm-font: 14px;
+  --tm-control-h: 3.6rem;
+  --tm-chip-min-h: 2.8rem;
+  --tm-scroll-max: min(48vh, 32rem);
+  --tm-radius: 1rem;
+  --tm-font: 1.4rem;
 }
 
 /* Touch devices: bump controls/typography for finger targets */
 @media (pointer: coarse) {
   .tm-tag-editor {
-    --tm-control-h: 40px;
-    --tm-chip-min-h: 34px;
-    --tm-font: 15px;
+    --tm-control-h: 4rem;
+    --tm-chip-min-h: 3.4rem;
+    --tm-font: 1.5rem;
   }
 }
 
 /* Toolbar */
 .tm-tag-editor__toolbar {
   display: flex;
-  gap: 8px;
+  gap: 0.8rem;
   align-items: center;
   flex-wrap: wrap;
 }
 .tm-tag-editor__search {
   position: relative;
-  flex: 1 1 200px;
+  flex: 1 1 20rem;
   min-width: 0;
   display: flex;
   align-items: center;
   background: var(--sd-bg2, #f3f4f6);
   border: 1px solid var(--sd-border, #eaeaea);
   border-radius: var(--tm-radius);
-  padding: 0 10px;
+  padding: 0 1rem;
   height: var(--tm-control-h);
   transition: border-color 0.15s, box-shadow 0.15s;
 }
 .tm-tag-editor__search:focus-within {
   border-color: var(--sd-primary, #2563eb);
-  box-shadow: 0 0 0 3px var(--sd-primary-ring, rgba(37, 99, 235, 0.15));
+  box-shadow: 0 0 0 0.3rem var(--sd-primary-ring, rgba(37, 99, 235, 0.15));
 }
 .tm-tag-editor__search-icon {
-  font-size: 13px;
+  font-size: 1.3rem;
   opacity: 0.55;
-  margin-right: 6px;
+  margin-right: 0.6rem;
   flex-shrink: 0;
 }
 .tm-tag-editor__search-input {
@@ -354,10 +354,10 @@ function onKeydown(e: KeyboardEvent) {
   background: transparent;
   font-size: var(--tm-font);
   line-height: 1.4;
-  padding: 6px 2px;
+  padding: 0.6rem 0.2rem;
   color: inherit;
   min-width: 0;
-  /* Prevent iOS from zooming when focusing an input smaller than 16px */
+  /* Prevent iOS from zooming when focusing an input smaller than 1.6rem */
   -webkit-appearance: none;
 }
 .tm-tag-editor__search-input::placeholder { color: var(--sd-text-secondary, #9ca3af); }
@@ -366,12 +366,12 @@ function onKeydown(e: KeyboardEvent) {
   background: none;
   cursor: pointer;
   color: var(--sd-text-secondary, #9ca3af);
-  font-size: 18px;
+  font-size: 1.8rem;
   line-height: 1;
-  padding: 4px 8px;
-  border-radius: 999px;
-  min-width: 28px;
-  min-height: 28px;
+  padding: 0.4rem 0.8rem;
+  border-radius: 99.9rem;
+  min-width: 2.8rem;
+  min-height: 2.8rem;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -383,19 +383,19 @@ function onKeydown(e: KeyboardEvent) {
 /* Inline create form */
 .tm-tag-editor__create {
   display: flex;
-  gap: 8px;
+  gap: 0.8rem;
   align-items: center;
-  padding: 10px;
+  padding: 1rem;
   background: var(--sd-bg2, #f9fafb);
   border: 1px dashed var(--sd-border, #eaeaea);
   border-radius: var(--tm-radius);
   flex-wrap: wrap;
 }
 .tm-tag-editor__create-name {
-  flex: 1 1 160px;
+  flex: 1 1 16rem;
   border: 1px solid var(--sd-border, #eaeaea);
-  border-radius: 8px;
-  padding: 0 10px;
+  border-radius: 0.8rem;
+  padding: 0 1rem;
   height: var(--tm-control-h);
   font-size: var(--tm-font);
   outline: none;
@@ -405,21 +405,21 @@ function onKeydown(e: KeyboardEvent) {
 }
 .tm-tag-editor__create-name:focus {
   border-color: var(--sd-primary, #2563eb);
-  box-shadow: 0 0 0 3px var(--sd-primary-ring, rgba(37, 99, 235, 0.15));
+  box-shadow: 0 0 0 0.3rem var(--sd-primary-ring, rgba(37, 99, 235, 0.15));
 }
 .tm-tag-editor__create-color {
   width: var(--tm-control-h);
   height: var(--tm-control-h);
   border: 1px solid var(--sd-border, #eaeaea);
-  border-radius: 8px;
-  padding: 2px;
+  border-radius: 0.8rem;
+  padding: 0.2rem;
   cursor: pointer;
   background: none;
   flex-shrink: 0;
 }
 .tm-tag-editor__create-actions {
   display: flex;
-  gap: 6px;
+  gap: 0.6rem;
   flex-shrink: 0;
   margin-left: auto;
 }
@@ -428,11 +428,11 @@ function onKeydown(e: KeyboardEvent) {
 .tm-tag-editor__section {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 1rem;
   min-width: 0;
 }
 .tm-tag-editor__section--assigned {
-  padding: 12px 14px;
+  padding: 1.2rem 1.4rem;
   background: var(--sd-bg2, #f9fafb);
   border-radius: var(--tm-radius);
 }
@@ -440,12 +440,12 @@ function onKeydown(e: KeyboardEvent) {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 8px;
+  gap: 0.8rem;
   flex-wrap: wrap;
 }
 .tm-tag-editor__section-actions {
   display: flex;
-  gap: 4px;
+  gap: 0.4rem;
 }
 .tm-tag-editor__title {
   font-size: var(--tm-font);
@@ -454,22 +454,22 @@ function onKeydown(e: KeyboardEvent) {
   margin: 0;
   display: inline-flex;
   align-items: baseline;
-  gap: 6px;
+  gap: 0.6rem;
 }
 .tm-tag-editor__count {
-  font-size: 12px;
+  font-size: 1.2rem;
   font-weight: 500;
   color: var(--sd-text-secondary, #9ca3af);
 }
 .tm-tag-editor__link {
   border: none;
   background: none;
-  font-size: 13px;
+  font-size: 1.3rem;
   cursor: pointer;
   color: var(--sd-text-secondary, #6b7280);
-  padding: 4px 8px;
-  border-radius: 4px;
-  min-height: 28px;
+  padding: 0.4rem 0.8rem;
+  border-radius: 0.4rem;
+  min-height: 2.8rem;
 }
 .tm-tag-editor__link:hover { color: var(--sd-primary, #2563eb); background: var(--sd-bg-hover, transparent); }
 .tm-tag-editor__link--danger:hover { color: var(--sd-danger, #ef4444); }
@@ -477,13 +477,13 @@ function onKeydown(e: KeyboardEvent) {
 .tm-tag-editor__chips {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
-  min-height: 24px;
+  gap: 0.8rem;
+  min-height: 2.4rem;
 }
 .tm-tag-editor__chips--scroll {
   max-height: var(--tm-scroll-max);
   overflow-y: auto;
-  padding: 4px 2px 4px 0;
+  padding: 0.4rem 0.2rem 0.4rem 0;
   align-content: flex-start;
   /* Smooth touch scrolling + prevent scroll chaining into dialog body */
   -webkit-overflow-scrolling: touch;
@@ -491,17 +491,17 @@ function onKeydown(e: KeyboardEvent) {
   scrollbar-width: thin;
   scrollbar-color: var(--sd-border, #d1d5db) transparent;
 }
-.tm-tag-editor__chips--scroll::-webkit-scrollbar { width: 6px; }
+.tm-tag-editor__chips--scroll::-webkit-scrollbar { width: 0.6rem; }
 .tm-tag-editor__chips--scroll::-webkit-scrollbar-thumb {
   background: var(--sd-border, #d1d5db);
-  border-radius: 3px;
+  border-radius: 0.3rem;
 }
 
 .tm-tag-editor__empty {
-  font-size: 13px;
+  font-size: 1.3rem;
   color: var(--sd-text-secondary, #9ca3af);
   margin: 0;
-  padding: 4px 2px;
+  padding: 0.4rem 0.2rem;
 }
 
 /* Footer */
@@ -509,8 +509,8 @@ function onKeydown(e: KeyboardEvent) {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 10px;
-  padding-top: 12px;
+  gap: 1rem;
+  padding-top: 1.2rem;
   border-top: 1px solid var(--sd-border, #eaeaea);
   flex-wrap: wrap;
   /* Ensure footer never gets covered by iOS home-indicator when in fullscreen dialogs */
@@ -518,15 +518,15 @@ function onKeydown(e: KeyboardEvent) {
 }
 .tm-tag-editor__footer-actions {
   display: flex;
-  gap: 8px;
+  gap: 0.8rem;
   margin-left: auto;
   flex-wrap: wrap;
 }
 .tm-tag-editor__switch {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  font-size: 13px;
+  gap: 0.6rem;
+  font-size: 1.3rem;
   color: var(--sd-text-secondary, #6b7280);
   cursor: pointer;
   user-select: none;
@@ -535,28 +535,28 @@ function onKeydown(e: KeyboardEvent) {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 14px;
-  height: 14px;
+  width: 1.4rem;
+  height: 1.4rem;
   border-radius: 50%;
   background: var(--sd-bg2, #e5e7eb);
   color: var(--sd-text-secondary, #6b7280);
-  font-size: 10px;
+  font-size: 1rem;
   cursor: help;
 }
 .tm-tag-editor__kbd {
-  margin-left: 6px;
-  padding: 1px 4px;
-  font-size: 10px;
-  border-radius: 3px;
+  margin-left: 0.6rem;
+  padding: 1px 0.4rem;
+  font-size: 1rem;
+  border-radius: 0.3rem;
   background: rgba(255, 255, 255, 0.25);
   opacity: 0.85;
 }
 
 /* Buttons */
 .tm-btn {
-  padding: 0 16px;
+  padding: 0 1.6rem;
   height: var(--tm-control-h);
-  border-radius: 8px;
+  border-radius: 0.8rem;
   font-size: var(--tm-font);
   font-weight: 500;
   cursor: pointer;
@@ -565,13 +565,13 @@ function onKeydown(e: KeyboardEvent) {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 4px;
+  gap: 0.4rem;
   white-space: nowrap;
   /* Better tap feedback on mobile */
   -webkit-tap-highlight-color: transparent;
   touch-action: manipulation;
 }
-.tm-btn--sm { padding: 0 12px; height: 32px; font-size: 12px; }
+.tm-btn--sm { padding: 0 1.2rem; height: 3.2rem; font-size: 1.2rem; }
 .tm-btn--primary {
   background: var(--sd-primary, #2563eb);
   color: #fff;
@@ -592,11 +592,11 @@ function onKeydown(e: KeyboardEvent) {
  * Callers can also just rely on container query below.
  * ------------------------------------------------------------ */
 .tm-tag-editor--compact {
-  --tm-control-h: 32px;
-  --tm-chip-min-h: 28px;
-  --tm-scroll-max: min(36vh, 240px);
-  --tm-font: 12px;
-  gap: 10px;
+  --tm-control-h: 3.2rem;
+  --tm-chip-min-h: 2.8rem;
+  --tm-scroll-max: min(36vh, 24rem);
+  --tm-font: 1.2rem;
+  gap: 1rem;
 }
 
 /* ------------------------------------------------------------
@@ -604,31 +604,31 @@ function onKeydown(e: KeyboardEvent) {
  * so it adapts inside dialogs, drawers and sidebars alike.
  * Falls back to viewport media query for older browsers.
  * ------------------------------------------------------------ */
-@container tag-editor (max-width: 520px) {
-  .tm-tag-editor__toolbar { gap: 6px; }
+@container tag-editor (max-width: 52rem) {
+  .tm-tag-editor__toolbar { gap: 0.6rem; }
   .tm-tag-editor__create-toggle-label { display: none; }
   .tm-tag-editor__create-toggle {
     width: var(--tm-control-h);
     padding: 0;
     justify-content: center;
-    font-size: 16px;
+    font-size: 1.6rem;
   }
   .tm-tag-editor__footer { flex-direction: column; align-items: stretch; }
   .tm-tag-editor__footer-actions { margin-left: 0; justify-content: flex-end; }
   .tm-tag-editor__create { flex-direction: column; align-items: stretch; }
   .tm-tag-editor__create-actions { margin-left: 0; justify-content: flex-end; }
 }
-@container tag-editor (max-width: 360px) {
-  .tm-tag-editor__section--assigned { padding: 8px 10px; }
+@container tag-editor (max-width: 36rem) {
+  .tm-tag-editor__section--assigned { padding: 0.8rem 1rem; }
   .tm-tag-editor__kbd { display: none; }
 }
 
 /* Fallback for browsers without container-query support */
 @supports not (container-type: inline-size) {
-  @media (max-width: 640px) {
-    .tm-tag-editor__toolbar { gap: 6px; }
+  @media (max-width: 64rem) {
+    .tm-tag-editor__toolbar { gap: 0.6rem; }
     .tm-tag-editor__create-toggle-label { display: none; }
-    .tm-tag-editor__create-toggle { width: 36px; padding: 0; justify-content: center; font-size: 16px; }
+    .tm-tag-editor__create-toggle { width: 3.6rem; padding: 0; justify-content: center; font-size: 1.6rem; }
     .tm-tag-editor__footer { flex-direction: column; align-items: stretch; }
     .tm-tag-editor__footer-actions { margin-left: 0; justify-content: flex-end; }
     .tm-tag-editor__create { flex-direction: column; align-items: stretch; }
@@ -637,19 +637,19 @@ function onKeydown(e: KeyboardEvent) {
   }
 }
 
-/* Prevent iOS zoom on focus by using 16px on very small screens */
-@media (max-width: 480px) {
+/* Prevent iOS zoom on focus by using 1.6rem on very small screens */
+@media (max-width: 48rem) {
   .tm-tag-editor__search-input,
   .tm-tag-editor__create-name {
-    font-size: 16px;
+    font-size: 1.6rem;
   }
 }
 
 /* Coarse-pointer (touch) — enlarge hit targets */
 @media (pointer: coarse) {
-  .tm-tag-editor { --tm-control-h: 40px; --tm-chip-min-h: 34px; }
-  .tm-btn--sm { height: 36px; }
-  .tm-tag-editor__link { min-height: 34px; padding: 6px 10px; }
+  .tm-tag-editor { --tm-control-h: 4rem; --tm-chip-min-h: 3.4rem; }
+  .tm-btn--sm { height: 3.6rem; }
+  .tm-tag-editor__link { min-height: 3.4rem; padding: 0.6rem 1rem; }
 }
 
 /* Respect reduced-motion users */

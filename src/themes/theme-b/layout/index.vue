@@ -53,7 +53,7 @@ onBeforeUnmount(() => {
 	overflow: hidden;
 	background: linear-gradient(135deg, #fff5fa 0%, #eef4ff 50%, #f5ecff 100%);
 	color: #1f2937;
-	font-size: 14px;
+	font-size: 1.4rem;
 	font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
 	position: relative;
 }
@@ -72,7 +72,7 @@ onBeforeUnmount(() => {
 	display: flex;
 	flex-direction: column;
 	min-width: 0;
-	padding: 16px;
+	padding: 1.6rem;
 }
 
 .tb-layout-content {

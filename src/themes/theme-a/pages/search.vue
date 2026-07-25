@@ -159,16 +159,16 @@ onMounted(() => {
 </script>
 
 <style scoped>
-.ta-page-head { margin-bottom: 24px; }
-.ta-page-head h1 { font-size: 20px; font-weight: 700; margin: 0; }
-.ta-search-bar { display: flex; gap: 10px; margin-bottom: 24px; }
-.ta-input { flex: 1; max-width: 480px; padding: 10px 14px; font-size: 14px; border: 1px solid #eaeaea; border-radius: 8px; outline: none; background: #fff; }
-.ta-btn-primary { padding: 10px 20px; font-size: 14px; font-weight: 500; color: #fff; background: #2563eb; border: none; border-radius: 8px; cursor: pointer; }
-.ta-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 18px; }
+.ta-page-head { margin-bottom: 2.4rem; }
+.ta-page-head h1 { font-size: 2rem; font-weight: 700; margin: 0; }
+.ta-search-bar { display: flex; gap: 1rem; margin-bottom: 2.4rem; }
+.ta-input { flex: 1; max-width: 48rem; padding: 1rem 1.4rem; font-size: 1.4rem; border: 1px solid #eaeaea; border-radius: 0.8rem; outline: none; background: #fff; }
+.ta-btn-primary { padding: 1rem 2rem; font-size: 1.4rem; font-weight: 500; color: #fff; background: #2563eb; border: none; border-radius: 0.8rem; cursor: pointer; }
+.ta-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr)); gap: 1.8rem; }
 .ta-grid-card { cursor: pointer; transition: transform 0.15s; }
-.ta-grid-card:hover { transform: translateY(-2px); }
-.ta-grid-cover { aspect-ratio: 3 / 4; border-radius: 10px; overflow: hidden; margin-bottom: 8px; background: #f3f4f6; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
-.ta-grid-name { font-size: 13px; font-weight: 500; color: #111827; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.ta-empty { text-align: center; padding: 60px; color: #9ca3af; }
-.ta-chapter-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 18px; }
+.ta-grid-card:hover { transform: translateY(-0.2rem); }
+.ta-grid-cover { aspect-ratio: 3 / 4; border-radius: 1rem; overflow: hidden; margin-bottom: 0.8rem; background: #f3f4f6; box-shadow: 0 0.2rem 0.8rem rgba(0,0,0,0.06); }
+.ta-grid-name { font-size: 1.3rem; font-weight: 500; color: #111827; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ta-empty { text-align: center; padding: 6rem; color: #9ca3af; }
+.ta-chapter-list { display: flex; flex-direction: column; gap: 1rem; margin-bottom: 1.8rem; }
 </style>

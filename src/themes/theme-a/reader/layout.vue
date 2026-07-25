@@ -162,14 +162,14 @@ onMounted(() => {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 10px 16px;
+  padding: 1rem 1.6rem;
   background: rgba(0,0,0,0.8);
-  backdrop-filter: blur(8px);
+  backdrop-filter: blur(0.8rem);
   z-index: 10;
 }
 
 .ta-reader-title {
-  font-size: 14px;
+  font-size: 1.4rem;
   font-weight: 500;
   white-space: nowrap;
   overflow: hidden;
@@ -181,21 +181,21 @@ onMounted(() => {
 .ta-reader-right {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 1rem;
 }
 
 .ta-reader-modes {
   display: flex;
-  gap: 4px;
+  gap: 0.4rem;
 }
 
 .ta-reader-mode {
-  padding: 6px 10px;
-  font-size: 12px;
+  padding: 0.6rem 1rem;
+  font-size: 1.2rem;
   color: rgba(255, 255, 255, 0.75);
   background: rgba(255, 255, 255, 0.08);
   border: 1px solid rgba(255, 255, 255, 0.18);
-  border-radius: 999px;
+  border-radius: 99.9rem;
   cursor: pointer;
 }
 
@@ -216,20 +216,20 @@ onMounted(() => {
 .ta-reader-bottom {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 10px 16px;
+  gap: 1.2rem;
+  padding: 1rem 1.6rem;
   background: rgba(0,0,0,0.8);
-  backdrop-filter: blur(8px);
+  backdrop-filter: blur(0.8rem);
   z-index: 10;
 }
 
 .ta-reader-btn {
-  padding: 6px 14px;
-  font-size: 13px;
+  padding: 0.6rem 1.4rem;
+  font-size: 1.3rem;
   color: #fff;
   background: rgba(255,255,255,0.1);
   border: 1px solid rgba(255,255,255,0.2);
-  border-radius: 6px;
+  border-radius: 0.6rem;
   cursor: pointer;
 }
 
@@ -239,24 +239,24 @@ onMounted(() => {
 }
 
 .ta-reader-page {
-  font-size: 13px;
+  font-size: 1.3rem;
   color: #9ca3af;
-  min-width: 84px;
+  min-width: 8.4rem;
   text-align: center;
 }
 
 .ta-reader-progress {
   flex: 1;
-  height: 4px;
+  height: 0.4rem;
   background: rgba(255, 255, 255, 0.14);
-  border-radius: 999px;
+  border-radius: 99.9rem;
   overflow: hidden;
 }
 
 .ta-reader-progress-bar {
   height: 100%;
   background: #2563eb;
-  border-radius: 999px;
+  border-radius: 99.9rem;
   transition: width 0.2s;
 }
 
@@ -264,14 +264,14 @@ onMounted(() => {
   position: fixed;
   inset: 0;
   background: rgba(0, 0, 0, 0.35);
-  backdrop-filter: blur(6px);
+  backdrop-filter: blur(0.6rem);
   display: flex;
   justify-content: flex-end;
   z-index: 100;
 }
 
 .ta-chapter-panel {
-  width: min(420px, 90vw);
+  width: min(42rem, 90vw);
   height: 100%;
   background: rgba(0, 0, 0, 0.78);
   border-left: 1px solid rgba(255, 255, 255, 0.14);
@@ -283,37 +283,37 @@ onMounted(() => {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
-  padding: 12px 12px;
+  gap: 1.2rem;
+  padding: 1.2rem 1.2rem;
   border-bottom: 1px solid rgba(255, 255, 255, 0.14);
 }
 
 .ta-chapter-head-title {
-  font-size: 13px;
+  font-size: 1.3rem;
   font-weight: 600;
   color: rgba(255, 255, 255, 0.9);
 }
 
 .ta-chapter-list {
-  padding: 10px 10px 14px;
+  padding: 1rem 1rem 1.4rem;
   overflow: auto;
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 0.6rem;
 }
 
 .ta-chapter-item {
   width: 100%;
   text-align: left;
-  padding: 10px 10px;
-  border-radius: 10px;
+  padding: 1rem 1rem;
+  border-radius: 1rem;
   border: 1px solid rgba(255, 255, 255, 0.12);
   background: rgba(255, 255, 255, 0.06);
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 10px;
+  gap: 1rem;
 }
 
 .ta-chapter-item.active {
@@ -322,7 +322,7 @@ onMounted(() => {
 }
 
 .ta-chapter-name {
-  font-size: 13px;
+  font-size: 1.3rem;
   color: rgba(255, 255, 255, 0.9);
   white-space: nowrap;
   overflow: hidden;
@@ -330,7 +330,7 @@ onMounted(() => {
 }
 
 .ta-chapter-meta {
-  font-size: 12px;
+  font-size: 1.2rem;
   color: rgba(255, 255, 255, 0.55);
   flex-shrink: 0;
 }

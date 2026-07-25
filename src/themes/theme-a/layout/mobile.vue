@@ -310,7 +310,7 @@ onBeforeUnmount(() => {
 	overflow: hidden;
 	background: #fafafa;
 	color: #171717;
-	font-size: 14px;
+	font-size: 1.4rem;
 	font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
 }
 
@@ -320,10 +320,10 @@ onBeforeUnmount(() => {
 	z-index: 50;
 	display: flex;
 	align-items: center;
-	gap: 12px;
-	padding: 12px 16px;
+	gap: 1.2rem;
+	padding: 1.2rem 1.6rem;
 	background: rgba(255, 255, 255, 0.95);
-	backdrop-filter: blur(10px);
+	backdrop-filter: blur(1rem);
 	border-bottom: 1px solid #eaeaea;
 }
 
@@ -334,7 +334,7 @@ onBeforeUnmount(() => {
 
 .sa-mobile-title h1 {
 	margin: 0;
-	font-size: 18px;
+	font-size: 1.8rem;
 	font-weight: 600;
 }
 
@@ -347,10 +347,10 @@ onBeforeUnmount(() => {
 .sa-header-user-trigger {
 	display: flex;
 	align-items: center;
-	gap: 6px;
+	gap: 0.6rem;
 	cursor: pointer;
-	padding: 4px 8px;
-	border-radius: 8px;
+	padding: 0.4rem 0.8rem;
+	border-radius: 0.8rem;
 }
 
 .sa-header-user-trigger:active {
@@ -358,14 +358,14 @@ onBeforeUnmount(() => {
 }
 
 .sa-avatar-sm {
-	width: 28px;
-	height: 28px;
+	width: 2.8rem;
+	height: 2.8rem;
 }
 
 .sa-header-user-name {
-	font-size: 13px;
+	font-size: 1.3rem;
 	font-weight: 500;
-	max-width: 80px;
+	max-width: 8rem;
 	overflow: hidden;
 	text-overflow: ellipsis;
 	white-space: nowrap;
@@ -377,19 +377,19 @@ onBeforeUnmount(() => {
 	position: absolute;
 	top: 100%;
 	right: 0;
-	min-width: 140px;
-	margin-top: 4px;
+	min-width: 14rem;
+	margin-top: 0.4rem;
 	background: #fff;
 	border: 1px solid #eaeaea;
-	border-radius: 8px;
-	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-	padding: 4px;
+	border-radius: 0.8rem;
+	box-shadow: 0 0.4rem 1.2rem rgba(0, 0, 0, 0.1);
+	padding: 0.4rem;
 	z-index: 60;
 }
 
 .sa-header-user-dropdown .sa-user-dropdown-item {
-	padding: 8px 12px;
-	border-radius: 6px;
+	padding: 0.8rem 1.2rem;
+	border-radius: 0.6rem;
 }
 
 .sa-header-user-dropdown .sa-user-dropdown-item:active {
@@ -402,13 +402,13 @@ onBeforeUnmount(() => {
 }
 
 .sa-menu-toggle {
-	width: 40px;
-	height: 40px;
+	width: 4rem;
+	height: 4rem;
 	border: none;
 	background: transparent;
-	font-size: 20px;
+	font-size: 2rem;
 	cursor: pointer;
-	border-radius: 8px;
+	border-radius: 0.8rem;
 	flex-shrink: 0;
 }
 
@@ -428,7 +428,7 @@ onBeforeUnmount(() => {
 	position: absolute;
 	top: 0;
 	left: 0;
-	width: 280px;
+	width: 28rem;
 	max-width: 80vw;
 	height: 100%;
 	background: #fff;
@@ -450,9 +450,9 @@ onBeforeUnmount(() => {
 	min-height: 0;
 	overflow-y: auto;
 	overscroll-behavior: contain;
-	padding: 0 4px;
+	padding: 0 0.4rem;
 	/* 底部预留空间，避免被底部导航栏遮挡，可向上滚动显示全部媒体库 */
-	padding-bottom: calc(90px + env(safe-area-inset-bottom));
+	padding-bottom: calc(9rem + env(safe-area-inset-bottom));
 }
 
 @keyframes slideIn {
@@ -470,21 +470,21 @@ onBeforeUnmount(() => {
 	align-items: center;
 	justify-content: space-between;
 	flex-shrink: 0;
-	padding: 8px 12px 12px;
-	gap: 8px;
+	padding: 0.8rem 1.2rem 1.2rem;
+	gap: 0.8rem;
 }
 
 .sa-manage-toggle {
-	width: 32px;
-	height: 32px;
+	width: 3.2rem;
+	height: 3.2rem;
 	display: flex;
 	align-items: center;
 	justify-content: center;
 	border: 1px solid #eaeaea;
-	border-radius: 8px;
+	border-radius: 0.8rem;
 	background: #fff;
 	cursor: pointer;
-	font-size: 16px;
+	font-size: 1.6rem;
 	transition: all 0.15s;
 	flex-shrink: 0;
 	order: 1;
@@ -501,11 +501,11 @@ onBeforeUnmount(() => {
 }
 
 .sa-close-sidebar {
-	width: 36px;
-	height: 36px;
+	width: 3.6rem;
+	height: 3.6rem;
 	border: none;
 	background: transparent;
-	font-size: 28px;
+	font-size: 2.8rem;
 	cursor: pointer;
 	color: #6b7280;
 }
@@ -514,32 +514,32 @@ onBeforeUnmount(() => {
 .sa-logo {
 	display: flex;
 	align-items: center;
-	gap: 10px;
+	gap: 1rem;
 }
 
 .sa-logo-mark {
-	width: 28px;
-	height: 28px;
+	width: 2.8rem;
+	height: 2.8rem;
 	display: flex;
 	align-items: center;
 	justify-content: center;
 	background: #171717;
 	color: #fff;
 	font-weight: 700;
-	border-radius: 8px;
+	border-radius: 0.8rem;
 }
 
 .sa-logo-text {
-	font-size: 16px;
+	font-size: 1.6rem;
 	font-weight: 700;
 }
 
 /* 导航 */
 .sa-sec-title {
-	padding: 10px 8px 4px;
+	padding: 1rem 0.8rem 0.4rem;
 	display: flex;
 	align-items: center;
-	font-size: 11px;
+	font-size: 1.1rem;
 	font-weight: 600;
 	color: #9ca3af;
 	text-transform: uppercase;
@@ -559,13 +559,13 @@ onBeforeUnmount(() => {
 .sa-nav-item {
 	display: flex;
 	align-items: center;
-	gap: 8px;
-	padding: 8px 12px;
+	gap: 0.8rem;
+	padding: 0.8rem 1.2rem;
 	color: #4b5563;
-	border-radius: 8px;
+	border-radius: 0.8rem;
 	cursor: pointer;
 	transition: all 0.15s;
-	font-size: 14px;
+	font-size: 1.4rem;
 	user-select: none;
 	-webkit-user-select: none;
 	-webkit-tap-highlight-color: transparent;
@@ -577,25 +577,25 @@ onBeforeUnmount(() => {
 }
 
 .sa-nav-icon {
-	width: 18px;
-	font-size: 16px;
+	width: 1.8rem;
+	font-size: 1.6rem;
 	text-align: center;
 }
 
 .sa-nav-count {
 	margin-left: auto;
-	padding: 2px 8px;
-	font-size: 11px;
+	padding: 0.2rem 0.8rem;
+	font-size: 1.1rem;
 	color: #6b7280;
 	background: #f3f4f6;
-	border-radius: 10px;
+	border-radius: 1rem;
 }
 
 /* 通用：头像 */
 .sa-avatar {
 	position: relative;
-	width: 36px;
-	height: 36px;
+	width: 3.6rem;
+	height: 3.6rem;
 	flex-shrink: 0;
 	display: flex;
 	align-items: center;
@@ -616,13 +616,13 @@ onBeforeUnmount(() => {
 }
 
 .sa-avatar-text {
-	font-size: 15px;
+	font-size: 1.5rem;
 }
 
 /* 通用：箭头与下拉 */
 .sa-user-arrow {
 	color: #9ca3af;
-	font-size: 12px;
+	font-size: 1.2rem;
 	transition: transform 0.2s;
 }
 
@@ -634,8 +634,8 @@ onBeforeUnmount(() => {
 .sa-user-dropdown-item {
 	display: flex;
 	align-items: center;
-	padding: 8px 0;
-	font-size: 13px;
+	padding: 0.8rem 0;
+	font-size: 1.3rem;
 	color: #4b5563;
 	cursor: pointer;
 }
@@ -650,8 +650,8 @@ onBeforeUnmount(() => {
 
 /* 导航空态 */
 .sa-nav-empty {
-	padding: 8px 12px;
-	font-size: 12px;
+	padding: 0.8rem 1.2rem;
+	font-size: 1.2rem;
 	color: #9ca3af;
 }
 
@@ -659,9 +659,9 @@ onBeforeUnmount(() => {
 .sa-mobile-main {
 	flex: 1;
 	overflow-y: auto;
-	padding: 16px;
-	/* 底栏 56px + safe-area */
-	padding-bottom: calc(56px + env(safe-area-inset-bottom, 0px) + 16px);
+	padding: 1.6rem;
+	/* 底栏 5.6rem + safe-area */
+	padding-bottom: calc(5.6rem + env(safe-area-inset-bottom, 0px) + 1.6rem);
 }
 
 /* 底部导航栏 */
@@ -672,7 +672,7 @@ onBeforeUnmount(() => {
 	right: 0;
 	display: flex;
 	justify-content: space-around;
-	padding: 8px 0;
+	padding: 0.8rem 0;
 	background: #fff;
 	border-top: 1px solid #eaeaea;
 	z-index: 100;
@@ -682,13 +682,13 @@ onBeforeUnmount(() => {
 	display: flex;
 	flex-direction: column;
 	align-items: center;
-	gap: 4px;
-	padding: 6px 12px;
+	gap: 0.4rem;
+	padding: 0.6rem 1.2rem;
 	min-height: auto;
 }
 
 .sa-mobile-nav-bar .sa-nav-label {
-	font-size: 11px;
+	font-size: 1.1rem;
 	font-weight: 500;
 }
 </style>

@@ -151,34 +151,34 @@ function goManga(item: any) {
 .sa-stats {
 	display: grid;
 	grid-template-columns: repeat(4, 1fr);
-	gap: 16px;
-	margin-bottom: 32px;
+	gap: 1.6rem;
+	margin-bottom: 3.2rem;
 }
 
 .sa-stat-card {
-	padding: 18px 20px;
+	padding: 1.8rem 2rem;
 	background: #fff;
 	border: 1px solid #eaeaea;
-	border-radius: 12px;
-	box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
+	border-radius: 1.2rem;
+	box-shadow: 0 1px 0.2rem rgba(0, 0, 0, 0.02);
 }
 
 .sa-stat-label {
-	font-size: 12px;
+	font-size: 1.2rem;
 	color: #6b7280;
-	margin-bottom: 8px;
+	margin-bottom: 0.8rem;
 }
 
 .sa-stat-value {
-	font-size: 26px;
+	font-size: 2.6rem;
 	font-weight: 700;
 	color: #111827;
 	letter-spacing: -0.02em;
 }
 
 .sa-stat-delta {
-	margin-top: 6px;
-	font-size: 12px;
+	margin-top: 0.6rem;
+	font-size: 1.2rem;
 	color: #9ca3af;
 }
 
@@ -187,39 +187,39 @@ function goManga(item: any) {
 }
 
 .sa-section {
-	margin-bottom: 32px;
+	margin-bottom: 3.2rem;
 }
 
 .sa-section-head {
 	display: flex;
 	align-items: baseline;
 	justify-content: space-between;
-	margin-bottom: 14px;
+	margin-bottom: 1.4rem;
 }
 
 .sa-section-head h2 {
 	margin: 0;
-	font-size: 16px;
+	font-size: 1.6rem;
 	font-weight: 600;
 	color: #111827;
 }
 
 .sa-link {
-	font-size: 13px;
+	font-size: 1.3rem;
 	color: #2563eb;
 	cursor: pointer;
 }
 
 .sa-continue {
 	display: grid;
-	grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-	gap: 14px;
+	grid-template-columns: repeat(auto-fill, minmax(28rem, 1fr));
+	gap: 1.4rem;
 }
 
 .sa-grid {
 	display: grid;
-	grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-	gap: 18px;
+	grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
+	gap: 1.8rem;
 }
 
 .sa-grid-card {
@@ -228,15 +228,15 @@ function goManga(item: any) {
 }
 
 .sa-grid-card:hover {
-	transform: translateY(-2px);
+	transform: translateY(-0.2rem);
 }
 
 .sa-grid-cover {
 	position: relative;
 	aspect-ratio: 3 / 4;
-	border-radius: 10px;
-	margin-bottom: 8px;
-	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+	border-radius: 1rem;
+	margin-bottom: 0.8rem;
+	box-shadow: 0 0.2rem 0.8rem rgba(0, 0, 0, 0.06);
 	overflow: hidden;
 	background-size: cover;
 	background-position: center;
@@ -246,35 +246,35 @@ function goManga(item: any) {
 
 .sa-grid-tag {
 	position: absolute;
-	top: 8px;
-	left: 8px;
-	padding: 3px 7px;
-	font-size: 10px;
+	top: 0.8rem;
+	left: 0.8rem;
+	padding: 0.3rem 0.7rem;
+	font-size: 1rem;
 	font-weight: 600;
 	color: #fff;
 	background: #2563eb;
-	border-radius: 4px;
+	border-radius: 0.4rem;
 }
 
 .sa-grid-unread {
 	position: absolute;
-	top: 8px;
-	right: 8px;
-	min-width: 18px;
-	height: 18px;
-	padding: 0 6px;
-	font-size: 11px;
+	top: 0.8rem;
+	right: 0.8rem;
+	min-width: 1.8rem;
+	height: 1.8rem;
+	padding: 0 0.6rem;
+	font-size: 1.1rem;
 	font-weight: 700;
 	color: #fff;
 	background: #ef4444;
-	border-radius: 9px;
+	border-radius: 0.9rem;
 	display: flex;
 	align-items: center;
 	justify-content: center;
 }
 
 .sa-grid-name {
-	font-size: 13px;
+	font-size: 1.3rem;
 	font-weight: 500;
 	color: #111827;
 	white-space: nowrap;
@@ -283,82 +283,82 @@ function goManga(item: any) {
 }
 
 .sa-grid-meta {
-	margin-top: 2px;
-	font-size: 11px;
+	margin-top: 0.2rem;
+	font-size: 1.1rem;
 	color: #9ca3af;
 }
 
 /* 响应式适配 */
-@media (max-width: 768px) {
+@media (max-width: 76.8rem) {
 	.sa-stats {
 		grid-template-columns: repeat(2, 1fr);
-		gap: 8px;
-		margin-bottom: 16px;
+		gap: 0.8rem;
+		margin-bottom: 1.6rem;
 	}
 
 	.sa-stat-card {
-		padding: 10px 12px;
-		border-radius: 8px;
+		padding: 1rem 1.2rem;
+		border-radius: 0.8rem;
 	}
 
 	.sa-stat-label {
-		font-size: 11px;
-		margin-bottom: 2px;
+		font-size: 1.1rem;
+		margin-bottom: 0.2rem;
 	}
 
 	.sa-stat-value {
-		font-size: 18px;
+		font-size: 1.8rem;
 	}
 
 	.sa-stat-delta {
-		margin-top: 2px;
-		font-size: 10px;
+		margin-top: 0.2rem;
+		font-size: 1rem;
 	}
 
 	.sa-continue {
 		grid-template-columns: 1fr;
-		gap: 12px;
+		gap: 1.2rem;
 	}
 
 	.sa-section {
-		margin-bottom: 20px;
+		margin-bottom: 2rem;
 	}
 
 	.sa-section h2 {
-		font-size: 16px;
+		font-size: 1.6rem;
 	}
 
 	.sa-grid {
 		grid-template-columns: repeat(3, 1fr);
-		gap: 12px;
+		gap: 1.2rem;
 	}
 }
 
-@media (max-width: 480px) {
+@media (max-width: 48rem) {
 	.sa-stats {
 		grid-template-columns: repeat(2, 1fr);
-		gap: 6px;
+		gap: 0.6rem;
 	}
 
 	.sa-stat-card {
-		padding: 8px 10px;
+		padding: 0.8rem 1rem;
 	}
 
 	.sa-stat-value {
-		font-size: 16px;
+		font-size: 1.6rem;
 	}
 
 	.sa-grid {
 		grid-template-columns: repeat(2, 1fr);
-		gap: 10px;
+		gap: 1rem;
 	}
 
 	.sa-stat-card {
-		padding: 12px;
+		padding: 1.2rem;
 	}
 
 	.sa-stat-value {
-		font-size: 20px;
+		font-size: 2rem;
 	}
 }
 </style>

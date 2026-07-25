@@ -127,33 +127,33 @@ onMounted(async () => {
 <style scoped>
 .sb-sidebar {
 	flex-shrink: 0;
-	width: 240px;
-	margin: 16px 0 16px 16px;
-	padding: 20px 14px;
+	width: 24rem;
+	margin: 1.6rem 0 1.6rem 1.6rem;
+	padding: 2rem 1.4rem;
 	background: rgba(255, 255, 255, 0.72);
-	backdrop-filter: blur(16px);
+	backdrop-filter: blur(1.6rem);
 	border: 1px solid rgba(255, 255, 255, 0.8);
-	border-radius: 20px;
+	border-radius: 2rem;
 	display: flex;
 	flex-direction: column;
 	position: relative;
 	z-index: 1;
-	box-shadow: 0 8px 24px rgba(108, 141, 255, 0.1);
+	box-shadow: 0 0.8rem 2.4rem rgba(108, 141, 255, 0.1);
 }
 
 .sb-logo {
 	display: flex;
 	align-items: center;
-	gap: 10px;
-	padding: 4px 8px 16px;
+	gap: 1rem;
+	padding: 0.4rem 0.8rem 1.6rem;
 }
 
 .sb-logo-emoji {
-	font-size: 24px;
+	font-size: 2.4rem;
 }
 
 .sb-logo-text {
-	font-size: 18px;
+	font-size: 1.8rem;
 	font-weight: 700;
 	background: linear-gradient(135deg, #ff6fa3, #6c8dff);
 	-webkit-background-clip: text;
@@ -164,16 +164,16 @@ onMounted(async () => {
 .sb-nav {
 	display: flex;
 	flex-direction: column;
-	gap: 4px;
+	gap: 0.4rem;
 }
 
 .sb-nav-item {
 	display: flex;
 	align-items: center;
-	gap: 10px;
-	padding: 10px 12px;
+	gap: 1rem;
+	padding: 1rem 1.2rem;
 	color: #4b5563;
-	border-radius: 12px;
+	border-radius: 1.2rem;
 	cursor: pointer;
 	transition: all 0.2s;
 	font-weight: 500;
@@ -181,7 +181,7 @@ onMounted(async () => {
 
 .sb-nav-item:hover {
 	background: rgba(255, 255, 255, 0.8);
-	transform: translateX(2px);
+	transform: translateX(0.2rem);
 }
 
 .sb-nav-item.active {
@@ -190,25 +190,25 @@ onMounted(async () => {
 }
 
 .sb-nav-item.active:hover {
-	transform: translateX(2px);
+	transform: translateX(0.2rem);
 }
 
 .sb-nav-icon {
-	font-size: 15px;
+	font-size: 1.5rem;
 }
 
 .sb-sec {
 	flex: 1;
 	min-height: 0;
 	overflow-y: auto;
-	margin-top: 16px;
+	margin-top: 1.6rem;
 }
 
 .sb-sec-title {
-	padding: 12px 8px 6px;
+	padding: 1.2rem 0.8rem 0.6rem;
 	display: flex;
 	align-items: center;
-	font-size: 11px;
+	font-size: 1.1rem;
 	font-weight: 600;
 	color: #9ca3af;
 	text-transform: uppercase;
@@ -220,7 +220,7 @@ onMounted(async () => {
 }
 
 .sb-nav-title {
-	padding: 10px 12px 6px;
+	padding: 1rem 1.2rem 0.6rem;
 	color: #9ca3af;
 	text-transform: none;
 	letter-spacing: normal;
@@ -228,17 +228,17 @@ onMounted(async () => {
 
 .sb-manage-toggle {
 	margin-left: auto;
-	width: 32px;
-	height: 32px;
+	width: 3.2rem;
+	height: 3.2rem;
 	display: flex;
 	align-items: center;
 	justify-content: center;
 	border: 1px solid rgba(0, 0, 0, 0.1);
-	border-radius: 8px;
+	border-radius: 0.8rem;
 	background: rgba(255, 255, 255, 0.6);
 	color: #9ca3af;
 	cursor: pointer;
-	font-size: 16px;
+	font-size: 1.6rem;
 	transition: all 0.15s;
 	flex-shrink: 0;
 }
@@ -257,10 +257,10 @@ onMounted(async () => {
 .sb-sec-item {
 	display: flex;
 	justify-content: space-between;
-	padding: 8px 12px;
-	font-size: 13px;
+	padding: 0.8rem 1.2rem;
+	font-size: 1.3rem;
 	color: #4b5563;
-	border-radius: 10px;
+	border-radius: 1rem;
 	cursor: pointer;
 }
 
@@ -269,40 +269,40 @@ onMounted(async () => {
 }
 
 .sb-sec-count {
-	font-size: 11px;
+	font-size: 1.1rem;
 	color: #9ca3af;
 }
 
 .sb-card-hint {
 	flex-shrink: 0;
 	margin-top: auto;
-	padding: 14px;
+	padding: 1.4rem;
 	background: linear-gradient(135deg, #ff6fa3, #6c8dff);
-	border-radius: 16px;
+	border-radius: 1.6rem;
 	color: #fff;
 	text-align: center;
 }
 
 .sb-card-hint-title {
-	font-size: 14px;
+	font-size: 1.4rem;
 	font-weight: 700;
-	margin-bottom: 4px;
+	margin-bottom: 0.4rem;
 }
 
 .sb-card-hint-desc {
-	font-size: 11px;
+	font-size: 1.1rem;
 	opacity: 0.9;
-	margin-bottom: 10px;
+	margin-bottom: 1rem;
 }
 
 .sb-card-hint-btn {
-	padding: 6px 16px;
+	padding: 0.6rem 1.6rem;
 	background: #fff;
 	color: #ff6fa3;
-	font-size: 12px;
+	font-size: 1.2rem;
 	font-weight: 600;
 	border: none;
-	border-radius: 999px;
+	border-radius: 99.9rem;
 	cursor: pointer;
 }
 </style>

@@ -147,16 +147,16 @@ onMounted(() => {
 })
 </script>
 <style scoped>
-h1{font-size:20px;font-weight:700;margin:0 0 20px;color:#1f2937}
-.tb-search-bar{display:flex;gap:10px;margin-bottom:20px}
-.tb-search-bar input{flex:1;max-width:400px;padding:10px 16px;background:rgba(255,255,255,0.8);border:1px solid rgba(0,0,0,0.1);border-radius:20px;color:#1f2937;font-size:14px;outline:none}
+h1{font-size:2rem;font-weight:700;margin:0 0 2rem;color:#1f2937}
+.tb-search-bar{display:flex;gap:1rem;margin-bottom:2rem}
+.tb-search-bar input{flex:1;max-width:40rem;padding:1rem 1.6rem;background:rgba(255,255,255,0.8);border:1px solid rgba(0,0,0,0.1);border-radius:2rem;color:#1f2937;font-size:1.4rem;outline:none}
 .tb-search-bar input::placeholder{color:rgba(0,0,0,0.4)}
-.tb-search-bar button{padding:10px 20px;background:linear-gradient(135deg,#a855f7,#ec4899);border:none;border-radius:20px;color:#1f2937;cursor:pointer;font-size:13px}
-.tb-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:16px}
-.tb-card{cursor:pointer;transition:transform .2s}.tb-card:hover{transform:translateY(-3px)}
-.tb-card-cover{aspect-ratio:3/4;border-radius:14px;overflow:hidden;background:rgba(255,255,255,0.8);box-shadow:0 4px 16px rgba(0,0,0,0.08);margin-bottom:8px}
-.tb-card-name{font-size:13px;font-weight:500;color:#1f2937;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.tb-chapter-list{display:flex;flex-direction:column;gap:10px;margin-bottom:18px}
+.tb-search-bar button{padding:1rem 2rem;background:linear-gradient(135deg,#a855f7,#ec4899);border:none;border-radius:2rem;color:#1f2937;cursor:pointer;font-size:1.3rem}
+.tb-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(14rem,1fr));gap:1.6rem}
+.tb-card{cursor:pointer;transition:transform .2s}.tb-card:hover{transform:translateY(-0.3rem)}
+.tb-card-cover{aspect-ratio:3/4;border-radius:1.4rem;overflow:hidden;background:rgba(255,255,255,0.8);box-shadow:0 0.4rem 1.6rem rgba(0,0,0,0.08);margin-bottom:0.8rem}
+.tb-card-name{font-size:1.3rem;font-weight:500;color:#1f2937;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tb-chapter-list{display:flex;flex-direction:column;gap:1rem;margin-bottom:1.8rem}
 </style>
 
 

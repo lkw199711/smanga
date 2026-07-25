@@ -63,16 +63,16 @@ function goMedia(m: any) { router.push(`/t/media/${m.mediaId}`) }
 </script>
 
 <style scoped>
-h1 { font-size: 20px; font-weight: 700; margin: 0 0 20px; color: #1f2937; }
-.tb-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 20px; }
-.tb-media-card { background: rgba(255,255,255,0.06); backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.08); border-radius: 14px; overflow: hidden; cursor: pointer; transition: all 0.25s ease; }
-.tb-media-card:hover { background: rgba(255,255,255,0.1); transform: translateY(-3px); box-shadow: 0 6px 20px rgba(0,0,0,0.08); }
+h1 { font-size: 2rem; font-weight: 700; margin: 0 0 2rem; color: #1f2937; }
+.tb-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(24rem, 1fr)); gap: 2rem; }
+.tb-media-card { background: rgba(255,255,255,0.06); backdrop-filter: blur(0.8rem); border: 1px solid rgba(255,255,255,0.08); border-radius: 1.4rem; overflow: hidden; cursor: pointer; transition: all 0.25s ease; }
+.tb-media-card:hover { background: rgba(255,255,255,0.1); transform: translateY(-0.3rem); box-shadow: 0 0.6rem 2rem rgba(0,0,0,0.08); }
 .tb-media-cover { width: 100%; aspect-ratio: 246 / 90; overflow: hidden; background: rgba(0,0,0,0.05); }
 .tb-media-cover img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s ease; }
 .tb-media-card:hover .tb-media-cover img { transform: scale(1.05); }
 .tb-media-placeholder { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, rgba(255,255,255,0.05), rgba(255,255,255,0.1)); }
-.tb-placeholder-icon { font-size: 36px; opacity: 0.6; }
-.tb-media-body { padding: 14px 16px; }
-.tb-media-name { font-size: 15px; font-weight: 600; color: #1f2937; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.tb-media-count { font-size: 12px; color: rgba(255,255,255,0.5); margin-top: 4px; }
+.tb-placeholder-icon { font-size: 3.6rem; opacity: 0.6; }
+.tb-media-body { padding: 1.4rem 1.6rem; }
+.tb-media-name { font-size: 1.5rem; font-weight: 600; color: #1f2937; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.tb-media-count { font-size: 1.2rem; color: rgba(255,255,255,0.5); margin-top: 0.4rem; }
 </style>

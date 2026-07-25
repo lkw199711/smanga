@@ -151,33 +151,33 @@ async function submitAdd() {
 
 <style scoped>
 .td-media-list {
-  max-width: 1200px;
+  max-width: 120rem;
   margin: 0 auto;
-  padding: 20px;
+  padding: 2rem;
 }
 
 .td-page-head {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 24px;
+  margin-bottom: 2.4rem;
 }
 
 .td-page-head h1 {
-  font-size: 20px;
+  font-size: 2rem;
   font-weight: 700;
   margin: 0;
   color: var(--sd-text);
 }
 
 .td-btn-primary {
-  padding: 8px 16px;
-  font-size: 13px;
+  padding: 0.8rem 1.6rem;
+  font-size: 1.3rem;
   font-weight: 500;
   color: #fff;
   background: var(--sd-primary);
   border: none;
-  border-radius: 8px;
+  border-radius: 0.8rem;
   cursor: pointer;
 }
 
@@ -187,13 +187,13 @@ async function submitAdd() {
 }
 
 .td-btn-ghost {
-  padding: 8px 16px;
-  font-size: 13px;
+  padding: 0.8rem 1.6rem;
+  font-size: 1.3rem;
   font-weight: 500;
   color: var(--sd-text-muted);
   background: transparent;
   border: 1px solid var(--sd-border);
-  border-radius: 8px;
+  border-radius: 0.8rem;
   cursor: pointer;
 }
 
@@ -203,14 +203,14 @@ async function submitAdd() {
 
 .td-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 20px;
+  grid-template-columns: repeat(auto-fill, minmax(28rem, 1fr));
+  gap: 2rem;
 }
 
 .td-media-card {
   background: var(--sd-card);
   border: 1px solid var(--sd-border);
-  border-radius: 12px;
+  border-radius: 1.2rem;
   overflow: hidden;
   cursor: pointer;
   transition: all 0.25s ease;
@@ -218,8 +218,8 @@ async function submitAdd() {
 
 .td-media-card:hover {
   border-color: var(--sd-primary);
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
-  transform: translateY(-3px);
+  box-shadow: 0 0.6rem 2rem rgba(0, 0, 0, 0.08);
+  transform: translateY(-0.3rem);
 }
 
 .td-media-cover {
@@ -250,16 +250,16 @@ async function submitAdd() {
 }
 
 .td-placeholder-icon {
-  font-size: 42px;
+  font-size: 4.2rem;
   opacity: 0.7;
 }
 
 .td-media-body {
-  padding: 14px 16px;
+  padding: 1.4rem 1.6rem;
 }
 
 .td-media-name {
-  font-size: 15px;
+  font-size: 1.5rem;
   font-weight: 600;
   color: var(--sd-text);
   white-space: nowrap;
@@ -268,15 +268,15 @@ async function submitAdd() {
 }
 
 .td-media-meta {
-  font-size: 12px;
+  font-size: 1.2rem;
   color: var(--sd-text-muted);
-  margin-top: 5px;
+  margin-top: 0.5rem;
 }
 
 .td-media-path {
-  font-size: 11px;
+  font-size: 1.1rem;
   color: var(--sd-text-faint);
-  margin-top: 4px;
+  margin-top: 0.4rem;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -285,7 +285,7 @@ async function submitAdd() {
 .td-empty {
   grid-column: 1 / -1;
   text-align: center;
-  padding: 60px;
+  padding: 6rem;
   color: var(--sd-text-muted);
 }
 
@@ -300,41 +300,41 @@ async function submitAdd() {
 }
 
 .td-modal-card {
-  width: min(520px, calc(100vw - 32px));
+  width: min(52rem, calc(100vw - 3.2rem));
   background: var(--sd-card);
   border: 1px solid var(--sd-border);
-  border-radius: 14px;
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12);
-  padding: 20px;
+  border-radius: 1.4rem;
+  box-shadow: 0 1.2rem 4rem rgba(0, 0, 0, 0.12);
+  padding: 2rem;
 }
 
 .td-modal-title {
-  font-size: 16px;
+  font-size: 1.6rem;
   font-weight: 700;
   color: var(--sd-text);
-  margin-bottom: 14px;
+  margin-bottom: 1.4rem;
 }
 
 .td-form {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 8px;
+  gap: 0.8rem;
 }
 
 .td-label {
-  font-size: 12px;
+  font-size: 1.2rem;
   font-weight: 600;
   color: var(--sd-text-muted);
-  margin-top: 6px;
+  margin-top: 0.6rem;
 }
 
 .td-input {
-  height: 40px;
-  padding: 0 12px;
+  height: 4rem;
+  padding: 0 1.2rem;
   border: 1px solid var(--sd-border);
-  border-radius: 10px;
+  border-radius: 1rem;
   outline: none;
-  font-size: 13px;
+  font-size: 1.3rem;
   background: var(--sd-card);
   color: var(--sd-text);
 }
@@ -346,13 +346,13 @@ async function submitAdd() {
 .td-modal-actions {
   display: flex;
   justify-content: flex-end;
-  gap: 10px;
-  margin-top: 16px;
+  gap: 1rem;
+  margin-top: 1.6rem;
 }
 
 .td-error {
-  margin-top: 10px;
-  font-size: 12px;
+  margin-top: 1rem;
+  font-size: 1.2rem;
   color: #ef4444;
 }
 </style>

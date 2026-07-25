@@ -162,15 +162,15 @@ onMounted(() => {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 10px 16px;
+  padding: 1rem 1.6rem;
   background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(8px);
+  backdrop-filter: blur(0.8rem);
   border-bottom: 1px solid #eaeaea;
   z-index: 10;
 }
 
 .td-reader-title {
-  font-size: 14px;
+  font-size: 1.4rem;
   font-weight: 500;
   white-space: nowrap;
   overflow: hidden;
@@ -182,21 +182,21 @@ onMounted(() => {
 .td-reader-right {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 1rem;
 }
 
 .td-reader-modes {
   display: flex;
-  gap: 4px;
+  gap: 0.4rem;
 }
 
 .td-reader-mode {
-  padding: 6px 10px;
-  font-size: 12px;
+  padding: 0.6rem 1rem;
+  font-size: 1.2rem;
   color: #6b7280;
   background: #f3f4f6;
   border: 1px solid #eaeaea;
-  border-radius: 999px;
+  border-radius: 99.9rem;
   cursor: pointer;
 }
 
@@ -218,21 +218,21 @@ onMounted(() => {
 .td-reader-bottom {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 10px 16px;
+  gap: 1.2rem;
+  padding: 1rem 1.6rem;
   background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(8px);
+  backdrop-filter: blur(0.8rem);
   border-top: 1px solid #eaeaea;
   z-index: 10;
 }
 
 .td-reader-btn {
-  padding: 6px 14px;
-  font-size: 13px;
+  padding: 0.6rem 1.4rem;
+  font-size: 1.3rem;
   color: #374151;
   background: #f9fafb;
   border: 1px solid #e5e7eb;
-  border-radius: 6px;
+  border-radius: 0.6rem;
   cursor: pointer;
 }
 
@@ -242,24 +242,24 @@ onMounted(() => {
 }
 
 .td-reader-page {
-  font-size: 13px;
+  font-size: 1.3rem;
   color: #6b7280;
-  min-width: 84px;
+  min-width: 8.4rem;
   text-align: center;
 }
 
 .td-reader-progress {
   flex: 1;
-  height: 4px;
+  height: 0.4rem;
   background: #e5e7eb;
-  border-radius: 999px;
+  border-radius: 99.9rem;
   overflow: hidden;
 }
 
 .td-reader-progress-bar {
   height: 100%;
   background: #2563eb;
-  border-radius: 999px;
+  border-radius: 99.9rem;
   transition: width 0.2s;
 }
 
@@ -267,14 +267,14 @@ onMounted(() => {
   position: fixed;
   inset: 0;
   background: rgba(0, 0, 0, 0.35);
-  backdrop-filter: blur(6px);
+  backdrop-filter: blur(0.6rem);
   display: flex;
   justify-content: flex-end;
   z-index: 100;
 }
 
 .td-chapter-panel {
-  width: min(420px, 90vw);
+  width: min(42rem, 90vw);
   height: 100%;
   background: #fff;
   border-left: 1px solid #eaeaea;
@@ -286,37 +286,37 @@ onMounted(() => {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
-  padding: 12px 12px;
+  gap: 1.2rem;
+  padding: 1.2rem 1.2rem;
   border-bottom: 1px solid #eaeaea;
 }
 
 .td-chapter-head-title {
-  font-size: 13px;
+  font-size: 1.3rem;
   font-weight: 600;
   color: #111827;
 }
 
 .td-chapter-list {
-  padding: 10px 10px 14px;
+  padding: 1rem 1rem 1.4rem;
   overflow: auto;
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 0.6rem;
 }
 
 .td-chapter-item {
   width: 100%;
   text-align: left;
-  padding: 10px 10px;
-  border-radius: 10px;
+  padding: 1rem 1rem;
+  border-radius: 1rem;
   border: 1px solid #e5e7eb;
   background: #f9fafb;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 10px;
+  gap: 1rem;
 }
 
 .td-chapter-item.active {
@@ -325,7 +325,7 @@ onMounted(() => {
 }
 
 .td-chapter-name {
-  font-size: 13px;
+  font-size: 1.3rem;
   color: #374151;
   white-space: nowrap;
   overflow: hidden;
@@ -333,7 +333,7 @@ onMounted(() => {
 }
 
 .td-chapter-meta {
-  font-size: 12px;
+  font-size: 1.2rem;
   color: #9ca3af;
   flex-shrink: 0;
 }

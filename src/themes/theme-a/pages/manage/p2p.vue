@@ -13,7 +13,7 @@
 
     <!-- 群组管理 -->
     <div v-if="activeTab === 'groups'">
-      <div class="ta-page-actions" style="margin-bottom:16px">
+      <div class="ta-page-actions" style="margin-bottom:1.6rem">
         <button class="ta-btn-ghost" @click="loadGroups">🔄 刷新</button>
         <button class="ta-btn-primary" @click="showGroupAdd = true">+ 创建群组</button>
         <button class="ta-btn-ghost" @click="showGroupJoin = true">🔗 加入群组</button>
@@ -38,7 +38,7 @@
 
     <!-- 共享管理 -->
     <div v-if="activeTab === 'shares'">
-      <div class="ta-page-actions" style="margin-bottom:16px">
+      <div class="ta-page-actions" style="margin-bottom:1.6rem">
         <button class="ta-btn-ghost" @click="loadShares">🔄 刷新</button>
       </div>
       <ResponsiveTable
@@ -61,7 +61,7 @@
 
     <!-- 传输任务 -->
     <div v-if="activeTab === 'transfers'">
-      <div class="ta-page-actions" style="margin-bottom:16px">
+      <div class="ta-page-actions" style="margin-bottom:1.6rem">
         <button class="ta-btn-ghost" @click="loadTransfers">🔄 刷新</button>
         <button class="ta-btn-ghost" @click="clearTransfers">🧹 清理已完成</button>
       </div>
@@ -89,10 +89,10 @@
 
     <!-- Tracker 管理 -->
     <div v-if="activeTab === 'tracker'">
-      <div class="ta-page-actions" style="margin-bottom:16px">
+      <div class="ta-page-actions" style="margin-bottom:1.6rem">
         <button class="ta-btn-ghost" @click="loadTrackerGroups">🔄 刷新群组</button>
       </div>
-      <h3 style="margin-bottom:12px;font-size:15px;font-weight:600">Tracker 群组</h3>
+      <h3 style="margin-bottom:1.2rem;font-size:1.5rem;font-weight:600">Tracker 群组</h3>
       <ResponsiveTable
         :columns="trackerGroupColumns"
         :items="trackerGroupList"
@@ -110,10 +110,10 @@
         </template>
       </ResponsiveTable>
 
-      <div class="ta-page-actions" style="margin-bottom:16px;margin-top:24px">
+      <div class="ta-page-actions" style="margin-bottom:1.6rem;margin-top:2.4rem">
         <button class="ta-btn-ghost" @click="loadTrackerNodes">🔄 刷新节点</button>
       </div>
-      <h3 style="margin-bottom:12px;font-size:15px;font-weight:600">Tracker 节点</h3>
+      <h3 style="margin-bottom:1.2rem;font-size:1.5rem;font-weight:600">Tracker 节点</h3>
       <ResponsiveTable
         :columns="trackerNodeColumns"
         :items="trackerNodeList"
@@ -299,38 +299,38 @@ onMounted(() => {
 </script>
 
 <style scoped>
-.ta-manage-page { max-width: 1100px; }
-.ta-page-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; flex-wrap: wrap; gap: 12px; }
-.ta-page-head h1 { font-size: 20px; font-weight: 700; margin: 0; }
-.ta-page-actions { display: flex; gap: 8px; flex-wrap: wrap; }
-.ta-tabs { display: flex; gap: 4px; margin-bottom: 20px; border-bottom: 2px solid #eaeaea; padding-bottom: 0; }
-.ta-tab { padding: 8px 16px; border: none; background: none; cursor: pointer; font-size: 14px; color: #6b7280; border-bottom: 2px solid transparent; margin-bottom: -2px; transition: .2s; }
+.ta-manage-page { max-width: 110rem; }
+.ta-page-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 2rem; flex-wrap: wrap; gap: 1.2rem; }
+.ta-page-head h1 { font-size: 2rem; font-weight: 700; margin: 0; }
+.ta-page-actions { display: flex; gap: 0.8rem; flex-wrap: wrap; }
+.ta-tabs { display: flex; gap: 0.4rem; margin-bottom: 2rem; border-bottom: 0.2rem solid #eaeaea; padding-bottom: 0; }
+.ta-tab { padding: 0.8rem 1.6rem; border: none; background: none; cursor: pointer; font-size: 1.4rem; color: #6b7280; border-bottom: 0.2rem solid transparent; margin-bottom: -0.2rem; transition: .2s; }
 .ta-tab:hover { color: #2563eb; }
 .ta-tab.active { color: #2563eb; border-bottom-color: #2563eb; font-weight: 600; }
-.ta-btn-primary,.ta-btn-ghost,.ta-btn-sm,.ta-btn-sm-danger { cursor: pointer; font-size: 13px; border-radius: 8px; }
-.ta-btn-primary { padding: 8px 16px; color: #fff; background: #2563eb; border: none; font-weight: 500; }
+.ta-btn-primary,.ta-btn-ghost,.ta-btn-sm,.ta-btn-sm-danger { cursor: pointer; font-size: 1.3rem; border-radius: 0.8rem; }
+.ta-btn-primary { padding: 0.8rem 1.6rem; color: #fff; background: #2563eb; border: none; font-weight: 500; }
 .ta-btn-primary:hover { background: #1d4ed8; }
-.ta-btn-ghost { padding: 8px 16px; color: #4b5563; background: #fff; border: 1px solid #eaeaea; }
+.ta-btn-ghost { padding: 0.8rem 1.6rem; color: #4b5563; background: #fff; border: 1px solid #eaeaea; }
 .ta-btn-ghost:hover { background: #f3f4f6; }
-.ta-btn-sm { padding: 5px 10px; color: #2563eb; background: #eff6ff; border: 1px solid #bfdbfe; font-size: 12px; }
+.ta-btn-sm { padding: 0.5rem 1rem; color: #2563eb; background: #eff6ff; border: 1px solid #bfdbfe; font-size: 1.2rem; }
 .ta-btn-sm:hover { background: #dbeafe; }
 .ta-btn-sm-danger { color: #ef4444; background: #fef2f2; border-color: #fecaca; }
 .ta-btn-sm-danger:hover { background: #fee2e2; }
-.ta-badge { padding: 2px 10px; border-radius: 10px; font-size: 12px; display: inline-block; }
+.ta-badge { padding: 0.2rem 1rem; border-radius: 1rem; font-size: 1.2rem; display: inline-block; }
 .ta-badge-success { color: #16a34a; background: #f0fdf4; }
 .ta-badge-danger { color: #dc2626; background: #fef2f2; }
 .ta-badge-active { color: #2563eb; background: #eff6ff; }
 .ta-badge-wait { color: #d97706; background: #fffbeb; }
 .ta-dialog-overlay { position: fixed; inset: 0; z-index: 200; background: rgba(0,0,0,.45); display: flex; align-items: center; justify-content: center; }
-.ta-dialog { background: #fff; border-radius: 14px; width: 480px; max-width: 90vw; max-height: 85vh; overflow-y: auto; box-shadow: 0 8px 32px rgba(0,0,0,.12); }
-.ta-dialog-head { display: flex; align-items: center; justify-content: space-between; padding: 16px 20px; border-bottom: 1px solid #eaeaea; }
-.ta-dialog-head h3 { margin: 0; font-size: 16px; font-weight: 600; }
-.ta-dialog-close { width: 32px; height: 32px; border: none; background: none; font-size: 20px; cursor: pointer; color: #9ca3af; border-radius: 6px; }
+.ta-dialog { background: #fff; border-radius: 1.4rem; width: 48rem; max-width: 90vw; max-height: 85vh; overflow-y: auto; box-shadow: 0 0.8rem 3.2rem rgba(0,0,0,.12); }
+.ta-dialog-head { display: flex; align-items: center; justify-content: space-between; padding: 1.6rem 2rem; border-bottom: 1px solid #eaeaea; }
+.ta-dialog-head h3 { margin: 0; font-size: 1.6rem; font-weight: 600; }
+.ta-dialog-close { width: 3.2rem; height: 3.2rem; border: none; background: none; font-size: 2rem; cursor: pointer; color: #9ca3af; border-radius: 0.6rem; }
 .ta-dialog-close:hover { background: #f3f4f6; }
-.ta-dialog-body { padding: 20px; display: flex; flex-direction: column; gap: 16px; }
-.ta-dialog-foot { display: flex; justify-content: flex-end; gap: 8px; padding: 12px 20px; border-top: 1px solid #eaeaea; }
-.ta-field { display: flex; flex-direction: column; gap: 6px; }
-.ta-field span { font-size: 13px; font-weight: 500; color: #374151; }
-.ta-field input { padding: 8px 12px; border: 1px solid #eaeaea; border-radius: 8px; font-size: 13px; outline: none; }
+.ta-dialog-body { padding: 2rem; display: flex; flex-direction: column; gap: 1.6rem; }
+.ta-dialog-foot { display: flex; justify-content: flex-end; gap: 0.8rem; padding: 1.2rem 2rem; border-top: 1px solid #eaeaea; }
+.ta-field { display: flex; flex-direction: column; gap: 0.6rem; }
+.ta-field span { font-size: 1.3rem; font-weight: 500; color: #374151; }
+.ta-field input { padding: 0.8rem 1.2rem; border: 1px solid #eaeaea; border-radius: 0.8rem; font-size: 1.3rem; outline: none; }
 .ta-field input:focus { border-color: #2563eb; }
 </style>

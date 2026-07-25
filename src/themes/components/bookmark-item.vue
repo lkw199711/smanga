@@ -85,9 +85,9 @@ const progress = computed(() => {
 	position: relative;
 	display: flex;
 	align-items: center;
-	gap: 14px;
-	padding: 12px;
-	border-radius: 12px;
+	gap: 1.4rem;
+	padding: 1.2rem;
+	border-radius: 1.2rem;
 	cursor: pointer;
 	-webkit-user-select: none;
 	-moz-user-select: none;
@@ -113,7 +113,7 @@ const progress = computed(() => {
 
 .t-bookmark-item--A:hover {
 	border-color: #d1d5db;
-	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+	box-shadow: 0 0.2rem 0.8rem rgba(0, 0, 0, 0.04);
 }
 
 .t-bookmark-item--B {
@@ -123,7 +123,7 @@ const progress = computed(() => {
 
 .t-bookmark-item--B:hover {
 	border-color: #d1d5db;
-	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+	box-shadow: 0 0.2rem 0.8rem rgba(0, 0, 0, 0.04);
 }
 
 .t-bookmark-item--D {
@@ -137,28 +137,28 @@ const progress = computed(() => {
 
 .t-bookmark-item__cover {
 	flex-shrink: 0;
-	width: 52px;
-	height: 70px;
-	border-radius: 10px;
+	width: 5.2rem;
+	height: 7rem;
+	border-radius: 1rem;
 }
 
 .t-bookmark-item__bookmark {
 	position: absolute;
-	top: 6px;
-	left: 6px;
-	font-size: 18px;
+	top: 0.6rem;
+	left: 0.6rem;
+	font-size: 1.8rem;
 	color: var(--el-color-warning, #f59e0b);
-	text-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+	text-shadow: 0 0.2rem 0.8rem rgba(0, 0, 0, 0.35);
 }
 
 .t-bookmark-item__page {
 	position: absolute;
-	left: 6px;
-	bottom: 6px;
-	padding: 2px 6px;
-	font-size: 11px;
+	left: 0.6rem;
+	bottom: 0.6rem;
+	padding: 0.2rem 0.6rem;
+	font-size: 1.1rem;
 	font-weight: 800;
-	border-radius: 999px;
+	border-radius: 99.9rem;
 	background: rgba(0, 0, 0, 0.65);
 	color: #fff;
 }
@@ -169,7 +169,7 @@ const progress = computed(() => {
 }
 
 .t-bookmark-item__title {
-	font-size: 14px;
+	font-size: 1.4rem;
 	font-weight: 600;
 	white-space: nowrap;
 	overflow: hidden;
@@ -177,8 +177,8 @@ const progress = computed(() => {
 }
 
 .t-bookmark-item__sub {
-	margin-top: 4px;
-	font-size: 12px;
+	margin-top: 0.4rem;
+	font-size: 1.2rem;
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;
@@ -214,7 +214,7 @@ const progress = computed(() => {
 	left: 0;
 	right: 0;
 	bottom: 0;
-	height: 3px;
+	height: 0.3rem;
 	background: rgba(128, 128, 128, 0.15);
 	z-index: 0;
 	pointer-events: none;
@@ -225,9 +225,9 @@ const progress = computed(() => {
 	left: 0;
 	top: 0;
 	height: 100%;
-	min-width: 2px;
+	min-width: 0.2rem;
 	background: #3b82f6;
-	border-radius: 0 2px 2px 0;
+	border-radius: 0 0.2rem 0.2rem 0;
 	transition: width 0.4s ease;
 }
 
@@ -236,7 +236,7 @@ const progress = computed(() => {
 	left: 0;
 	right: 0;
 	bottom: 0;
-	height: 3px;
+	height: 0.3rem;
 	background: #10b981;
 	z-index: 0;
 	pointer-events: none;

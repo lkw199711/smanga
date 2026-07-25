@@ -114,30 +114,30 @@ function getBadgeClass(_item: any, col: RtColumn): string {
 
 <style scoped>
 /* ===== 桌面端: 表格 ===== */
-.rt-root { max-width: 1100px; }
+.rt-root { max-width: 110rem; }
 .rt-table-wrap {
   background: #fff;
   border: 1px solid #eaeaea;
-  border-radius: 12px;
+  border-radius: 1.2rem;
   overflow-x: auto;
 }
 .rt-table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 13px;
+  font-size: 1.3rem;
 }
 .rt-table thead th {
   text-align: left;
-  padding: 10px 12px;
+  padding: 1rem 1.2rem;
   color: #6b7280;
   font-weight: 600;
-  font-size: 12px;
+  font-size: 1.2rem;
   border-bottom: 1px solid #eaeaea;
   white-space: nowrap;
   background: #fafafa;
 }
 .rt-table tbody td {
-  padding: 10px 12px;
+  padding: 1rem 1.2rem;
   border-bottom: 1px solid #f3f4f6;
   color: #374151;
 }
@@ -148,18 +148,18 @@ function getBadgeClass(_item: any, col: RtColumn): string {
   background: #fafafa;
 }
 .rt-col-check {
-  width: 40px;
+  width: 4rem;
   text-align: center;
 }
 .rt-col-actions {
   white-space: nowrap;
   display: flex;
-  gap: 6px;
+  gap: 0.6rem;
 }
 .rt-empty {
   text-align: center;
   color: #9ca3af;
-  padding: 32px 0 !important;
+  padding: 3.2rem 0 !important;
 }
 
 /* 分页 */
@@ -167,16 +167,16 @@ function getBadgeClass(_item: any, col: RtColumn): string {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 16px;
-  margin-top: 16px;
-  font-size: 13px;
+  gap: 1.6rem;
+  margin-top: 1.6rem;
+  font-size: 1.3rem;
   color: #6b7280;
 }
 .rt-pager button {
-  padding: 6px 14px;
-  font-size: 13px;
+  padding: 0.6rem 1.4rem;
+  font-size: 1.3rem;
   border: 1px solid #eaeaea;
-  border-radius: 8px;
+  border-radius: 0.8rem;
   background: #fff;
   cursor: pointer;
   color: #374151;
@@ -190,7 +190,7 @@ function getBadgeClass(_item: any, col: RtColumn): string {
 }
 
 /* ===== 手机端: 卡片模式 ===== */
-@media (max-width: 768px) {
+@media (max-width: 76.8rem) {
   .rt-root {
     max-width: 100%;
   }
@@ -215,12 +215,12 @@ function getBadgeClass(_item: any, col: RtColumn): string {
   }
 
   .rt-table tbody tr {
-    margin-bottom: 8px;
+    margin-bottom: 0.8rem;
     border: 1px solid #eaeaea;
-    border-radius: 10px;
+    border-radius: 1rem;
     background: #fff;
     overflow: hidden;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+    box-shadow: 0 1px 0.3rem rgba(0, 0, 0, 0.04);
   }
 
   .rt-table tbody tr:hover td {
@@ -231,11 +231,11 @@ function getBadgeClass(_item: any, col: RtColumn): string {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 6px 12px;
+    padding: 0.6rem 1.2rem;
     border-bottom: 1px solid #f3f4f6;
-    font-size: 13px;
+    font-size: 1.3rem;
     text-align: right;
-    min-height: 24px;
+    min-height: 2.4rem;
   }
 
   .rt-table tbody td:last-child {
@@ -246,17 +246,17 @@ function getBadgeClass(_item: any, col: RtColumn): string {
   .rt-table tbody td::before {
     content: attr(data-label);
     font-weight: 600;
-    font-size: 11px;
+    font-size: 1.1rem;
     color: #6b7280;
     text-align: left;
     flex-shrink: 0;
-    margin-right: 8px;
+    margin-right: 0.8rem;
     white-space: nowrap;
   }
 
   /* 复选框列: 卡片顶部左对齐，不显示 label */
   .rt-col-check {
-    padding: 6px 12px 2px;
+    padding: 0.6rem 1.2rem 0.2rem;
     border-bottom: none;
     text-align: left;
     justify-content: flex-start;
@@ -265,15 +265,15 @@ function getBadgeClass(_item: any, col: RtColumn): string {
     display: none;
   }
   .rt-col-check input[type="checkbox"] {
-    width: 18px;
-    height: 18px;
+    width: 1.8rem;
+    height: 1.8rem;
     cursor: pointer;
     accent-color: #2563eb;
   }
 
   /* 操作按钮: 卡片底部全宽 */
   .rt-col-actions {
-    padding: 4px 12px 8px;
+    padding: 0.4rem 1.2rem 0.8rem;
     border-bottom: none;
     justify-content: flex-end;
     border-top: 1px solid #f3f4f6;
@@ -290,9 +290,9 @@ function getBadgeClass(_item: any, col: RtColumn): string {
   /* 空状态 */
   .rt-empty {
     border: 1px solid #eaeaea;
-    border-radius: 12px;
+    border-radius: 1.2rem;
     background: #fff;
-    padding: 48px 20px !important;
+    padding: 4.8rem 2rem !important;
   }
 }
 </style>

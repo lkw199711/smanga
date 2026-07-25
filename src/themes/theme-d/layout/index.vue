@@ -515,14 +515,14 @@ onBeforeUnmount(() => {
 	height: 100vh;
 	background: var(--sd-back);
 	color: var(--sd-text);
-	font-size: 14px;
+	font-size: 1.4rem;
 	font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
 }
 
 .sd-sidebar {
 	flex-shrink: 0;
-	width: 240px;
-	padding: 20px 12px;
+	width: 24rem;
+	padding: 2rem 1.2rem;
 	background: var(--sd-card);
 	border-right: 1px solid var(--sd-border);
 	display: flex;
@@ -533,52 +533,52 @@ onBeforeUnmount(() => {
 .sd-logo {
 	display: flex;
 	align-items: center;
-	gap: 10px;
-	padding: 4px 8px 18px;
+	gap: 1rem;
+	padding: 0.4rem 0.8rem 1.8rem;
 	cursor: pointer;
 	user-select: none;
 }
 
 .sd-logo-mark {
-	width: 28px;
-	height: 28px;
+	width: 2.8rem;
+	height: 2.8rem;
 	display: flex;
 	align-items: center;
 	justify-content: center;
 	background: var(--sd-primary);
 	color: #fff;
 	font-weight: 800;
-	border-radius: 8px;
+	border-radius: 0.8rem;
 }
 
 .sd-logo-text {
-	font-size: 16px;
+	font-size: 1.6rem;
 	font-weight: 700;
 }
 
 .sd-theme-switcher {
-	padding: 10px 8px 14px;
-	margin-bottom: 10px;
+	padding: 1rem 0.8rem 1.4rem;
+	margin-bottom: 1rem;
 	border-bottom: 1px dashed var(--sd-border);
 }
 
 .sd-theme-label {
-	font-size: 11px;
+	font-size: 1.1rem;
 	font-weight: 600;
 	color: var(--sd-text-muted);
-	margin-bottom: 8px;
+	margin-bottom: 0.8rem;
 }
 
 .sd-theme-options {
 	display: flex;
 	flex-wrap: wrap;
-	gap: 6px;
+	gap: 0.6rem;
 }
 
 .sd-theme-swatch {
-	width: 22px;
-	height: 22px;
-	border: 2px solid var(--sd-card);
+	width: 2.2rem;
+	height: 2.2rem;
+	border: 0.2rem solid var(--sd-card);
 	outline: 1px solid var(--sd-border);
 	border-radius: 50%;
 	cursor: pointer;
@@ -590,23 +590,23 @@ onBeforeUnmount(() => {
 }
 
 .sd-theme-swatch.active {
-	outline: 2px solid var(--sd-primary);
+	outline: 0.2rem solid var(--sd-primary);
 	transform: scale(1.1);
 }
 
 .sd-nav {
 	display: flex;
 	flex-direction: column;
-	gap: 2px;
+	gap: 0.2rem;
 }
 
 .sd-nav-item {
 	display: flex;
 	align-items: center;
-	gap: 10px;
-	padding: 9px 10px;
+	gap: 1rem;
+	padding: 0.9rem 1rem;
 	color: var(--sd-text-muted);
-	border-radius: 10px;
+	border-radius: 1rem;
 	cursor: pointer;
 	transition: all 0.15s;
 }
@@ -623,7 +623,7 @@ onBeforeUnmount(() => {
 }
 
 .sd-nav-icon {
-	width: 18px;
+	width: 1.8rem;
 	text-align: center;
 }
 
@@ -636,23 +636,23 @@ onBeforeUnmount(() => {
 
 .sd-nav-count {
 	margin-left: auto;
-	font-size: 11px;
+	font-size: 1.1rem;
 	color: var(--sd-text-faint);
 }
 
 .sd-manage-toggle {
 	margin-left: auto;
-	width: 32px;
-	height: 32px;
+	width: 3.2rem;
+	height: 3.2rem;
 	display: flex;
 	align-items: center;
 	justify-content: center;
 	border: 1px solid var(--sd-border);
-	border-radius: 8px;
+	border-radius: 0.8rem;
 	background: var(--sd-card);
 	color: var(--sd-text-muted);
 	cursor: pointer;
-	font-size: 16px;
+	font-size: 1.6rem;
 	transition: all 0.15s;
 	flex-shrink: 0;
 }
@@ -675,16 +675,16 @@ onBeforeUnmount(() => {
 }
 
 .sd-nav-empty {
-	padding: 9px 10px;
-	font-size: 12px;
+	padding: 0.9rem 1rem;
+	font-size: 1.2rem;
 	color: var(--sd-text-faint);
 }
 
 .sd-sec-title {
-	padding: 12px 8px 6px;
+	padding: 1.2rem 0.8rem 0.6rem;
 	display: flex;
 	align-items: center;
-	font-size: 11px;
+	font-size: 1.1rem;
 	font-weight: 600;
 	color: var(--sd-text-faint);
 	text-transform: uppercase;
@@ -704,10 +704,10 @@ onBeforeUnmount(() => {
 .sd-user-trigger {
 	display: flex;
 	align-items: center;
-	gap: 10px;
-	padding: 10px 8px;
+	gap: 1rem;
+	padding: 1rem 0.8rem;
 	cursor: pointer;
-	border-radius: 8px;
+	border-radius: 0.8rem;
 	transition: background 0.15s;
 }
 
@@ -716,8 +716,8 @@ onBeforeUnmount(() => {
 }
 
 .sd-avatar {
-	width: 32px;
-	height: 32px;
+	width: 3.2rem;
+	height: 3.2rem;
 	display: flex;
 	align-items: center;
 	justify-content: center;
@@ -727,7 +727,7 @@ onBeforeUnmount(() => {
 	border-radius: 50%;
 	flex-shrink: 0;
 	overflow: hidden;
-	font-size: 14px;
+	font-size: 1.4rem;
 }
 
 .sd-avatar-img {
@@ -743,20 +743,20 @@ onBeforeUnmount(() => {
 
 .sd-user-name {
 	font-weight: 500;
-	font-size: 13px;
+	font-size: 1.3rem;
 	overflow: hidden;
 	text-overflow: ellipsis;
 	white-space: nowrap;
 }
 
 .sd-user-role {
-	font-size: 11px;
+	font-size: 1.1rem;
 	color: var(--sd-text-faint);
 }
 
 .sd-user-arrow {
 	margin-left: auto;
-	font-size: 12px;
+	font-size: 1.2rem;
 	color: var(--sd-text-faint);
 	transition: transform 0.2s;
 }
@@ -767,25 +767,25 @@ onBeforeUnmount(() => {
 
 .sd-user-dropdown {
 	position: absolute;
-	bottom: calc(100% + 8px);
-	left: 8px;
-	right: 8px;
+	bottom: calc(100% + 0.8rem);
+	left: 0.8rem;
+	right: 0.8rem;
 	background: var(--sd-card);
 	border: 1px solid var(--sd-border);
-	border-radius: 10px;
-	box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.08);
+	border-radius: 1rem;
+	box-shadow: 0 -0.4rem 1.6rem rgba(0, 0, 0, 0.08);
 	z-index: 300;
-	padding: 6px;
+	padding: 0.6rem;
 }
 
 .sd-user-dropdown-item {
 	display: flex;
 	align-items: center;
-	gap: 8px;
-	padding: 9px 12px;
-	font-size: 13px;
+	gap: 0.8rem;
+	padding: 0.9rem 1.2rem;
+	font-size: 1.3rem;
 	color: var(--sd-text-muted);
-	border-radius: 6px;
+	border-radius: 0.6rem;
 	cursor: pointer;
 	transition: all 0.15s;
 }
@@ -814,8 +814,8 @@ onBeforeUnmount(() => {
 .sd-topbar {
 	display: flex;
 	align-items: center;
-	gap: 16px;
-	padding: 14px 28px;
+	gap: 1.6rem;
+	padding: 1.4rem 2.8rem;
 	background: var(--sd-back);
 	border-bottom: 1px solid var(--sd-border);
 	flex-shrink: 0;
@@ -823,14 +823,14 @@ onBeforeUnmount(() => {
 
 .sd-search {
 	flex: 1;
-	max-width: 520px;
+	max-width: 52rem;
 	display: flex;
 	align-items: center;
-	gap: 8px;
-	padding: 8px 14px;
+	gap: 0.8rem;
+	padding: 0.8rem 1.4rem;
 	background: var(--sd-card);
 	border: 1px solid var(--sd-border);
-	border-radius: 10px;
+	border-radius: 1rem;
 }
 
 .sd-search input {
@@ -838,7 +838,7 @@ onBeforeUnmount(() => {
 	border: none;
 	outline: none;
 	background: transparent;
-	font-size: 13px;
+	font-size: 1.3rem;
 	color: var(--sd-text);
 }
 
@@ -848,16 +848,16 @@ onBeforeUnmount(() => {
 
 .sd-top-actions {
 	display: flex;
-	gap: 6px;
+	gap: 0.6rem;
 }
 
 .sd-btn {
-	padding: 7px 12px;
-	font-size: 13px;
+	padding: 0.7rem 1.2rem;
+	font-size: 1.3rem;
 	color: var(--sd-text-muted);
 	background: transparent;
 	border: 1px solid var(--sd-border);
-	border-radius: 8px;
+	border-radius: 0.8rem;
 	cursor: pointer;
 }
 
@@ -867,13 +867,13 @@ onBeforeUnmount(() => {
 }
 
 .sd-btn-primary {
-	padding: 7px 14px;
-	font-size: 13px;
+	padding: 0.7rem 1.4rem;
+	font-size: 1.3rem;
 	font-weight: 500;
 	color: #fff;
 	background: var(--sd-primary);
 	border: none;
-	border-radius: 8px;
+	border-radius: 0.8rem;
 	cursor: pointer;
 }
 
@@ -883,7 +883,7 @@ onBeforeUnmount(() => {
 
 .sd-main {
 	flex: 1;
-	padding: 28px;
+	padding: 2.8rem;
 	overflow: auto;
 }
 
@@ -895,13 +895,13 @@ onBeforeUnmount(() => {
 .sd-sort-btn {
 	display: flex;
 	align-items: center;
-	gap: 4px;
-	min-width: 90px;
+	gap: 0.4rem;
+	min-width: 9rem;
 	justify-content: space-between;
 }
 
 .sd-sort-arrow {
-	font-size: 10px;
+	font-size: 1rem;
 	transition: transform 0.2s;
 	color: var(--sd-text-faint);
 }
@@ -912,24 +912,24 @@ onBeforeUnmount(() => {
 
 .sd-sort-dropdown {
 	position: absolute;
-	top: calc(100% + 6px);
+	top: calc(100% + 0.6rem);
 	right: 0;
-	min-width: 180px;
+	min-width: 18rem;
 	background: var(--sd-card);
 	border: 1px solid var(--sd-border);
-	border-radius: 10px;
-	box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+	border-radius: 1rem;
+	box-shadow: 0 0.8rem 2.4rem rgba(0, 0, 0, 0.08);
 	z-index: 200;
-	padding: 6px;
-	max-height: 360px;
+	padding: 0.6rem;
+	max-height: 36rem;
 	overflow-y: auto;
 }
 
 .sd-sort-item {
-	padding: 8px 12px;
-	font-size: 13px;
+	padding: 0.8rem 1.2rem;
+	font-size: 1.3rem;
 	color: var(--sd-text-muted);
-	border-radius: 6px;
+	border-radius: 0.6rem;
 	cursor: pointer;
 	transition: all 0.15s;
 	white-space: nowrap;
@@ -953,27 +953,27 @@ onBeforeUnmount(() => {
 
 .sd-skin-dropdown {
 	position: absolute;
-	top: calc(100% + 6px);
+	top: calc(100% + 0.6rem);
 	right: 0;
-	min-width: 160px;
+	min-width: 16rem;
 	background: var(--sd-card);
 	border: 1px solid var(--sd-border);
-	border-radius: 10px;
-	box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+	border-radius: 1rem;
+	box-shadow: 0 0.8rem 2.4rem rgba(0, 0, 0, 0.08);
 	z-index: 200;
-	padding: 6px;
-	max-height: 420px;
+	padding: 0.6rem;
+	max-height: 42rem;
 	overflow-y: auto;
 }
 
 .sd-skin-item {
 	display: flex;
 	align-items: center;
-	gap: 8px;
-	padding: 8px 14px;
-	font-size: 13px;
+	gap: 0.8rem;
+	padding: 0.8rem 1.4rem;
+	font-size: 1.3rem;
 	color: var(--sd-text-muted);
-	border-radius: 6px;
+	border-radius: 0.6rem;
 	cursor: pointer;
 	transition: all 0.15s;
 }
@@ -990,23 +990,23 @@ onBeforeUnmount(() => {
 }
 
 .sd-theme-section-title {
-	padding: 6px 14px 4px;
-	font-size: 11px;
+	padding: 0.6rem 1.4rem 0.4rem;
+	font-size: 1.1rem;
 	font-weight: 600;
 	color: var(--sd-text-faint);
 	letter-spacing: 0.05em;
 }
 
 .sd-theme-divider {
-	margin: 6px 10px;
+	margin: 0.6rem 1rem;
 	border-top: 1px solid var(--sd-border);
 }
 
 .sd-theme-swatch-dot {
 	flex-shrink: 0;
-	width: 14px;
-	height: 14px;
+	width: 1.4rem;
+	height: 1.4rem;
 	border-radius: 50%;
-	border: 1.5px solid rgba(0, 0, 0, 0.1);
+	border: 0.15rem solid rgba(0, 0, 0, 0.1);
 }
 </style>

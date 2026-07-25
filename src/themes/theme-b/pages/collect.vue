@@ -69,13 +69,13 @@ function goManga(item: any) {
 }
 </script>
 <style scoped>
-.tb-page{max-width:980px;margin:0 auto}
-.tb-page-head{margin-bottom:18px}
-.tb-page-head h1{font-size:20px;font-weight:700;margin:0;color:#1f2937}
-.tb-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:16px}
-.tb-card{cursor:pointer;transition:transform .2s}.tb-card:hover{transform:translateY(-3px)}
-.tb-card-cover{aspect-ratio:3/4;border-radius:14px;overflow:hidden;box-shadow:0 4px 16px rgba(0,0,0,0.08);margin-bottom:8px}
-.tb-card-name{font-size:13px;font-weight:500;color:#1f2937;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.tb-chapter-list{display:flex;flex-direction:column;gap:10px;margin-bottom:18px}
-.tb-empty{text-align:center;padding:60px;color:#6b7280;grid-column:1/-1}
+.tb-page{max-width:98rem;margin:0 auto}
+.tb-page-head{margin-bottom:1.8rem}
+.tb-page-head h1{font-size:2rem;font-weight:700;margin:0;color:#1f2937}
+.tb-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(14rem,1fr));gap:1.6rem}
+.tb-card{cursor:pointer;transition:transform .2s}.tb-card:hover{transform:translateY(-0.3rem)}
+.tb-card-cover{aspect-ratio:3/4;border-radius:1.4rem;overflow:hidden;box-shadow:0 0.4rem 1.6rem rgba(0,0,0,0.08);margin-bottom:0.8rem}
+.tb-card-name{font-size:1.3rem;font-weight:500;color:#1f2937;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tb-chapter-list{display:flex;flex-direction:column;gap:1rem;margin-bottom:1.8rem}
+.tb-empty{text-align:center;padding:6rem;color:#6b7280;grid-column:1/-1}
 </style>

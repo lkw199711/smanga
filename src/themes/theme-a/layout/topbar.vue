@@ -304,22 +304,22 @@ onBeforeUnmount(() => {
 	z-index: 100;
 	display: flex;
 	align-items: center;
-	gap: 16px;
-	padding: 14px 28px;
+	gap: 1.6rem;
+	padding: 1.4rem 2.8rem;
 	background: #fafafa;
 	border-bottom: 1px solid #eaeaea;
 }
 
 .sa-search {
 	flex: 1;
-	max-width: 560px;
+	max-width: 56rem;
 	display: flex;
 	align-items: center;
-	gap: 8px;
-	padding: 8px 12px;
+	gap: 0.8rem;
+	padding: 0.8rem 1.2rem;
 	background: #fff;
 	border: 1px solid #eaeaea;
-	border-radius: 10px;
+	border-radius: 1rem;
 }
 
 .sa-search input {
@@ -327,7 +327,7 @@ onBeforeUnmount(() => {
 	border: none;
 	outline: none;
 	background: transparent;
-	font-size: 13px;
+	font-size: 1.3rem;
 	color: #171717;
 }
 
@@ -337,30 +337,30 @@ onBeforeUnmount(() => {
 
 .sa-search-icon {
 	color: #9ca3af;
-	font-size: 13px;
+	font-size: 1.3rem;
 }
 
 .sa-search-kbd {
-	padding: 2px 6px;
-	font-size: 11px;
+	padding: 0.2rem 0.6rem;
+	font-size: 1.1rem;
 	color: #6b7280;
 	background: #f3f4f6;
 	border: 1px solid #eaeaea;
-	border-radius: 4px;
+	border-radius: 0.4rem;
 }
 
 .sa-top-actions {
 	display: flex;
-	gap: 6px;
+	gap: 0.6rem;
 }
 
 .sa-btn-ghost {
-	padding: 7px 12px;
-	font-size: 13px;
+	padding: 0.7rem 1.2rem;
+	font-size: 1.3rem;
 	color: #4b5563;
 	background: transparent;
 	border: 1px solid transparent;
-	border-radius: 8px;
+	border-radius: 0.8rem;
 	cursor: pointer;
 }
 
@@ -370,13 +370,13 @@ onBeforeUnmount(() => {
 }
 
 .sa-btn-primary {
-	padding: 7px 14px;
-	font-size: 13px;
+	padding: 0.7rem 1.4rem;
+	font-size: 1.3rem;
 	font-weight: 500;
 	color: #fff;
 	background: #2563eb;
 	border: none;
-	border-radius: 8px;
+	border-radius: 0.8rem;
 	cursor: pointer;
 }
 
@@ -390,22 +390,22 @@ onBeforeUnmount(() => {
 
 .sa-theme-dropdown {
 	position: absolute;
-	top: calc(100% + 6px);
+	top: calc(100% + 0.6rem);
 	right: 0;
 	background: #fff;
 	border: 1px solid #eaeaea;
-	border-radius: 10px;
-	padding: 8px;
-	box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+	border-radius: 1rem;
+	padding: 0.8rem;
+	box-shadow: 0 0.8rem 2.4rem rgba(0, 0, 0, 0.08);
 	z-index: 300;
-	min-width: 180px;
-	max-height: 480px;
+	min-width: 18rem;
+	max-height: 48rem;
 	overflow-y: auto;
 }
 
 .sa-theme-section-title {
-	padding: 6px 10px 4px;
-	font-size: 11px;
+	padding: 0.6rem 1rem 0.4rem;
+	font-size: 1.1rem;
 	font-weight: 600;
 	color: #9ca3af;
 	text-transform: uppercase;
@@ -413,17 +413,17 @@ onBeforeUnmount(() => {
 }
 
 .sa-theme-divider {
-	margin: 6px 10px;
+	margin: 0.6rem 1rem;
 	border-top: 1px solid #eaeaea;
 }
 
 .sa-theme-option {
 	display: flex;
 	align-items: center;
-	gap: 8px;
-	padding: 8px 14px;
-	font-size: 13px;
-	border-radius: 6px;
+	gap: 0.8rem;
+	padding: 0.8rem 1.4rem;
+	font-size: 1.3rem;
+	border-radius: 0.6rem;
 	cursor: pointer;
 	color: #4b5563;
 }
@@ -440,10 +440,10 @@ onBeforeUnmount(() => {
 
 .sa-theme-swatch {
 	flex-shrink: 0;
-	width: 14px;
-	height: 14px;
+	width: 1.4rem;
+	height: 1.4rem;
 	border-radius: 50%;
-	border: 1.5px solid rgba(0, 0, 0, 0.1);
+	border: 0.15rem solid rgba(0, 0, 0, 0.1);
 }
 
 /* 排序下拉 */
@@ -453,24 +453,24 @@ onBeforeUnmount(() => {
 
 .sa-sort-dropdown {
 	position: absolute;
-	top: calc(100% + 6px);
+	top: calc(100% + 0.6rem);
 	right: 0;
-	min-width: 180px;
+	min-width: 18rem;
 	background: #fff;
 	border: 1px solid #eaeaea;
-	border-radius: 10px;
-	box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+	border-radius: 1rem;
+	box-shadow: 0 0.8rem 2.4rem rgba(0, 0, 0, 0.08);
 	z-index: 200;
-	padding: 6px;
-	max-height: 360px;
+	padding: 0.6rem;
+	max-height: 36rem;
 	overflow-y: auto;
 }
 
 .sa-sort-item {
-	padding: 8px 14px;
-	font-size: 13px;
+	padding: 0.8rem 1.4rem;
+	font-size: 1.3rem;
 	color: #4b5563;
-	border-radius: 6px;
+	border-radius: 0.6rem;
 	cursor: pointer;
 	white-space: nowrap;
 	transition: all 0.15s;

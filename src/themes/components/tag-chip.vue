@@ -51,12 +51,12 @@ const chipStyle = computed(() => {
 .tm-tag-chip {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: 0.6rem;
   /* PC-first defaults: compact rectangle with soft radius, larger readable text */
-  padding: 5px 10px;
-  min-height: 28px;
-  border-radius: 6px;
-  font-size: 13px;
+  padding: 0.5rem 1rem;
+  min-height: 2.8rem;
+  border-radius: 0.6rem;
+  font-size: 1.3rem;
   line-height: 1.25;
   font-weight: 500;
   letter-spacing: 0.01em;
@@ -93,8 +93,8 @@ const chipStyle = computed(() => {
 }
 
 .tm-tag-chip__dot {
-  width: 6px;
-  height: 6px;
+  width: 0.6rem;
+  height: 0.6rem;
   border-radius: 50%;
   background: currentColor;
   opacity: 0.55;
@@ -103,21 +103,21 @@ const chipStyle = computed(() => {
 .tm-tag-chip--active .tm-tag-chip__dot { opacity: 0.85; }
 
 .tm-tag-chip__count {
-  font-size: 11px;
+  font-size: 1.1rem;
   opacity: 0.7;
-  margin-left: 2px;
+  margin-left: 0.2rem;
 }
 
 /* Coarse-pointer (touch) — pill shape with larger tap target */
 @media (pointer: coarse) {
   .tm-tag-chip {
-    min-height: 34px;
-    padding: 7px 14px;
-    font-size: 14px;
-    border-radius: 999px;
+    min-height: 3.4rem;
+    padding: 0.7rem 1.4rem;
+    font-size: 1.4rem;
+    border-radius: 99.9rem;
   }
-  .tm-tag-chip__dot { width: 7px; height: 7px; }
-  .tm-tag-chip__count { font-size: 12px; }
+  .tm-tag-chip__dot { width: 0.7rem; height: 0.7rem; }
+  .tm-tag-chip__count { font-size: 1.2rem; }
 }
 
 @media (prefers-reduced-motion: reduce) {

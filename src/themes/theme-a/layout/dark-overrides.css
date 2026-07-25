@@ -79,7 +79,7 @@
 .sa-dark .sa-sort-dropdown {
 	background: var(--sa-card) !important;
 	border-color: var(--sa-border) !important;
-	box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5) !important;
+	box-shadow: 0 0.8rem 2.4rem rgba(0, 0, 0, 0.5) !important;
 }
 .sa-dark .sa-theme-section-title {
 	color: var(--sa-text-muted) !important;
@@ -248,7 +248,7 @@
 }
 .sa-dark ::-webkit-scrollbar-thumb {
 	background: var(--sa-border);
-	border-radius: 4px;
+	border-radius: 0.4rem;
 }
 .sa-dark ::-webkit-scrollbar-thumb:hover {
 	background: var(--sa-text-muted);
@@ -461,7 +461,7 @@
 .sa-dark .sa-stat-card {
 	background: var(--sa-card) !important;
 	border-color: var(--sa-border) !important;
-	box-shadow: 0 1px 2px rgba(0, 0, 0, 0.4) !important;
+	box-shadow: 0 1px 0.2rem rgba(0, 0, 0, 0.4) !important;
 }
 .sa-dark .sa-stat-label,
 .sa-dark .sa-stat-delta {

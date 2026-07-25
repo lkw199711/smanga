@@ -26,9 +26,9 @@ function go(path: string) {
 }
 </script>
 <style scoped>
-h1{font-size:20px;font-weight:700;margin:0 0 20px;color:#1f2937}
-.tb-card{background:rgba(255,255,255,0.8);border:1px solid rgba(0,0,0,0.1);border-radius:16px;padding:60px;text-align:center;box-shadow:0 8px 32px rgba(0,0,0,0.08)}
-.tb-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px}
-.tb-btn{padding:12px 16px;background:rgba(255,255,255,1);border:1px solid rgba(0,0,0,0.1);border-radius:16px;color:#1f2937;cursor:pointer;font-size:13px;transition:all .15s;box-shadow:0 2px 8px rgba(0,0,0,0.05)}
-.tb-btn:hover{background:#f9fafb;transform:translateY(-1px);box-shadow:0 4px 12px rgba(0,0,0,0.1)}
+h1{font-size:2rem;font-weight:700;margin:0 0 2rem;color:#1f2937}
+.tb-card{background:rgba(255,255,255,0.8);border:1px solid rgba(0,0,0,0.1);border-radius:1.6rem;padding:6rem;text-align:center;box-shadow:0 0.8rem 3.2rem rgba(0,0,0,0.08)}
+.tb-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(18rem,1fr));gap:1.2rem}
+.tb-btn{padding:1.2rem 1.6rem;background:rgba(255,255,255,1);border:1px solid rgba(0,0,0,0.1);border-radius:1.6rem;color:#1f2937;cursor:pointer;font-size:1.3rem;transition:all .15s;box-shadow:0 0.2rem 0.8rem rgba(0,0,0,0.05)}
+.tb-btn:hover{background:#f9fafb;transform:translateY(-1px);box-shadow:0 0.4rem 1.2rem rgba(0,0,0,0.1)}
 </style>

@@ -101,7 +101,7 @@ watch(mangaId, prepare)
   min-height: 100vh;
   display: grid;
   place-content: center;
-  gap: 12px;
+  gap: 1.2rem;
   color: #64748b;
   background: #f8fafc;
   text-align: center;
@@ -109,8 +109,8 @@ watch(mangaId, prepare)
 
 button {
   border: 1px solid #cbd5e1;
-  border-radius: 6px;
-  padding: 7px 12px;
+  border-radius: 0.6rem;
+  padding: 0.7rem 1.2rem;
   background: #fff;
   color: #334155;
   cursor: pointer;

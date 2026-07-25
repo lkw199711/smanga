@@ -188,26 +188,26 @@ function goRead(ch: any, idx: number) {
 
 <style scoped>
 .td-chapter-list {
-  padding: 24px;
+  padding: 2.4rem;
   min-height: 100vh;
 }
 
 .td-header {
   display: flex;
   align-items: center;
-  margin-bottom: 24px;
-  gap: 16px;
+  margin-bottom: 2.4rem;
+  gap: 1.6rem;
 }
 
 .td-back {
   display: flex;
   align-items: center;
-  gap: 6px;
-  font-size: 13px;
+  gap: 0.6rem;
+  font-size: 1.3rem;
   color: #6b7280;
   cursor: pointer;
-  padding: 6px 12px;
-  border-radius: 6px;
+  padding: 0.6rem 1.2rem;
+  border-radius: 0.6rem;
   transition: background 0.15s;
 }
 
@@ -216,7 +216,7 @@ function goRead(ch: any, idx: number) {
 }
 
 .td-title {
-  font-size: 18px;
+  font-size: 1.8rem;
   font-weight: 700;
   color: #111827;
 }
@@ -226,13 +226,13 @@ function goRead(ch: any, idx: number) {
 }
 
 .td-btn-icon {
-  width: 36px;
-  height: 36px;
+  width: 3.6rem;
+  height: 3.6rem;
   border: none;
   background: transparent;
   border-radius: 50%;
   cursor: pointer;
-  font-size: 18px;
+  font-size: 1.8rem;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -245,22 +245,22 @@ function goRead(ch: any, idx: number) {
 
 .td-content {
   display: grid;
-  grid-template-columns: 300px 1fr;
-  gap: 32px;
+  grid-template-columns: 30rem 1fr;
+  gap: 3.2rem;
 }
 
 .td-manga-info {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 1.6rem;
 }
 
 .td-cover {
   width: 100%;
   aspect-ratio: 3 / 4;
-  border-radius: 12px;
+  border-radius: 1.2rem;
   overflow: hidden;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 0.4rem 1.2rem rgba(0, 0, 0, 0.08);
 }
 
 .td-cover img {
@@ -275,59 +275,59 @@ function goRead(ch: any, idx: number) {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 48px;
+  font-size: 4.8rem;
   background: linear-gradient(135deg, #dbeafe, #bfdbfe);
 }
 
 .td-info {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 0.8rem;
 }
 
 .td-author {
-  font-size: 13px;
+  font-size: 1.3rem;
   color: #6b7280;
 }
 
 .td-desc {
-  font-size: 13px;
+  font-size: 1.3rem;
   color: #374151;
   line-height: 1.5;
 }
 
 .td-meta {
   display: flex;
-  gap: 16px;
-  font-size: 12px;
+  gap: 1.6rem;
+  font-size: 1.2rem;
   color: #9ca3af;
 }
 
 .td-chapters {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 1.6rem;
 }
 
 .td-section-title {
-  font-size: 16px;
+  font-size: 1.6rem;
   font-weight: 700;
   color: #111827;
 }
 
 .td-chapter-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 12px;
+  grid-template-columns: repeat(auto-fill, minmax(28rem, 1fr));
+  gap: 1.2rem;
 }
 
 .td-empty {
   text-align: center;
-  padding: 60px;
+  padding: 6rem;
   color: #9ca3af;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 76.8rem) {
   .td-content {
     grid-template-columns: 1fr;
   }

@@ -75,11 +75,11 @@ function goRead(ch: any, idx: number) {
 </script>
 
 <style scoped>
-.ta-page-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; }
-.ta-head-left { display: flex; align-items: center; gap: 12px; }
-.ta-head-left h1 { font-size: 20px; font-weight: 700; margin: 0; }
-.ta-btn-back { padding: 6px 12px; font-size: 13px; border: 1px solid #eaeaea; border-radius: 6px; background: #fff; cursor: pointer; }
-.ta-select { padding: 7px 12px; font-size: 13px; border: 1px solid #eaeaea; border-radius: 8px; background: #fff; }
-.ta-chapters { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 12px; }
-.ta-empty { text-align: center; padding: 60px; color: #9ca3af; }
+.ta-page-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 2.4rem; }
+.ta-head-left { display: flex; align-items: center; gap: 1.2rem; }
+.ta-head-left h1 { font-size: 2rem; font-weight: 700; margin: 0; }
+.ta-btn-back { padding: 0.6rem 1.2rem; font-size: 1.3rem; border: 1px solid #eaeaea; border-radius: 0.6rem; background: #fff; cursor: pointer; }
+.ta-select { padding: 0.7rem 1.2rem; font-size: 1.3rem; border: 1px solid #eaeaea; border-radius: 0.8rem; background: #fff; }
+.ta-chapters { display: grid; grid-template-columns: repeat(auto-fill, minmax(28rem, 1fr)); gap: 1.2rem; }
+.ta-empty { text-align: center; padding: 6rem; color: #9ca3af; }
 </style>

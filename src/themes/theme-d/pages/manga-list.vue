@@ -62,17 +62,17 @@ watch(() => userConfig.order, () => {
 
 <style scoped>
 .td-manga-list { margin: 0 auto; }
-.td-page-title { font-size: 20px; font-weight: 700; color: var(--fg); margin-bottom: 20px; }
-.td-card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 16px; }
-.td-card { position: relative; background: var(--bg2); border-radius: 10px; overflow: hidden; cursor: pointer; border: 1px solid var(--border); transition: all .2s; }
-.td-card:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.06); }
+.td-page-title { font-size: 2rem; font-weight: 700; color: var(--fg); margin-bottom: 2rem; }
+.td-card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr)); gap: 1.6rem; }
+.td-card { position: relative; background: var(--bg2); border-radius: 1rem; overflow: hidden; cursor: pointer; border: 1px solid var(--border); transition: all .2s; }
+.td-card:hover { transform: translateY(-0.2rem); box-shadow: 0 0.4rem 1.2rem rgba(0,0,0,0.06); }
 .td-card-cover { aspect-ratio: 3/4; overflow: hidden; background: var(--bg); }
 .td-card-cover img { width: 100%; height: 100%; object-fit: cover; }
-.td-card-body { padding: 8px 10px; }
-.td-card-title { font-size: 13px; font-weight: 500; color: var(--fg); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.td-card-sub { font-size: 11px; color: var(--fg2); margin-top: 2px; }
-.td-pagination { display: flex; align-items: center; justify-content: center; gap: 16px; margin-top: 24px; }
-.td-pagination button { padding: 6px 16px; border-radius: 6px; border: 1px solid var(--border); background: var(--bg2); color: var(--fg); cursor: pointer; }
+.td-card-body { padding: 0.8rem 1rem; }
+.td-card-title { font-size: 1.3rem; font-weight: 500; color: var(--fg); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.td-card-sub { font-size: 1.1rem; color: var(--fg2); margin-top: 0.2rem; }
+.td-pagination { display: flex; align-items: center; justify-content: center; gap: 1.6rem; margin-top: 2.4rem; }
+.td-pagination button { padding: 0.6rem 1.6rem; border-radius: 0.6rem; border: 1px solid var(--border); background: var(--bg2); color: var(--fg); cursor: pointer; }
 .td-pagination button:disabled { opacity: 0.4; cursor: default; }
 .td-pagination button:hover:not(:disabled) { border-color: var(--accent); color: var(--accent); }
 </style>

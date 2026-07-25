@@ -41,6 +41,6 @@ function nextPage() {
 
 .td-single-empty {
   color: #9ca3af;
-  font-size: 14px;
+  font-size: 1.4rem;
 }
 </style>

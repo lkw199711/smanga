@@ -140,26 +140,26 @@ function goRead(chapter: any) {
 
 <style scoped>
 .tb-chapter-list {
-  padding: 24px;
+  padding: 2.4rem;
   min-height: 100vh;
 }
 
 .tb-header {
   display: flex;
   align-items: center;
-  margin-bottom: 24px;
-  gap: 16px;
+  margin-bottom: 2.4rem;
+  gap: 1.6rem;
 }
 
 .tb-back {
   display: flex;
   align-items: center;
-  gap: 6px;
-  font-size: 13px;
+  gap: 0.6rem;
+  font-size: 1.3rem;
   color: #6b7280;
   cursor: pointer;
-  padding: 6px 12px;
-  border-radius: 6px;
+  padding: 0.6rem 1.2rem;
+  border-radius: 0.6rem;
   transition: background 0.15s;
 }
 
@@ -168,7 +168,7 @@ function goRead(chapter: any) {
 }
 
 .tb-title {
-  font-size: 18px;
+  font-size: 1.8rem;
   font-weight: 700;
   color: #111827;
 }
@@ -178,13 +178,13 @@ function goRead(chapter: any) {
 }
 
 .tb-btn-icon {
-  width: 36px;
-  height: 36px;
+  width: 3.6rem;
+  height: 3.6rem;
   border: none;
   background: transparent;
   border-radius: 50%;
   cursor: pointer;
-  font-size: 18px;
+  font-size: 1.8rem;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -197,22 +197,22 @@ function goRead(chapter: any) {
 
 .tb-content {
   display: grid;
-  grid-template-columns: 300px 1fr;
-  gap: 32px;
+  grid-template-columns: 30rem 1fr;
+  gap: 3.2rem;
 }
 
 .tb-manga-info {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 1.6rem;
 }
 
 .tb-cover {
   width: 100%;
   aspect-ratio: 3 / 4;
-  border-radius: 12px;
+  border-radius: 1.2rem;
   overflow: hidden;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 0.4rem 1.2rem rgba(0, 0, 0, 0.08);
 }
 
 .tb-cover img {
@@ -227,59 +227,59 @@ function goRead(chapter: any) {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 48px;
+  font-size: 4.8rem;
   background: linear-gradient(135deg, #dbeafe, #bfdbfe);
 }
 
 .tb-info {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 0.8rem;
 }
 
 .tb-author {
-  font-size: 13px;
+  font-size: 1.3rem;
   color: #6b7280;
 }
 
 .tb-desc {
-  font-size: 13px;
+  font-size: 1.3rem;
   color: #374151;
   line-height: 1.5;
 }
 
 .tb-meta {
   display: flex;
-  gap: 16px;
-  font-size: 12px;
+  gap: 1.6rem;
+  font-size: 1.2rem;
   color: #9ca3af;
 }
 
 .tb-chapters {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 1.6rem;
 }
 
 .tb-section-title {
-  font-size: 16px;
+  font-size: 1.6rem;
   font-weight: 700;
   color: #111827;
 }
 
 .tb-chapter-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 12px;
+  grid-template-columns: repeat(auto-fill, minmax(28rem, 1fr));
+  gap: 1.2rem;
 }
 
 .tb-empty {
   text-align: center;
-  padding: 60px;
+  padding: 6rem;
   color: #9ca3af;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 76.8rem) {
   .tb-content {
     grid-template-columns: 1fr;
   }

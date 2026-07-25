@@ -213,28 +213,28 @@ function coverStyle(
 .sd-stats {
 	display: grid;
 	grid-template-columns: repeat(4, minmax(0, 1fr));
-	gap: 14px;
-	margin-bottom: 28px;
+	gap: 1.4rem;
+	margin-bottom: 2.8rem;
 }
 
-/* 窄屏改 2×2 布局，避免 4 列在 <=640px 撑爆容器 */
-@media (max-width: 640px) {
+/* 窄屏改 2×2 布局，避免 4 列在 <=64rem 撑爆容器 */
+@media (max-width: 64rem) {
 	.sd-stats {
 		grid-template-columns: repeat(2, minmax(0, 1fr));
-		gap: 10px;
-		margin-bottom: 20px;
+		gap: 1rem;
+		margin-bottom: 2rem;
 	}
 }
 
 .sd-stat-card {
 	display: flex;
 	align-items: center;
-	gap: 14px;
-	padding: 16px 18px;
+	gap: 1.4rem;
+	padding: 1.6rem 1.8rem;
 	background: var(--sd-card);
 	border: 1px solid var(--sd-border);
-	border-radius: 12px;
-	box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+	border-radius: 1.2rem;
+	box-shadow: 0 1px 0.2rem rgba(0, 0, 0, 0.03);
 	min-width: 0;
 	overflow: hidden;
 }
@@ -244,72 +244,72 @@ function coverStyle(
 	flex: 1;
 }
 
-@media (max-width: 640px) {
+@media (max-width: 64rem) {
 	.sd-stat-card {
-		padding: 12px 12px;
-		gap: 10px;
+		padding: 1.2rem 1.2rem;
+		gap: 1rem;
 	}
 }
 
 .sd-stat-icon {
-	width: 42px;
-	height: 42px;
+	width: 4.2rem;
+	height: 4.2rem;
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	font-size: 20px;
-	border-radius: 10px;
+	font-size: 2rem;
+	border-radius: 1rem;
 	flex-shrink: 0;
 }
 
-@media (max-width: 640px) {
+@media (max-width: 64rem) {
 	.sd-stat-icon {
-		width: 36px;
-		height: 36px;
-		font-size: 18px;
-		border-radius: 8px;
+		width: 3.6rem;
+		height: 3.6rem;
+		font-size: 1.8rem;
+		border-radius: 0.8rem;
 	}
 }
 
 .sd-stat-value {
-	font-size: 20px;
+	font-size: 2rem;
 	font-weight: 700;
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;
 }
 
-@media (max-width: 640px) {
+@media (max-width: 64rem) {
 	.sd-stat-value {
-		font-size: 16px;
+		font-size: 1.6rem;
 	}
 }
 
 .sd-stat-label {
-	font-size: 12px;
+	font-size: 1.2rem;
 	color: var(--sd-text-muted);
-	margin-top: 2px;
+	margin-top: 0.2rem;
 }
 
 .sd-section {
-	margin-bottom: 28px;
+	margin-bottom: 2.8rem;
 }
 
 .sd-section-head {
 	display: flex;
 	align-items: baseline;
 	justify-content: space-between;
-	margin-bottom: 14px;
+	margin-bottom: 1.4rem;
 }
 
 .sd-section-head h2 {
 	margin: 0;
-	font-size: 16px;
+	font-size: 1.6rem;
 	font-weight: 600;
 }
 
 .sd-link {
-	font-size: 13px;
+	font-size: 1.3rem;
 	color: var(--sd-primary);
 	cursor: pointer;
 	font-weight: 500;
@@ -317,14 +317,14 @@ function coverStyle(
 
 .sd-continue {
 	display: grid;
-	grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-	gap: 14px;
+	grid-template-columns: repeat(auto-fill, minmax(28rem, 1fr));
+	gap: 1.4rem;
 }
 
 .sd-grid {
 	display: grid;
-	grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-	gap: 18px;
+	grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
+	gap: 1.8rem;
 }
 
 .sd-grid-card {
@@ -333,15 +333,15 @@ function coverStyle(
 }
 
 .sd-grid-card:hover {
-	transform: translateY(-2px);
+	transform: translateY(-0.2rem);
 }
 
 .sd-grid-cover {
 	position: relative;
 	aspect-ratio: 3 / 4;
-	border-radius: 10px;
-	margin-bottom: 8px;
-	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+	border-radius: 1rem;
+	margin-bottom: 0.8rem;
+	box-shadow: 0 0.2rem 0.8rem rgba(0, 0, 0, 0.06);
 	background-size: cover;
 	background-position: center;
 	background-repeat: no-repeat;
@@ -350,18 +350,18 @@ function coverStyle(
 
 .sd-grid-tag {
 	position: absolute;
-	top: 8px;
-	left: 8px;
-	padding: 3px 7px;
-	font-size: 10px;
+	top: 0.8rem;
+	left: 0.8rem;
+	padding: 0.3rem 0.7rem;
+	font-size: 1rem;
 	font-weight: 600;
 	color: #fff;
 	background: var(--sd-primary);
-	border-radius: 4px;
+	border-radius: 0.4rem;
 }
 
 .sd-grid-name {
-	font-size: 13px;
+	font-size: 1.3rem;
 	font-weight: 500;
 	white-space: nowrap;
 	overflow: hidden;
@@ -369,8 +369,8 @@ function coverStyle(
 }
 
 .sd-grid-meta {
-	margin-top: 2px;
-	font-size: 11px;
+	margin-top: 0.2rem;
+	font-size: 1.1rem;
 	color: var(--sd-text-faint);
 }
 

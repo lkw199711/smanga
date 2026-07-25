@@ -134,7 +134,7 @@ services:
           <a href="https://t.me/+FFgQ7AMIdrg2M2Y1" target="_blank" class="ta-link-item">📨 Telegram 交流群</a>
         </div>
 
-        <h3 style="margin-top:24px">版本更新记录</h3>
+        <h3 style="margin-top:2.4rem">版本更新记录</h3>
         <div class="ta-version-list">
           <div v-for="v in versionHistory" :key="v.ver" class="ta-version-item">
             <span class="ta-version-num">{{ v.ver }}</span>
@@ -187,37 +187,37 @@ const versionHistory = [
 </script>
 
 <style scoped>
-.ta-manage-page { max-width: 900px; }
-.ta-page-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
-.ta-page-head h1 { font-size: 20px; font-weight: 700; margin: 0; }
-.ta-version { font-size: 13px; color: #2563eb; background: #eff6ff; padding: 4px 12px; border-radius: 12px; font-weight: 500; }
-.ta-tabs { display: flex; gap: 4px; margin-bottom: 24px; border-bottom: 2px solid #eaeaea; overflow-x: auto; }
-.ta-tab { padding: 8px 14px; border: none; background: none; cursor: pointer; font-size: 13px; color: #6b7280; border-bottom: 2px solid transparent; margin-bottom: -2px; transition: .2s; white-space: nowrap; }
+.ta-manage-page { max-width: 90rem; }
+.ta-page-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 2rem; }
+.ta-page-head h1 { font-size: 2rem; font-weight: 700; margin: 0; }
+.ta-version { font-size: 1.3rem; color: #2563eb; background: #eff6ff; padding: 0.4rem 1.2rem; border-radius: 1.2rem; font-weight: 500; }
+.ta-tabs { display: flex; gap: 0.4rem; margin-bottom: 2.4rem; border-bottom: 0.2rem solid #eaeaea; overflow-x: auto; }
+.ta-tab { padding: 0.8rem 1.4rem; border: none; background: none; cursor: pointer; font-size: 1.3rem; color: #6b7280; border-bottom: 0.2rem solid transparent; margin-bottom: -0.2rem; transition: .2s; white-space: nowrap; }
 .ta-tab:hover { color: #2563eb; }
 .ta-tab.active { color: #2563eb; border-bottom-color: #2563eb; font-weight: 600; }
-.ta-content { background: #fff; border: 1px solid #eaeaea; border-radius: 12px; padding: 24px; }
-.ta-section h2 { font-size: 18px; font-weight: 700; margin: 0 0 16px 0; color: #1f2937; }
-.ta-section h3 { font-size: 14px; font-weight: 600; margin: 20px 0 10px 0; color: #374151; }
-.ta-section p { font-size: 13px; line-height: 1.7; color: #4b5563; margin: 8px 0; }
-.ta-section ol, .ta-section ul { padding-left: 20px; font-size: 13px; color: #4b5563; line-height: 1.8; }
-.ta-section li { margin-bottom: 4px; }
-.ta-section code { background: #f3f4f6; padding: 2px 6px; border-radius: 4px; font-size: 12px; }
-.ta-code { background: #1e293b; color: #e2e8f0; padding: 16px; border-radius: 8px; overflow-x: auto; font-size: 12px; line-height: 1.6; margin: 12px 0; white-space: pre; }
-.ta-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
-.ta-feature-item { padding: 16px; background: #f9fafb; border: 1px solid #f3f4f6; border-radius: 10px; }
-.ta-feature-item h3 { margin: 0 0 8px 0; font-size: 14px; }
-.ta-feature-item p { margin: 0; font-size: 12px; color: #6b7280; }
-.ta-note { padding: 14px 16px; border-radius: 8px; margin-bottom: 12px; font-size: 13px; }
-.ta-note p { margin: 4px 0 0 0; }
-.ta-note-warning { background: #fffbeb; border-left: 3px solid #f59e0b; }
-.ta-note-info { background: #f0f9ff; border-left: 3px solid #0ea5e9; }
-.ta-links { display: flex; flex-wrap: wrap; gap: 10px; }
-.ta-link-item { display: inline-flex; align-items: center; padding: 8px 14px; background: #f3f4f6; color: #374151; border-radius: 8px; text-decoration: none; font-size: 13px; transition: .2s; }
+.ta-content { background: #fff; border: 1px solid #eaeaea; border-radius: 1.2rem; padding: 2.4rem; }
+.ta-section h2 { font-size: 1.8rem; font-weight: 700; margin: 0 0 1.6rem 0; color: #1f2937; }
+.ta-section h3 { font-size: 1.4rem; font-weight: 600; margin: 2rem 0 1rem 0; color: #374151; }
+.ta-section p { font-size: 1.3rem; line-height: 1.7; color: #4b5563; margin: 0.8rem 0; }
+.ta-section ol, .ta-section ul { padding-left: 2rem; font-size: 1.3rem; color: #4b5563; line-height: 1.8; }
+.ta-section li { margin-bottom: 0.4rem; }
+.ta-section code { background: #f3f4f6; padding: 0.2rem 0.6rem; border-radius: 0.4rem; font-size: 1.2rem; }
+.ta-code { background: #1e293b; color: #e2e8f0; padding: 1.6rem; border-radius: 0.8rem; overflow-x: auto; font-size: 1.2rem; line-height: 1.6; margin: 1.2rem 0; white-space: pre; }
+.ta-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.2rem; }
+.ta-feature-item { padding: 1.6rem; background: #f9fafb; border: 1px solid #f3f4f6; border-radius: 1rem; }
+.ta-feature-item h3 { margin: 0 0 0.8rem 0; font-size: 1.4rem; }
+.ta-feature-item p { margin: 0; font-size: 1.2rem; color: #6b7280; }
+.ta-note { padding: 1.4rem 1.6rem; border-radius: 0.8rem; margin-bottom: 1.2rem; font-size: 1.3rem; }
+.ta-note p { margin: 0.4rem 0 0 0; }
+.ta-note-warning { background: #fffbeb; border-left: 0.3rem solid #f59e0b; }
+.ta-note-info { background: #f0f9ff; border-left: 0.3rem solid #0ea5e9; }
+.ta-links { display: flex; flex-wrap: wrap; gap: 1rem; }
+.ta-link-item { display: inline-flex; align-items: center; padding: 0.8rem 1.4rem; background: #f3f4f6; color: #374151; border-radius: 0.8rem; text-decoration: none; font-size: 1.3rem; transition: .2s; }
 .ta-link-item:hover { background: #e5e7eb; }
-.ta-version-list { display: flex; flex-direction: column; gap: 8px; }
-.ta-version-item { display: flex; gap: 12px; padding: 8px 0; border-bottom: 1px solid #f3f4f6; font-size: 13px; }
-.ta-version-num { font-weight: 600; color: #2563eb; min-width: 50px; }
+.ta-version-list { display: flex; flex-direction: column; gap: 0.8rem; }
+.ta-version-item { display: flex; gap: 1.2rem; padding: 0.8rem 0; border-bottom: 1px solid #f3f4f6; font-size: 1.3rem; }
+.ta-version-num { font-weight: 600; color: #2563eb; min-width: 5rem; }
 .ta-version-desc { color: #6b7280; }
-.ta-footer { text-align: center; padding: 24px; color: #9ca3af; font-size: 13px; margin-top: 24px; }
-@media (max-width: 640px) { .ta-grid { grid-template-columns: 1fr; } }
+.ta-footer { text-align: center; padding: 2.4rem; color: #9ca3af; font-size: 1.3rem; margin-top: 2.4rem; }
+@media (max-width: 64rem) { .ta-grid { grid-template-columns: 1fr; } }
 </style>

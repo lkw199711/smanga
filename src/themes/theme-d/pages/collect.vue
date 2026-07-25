@@ -71,13 +71,13 @@ function goManga(item: any) {
 </script>
 
 <style scoped>
-.td-collect { max-width: 1200px; margin: 0 auto; }
-.td-page-title { font-size: 20px; font-weight: 700; color: var(--fg); margin-bottom: 20px; }
-.td-card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 16px; }
-.td-card { background: var(--bg2); border-radius: 10px; overflow: hidden; cursor: pointer; border: 1px solid var(--border); transition: all .2s; }
-.td-card:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.06); }
-.td-card-cover { aspect-ratio: 3/4; overflow: hidden; border-radius: 8px; }
-.td-card-title { padding: 8px 10px; font-size: 13px; font-weight: 500; color: var(--fg); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.td-chapter-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 18px; }
-.td-empty { text-align: center; color: var(--fg2); margin-top: 40px; }
+.td-collect { max-width: 120rem; margin: 0 auto; }
+.td-page-title { font-size: 2rem; font-weight: 700; color: var(--fg); margin-bottom: 2rem; }
+.td-card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr)); gap: 1.6rem; }
+.td-card { background: var(--bg2); border-radius: 1rem; overflow: hidden; cursor: pointer; border: 1px solid var(--border); transition: all .2s; }
+.td-card:hover { transform: translateY(-0.2rem); box-shadow: 0 0.4rem 1.2rem rgba(0,0,0,0.06); }
+.td-card-cover { aspect-ratio: 3/4; overflow: hidden; border-radius: 0.8rem; }
+.td-card-title { padding: 0.8rem 1rem; font-size: 1.3rem; font-weight: 500; color: var(--fg); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.td-chapter-list { display: flex; flex-direction: column; gap: 1rem; margin-bottom: 1.8rem; }
+.td-empty { text-align: center; color: var(--fg2); margin-top: 4rem; }
 </style>

@@ -50,8 +50,8 @@ const { page, list, count, loading, pageSizes, pageChange } = useListPage<any>({
 </script>
 
 <style scoped>
-.td-history { max-width: 800px; margin: 0 auto; }
-.td-page-title { font-size: 20px; font-weight: 700; color: var(--fg); margin-bottom: 20px; }
-.td-history-list { display: flex; flex-direction: column; gap: 10px; }
-.td-empty { text-align: center; color: var(--fg2); margin-top: 40px; }
+.td-history { max-width: 80rem; margin: 0 auto; }
+.td-page-title { font-size: 2rem; font-weight: 700; color: var(--fg); margin-bottom: 2rem; }
+.td-history-list { display: flex; flex-direction: column; gap: 1rem; }
+.td-empty { text-align: center; color: var(--fg2); margin-top: 4rem; }
 </style>

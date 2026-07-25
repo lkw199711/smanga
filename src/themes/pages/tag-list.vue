@@ -141,71 +141,71 @@ function onContextmenu(item: any, event: MouseEvent) {
 
 <style scoped>
 .tm-tag-list-page {
-  padding: 24px;
-  max-width: 1400px;
+  padding: 2.4rem;
+  max-width: 140rem;
   margin: 0 auto;
 }
 
 .tm-tag-list-head {
   display: flex;
   align-items: baseline;
-  gap: 12px;
-  margin-bottom: 20px;
+  gap: 1.2rem;
+  margin-bottom: 2rem;
 }
 
 .tm-tag-list-head h1 {
-  font-size: 22px;
+  font-size: 2.2rem;
   font-weight: 700;
   margin: 0;
   color: var(--sd-text, #1f2937);
 }
 
 .tm-tag-list-count {
-  font-size: 13px;
+  font-size: 1.3rem;
   color: var(--sd-text-secondary, #9ca3af);
 }
 
 .tm-tag-list-filter {
-  margin-bottom: 24px;
+  margin-bottom: 2.4rem;
 }
 
 .tm-tag-list-result-head {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 16px;
-  font-size: 14px;
+  margin-bottom: 1.6rem;
+  font-size: 1.4rem;
   color: var(--sd-text, #374151);
 }
 
 .tm-tag-list-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-  gap: 16px;
+  grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
+  gap: 1.6rem;
 }
 
 .tm-tag-list-empty {
   text-align: center;
-  padding: 60px 20px;
+  padding: 6rem 2rem;
   color: var(--sd-text-secondary, #9ca3af);
-  font-size: 14px;
+  font-size: 1.4rem;
 }
 
 .tm-tag-list-pager {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 16px;
-  margin-top: 24px;
-  font-size: 13px;
+  gap: 1.6rem;
+  margin-top: 2.4rem;
+  font-size: 1.3rem;
   color: var(--sd-text-secondary, #6b7280);
 }
 
 .tm-tag-list-pager button {
-  padding: 6px 14px;
-  font-size: 13px;
+  padding: 0.6rem 1.4rem;
+  font-size: 1.3rem;
   border: 1px solid var(--sd-border, #eaeaea);
-  border-radius: 8px;
+  border-radius: 0.8rem;
   background: var(--sd-bg2, #fff);
   color: var(--sd-text, #374151);
   cursor: pointer;
@@ -222,13 +222,13 @@ function onContextmenu(item: any, event: MouseEvent) {
   cursor: not-allowed;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 76.8rem) {
   .tm-tag-list-page {
-    padding: 16px;
+    padding: 1.6rem;
   }
   .tm-tag-list-grid {
-    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-    gap: 12px;
+    grid-template-columns: repeat(auto-fill, minmax(12rem, 1fr));
+    gap: 1.2rem;
   }
 }
 </style>

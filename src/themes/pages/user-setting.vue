@@ -504,11 +504,11 @@ function back_old_theme(){
   --setting-active-border: #2563eb;
   --setting-card-background: #fff;
   --setting-card-border: #eaeaea;
-  --setting-card-radius: 12px;
-  --setting-card-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-  --setting-control-radius: 6px;
-  --setting-theme-button-radius: 6px;
-  --setting-primary-radius: 8px;
+  --setting-card-radius: 1.2rem;
+  --setting-card-shadow: 0 0.2rem 0.8rem rgba(0, 0, 0, 0.04);
+  --setting-control-radius: 0.6rem;
+  --setting-theme-button-radius: 0.6rem;
+  --setting-primary-radius: 0.8rem;
   --setting-primary-shadow: none;
   --setting-primary-hover-shadow: none;
   --setting-primary-hover-transform: none;
@@ -527,8 +527,8 @@ function back_old_theme(){
   --setting-secondary-hover: #e5e7eb;
   --setting-primary-text: #fff;
   --setting-primary-hover-opacity: 1;
-  padding: 24px;
-  max-width: 800px;
+  padding: 2.4rem;
+  max-width: 80rem;
   margin: 0 auto;
   position: relative;
   min-height: 100%; /* 改为相对高度以确保在父元素内 */
@@ -542,14 +542,14 @@ function back_old_theme(){
   --setting-active-border: transparent;
   --setting-card-background: rgba(255, 255, 255, 0.78);
   --setting-card-border: rgba(255, 255, 255, 0.9);
-  --setting-card-radius: 16px;
-  --setting-card-shadow: 0 8px 24px rgba(108, 141, 255, 0.1);
-  --setting-control-radius: 8px;
-  --setting-theme-button-radius: 20px;
-  --setting-primary-radius: 12px;
-  --setting-primary-shadow: 0 4px 12px rgba(168, 85, 247, 0.3);
-  --setting-primary-hover-shadow: 0 6px 16px rgba(168, 85, 247, 0.4);
-  --setting-primary-hover-transform: translateY(-2px);
+  --setting-card-radius: 1.6rem;
+  --setting-card-shadow: 0 0.8rem 2.4rem rgba(108, 141, 255, 0.1);
+  --setting-control-radius: 0.8rem;
+  --setting-theme-button-radius: 2rem;
+  --setting-primary-radius: 1.2rem;
+  --setting-primary-shadow: 0 0.4rem 1.2rem rgba(168, 85, 247, 0.3);
+  --setting-primary-hover-shadow: 0 0.6rem 1.6rem rgba(168, 85, 247, 0.4);
+  --setting-primary-hover-transform: translateY(-0.2rem);
   --setting-footer-background: rgba(255, 255, 255, 0.9);
   --setting-avatar-background: linear-gradient(135deg, #a855f7, #ec4899);
 }
@@ -561,11 +561,11 @@ function back_old_theme(){
   --setting-active-border: var(--accent, var(--sd-primary, #2563eb));
   --setting-card-background: var(--bg2, var(--sd-card, #fff));
   --setting-card-border: var(--border, var(--sd-border, #e5e7eb));
-  --setting-card-radius: 12px;
+  --setting-card-radius: 1.2rem;
   --setting-card-shadow: none;
-  --setting-control-radius: 8px;
-  --setting-theme-button-radius: 8px;
-  --setting-primary-radius: 8px;
+  --setting-control-radius: 0.8rem;
+  --setting-theme-button-radius: 0.8rem;
+  --setting-primary-radius: 0.8rem;
   --setting-footer-background: var(--bg2, var(--sd-card, #fff));
   --setting-avatar-background: var(--accent, var(--sd-primary, #2563eb));
   --setting-heading: var(--fg, var(--sd-text, #0f172a));
@@ -584,11 +584,11 @@ function back_old_theme(){
 }
 
 .setting-page-head {
-  margin-bottom: 32px;
+  margin-bottom: 3.2rem;
 }
 
 .setting-page-head h1 {
-  font-size: 24px;
+  font-size: 2.4rem;
   font-weight: 700;
   margin: 0;
   color: var(--setting-heading);
@@ -597,7 +597,7 @@ function back_old_theme(){
 .setting-groups {
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 2.4rem;
   margin-bottom: 0; /* 移除底部margin，由吸底按钮处理 */
   padding-bottom: 0; /* 移除底部padding，由吸底按钮处理 */
 }
@@ -606,15 +606,15 @@ function back_old_theme(){
   background: var(--setting-card-background);
   border: 1px solid var(--setting-card-border);
   border-radius: var(--setting-card-radius);
-  padding: 24px;
+  padding: 2.4rem;
   box-shadow: var(--setting-card-shadow);
-  backdrop-filter: blur(16px);
+  backdrop-filter: blur(1.6rem);
 }
 
 .setting-card h3 {
-  font-size: 18px;
+  font-size: 1.8rem;
   font-weight: 600;
-  margin: 0 0 20px;
+  margin: 0 0 2rem;
   color: var(--setting-heading);
 }
 
@@ -622,7 +622,7 @@ function back_old_theme(){
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 12px 0;
+  padding: 1.2rem 0;
   border-bottom: 1px solid var(--setting-row-border);
 }
 
@@ -631,28 +631,28 @@ function back_old_theme(){
 }
 
 .setting-label {
-  font-size: 15px;
+  font-size: 1.5rem;
   color: var(--setting-label);
   flex: 1;
 }
 
 .setting-value {
-  font-size: 15px;
+  font-size: 1.5rem;
   color: var(--setting-value);
   font-weight: 500;
 }
 
 .setting-note {
-  font-size: 13px;
+  font-size: 1.3rem;
   color: var(--setting-note);
-  margin-left: 8px;
+  margin-left: 0.8rem;
 }
 
 .setting-select {
-  padding: 6px 12px;
+  padding: 0.6rem 1.2rem;
   border: 1px solid #d1d5db;
   border-radius: var(--setting-control-radius);
-  font-size: 14px;
+  font-size: 1.4rem;
   background: var(--setting-control-background);
   color: var(--setting-control-text);
 }
@@ -664,11 +664,11 @@ function back_old_theme(){
 }
 
 .setting-input-number {
-  width: 80px;
-  padding: 6px 12px;
+  width: 8rem;
+  padding: 0.6rem 1.2rem;
   border: 1px solid #d1d5db;
   border-radius: var(--setting-control-radius);
-  font-size: 14px;
+  font-size: 1.4rem;
   text-align: center;
   background: var(--setting-control-background);
   color: var(--setting-control-text);
@@ -677,13 +677,13 @@ function back_old_theme(){
 .setting-slider-container {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 1.2rem;
 }
 
 .setting-slider {
-  width: 120px;
-  height: 4px;
-  border-radius: 2px;
+  width: 12rem;
+  height: 0.4rem;
+  border-radius: 0.2rem;
   background: var(--setting-switch-background);
   outline: none;
   -webkit-appearance: none;
@@ -691,24 +691,24 @@ function back_old_theme(){
 
 .setting-slider::-webkit-slider-thumb {
   -webkit-appearance: none;
-  width: 16px;
-  height: 16px;
+  width: 1.6rem;
+  height: 1.6rem;
   border-radius: 50%;
   background: var(--setting-accent-background);
   cursor: pointer;
 }
 
 .setting-slider-value {
-  font-size: 14px;
+  font-size: 1.4rem;
   color: #6b7280;
-  min-width: 50px;
+  min-width: 5rem;
 }
 
 .setting-switch {
   position: relative;
   display: inline-block;
-  width: 44px;
-  height: 24px;
+  width: 4.4rem;
+  height: 2.4rem;
 }
 
 .setting-switch input {
@@ -726,16 +726,16 @@ function back_old_theme(){
   bottom: 0;
   background-color: #e5e7eb;
   transition: .4s;
-  border-radius: 24px;
+  border-radius: 2.4rem;
 }
 
 .setting-switch-slider:before {
   position: absolute;
   content: "";
-  height: 18px;
-  width: 18px;
-  left: 3px;
-  bottom: 3px;
+  height: 1.8rem;
+  width: 1.8rem;
+  left: 0.3rem;
+  bottom: 0.3rem;
   background-color: var(--setting-switch-knob);
   transition: .4s;
   border-radius: 50%;
@@ -746,17 +746,17 @@ function back_old_theme(){
 }
 
 .setting-switch input:checked + .setting-switch-slider:before {
-  transform: translateX(20px);
+  transform: translateX(2rem);
 }
 
 .setting-theme-options {
   display: flex;
-  gap: 8px;
+  gap: 0.8rem;
 }
 
 .setting-theme-btn {
-  padding: 8px 16px;
-  font-size: 14px;
+  padding: 0.8rem 1.6rem;
+  font-size: 1.4rem;
   border: 1px solid #d1d5db;
   border-radius: var(--setting-theme-button-radius);
   background: var(--setting-control-background);
@@ -781,15 +781,15 @@ function back_old_theme(){
 }
 
 .setting-avatar {
-  width: 48px;
-  height: 48px;
+  width: 4.8rem;
+  height: 4.8rem;
   display: flex;
   align-items: center;
   justify-content: center;
   background: var(--setting-avatar-background);
   color: #fff;
   font-weight: 600;
-  font-size: 20px;
+  font-size: 2rem;
   border-radius: 50%;
   cursor: pointer;
   position: relative;
@@ -831,7 +831,7 @@ function back_old_theme(){
   border-radius: 50%;
   opacity: 0;
   transition: opacity 0.2s;
-  font-size: 18px;
+  font-size: 1.8rem;
 }
 
 .setting-avatar-input-hidden {
@@ -839,8 +839,8 @@ function back_old_theme(){
 }
 
 .setting-btn-primary {
-  padding: 12px 24px;
-  font-size: 16px;
+  padding: 1.2rem 2.4rem;
+  font-size: 1.6rem;
   font-weight: 500;
   color: #fff;
   background: var(--setting-accent-background);
@@ -858,8 +858,8 @@ function back_old_theme(){
 }
 
 .setting-btn-secondary {
-  padding: 8px 16px;
-  font-size: 14px;
+  padding: 0.8rem 1.6rem;
+  font-size: 1.4rem;
   color: var(--setting-control-text);
   background: var(--setting-secondary-background);
   border: 1px solid #d1d5db;
@@ -877,28 +877,28 @@ function back_old_theme(){
   bottom: 0;
   background: var(--setting-footer-background);
   border-top: 1px solid var(--setting-card-border);
-  padding: 16px 24px;
+  padding: 1.6rem 2.4rem;
   display: flex;
   justify-content: center;
-  box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.04);
+  box-shadow: 0 -0.2rem 0.8rem rgba(0, 0, 0, 0.04);
   z-index: 10;
-  margin: 0 -24px -24px -24px; /* 抵消父元素的padding，确保按钮占满宽度 */
+  margin: 0 -2.4rem -2.4rem -2.4rem; /* 抵消父元素的padding，确保按钮占满宽度 */
   position: -webkit-sticky; /* Safari兼容 */
 }
 
-@media (max-width: 768px) {
+@media (max-width: 76.8rem) {
   .setting-page {
-    padding: 16px;
+    padding: 1.6rem;
   }
   
   .setting-row {
     flex-direction: column;
     align-items: flex-start;
-    gap: 8px;
+    gap: 0.8rem;
   }
   
   .setting-label {
-    margin-bottom: 4px;
+    margin-bottom: 0.4rem;
   }
   
   .setting-theme-options {
@@ -906,8 +906,8 @@ function back_old_theme(){
   }
   
   .setting-footer {
-    padding: 12px 16px;
-    margin: 0 -16px -16px -16px; /* 移动端也抵消父元素padding */
+    padding: 1.2rem 1.6rem;
+    margin: 0 -1.6rem -1.6rem -1.6rem; /* 移动端也抵消父元素padding */
   }
   
   .setting-groups {
