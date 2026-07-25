@@ -155,7 +155,7 @@ h1{font-size:2rem;font-weight:700;margin:0 0 2rem;color:#1f2937}
 .tb-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(14rem,1fr));gap:1.6rem}
 .tb-card{cursor:pointer;transition:transform .2s}.tb-card:hover{transform:translateY(-0.3rem)}
 .tb-card-cover{aspect-ratio:3/4;border-radius:1.4rem;overflow:hidden;background:rgba(255,255,255,0.8);box-shadow:0 0.4rem 1.6rem rgba(0,0,0,0.08);margin-bottom:0.8rem}
-.tb-card-name{font-size:1.3rem;font-weight:500;color:#1f2937;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tb-card-name{font-size:1.3rem;font-weight:500;color:#1f2937;line-height:1.35;max-height:calc(1.3rem * 1.35 * 2);display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;text-overflow:ellipsis;word-break:break-word;overflow-wrap:anywhere}
 .tb-chapter-list{display:flex;flex-direction:column;gap:1rem;margin-bottom:1.8rem}
 </style>
 

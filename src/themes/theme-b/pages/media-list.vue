@@ -73,6 +73,6 @@ h1 { font-size: 2rem; font-weight: 700; margin: 0 0 2rem; color: #1f2937; }
 .tb-media-placeholder { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, rgba(255,255,255,0.05), rgba(255,255,255,0.1)); }
 .tb-placeholder-icon { font-size: 3.6rem; opacity: 0.6; }
 .tb-media-body { padding: 1.4rem 1.6rem; }
-.tb-media-name { font-size: 1.5rem; font-weight: 600; color: #1f2937; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.tb-media-name { font-size: 1.5rem; font-weight: 600; color: #1f2937; line-height: 1.35; max-height: calc(1.5rem * 1.35 * 2); display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; text-overflow: ellipsis; word-break: break-word; overflow-wrap: anywhere; }
 .tb-media-count { font-size: 1.2rem; color: rgba(255,255,255,0.5); margin-top: 0.4rem; }
 </style>

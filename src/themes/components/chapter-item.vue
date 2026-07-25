@@ -170,17 +170,29 @@ const displaySub = computed(() => {
 .t-chapter-item__title {
 	font-size: 1.4rem;
 	font-weight: 600;
-	white-space: nowrap;
+	line-height: 1.35;
+	max-height: calc(1.4rem * 1.35 * 2);
+	display: -webkit-box;
+	-webkit-box-orient: vertical;
+	-webkit-line-clamp: 2;
 	overflow: hidden;
 	text-overflow: ellipsis;
+	word-break: break-word;
+	overflow-wrap: anywhere;
 }
 
 .t-chapter-item__sub {
 	margin-top: 0.4rem;
 	font-size: 1.2rem;
-	white-space: nowrap;
+	line-height: 1.35;
+	max-height: calc(1.2rem * 1.35 * 2);
+	display: -webkit-box;
+	-webkit-box-orient: vertical;
+	-webkit-line-clamp: 2;
 	overflow: hidden;
 	text-overflow: ellipsis;
+	word-break: break-word;
+	overflow-wrap: anywhere;
 	opacity: 0.7;
 }
 </style>

@@ -255,6 +255,15 @@ async function submitAdd() {
   font-size: 1.5rem;
   font-weight: 600;
   color: #111827;
+  line-height: 1.35;
+  max-height: calc(1.5rem * 1.35 * 2);
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  word-break: break-word;
+  overflow-wrap: anywhere;
 }
 
 .ta-media-meta {

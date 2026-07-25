@@ -168,7 +168,7 @@ onMounted(() => {
 .ta-grid-card { cursor: pointer; transition: transform 0.15s; }
 .ta-grid-card:hover { transform: translateY(-0.2rem); }
 .ta-grid-cover { aspect-ratio: 3 / 4; border-radius: 1rem; overflow: hidden; margin-bottom: 0.8rem; background: #f3f4f6; box-shadow: 0 0.2rem 0.8rem rgba(0,0,0,0.06); }
-.ta-grid-name { font-size: 1.3rem; font-weight: 500; color: #111827; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ta-grid-name { font-size: 1.3rem; font-weight: 500; color: #111827; line-height: 1.35; max-height: calc(1.3rem * 1.35 * 2); display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden;text-overflow: ellipsis; word-break: break-word; overflow-wrap: anywhere; }
 .ta-empty { text-align: center; padding: 6rem; color: #9ca3af; }
 .ta-chapter-list { display: flex; flex-direction: column; gap: 1rem; margin-bottom: 1.8rem; }
 </style>

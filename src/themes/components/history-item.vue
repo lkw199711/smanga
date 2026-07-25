@@ -264,18 +264,28 @@ const timeText = computed(() => {
 .t-history-item__title {
 	font-size: 1.4rem;
 	font-weight: 600;
-	white-space: nowrap;
+	line-height: 1.3;
+	max-height: calc(1.4rem * 1.3 * 2);
+	display: -webkit-box;
+	-webkit-box-orient: vertical;
+	-webkit-line-clamp: 2;
 	overflow: hidden;
 	text-overflow: ellipsis;
-	line-height: 1.3;
+	word-break: break-word;
+	overflow-wrap: anywhere;
 }
 
 .t-history-item__sub {
 	font-size: 1.2rem;
-	white-space: nowrap;
+	line-height: 1.3;
+	max-height: calc(1.2rem * 1.3 * 2);
+	display: -webkit-box;
+	-webkit-box-orient: vertical;
+	-webkit-line-clamp: 2;
 	overflow: hidden;
 	text-overflow: ellipsis;
-	line-height: 1.3;
+	word-break: break-word;
+	overflow-wrap: anywhere;
 }
 
 .t-history-item__chapter {

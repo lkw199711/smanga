@@ -69,7 +69,7 @@ watch(() => userConfig.order, () => {
 .td-card-cover { aspect-ratio: 3/4; overflow: hidden; background: var(--bg); }
 .td-card-cover img { width: 100%; height: 100%; object-fit: cover; }
 .td-card-body { padding: 0.8rem 1rem; }
-.td-card-title { font-size: 1.3rem; font-weight: 500; color: var(--fg); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.td-card-title { font-size: 1.3rem; font-weight: 500; color: var(--fg); line-height: 1.35; max-height: calc(1.3rem * 1.35 * 2); display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; text-overflow: ellipsis; word-break: break-word; overflow-wrap: anywhere; }
 .td-card-sub { font-size: 1.1rem; color: var(--fg2); margin-top: 0.2rem; }
 .td-pagination { display: flex; align-items: center; justify-content: center; gap: 1.6rem; margin-top: 2.4rem; }
 .td-pagination button { padding: 0.6rem 1.6rem; border-radius: 0.6rem; border: 1px solid var(--border); background: var(--bg2); color: var(--fg); cursor: pointer; }

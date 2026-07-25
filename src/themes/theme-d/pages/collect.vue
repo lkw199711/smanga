@@ -77,7 +77,7 @@ function goManga(item: any) {
 .td-card { background: var(--bg2); border-radius: 1rem; overflow: hidden; cursor: pointer; border: 1px solid var(--border); transition: all .2s; }
 .td-card:hover { transform: translateY(-0.2rem); box-shadow: 0 0.4rem 1.2rem rgba(0,0,0,0.06); }
 .td-card-cover { aspect-ratio: 3/4; overflow: hidden; border-radius: 0.8rem; }
-.td-card-title { padding: 0.8rem 1rem; font-size: 1.3rem; font-weight: 500; color: var(--fg); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.td-card-title { padding: 0.8rem 1rem; font-size: 1.3rem; font-weight: 500; color: var(--fg); line-height: 1.35; max-height: calc(1.3rem * 1.35 * 2); display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; text-overflow: ellipsis; word-break: break-word; overflow-wrap: anywhere; }
 .td-chapter-list { display: flex; flex-direction: column; gap: 1rem; margin-bottom: 1.8rem; }
 .td-empty { text-align: center; color: var(--fg2); margin-top: 4rem; }
 </style>
