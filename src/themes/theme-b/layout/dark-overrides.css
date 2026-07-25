@@ -235,6 +235,30 @@
 }
 
 /* ---- 移动端 ---- */
+/* 根容器：亮色是粉紫渐变，暗色改为深色渐变
+   注意：.tb-dark 与 .style-b-mobile 在同一元素上，需用同元素多类选择器 */
+.tb-dark.style-b-mobile {
+	background: linear-gradient(135deg, #0f172a 0%, #111827 50%, #1e1b2e 100%) !important;
+	color: var(--sb-text) !important;
+}
+/* 主内容区（默认无背景，靠父级渐变），确保文字色继承正确 */
+.tb-dark .sb-mobile-main {
+	background: transparent !important;
+	color: var(--sb-text);
+}
+/* 底部导航栏 - 亮色为白色磨砂，暗色改为深色磨砂 */
+.tb-dark .sb-mobile-nav-bar {
+	background: var(--sb-glass-strong) !important;
+	backdrop-filter: blur(1.2rem);
+	border-top-color: var(--sb-border) !important;
+	color: var(--sb-text);
+}
+.tb-dark .sb-mobile-nav-bar .sb-nav-item {
+	color: var(--sb-text-2) !important;
+}
+.tb-dark .sb-mobile-nav-bar .sb-nav-item.active {
+	color: var(--sb-primary) !important;
+}
 .tb-dark .sb-mobile-header,
 .tb-dark .sb-mobile-drawer {
 	background: var(--sb-glass-strong) !important;
