@@ -686,7 +686,7 @@ function onSidebarClick(e: MouseEvent) {
 	overflow-y: auto;
 	padding: 1.6rem;
 	/* 底栏 5.6rem + safe-area */
-	padding-bottom: calc(5.6rem + env(safe-area-inset-bottom, 0px) + 1.6rem);
+	padding-bottom: calc(5.6rem + env(safe-area-inset-bottom, 0px) + 3.2rem);
 }
 
 .sd-mobile-nav-bar {

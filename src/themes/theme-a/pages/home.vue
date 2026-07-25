@@ -218,8 +218,16 @@ function goManga(item: any) {
 
 .sa-grid {
 	display: grid;
-	grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
+	/* 关键：minmax(0, 1fr) 允许列被压缩至 0，防止子项 nowrap 文本撑破网格 */
+	grid-template-columns: repeat(auto-fill, minmax(min(15rem, 100%), 1fr));
 	gap: 1.8rem;
+	row-gap: 4.8rem;
+}
+
+/* 让所有网格子项都可以被压缩，避免 min-width: auto 反噬父容器 */
+.sa-grid > *,
+.sa-continue > * {
+	min-width: 0;
 }
 
 .sa-grid-card {
@@ -329,8 +337,9 @@ function goManga(item: any) {
 	}
 
 	.sa-grid {
-		grid-template-columns: repeat(3, 1fr);
+		grid-template-columns: repeat(3, minmax(0, 1fr));
 		gap: 1.2rem;
+		row-gap: 4.8rem;
 	}
 }
 
@@ -349,8 +358,9 @@ function goManga(item: any) {
 	}
 
 	.sa-grid {
-		grid-template-columns: repeat(2, 1fr);
+		grid-template-columns: repeat(2, minmax(0, 1fr));
 		gap: 1rem;
+		row-gap: 4.8rem;
 	}
 
 	.sa-stat-card {

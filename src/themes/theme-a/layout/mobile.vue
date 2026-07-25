@@ -1,5 +1,5 @@
 <template>
-	<div class="style-a style-a-mobile">
+	<div class="style-a style-a-mobile" :class="{ 'sa-dark': isDarkMode }">
 		<android-seat />
 		<!-- 移动端顶部栏 -->
 		<header class="sa-mobile-header">
@@ -7,7 +7,16 @@
 			<div class="sa-mobile-title">
 				<h1>{{ pageTitle }}</h1>
 			</div>
-			<div class="sa-header-user">
+			<div class="sa-header-actions">
+				<button
+					class="sa-header-icon-btn"
+					:title="isDarkMode ? '切换到亮色' : '切换到暗色'"
+					:aria-label="isDarkMode ? '切换到亮色模式' : '切换到暗色模式'"
+					@click="toggleDarkMode"
+				>
+					{{ isDarkMode ? '☀️' : '🌙' }}
+				</button>
+				<div class="sa-header-user">
 				<div class="sa-header-user-trigger" @click="toggleMobileUserDropdown">
 					<div class="sa-avatar sa-avatar-sm">
 						<img v-if="mobileAvatarBlobUrl" :src="mobileAvatarBlobUrl" class="sa-avatar-img" />
@@ -23,6 +32,7 @@
 					<div class="sa-user-dropdown-item sa-user-dropdown-logout" @click="mobileLogout">
 						<span>🚪 登出</span>
 					</div>
+				</div>
 				</div>
 			</div>
 		</header>
@@ -131,6 +141,11 @@ import { userInfo } from '@/store'
 import imageApi from '@/api/image'
 import mediaStatsApi from '@/api/media-stats'
 import { Cookies } from '@/utils'
+import { useColorTheme } from '@/themes/composables/use-color-theme'
+import './dark-overrides.css'
+
+// 夜间模式切换（与桌面顶栏共享同一状态）
+const { isDarkMode, toggleDarkMode } = useColorTheme()
 
 const showSidebar = ref(false)
 const showMobileUserDropdown = ref(false)
@@ -336,6 +351,42 @@ onBeforeUnmount(() => {
 	margin: 0;
 	font-size: 1.8rem;
 	font-weight: 600;
+}
+
+/* Header 操作区容器 */
+.sa-header-actions {
+	display: flex;
+	align-items: center;
+	gap: 0.8rem;
+	flex-shrink: 0;
+}
+
+/* Header 图标按钮 */
+.sa-header-icon-btn {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 3.6rem;
+	height: 3.6rem;
+	padding: 0;
+	border: none;
+	background: transparent;
+	color: inherit;
+	border-radius: 50%;
+	font-size: 1.8rem;
+	line-height: 1;
+	cursor: pointer;
+	transition: background 0.2s ease, transform 0.2s ease;
+	-webkit-tap-highlight-color: transparent;
+}
+
+.sa-header-icon-btn:hover {
+	background: rgba(0, 0, 0, 0.05);
+}
+
+.sa-header-icon-btn:active {
+	background: rgba(0, 0, 0, 0.08);
+	transform: scale(0.94);
 }
 
 /* Header 用户区 */
@@ -659,9 +710,10 @@ onBeforeUnmount(() => {
 .sa-mobile-main {
 	flex: 1;
 	overflow-y: auto;
+	overflow-x: hidden;
 	padding: 1.6rem;
-	/* 底栏 5.6rem + safe-area */
-	padding-bottom: calc(5.6rem + env(safe-area-inset-bottom, 0px) + 1.6rem);
+	/* 底栏 5.6rem + safe-area + 冗余，避免最后内容被底栏遮挡 */
+	padding-bottom: calc(5.6rem + env(safe-area-inset-bottom, 0px) + 3.2rem);
 }
 
 /* 底部导航栏 */

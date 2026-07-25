@@ -42,6 +42,9 @@
 
 html {
 	font-size: 62.5%;
+	/* 阻止 iOS/Android 浏览器自动放大文本，避免 rem 布局在真机上被撑破 */
+	-webkit-text-size-adjust: 100%;
+	text-size-adjust: 100%;
 }
 
 body {

@@ -486,3 +486,94 @@
 .sa-dark .sa-grid-meta {
 	color: var(--sa-text-3) !important;
 }
+
+/* ==========================================================================
+ * 移动端 mobile.vue 专项适配
+ * ========================================================================== */
+/* 根容器 */
+.sa-dark.style-a-mobile,
+.sa-dark .style-a-mobile {
+	background: var(--sa-bg) !important;
+	color: var(--sa-text) !important;
+}
+
+/* 顶部栏 */
+.sa-dark .sa-mobile-header {
+	background: rgba(15, 23, 42, 0.95) !important;
+	border-bottom-color: var(--sa-border) !important;
+	color: var(--sa-text) !important;
+}
+.sa-dark .sa-header-icon-btn:hover {
+	background: rgba(255, 255, 255, 0.08) !important;
+}
+.sa-dark .sa-header-icon-btn:active {
+	background: rgba(255, 255, 255, 0.12) !important;
+}
+.sa-dark .sa-header-user-trigger:active {
+	background: var(--sa-bg-hover) !important;
+}
+
+/* 用户下拉 */
+.sa-dark .sa-header-user-dropdown {
+	background: var(--sa-card) !important;
+	border-color: var(--sa-border) !important;
+	color: var(--sa-text) !important;
+}
+.sa-dark .sa-user-dropdown-item:hover {
+	background: var(--sa-bg-hover) !important;
+}
+
+/* 主内容区 */
+.sa-dark .sa-mobile-main {
+	background: var(--sa-bg) !important;
+	color: var(--sa-text) !important;
+}
+
+/* 底部导航 */
+.sa-dark .sa-mobile-nav-bar {
+	background: rgba(15, 23, 42, 0.95) !important;
+	border-top-color: var(--sa-border) !important;
+	color: var(--sa-text-2) !important;
+}
+.sa-dark .sa-mobile-nav-bar .sa-nav-item {
+	color: var(--sa-text-2) !important;
+}
+.sa-dark .sa-mobile-nav-bar .sa-nav-item:hover,
+.sa-dark .sa-mobile-nav-bar .sa-nav-item.active {
+	background: var(--sa-bg-hover) !important;
+	color: var(--sa-text) !important;
+}
+
+/* 抽屉遮罩 & 侧栏 */
+.sa-dark .sa-mobile-sidebar-backdrop {
+	background: rgba(0, 0, 0, 0.65) !important;
+}
+.sa-dark .sa-mobile-sidebar {
+	background: var(--sa-card) !important;
+	color: var(--sa-text) !important;
+}
+.sa-dark .sa-sec-title,
+.sa-dark .sa-nav-empty {
+	color: var(--sa-text-3) !important;
+}
+.sa-dark .sa-nav-item {
+	color: var(--sa-text-2) !important;
+}
+.sa-dark .sa-nav-item:hover {
+	background: var(--sa-bg-hover) !important;
+	color: var(--sa-text) !important;
+}
+.sa-dark .sa-nav-count {
+	color: var(--sa-text-3) !important;
+	background: var(--sa-bg-hover) !important;
+}
+
+/* 安卓占位符 - 顶部与顶栏同色（.sa-dark 与 .style-a-mobile 在同一元素上，需用同元素多类选择器） */
+.sa-dark.style-a-mobile > .android-seat {
+	background: rgba(15, 23, 42, 0.95) !important;
+}
+/* 安卓占位符 - 侧边栏内与侧栏同色 */
+.sa-dark .sa-mobile-sidebar .android-seat {
+	background: var(--sa-card) !important;
+}
+

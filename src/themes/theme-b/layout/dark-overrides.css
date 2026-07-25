@@ -245,6 +245,14 @@
 .tb-dark .sb-menu-toggle {
 	color: var(--sb-text) !important;
 }
+/* 安卓占位符 - 顶部与顶栏同色（.tb-dark 与 .style-b-mobile 在同一元素上，需用同元素多类选择器） */
+.tb-dark.style-b-mobile > .android-seat {
+	background: var(--sb-glass-strong) !important;
+}
+/* 安卓占位符 - 侧边栏内与侧栏同色 */
+.tb-dark .sb-mobile-sidebar .android-seat {
+	background: var(--sb-glass-strong) !important;
+}
 
 /* ---- 弹窗/对话框(共享组件) ---- */
 .tb-dark .sm-dialog,

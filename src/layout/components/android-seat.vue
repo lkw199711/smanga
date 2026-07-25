@@ -1,5 +1,5 @@
 <template>
-<div class="android-seat" v-if="config.android"></div>
+<div class="android-seat"></div>
 </template>
 <script lang="ts" setup>
 import { config } from '@/store';

@@ -1,5 +1,5 @@
 <template>
-	<div class="style-b style-b-mobile">
+	<div class="style-b style-b-mobile" :class="{ 'tb-dark': isDarkMode }">
 		<android-seat />
 		<!-- 移动端顶部栏 -->
 		<header class="sb-mobile-header">
@@ -7,8 +7,16 @@
 			<div class="sb-mobile-title">
 				<h1>{{ pageTitle }}</h1>
 			</div>
-			<div class="sb-header-user">
-				<div class="sb-header-user-trigger" @click="toggleMobileUserDropdown">
+			<div class="sb-header-actions">
+				<button
+					class="sb-header-icon-btn"
+					:title="isDarkMode ? '切换到亮色模式' : '切换到暗色模式'"
+					@click="toggleDarkMode"
+				>
+					{{ isDarkMode ? '☀️' : '🌙' }}
+				</button>
+				<div class="sb-header-user">
+					<div class="sb-header-user-trigger" @click="toggleMobileUserDropdown">
 					<div class="sb-avatar sb-avatar-sm">
 						<img v-if="mobileAvatarBlobUrl" :src="mobileAvatarBlobUrl" class="sb-avatar-img" />
 						<span v-else>{{ userInfo.userName?.charAt(0) || 'U' }}</span>
@@ -19,6 +27,7 @@
 					<div class="sb-user-dropdown-item" @click="goMobileSettings">⚙️ 设置</div>
 					<div class="sb-user-dropdown-item sb-user-dropdown-logout" @click="mobileLogout">🚪 登出</div>
 				</div>
+			</div>
 			</div>
 		</header>
 
@@ -90,6 +99,10 @@ import mediaStatsApi from '@/api/media-stats'
 import { userInfo } from '@/store'
 import imageApi from '@/api/image'
 import { Cookies } from '@/utils'
+import { useColorTheme } from '@/themes/composables/use-color-theme'
+import './dark-overrides.css'
+
+const { isDarkMode, toggleDarkMode } = useColorTheme()
 
 const showSidebar = ref(false)
 const router = useRouter()
@@ -303,6 +316,42 @@ function onSidebarClick(e: MouseEvent) {
 	margin: 0;
 	font-size: 1.8rem;
 	font-weight: 600;
+}
+
+/* Header 操作区容器 */
+.sb-header-actions {
+	display: flex;
+	align-items: center;
+	gap: 0.6rem;
+	flex-shrink: 0;
+}
+
+/* Header 图标按钮 */
+.sb-header-icon-btn {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 3.6rem;
+	height: 3.6rem;
+	padding: 0;
+	border: none;
+	background: transparent;
+	color: inherit;
+	border-radius: 50%;
+	font-size: 1.8rem;
+	line-height: 1;
+	cursor: pointer;
+	transition: background 0.2s ease, transform 0.2s ease;
+	-webkit-tap-highlight-color: transparent;
+}
+
+.sb-header-icon-btn:hover {
+	background: rgba(236, 72, 153, 0.1);
+}
+
+.sb-header-icon-btn:active {
+	background: rgba(236, 72, 153, 0.15);
+	transform: scale(0.94);
 }
 
 /* Header 用户区 */
@@ -579,9 +628,10 @@ function onSidebarClick(e: MouseEvent) {
 .sb-mobile-main {
 	flex: 1;
 	overflow-y: auto;
+	overflow-x: hidden;
 	padding: 1.6rem;
-	/* 底栏 5.6rem + safe-area */
-	padding-bottom: calc(5.6rem + env(safe-area-inset-bottom, 0px) + 1.6rem);
+	/* 底栏 5.6rem + safe-area + 冗余，避免最后内容被底栏遮挡 */
+	padding-bottom: calc(5.6rem + env(safe-area-inset-bottom, 0px) + 3.2rem);
 }
 
 .sb-mobile-nav-bar {

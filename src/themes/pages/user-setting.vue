@@ -110,6 +110,19 @@
           </div>
         </div>
         <div class="setting-row">
+          <span class="setting-label">配色偏好</span>
+          <div class="setting-theme-options">
+            <button
+              v-for="ct in colorThemeList"
+              :key="ct.value"
+              :class="['setting-theme-btn', { active: activeColorTheme === ct.value }]"
+              @click="applyColorTheme(ct.value)"
+            >
+              {{ ct.label }}
+            </button>
+          </div>
+        </div>
+        <div class="setting-row">
           <span class="setting-label">侧边栏媒体库列表</span>
           <label class="setting-switch">
             <input 
@@ -392,11 +405,15 @@ import { ref, onMounted, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { userConfig, userInfo, mangaSortOrder, chapterSortOrder } from '@/store'
 import { themeState, setTheme } from '@/themes/store'
+import { useColorTheme } from '@/themes/composables/use-color-theme'
+import colorThemeList from '@/store/theme'
 import userApi from '@/api/account'
 import imageApi from '@/api/image'
 import { Cookies } from '@/utils'
 
 const router = useRouter()
+
+const { activeColorTheme, applyColorTheme } = useColorTheme()
 
 // 本地页面容量设置
 const mangaPageSize = ref(0)

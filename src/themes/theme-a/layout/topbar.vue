@@ -67,6 +67,7 @@ import languages from '@/store/language'
 import themeList from '@/store/theme'
 import { set_theme } from '@/style/theme'
 import { Cookies } from '@/utils'
+import { useColorTheme } from '@/themes/composables/use-color-theme'
 
 const router = useRouter()
 const route = useRoute()
@@ -109,7 +110,8 @@ function getCookie(name: string): string | undefined {
 	return undefined
 }
 
-const activeColorTheme = ref(getCookie('theme') || 'light')
+// 颜色主题状态与切换方法：改由 composable 提供跨组件共享
+const { activeColorTheme, isDarkMode, toggleDarkMode, applyColorTheme: applyColorThemeImpl } = useColorTheme()
 
 const colorThemeColors: Record<string, string> = {
 	light: '#f5f5f5',
@@ -176,34 +178,12 @@ function applySkin(key: ThemeKey) {
 }
 
 function applyColorTheme(value: string) {
-	activeColorTheme.value = value
-	set_theme(value)
-	userConfig.theme = value
+	applyColorThemeImpl(value)
 	showThemeSwitch.value = false
-	window.dispatchEvent(new CustomEvent('smanga:color-theme-changed', { detail: value }))
 }
 
 // ---- 夜间模式切换 ----
-const lastNonDarkTheme = ref<string>(activeColorTheme.value === 'dark' ? 'light' : activeColorTheme.value)
-const isDarkMode = computed(() => activeColorTheme.value === 'dark')
-
-function toggleDarkMode() {
-	if (activeColorTheme.value === 'dark') {
-		// 切回上一次的亮色主题
-		const target = lastNonDarkTheme.value || 'light'
-		activeColorTheme.value = target
-		set_theme(target)
-		userConfig.theme = target
-		window.dispatchEvent(new CustomEvent('smanga:color-theme-changed', { detail: target }))
-	} else {
-		// 记住当前亮色主题,然后切到暗色
-		lastNonDarkTheme.value = activeColorTheme.value
-		activeColorTheme.value = 'dark'
-		set_theme('dark')
-		userConfig.theme = 'dark'
-		window.dispatchEvent(new CustomEvent('smanga:color-theme-changed', { detail: 'dark' }))
-	}
-}
+// toggleDarkMode / isDarkMode 由 useColorTheme() 提供，无需在此重复实现
 
 function toggleLanguage() {
 	const currentIndex = languages.findIndex((language) => language.value === userConfig.language)

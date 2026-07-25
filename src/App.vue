@@ -108,8 +108,7 @@ function set_screen_type() {
 	// 设置移动端标识（768px 以下视为移动端）
 	config.isMobile = screen < 768;
 
-	// ElMessage(String(window.screen.height));
-	// ElMessage(String(window.screen.width));
+	// ElMessage(String(window.screen.width)+','+String(window.screen.height));
 }
 
 async function get_setting() {

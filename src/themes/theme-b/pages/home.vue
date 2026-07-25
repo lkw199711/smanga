@@ -56,6 +56,9 @@
 				/>
 			</div>
 		</section>
+
+		<!-- 底部占位：防止移动端底栏遮挡最后内容 -->
+		<div class="sb-bottom-spacer" aria-hidden="true"></div>
 	</div>
 </template>
 
@@ -255,6 +258,31 @@ function goManga(item: any) {
 	display: grid;
 	grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
 	gap: 1.8rem;
+	row-gap: 4.8rem;
+}
+
+/* 移动端窄屏：固定两列，避免 minmax 15rem 叠加 gap/padding 撑破视口 */
+@media (max-width: 48rem) {
+	.sb-continue {
+		grid-template-columns: 1fr;
+		gap: 1.2rem;
+	}
+	.sb-grid {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: 1.2rem;
+		row-gap: 4.8rem;
+	}
+}
+
+/* 底部占位（默认无高度，仅在移动端下生效） */
+.sb-bottom-spacer {
+	height: 0;
+}
+
+@media (max-width: 48rem) {
+	.sb-bottom-spacer {
+		height: calc(6.4rem + env(safe-area-inset-bottom, 0px));
+	}
 }
 
 </style>
