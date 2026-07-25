@@ -1,7 +1,29 @@
 <template>
   <div :class="['setting-page', `setting-page--${themeState.current.toLowerCase()}`]">
     <div class="setting-page-head">
-      <h1>用户设置</h1>
+      <div class="setting-page-head-title">
+        <h1>用户设置</h1>
+        <p class="setting-page-head-sub">个性化你的阅读体验</p>
+      </div>
+      <div class="setting-page-head-actions">
+        <transition name="setting-toast-fade">
+          <span
+            v-if="saveHint"
+            class="setting-save-hint"
+            :class="`setting-save-hint--${saveHintType}`"
+          >
+            {{ saveHint }}
+          </span>
+        </transition>
+        <button
+          class="setting-btn-primary setting-btn-save"
+          :disabled="saving"
+          @click="saveAll"
+        >
+          <span v-if="saving" class="setting-btn-spinner"></span>
+          <span>{{ saving ? '保存中…' : '保存所有设置' }}</span>
+        </button>
+      </div>
     </div>
     
     <div class="setting-groups">
@@ -362,10 +384,6 @@
         </div>
       </div>
     </div>
-
-    <div class="setting-footer">
-      <button class="setting-btn-primary" @click="saveAll">保存所有设置</button>
-    </div>
   </div>
 </template>
 
@@ -388,6 +406,21 @@ const chapterPageSize = ref(0)
 const avatarInputRef = ref<HTMLInputElement>()
 const uploadingAvatar = ref(false)
 const avatarBlobUrl = ref('')
+
+// 保存状态与轻提示
+const saving = ref(false)
+const saveHint = ref('')
+const saveHintType = ref<'success' | 'error'>('success')
+let saveHintTimer: ReturnType<typeof setTimeout> | null = null
+
+function showSaveHint(text: string, type: 'success' | 'error' = 'success') {
+  saveHint.value = text
+  saveHintType.value = type
+  if (saveHintTimer) clearTimeout(saveHintTimer)
+  saveHintTimer = setTimeout(() => {
+    saveHint.value = ''
+  }, 1800)
+}
 
 // 加载头像 blob
 async function loadAvatar() {
@@ -458,8 +491,10 @@ function getSortLabel(sort: string): string {
 async function save() {
   try {
     await userApi.update_user_config({ userConfig })
+    showSaveHint('已保存', 'success')
   } catch (e) {
     console.error('保存设置失败:', e)
+    showSaveHint('保存失败', 'error')
   }
 }
 
@@ -471,13 +506,19 @@ async function savePageSize() {
 
 // 保存所有设置
 async function saveAll() {
+  if (saving.value) return
+  saving.value = true
   try {
     // 保存页面容量
     await savePageSize()
     // 保存用户配置
-    await save()
+    await userApi.update_user_config({ userConfig })
+    showSaveHint('全部设置已保存', 'success')
   } catch (e) {
     console.error('保存设置失败:', e)
+    showSaveHint('保存失败', 'error')
+  } finally {
+    saving.value = false
   }
 }
 
@@ -584,14 +625,101 @@ function back_old_theme(){
 }
 
 .setting-page-head {
-  margin-bottom: 3.2rem;
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.6rem;
+  flex-wrap: wrap;
+  margin: -2.4rem -2.4rem 2.4rem;
+  padding: 1.6rem 2.4rem;
+  background: var(--setting-footer-background);
+  border-bottom: 1px solid var(--setting-card-border);
+  backdrop-filter: saturate(1.4) blur(1.4rem);
+  -webkit-backdrop-filter: saturate(1.4) blur(1.4rem);
+  box-shadow: 0 0.2rem 0.8rem rgba(0, 0, 0, 0.04);
+}
+
+.setting-page-head-title {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  min-width: 0;
 }
 
 .setting-page-head h1 {
-  font-size: 2.4rem;
+  font-size: 2.2rem;
   font-weight: 700;
   margin: 0;
   color: var(--setting-heading);
+  line-height: 1.2;
+}
+
+.setting-page-head-sub {
+  margin: 0;
+  font-size: 1.3rem;
+  color: var(--setting-note);
+}
+
+.setting-page-head-actions {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+}
+
+.setting-save-hint {
+  font-size: 1.3rem;
+  padding: 0.4rem 1rem;
+  border-radius: 999px;
+  background: rgba(34, 197, 94, 0.12);
+  color: #16a34a;
+  white-space: nowrap;
+}
+
+.setting-save-hint--error {
+  background: rgba(239, 68, 68, 0.12);
+  color: #dc2626;
+}
+
+.setting-toast-fade-enter-active,
+.setting-toast-fade-leave-active {
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+.setting-toast-fade-enter-from,
+.setting-toast-fade-leave-to {
+  opacity: 0;
+  transform: translateY(-0.4rem);
+}
+
+.setting-btn-save {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.8rem 1.6rem;
+  font-size: 1.4rem;
+  white-space: nowrap;
+}
+
+.setting-btn-save:disabled {
+  cursor: not-allowed;
+  opacity: 0.7;
+  transform: none;
+  box-shadow: var(--setting-primary-shadow);
+}
+
+.setting-btn-spinner {
+  width: 1.2rem;
+  height: 1.2rem;
+  border: 0.2rem solid rgba(255, 255, 255, 0.5);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: setting-spin 0.7s linear infinite;
+}
+
+@keyframes setting-spin {
+  to { transform: rotate(360deg); }
 }
 
 .setting-groups {
@@ -650,28 +778,36 @@ function back_old_theme(){
 
 .setting-select {
   padding: 0.6rem 1.2rem;
-  border: 1px solid #d1d5db;
+  border: 1px solid var(--setting-card-border);
   border-radius: var(--setting-control-radius);
   font-size: 1.4rem;
   background: var(--setting-control-background);
   color: var(--setting-control-text);
+  transition: border-color 0.2s;
+}
+
+.setting-select:hover,
+.setting-input-number:hover {
+  border-color: var(--setting-accent);
 }
 
 .setting-select:focus,
 .setting-input-number:focus {
   outline: none;
   border-color: var(--setting-accent);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
 }
 
 .setting-input-number {
   width: 8rem;
   padding: 0.6rem 1.2rem;
-  border: 1px solid #d1d5db;
+  border: 1px solid var(--setting-card-border);
   border-radius: var(--setting-control-radius);
   font-size: 1.4rem;
   text-align: center;
   background: var(--setting-control-background);
   color: var(--setting-control-text);
+  transition: border-color 0.2s, box-shadow 0.2s;
 }
 
 .setting-slider-container {
@@ -757,7 +893,7 @@ function back_old_theme(){
 .setting-theme-btn {
   padding: 0.8rem 1.6rem;
   font-size: 1.4rem;
-  border: 1px solid #d1d5db;
+  border: 1px solid var(--setting-card-border);
   border-radius: var(--setting-theme-button-radius);
   background: var(--setting-control-background);
   color: var(--setting-control-text);
@@ -862,7 +998,7 @@ function back_old_theme(){
   font-size: 1.4rem;
   color: var(--setting-control-text);
   background: var(--setting-secondary-background);
-  border: 1px solid #d1d5db;
+  border: 1px solid var(--setting-card-border);
   border-radius: var(--setting-control-radius);
   cursor: pointer;
   transition: all 0.2s;
@@ -870,20 +1006,6 @@ function back_old_theme(){
 
 .setting-btn-secondary:hover {
   background: var(--setting-secondary-hover);
-}
-
-.setting-footer {
-  position: sticky;
-  bottom: 0;
-  background: var(--setting-footer-background);
-  border-top: 1px solid var(--setting-card-border);
-  padding: 1.6rem 2.4rem;
-  display: flex;
-  justify-content: center;
-  box-shadow: 0 -0.2rem 0.8rem rgba(0, 0, 0, 0.04);
-  z-index: 10;
-  margin: 0 -2.4rem -2.4rem -2.4rem; /* 抵消父元素的padding，确保按钮占满宽度 */
-  position: -webkit-sticky; /* Safari兼容 */
 }
 
 @media (max-width: 76.8rem) {
@@ -904,14 +1026,24 @@ function back_old_theme(){
   .setting-theme-options {
     flex-wrap: wrap;
   }
-  
-  .setting-footer {
+
+  .setting-page-head {
+    margin: -1.6rem -1.6rem 1.6rem;
     padding: 1.2rem 1.6rem;
-    margin: 0 -1.6rem -1.6rem -1.6rem; /* 移动端也抵消父元素padding */
+    align-items: flex-start;
   }
-  
-  .setting-groups {
-    padding-bottom: 0; /* 移动端不需要额外padding */
+
+  .setting-page-head h1 {
+    font-size: 1.8rem;
+  }
+
+  .setting-page-head-sub {
+display: none;
+  }
+
+  .setting-page-head-actions {
+    width: 100%;
+    justify-content: flex-end;
   }
 }
 </style>
