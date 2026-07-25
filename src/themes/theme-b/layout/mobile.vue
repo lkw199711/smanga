@@ -56,7 +56,7 @@
 				</div>
 
 				<nav class="sb-nav">
-					<div v-for="item in currentMenu" :key="item.key" class="sb-nav-item" @click="navigateTo(item.key)">
+					<div v-for="item in currentMenu" :key="item.path" class="sb-nav-item" @click="navigateTo(item.path)">
 						<span class="sb-nav-icon">{{ item.icon }}</span>
 						<span>{{ item.label }}</span>
 					</div>
@@ -80,7 +80,7 @@
 
 		<!-- 底部导航栏 -->
 		<nav class="sb-mobile-nav-bar">
-			<div v-for="item in bottomNav" :key="item.key" class="sb-nav-item" @click="navigateTo(item.key)">
+			<div v-for="item in bottomNav" :key="item.path" class="sb-nav-item" @click="navigateTo(item.path)">
 				<span class="sb-nav-icon">{{ item.icon }}</span>
 				<span class="sb-nav-label">{{ item.label }}</span>
 			</div>
@@ -100,6 +100,7 @@ import { userInfo } from '@/store'
 import imageApi from '@/api/image'
 import { Cookies } from '@/utils'
 import { useColorTheme } from '@/themes/composables/use-color-theme'
+import { navMenu, adminNavMenu, bottomNavMenu, getPageTitle } from '@/themes/constants/menu'
 import './dark-overrides.css'
 
 const { isDarkMode, toggleDarkMode } = useColorTheme()
@@ -111,35 +112,7 @@ const route = useRoute()
 const manageMode = ref(false)
 const isAdmin = computed(() => Cookies.getRole() === 'admin')
 
-const menu = [
-	{ key: 'home', label: '首页', icon: '🏠' },
-	{ key: 'history', label: '最近阅读', icon: '🕘' },
-	{ key: 'bookmark', label: '书签', icon: '🔖' },
-	{ key: 'collect', label: '收藏', icon: '⭐' },
-	{ key: 'media', label: '媒体库', icon: '📁' },
-	{ key: 'search', label: '搜索', icon: '🔍' },
-	{ key: 'tag', label: '标签', icon: '🏷️' },
-	{ key: 'setting', label: '设置', icon: '🔧' },
-]
-
-const adminMenu = [
-	{ key: 'manage-users', label: '用户管理', icon: '👤' },
-	{ key: 'manage-media', label: '媒体库管理', icon: '📁' },
-	{ key: 'manage-manga', label: '漫画管理', icon: '📚' },
-	{ key: 'manage-chapters', label: '章节管理', icon: '📑' },
-	{ key: 'manage-paths', label: '路径管理', icon: '📂' },
-	{ key: 'manage-bookmarks', label: '书签管理', icon: '🔖' },
-	{ key: 'manage-tags', label: '标签管理', icon: '🏷️' },
-	{ key: 'manage-compress', label: '解压管理', icon: '🗜️' },
-	{ key: 'manage-jobs', label: '任务管理', icon: '📋' },
-	{ key: 'manage-sync', label: '漫画同步', icon: '🔄' },
-	{ key: 'manage-share', label: '漫画分享', icon: '📤' },
-	{ key: 'manage-p2p', label: 'P2P管理', icon: '🌐' },
-	{ key: 'manage-server', label: '服务器设置', icon: '🖥️' },
-	{ key: 'manage-wiki', label: '帮助文档', icon: '📖' },
-]
-
-const currentMenu = computed(() => (manageMode.value ? adminMenu : menu))
+const currentMenu = computed(() => (manageMode.value ? adminNavMenu : navMenu))
 
 const mediaListData = ref<any[]>([])
 
@@ -156,64 +129,13 @@ onBeforeUnmount(() => {
 	window.removeEventListener('click', onSidebarClick)
 })
 
-const bottomNav = [
-	{ key: 'home', label: '首页', icon: '🏠' },
-	{ key: 'history', label: '历史', icon: '🕘' },
-	{ key: 'bookmark', label: '书签', icon: '🔖' },
-	{ key: 'collect', label: '收藏', icon: '⭐' },
-	{ key: 'media', label: '媒体', icon: '📁' },
-	{ key: 'search', label: '搜索', icon: '🔍' },
-]
+const bottomNav = bottomNavMenu
 
-const pageTitle = computed(() => {
-	const titleMap: Record<string, string> = {
-		't-home': '首页',
-		't-media-list': '媒体库',
-		't-manga-list': '漫画列表',
-		't-manga-info': '漫画详情',
-		't-chapter-list': '章节列表',
-		't-history': '最近阅读',
-		't-bookmark': '书签',
-		't-collect': '收藏',
-		't-search': '搜索',
-		't-tag-list': '标签',
-		't-manage': '管理',
-		't-user-setting': '用户设置',
-		't-serve-setting': '服务器设置',
-	}
-	return titleMap[route.name as string] || 'smanga'
-})
+const pageTitle = computed(() => getPageTitle(route.name as string | undefined))
 
-function navigateTo(key: string) {
-	const routeMap: Record<string, string> = {
-		home: '/t',
-		history: '/t/history',
-		bookmark: '/t/bookmark',
-		collect: '/t/collect',
-		media: '/t/media',
-		search: '/t/search',
-		tag: '/t/tags',
-		manage: '/t/manage',
-		setting: '/t/setting/user',
-		'manage-users': '/t/manage/users',
-		'manage-media': '/t/manage/media',
-		'manage-manga': '/t/manage/manga',
-		'manage-chapters': '/t/manage/chapters',
-		'manage-paths': '/t/manage/paths',
-		'manage-bookmarks': '/t/manage/bookmarks',
-		'manage-tags': '/t/manage/tags',
-		'manage-compress': '/t/manage/compress',
-		'manage-jobs': '/t/manage/jobs',
-		'manage-sync': '/t/manage/sync',
-		'manage-share': '/t/manage/share',
-		'manage-p2p': '/t/manage/p2p',
-		'manage-server': '/t/manage/server',
-		'manage-wiki': '/t/manage/wiki',
-	}
-	if (routeMap[key]) {
-		router.push(routeMap[key])
-		showSidebar.value = false
-	}
+function navigateTo(path: string) {
+	router.push(path)
+	showSidebar.value = false
 }
 
 function navigateToMedia(mediaId: number) {

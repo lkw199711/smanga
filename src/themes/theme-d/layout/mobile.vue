@@ -64,7 +64,7 @@
 				<nav class="sd-nav">
 					<div
 						v-for="item in currentMenu"
-						:key="item.key"
+						:key="item.path"
 						:class="['sd-nav-item', { active: isActive(item) }]"
 						@click="go(item.path)"
 					>
@@ -83,13 +83,6 @@
 					<div v-if="mediaListData.length === 0" class="sd-nav-empty">暂无媒体库</div>
 				</nav>
 
-				<div class="sd-user">
-					<div class="sd-avatar">{{ userInfo.userName?.charAt(0) || 'U' }}</div>
-					<div>
-						<div class="sd-user-name">{{ userInfo.userName || 'User' }}</div>
-						<div class="sd-user-role">{{ Cookies.getRole() === 'admin' ? '管理员' : '用户' }}</div>
-					</div>
-				</div>
 			</aside>
 		</div>
 
@@ -100,7 +93,7 @@
 
 		<!-- 底部导航栏 -->
 		<nav class="sd-mobile-nav-bar">
-			<div v-for="item in bottomNav" :key="item.key" class="sd-nav-item" @click="go(item.path)">
+			<div v-for="item in bottomNav" :key="item.path" class="sd-nav-item" @click="go(item.path)">
 				<span class="sd-nav-icon">{{ item.icon }}</span>
 				<span class="sd-nav-label">{{ item.label }}</span>
 			</div>
@@ -119,6 +112,7 @@ import mediaStatsApi from '@/api/media-stats'
 import imageApi from '@/api/image'
 import ThemeContextMenu from '@/themes/components/theme-context-menu.vue'
 import androidSeat from '@/layout/components/android-seat.vue'
+import { navMenu, adminNavMenu, bottomNavMenu, getPageTitle } from '@/themes/constants/menu'
 import './dark-overrides.css'
 
 const showSidebar = ref(false)
@@ -225,37 +219,9 @@ const themeVars = computed(() => {
 	}
 })
 
-const menu = [
-	{ key: 'home', label: '首页', icon: '🏠', path: '/t' },
-	{ key: 'history', label: '最近阅读', icon: '🕘', path: '/t/history' },
-	{ key: 'bookmark', label: '书签', icon: '🔖', path: '/t/bookmark' },
-	{ key: 'collect', label: '收藏', icon: '⭐', path: '/t/collect' },
-	{ key: 'media', label: '媒体库', icon: '📁', path: '/t/media' },
-	{ key: 'search', label: '搜索', icon: '🔍', path: '/t/search' },
-	{ key: 'tag', label: '标签', icon: '🏷️', path: '/t/tags' },
-	{ key: 'setting', label: '设置', icon: '🔧', path: '/t/setting/user' },
-]
-
-const adminMenu = [
-	{ key: 'manage-users', label: '用户管理', icon: '👤', path: '/t/manage/users' },
-	{ key: 'manage-media', label: '媒体库管理', icon: '📁', path: '/t/manage/media' },
-	{ key: 'manage-manga', label: '漫画管理', icon: '📚', path: '/t/manage/manga' },
-	{ key: 'manage-chapters', label: '章节管理', icon: '📑', path: '/t/manage/chapters' },
-	{ key: 'manage-paths', label: '路径管理', icon: '📂', path: '/t/manage/paths' },
-	{ key: 'manage-bookmarks', label: '书签管理', icon: '🔖', path: '/t/manage/bookmarks' },
-	{ key: 'manage-tags', label: '标签管理', icon: '🏷️', path: '/t/manage/tags' },
-	{ key: 'manage-compress', label: '解压管理', icon: '🗜️', path: '/t/manage/compress' },
-	{ key: 'manage-jobs', label: '任务管理', icon: '📋', path: '/t/manage/jobs' },
-	{ key: 'manage-sync', label: '漫画同步', icon: '🔄', path: '/t/manage/sync' },
-	{ key: 'manage-share', label: '漫画分享', icon: '📤', path: '/t/manage/share' },
-	{ key: 'manage-p2p', label: 'P2P管理', icon: '🌐', path: '/t/manage/p2p' },
-	{ key: 'manage-server', label: '服务器设置', icon: '🖥️', path: '/t/manage/server' },
-	{ key: 'manage-wiki', label: '帮助文档', icon: '📖', path: '/t/manage/wiki' },
-]
-
 const manageMode = ref(false)
 const isAdmin = computed(() => Cookies.getRole() === 'admin')
-const currentMenu = computed(() => (manageMode.value ? adminMenu : menu))
+const currentMenu = computed(() => (manageMode.value ? adminNavMenu : navMenu))
 
 const mediaListData = ref<any[]>([])
 
@@ -272,33 +238,9 @@ onBeforeUnmount(() => {
 	window.removeEventListener('click', onSidebarClick)
 })
 
-const bottomNav = [
-	{ key: 'home', label: '首页', icon: '🏠', path: '/t' },
-	{ key: 'history', label: '历史', icon: '🕘', path: '/t/history' },
-	{ key: 'bookmark', label: '书签', icon: '🔖', path: '/t/bookmark' },
-	{ key: 'collect', label: '收藏', icon: '⭐', path: '/t/collect' },
-	{ key: 'media', label: '媒体', icon: '📁', path: '/t/media' },
-	{ key: 'search', label: '搜索', icon: '🔍', path: '/t/search' },
-]
+const bottomNav = bottomNavMenu
 
-const pageTitle = computed(() => {
-	const titleMap: Record<string, string> = {
-		't-home': '首页',
-		't-media-list': '媒体库',
-		't-manga-list': '漫画列表',
-		't-manga-info': '漫画详情',
-		't-chapter-list': '章节列表',
-		't-history': '最近阅读',
-		't-bookmark': '书签',
-		't-collect': '收藏',
-		't-search': '搜索',
-		't-tag-list': '标签',
-		't-manage': '管理',
-		't-user-setting': '用户设置',
-		't-serve-setting': '服务器设置',
-	}
-	return titleMap[route.name as string] || 'smanga'
-})
+const pageTitle = computed(() => getPageTitle(route.name as string | undefined))
 
 function isActive(item: any) {
 	return route.path === item.path
@@ -700,15 +642,6 @@ function onSidebarClick(e: MouseEvent) {
 	color: #fff;
 }
 
-.sd-user {
-	margin-top: auto;
-	display: flex;
-	align-items: center;
-	gap: 1rem;
-	padding: 1.2rem 0.8rem;
-	border-top: 1px solid var(--sd-border, #e5e7eb);
-}
-
 .sd-avatar {
 	width: 3.6rem;
 	height: 3.6rem;
@@ -730,16 +663,6 @@ function onSidebarClick(e: MouseEvent) {
 	object-fit: cover;
 	border-radius: 50%;
 	display: block;
-}
-
-.sd-user-name {
-	font-weight: 500;
-	font-size: 1.4rem;
-}
-
-.sd-user-role {
-	font-size: 1.2rem;
-	color: var(--sd-text-muted, #64748b);
 }
 
 .sd-mobile-main {

@@ -121,6 +121,7 @@ import { userInfo } from '@/store'
 import mediaStatsApi from '@/api/media-stats'
 import imageApi from '@/api/image'
 import { Cookies } from '@/utils'
+import { navMenu as navItems, adminNavMenu as adminNavItems } from '@/themes/constants/menu'
 
 const router = useRouter()
 
@@ -165,34 +166,6 @@ function onGlobalClick(e: MouseEvent) {
 	if (target.closest('.sa-user-trigger')) return
 	showUserDropdown.value = false
 }
-
-const navItems = [
-	{ path: '/t', icon: '🏠', label: '首页', exact: true },
-	{ path: '/t/history', icon: '🕘', label: '最近阅读' },
-	{ path: '/t/bookmark', icon: '🔖', label: '书签' },
-	{ path: '/t/collect', icon: '⭐', label: '收藏' },
-	{ path: '/t/search', icon: '🔍', label: '搜索' },
-	{ path: '/t/tags', icon: '🏷️', label: '标签' },
-	{ path: '/t/media', icon: '📁', label: '媒体库' },
-	{ path: '/t/setting/user', icon: '🔧', label: '设置' },
-]
-
-const adminNavItems = [
-	{ path: '/t/manage/users', icon: '👤', label: '用户管理' },
-	{ path: '/t/manage/media', icon: '📁', label: '媒体库管理' },
-	{ path: '/t/manage/manga', icon: '📚', label: '漫画管理' },
-	{ path: '/t/manage/chapters', icon: '📑', label: '章节管理' },
-	{ path: '/t/manage/paths', icon: '📂', label: '路径管理' },
-	{ path: '/t/manage/bookmarks', icon: '🔖', label: '书签管理' },
-	{ path: '/t/manage/tags', icon: '🏷️', label: '标签管理' },
-	{ path: '/t/manage/compress', icon: '🗜️', label: '解压管理' },
-	{ path: '/t/manage/jobs', icon: '📋', label: '任务管理' },
-	{ path: '/t/manage/sync', icon: '🔄', label: '漫画同步' },
-	{ path: '/t/manage/share', icon: '📤', label: '漫画分享' },
-	{ path: '/t/manage/p2p', icon: '🌐', label: 'P2P管理' },
-	{ path: '/t/manage/server', icon: '🖥️', label: '服务器设置' },
-	{ path: '/t/manage/wiki', icon: '📖', label: '帮助文档' },
-]
 
 const mediaListData = ref<any[]>([])
 

@@ -63,7 +63,7 @@
 							</button>
 						</div>
 						<nav class="sa-nav">
-							<div v-for="item in adminMenu" :key="item.key" class="sa-nav-item" @click="navigateTo(item.key)">
+							<div v-for="item in adminMenu" :key="item.path" class="sa-nav-item" @click="navigateTo(item.path)">
 								<span class="sa-nav-icon">{{ item.icon }}</span>
 								<span>{{ item.label }}</span>
 							</div>
@@ -94,7 +94,7 @@
 							</button>
 						</div>
 						<nav class="sa-nav">
-							<div v-for="item in menu" :key="item.key" class="sa-nav-item" @click="navigateTo(item.key)">
+							<div v-for="item in menu" :key="item.path" class="sa-nav-item" @click="navigateTo(item.path)">
 								<span class="sa-nav-icon">{{ item.icon }}</span>
 								<span>{{ item.label }}</span>
 							</div>
@@ -122,7 +122,7 @@
 
 		<!-- 底部导航栏 -->
 		<nav class="sa-mobile-nav-bar">
-			<div v-for="item in bottomNav" :key="item.key" class="sa-nav-item" @click="navigateTo(item.key)">
+			<div v-for="item in bottomNav" :key="item.path" class="sa-nav-item" @click="navigateTo(item.path)">
 				<span class="sa-nav-icon">{{ item.icon }}</span>
 				<span class="sa-nav-label">{{ item.label }}</span>
 			</div>
@@ -142,6 +142,12 @@ import imageApi from '@/api/image'
 import mediaStatsApi from '@/api/media-stats'
 import { Cookies } from '@/utils'
 import { useColorTheme } from '@/themes/composables/use-color-theme'
+import {
+	navMenu as menu,
+	adminNavMenu as adminMenu,
+	bottomNavMenu as bottomNav,
+	getPageTitle,
+} from '@/themes/constants/menu'
 import './dark-overrides.css'
 
 // 夜间模式切换（与桌面顶栏共享同一状态）
@@ -157,104 +163,11 @@ const manageMode = ref(false)
 
 const isAdmin = computed(() => Cookies.getRole() === 'admin')
 
-const menu = [
-	{ key: 'home', label: '首页', icon: '🏠' },
-	{ key: 'history', label: '最近阅读', icon: '🕘' },
-	{ key: 'bookmark', label: '书签', icon: '🔖' },
-	{ key: 'collect', label: '收藏', icon: '⭐' },
-	{ key: 'search', label: '搜索', icon: '🔍' },
-	{ key: 'tag', label: '标签', icon: '🏷️' },
-	{ key: 'media', label: '媒体库', icon: '📁' },
-	{ key: 'setting', label: '设置', icon: '🔧' },
-]
+const pageTitle = computed(() => getPageTitle(route.name as string | undefined))
 
-const adminMenu = [
-	{ key: 'manage-users', label: '用户管理', icon: '👤' },
-	{ key: 'manage-media', label: '媒体库管理', icon: '📁' },
-	{ key: 'manage-manga', label: '漫画管理', icon: '📚' },
-	{ key: 'manage-chapters', label: '章节管理', icon: '📑' },
-	{ key: 'manage-paths', label: '路径管理', icon: '📂' },
-	{ key: 'manage-bookmarks', label: '书签管理', icon: '🔖' },
-	{ key: 'manage-tags', label: '标签管理', icon: '🏷️' },
-	{ key: 'manage-compress', label: '解压管理', icon: '🗜️' },
-	{ key: 'manage-jobs', label: '任务管理', icon: '📋' },
-	{ key: 'manage-sync', label: '漫画同步', icon: '🔄' },
-	{ key: 'manage-share', label: '漫画分享', icon: '📤' },
-	{ key: 'manage-p2p', label: 'P2P管理', icon: '🌐' },
-	{ key: 'manage-server', label: '服务器设置', icon: '🖥️' },
-	{ key: 'manage-wiki', label: '帮助文档', icon: '📖' },
-]
-
-const bottomNav = [
-	{ key: 'home', label: '首页', icon: '🏠' },
-	{ key: 'media', label: '媒体', icon: '📁' },
-	{ key: 'history', label: '历史', icon: '🕘' },
-	{ key: 'bookmark', label: '书签', icon: '🔖' },
-	{ key: 'collect', label: '收藏', icon: '⭐' },
-	{ key: 'search', label: '搜索', icon: '🔍' },
-]
-
-const pageTitle = computed(() => {
-	const titleMap: Record<string, string> = {
-		't-home': '首页',
-		't-media-list': '媒体库',
-		't-manga-list': '漫画列表',
-		't-manga-info': '漫画详情',
-		't-chapter-list': '章节列表',
-		't-history': '最近阅读',
-		't-bookmark': '书签',
-		't-collect': '收藏',
-		't-search': '搜索',
-		't-tag-list': '标签',
-		't-user-setting': '用户设置',
-		't-serve-setting': '服务器设置',
-		't-manage-users': '用户管理',
-		't-manage-media': '媒体库管理',
-		't-manage-manga': '漫画管理',
-		't-manage-chapters': '章节管理',
-		't-manage-paths': '路径管理',
-		't-manage-bookmarks': '书签管理',
-		't-manage-tags': '标签管理',
-		't-manage-compress': '解压管理',
-		't-manage-jobs': '任务管理',
-		't-manage-sync': '漫画同步',
-		't-manage-share': '漫画分享',
-		't-manage-p2p': 'P2P管理',
-		't-manage-server': '服务器设置',
-		't-manage-wiki': '帮助文档',
-	}
-	return titleMap[route.name as string] || 'smanga'
-})
-
-function navigateTo(key: string) {
-	const routeMap: Record<string, string> = {
-		home: '/t',
-		history: '/t/history',
-		bookmark: '/t/bookmark',
-		collect: '/t/collect',
-		media: '/t/media',
-		search: '/t/search',
-		tag: '/t/tags',
-		setting: '/t/setting/user',
-		'manage-users': '/t/manage/users',
-		'manage-media': '/t/manage/media',
-		'manage-manga': '/t/manage/manga',
-		'manage-chapters': '/t/manage/chapters',
-		'manage-paths': '/t/manage/paths',
-		'manage-bookmarks': '/t/manage/bookmarks',
-		'manage-tags': '/t/manage/tags',
-		'manage-compress': '/t/manage/compress',
-		'manage-jobs': '/t/manage/jobs',
-		'manage-sync': '/t/manage/sync',
-		'manage-share': '/t/manage/share',
-		'manage-p2p': '/t/manage/p2p',
-		'manage-server': '/t/manage/server',
-		'manage-wiki': '/t/manage/wiki',
-	}
-	if (routeMap[key]) {
-		router.push(routeMap[key])
-		showSidebar.value = false
-	}
+function navigateTo(path: string) {
+	router.push(path)
+	showSidebar.value = false
 }
 
 function navigateToMedia(mediaId: number) {
