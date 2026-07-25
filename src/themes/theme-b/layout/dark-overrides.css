@@ -563,3 +563,19 @@
 	--s-input: var(--sb-card) !important;
 	--s-input-border: var(--sb-border) !important;
 }
+
+/* ---- 侧边栏 / 移动端抽屉:管理模式切换按钮 ---- */
+.tb-dark .sb-manage-toggle {
+	background: rgba(255, 255, 255, 0.04) !important;
+	border-color: var(--sb-border) !important;
+	color: var(--sb-text-3) !important;
+}
+.tb-dark .sb-manage-toggle:hover {
+	background: rgba(255, 255, 255, 0.08) !important;
+	color: var(--sb-text) !important;
+}
+.tb-dark .sb-manage-toggle.active {
+	background: linear-gradient(135deg, #ff6fa3, #6c8dff) !important;
+	border-color: transparent !important;
+	color: #fff !important;
+}

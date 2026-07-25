@@ -138,6 +138,22 @@
 	border-top-color: var(--sa-border) !important;
 }
 
+/* ---- 侧边栏 / 移动端抽屉:管理模式切换按钮 ---- */
+.sa-dark .sa-manage-toggle {
+	background: var(--sa-bg-elev) !important;
+	border-color: var(--sa-border) !important;
+	color: var(--sa-text-2) !important;
+}
+.sa-dark .sa-manage-toggle:hover {
+	background: var(--sa-bg-hover) !important;
+	color: var(--sa-text) !important;
+}
+.sa-dark .sa-manage-toggle.active {
+	background: var(--sa-primary) !important;
+	border-color: var(--sa-primary) !important;
+	color: #0b1220 !important;
+}
+
 /* ---- 卡片/内容区通用 ---- */
 .sa-dark .sa-card,
 .sa-dark .sa-panel,
