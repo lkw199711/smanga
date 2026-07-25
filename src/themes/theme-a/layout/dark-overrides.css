@@ -787,3 +787,129 @@
 	--s-input-border: var(--sa-border) !important;
 }
 
+/* ==========================================================================
+ * 漫画列表页 manga-list.vue 专项适配(scoped 样式覆盖)
+ * ========================================================================== */
+.sa-dark .ta-manga-list,
+.sa-dark .ta-manga-list * {
+	color: var(--sa-text);
+}
+.sa-dark .ta-manga-list .ta-page-head h1 {
+	color: var(--sa-text) !important;
+}
+.sa-dark .ta-manga-list .ta-input,
+.sa-dark .ta-manga-list .ta-select {
+	background: var(--sa-bg-elev) !important;
+	border-color: var(--sa-border) !important;
+	color: var(--sa-text) !important;
+}
+.sa-dark .ta-manga-list .ta-input::placeholder {
+	color: var(--sa-text-3) !important;
+}
+.sa-dark .ta-manga-list .ta-manga-cover {
+	background: var(--sa-bg-hover) !important;
+	box-shadow: 0 0.2rem 0.8rem rgba(0, 0, 0, 0.4) !important;
+}
+.sa-dark .ta-manga-list .ta-cover-placeholder {
+	background: linear-gradient(135deg, #1e3a8a, #1e40af) !important;
+	color: var(--sa-text-2) !important;
+}
+.sa-dark .ta-manga-list .ta-manga-name {
+	color: var(--sa-text) !important;
+}
+.sa-dark .ta-manga-list .ta-manga-meta {
+	color: var(--sa-text-3) !important;
+}
+.sa-dark .ta-manga-list .ta-empty {
+	color: var(--sa-text-3) !important;
+}
+.sa-dark .ta-manga-list .ta-pagination span {
+	color: var(--sa-text-2) !important;
+}
+.sa-dark .ta-manga-list .ta-pagination button {
+	background: var(--sa-bg-elev) !important;
+	border-color: var(--sa-border) !important;
+	color: var(--sa-text) !important;
+}
+.sa-dark .ta-manga-list .ta-pagination button:hover:not(:disabled) {
+	background: var(--sa-bg-hover) !important;
+}
+
+/* -------- 新工具条(toolbar / search / sort chips)暗色适配 -------- */
+.sa-dark .ta-manga-list .ta-toolbar {
+	border-bottom-color: var(--sa-border) !important;
+}
+.sa-dark .ta-manga-list .ta-toolbar-title h1 {
+	color: var(--sa-text) !important;
+}
+.sa-dark .ta-manga-list .ta-count-badge {
+	color: var(--sa-primary) !important;
+	background: rgba(37, 99, 235, 0.15) !important;
+}
+.sa-dark .ta-manga-list .ta-search {
+	background: var(--sa-bg-elev) !important;
+	border-color: transparent !important;
+}
+.sa-dark .ta-manga-list .ta-search:focus-within,
+.sa-dark .ta-manga-list .ta-search.is-active {
+	background: var(--sa-card) !important;
+	border-color: var(--sa-primary) !important;
+	box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.25) !important;
+}
+.sa-dark .ta-manga-list .ta-search-icon {
+	color: var(--sa-text-3) !important;
+}
+.sa-dark .ta-manga-list .ta-search-input {
+	color: var(--sa-text) !important;
+	background: transparent !important;
+}
+.sa-dark .ta-manga-list .ta-search-input::placeholder {
+	color: var(--sa-text-3) !important;
+}
+.sa-dark .ta-manga-list .ta-search-clear {
+	background: var(--sa-bg-hover) !important;
+	color: var(--sa-text-2) !important;
+}
+.sa-dark .ta-manga-list .ta-search-clear:hover {
+	background: var(--sa-border) !important;
+	color: var(--sa-text) !important;
+}
+.sa-dark .ta-manga-list .ta-search-submit {
+	background: var(--sa-primary) !important;
+	color: #fff !important;
+}
+.sa-dark .ta-manga-list .ta-sort-chip {
+	background: var(--sa-bg-elev) !important;
+	color: var(--sa-text-2) !important;
+	border-color: transparent !important;
+}
+.sa-dark .ta-manga-list .ta-sort-chip:hover {
+	background: var(--sa-bg-hover) !important;
+	color: var(--sa-text) !important;
+}
+.sa-dark .ta-manga-list .ta-sort-chip.active {
+	background: var(--sa-primary) !important;
+	border-color: var(--sa-primary) !important;
+	color: #fff !important;
+	box-shadow: 0 2px 6px rgba(37, 99, 235, 0.4) !important;
+}
+
+/* 筛选切换按钮 */
+.sa-dark .ta-manga-list .ta-filter-toggle {
+	background: var(--sa-bg-elev) !important;
+	color: var(--sa-text-2) !important;
+	border-color: transparent !important;
+}
+.sa-dark .ta-manga-list .ta-filter-toggle:hover {
+	background: var(--sa-bg-hover) !important;
+	color: var(--sa-text) !important;
+}
+.sa-dark .ta-manga-list .ta-filter-toggle.is-open {
+	color: var(--sa-primary) !important;
+	background: rgba(37, 99, 235, 0.15) !important;
+	border-color: rgba(37, 99, 235, 0.4) !important;
+}
+.sa-dark .ta-manga-list .ta-filter-dot {
+	box-shadow: 0 0 0 2px var(--sa-bg) !important;
+}
+
