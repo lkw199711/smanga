@@ -603,3 +603,100 @@
 	border-color: transparent !important;
 	color: #fff !important;
 }
+
+/* ==========================================
+ * theme-b 漫画列表页 (manga-list) 暗色覆盖
+ * ========================================== */
+
+/* 顶部工具条边框 */
+.tb-dark .tb-toolbar {
+	border-bottom-color: rgba(255, 255, 255, 0.08) !important;
+}
+.tb-dark .tb-page-title {
+	color: var(--sb-text) !important;
+}
+.tb-dark .tb-count-badge {
+	color: #93c5fd !important;
+	background: rgba(147, 197, 253, 0.12) !important;
+}
+
+/* 筛选按钮 */
+.tb-dark .tb-filter-toggle {
+	color: var(--sb-text-3) !important;
+	background: rgba(255, 255, 255, 0.04) !important;
+	border-color: rgba(255, 255, 255, 0.1) !important;
+}
+.tb-dark .tb-filter-toggle:hover {
+	background: rgba(255, 255, 255, 0.08) !important;
+	color: var(--sb-text) !important;
+}
+.tb-dark .tb-filter-toggle.is-open {
+	color: #93c5fd !important;
+	background: rgba(147, 197, 253, 0.12) !important;
+	border-color: rgba(147, 197, 253, 0.35) !important;
+}
+.tb-dark .tb-filter-dot {
+	box-shadow: 0 0 0 2px var(--sb-bg, #1a1a1a) !important;
+}
+
+/* 搜索胶囊 */
+.tb-dark .tb-search {
+	background: rgba(255, 255, 255, 0.06) !important;
+	border-color: rgba(255, 255, 255, 0.1) !important;
+}
+.tb-dark .tb-search:focus-within {
+	background: rgba(255, 255, 255, 0.1) !important;
+	border-color: #6c8dff !important;
+	box-shadow: 0 0 0 3px rgba(108, 141, 255, 0.2) !important;
+}
+.tb-dark .tb-search-input {
+	color: var(--sb-text) !important;
+}
+.tb-dark .tb-search-input::placeholder {
+	color: rgba(255, 255, 255, 0.35) !important;
+}
+.tb-dark .tb-search-clear {
+	color: var(--sb-text-3) !important;
+	background: rgba(255, 255, 255, 0.08) !important;
+}
+.tb-dark .tb-search-clear:hover {
+	color: var(--sb-text) !important;
+	background: rgba(255, 255, 255, 0.15) !important;
+}
+
+/* 排序 chips */
+.tb-dark .tb-sort-chip {
+	color: var(--sb-text-3) !important;
+	background: rgba(255, 255, 255, 0.04) !important;
+	border-color: rgba(255, 255, 255, 0.1) !important;
+}
+.tb-dark .tb-sort-chip:hover {
+	background: rgba(255, 255, 255, 0.08) !important;
+	color: var(--sb-text) !important;
+}
+.tb-dark .tb-sort-chip.is-active {
+	color: #fff !important;
+	background: linear-gradient(135deg, #6c8dff, #8b5cf6) !important;
+	border-color: transparent !important;
+	box-shadow: 0 2px 6px rgba(108, 141, 255, 0.35) !important;
+}
+
+/* 分页按钮 */
+.tb-dark .tb-pagination button {
+	color: var(--sb-text-3) !important;
+	background: rgba(255, 255, 255, 0.04) !important;
+	border-color: rgba(255, 255, 255, 0.1) !important;
+	box-shadow: none !important;
+}
+.tb-dark .tb-pagination button:not(:disabled):hover {
+	background: rgba(255, 255, 255, 0.08) !important;
+	color: var(--sb-text) !important;
+}
+.tb-dark .tb-pagination span {
+	color: var(--sb-text-3) !important;
+}
+
+/* 空状态 */
+.tb-dark .tb-empty {
+	color: var(--sb-text-3) !important;
+}
