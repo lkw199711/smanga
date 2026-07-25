@@ -75,4 +75,14 @@ watch(() => userConfig.order, () => {
 .td-pagination button { padding: 0.6rem 1.6rem; border-radius: 0.6rem; border: 1px solid var(--border); background: var(--bg2); color: var(--fg); cursor: pointer; }
 .td-pagination button:disabled { opacity: 0.4; cursor: default; }
 .td-pagination button:hover:not(:disabled) { border-color: var(--accent); color: var(--accent); }
+
+/* 响应式适配:移动端漫画列表一行 3 个 */
+@media (max-width: 76.8rem) {
+  .td-card-grid { grid-template-columns: repeat(3, 1fr); gap: 1.2rem; }
+  .td-card-title { font-size: 1.2rem; }
+}
+
+@media (max-width: 48rem) {
+  .td-card-grid { grid-template-columns: repeat(3, 1fr); gap: 0.8rem; }
+}
 </style>

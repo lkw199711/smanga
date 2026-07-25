@@ -164,7 +164,7 @@ onMounted(() => {
 .ta-search-bar { display: flex; gap: 1rem; margin-bottom: 2.4rem; }
 .ta-input { flex: 1; max-width: 48rem; padding: 1rem 1.4rem; font-size: 1.4rem; border: 1px solid #eaeaea; border-radius: 0.8rem; outline: none; background: #fff; }
 .ta-btn-primary { padding: 1rem 2rem; font-size: 1.4rem; font-weight: 500; color: #fff; background: #2563eb; border: none; border-radius: 0.8rem; cursor: pointer; }
-.ta-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr)); gap: 1.8rem; row-gap: 4.8rem; }
+.ta-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr)); gap: 1.8rem; row-gap: 1.2rem; }
 .ta-grid-card { cursor: pointer; transition: transform 0.15s; }
 .ta-grid-card:hover { transform: translateY(-0.2rem); }
 .ta-grid-cover { aspect-ratio: 3 / 4; border-radius: 1rem; overflow: hidden; margin-bottom: 0.8rem; background: #f3f4f6; box-shadow: 0 0.2rem 0.8rem rgba(0,0,0,0.06); }

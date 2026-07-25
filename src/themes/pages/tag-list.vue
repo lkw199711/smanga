@@ -182,7 +182,7 @@ function onContextmenu(item: any, event: MouseEvent) {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
   gap: 1.6rem;
-  row-gap: 4.8rem;
+  row-gap: 1.2rem;
 }
 
 .tm-tag-list-empty {

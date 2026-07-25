@@ -258,7 +258,7 @@ function goManga(item: any) {
 	display: grid;
 	grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
 	gap: 1.8rem;
-	row-gap: 4.8rem;
+	row-gap: 1.2rem;
 }
 
 /* 移动端窄屏：固定两列，避免 minmax 15rem 叠加 gap/padding 撑破视口 */
@@ -270,7 +270,7 @@ function goManga(item: any) {
 	.sb-grid {
 		grid-template-columns: repeat(2, minmax(0, 1fr));
 		gap: 1.2rem;
-		row-gap: 4.8rem;
+		row-gap: 1rem;
 	}
 }
 

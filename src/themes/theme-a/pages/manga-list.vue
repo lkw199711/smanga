@@ -134,7 +134,7 @@ async function get_poster(item: any) {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
   gap: 1.8rem;
-  row-gap: 4.8rem;
+  row-gap: .8rem;
 }
 
 .ta-manga-card {
@@ -258,8 +258,8 @@ async function get_poster(item: any) {
 
 @media (max-width: 48rem) {
   .ta-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 1rem;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.8rem;
   }
 
   .ta-manga-cover {

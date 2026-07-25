@@ -43,7 +43,7 @@
           </select>
         </div>
       </div>
-      <div class="td-grid">
+      <div class="td-manga-grid">
         <div v-for="m in mangaList" :key="m.mangaId" class="td-manga-card" @click="goChapters(m)" ref="mangaImageBox">
           <div class="td-manga-cover">
             <img v-if="m.mangaCover" :src="getMangaCover(m)" alt="" />
@@ -398,7 +398,7 @@ onUnmounted(stopMediaOperationListener)
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
   gap: 1.8rem;
-  row-gap: 4.8rem;
+  row-gap: 1.2rem;
 }
 
 .td-manga-card {

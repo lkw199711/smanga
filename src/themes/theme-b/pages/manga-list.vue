@@ -147,7 +147,7 @@ async function get_poster(item: any) {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr));
   column-gap: 1.6rem;
-  row-gap: 5rem;
+  row-gap: 1.2rem;
 }
 
 .tb-empty {
@@ -189,5 +189,22 @@ async function get_poster(item: any) {
 .tb-pagination span {
   color: #6b7280;
   font-size: 1.3rem;
+}
+
+/* 响应式适配:移动端漫画列表一行 3 个 */
+@media (max-width: 76.8rem) {
+  .tb-grid {
+    grid-template-columns: repeat(3, 1fr);
+    column-gap: 1.2rem;
+    row-gap: 1rem;
+  }
+}
+
+@media (max-width: 48rem) {
+  .tb-grid {
+    grid-template-columns: repeat(3, 1fr);
+    column-gap: 0.8rem;
+    row-gap: 0.8rem;
+  }
 }
 </style>

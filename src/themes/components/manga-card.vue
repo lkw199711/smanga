@@ -100,6 +100,10 @@ const metaText = computed(() => {
 
 .t-manga-card__cover {
 	position: relative;
+	/* 关键:height 必须为 auto,否则会继承 t-cover 组件根元素的 height:100%,
+	   在 grid item 里被 stretch 拉伸,把 name/meta 挤到卡片外部,造成
+	   "卡片高度不含 name/meta,必须靠 row-gap:5rem 撑开"的假象 */
+	height: auto;
 	aspect-ratio: 3 / 4;
 	border-radius: 1.4rem;
 	overflow: hidden;

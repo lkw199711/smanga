@@ -13,12 +13,14 @@
 		<div class="t-bookmark-item__info">
 			<div class="t-bookmark-item__title">{{ title }}</div>
 			<div class="t-bookmark-item__sub">{{ subTitle }}</div>
+			<div v-if="progress > 0" class="t-bookmark-item__progress">
+				<div
+					class="t-bookmark-item__progress-bar"
+					:class="{ 'is-finish': progress >= 100 }"
+					:style="{ width: `${Math.max(progress, 2)}%` }"
+				/>
+			</div>
 		</div>
-
-		<div v-if="progress > 0 && progress < 100" class="t-bookmark-item__progress">
-			<div class="t-bookmark-item__progress-bar" :style="{ width: `${progress}%` }" />
-		</div>
-		<div v-else-if="progress >= 100" class="t-bookmark-item__finish" />
 	</div>
 </template>
 
@@ -166,6 +168,10 @@ const progress = computed(() => {
 .t-bookmark-item__info {
 	min-width: 0;
 	flex: 1;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	gap: 0.4rem;
 }
 
 .t-bookmark-item__title {
@@ -183,7 +189,6 @@ const progress = computed(() => {
 }
 
 .t-bookmark-item__sub {
-	margin-top: 0.4rem;
 	font-size: 1.2rem;
 	line-height: 1.35;
 	max-height: calc(1.2rem * 1.35 * 2);
@@ -220,37 +225,49 @@ const progress = computed(() => {
 .t-bookmark-item--D .t-bookmark-item__sub {
 	color: var(--fg2);
 }
-/* 底部进度条（横跨整个卡片） */
+
+/* ---------- 进度条（右侧信息区内，与 history-item 保持一致） ---------- */
 .t-bookmark-item__progress {
-	position: absolute;
-	left: 0;
-	right: 0;
-	bottom: 0;
-	height: 0.3rem;
-	background: rgba(128, 128, 128, 0.15);
-	z-index: 0;
-	pointer-events: none;
+	height: 0.4rem;
+	border-radius: 0.2rem;
+	overflow: hidden;
+	margin-top: 0.2rem;
 }
 
 .t-bookmark-item__progress-bar {
-	position: absolute;
-	left: 0;
-	top: 0;
 	height: 100%;
 	min-width: 0.2rem;
-	background: #3b82f6;
-	border-radius: 0 0.2rem 0.2rem 0;
+	border-radius: 0.2rem;
 	transition: width 0.4s ease;
 }
 
-.t-bookmark-item__finish {
-	position: absolute;
-	left: 0;
-	right: 0;
-	bottom: 0;
-	height: 0.3rem;
+.t-bookmark-item--A .t-bookmark-item__progress {
+	background: #f3f4f6;
+}
+.t-bookmark-item--A .t-bookmark-item__progress-bar {
+	background: #3b82f6;
+}
+.t-bookmark-item--A .t-bookmark-item__progress-bar.is-finish {
 	background: #10b981;
-	z-index: 0;
-	pointer-events: none;
+}
+
+.t-bookmark-item--B .t-bookmark-item__progress {
+	background: #f3f4f6;
+}
+.t-bookmark-item--B .t-bookmark-item__progress-bar {
+	background: #3b82f6;
+}
+.t-bookmark-item--B .t-bookmark-item__progress-bar.is-finish {
+	background: #10b981;
+}
+
+.t-bookmark-item--D .t-bookmark-item__progress {
+	background: var(--bg3, rgba(128, 128, 128, 0.15));
+}
+.t-bookmark-item--D .t-bookmark-item__progress-bar {
+	background: var(--accent);
+}
+.t-bookmark-item--D .t-bookmark-item__progress-bar.is-finish {
+	background: #10b981;
 }
 </style>
