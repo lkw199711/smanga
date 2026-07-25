@@ -449,7 +449,10 @@ onBeforeUnmount(() => {
 	flex: 1;
 	min-height: 0;
 	overflow-y: auto;
+	overscroll-behavior: contain;
 	padding: 0 4px;
+	/* 底部预留空间，避免被底部导航栏遮挡，可向上滚动显示全部媒体库 */
+	padding-bottom: calc(90px + env(safe-area-inset-bottom));
 }
 
 @keyframes slideIn {

@@ -25,6 +25,7 @@
 		<!-- 侧边栏抽屉 -->
 		<div v-if="showSidebar" class="sb-mobile-sidebar-backdrop" @click="showSidebar = false">
 			<aside class="sb-mobile-sidebar" @click.stop>
+				<android-seat />
 				<div class="sb-sidebar-header">
 					<div class="sb-logo">
 						<span class="sb-logo-emoji">🌸</span>
@@ -33,8 +34,20 @@
 					<button class="sb-close-sidebar" @click="showSidebar = false">×</button>
 				</div>
 
+				<div class="sb-sec-title sb-nav-title">
+					<span>{{ manageMode ? '管理菜单' : '导航' }}</span>
+					<button
+						v-if="isAdmin"
+						:class="['sb-manage-toggle', { active: manageMode }]"
+						@click="manageMode = !manageMode"
+						:title="manageMode ? '退出管理模式' : '管理模式'"
+					>
+						⚙️
+					</button>
+				</div>
+
 				<nav class="sb-nav">
-					<div v-for="item in menu" :key="item.key" class="sb-nav-item" @click="navigateTo(item.key)">
+					<div v-for="item in currentMenu" :key="item.key" class="sb-nav-item" @click="navigateTo(item.key)">
 						<span class="sb-nav-icon">{{ item.icon }}</span>
 						<span>{{ item.label }}</span>
 					</div>
@@ -82,6 +95,9 @@ const showSidebar = ref(false)
 const router = useRouter()
 const route = useRoute()
 
+const manageMode = ref(false)
+const isAdmin = computed(() => Cookies.getRole() === 'admin')
+
 const menu = [
 	{ key: 'home', label: '首页', icon: '🏠' },
 	{ key: 'history', label: '最近阅读', icon: '🕘' },
@@ -90,9 +106,27 @@ const menu = [
 	{ key: 'media', label: '媒体库', icon: '📁' },
 	{ key: 'search', label: '搜索', icon: '🔍' },
 	{ key: 'tag', label: '标签', icon: '🏷️' },
-	{ key: 'manage', label: '管理', icon: '⚙️' },
 	{ key: 'setting', label: '设置', icon: '🔧' },
 ]
+
+const adminMenu = [
+	{ key: 'manage-users', label: '用户管理', icon: '👤' },
+	{ key: 'manage-media', label: '媒体库管理', icon: '📁' },
+	{ key: 'manage-manga', label: '漫画管理', icon: '📚' },
+	{ key: 'manage-chapters', label: '章节管理', icon: '📑' },
+	{ key: 'manage-paths', label: '路径管理', icon: '📂' },
+	{ key: 'manage-bookmarks', label: '书签管理', icon: '🔖' },
+	{ key: 'manage-tags', label: '标签管理', icon: '🏷️' },
+	{ key: 'manage-compress', label: '解压管理', icon: '🗜️' },
+	{ key: 'manage-jobs', label: '任务管理', icon: '📋' },
+	{ key: 'manage-sync', label: '漫画同步', icon: '🔄' },
+	{ key: 'manage-share', label: '漫画分享', icon: '📤' },
+	{ key: 'manage-p2p', label: 'P2P管理', icon: '🌐' },
+	{ key: 'manage-server', label: '服务器设置', icon: '🖥️' },
+	{ key: 'manage-wiki', label: '帮助文档', icon: '📖' },
+]
+
+const currentMenu = computed(() => (manageMode.value ? adminMenu : menu))
 
 const mediaListData = ref<any[]>([])
 
@@ -148,6 +182,20 @@ function navigateTo(key: string) {
 		tag: '/t/tags',
 		manage: '/t/manage',
 		setting: '/t/setting/user',
+		'manage-users': '/t/manage/users',
+		'manage-media': '/t/manage/media',
+		'manage-manga': '/t/manage/manga',
+		'manage-chapters': '/t/manage/chapters',
+		'manage-paths': '/t/manage/paths',
+		'manage-bookmarks': '/t/manage/bookmarks',
+		'manage-tags': '/t/manage/tags',
+		'manage-compress': '/t/manage/compress',
+		'manage-jobs': '/t/manage/jobs',
+		'manage-sync': '/t/manage/sync',
+		'manage-share': '/t/manage/share',
+		'manage-p2p': '/t/manage/p2p',
+		'manage-server': '/t/manage/server',
+		'manage-wiki': '/t/manage/wiki',
 	}
 	if (routeMap[key]) {
 		router.push(routeMap[key])
@@ -204,26 +252,32 @@ function onSidebarClick(e: MouseEvent) {
 
 <style scoped>
 .style-b-mobile {
-	min-height: 100vh;
+	height: 100dvh;
+	height: 100vh;
+	display: flex;
+	flex-direction: column;
+	overflow: hidden;
 	background: linear-gradient(135deg, #fff5fa 0%, #eef4ff 50%, #f5ecff 100%);
 	color: #1f2937;
 	font-size: 14px;
 	font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
-	padding-bottom: 70px;
 }
 
 .sb-mobile-header {
-	position: sticky;
-	top: 0;
+	flex-shrink: 0;
 	z-index: 50;
 	display: flex;
 	align-items: center;
 	gap: 12px;
 	padding: 12px 16px;
-	padding-top: calc(12px + env(safe-area-inset-top));
 	background: rgba(255, 255, 255, 0.9);
 	backdrop-filter: blur(12px);
 	border-bottom: 1px solid rgba(255, 111, 163, 0.2);
+}
+
+/* 安卓占位符与顶栏背景一致 */
+:deep(.android-seat) {
+	background: rgba(255, 255, 255, 0.9);
 }
 
 .sb-menu-toggle {
@@ -349,7 +403,24 @@ function onSidebarClick(e: MouseEvent) {
 	background: rgba(255, 255, 255, 0.96);
 	padding: 12px;
 	overflow-y: auto;
+	overscroll-behavior: contain;
 	animation: slideIn 0.3s ease;
+}
+
+/* 修复 Chromium/WebKit 中 overflow 容器 padding-bottom 失效问题：
+   在最后一个子元素后追加占位空间，确保底部内容可完整滚出，不被底部导航栏遮挡 */
+.sb-mobile-sidebar::after {
+	content: '';
+	display: block;
+	height: calc(80px + env(safe-area-inset-bottom));
+	flex-shrink: 0;
+}
+
+/* 安卓占位符 - 侧边栏内与侧栏同色 */
+.sb-mobile-sidebar :deep(.android-seat) {
+	flex-shrink: 0;
+	background: rgba(255, 255, 255, 0.96);
+	margin: -12px -12px 0;
 }
 
 @keyframes slideIn {
@@ -441,6 +512,51 @@ function onSidebarClick(e: MouseEvent) {
 	padding: 8px 12px 4px;
 }
 
+.sb-nav-title {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	text-transform: none;
+	letter-spacing: normal;
+}
+
+.sb-nav-title span {
+	flex: 1;
+}
+
+.sb-manage-toggle {
+	width: 28px;
+	height: 28px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	border: 1px solid rgba(0, 0, 0, 0.1);
+	border-radius: 8px;
+	background: rgba(255, 255, 255, 0.6);
+	color: #9ca3af;
+	cursor: pointer;
+	font-size: 14px;
+	transition: all 0.15s;
+	flex-shrink: 0;
+}
+
+.sb-manage-toggle:active {
+	background: rgba(255, 255, 255, 0.9);
+	color: #4b5563;
+}
+
+.sb-manage-toggle.active {
+	background: linear-gradient(135deg, #ff6fa3, #6c8dff);
+	border-color: transparent;
+	color: #fff;
+}
+
+.sb-nav-empty {
+	padding: 8px 12px;
+	font-size: 12px;
+	color: #9ca3af;
+}
+
 .sb-sec-item {
 	display: flex;
 	justify-content: space-between;
@@ -461,8 +577,11 @@ function onSidebarClick(e: MouseEvent) {
 }
 
 .sb-mobile-main {
+	flex: 1;
+	overflow-y: auto;
 	padding: 16px;
-	min-height: calc(100vh - 140px);
+	/* 底栏 56px + safe-area */
+	padding-bottom: calc(56px + env(safe-area-inset-bottom, 0px) + 16px);
 }
 
 .sb-mobile-nav-bar {
