@@ -105,6 +105,7 @@ function goManga(item: any) {
 }
 
 .ta-grid-card {
+  min-width: 0;
   cursor: pointer;
   transition: transform 0.15s;
   &:hover {
@@ -113,6 +114,7 @@ function goManga(item: any) {
 }
 
 .ta-grid-cover {
+  width: 100%;
   aspect-ratio: 3 / 4;
   border-radius: 1rem;
   overflow: hidden;
@@ -149,6 +151,7 @@ function goManga(item: any) {
 }
 
 @media (max-width: 48rem) {
-  .ta-grid { grid-template-columns: repeat(2, 1fr); gap: 1rem; }
+  .ta-grid { grid-template-columns: repeat(2, 1fr); gap: 1rem; row-gap: 4.2rem; }
+  .ta-grid-name { font-size: 1.2rem; }
 }
 </style>
