@@ -104,18 +104,50 @@ const ajax = Axios.create({
         router.push('/login');
       }
 
-      // 处理时间格式
-      if (response.list) {
-        response.list.forEach((item: any) => {
-          if (item.createTime) {
-            item.createTime = new Date(item.createTime).toLocaleString();
-          }
+      // 处理时间格式 —— 兼容:ISO字符串、Date对象、数字/字符串形式的毫秒或秒级时间戳
+      // 无效时间不要覆盖成 "Invalid Date" 字符串
+      const toValidDate = (v: any): Date | null => {
+        if (v === null || v === undefined || v === '') return null;
+        if (v instanceof Date) return isNaN(v.getTime()) ? null : v;
+        // 数字或纯数字字符串 => 时间戳
+        if (typeof v === 'number' || (typeof v === 'string' && /^\d+$/.test(v))) {
+          let n = Number(v);
+          if (!isFinite(n)) return null;
+          // 10位视为秒级时间戳,转成毫秒
+          if (String(Math.trunc(n)).length <= 10) n = n * 1000;
+          const d = new Date(n);
+          return isNaN(d.getTime()) ? null : d;
+        }
+        if (typeof v !== 'string') return null;
+        const d = new Date(v);
+        return isNaN(d.getTime()) ? null : d;
+      };
 
-          if (item.updateTime) {
-            item.updateTime = new Date(item.updateTime).toLocaleString();
+      // 命名匹配:createTime / updateTime / readTime / lastTime / xxxTime / xxxAt
+      const TIME_KEY_RE = /^(?:.*T|t)ime$|^(?:.*A|a)t$|^(?:create|update|read|last|start|end|finish)Time$/;
+      // 递归规范化对象中的时间字段;限制深度避免环形引用/巨大对象性能问题
+      const normalizeTimes = (node: any, depth = 0): void => {
+        if (!node || depth > 6) return;
+        if (Array.isArray(node)) {
+          for (const it of node) normalizeTimes(it, depth + 1);
+          return;
+        }
+        if (typeof node !== 'object') return;
+        for (const key of Object.keys(node)) {
+          const val = node[key];
+          if (val && typeof val === 'object') {
+            normalizeTimes(val, depth + 1);
+            continue;
           }
-        });
-      }
+          if (TIME_KEY_RE.test(key) && val !== null && val !== undefined && val !== '') {
+            const d = toValidDate(val);
+            node[key] = d ? d.toLocaleString() : '';
+          }
+        }
+      };
+
+      if (response.list) normalizeTimes(response.list);
+      if (response.data) normalizeTimes(response.data);
 
       return response;
     },

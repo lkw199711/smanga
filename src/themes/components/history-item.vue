@@ -76,10 +76,44 @@ const progress = computed(() => {
 	return Math.min(100, Math.max(0, Math.round((page / count) * 100)))
 })
 
+// 兼容多种时间格式(ISO字符串、时间戳、以及被 toLocaleString 处理过的本地化字符串,如 "2026/7/25 下午3:20:15")
+function parseDateSafe(t: any): Date | null {
+	if (t === null || t === undefined || t === '') return null
+	// 时间戳(数字或纯数字字符串)
+	if (typeof t=== 'number' || /^\d+$/.test(String(t))) {
+		let n = Number(t)
+		// 10位视为秒级时间戳
+		if (String(Math.trunc(n)).length <= 10) n = n * 1000
+		const d = new Date(n)
+		return isNaN(d.getTime()) ? null : d
+	}
+	let s = String(t).trim()
+	// 直接尝试解析
+	let d = new Date(s)
+	if (!isNaN(d.getTime())) return d
+	// 处理形如 "2026/7/25 下午3:20:15" 或 "2026/7/25 上午11:20:15" 的中文本地化字符串
+	const cn = s.match(/^(\d{4})[\/\-](\d{1,2})[\/\-](\d{1,2})(?:\s+(上午|下午))?\s*(\d{1,2}):(\d{1,2})(?::(\d{1,2}))?$/)
+	if (cn) {
+		let [, y, mo, da, ap, h, mi, se] = cn
+		let hour = Number(h)
+		if (ap === '下午' && hour < 12) hour += 12
+		if (ap === '上午' && hour === 12) hour = 0
+		d = new Date(Number(y), Number(mo) - 1, Number(da), hour, Number(mi), Number(se || 0))
+		if (!isNaN(d.getTime())) return d
+	}
+	// 兜底: 把 / 换成 - 再试
+	d = new Date(s.replace(/\//g, '-'))
+	return isNaN(d.getTime()) ? null : d
+}
+
 const timeText = computed(() => {
 	const t = props.item?.createTime
 	if (!t) return ''
-	const diff = Date.now() - new Date(t).getTime()
+	// 明确的非法值直接不显示
+	if (typeof t === 'string' && /invalid\s*date/i.test(t)) return ''
+	const date = parseDateSafe(t)
+	if (!date) return ''
+	const diff = Date.now() - date.getTime()
 	const mins = Math.floor(diff / 60000)
 	if (mins < 1) return '刚刚'
 	if (mins < 60) return `${mins} 分钟前`
@@ -87,7 +121,7 @@ const timeText = computed(() => {
 	if (hours < 24) return `${hours} 小时前`
 	const days = Math.floor(hours / 24)
 	if (days < 7) return `${days} 天前`
-	return new Date(t).toLocaleDateString()
+	return date.toLocaleDateString()
 })
 </script>
 
