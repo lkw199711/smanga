@@ -2,7 +2,7 @@
   <div class="ta-media-list">
     <div class="ta-page-head">
       <h1>媒体库</h1>
-      <button class="ta-btn-primary" @click="showAdd = true">+ 新建媒体库</button>
+      <button v-if="isAdmin" class="ta-btn-primary" @click="showAdd = true">+ 新建媒体库</button>
     </div>
     <div class="ta-grid">
       <div v-for="m in list" :key="m.mediaId" class="ta-media-card" v-long-press="() => openThemeActionSheet('media', m)" @click="goMedia(m)" @contextmenu="openThemeContextMenu($event, 'media', m)">
@@ -18,10 +18,10 @@
           <div class="ta-media-path">{{ m.mediaPath }}</div>
         </div>
       </div>
-      <div v-if="list.length === 0" class="ta-empty">暂无媒体库，点击右上角添加</div>
+      <div v-if="list.length === 0" class="ta-empty">{{ isAdmin ? '暂无媒体库，点击右上角添加' : '暂无媒体库，请联系管理员添加' }}</div>
     </div>
 
-    <div v-if="showAdd" class="ta-modal" @click.self="closeAdd">
+    <div v-if="showAdd && isAdmin" class="ta-modal" @click.self="closeAdd">
       <div class="ta-modal-card">
         <div class="ta-modal-title">新建媒体库</div>
         <div class="ta-form">
@@ -41,11 +41,12 @@
 </template>
 
 <script lang="ts" setup>
-import { onMounted, ref, watch } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import mediaApi from '@/api/media'
 import imageApi from '@/api/image'
 import { openThemeActionSheet, openThemeContextMenu } from '@/themes/context-menu'
+import { Cookies } from '@/utils'
 
 const router = useRouter()
 const route = useRoute()
@@ -54,6 +55,9 @@ const showAdd = ref(false)
 const submitting = ref(false)
 const error = ref('')
 const form = ref({ mediaName: '', mediaPath: '' })
+
+// 仅服务器管理员可创建媒体库
+const isAdmin = computed(() => Cookies.getRole() === 'admin')
 
 // 媒体库封面缓存
 const mediaCoverCache = ref<{[key: string]: string}>({})
@@ -94,7 +98,7 @@ onMounted(loadData)
 watch(
   () => route.query.add,
   (v) => {
-    if (v === '1') showAdd.value = true
+    if (v === '1' && isAdmin.value) showAdd.value = true
   },
   { immediate: true }
 )

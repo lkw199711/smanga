@@ -4,7 +4,7 @@
     <div class="ta-section" v-if="!selectedMediaId">
       <div class="ta-page-head">
         <h1>媒体库</h1>
-        <button class="ta-btn-primary" @click="showAdd = true">+ 新建媒体库</button>
+        <button v-if="isAdmin" class="ta-btn-primary" @click="showAdd = true">+ 新建媒体库</button>
       </div>
       <div class="ta-grid">
         <div v-for="m in mediaList" :key="m.mediaId" class="ta-media-card" v-long-press="() => openThemeActionSheet('media', m)" @click="selectMedia(m)" @contextmenu="openThemeContextMenu($event, 'media', m)">
@@ -20,7 +20,7 @@
             <div class="ta-media-path">{{ m.mediaPath }}</div>
           </div>
         </div>
-        <div v-if="mediaList.length === 0" class="ta-empty">暂无媒体库，点击右上角添加</div>
+        <div v-if="mediaList.length === 0" class="ta-empty">{{ isAdmin ? '暂无媒体库，点击右上角添加' : '暂无媒体库，请联系管理员添加' }}</div>
       </div>
     </div>
 
@@ -63,7 +63,7 @@
       </div>
     </div>
 
-    <media-library-create-dialog v-model:visible="showAdd" @created="loadMediaData" />
+    <media-library-create-dialog v-if="isAdmin" v-model:visible="showAdd" @created="loadMediaData" />
   </div>
 </template>
 
@@ -79,9 +79,13 @@ import { onMediaOperation } from '@/utils/cache'
 import queue from '@/store/quque'
 import { openThemeActionSheet, openThemeContextMenu } from '@/themes/context-menu'
 import MediaLibraryCreateDialog from '@/themes/components/media-library-create-dialog.vue'
+import { Cookies } from '@/utils'
 
 const router = useRouter()
 const route = useRoute()
+
+// 仅服务器管理员可创建媒体库
+const isAdmin = computed(() => Cookies.getRole() === 'admin')
 
 // 媒体库相关
 const mediaList = ref<mediaType[]>([])
@@ -120,7 +124,7 @@ watch(() => route.params.mediaId, (newMediaId) => {
 watch(
   () => route.query.add,
   (value) => {
-    if (value === '1') showAdd.value = true
+    if (value === '1' && isAdmin.value) showAdd.value = true
   },
   { immediate: true }
 )

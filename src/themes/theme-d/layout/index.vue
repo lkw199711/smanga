@@ -126,7 +126,7 @@
 						</div>
 					</div>
 					<button class="sd-btn" @click="toggleLanguage">{{ currentLanguage }}</button>
-					<button class="sd-btn-primary" @click="openCreateMedia">+ 新建</button>
+					<button v-if="isAdmin" class="sd-btn-primary" @click="openCreateMedia">+ 新建</button>
 				</div>
 			</header>
 

@@ -51,7 +51,7 @@
 				{{ isDarkMode ? '☀️ 亮色' : '🌙 暗色' }}
 			</button>
 			<button class="sa-btn-ghost" @click="toggleLanguage">{{ currentLanguage }}</button>
-			<button class="sa-btn-primary" @click="router.push({ path: '/t/media', query: { add: '1' } })">+ 新建媒体库</button>
+			<button v-if="isAdmin" class="sa-btn-primary" @click="router.push({ path: '/t/media', query: { add: '1' } })">+ 新建媒体库</button>
 		</div>
 	</header>
 </template>
@@ -66,6 +66,7 @@ import { userConfig, mangaSortOrder, chapterSortOrder } from '@/store'
 import languages from '@/store/language'
 import themeList from '@/store/theme'
 import { set_theme } from '@/style/theme'
+import { Cookies } from '@/utils'
 
 const router = useRouter()
 const route = useRoute()
@@ -73,6 +74,9 @@ const { locale } = useI18n()
 const keyword = ref('')
 const showThemeSwitch = ref(false)
 const searchInputRef = ref<HTMLInputElement>()
+
+// 仅服务器管理员可见"新建媒体库"按钮
+const isAdmin = computed(() => Cookies.getRole() === 'admin')
 
 // ---- 皮肤列表 ----
 const skinList: { key: ThemeKey; name: string }[] = [
