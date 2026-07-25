@@ -326,22 +326,32 @@ async function toggleCollect() {
 async function startRead() {
   try {
     let chapterToRead
-    
+    let jumpPage = 1
+
     if (hasLatest.value) {
       // 如果有阅读记录，获取最后一次阅读的章节
       const latest = await lastesApi.get_latest(mangaId.value)
       if (latest && latest.chapter) {
         chapterToRead = latest.chapter
-        browse.page = latest.page || 1
+        jumpPage = Number(latest.page) || 1
+        browse.page = jumpPage
       }
     }
-    
+
     if (!chapterToRead) {
       // 否则获取第一章
       chapterToRead = await chapterApi.get_first(mangaId.value, 'number')
+      jumpPage = 1
+      browse.page = 1
     }
-    
+
     if (chapterToRead?.chapterId) {
+      // reader 从 localStorage.pageJump 读取初始页码，必须同步写入才能跳到目标页
+      if (jumpPage > 1) {
+        localStorage.setItem('pageJump', String(jumpPage))
+      } else {
+        localStorage.removeItem('pageJump')
+      }
       router.push(`/t/reader/${chapterToRead.chapterId}`)
     }
   } catch (error) {
@@ -363,19 +373,25 @@ function updateTags(tags: any[]) {
 
 function goToChapter(chapter: any) {
   try {
+    let jumpPage = 1
     if (chapter?.latest?.finish) {
-      browse.page = 1
-    } else if (chapter?.latest) {
-      browse.page = chapter.latest.page
-    } else {
-      browse.page = 1
+      jumpPage = 1
+    } else if (chapter?.latest?.page) {
+      jumpPage = Number(chapter.latest.page) || 1
     }
-    
+    browse.page = jumpPage
+    // 同步写入 pageJump，供 reader 读取初始页码
+    if (jumpPage > 1) {
+      localStorage.setItem('pageJump', String(jumpPage))
+    } else {
+      localStorage.removeItem('pageJump')
+    }
+
     let routeName = chapter.browseType
     if (chapter.chapterType === 'pdf') {
       routeName = 'pdfView'
     }
-    
+
     router.push({
       name: routeName,
       query: {
