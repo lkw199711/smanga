@@ -510,3 +510,56 @@
 .tb-dark .sb-link {
 	color: var(--sb-accent-2, #6c8dff) !important;
 }
+
+/* ==========================================================================
+ * Legacy 漫画详情页 legacy-manga-info-bridge.vue 变量覆盖
+ * 该桥接组件通过 --tmi-* 定义外层背景/文字,内部子组件又使用
+ * --s-back-soft-original / --s-back-text 等一组 CSS 变量。
+ * 暗色模式(.tb-dark)下需要一并重写,使 legacy 详情页跟随夜间模式变暗。
+ * ========================================================================== */
+.tb-dark .theme-legacy-manga-info,
+.tb-dark .theme-legacy-manga-info-a,
+.tb-dark .theme-legacy-manga-info-b,
+.tb-dark .theme-legacy-manga-info-d {
+	--tmi-bg: var(--sb-bg) !important;
+	--tmi-card-bg: var(--sb-card) !important;
+	--tmi-text: var(--sb-text) !important;
+	--tmi-text-secondary: var(--sb-text-3) !important;
+	--tmi-border: var(--sb-border) !important;
+	--tmi-accent: var(--sb-accent, #f0abfc) !important;
+	--tmi-accent-hover: var(--sb-accent-2, #a5b4fc) !important;
+	background: var(--sb-bg) !important;
+	color: var(--sb-text) !important;
+}
+
+/* legacy 加载态 */
+.tb-dark .legacy-manga-info-loading {
+	background: var(--sb-bg) !important;
+	color: var(--sb-text-3) !important;
+}
+.tb-dark .legacy-manga-info-loading button {
+	background: var(--sb-bg-elev) !important;
+	border-color: var(--sb-border) !important;
+	color: var(--sb-text-2) !important;
+}
+
+/* legacy 内部子组件使用的 --s-* 系列 CSS 变量,
+   在暗色模式下重写,使 meta-info / action-panel / 章节卡片等区块跟随暗化 */
+.tb-dark .theme-legacy-manga-info {
+	--s-back: var(--sb-bg) !important;
+	--s-back-soft: var(--sb-card) !important;
+	--s-back-soft-original: var(--sb-card) !important;
+	--s-back-text: var(--sb-text) !important;
+	--s-back-text-secondary: var(--sb-text-2) !important;
+	--s-back-text-tertiary: var(--sb-text-3) !important;
+	--s-text: var(--sb-text) !important;
+	--s-text-secondary: var(--sb-text-2) !important;
+	--s-text-tertiary: var(--sb-text-3) !important;
+	--s-border: var(--sb-border) !important;
+	--s-hover-back: var(--sb-bg-hover) !important;
+	--s-card: var(--sb-card) !important;
+	--s-header: var(--sb-bg-elev) !important;
+	--s-menu: var(--sb-bg-elev) !important;
+	--s-input: var(--sb-card) !important;
+	--s-input-border: var(--sb-border) !important;
+}

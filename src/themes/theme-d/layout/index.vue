@@ -80,7 +80,6 @@
 					<input v-model="keyword" placeholder="搜索漫画、章节、标签…" @keyup.enter="goSearch" />
 				</div>
 				<div class="sd-top-actions">
-					<button class="sd-btn" @click="toggleView">{{ config.viewType === 'block' ? '📋 网格' : '📊 列表' }}</button>
 					<div class="sd-sort-wrap" ref="sortWrapRef">
 						<button class="sd-btn sd-sort-btn" @click="toggleSortDropdown">
 							<span>{{ currentSortLabel }}</span>
@@ -97,7 +96,6 @@
 							</div>
 						</div>
 					</div>
-					<button class="sd-btn" @click="toggleDark">🌙</button>
 					<div class="sd-skin-wrap" ref="skinWrapRef">
 						<button class="sd-btn sd-skin-btn" @click="toggleSkinDropdown">
 							<span>🎨 {{ currentSkinLabel }}</span>
@@ -125,6 +123,7 @@
 							</div>
 						</div>
 					</div>
+					<button class="sd-btn" @click="toggleDark">🌙</button>
 					<button class="sd-btn" @click="toggleLanguage">{{ currentLanguage }}</button>
 					<button v-if="isAdmin" class="sd-btn-primary" @click="openCreateMedia">+ 新建</button>
 				</div>
