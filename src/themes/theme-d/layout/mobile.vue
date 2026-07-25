@@ -1,5 +1,5 @@
 <template>
-	<div class="style-d style-d-mobile" :style="themeVars">
+	<div :class="['style-d', 'style-d-mobile', { 'sd-dark': isDark }]" :style="themeVars">
 		<android-seat />
 		<!-- 移动端顶部栏 -->
 		<header class="sd-mobile-header">
@@ -119,6 +119,7 @@ import mediaStatsApi from '@/api/media-stats'
 import imageApi from '@/api/image'
 import ThemeContextMenu from '@/themes/components/theme-context-menu.vue'
 import androidSeat from '@/layout/components/android-seat.vue'
+import './dark-overrides.css'
 
 const showSidebar = ref(false)
 const router = useRouter()
@@ -151,16 +152,76 @@ function setThemeColor(key: ThemeColorKey) {
 	localStorage.setItem(STORAGE_KEY, key)
 }
 
+const isDark = computed(() => currentTheme.value === 'dark')
+
+/**
+ * 与 index.vue 一致:theme-d 的 dark 是自定义皮肤 key,不会触发 src/style/theme.ts changeStyle,
+ * 章节卡片等依赖 --s-back-soft-original / --s-back-text 的通用组件保持 light值。
+ * 直接以 theme.ts 相同方式(document.body inline style)注入暗色 --s-*,同优先级、后写入生效。
+ */
+const SD_DARK_S_VARS_M: Record<string, string> = {
+	's-back': '#0D0F12',
+	's-back-soft': '#161A20',
+	's-back-soft-original': '#161A20',
+	's-back-text': '#E6E8EB',
+	's-back-text-secondary': '#9AA3AE',
+	's-back-text-tertiary': '#5C6470',
+	's-text': '#E6E8EB',
+	's-text-secondary': '#9AA3AE',
+	's-text-tertiary': '#5C6470',
+	's-border': '#2A313C',
+	's-hover-back': '#232A34',
+	's-card': '#161A20',
+	's-header': '#1B2028',
+	's-menu': '#1B2028',
+	's-input': '#161A20',
+	's-input-border': '#2A313C',
+	's-background': '#0D0F12',
+}
+function applySdDarkSVarsMobile(dark: boolean) {
+	if (dark) {
+		for (const k in SD_DARK_S_VARS_M) {
+			document.body.style.setProperty(`--${k}`, SD_DARK_S_VARS_M[k])
+		}
+		document.documentElement.style.setProperty('--s-back', SD_DARK_S_VARS_M['s-back'])
+		document.documentElement.style.setProperty('--s-background', SD_DARK_S_VARS_M['s-background'])
+	} else {
+		for (const k in SD_DARK_S_VARS_M) {
+			document.body.style.removeProperty(`--${k}`)
+		}
+		document.documentElement.style.removeProperty('--s-back')
+		document.documentElement.style.removeProperty('--s-background')
+	}
+}
+watch(isDark, (v) => applySdDarkSVarsMobile(v), { immediate: true })
+
 const themeVars = computed(() => {
 	const t = themeList.find((x) => x.key === currentTheme.value) || themeList[0]
+	const dark = t.key === 'dark'
 	return {
 		'--sd-primary': t.primary,
+		'--sd-primary-bg': `${t.primary}1a`,
+		'--sd-primary-hover': t.primary,
+		'--sd-primary-ring': `${t.primary}26`,
 		'--sd-back': t.back,
 		'--sd-hover': t.hover,
-		'--sd-text': t.key === 'dark' ? '#E6E8EB' : '#0F172A',
-		'--sd-text-muted': t.key === 'dark' ? '#9AA3AE' : '#64748B',
-		'--sd-card': t.key === 'dark' ? '#161A20' : '#FFFFFF',
-		'--sd-border': t.key === 'dark' ? '#2A313C' : '#DBEAFE',
+		'--sd-text': dark ? '#E6E8EB' : '#0F172A',
+		'--sd-text-muted': dark ? '#9AA3AE' : '#64748B',
+		'--sd-text-secondary': dark ? '#9AA3AE' : '#64748B',
+		'--sd-text-faint': dark ? '#5C6470' : '#94A3B8',
+		'--sd-card': dark ? '#161A20' : '#FFFFFF',
+		'--sd-border': dark ? '#2A313C' : '#DBEAFE',
+		'--sd-border-strong': dark ? '#3A424E' : '#D1D5DB',
+		'--sd-bg': dark ? '#0D0F12' : '#FFFFFF',
+		'--sd-bg2': dark ? '#1B2028' : '#F3F4F6',
+		'--sd-bg-hover': dark ? '#232A34' : '#E5E7EB',
+		'--sd-danger': dark ? '#F87171' : '#EF4444',
+		'--accent': t.primary,
+		'--bg': t.back,
+		'--bg2': dark ? '#161A20' : '#FFFFFF',
+		'--border': dark ? '#2A313C' : '#DBEAFE',
+		'--fg': dark ? '#E6E8EB' : '#0F172A',
+		'--fg2': dark ? '#9AA3AE' : '#64748B',
 	}
 })
 

@@ -1,0 +1,57 @@
+/* ==========================================================================
+ * theme-d 夜间模式(currentTheme==='dark',通过 .sd-dark 类挂载在 .style-d 根节点)
+ * 主要用于覆盖 legacy 桥接漫画详情页 及其内部通用组件使用的一组变量:
+ *   1) --tmi-* : legacy-manga-info-bridge.vue 定义的桥接变量
+ *   2) --s-*   : color.less 中通过 @s-* 引用、在通用组件里用 var(--s-*) 使用
+ * 由于 :style 内联注入的 --sd-* 只影响 theme-d 自身页面,而 legacy 详情页依赖上述
+ * 全局变量族,因此需要在 .sd-dark 作用域内显式重写。
+ * ========================================================================== */
+
+/* legacy 漫画详情页桥接层 --tmi-* 变量 */
+.sd-dark .theme-legacy-manga-info,
+.sd-dark .theme-legacy-manga-info-a,
+.sd-dark .theme-legacy-manga-info-b,
+.sd-dark .theme-legacy-manga-info-d {
+	--tmi-bg: #0D0F12 !important;
+	--tmi-card-bg: #161A20 !important;
+	--tmi-text: #E6E8EB !important;
+	--tmi-text-secondary: #9AA3AE !important;
+	--tmi-border: #2A313C !important;
+	--tmi-accent: var(--sd-primary, #F5A524) !important;
+	--tmi-accent-hover: var(--sd-primary, #F5A524) !important;
+	background: #0D0F12 !important;
+	color: #E6E8EB !important;
+}
+
+/* legacy 加载态背景 */
+.sd-dark .legacy-manga-info-loading {
+	background: #0D0F12 !important;
+	color: #9AA3AE !important;
+}
+.sd-dark .legacy-manga-info-loading button {
+	background: #161A20 !important;
+	border-color: #2A313C !important;
+	color: #E6E8EB !important;
+}
+
+/* legacy 内部子组件(views/manga-info/**、legacy-manga-info/index.vue)
+   通过 color.less 中 @s-* -> var(--s-*) 引用的一组全局变量,
+   夜间模式下重写,让章节卡片 / meta 区 / 简介面板等跟随暗化 */
+.sd-dark .theme-legacy-manga-info {
+	--s-back: #0D0F12 !important;
+	--s-back-soft: #161A20 !important;
+	--s-back-soft-original: #161A20 !important;
+	--s-back-text: #E6E8EB !important;
+	--s-back-text-secondary: #9AA3AE !important;
+	--s-back-text-tertiary: #5C6470 !important;
+	--s-text: #E6E8EB !important;
+	--s-text-secondary: #9AA3AE !important;
+	--s-text-tertiary: #5C6470 !important;
+	--s-border: #2A313C !important;
+	--s-hover-back: #232A34 !important;
+	--s-card: #161A20 !important;
+	--s-header: #1B2028 !important;
+	--s-menu: #1B2028 !important;
+	--s-input: #161A20 !important;
+	--s-input-border: #2A313C !important;
+}

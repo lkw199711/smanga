@@ -1,5 +1,5 @@
 <template>
-	<div class="style-d" :style="themeVars">
+	<div :class="['style-d', { 'sd-dark': isDark }]" :style="themeVars">
 		<aside class="sd-sidebar">
 			<div class="sd-logo" @click="router.push('/t')">
 				<div class="sd-logo-mark">s</div>
@@ -149,6 +149,7 @@ import languages from '@/store/language'
 import type { ThemeKey } from '@/themes/store'
 import { themeState, setTheme } from '@/themes/store'
 import ThemeContextMenu from '@/themes/components/theme-context-menu.vue'
+import './dark-overrides.css'
 
 const refreshKey = ref(0)
 function refreshPage() { refreshKey.value += 1 }
@@ -196,23 +197,82 @@ function setThemeColor(key: ThemeColorKey) {
 const theme = computed(() => themeList.find((t) => t.key === currentTheme.value)!)
 const isDark = computed(() => currentTheme.value === 'dark')
 
+/**
+ * theme-d 的 dark 是"自定义皮肤 key",不会触发 src/style/theme.ts 的 changeStyle,
+ * body 上 --s-* 内联样式仍保持 light 值。theme.ts 使用 document.body.style.setProperty
+ * 注入变量,其特异性(inline style)高于任何 class 选择器 + !important,
+ * 所以单靠 .sd-dark .theme-legacy-manga-info { --s-*: ... !important } 无法覆盖
+ * 章节卡片、简介面板等通过 var(--s-back-soft-original)/var(--s-back-text) 引用变量的组件。
+ *
+ * 这里在 isDark 时,与 theme.ts 相同的机制向 body 注入一套暗色 --s-*,
+ * 后写入 = 优先级同源且生效;切回其他 skin 时清除,让 theme.ts 恢复主导。
+ */
+const SD_DARK_S_VARS: Record<string, string> = {
+	's-back': '#0D0F12',
+	's-back-soft': '#161A20',
+	's-back-soft-original': '#161A20',
+	's-back-text': '#E6E8EB',
+	's-back-text-secondary': '#9AA3AE',
+	's-back-text-tertiary': '#5C6470',
+	's-text': '#E6E8EB',
+	's-text-secondary': '#9AA3AE',
+	's-text-tertiary': '#5C6470',
+	's-border': '#2A313C',
+	's-hover-back': '#232A34',
+	's-card': '#161A20',
+	's-header': '#1B2028',
+	's-menu': '#1B2028',
+	's-input': '#161A20',
+	's-input-border': '#2A313C',
+	's-background': '#0D0F12',
+}
+function applySdDarkSVars(dark: boolean) {
+	if (dark) {
+		for (const k in SD_DARK_S_VARS) {
+			document.body.style.setProperty(`--${k}`, SD_DARK_S_VARS[k])
+		}
+		document.documentElement.style.setProperty('--s-back', SD_DARK_S_VARS['s-back'])
+		document.documentElement.style.setProperty('--s-background', SD_DARK_S_VARS['s-background'])
+	} else {
+		for (const k in SD_DARK_S_VARS) {
+			document.body.style.removeProperty(`--${k}`)
+		}
+		document.documentElement.style.removeProperty('--s-back')
+		document.documentElement.style.removeProperty('--s-background')
+	}
+}
+watch(isDark, (v) => applySdDarkSVars(v), { immediate: true })
+
 const themeVars = computed(() => {
 	const t = theme.value
 	const card = isDark.value ? '#161A20' : '#FFFFFF'
 	const border = isDark.value ? '#2A313C' : '#E5E7EB'
+	const borderStrong = isDark.value ? '#3A424E' : '#D1D5DB'
 	const fg = isDark.value ? '#E6E8EB' : '#0F172A'
 	const fg2 = isDark.value ? '#9AA3AE' : '#64748B'
 	const fg3 = isDark.value ? '#5C6470' : '#94A3B8'
+	// 子组件常用别名,补齐避免 fallback 到硬编码浅色导致夜间模式失效
+	const sdBg = isDark.value ? '#0D0F12' : '#FFFFFF'
+	const sdBg2 = isDark.value ? '#1B2028' : '#F3F4F6'
+	const sdBgHover = isDark.value ? '#232A34' : '#E5E7EB'
 	return {
 		'--sd-primary': t.primary,
 		'--sd-primary-bg': `${t.primary}1a`,
+		'--sd-primary-hover': t.primary,
+		'--sd-primary-ring': `${t.primary}26`,
 		'--sd-back': t.back,
 		'--sd-card': card,
 		'--sd-border': border,
+		'--sd-border-strong': borderStrong,
 		'--sd-text': fg,
 		'--sd-text-muted': fg2,
+		'--sd-text-secondary': fg2,
 		'--sd-text-faint': fg3,
 		'--sd-hover': t.hover,
+		'--sd-bg': sdBg,
+		'--sd-bg2': sdBg2,
+		'--sd-bg-hover': sdBgHover,
+		'--sd-danger': isDark.value ? '#F87171' : '#EF4444',
 		'--accent': t.primary,
 		'--bg': t.back,
 		'--bg2': card,

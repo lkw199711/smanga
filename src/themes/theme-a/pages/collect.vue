@@ -107,6 +107,8 @@ function goManga(item: any) {
 .ta-grid-card {
   min-width: 0;
   cursor: pointer;
+  display: flex;
+  flex-direction: column;
   transition: transform 0.15s;
   &:hover {
     transform: translateY(-0.2rem);
@@ -116,6 +118,8 @@ function goManga(item: any) {
 .ta-grid-cover {
   width: 100%;
   aspect-ratio: 3 / 4;
+  height: auto;
+  flex-shrink: 0;
   border-radius: 1rem;
   overflow: hidden;
   margin-bottom: 0.8rem;
