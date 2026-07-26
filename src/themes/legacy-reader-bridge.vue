@@ -1,8 +1,8 @@
 <template>
   <main
     :class="['theme-legacy-reader', `theme-legacy-reader-${themeState.current.toLowerCase()}`]"
-    @contextmenu.prevent="openRightSidebar"
-    v-long-press="openRightSidebar"
+    @contextmenu.prevent="openControlPanel"
+    v-long-press="openControlPanel"
   >
     <android-seat />
     <template v-if="ready">
@@ -38,8 +38,8 @@ const router = useRouter()
 const error = ref('')
 const ready = ref(false)
 
-function openRightSidebar() {
-  config.rightSidebar = true
+function openControlPanel() {
+  config.controlPanel = true
 }
 
 const readerRoutes = new Set(['flow', 'single', 'double', 'half', 'pdfView'])

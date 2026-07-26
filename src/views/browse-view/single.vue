@@ -309,6 +309,13 @@ onMounted(() => {
     }
   );
 });
+
+// 订阅 control-panel 触发的阅读器操作
+watch(() => browseStore.readerActionTick.download, (v, ov) => { if (v > (ov || 0)) dwonload_image(); });
+watch(() => browseStore.readerActionTick.setImageWidth, (v, ov) => { if (v > (ov || 0)) browseStore.dialogViewWidth = true; });
+watch(() => browseStore.readerActionTick.beforeChapter, (v, ov) => { if (v > (ov || 0)) before_chapter(); });
+watch(() => browseStore.readerActionTick.nextChapter, (v, ov) => { if (v > (ov || 0)) next_chapter(); });
+watch(() => browseStore.readerActionTick.changeChapter, (v, ov) => { if (v > (ov || 0) && browseStore.pendingChangeChapterId) change_chapter(browseStore.pendingChangeChapterId); });
 </script>
 
 <style src="./style/single-page.less" scoped lang="less"></style>

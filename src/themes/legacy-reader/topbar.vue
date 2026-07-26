@@ -8,11 +8,8 @@
     <!-- 桌面端: 胶囊快捷按钮 (仅一个入口, 唤起 control-panel) -->
     <nav v-if="!isMobile" class="quick-capsule" aria-label="reader-quick-nav">
       <button class="qc-btn is-primary" :title="$t('sidebar.rightMenu')" @click="openPanel">
-        <i class="iconfont icon-menu" />
-        <span class="qc-label">{{ $t('sidebar.chapterList') || '菜单' }}</span>
-      </button>
-      <button class="qc-btn" :title="$t('sidebar.rightMenu')" @click="openPanel">
-        <i class="iconfont icon-more" />
+        <span class="qc-ico" aria-hidden="true">☰</span>
+        <span class="qc-label">{{ $t('sidebar.rightMenu') }}</span>
       </button>
     </nav>
 
@@ -24,7 +21,7 @@
       :title="$t('sidebar.rightMenu')"
       @click="openPanel"
     >
-      <i class="iconfont icon-more" />
+      <span class="qc-ico" aria-hidden="true">⋯</span>
     </button>
   </header>
 </template>
@@ -65,6 +62,10 @@ function openPanel() {
   right: 0;
   padding-top: env(safe-area-inset-top);
   pointer-events: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+  -webkit-tap-highlight-color: transparent;
 }
 
 /* 章节标题条: 顶部窄条, 半透明 */
@@ -108,6 +109,16 @@ function openPanel() {
   opacity: 1;
 }
 
+.qc-ico {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Segoe UI Symbol', 'Apple Color Emoji', 'Noto Sans Symbols', system-ui, sans-serif;
+  font-style: normal;
+  line-height: 1;
+  pointer-events: none;
+}
+
 .qc-btn {
   display: inline-flex;
   align-items: center;
@@ -132,8 +143,10 @@ function openPanel() {
   background: rgba(255, 255, 255, 0.1);
 }
 
-.qc-btn .iconfont {
+.qc-btn .iconfont,
+.qc-btn .qc-ico {
   font-size: 1.6rem;
+  line-height: 1;
   pointer-events: none;
 }
 
@@ -143,7 +156,17 @@ function openPanel() {
     display: none;
   }
 
-  .qc-btn {
+  .qc-ico {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Segoe UI Symbol', 'Apple Color Emoji', 'Noto Sans Symbols', system-ui, sans-serif;
+  font-style: normal;
+  line-height: 1;
+  pointer-events: none;
+}
+
+.qc-btn {
     padding: 0 0.9rem;
   }
 }
@@ -170,8 +193,10 @@ function openPanel() {
   z-index: 21;
 }
 
-.mobile-fab .iconfont {
+.mobile-fab .iconfont,
+.mobile-fab .qc-ico {
   font-size: 1.8rem;
+  line-height: 1;
   pointer-events: none;
 }
 </style>

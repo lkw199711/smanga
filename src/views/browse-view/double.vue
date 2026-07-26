@@ -334,6 +334,18 @@ onMounted(async () => {
   );
 
 })
+
+// 订阅 control-panel 触发的阅读器操作
+watch(() => browseStore.readerActionTick.download, (v, ov) => { if (v > (ov || 0)) dwonload_image(); });
+watch(() => browseStore.readerActionTick.setImageWidth, (v, ov) => { if (v > (ov || 0)) browseStore.dialogViewWidth = true; });
+watch(() => browseStore.readerActionTick.toggleDirection, (v, ov) => { if (v > (ov || 0)) { switch_direction(); browseStore.readerFlags.direction = directionDesc.value; } });
+watch(() => browseStore.readerActionTick.toggleRemoveFirst, (v, ov) => { if (v > (ov || 0)) { remove_poster(); browseStore.readerFlags.removeFirst = removeFirst.value; } });
+watch(() => browseStore.readerActionTick.beforeChapter, (v, ov) => { if (v > (ov || 0)) before_chapter(); });
+watch(() => browseStore.readerActionTick.nextChapter, (v, ov) => { if (v > (ov || 0)) next_chapter(); });
+watch(() => browseStore.readerActionTick.changeChapter, (v, ov) => { if (v > (ov || 0) && browseStore.pendingChangeChapterId) change_chapter(browseStore.pendingChangeChapterId); });
+// 初始化状态镜像
+browseStore.readerFlags.direction = directionDesc.value;
+browseStore.readerFlags.removeFirst = removeFirst.value;
 </script>
 
 <style src='./style/double-page.less' scoped lang='less'></style>

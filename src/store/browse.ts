@@ -63,7 +63,26 @@ const useBrowseStore = defineStore('browse', {
 		// 排序方式
 		mangaOrder: 'chapterUpdateDesc',
 		chapterOrder: 'number',
-		route: <RouteLocationNormalizedLoaded | null>null
+		route: <RouteLocationNormalizedLoaded | null>null,
+		// 阅读器操作触发计数器(control-panel 与阅读器视图之间的解耦通道)
+		// 视图 watch 对应计数器,每次 +1 视图执行本地对应逻辑
+		readerActionTick: {
+			download: 0,
+			jumpPage: 0,
+			setImageWidth: 0,
+			toggleDirection: 0,
+			toggleRemoveFirst: 0,
+			changeChapter: 0,
+			beforeChapter: 0,
+			nextChapter: 0,
+		} as Record<string, number>,
+		// 阅读器状态镜像(供 control-panel 直接读取显示)
+		readerFlags: {
+			direction: false, // double 模式的翻页方向
+			removeFirst: false, // double 模式是否移除首张
+		},
+		// 章节切换目标(配合 changeChapter tick 使用)
+		pendingChangeChapterId: 0,
 	}),
 	getters: {
 		orderBy: (state) => {
@@ -364,6 +383,23 @@ const useBrowseStore = defineStore('browse', {
 				this.useAutoViewWidth = false;
 				this.viewWidthValue = Number(viewWidthValue);
 			}
+		},
+
+		/**
+		 * @description: 阅读器操作触发器
+		 * control-panel 调用 → 视图 watch 计数器 → 视图执行本地实现
+		 */
+		trigger_reader_action(action: 'download' | 'jumpPage' | 'setImageWidth' | 'toggleDirection' | 'toggleRemoveFirst' | 'beforeChapter' | 'nextChapter') {
+			this.readerActionTick[action] = (this.readerActionTick[action] || 0) + 1;
+		},
+
+		/**
+		 * @description: 切换章节触发器
+		 * control-panel 传入目标 chapterId → 视图执行 change_chapter
+		 */
+		trigger_change_chapter(chapterId: number) {
+			this.pendingChangeChapterId = chapterId;
+			this.readerActionTick.changeChapter = (this.readerActionTick.changeChapter || 0) + 1;
 		}
 	},
 });

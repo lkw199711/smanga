@@ -83,7 +83,7 @@
 </template>
 
 <script setup lang="ts">
-import {ref, onMounted, computed} from 'vue';
+import {ref, onMounted, computed, watch} from 'vue';
 import {config, userConfig} from '@/store';
 import operationCover from './components/operation-cover.vue';
 import chapterListMenu from './components/chapter-list-menu.vue';
@@ -329,6 +329,13 @@ onMounted(() => {
   // 加载自定义视图宽度
   browseStore.load_view_width('half');
 });
+
+// 订阅 control-panel 触发的阅读器操作
+watch(() => browseStore.readerActionTick.download, (v, ov) => { if (v > (ov || 0)) dwonload_image(); });
+watch(() => browseStore.readerActionTick.setImageWidth, (v, ov) => { if (v > (ov || 0)) browseStore.dialogViewWidth = true; });
+watch(() => browseStore.readerActionTick.beforeChapter, (v, ov) => { if (v > (ov || 0)) before_chapter(); });
+watch(() => browseStore.readerActionTick.nextChapter, (v, ov) => { if (v > (ov || 0)) next_chapter(); });
+watch(() => browseStore.readerActionTick.changeChapter, (v, ov) => { if (v > (ov || 0) && browseStore.pendingChangeChapterId) change_chapter(browseStore.pendingChangeChapterId); });
 </script>
 
 <style src="./style/single-page.less" scoped lang="less"></style>
