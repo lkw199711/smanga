@@ -3,7 +3,6 @@
     <android-seat />
     <template v-if="ready">
       <theme-reader-topbar v-if="config.browseTop" />
-      <div v-if="config.browseTop" class="theme-reader-topbar-seat" />
       <section class="theme-legacy-reader-content" :class="readerMode">
         <component :is="readerComponent" :key="`${readerMode}-${route.params.chapterId}`" />
       </section>
@@ -130,10 +129,6 @@ watch(() => route.params.chapterId, prepareReader)
 
 .theme-legacy-reader-content {
   min-height: 100vh;
-}
-
-.theme-reader-topbar-seat {
-  height: 9.6rem;
 }
 
 .theme-legacy-reader-content.single,
