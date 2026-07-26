@@ -1,19 +1,25 @@
 <template>
 	<div class="right-sidebar">
-		<el-drawer v-model="drawer" size="auto" :with-header="false" :before-close="close_sidebar">
-			<!-- 安卓端占位 -->
+		<el-drawer
+			v-model="drawer"
+			size="auto"
+			:with-header="false"
+			:before-close="close_sidebar"
+			append-to-body
+			:z-index="3000"
+			modal-class="right-sidebar-drawer-modal"
+			class="right-sidebar-drawer"
+		>
 			<android-seat />
 			<el-menu class="right-sidebar-menu" active-text-color="#ffd04b" background-color="#545c64" text-color="#fff"
 				@select="menu_select">
-				<el-menu-item v-if="idDouble" index="remove-first">{{
-					removeFirstTitle
-					}}</el-menu-item>
+				<el-menu-item index="chapter-list">
+					<i class="iconfont icon-menu" style="margin-right: 0.6rem;" />{{ $t('sidebar.chapterList') || '章节列表' }}
+				</el-menu-item>
+				<el-menu-item v-if="idDouble" index="remove-first">{{ removeFirstTitle }}</el-menu-item>
 				<el-menu-item index="bookmark">{{ bookmarkTitle }}</el-menu-item>
-				<el-menu-item v-if="idDouble" index="direction">{{ $t('option.direction') }} ({{ directionTitle
-					}})</el-menu-item>
-				<el-menu-item index="dwonload">{{
-					$t('option.dwonload')
-					}}</el-menu-item>
+				<el-menu-item v-if="idDouble" index="direction">{{ $t('option.direction') }} ({{ directionTitle }})</el-menu-item>
+				<el-menu-item index="dwonload">{{ $t('option.dwonload') }}</el-menu-item>
 				<el-menu-item index="operation">{{ operationText }}</el-menu-item>
 				<el-menu-item index="jump">{{ $t('rightSidebar.jumpPageText') }}</el-menu-item>
 				<el-menu-item index="setImageWidth">{{ $t('rightSidebar.setImageWidth') }}</el-menu-item>
@@ -40,7 +46,11 @@ const route = useRoute();
 
 const drawer = ref(false);
 
-const props = defineProps(['rightSidebar', 'direction', 'removeFirst']);
+const props = defineProps({
+	rightSidebar: null,
+	direction: null,
+	removeFirst: null,
+});
 const emit = defineEmits([
 	'contextMenu',
 	'direction',
@@ -87,6 +97,10 @@ function close_sidebar() {
 
 function menu_select(key: string) {
 	switch (key) {
+		case 'chapter-list':
+			config.rightSidebar = false;
+			(config as any).chapterList = true;
+			return;
 		case 'bookmark':
 			browse.toggle_bookmark();
 			break;
@@ -143,5 +157,15 @@ function menu_select(key: string) {
 	max-width: 70vw;
 	height: 100%;
 	background-color: #545c64;
+}
+</style>
+
+<!-- append-to-body 后 el-drawer 挂到 body, 保证覆盖 imagesLoader 的 z-index:2000 -->
+<style lang="less">
+.right-sidebar-drawer-modal {
+	z-index: 3000 !important;
+}
+.right-sidebar-drawer {
+	z-index: 3001 !important;
 }
 </style>

@@ -40,6 +40,10 @@ export const config = reactive({
 	browseType: 'flow',
 	screenType: 'large' as screenType, // mini | small | middle | large | 2k | 4k
 	rightSidebar: false,
+	// 章节列表抽屉开关 (合并方案: 顶栏 / right-sidebar 里都可唤起)
+	chapterList: false,
+	// legacy-reader 统一控制面板开关 (章节列表 + 工具栏 一屏合并)
+	controlPanel: false,
 	android: false,
 	isMobile: false, // 移动端环境标识
 	viewType: 'block',

@@ -1,8 +1,13 @@
 <template>
-  <main :class="['theme-legacy-reader', `theme-legacy-reader-${themeState.current.toLowerCase()}`]">
+  <main
+    :class="['theme-legacy-reader', `theme-legacy-reader-${themeState.current.toLowerCase()}`]"
+    @contextmenu.prevent="openRightSidebar"
+    v-long-press="openRightSidebar"
+  >
     <android-seat />
     <template v-if="ready">
       <theme-reader-topbar v-if="config.browseTop" />
+      <theme-reader-control-panel />
       <section class="theme-legacy-reader-content" :class="readerMode">
         <component :is="readerComponent" :key="`${readerMode}-${route.params.chapterId}`" />
       </section>
@@ -25,12 +30,17 @@ import { themeState } from '@/themes/store'
 import chapterApi from '@/api/chapter'
 import mangaApi from '@/api/manga'
 import ThemeReaderTopbar from './legacy-reader/topbar.vue'
+import ThemeReaderControlPanel from './legacy-reader/control-panel.vue'
 import androidSeat from '@/layout/components/android-seat.vue'
 
 const route = useRoute()
 const router = useRouter()
 const error = ref('')
 const ready = ref(false)
+
+function openRightSidebar() {
+  config.rightSidebar = true
+}
 
 const readerRoutes = new Set(['flow', 'single', 'double', 'half', 'pdfView'])
 const readerMode = computed(() => String(route.query.readerMode || 'flow'))
