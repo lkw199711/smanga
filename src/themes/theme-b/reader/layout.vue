@@ -20,7 +20,7 @@
       <button :disabled="!canNextPage" @click="nextPage">下一页</button>
     </footer>
 
-    <aside v-if="showChapters" class="tb-drawer" @click.self="showChapters = false">
+    <aside v-if="showChapters" class="tb-drawer smanga-backable" @click.self="showChapters = false">
       <div class="tb-panel">
         <div class="tb-panel-head">
           <div class="tb-panel-title">目录</div>

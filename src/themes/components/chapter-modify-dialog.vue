@@ -1,12 +1,12 @@
 <template>
-  <div v-if="editChapterDialog" class="tm-edit-backdrop" @click.self="close">
+  <div v-if="editChapterDialog" class="tm-edit-backdrop smanga-backable" @click.self="close">
     <form class="tm-edit-dialog" @submit.prevent="submit">
       <header class="tm-edit-header">
         <div>
           <h2>编辑章节</h2>
           <p>修改章节的基本信息。</p>
         </div>
-        <button type="button" class="tm-icon-button" aria-label="关闭" @click="close">×</button>
+        <button type="button" class="tm-icon-button smanga-back-close" aria-label="关闭" @click="close">×</button>
       </header>
 
       <div class="tm-edit-content">

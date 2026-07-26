@@ -151,11 +151,11 @@
     </div>
 
     <!-- 标签编辑弹窗 -->
-    <div v-if="editTagsDialog" class="ta-dialog-overlay" @click.self="editTagsDialog = false">
+    <div v-if="editTagsDialog" class="ta-dialog-overlay smanga-backable" @click.self="editTagsDialog = false">
       <div class="ta-dialog">
         <div class="ta-dialog-head">
           <h3>编辑标签</h3>
-          <button class="ta-dialog-close" @click="editTagsDialog = false">×</button>
+          <button class="ta-dialog-close smanga-back-close" @click="editTagsDialog = false">×</button>
         </div>
         <div class="ta-dialog-body">
           <TagEditor

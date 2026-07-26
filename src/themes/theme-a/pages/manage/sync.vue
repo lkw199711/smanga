@@ -31,9 +31,9 @@
     </ResponsiveTable>
 
     <!-- 添加同步弹窗 -->
-    <div v-if="addShow" class="ta-dialog-overlay" @click.self="addShow = false">
+    <div v-if="addShow" class="ta-dialog-overlay smanga-backable" @click.self="addShow = false">
       <div class="ta-dialog" style="width:56rem">
-        <div class="ta-dialog-head"><h3>添加同步</h3><button class="ta-dialog-close" @click="addShow = false">×</button></div>
+        <div class="ta-dialog-head"><h3>添加同步</h3><button class="ta-dialog-close smanga-back-close" @click="addShow = false">×</button></div>
         <div class="ta-dialog-body">
           <label class="ta-field"><span>分享链接</span><input v-model="addForm.link" placeholder="输入 smanga 分享链接" @keydown.enter="analysisLink" /></label>
           <button class="ta-btn-primary" @click="analysisLink" style="align-self:flex-start">🔍 解析链接</button>
@@ -55,9 +55,9 @@
     </div>
 
     <!-- 详情弹窗 -->
-    <div v-if="detailShow" class="ta-dialog-overlay" @click.self="detailShow = false">
+    <div v-if="detailShow" class="ta-dialog-overlay smanga-backable" @click.self="detailShow = false">
       <div class="ta-dialog" style="width:56rem">
-        <div class="ta-dialog-head"><h3>同步详情</h3><button class="ta-dialog-close" @click="detailShow = false">×</button></div>
+        <div class="ta-dialog-head"><h3>同步详情</h3><button class="ta-dialog-close smanga-back-close" @click="detailShow = false">×</button></div>
         <div class="ta-dialog-body">
           <div class="ta-card ta-card-preview" v-if="detailData.share?.shareType">
             <p><strong>类型:</strong> {{ detailData.share.shareType === 'manga' ? '漫画' : '媒体库' }}</p>

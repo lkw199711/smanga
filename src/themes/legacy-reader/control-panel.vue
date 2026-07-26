@@ -1,13 +1,13 @@
 <template>
   <transition name="lcp-fade">
-    <div v-if="visible" class="lcp-mask" @click.self="close" @contextmenu.stop.prevent>
+    <div v-if="visible" class="lcp-mask smanga-backable" @click.self="close" @contextmenu.stop.prevent>
       <transition :name="isMobile ? 'lcp-slide-up' : 'lcp-zoom'" appear>
         <div v-if="visible" class="lcp-sheet" :class="{ 'is-mobile': isMobile }">
           <!-- 拖动条 -->
           <div class="lcp-handle" />
 
           <!-- 关闭按钮 -->
-          <button type="button" class="lcp-close" :aria-label="$t('option.cancel')" @click="close">
+          <button type="button" class="lcp-close smanga-back-close" :aria-label="$t('option.cancel')" @click="close">
             <span class="lcp-ico lcp-ico-close" aria-hidden="true">×</span>
           </button>
 

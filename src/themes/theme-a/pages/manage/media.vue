@@ -37,11 +37,11 @@
     />
 
     <!-- 路径管理弹窗 -->
-    <div v-if="pathDialog" class="ta-dialog-overlay" @click.self="pathDialog = false">
+    <div v-if="pathDialog" class="ta-dialog-overlay smanga-backable" @click.self="pathDialog = false">
       <div class="ta-dialog" style="width: 64rem;">
         <div class="ta-dialog-head">
           <h3>{{ pathMedia?.mediaName }} - 路径管理</h3>
-          <button class="ta-dialog-close" @click="pathDialog = false">×</button>
+          <button class="ta-dialog-close smanga-back-close" @click="pathDialog = false">×</button>
         </div>
         <div class="ta-dialog-body">
           <button class="ta-btn-primary" style="align-self:flex-start" @click="openPathAdd">+ 添加路径</button>

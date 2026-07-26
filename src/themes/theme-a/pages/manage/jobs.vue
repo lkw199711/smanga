@@ -37,9 +37,9 @@
       </template>
     </ResponsiveTable>
 
-    <div v-if="detailShow" class="ta-dialog-overlay" @click.self="detailShow = false">
+    <div v-if="detailShow" class="ta-dialog-overlay smanga-backable" @click.self="detailShow = false">
       <div class="ta-dialog" style="width:68rem">
-        <div class="ta-dialog-head"><h3>任务详情</h3><button class="ta-dialog-close" @click="detailShow = false">×</button></div>
+        <div class="ta-dialog-head"><h3>任务详情</h3><button class="ta-dialog-close smanga-back-close" @click="detailShow = false">×</button></div>
         <div class="ta-dialog-body">
           <pre class="ta-code-block"><code>{{ detailJson }}</code></pre>
         </div>

@@ -1,6 +1,6 @@
 <template>
   <Teleport to="body">
-    <div v-if="themeContextMenu.visible && themeContextMenu.presentation === 'menu'" class="tcm-backdrop" @mousedown.self="closeThemeContextMenu">
+    <div v-if="themeContextMenu.visible && themeContextMenu.presentation === 'menu'" class="tcm-backdrop smanga-backable" @mousedown.self="closeThemeContextMenu">
       <div ref="menuEl" class="tcm-menu" :style="[positionStyle, skinStyle]" role="menu" @contextmenu.prevent>
         <div class="tcm-title">{{ title }}</div>
         <button v-for="action in actions" :key="action.key" class="tcm-action" :class="{ danger: action.danger }" :disabled="busy"
@@ -10,7 +10,7 @@
         </button>
       </div>
     </div>
-    <div v-if="themeContextMenu.visible && themeContextMenu.presentation === 'sheet'" class="tcm-sheet-backdrop" @click.self="closeThemeContextMenu">
+    <div v-if="themeContextMenu.visible && themeContextMenu.presentation === 'sheet'" class="tcm-sheet-backdrop smanga-backable" @click.self="closeThemeContextMenu">
       <section class="tcm-sheet" :style="skinStyle" role="dialog" aria-modal="true" :aria-label="`${title}操作`">
         <div class="tcm-sheet-handle" />
         <div class="tcm-sheet-title">{{ title }}</div>
@@ -19,7 +19,7 @@
           <span class="tcm-sheet-action-icon" aria-hidden="true">{{ action.icon }}</span>
           <span>{{ action.label }}</span>
         </button>
-        <button class="tcm-sheet-cancel" type="button" @click="closeThemeContextMenu">取消</button>
+        <button class="tcm-sheet-cancel smanga-back-close" type="button" @click="closeThemeContextMenu">取消</button>
       </section>
     </div>
   </Teleport>

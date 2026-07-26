@@ -32,7 +32,7 @@
 		</header>
 
 		<!-- 侧边栏抽屉 -->
-		<div v-if="showSidebar" class="sb-mobile-sidebar-backdrop" @click="showSidebar = false">
+		<div v-if="showSidebar" class="sb-mobile-sidebar-backdrop smanga-backable" @click="showSidebar = false">
 			<aside class="sb-mobile-sidebar" @click.stop>
 				<android-seat />
 				<div class="sb-sidebar-header">

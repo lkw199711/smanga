@@ -1,5 +1,5 @@
 <template>
-  <div v-if="visible" class="tm-create-backdrop" @click.self="close">
+  <div v-if="visible" class="tm-create-backdrop smanga-backable" @click.self="close">
     <form class="tm-create-dialog" @submit.prevent="submit">
       <header class="tm-create-header">
         <div>

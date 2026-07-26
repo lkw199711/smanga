@@ -1,9 +1,9 @@
 <template>
-  <div v-if="visible" class="ta-dialog-overlay" @click.self="close">
+  <div v-if="visible" class="ta-dialog-overlay smanga-backable" @click.self="close">
     <div class="ta-dialog" style="width:56rem">
       <div class="ta-dialog-head">
         <h3>{{ isAdd ? '添加路径' : '编辑路径' }}</h3>
-        <button class="ta-dialog-close" @click="close">×</button>
+        <button class="ta-dialog-close smanga-back-close" @click="close">×</button>
       </div>
       <div class="ta-dialog-body">
         <!-- 路径输入 (仅添加模式) -->

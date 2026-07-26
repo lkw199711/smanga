@@ -137,9 +137,9 @@
     </div>
 
     <!-- 创建群组弹窗 -->
-    <div v-if="showGroupAdd" class="ta-dialog-overlay" @click.self="showGroupAdd = false">
+    <div v-if="showGroupAdd" class="ta-dialog-overlay smanga-backable" @click.self="showGroupAdd = false">
       <div class="ta-dialog">
-        <div class="ta-dialog-head"><h3>创建群组</h3><button class="ta-dialog-close" @click="showGroupAdd = false">×</button></div>
+        <div class="ta-dialog-head"><h3>创建群组</h3><button class="ta-dialog-close smanga-back-close" @click="showGroupAdd = false">×</button></div>
         <div class="ta-dialog-body">
           <label class="ta-field"><span>名称</span><input v-model="groupForm.groupName" /></label>
           <label class="ta-field"><span>描述</span><input v-model="groupForm.description" /></label>
@@ -152,9 +152,9 @@
     </div>
 
     <!-- 加入群组弹窗 -->
-    <div v-if="showGroupJoin" class="ta-dialog-overlay" @click.self="showGroupJoin = false">
+    <div v-if="showGroupJoin" class="ta-dialog-overlay smanga-backable" @click.self="showGroupJoin = false">
       <div class="ta-dialog">
-        <div class="ta-dialog-head"><h3>加入群组</h3><button class="ta-dialog-close" @click="showGroupJoin = false">×</button></div>
+        <div class="ta-dialog-head"><h3>加入群组</h3><button class="ta-dialog-close smanga-back-close" @click="showGroupJoin = false">×</button></div>
         <div class="ta-dialog-body">
           <label class="ta-field"><span>群组号</span><input v-model="groupForm.groupNo" placeholder="输入邀请码或群组号" /></label>
         </div>

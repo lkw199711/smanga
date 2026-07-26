@@ -32,11 +32,11 @@
     </ResponsiveTable>
 
     <!-- 添加/编辑弹窗 -->
-    <div v-if="dialogShow" class="ta-dialog-overlay" @click.self="dialogShow = false">
+    <div v-if="dialogShow" class="ta-dialog-overlay smanga-backable" @click.self="dialogShow = false">
       <div class="ta-dialog">
         <div class="ta-dialog-head">
           <h3>{{ editingUser ? '编辑用户' : '添加用户' }}</h3>
-          <button class="ta-dialog-close" @click="dialogShow = false">×</button>
+          <button class="ta-dialog-close smanga-back-close" @click="dialogShow = false">×</button>
         </div>
         <div class="ta-dialog-body">
           <label class="ta-field">

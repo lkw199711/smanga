@@ -24,7 +24,7 @@
       <button class="td-reader-btn" :disabled="!canNextPage" @click="nextPage">下一页</button>
     </footer>
 
-    <aside v-if="showChapters" class="td-chapter-drawer" @click.self="showChapters = false">
+    <aside v-if="showChapters" class="td-chapter-drawer smanga-backable" @click.self="showChapters = false">
       <div class="td-chapter-panel">
         <div class="td-chapter-head">
           <div class="td-chapter-head-title">目录</div>

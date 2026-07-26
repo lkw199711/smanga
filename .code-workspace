@@ -1,0 +1,61 @@
+{
+    "folders": [
+        {
+            "name": "smanga",
+            "path": "../smanga"
+        },
+        {
+            "name": "smanga-adonis",
+            "path": "../smanga-adonis"
+        },
+        {
+            "name": "smanga-express",
+            "path": "../smanga-express"
+        },
+        {
+            "name": "smanga-get",
+            "path": "../smanga-get"
+        },
+        {
+            "name": "smanga-get-webui",
+            "path": "../smanga-get-webui"
+        },
+        {
+            "name": "smanga-scripts",
+            "path": "../smanga-scripts"
+        },
+        {
+            "name": "smanga-apk",
+            "path": "../smanga-apk"
+        }
+    ],
+    "settings": {
+        "git.autoRepositoryDetection": true,
+        "git.scanRepositories": [
+            "../smanga",
+            "../smanga-adonis",
+            "../smanga-express",
+            "../smanga-get",
+            "../smanga-get-webui",
+            "../smanga-scripts",
+            "../smanga-apk"
+        ],
+        "files.exclude": {
+            "**/.git": false,
+            "**/.vs": true,
+            "**/node_modules": true,
+            "**/dist": true,
+            "**/build": true,
+            "**/coverage": true,
+            "**/.output": true,
+            "**/.cache": true,
+            "**/.turbo": true
+        }
+    },
+    "extensions": {
+        "recommendations": [
+            "eamodio.gitlens",
+            "ms-vscode.vscode-typescript-next"
+        ]
+    }
+}

@@ -38,7 +38,7 @@
 		</header>
 
 		<!-- 侧边栏（抽屉式） -->
-		<div v-if="showSidebar" class="sa-mobile-sidebar-backdrop" @click="showSidebar = false">
+		<div v-if="showSidebar" class="sa-mobile-sidebar-backdrop smanga-backable" @click="showSidebar = false">
 			<aside class="sa-mobile-sidebar" @click.stop>
 				<android-seat />
 				<div class="sa-sidebar-header">

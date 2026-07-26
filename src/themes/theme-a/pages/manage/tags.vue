@@ -29,9 +29,9 @@
       </template>
     </ResponsiveTable>
 
-    <div v-if="dialogShow" class="ta-dialog-overlay" @click.self="dialogShow = false">
+    <div v-if="dialogShow" class="ta-dialog-overlay smanga-backable" @click.self="dialogShow = false">
       <div class="ta-dialog">
-        <div class="ta-dialog-head"><h3>{{ editingTag ? '编辑标签' : '添加标签' }}</h3><button class="ta-dialog-close" @click="dialogShow = false">×</button></div>
+        <div class="ta-dialog-head"><h3>{{ editingTag ? '编辑标签' : '添加标签' }}</h3><button class="ta-dialog-close smanga-back-close" @click="dialogShow = false">×</button></div>
         <div class="ta-dialog-body">
           <label class="ta-field"><span>名称</span><input v-model="form.tagName" /></label>
           <label class="ta-field"><span>颜色</span><input v-model="form.tagColor" type="color" style="height:4rem;padding:0.4rem" />

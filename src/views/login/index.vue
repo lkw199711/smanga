@@ -118,6 +118,20 @@ onMounted(() => {
 
 	// 加载保存的服务
 	loadServices();
+
+	// Android APK 注入凭据自动登录
+	// APK 通过 window.javaObj 挂载 { hasCredentials, username, password, ... }
+	try {
+		const jo = (window as any).javaObj;
+		if (jo && typeof jo === 'object' && jo.hasCredentials && jo.username && jo.password) {
+			userName.value = String(jo.username);
+			passWord.value = String(jo.password);
+			// 稍作延迟以确保 store/router 就绪
+			setTimeout(() => { do_login(); }, 0);
+		}
+	} catch (e) {
+		// 忽略注入对象读取异常,回落到手动登录
+	}
 })
 
 

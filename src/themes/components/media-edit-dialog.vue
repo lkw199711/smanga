@@ -1,5 +1,5 @@
 <template>
-  <div v-if="editMediaDialog" class="tm-edit-backdrop" @click.self="close">
+  <div v-if="editMediaDialog" class="tm-edit-backdrop smanga-backable" @click.self="close">
     <form class="tm-edit-dialog" @submit.prevent="submit">
       <header class="tm-edit-header">
         <div>
@@ -7,7 +7,7 @@
           <h2 v-else>新建媒体库</h2>
           <p>{{ editModel === 'modify' ? '修改媒体库的基本信息与阅读设置。' : '添加新的媒体库。' }}</p>
         </div>
-        <button type="button" class="tm-icon-button" aria-label="关闭" @click="close">×</button>
+        <button type="button" class="tm-icon-button smanga-back-close" aria-label="关闭" @click="close">×</button>
       </header>
 
       <div class="tm-edit-content">
