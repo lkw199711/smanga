@@ -108,6 +108,12 @@
               <button class="ta-btn-edit-tag" @click="editTagsDialog = true" v-if="mangaInfo.mangaId">
                 {{ mangaInfo.tags?.length ? '编辑标签' : '添加标签' }}
               </button>
+              <button class="ta-btn-edit-tag" @click="openCoversEdit" v-if="mangaInfo.mangaId && hasManyCover">
+                编辑封面
+              </button>
+              <button class="ta-btn-edit-tag" @click="editMetaDialog = true" v-if="mangaInfo.mangaId">
+                编辑元数据
+              </button>
             </div>
           </div>
         </div>
@@ -167,6 +173,23 @@
         </div>
       </div>
     </div>
+
+    <!-- 封面编辑弹窗 -->
+    <manga-cover-edit-dialog
+      v-model="editCoverDialog"
+      :manga-id="mangaInfo.mangaId"
+      :current-cover="mangaInfo.mangaCover"
+      :covers="covers"
+      @reload="loadMangaInfo"
+      @update:cover="onCoverUpdate"
+    />
+
+    <!-- 元数据编辑弹窗 -->
+    <manga-meta-edit-dialog
+      v-model="editMetaDialog"
+      :manga-info="mangaInfo"
+      @reload="loadMangaInfo"
+    />
   </div>
 </template>
 
@@ -182,6 +205,8 @@ import useBrowseStore from '@/store/browse'
 import { openThemeContextMenu } from '@/themes/context-menu'
 import TagChip from '@/themes/components/tag-chip.vue'
 import TagEditor from '@/themes/components/tag-editor.vue'
+import MangaCoverEditDialog from '@/themes/components/manga-cover-edit-dialog.vue'
+import MangaMetaEditDialog from '@/themes/components/manga-meta-edit-dialog.vue'
 
 const router = useRouter()
 const route = useRoute()
@@ -194,6 +219,8 @@ const isCollected = ref(false)
 const hasLatest = ref(false)
 const chapterListDesc = ref(false)
 const editTagsDialog = ref(false)
+const editCoverDialog = ref(false)
+const editMetaDialog = ref(false)
 
 // 元数据
 const banner = ref<any[]>([])
@@ -202,6 +229,8 @@ const character = ref<any[]>([])
 const mangaCover = ref<string>('')
 const bannerModel = ref<string>('toptoon')
 const interval = ref(6 * 1000)
+const covers = ref<any[]>([])
+const hasManyCover = ref(false)
 
 // 计算属性
 const mangaId = computed(() => Number(route.params.mangaId) || Number(route.query.mangaId) || 0)
@@ -255,6 +284,10 @@ async function loadMangaInfo() {
       for (const item of character.value) {
         item.blob = await imageApi.get({ file: item.metaFile })
       }
+
+      // 封面候选集合
+      covers.value = mangaInfo.value.metas.filter((item: any) => item.metaName === 'cover')
+      hasManyCover.value = covers.value.length > 0
       
       // 从元数据中提取信息
       const title = mangaInfo.value.metas.find((item: any) => item.metaName === 'title')?.metaContent
@@ -370,6 +403,19 @@ function goChapterList() {
 
 function updateTags(tags: any[]) {
   mangaInfo.value.tags = tags
+}
+
+function openCoversEdit() {
+  editCoverDialog.value = true
+  covers.value.forEach(async (item: any) => {
+    item.active = item.metaFile === mangaInfo.value.mangaCover
+    item.blob = await imageApi.get({ file: item.metaFile })
+  })
+}
+
+async function onCoverUpdate(v: string) {
+  mangaInfo.value.mangaCover = v
+  if (v) mangaCover.value = await imageApi.get({ file: v })
 }
 
 function goToChapter(chapter: any) {

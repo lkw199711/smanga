@@ -144,7 +144,7 @@
               <el-icon><Picture /></el-icon>
               <span>编辑封面</span>
             </el-button>
-            <el-button class="action-tool" @click="open_metas_edit">
+            <el-button class="action-tool" @click="editMetasDialog = true">
               <el-icon><Document /></el-icon>
               <span>编辑元数据</span>
             </el-button>
@@ -222,40 +222,23 @@
 
     <manga-modify v-model:editMangaDialog="editMangaDialog" @reload="render_meta" :mangaInfo="mangaInfo" />
 
-    <el-dialog :title="$t('rightSidebar.editCover')" v-model="editCover">
-      <div class="cover-setting">
-        <div :class="['cover-setting-box', {active: item.active}]" v-for="item in covers" :key="item.metaId">
-          <img :src="item.blob" alt="cover" @click="choose_cover(item.metaFile)" />
-        </div>
-      </div>
-    </el-dialog>
+    <manga-cover-edit-dialog
+      v-model="editCover"
+      :manga-id="mangaInfo.mangaId"
+      :current-cover="mangaInfo.mangaCover"
+      :covers="covers"
+      @reload="render_meta"
+      @update:cover="(v) => (mangaInfo.mangaCover = v)"
+    />
 
-    <el-dialog :title="$t('rightSidebar.editMetas')" v-model="editMetasDialog">
-      <el-form :model="metaForm" label-width="auto" style="max-width: 60rem">
-        <el-form-item label="漫画名称">
-          <el-input v-model="metaForm.title" placeholder="请输入漫画名称"></el-input>
-        </el-form-item>
-        <el-form-item label="作者">
-          <el-input v-model="metaForm.author" placeholder="请输入作者名"></el-input>
-        </el-form-item>
-        <el-form-item label="发布时间">
-          <el-date-picker v-model="metaForm.publishDate" type="date" placeholder="请选择发布时间" />
-        </el-form-item>
-        <el-form-item label="评分">
-          <el-input v-model="metaForm.star" placeholder="请输入评分"></el-input>
-        </el-form-item>
-        <el-form-item label="简介">
-          <el-input type="textarea" v-model="metaForm.describe" placeholder="请输入漫画简介"></el-input>
-        </el-form-item>
-        <el-form-item label="存为JSON">
-          <el-switch v-model="metaWriteJson"></el-switch>
-        </el-form-item>
-        <el-form-item>
-          <el-button type="primary" @click="update_metas">保存</el-button>
-          <el-button @click="editMetasDialog = false">取消</el-button>
-        </el-form-item>
-      </el-form>
-    </el-dialog>
+    <manga-meta-edit-dialog
+      v-model="editMetasDialog"
+      :manga-info="mangaInfo"
+      @reload="render_meta"
+    />
+
+
+
 
     <el-dialog :title="$t('mangaInfo.mangaShareDialogTitle')" v-model="mangaShareDialog">
       <share :mangaInfo="mangaInfo" @close_dialog="mangaShareDialog = false" />
@@ -285,6 +268,8 @@ import useBrowseStore from '@/store/browse';
 import chapter from '@/views/manga-info/components/chapter.vue';
 import chapterSimple from '@/views/manga-info/components/chapter-simple.vue';
 import mangaModify from '@/themes/components/manga-modify-dialog.vue';
+import mangaCoverEditDialog from '@/themes/components/manga-cover-edit-dialog.vue';
+import mangaMetaEditDialog from '@/themes/components/manga-meta-edit-dialog.vue';
 import ThemeContextMenu from '@/themes/components/theme-context-menu.vue';
 import { openThemeContextMenu } from '@/themes/context-menu';
 import {Document, EditPen, Picture, PriceTag, Reading, Share, Star, StarFilled, Tickets} from '@element-plus/icons-vue';
@@ -292,13 +277,7 @@ const browse: any = useBrowseStore();
 const router = useRouter();
 const route = useRoute();
 
-const metaForm = reactive({
-  title: '',
-  author: '',
-  publishDate: '',
-  star: '',
-  describe: '',
-});
+
 
 const continueRead = ref({
   chapterId: 0,
@@ -326,7 +305,6 @@ let mangaShareDialog = ref(false);
 let bannerModel = ref<string>('toptoon');
 let bannerBg = ref<metaType>();
 let hasManyCover = ref(false);
-let metaWriteJson = ref(true);
 
 let sourceWebsite = ref('');
 
@@ -563,37 +541,6 @@ function open_covers_edit() {
     const blob = await imageApi.get({file: item.metaFile});
     item.blob = blob;
   });
-}
-
-function open_metas_edit() {
-  editMetasDialog.value = true;
-  Object.assign(metaForm, mangaInfo);
-}
-
-function choose_cover(metaFile: string) {
-  if (!metaFile) return;
-  covers.value.forEach((item: metaType) => {
-    item.active = item.metaFile === metaFile;
-  });
-  mangaApi
-    .update_manga({
-      mangaId: mangaInfo.mangaId,
-      mangaCover: metaFile,
-    })
-    .then(() => {
-      mangaInfo.mangaCover = metaFile;
-      editCover.value = false;
-    })
-    .catch((err: any) => {
-      console.error('更新封面失败:', err);
-    });
-}
-
-async function update_metas() {
-  if (!mangaInfo.mangaId) return;
-  await mangaApi.update_manga_meta(metaForm, metaWriteJson.value);
-  editMetasDialog.value = false;
-  await render_meta();
 }
 
 function update_tags(tagsParams: tagItemType[]) {
