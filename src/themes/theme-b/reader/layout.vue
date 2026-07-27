@@ -124,7 +124,7 @@ function goChapter(idx: number) {
   globalData.chapterIndex = idx
   globalData.chapterId = target.chapterId
   globalData.chapterName = target.chapterName || globalData.chapterName
-  router.push(`/t/reader/${target.chapterId}`)
+  router.replace(`/t/reader/${target.chapterId}`)
 }
 
 function prevChapter() {
