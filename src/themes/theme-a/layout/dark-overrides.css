@@ -597,142 +597,24 @@
  * 漫画详情页 manga-info.vue 专项适配
  * ========================================================================== */
 /* 页面根容器 */
-.sa-dark .ta-manga-info {
-	background: var(--sa-bg) !important;
-	color: var(--sa-text) !important;
-}
 
 /* 返回按钮 */
-.sa-dark .ta-btn-back {
-	background: var(--sa-bg-elev) !important;
-	border-color: var(--sa-border) !important;
-	color: var(--sa-text-2) !important;
-}
-.sa-dark .ta-btn-back:hover {
-	background: var(--sa-bg-hover) !important;
-	color: var(--sa-text) !important;
-}
 
 /* 主内容卡片区域(白色背景 → 暗卡片) */
-.sa-dark .ta-info-content {
-	background: var(--sa-card) !important;
-	box-shadow: 0 0.2rem 1.2rem rgba(0, 0, 0, 0.35) !important;
-	color: var(--sa-text) !important;
-}
 
 /* 封面兜底底色(避免覆盖 img) */
-.sa-dark .ta-info-cover {
-	background: var(--sa-bg-hover) !important;
-	box-shadow: 0 0.8rem 2.4rem rgba(0, 0, 0, 0.5) !important;
-}
-.sa-dark .ta-info-cover-ph {
-	background: linear-gradient(135deg, #1e3a8a, #1e40af) !important;
-	color: var(--sa-text-2) !important;
-}
 
 /* 标题、元信息、描述 */
-.sa-dark .ta-info-detail h1 {
-	color: var(--sa-text) !important;
-}
-.sa-dark .ta-info-meta,
-.sa-dark .ta-info-meta span {
-	color: var(--sa-text-3) !important;
-}
-.sa-dark .ta-info-desc {
-	color: var(--sa-text-2) !important;
-}
 
 /* 按钮组 */
-.sa-dark .ta-btn-primary {
-	background: var(--sa-primary) !important;
-	color: #0b1220 !important;
-}
-.sa-dark .ta-btn-primary:hover {
-	background: #3b82f6 !important;
-}
-.sa-dark .ta-btn-ghost {
-	background: var(--sa-bg-elev) !important;
-	border-color: var(--sa-border) !important;
-	color: var(--sa-text-2) !important;
-}
-.sa-dark .ta-btn-ghost:hover {
-	background: var(--sa-bg-hover) !important;
-	color: var(--sa-text) !important;
-}
-.sa-dark .ta-btn-collected {
-	background: rgba(248, 113, 113, 0.12) !important;
-	border-color: rgba(248, 113, 113, 0.4) !important;
-	color: var(--sa-danger) !important;
-}
-.sa-dark .ta-btn-secondary {
-	background: var(--sa-bg-hover) !important;
-	color: var(--sa-text-2) !important;
-}
-.sa-dark .ta-btn-secondary:hover {
-	background: var(--sa-border) !important;
-	color: var(--sa-text) !important;
-}
 
 /* 板块标题 */
-.sa-dark .ta-section-title {
-	color: var(--sa-text) !important;
-}
 
 /* 角色区 */
-.sa-dark .ta-character-item img {
-	box-shadow: 0 0.4rem 1.2rem rgba(0, 0, 0, 0.5) !important;
-}
-.sa-dark .ta-character-name {
-	color: var(--sa-text) !important;
-}
-.sa-dark .ta-character-desc {
-	color: var(--sa-text-3) !important;
-}
 
 /* 元数据表格 */
-.sa-dark .ta-meta-item {
-	border-bottom-color: var(--sa-border) !important;
-}
-.sa-dark .ta-meta-label {
-	color: var(--sa-text-2) !important;
-}
-.sa-dark .ta-meta-value {
-	color: var(--sa-text-3) !important;
-}
-.sa-dark .ta-btn-edit-tag {
-	color: var(--sa-primary) !important;
-	border-color: var(--sa-primary) !important;
-	background: transparent !important;
-}
-.sa-dark .ta-btn-edit-tag:hover {
-	background: var(--sa-primary) !important;
-	color: #0b1220 !important;
-}
 
 /* 章节列表项 */
-.sa-dark .ta-chapter-item {
-	background: var(--sa-bg-elev) !important;
-	color: var(--sa-text) !important;
-}
-.sa-dark .ta-chapter-item:hover {
-	background: var(--sa-bg-hover) !important;
-}
-.sa-dark .ta-chapter-item.ta-chapter-read {
-	background: var(--sa-primary-bg) !important;
-	border-left-color: var(--sa-primary) !important;
-}
-.sa-dark .ta-chapter-number {
-	color: var(--sa-text) !important;
-}
-.sa-dark .ta-chapter-name {
-	color: var(--sa-text-2) !important;
-}
-.sa-dark .ta-chapter-date {
-	color: var(--sa-text-3) !important;
-}
-.sa-dark .ta-chapter-status {
-	color: var(--sa-primary) !important;
-}
 
 /* ==========================================================================
  * Legacy 漫画详情页 legacy-manga-info-bridge.vue 变量覆盖
