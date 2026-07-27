@@ -5,7 +5,8 @@
     :style="chipStyle"
     @click="clickable && $emit('click')"
   >
-    <span class="tm-tag-chip__dot" v-if="showDot"></span>
+    <span v-if="active" class="tm-tag-chip__state" aria-hidden="true">✓</span>
+    <span v-else-if="showDot || clickable" class="tm-tag-chip__dot" aria-hidden="true"></span>
     {{ name }}
     <span class="tm-tag-chip__count" v-if="count !== undefined">{{ count }}</span>
   </span>
@@ -37,14 +38,49 @@ defineEmits<{
 }>()
 
 const chipStyle = computed(() => {
-  const style: Record<string, string> = {}
-  if (props.active) {
-    style.backgroundColor = props.color
-    style.color = '#fff'
-    style.borderColor = props.color
+  const color = normalizeHexColor(props.color)
+  const style: Record<string, string> = {
+    '--tm-tag-color': color,
   }
+
+  if (props.active) {
+    style.backgroundColor = color
+    style.color = contrastTextColor(color)
+    style.borderColor = color
+  } else {
+    // Keep the tag identity visible while making the unselected state visually lighter.
+    style.backgroundColor = `color-mix(in srgb, ${color} 14%, var(--sd-bg2, #fff))`
+    style.color = `color-mix(in srgb, ${color} 55%, var(--sd-text, #1f2937))`
+    style.borderColor = `color-mix(in srgb, ${color} 58%, var(--sd-border, #e5e7eb))`
+  }
+
   return style
 })
+
+function normalizeHexColor(color?: string): string {
+  const value = color?.trim()
+  if (/^#[0-9a-f]{6}$/i.test(value || '')) return value!
+  if (/^#[0-9a-f]{3}$/i.test(value || '')) {
+    return `#${value![1]}${value![1]}${value![2]}${value![2]}${value![3]}${value![3]}`
+  }
+  return '#6366f1'
+}
+
+function contrastTextColor(color: string): '#111827' | '#ffffff' {
+  const channels = [color.slice(1, 3), color.slice(3, 5), color.slice(5, 7)].map((hex) =>
+    Number.parseInt(hex, 16)
+  )
+  const luminance = channels
+    .map((channel) => {
+      const value = channel / 255
+      return value <= 0.03928 ? value / 12.92 : ((value + 0.055) / 1.055) ** 2.4
+    })
+    .reduce((sum, value, index) => sum + value * [0.2126, 0.7152, 0.0722][index], 0)
+
+  const whiteContrast = 1.05 / (luminance + 0.05)
+  const darkContrast = (luminance + 0.05) / 0.059
+  return darkContrast > whiteContrast ? '#111827' : '#ffffff'
+}
 </script>
 
 <style scoped>
@@ -90,17 +126,24 @@ const chipStyle = computed(() => {
   background: var(--sd-primary, #2563eb);
   color: #fff;
   border-color: var(--sd-primary, #2563eb);
+  font-weight: 600;
 }
 
 .tm-tag-chip__dot {
   width: 0.6rem;
   height: 0.6rem;
   border-radius: 50%;
-  background: currentColor;
-  opacity: 0.55;
+  background: var(--tm-tag-color, currentColor);
+  opacity: 0.9;
   flex-shrink: 0;
 }
-.tm-tag-chip--active .tm-tag-chip__dot { opacity: 0.85; }
+
+.tm-tag-chip__state {
+  font-size: 1.1em;
+  font-weight: 800;
+  line-height: 1;
+  flex-shrink: 0;
+}
 
 .tm-tag-chip__count {
   font-size: 1.1rem;
