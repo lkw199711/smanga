@@ -32,7 +32,6 @@ const tabs = [
   { key: 'manga-share', label: '漫画分享', desc: '管理漫画分享与导出', path: '/manga-share' },
   { key: 'p2p', label: 'P2P管理', desc: '管理P2P共享与节点', path: '/p2p-group' },
   { key: 'serve-setting', label: '服务器设置', desc: '配置服务器参数与性能', path: '/serve-setting' },
-  { key: 'wiki', label: '帮助文档', desc: '查看系统使用文档与指南', path: '/wiki' },
 ]
 
 const activeTab = ref('user')

@@ -558,6 +558,7 @@ const routes: Array<RouteRecordRaw> = [
 			{ path: 'collect', name: 't-collect', component: ThemeBridge, props: { page: 'collect' }, meta: { title: '收藏' } },
 			{ path: 'search', name: 't-search', component: ThemeBridge, props: { page: 'search' }, meta: { title: '搜索' } },
 			{ path: 'tags', name: 't-tag-list', component: ThemeBridge, props: { page: 'tag-list' }, meta: { title: '标签' } },
+			{ path: 'wiki', name: 't-wiki', component: ThemeBridge, props: { page: 'manage-wiki' }, meta: { title: '帮助文档' } },
 			{ path: 'setting/user', name: 't-user-setting', component: ThemeBridge, props: { page: 'user-setting' }, meta: { title: '用户设置' } },
 			{ path: 'setting/serve', name: 't-serve-setting', component: ThemeBridge, props: { page: 'serve-setting' }, meta: { title: '服务器设置' } },
 			{ path: 'manage', name: 't-manage', component: ThemeBridge, props: { page: 'manage' }, meta: { title: '管理' } },
@@ -574,7 +575,7 @@ const routes: Array<RouteRecordRaw> = [
 				{ path: 'manage/share', name: 't-manage-share', component: ThemeBridge, props: { page: 'manage-share' }, meta: { title: '漫画分享' } },
 				{ path: 'manage/p2p', name: 't-manage-p2p', component: ThemeBridge, props: { page: 'manage-p2p' }, meta: { title: 'P2P管理' } },
 				{ path: 'manage/server', name: 't-manage-server', component: ThemeBridge, props: { page: 'manage-server' }, meta: { title: '服务器设置' } },
-				{ path: 'manage/wiki', name: 't-manage-wiki', component: ThemeBridge, props: { page: 'manage-wiki' }, meta: { title: '帮助文档' } },
+				{ path: 'manage/wiki', redirect: '/t/wiki' },
 		],
 	},
 	{
@@ -623,7 +624,7 @@ router.beforeEach(async (to) => {
 		const legacyMap: Record<string, string> = {
 			't-home': '/', 't-media-list': '/media-list', 't-history': '/history',
 			't-bookmark': '/bookmark', 't-collect': '/collect', 't-search': '/search',
-			't-tag-list': '/tag-list', 't-user-setting': '/user-setting',
+			't-tag-list': '/tag-list', 't-wiki': '/wiki', 't-user-setting': '/user-setting',
 			't-serve-setting': '/serve-setting', 't-manage': '/manage', 't-login': '/login',
 			't-manage-users': '/account', 't-manage-media': '/media-setting',
 			't-manage-manga': '/manga-setting', 't-manage-chapters': '/chapter-setting',
@@ -631,7 +632,7 @@ router.beforeEach(async (to) => {
 			't-manage-tags': '/tag-setting', 't-manage-compress': '/compress-setting',
 			't-manage-jobs': '/jobs-setting', 't-manage-sync': '/manga-sync',
 			't-manage-share': '/manga-share', 't-manage-p2p': '/p2p-group',
-			't-manage-server': '/serve-setting', 't-manage-wiki': '/wiki',
+			't-manage-server': '/serve-setting',
 		}
 		const target = legacyMap[to.name as string]
 		if (target) { close(); return target }

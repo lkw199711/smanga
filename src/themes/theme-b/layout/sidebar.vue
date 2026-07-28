@@ -57,6 +57,7 @@ const navItems = [
 	{ key: 'search', label: '搜索', icon: '🔍', path: '/t/search' },
 	{ key: 'tag', label: '标签', icon: '🏷️', path: '/t/tags' },
 	{ key: 'setting', label: '设置', icon: '🔧', path: '/t/setting/user' },
+	{ key: 'wiki', label: '帮助文档', icon: '📖', path: '/t/wiki' },
 ]
 
 const adminNavItems = [
@@ -73,7 +74,6 @@ const adminNavItems = [
 	{ key: 'manage-share', label: '漫画分享', icon: '📤', path: '/t/manage/share' },
 	{ key: 'manage-p2p', label: 'P2P管理', icon: '🌐', path: '/t/manage/p2p' },
 	{ key: 'manage-server', label: '服务器设置', icon: '🖥️', path: '/t/manage/server' },
-	{ key: 'manage-wiki', label: '帮助文档', icon: '📖', path: '/t/manage/wiki' },
 ]
 
 const menu = computed(() => manageMode.value ? adminNavItems : navItems)

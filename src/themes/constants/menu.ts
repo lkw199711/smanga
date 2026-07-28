@@ -28,6 +28,7 @@ export const navMenu: MenuItem[] = [
 	{ path: '/t/tags', icon: '🏷️', label: '标签', routeName: 't-tag-list' },
 	{ path: '/t/media', icon: '📁', label: '媒体库', routeName: 't-media-list' },
 	{ path: '/t/setting/user', icon: '🔧', label: '设置', routeName: 't-user-setting' },
+	{ path: '/t/wiki', icon: '📖', label: '帮助文档', routeName: 't-wiki' },
 ]
 
 /** 管理员菜单 */
@@ -45,7 +46,6 @@ export const adminNavMenu: MenuItem[] = [
 	{ path: '/t/manage/share', icon: '📤', label: '漫画分享', routeName: 't-manage-share' },
 	{ path: '/t/manage/p2p', icon: '🌐', label: 'P2P管理', routeName: 't-manage-p2p' },
 	{ path: '/t/manage/server', icon: '🖥️', label: '服务器设置', routeName: 't-manage-server' },
-	{ path: '/t/manage/wiki', icon: '📖', label: '帮助文档', routeName: 't-manage-wiki' },
 ]
 
 /**
