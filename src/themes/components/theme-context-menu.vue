@@ -174,13 +174,42 @@ async function runManga(key: string, data: any) {
 }
 
 async function runChapter(key: string, data: any) {
-  const id = data.chapterId
+  const id = Number(data.chapterId)
+  if (!Number.isInteger(id) || id <= 0) throw new Error('无效的章节 ID')
   if (key === 'collect') {
     if (collected.value) await collectApi.remove_collect('chapter', id)
     else await collectApi.add_chapter_collect('chapter', id, data)
   } else if (key === 'read') {
-    if (data.latest?.finish) { await historyApi.delete(id); await latestApi.delete(id) }
-    else { await historyApi.add(data); await latestApi.add({ chapterId: id, mangaId: data.mangaId, finish: true, page: 0, count: 0 }) }
+    if (data.latest?.finish) {
+      await Promise.all([historyApi.delete(id), latestApi.delete(id)])
+      data.latest = null
+      ElMessage.success('已标记为未读')
+    } else {
+      let mediaId = Number(data.mediaId)
+      let mangaId = Number(data.mangaId)
+      let chapterName = data.chapterName
+
+      // 首页历史条目在旧接口响应中没有 mediaId。仅当历史记录不存在时才需新建，
+      // 此时从章节详情补齐接口校验要求的字段，避免把整个列表对象直接提交。
+      const hasHistory = await historyApi.is_read(id)
+      if (!hasHistory) {
+        if (!Number.isInteger(mediaId) || mediaId <= 0 || !Number.isInteger(mangaId) || mangaId <= 0) {
+          const chapter = await chapterApi.get_by_id(id)
+          mediaId = Number(chapter?.mediaId)
+          mangaId = Number(chapter?.mangaId)
+          chapterName ||= chapter?.chapterName
+        }
+        await historyApi.add({ mediaId, mangaId, chapterId: id, chapterName })
+      }
+
+      if (!Number.isInteger(mangaId) || mangaId <= 0) {
+        const chapter = await chapterApi.get_by_id(id)
+        mangaId = Number(chapter?.mangaId)
+      }
+      await latestApi.add({ chapterId: id, mangaId, finish: true, page: 0, count: 0 })
+      data.latest = { ...(data.latest || {}), finish: 1, page: 0, count: 0 }
+      ElMessage.success('已标记为已读')
+    }
   } else if (key === 'compress-delete') await chapterApi.compress_delete(id)
   else if (key === 'remove') await chapterApi.delete_chapter(id)
   else if (key === 'delete') await chapterApi.delete_chapter(id, true)
