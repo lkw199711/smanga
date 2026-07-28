@@ -89,51 +89,81 @@
 
     <!-- Tracker 管理 -->
     <div v-if="activeTab === 'tracker'">
-      <div class="ta-page-actions" style="margin-bottom:1.6rem">
-        <button class="ta-btn-ghost" @click="loadTrackerGroups">🔄 刷新群组</button>
+      <div v-if="trackerStatus === 'loading'" class="ta-tracker-notice" aria-live="polite">
+        <div class="ta-tracker-notice-icon">⏳</div>
+        <div>
+          <h3>正在检查 Tracker 状态</h3>
+          <p>请稍候...</p>
+        </div>
       </div>
-      <h3 style="margin-bottom:1.2rem;font-size:1.5rem;font-weight:600">Tracker 群组</h3>
-      <ResponsiveTable
-        :columns="trackerGroupColumns"
-        :items="trackerGroupList"
-        :row-key="(item) => item.groupNo"
-        :total="trackerGroupList.length"
-        :page="1"
-        :page-size="99999"
-        empty-text="暂无 Tracker 群组"
-      >
-        <template #cell-enable="{ item }">
-          <span :class="['ta-badge', item.enable ? 'ta-badge-success' : 'ta-badge-danger']">{{ item.enable ? '启用' : '禁用' }}</span>
-        </template>
-        <template #actions="{ item }">
-          <button class="ta-btn-sm ta-btn-sm-danger" @click="dismissTrackerGroup(item)">解散</button>
-        </template>
-      </ResponsiveTable>
 
-      <div class="ta-page-actions" style="margin-bottom:1.6rem;margin-top:2.4rem">
-        <button class="ta-btn-ghost" @click="loadTrackerNodes">🔄 刷新节点</button>
+      <div v-else-if="trackerStatus === 'disabled'" class="ta-tracker-notice ta-tracker-notice-warning" aria-live="polite">
+        <div class="ta-tracker-notice-icon">⚠️</div>
+        <div>
+          <h3>本机未启用 Tracker 角色</h3>
+          <p>{{ trackerStatusMessage }}</p>
+          <RouterLink class="ta-btn-primary ta-tracker-setting-link" :to="{ name: 't-manage-server' }">
+            前往服务器设置
+          </RouterLink>
+        </div>
       </div>
-      <h3 style="margin-bottom:1.2rem;font-size:1.5rem;font-weight:600">Tracker 节点</h3>
-      <ResponsiveTable
-        :columns="trackerNodeColumns"
-        :items="trackerNodeList"
-        :row-key="(item) => item.nodeId"
-        :total="trackerNodeList.length"
-        :page="1"
-        :page-size="99999"
-        empty-text="暂无节点"
-      >
-        <template #cell-online="{ item }">
-          <span :class="['ta-badge', item.online ? 'ta-badge-success' : 'ta-badge-wait']">{{ item.online ? '在线' : '离线' }}</span>
-        </template>
-        <template #cell-banned="{ item }">
-          <span :class="['ta-badge', item.banned ? 'ta-badge-danger' : 'ta-badge-success']">{{ item.banned ? '是' : '否' }}</span>
-        </template>
-        <template #actions="{ item }">
-          <button class="ta-btn-sm" @click="toggleBanNode(item)">{{ item.banned ? '解封' : '封禁' }}</button>
-          <button class="ta-btn-sm ta-btn-sm-danger" @click="destroyNode(item)">注销</button>
-        </template>
-      </ResponsiveTable>
+
+      <div v-else-if="trackerStatus === 'error'" class="ta-tracker-notice ta-tracker-notice-error" aria-live="polite">
+        <div class="ta-tracker-notice-icon">❌</div>
+        <div>
+          <h3>无法获取 Tracker 状态</h3>
+          <p>{{ trackerStatusMessage }}</p>
+          <button class="ta-btn-ghost" @click="loadTrackerManagement">重新检查</button>
+        </div>
+      </div>
+
+      <template v-else-if="trackerStatus === 'enabled'">
+        <div class="ta-page-actions" style="margin-bottom:1.6rem">
+          <button class="ta-btn-ghost" @click="loadTrackerGroups">🔄 刷新群组</button>
+        </div>
+        <h3 style="margin-bottom:1.2rem;font-size:1.5rem;font-weight:600">Tracker 群组</h3>
+        <ResponsiveTable
+          :columns="trackerGroupColumns"
+          :items="trackerGroupList"
+          :row-key="(item) => item.groupNo"
+          :total="trackerGroupList.length"
+          :page="1"
+          :page-size="99999"
+          empty-text="暂无 Tracker 群组"
+        >
+          <template #cell-enable="{ item }">
+            <span :class="['ta-badge', item.enable ? 'ta-badge-success' : 'ta-badge-danger']">{{ item.enable ? '启用' : '禁用' }}</span>
+          </template>
+          <template #actions="{ item }">
+            <button class="ta-btn-sm ta-btn-sm-danger" @click="dismissTrackerGroup(item)">解散</button>
+          </template>
+        </ResponsiveTable>
+
+        <div class="ta-page-actions" style="margin-bottom:1.6rem;margin-top:2.4rem">
+          <button class="ta-btn-ghost" @click="loadTrackerNodes">🔄 刷新节点</button>
+        </div>
+        <h3 style="margin-bottom:1.2rem;font-size:1.5rem;font-weight:600">Tracker 节点</h3>
+        <ResponsiveTable
+          :columns="trackerNodeColumns"
+          :items="trackerNodeList"
+          :row-key="(item) => item.nodeId"
+          :total="trackerNodeList.length"
+          :page="1"
+          :page-size="99999"
+          empty-text="暂无节点"
+        >
+          <template #cell-online="{ item }">
+            <span :class="['ta-badge', item.online ? 'ta-badge-success' : 'ta-badge-wait']">{{ item.online ? '在线' : '离线' }}</span>
+          </template>
+          <template #cell-banned="{ item }">
+            <span :class="['ta-badge', item.banned ? 'ta-badge-danger' : 'ta-badge-success']">{{ item.banned ? '是' : '否' }}</span>
+          </template>
+          <template #actions="{ item }">
+            <button class="ta-btn-sm" @click="toggleBanNode(item)">{{ item.banned ? '解封' : '封禁' }}</button>
+            <button class="ta-btn-sm ta-btn-sm-danger" @click="destroyNode(item)">注销</button>
+          </template>
+        </ResponsiveTable>
+      </template>
     </div>
 
     <!-- 创建群组弹窗 -->
@@ -168,8 +198,9 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted } from 'vue'
+import { ref, watch } from 'vue'
 import { p2pGroupApi, p2pShareApi, p2pTransferApi, trackerAdminGroupApi, trackerAdminNodeApi } from '@/api/p2p'
+import serveSettingApi from '@/api/serve-setting'
 import ResponsiveTable from '@/themes/components/responsive-table.vue'
 import type { RtColumn } from '@/themes/components/responsive-table.vue'
 
@@ -179,6 +210,8 @@ const shareList = ref<any[]>([])
 const transferList = ref<any[]>([])
 const trackerGroupList = ref<any[]>([])
 const trackerNodeList = ref<any[]>([])
+const trackerStatus = ref<'idle' | 'loading' | 'enabled' | 'disabled' | 'error'>('idle')
+const trackerStatusMessage = ref('')
 const showGroupAdd = ref(false)
 const showGroupJoin = ref(false)
 const groupForm = ref({ groupName: '', description: '', groupNo: '' })
@@ -274,6 +307,29 @@ async function loadTrackerGroups() {
 async function loadTrackerNodes() {
   try { const res = await trackerAdminNodeApi.list(); trackerNodeList.value = res.list || [] } catch { trackerNodeList.value = [] }
 }
+async function loadTrackerManagement() {
+  trackerStatus.value = 'loading'
+  trackerStatusMessage.value = ''
+  trackerGroupList.value = []
+  trackerNodeList.value = []
+
+  try {
+    const config = await serveSettingApi.get()
+    if (!config?.p2p?.enable || !config?.p2p?.role?.tracker) {
+      trackerStatus.value = 'disabled'
+      trackerStatusMessage.value = !config?.p2p?.enable
+        ? 'P2P 总开关尚未开启。请先在服务器设置中启用 P2P，再开启 Tracker 角色。'
+        : '请在服务器设置中开启“作为 Tracker”角色后再使用此功能。'
+      return
+    }
+
+    trackerStatus.value = 'enabled'
+    await Promise.all([loadTrackerGroups(), loadTrackerNodes()])
+  } catch {
+    trackerStatus.value = 'error'
+    trackerStatusMessage.value = '服务器配置读取失败，请稍后重试。'
+  }
+}
 async function dismissTrackerGroup(row: any) {
   if (!confirm(`确定解散群组「${row.groupNo}」吗？`)) return
   try { await trackerAdminGroupApi.dismiss(row.groupNo); loadTrackerGroups() } catch (e: any) { alert(e?.message || '解散失败') }
@@ -289,13 +345,17 @@ async function destroyNode(row: any) {
   try { await trackerAdminNodeApi.destroy(row.nodeId); loadTrackerNodes() } catch (e: any) { alert(e?.message || '注销失败') }
 }
 
-onMounted(() => {
-  loadGroups()
-  loadShares()
-  loadTransfers()
-  loadTrackerGroups()
-  loadTrackerNodes()
-})
+watch(activeTab, (tab) => {
+  if (tab === 'groups') {
+    loadGroups()
+  } else if (tab === 'shares') {
+    loadShares()
+  } else if (tab === 'transfers') {
+    loadTransfers()
+  } else if (tab === 'tracker') {
+    loadTrackerManagement()
+  }
+}, { immediate: true })
 </script>
 
 <style scoped>
@@ -321,6 +381,13 @@ onMounted(() => {
 .ta-badge-danger { color: #dc2626; background: #fef2f2; }
 .ta-badge-active { color: #2563eb; background: #eff6ff; }
 .ta-badge-wait { color: #d97706; background: #fffbeb; }
+.ta-tracker-notice { display: flex; align-items: flex-start; gap: 1.6rem; padding: 2.4rem; border: 1px solid #dbeafe; border-radius: 1.2rem; background: #eff6ff; color: #1e3a8a; }
+.ta-tracker-notice-warning { border-color: #fde68a; background: #fffbeb; color: #92400e; }
+.ta-tracker-notice-error { border-color: #fecaca; background: #fef2f2; color: #991b1b; }
+.ta-tracker-notice-icon { font-size: 2.4rem; line-height: 1; }
+.ta-tracker-notice h3 { margin: 0 0 0.8rem; font-size: 1.6rem; }
+.ta-tracker-notice p { margin: 0 0 1.6rem; font-size: 1.3rem; line-height: 1.6; }
+.ta-tracker-setting-link { display: inline-block; text-decoration: none; }
 .ta-dialog-overlay { position: fixed; inset: 0; z-index: 200; background: rgba(0,0,0,.45); display: flex; align-items: center; justify-content: center; }
 .ta-dialog { background: #fff; border-radius: 1.4rem; width: 48rem; max-width: 90vw; max-height: 85vh; overflow-y: auto; box-shadow: 0 0.8rem 3.2rem rgba(0,0,0,.12); }
 .ta-dialog-head { display: flex; align-items: center; justify-content: space-between; padding: 1.6rem 2rem; border-bottom: 1px solid #eaeaea; }
