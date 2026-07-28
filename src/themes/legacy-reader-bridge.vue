@@ -29,12 +29,14 @@ import { config } from '@/store'
 import { themeState } from '@/themes/store'
 import chapterApi from '@/api/chapter'
 import mangaApi from '@/api/manga'
+import useBrowseStore from '@/store/browse'
 import ThemeReaderTopbar from './legacy-reader/topbar.vue'
 import ThemeReaderControlPanel from './legacy-reader/control-panel.vue'
 import androidSeat from '@/layout/components/android-seat.vue'
 
 const route = useRoute()
 const router = useRouter()
+const browseStore = useBrowseStore()
 const error = ref('')
 const ready = ref(false)
 
@@ -96,6 +98,21 @@ async function prepareReader() {
     if (route.query.mediaId !== query.mediaId || route.query.mangaId !== query.mangaId || route.query.readerMode !== query.readerMode) {
       await router.replace({ name: 't-reader', params: { chapterId }, query })
     }
+
+    // 旧阅读内容组件使用 1 起始的 browseStore.page。
+    // 首页/历史/书签会在跳转前通过 pageJump 传入上次阅读页码。
+    const pendingPage = Number(localStorage.getItem('pageJump') || 0)
+    localStorage.removeItem('pageJump')
+
+    // 阅读器视图在 setup 阶段会立即监听 imagePathList。若保留上一章节的图片，
+    // 监听器会先以默认 currentPage=1 回写 browseStore.page，覆盖继续阅读页码。
+    browseStore.imagePathList = []
+    browseStore.imageFileList = []
+    browseStore.pageImage = ''
+    browseStore.page = Number.isFinite(pendingPage) && pendingPage >= 1
+      ? Math.floor(pendingPage)
+      : 1
+
     ready.value = true
   } catch (cause) {
     console.error('打开旧阅读器失败:', cause)

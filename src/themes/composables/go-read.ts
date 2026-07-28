@@ -1,16 +1,23 @@
 import { useRouter } from 'vue-router'
 import { globalData } from '@/store'
+import useBrowseStore from '@/store/browse'
 
 export interface GoReadItem {
 	chapterId?: number | string
+	mediaId?: number | string
+	mangaId?: number | string
 	page?: number | string
+	latest?: {
+		page?: number | string
+		[key: string]: any
+	} | null
 	mangaName?: string
 	chapterName?: string
 	[key: string]: any
 }
 
 export interface GoReadOptions {
-	/** 是否将 item.page 写入 localStorage.pageJump,供 reader 跳页使用(bookmark 场景) */
+	/** 是否将 item.page / item.latest.page 写入 pageJump,供 reader 恢复阅读进度 */
 	withPageJump?: boolean
 	/** 是否同步 mangaName/chapterName 到 globalData(bookmark 场景) */
 	syncGlobalNames?: boolean
@@ -23,6 +30,7 @@ export interface GoReadOptions {
  */
 export function useGoRead(defaults: GoReadOptions = {}) {
 	const router = useRouter()
+	const browse = useBrowseStore()
 
 	function goRead(item: GoReadItem | number | string, options?: GoReadOptions) {
 		const merged = { ...defaults, ...(options || {}) }
@@ -31,7 +39,14 @@ export function useGoRead(defaults: GoReadOptions = {}) {
 		if (!data.chapterId && data.chapterId !== 0) return
 
 		if (merged.withPageJump) {
-			const pageNum = Number(data.page || 1)
+			const rawPage = data.page ?? data.latest?.page ?? 1
+			const parsedPage = Number(rawPage)
+			const pageNum = Number.isFinite(parsedPage) && parsedPage >= 1
+				? Math.floor(parsedPage)
+				: 1
+			// 与漫画详情页的继续阅读保持一致：先更新 Pinia 中阅读器直接消费的页码，
+			// pageJump 仅作为跨页面/新标签页场景的后备值。
+			browse.page = pageNum
 			localStorage.setItem('pageJump', String(pageNum))
 		}
 		if (merged.syncGlobalNames) {
@@ -39,7 +54,14 @@ export function useGoRead(defaults: GoReadOptions = {}) {
 			globalData.chapterName = data.chapterName || globalData.chapterName
 		}
 
-		return router.push(`/t/reader/${data.chapterId}`)
+		const query: Record<string, string> = {}
+		if (data.mediaId !== undefined && data.mediaId !== null) query.mediaId = String(data.mediaId)
+		if (data.mangaId !== undefined && data.mangaId !== null) query.mangaId = String(data.mangaId)
+
+		return router.push({
+			path: `/t/reader/${data.chapterId}`,
+			query,
+		})
 	}
 
 	return { goRead }

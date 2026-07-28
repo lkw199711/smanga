@@ -76,6 +76,7 @@ import chartsApi from '@/api/charts'
 import imageApi from '@/api/image'
 import THistoryItem from '@/themes/components/history-item.vue'
 import { openThemeContextMenu } from '@/themes/context-menu'
+import { useGoRead } from '@/themes/composables'
 
 type MangaCard = {
 	id: number
@@ -90,6 +91,7 @@ type MangaCard = {
 }
 
 const router = useRouter()
+const { goRead } = useGoRead({ withPageJump: true, syncGlobalNames: true })
 
 const stats = ref({
 	totalManga: 0,
@@ -164,10 +166,6 @@ onMounted(async () => {
 	console.log('continueReading', continueReading.value)
 	await warmCovers(recentAdded.value, { kind: 'manga' })
 })
-
-function goRead(item: any) {
-	router.push(`/t/reader/${item.chapterId}`)
-}
 
 function goManga(item: MangaCard) {
 	router.push(`/t/manga/${item.id}`)

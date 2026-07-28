@@ -6,7 +6,8 @@
 
     <div class="ta-tabs">
       <button :class="['ta-tab', { active: activeTab === 'groups' }]" @click="activeTab = 'groups'">群组管理</button>
-      <button :class="['ta-tab', { active: activeTab === 'shares' }]" @click="activeTab = 'shares'">共享管理</button>
+      <button :class="['ta-tab', { active: activeTab === 'shares' }]" @click="activeTab = 'shares'">本地共享</button>
+      <button :class="['ta-tab', { active: activeTab === 'peers' }]" @click="activeTab = 'peers'">群内节点</button>
       <button :class="['ta-tab', { active: activeTab === 'transfers' }]" @click="activeTab = 'transfers'">传输任务</button>
       <button :class="['ta-tab', { active: activeTab === 'tracker' }]" @click="activeTab = 'tracker'">Tracker 管理</button>
     </div>
@@ -36,25 +37,101 @@
       </ResponsiveTable>
     </div>
 
-    <!-- 共享管理 -->
+    <!-- 本地共享 -->
     <div v-if="activeTab === 'shares'">
       <div class="ta-page-actions" style="margin-bottom:1.6rem">
-        <button class="ta-btn-ghost" @click="loadShares">🔄 刷新</button>
+        <select v-model="shareFilterGroupNo" class="ta-select" @change="loadShares(1)">
+          <option value="">全部群组</option>
+          <option v-for="group in groupList" :key="group.groupNo" :value="group.groupNo">
+            {{ group.groupName }} ({{ group.groupNo }})
+          </option>
+        </select>
+        <button class="ta-btn-ghost" @click="loadShares(sharePage)">🔄 刷新</button>
+        <button class="ta-btn-primary" :disabled="groupList.length === 0" @click="openShareAdd">+ 新增共享</button>
+        <button class="ta-btn-ghost" :disabled="!shareFilterGroupNo" @click="announceShares">📢 广播当前群组</button>
       </div>
       <ResponsiveTable
         :columns="shareColumns"
         :items="shareList"
-        :row-key="(item) => item.id"
-        :total="shareList.length"
-        :page="1"
-        :page-size="99999"
+        :row-key="(item) => item.p2pLocalShareId"
+        :total="shareCount"
+        :page="sharePage"
+        :page-size="sharePageSize"
         empty-text="暂无共享配置"
+        @update:page="loadShares"
       >
-        <template #cell-_targetId="{ item }">
-          {{ item.mediaId || item.mangaId || '-' }}
+        <template #cell-shareType="{ item }">
+          {{ item.shareType === 'media' ? '媒体库' : '漫画' }}
+        </template>
+        <template #cell-_resource="{ item }">
+          {{ item.mediaName || item.mangaName || item.shareName || '-' }}
+        </template>
+        <template #cell-enable="{ item }">
+          <label class="ta-switch">
+            <input
+              type="checkbox"
+              :checked="item.enable === 1"
+              @change="toggleShare(item, ($event.target as HTMLInputElement).checked)"
+            />
+            <span class="ta-switch-slider"></span>
+          </label>
         </template>
         <template #actions="{ item }">
           <button class="ta-btn-sm ta-btn-sm-danger" @click="deleteShare(item)">删除</button>
+        </template>
+      </ResponsiveTable>
+    </div>
+
+    <!-- 群内节点 -->
+    <div v-if="activeTab === 'peers'">
+      <div class="ta-page-actions" style="margin-bottom:1.6rem">
+        <select v-model="peerGroupNo" class="ta-select" @change="loadPeers(true)">
+          <option value="" disabled>请选择群组</option>
+          <option v-for="group in groupList" :key="group.groupNo" :value="group.groupNo">
+            {{ group.groupName }} ({{ group.groupNo }})
+          </option>
+        </select>
+        <button class="ta-btn-primary" :disabled="!peerGroupNo || peerLoading" @click="loadPeers(true)">
+          {{ peerLoading ? '加载中...' : '🔄 从 Tracker 刷新' }}
+        </button>
+        <button class="ta-btn-ghost" :disabled="!peerGroupNo || peerLoading" @click="loadPeerShares(false)">
+          📋 读取本地缓存
+        </button>
+      </div>
+
+      <h3 class="ta-section-title">群组成员</h3>
+      <ResponsiveTable
+        :columns="peerMemberColumns"
+        :items="peerMembers"
+        :row-key="(item) => item.nodeId"
+        :total="peerMembers.length"
+        :page="1"
+        :page-size="99999"
+        empty-text="暂无群组成员"
+      >
+        <template #cell-online="{ item }">
+          <span :class="['ta-badge', item.online ? 'ta-badge-success' : 'ta-badge-wait']">
+            {{ item.online ? '在线' : '离线' }}
+          </span>
+        </template>
+      </ResponsiveTable>
+
+      <h3 class="ta-section-title ta-section-title-spaced">群内共享资源</h3>
+      <ResponsiveTable
+        :columns="peerShareColumns"
+        :items="peerShares"
+        :row-key="peerShareRowKey"
+        :total="peerShares.length"
+        :page="1"
+        :page-size="99999"
+        empty-text="暂无群内共享资源"
+      >
+        <template #cell-shareType="{ item }">
+          {{ item.shareType === 'media' ? '媒体库' : '漫画' }}
+        </template>
+        <template #actions="{ item }">
+          <button class="ta-btn-sm" @click="openPeerDetail(item)">查看详情</button>
+          <button class="ta-btn-sm ta-btn-sm-success" @click="openPullDialog(item)">拉取</button>
         </template>
       </ResponsiveTable>
     </div>
@@ -68,7 +145,7 @@
       <ResponsiveTable
         :columns="transferColumns"
         :items="transferList"
-        :row-key="(item) => item.id"
+        :row-key="(item) => item.p2pTransferId"
         :total="transferList.length"
         :page="1"
         :page-size="99999"
@@ -166,6 +243,108 @@
       </template>
     </div>
 
+    <!-- 新增本地共享弹窗 -->
+    <div v-if="showShareAdd" class="ta-dialog-overlay smanga-backable" @click.self="showShareAdd = false">
+      <div class="ta-dialog">
+        <div class="ta-dialog-head">
+          <h3>新增本地共享</h3>
+          <button class="ta-dialog-close smanga-back-close" @click="showShareAdd = false">×</button>
+        </div>
+        <div class="ta-dialog-body">
+          <label class="ta-field">
+            <span>共享到群组</span>
+            <select v-model="shareForm.groupNo">
+              <option value="" disabled>请选择群组</option>
+              <option v-for="group in groupList" :key="group.groupNo" :value="group.groupNo">
+                {{ group.groupName }} ({{ group.groupNo }})
+              </option>
+            </select>
+          </label>
+          <label class="ta-field">
+            <span>共享类型</span>
+            <select v-model="shareForm.shareType" @change="onShareTypeChange">
+              <option value="media">媒体库</option>
+              <option value="manga">漫画</option>
+            </select>
+          </label>
+          <label v-if="shareForm.shareType === 'media'" class="ta-field">
+            <span>媒体库</span>
+            <select v-model="shareForm.mediaId">
+              <option :value="undefined" disabled>请选择媒体库</option>
+              <option v-for="media in mediaList" :key="media.mediaId" :value="media.mediaId">
+                {{ media.mediaName }}
+              </option>
+            </select>
+          </label>
+          <template v-else>
+            <label class="ta-field">
+              <span>所属媒体库</span>
+              <select v-model="shareMangaMediaId" @change="loadMangasForMedia">
+                <option :value="undefined" disabled>请选择媒体库</option>
+                <option v-for="media in mediaList" :key="media.mediaId" :value="media.mediaId">
+                  {{ media.mediaName }}
+                </option>
+              </select>
+            </label>
+            <label class="ta-field">
+              <span>漫画</span>
+              <select v-model="shareForm.mangaId" :disabled="!shareMangaMediaId">
+                <option :value="undefined" disabled>请选择漫画</option>
+                <option v-for="manga in mangaList" :key="manga.mangaId" :value="manga.mangaId">
+                  {{ manga.mangaName }}
+                </option>
+              </select>
+            </label>
+          </template>
+        </div>
+        <div class="ta-dialog-foot">
+          <button class="ta-btn-primary" @click="createShare">确认</button>
+          <button class="ta-btn-ghost" @click="showShareAdd = false">取消</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 拉取群内资源弹窗 -->
+    <div v-if="showPullDialog" class="ta-dialog-overlay smanga-backable" @click.self="showPullDialog = false">
+      <div class="ta-dialog">
+        <div class="ta-dialog-head">
+          <h3>拉取群内资源</h3>
+          <button class="ta-dialog-close smanga-back-close" @click="showPullDialog = false">×</button>
+        </div>
+        <div class="ta-dialog-body">
+          <label class="ta-field">
+            <span>类型</span>
+            <div class="ta-field-value">{{ pullForm.transferType === 'media' ? '媒体库' : '漫画' }}</div>
+          </label>
+          <label class="ta-field">
+            <span>资源名称</span>
+            <div class="ta-field-value">{{ pullForm.remoteName }}</div>
+          </label>
+          <label class="ta-field">
+            <span>接收路径</span>
+            <input
+              v-model="pullForm.receivedPath"
+              list="p2p-received-paths"
+              placeholder="请选择或输入接收路径"
+            />
+            <datalist id="p2p-received-paths">
+              <option v-for="pathItem in pathList" :key="pathItem.pathId" :value="pathItem.pathContent"></option>
+            </datalist>
+          </label>
+        </div>
+        <div class="ta-dialog-foot">
+          <button class="ta-btn-primary" @click="submitPull">开始拉取</button>
+          <button class="ta-btn-ghost" @click="showPullDialog = false">取消</button>
+        </div>
+      </div>
+    </div>
+
+    <ManifestDetailDialog
+      v-model="showPeerDetail"
+      :group-no="peerGroupNo"
+      :share="selectedPeerShare"
+    />
+
     <!-- 创建群组弹窗 -->
     <div v-if="showGroupAdd" class="ta-dialog-overlay smanga-backable" @click.self="showGroupAdd = false">
       <div class="ta-dialog">
@@ -199,14 +378,65 @@
 
 <script lang="ts" setup>
 import { ref, watch } from 'vue'
-import { p2pGroupApi, p2pShareApi, p2pTransferApi, trackerAdminGroupApi, trackerAdminNodeApi } from '@/api/p2p'
+import {
+  p2pGroupApi,
+  p2pPeerApi,
+  p2pShareApi,
+  p2pTransferApi,
+  trackerAdminGroupApi,
+  trackerAdminNodeApi,
+} from '@/api/p2p'
+import mediaApi from '@/api/media'
+import mangaApi from '@/api/manga'
+import pathApi from '@/api/path'
 import serveSettingApi from '@/api/serve-setting'
 import ResponsiveTable from '@/themes/components/responsive-table.vue'
+import ManifestDetailDialog from '@/views/p2p-peers/ManifestDetailDialog.vue'
 import type { RtColumn } from '@/themes/components/responsive-table.vue'
+import type {
+  P2PLocalShareCreateParams,
+  P2PLocalShareType,
+  P2PPullCreateParams,
+  P2PShareIndexType,
+} from '@/type/p2p'
+import type { mediaType } from '@/type/media'
+import type { mangaType } from '@/type/manga'
+import type { pathType } from '@/type/path'
 
 const activeTab = ref('groups')
 const groupList = ref<any[]>([])
-const shareList = ref<any[]>([])
+const shareList = ref<P2PLocalShareType[]>([])
+const shareCount = ref(0)
+const sharePage = ref(1)
+const sharePageSize = 10
+const shareFilterGroupNo = ref('')
+const mediaList = ref<mediaType[]>([])
+const mangaList = ref<mangaType[]>([])
+const showShareAdd = ref(false)
+const shareMangaMediaId = ref<number>()
+const shareForm = ref<P2PLocalShareCreateParams>({
+  groupNo: '',
+  shareType: 'media',
+  mediaId: undefined,
+  mangaId: undefined,
+})
+const peerGroupNo = ref('')
+const peerMembers = ref<any[]>([])
+const peerShares = ref<P2PShareIndexType[]>([])
+const peerLoading = ref(false)
+const pathList = ref<pathType[]>([])
+const showPeerDetail = ref(false)
+const selectedPeerShare = ref<any | null>(null)
+const showPullDialog = ref(false)
+const pullForm = ref<P2PPullCreateParams>({
+  groupNo: '',
+  transferType: 'manga',
+  remoteMediaId: undefined,
+  remoteMangaId: undefined,
+  remoteChapterId: undefined,
+  remoteName: '',
+  receivedPath: '',
+})
 const transferList = ref<any[]>([])
 const trackerGroupList = ref<any[]>([])
 const trackerNodeList = ref<any[]>([])
@@ -226,18 +456,36 @@ const groupColumns: RtColumn[] = [
 
 const shareColumns: RtColumn[] = [
   { key: '_idx', label: '#', type: 'index', hideOnMobile: true },
-  { key: 'id', label: 'ID' },
-  { key: 'groupNo', label: '群组号' },
+  { key: 'groupName', label: '群组' },
   { key: 'shareType', label: '类型' },
-  { key: '_targetId', label: '目标ID', hideOnMobile: true },
-  { key: 'createTime', label: '创建时间', hideOnMobile: true },
+  { key: '_resource', label: '共享资源' },
+  { key: 'enable', label: '启用' },
+  { key: 'updateTime', label: '更新时间', hideOnMobile: true },
+]
+
+const peerMemberColumns: RtColumn[] = [
+  { key: '_idx', label: '#', type: 'index', hideOnMobile: true },
+  { key: 'nodeId', label: '节点 ID' },
+  { key: 'nodeName', label: '节点名称' },
+  { key: 'online', label: '状态' },
+  { key: 'lastHeartbeat', label: '最后心跳', hideOnMobile: true },
+]
+
+const peerShareColumns: RtColumn[] = [
+  { key: '_idx', label: '#', type: 'index', hideOnMobile: true },
+  { key: 'nodeName', label: '来源节点' },
+  { key: 'shareType', label: '类型' },
+  { key: 'shareName', label: '资源名称' },
+  { key: 'mangaCount', label: '漫画数', hideOnMobile: true },
+  { key: 'updateTime', label: '更新时间', hideOnMobile: true },
 ]
 
 const transferColumns: RtColumn[] = [
   { key: '_idx', label: '#', type: 'index', hideOnMobile: true },
-  { key: 'id', label: 'ID' },
+  { key: 'p2pTransferId', label: 'ID' },
   { key: 'groupNo', label: '群组号' },
-  { key: 'shareType', label: '类型' },
+  { key: 'transferType', label: '类型' },
+  { key: 'remoteName', label: '资源名称' },
   { key: 'status', label: '状态' },
   { key: 'progress', label: '进度', hideOnMobile: true },
   { key: 'createTime', label: '创建时间', hideOnMobile: true },
@@ -276,12 +524,213 @@ async function leaveGroup(row: any) {
 }
 
 // Shares
-async function loadShares() {
-  try { const res = await p2pShareApi.list({ page: 1, pageSize: 100 }); shareList.value = res.list || [] } catch { shareList.value = [] }
+async function loadMedia() {
+  try {
+    const res = await mediaApi.get(1, 999)
+    mediaList.value = res?.list || []
+  } catch {
+    mediaList.value = []
+  }
 }
-async function deleteShare(row: any) {
+async function loadMangasForMedia() {
+  shareForm.value.mangaId = undefined
+  if (!shareMangaMediaId.value) {
+    mangaList.value = []
+    return
+  }
+  try {
+    const res = await mangaApi.get(shareMangaMediaId.value, 1, 999)
+    mangaList.value = res?.list || []
+  } catch {
+    mangaList.value = []
+  }
+}
+async function loadShares(page = sharePage.value) {
+  sharePage.value = page
+  try {
+    const res = await p2pShareApi.list({
+      page,
+      pageSize: sharePageSize,
+      groupNo: shareFilterGroupNo.value || undefined,
+    })
+    shareList.value = res?.list || res?.data?.list || []
+    shareCount.value = res?.count || res?.data?.count || shareList.value.length
+  } catch {
+    shareList.value = []
+    shareCount.value = 0
+  }
+}
+async function loadLocalShareTab() {
+  await Promise.all([loadGroups(), loadMedia()])
+  await loadShares(1)
+}
+function openShareAdd() {
+  shareForm.value = {
+    groupNo: shareFilterGroupNo.value || groupList.value[0]?.groupNo || '',
+    shareType: 'media',
+    mediaId: undefined,
+    mangaId: undefined,
+  }
+  shareMangaMediaId.value = undefined
+  mangaList.value = []
+  showShareAdd.value = true
+}
+function onShareTypeChange() {
+  shareForm.value.mediaId = undefined
+  shareForm.value.mangaId = undefined
+  shareMangaMediaId.value = undefined
+  mangaList.value = []
+}
+async function createShare() {
+  if (!shareForm.value.groupNo) return alert('请选择共享群组')
+  if (shareForm.value.shareType === 'media' && !shareForm.value.mediaId) {
+    return alert('请选择媒体库')
+  }
+  if (shareForm.value.shareType === 'manga' && !shareForm.value.mangaId) {
+    return alert('请选择漫画')
+  }
+  try {
+    await p2pShareApi.create(shareForm.value)
+    showShareAdd.value = false
+    await loadShares(1)
+  } catch (e: any) {
+    alert(e?.response?.data?.message || e?.message || '新增共享失败')
+  }
+}
+async function toggleShare(row: P2PLocalShareType, enable: boolean) {
+  if (!row.p2pLocalShareId) return
+  const previous = row.enable
+  row.enable = enable ? 1 : 0
+  try {
+    await p2pShareApi.update(row.p2pLocalShareId, { enable: row.enable })
+  } catch (e: any) {
+    row.enable = previous
+    alert(e?.response?.data?.message || e?.message || '更新共享失败')
+  }
+}
+async function announceShares() {
+  if (!shareFilterGroupNo.value) return
+  try {
+    await p2pShareApi.announce(shareFilterGroupNo.value)
+  } catch (e: any) {
+    alert(e?.response?.data?.message || e?.message || '广播失败')
+  }
+}
+async function deleteShare(row: P2PLocalShareType) {
+  if (!row.p2pLocalShareId) return
   if (!confirm('确定删除此共享配置吗？')) return
-  try { await p2pShareApi.destroy(row.id); loadShares() } catch (e: any) { alert(e?.message || '删除失败') }
+  try {
+    await p2pShareApi.destroy(row.p2pLocalShareId)
+    await loadShares(sharePage.value)
+  } catch (e: any) {
+    alert(e?.response?.data?.message || e?.message || '删除失败')
+  }
+}
+
+// Peers
+async function loadPaths() {
+  try {
+    const res = await pathApi.get(0)
+    pathList.value = res?.list || []
+  } catch {
+    pathList.value = []
+  }
+}
+async function loadPeerMembers() {
+  if (!peerGroupNo.value) {
+    peerMembers.value = []
+    return
+  }
+  try {
+    const res = await p2pPeerApi.members(peerGroupNo.value)
+    peerMembers.value = res?.list || res?.data?.list || res?.data || []
+  } catch {
+    peerMembers.value = []
+  }
+}
+async function loadPeerShares(fromTracker = true) {
+  if (!peerGroupNo.value) {
+    peerShares.value = []
+    return
+  }
+  try {
+    const res = fromTracker
+      ? await p2pPeerApi.manifests(peerGroupNo.value, { sync: 1, fallback: 1 })
+      : await p2pPeerApi.manifests(peerGroupNo.value, { sync: 0, fallback: 1 })
+    const data = res?.data || res
+    peerShares.value = data?.list || []
+  } catch {
+    peerShares.value = []
+  }
+}
+async function loadPeers(fromTracker = true) {
+  if (!peerGroupNo.value) {
+    peerMembers.value = []
+    peerShares.value = []
+    return
+  }
+  peerLoading.value = true
+  try {
+    await Promise.all([loadPeerMembers(), loadPeerShares(fromTracker)])
+  } finally {
+    peerLoading.value = false
+  }
+}
+async function loadPeersTab() {
+  await Promise.all([loadGroups(), loadPaths()])
+  if (!groupList.value.some((group) => group.groupNo === peerGroupNo.value)) {
+    peerGroupNo.value = groupList.value[0]?.groupNo || ''
+  }
+  await loadPeers(true)
+}
+function peerShareRowKey(item: P2PShareIndexType) {
+  return [
+    item.nodeId,
+    item.shareType,
+    item.remoteMediaId ?? '',
+    item.remoteMangaId ?? '',
+  ].join(':')
+}
+function openPeerDetail(row: P2PShareIndexType) {
+  selectedPeerShare.value = {
+    nodeId: row.nodeId,
+    nodeName: row.nodeName,
+    shareType: row.shareType,
+    remoteMediaId: row.remoteMediaId ?? null,
+    remoteMangaId: row.remoteMangaId ?? null,
+    shareName: row.shareName,
+    payloadTruncated: (row as any).payloadTruncated ?? 0,
+  }
+  showPeerDetail.value = true
+}
+function openPullDialog(row: P2PShareIndexType) {
+  const transferType: 'media' | 'manga' = row.shareType === 'media' ? 'media' : 'manga'
+  pullForm.value = {
+    groupNo: peerGroupNo.value,
+    transferType,
+    remoteMediaId: transferType === 'media' ? (row.remoteMediaId ?? undefined) : undefined,
+    remoteMangaId: transferType === 'manga' ? (row.remoteMangaId ?? undefined) : undefined,
+    remoteChapterId: undefined,
+    remoteName: row.shareName || '',
+    receivedPath: pathList.value[0]?.pathContent || '',
+  }
+  showPullDialog.value = true
+}
+async function submitPull() {
+  if (!pullForm.value.receivedPath) return alert('请选择或输入接收路径')
+  if (pullForm.value.transferType === 'media' && !pullForm.value.remoteMediaId) {
+    return alert('资源缺少 remoteMediaId')
+  }
+  if (pullForm.value.transferType === 'manga' && !pullForm.value.remoteMangaId) {
+    return alert('资源缺少 remoteMangaId')
+  }
+  if (!pullForm.value.remoteName) return alert('资源名称不能为空')
+  try {
+    await p2pTransferApi.pull(pullForm.value)
+    showPullDialog.value = false
+  } catch (e: any) {
+    alert(e?.response?.data?.message || e?.message || '拉取失败')
+  }
 }
 
 // Transfers
@@ -289,11 +738,13 @@ async function loadTransfers() {
   try { const res = await p2pTransferApi.list({ page: 1, pageSize: 100 }); transferList.value = res.list || [] } catch { transferList.value = [] }
 }
 async function cancelTransfer(row: any) {
-  try { await p2pTransferApi.cancel(row.id); loadTransfers() } catch (e: any) { alert(e?.message || '取消失败') }
+  if (!row.p2pTransferId) return
+  try { await p2pTransferApi.cancel(row.p2pTransferId); loadTransfers() } catch (e: any) { alert(e?.message || '取消失败') }
 }
 async function deleteTransfer(row: any) {
+  if (!row.p2pTransferId) return
   if (!confirm('确定删除此传输记录吗？')) return
-  try { await p2pTransferApi.destroy(row.id); loadTransfers() } catch (e: any) { alert(e?.message || '删除失败') }
+  try { await p2pTransferApi.destroy(row.p2pTransferId); loadTransfers() } catch (e: any) { alert(e?.message || '删除失败') }
 }
 async function clearTransfers() {
   if (!confirm('确定清理所有已完成的传输记录吗？')) return
@@ -349,7 +800,9 @@ watch(activeTab, (tab) => {
   if (tab === 'groups') {
     loadGroups()
   } else if (tab === 'shares') {
-    loadShares()
+    loadLocalShareTab()
+  } else if (tab === 'peers') {
+    loadPeersTab()
   } else if (tab === 'transfers') {
     loadTransfers()
   } else if (tab === 'tracker') {
@@ -362,20 +815,27 @@ watch(activeTab, (tab) => {
 .ta-manage-page { max-width: 110rem; }
 .ta-page-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 2rem; flex-wrap: wrap; gap: 1.2rem; }
 .ta-page-head h1 { font-size: 2rem; font-weight: 700; margin: 0; }
-.ta-page-actions { display: flex; gap: 0.8rem; flex-wrap: wrap; }
-.ta-tabs { display: flex; gap: 0.4rem; margin-bottom: 2rem; border-bottom: 0.2rem solid #eaeaea; padding-bottom: 0; }
+.ta-page-actions { display: flex; align-items: center; gap: 0.8rem; flex-wrap: wrap; }
+.ta-tabs { display: flex; gap: 0.4rem; margin-bottom: 2rem; border-bottom: 0.2rem solid #eaeaea; padding-bottom: 0; overflow-x: auto; }
 .ta-tab { padding: 0.8rem 1.6rem; border: none; background: none; cursor: pointer; font-size: 1.4rem; color: #6b7280; border-bottom: 0.2rem solid transparent; margin-bottom: -0.2rem; transition: .2s; }
 .ta-tab:hover { color: #2563eb; }
 .ta-tab.active { color: #2563eb; border-bottom-color: #2563eb; font-weight: 600; }
 .ta-btn-primary,.ta-btn-ghost,.ta-btn-sm,.ta-btn-sm-danger { cursor: pointer; font-size: 1.3rem; border-radius: 0.8rem; }
+.ta-btn-primary:disabled,.ta-btn-ghost:disabled,.ta-btn-sm:disabled { opacity: .5; cursor: not-allowed; }
 .ta-btn-primary { padding: 0.8rem 1.6rem; color: #fff; background: #2563eb; border: none; font-weight: 500; }
 .ta-btn-primary:hover { background: #1d4ed8; }
 .ta-btn-ghost { padding: 0.8rem 1.6rem; color: #4b5563; background: #fff; border: 1px solid #eaeaea; }
 .ta-btn-ghost:hover { background: #f3f4f6; }
 .ta-btn-sm { padding: 0.5rem 1rem; color: #2563eb; background: #eff6ff; border: 1px solid #bfdbfe; font-size: 1.2rem; }
 .ta-btn-sm:hover { background: #dbeafe; }
+.ta-btn-sm-success { color: #15803d; background: #f0fdf4; border-color: #bbf7d0; }
+.ta-btn-sm-success:hover { background: #dcfce7; }
 .ta-btn-sm-danger { color: #ef4444; background: #fef2f2; border-color: #fecaca; }
 .ta-btn-sm-danger:hover { background: #fee2e2; }
+.ta-select { min-width: 22rem; padding: 0.8rem 3.2rem 0.8rem 1.2rem; border: 1px solid #eaeaea; border-radius: 0.8rem; background: #fff; color: #374151; font-size: 1.3rem; outline: none; }
+.ta-select:focus { border-color: #2563eb; }
+.ta-section-title { margin: 0 0 1.2rem; font-size: 1.5rem; font-weight: 600; color: #1f2937; }
+.ta-section-title-spaced { margin-top: 2.4rem; }
 .ta-badge { padding: 0.2rem 1rem; border-radius: 1rem; font-size: 1.2rem; display: inline-block; }
 .ta-badge-success { color: #16a34a; background: #f0fdf4; }
 .ta-badge-danger { color: #dc2626; background: #fef2f2; }
@@ -398,6 +858,14 @@ watch(activeTab, (tab) => {
 .ta-dialog-foot { display: flex; justify-content: flex-end; gap: 0.8rem; padding: 1.2rem 2rem; border-top: 1px solid #eaeaea; }
 .ta-field { display: flex; flex-direction: column; gap: 0.6rem; }
 .ta-field span { font-size: 1.3rem; font-weight: 500; color: #374151; }
-.ta-field input { padding: 0.8rem 1.2rem; border: 1px solid #eaeaea; border-radius: 0.8rem; font-size: 1.3rem; outline: none; }
-.ta-field input:focus { border-color: #2563eb; }
+.ta-field input,.ta-field select { padding: 0.8rem 1.2rem; border: 1px solid #eaeaea; border-radius: 0.8rem; background: #fff; font-size: 1.3rem; outline: none; }
+.ta-field input:focus,.ta-field select:focus { border-color: #2563eb; }
+.ta-field input:disabled,.ta-field select:disabled { background: #f3f4f6; color: #9ca3af; }
+.ta-field-value { min-height: 2rem; padding: 0.8rem 1.2rem; border-radius: 0.8rem; background: #f9fafb; color: #374151; font-size: 1.3rem; }
+.ta-switch { position: relative; display: inline-block; width: 4rem; height: 2.2rem; cursor: pointer; }
+.ta-switch input { width: 0; height: 0; opacity: 0; }
+.ta-switch-slider { position: absolute; inset: 0; border-radius: 2rem; background: #d1d5db; transition: .2s; }
+.ta-switch-slider::before { content: ''; position: absolute; width: 1.8rem; height: 1.8rem; left: .2rem; top: .2rem; border-radius: 50%; background: #fff; box-shadow: 0 1px .3rem rgba(0,0,0,.2); transition: .2s; }
+.ta-switch input:checked + .ta-switch-slider { background: #2563eb; }
+.ta-switch input:checked + .ta-switch-slider::before { transform: translateX(1.8rem); }
 </style>

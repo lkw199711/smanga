@@ -71,12 +71,13 @@ import { useRouter } from 'vue-router'
 import historyApi from '@/api/history'
 import latestApi from '@/api/latest'
 import chartsApi from '@/api/charts'
-import { globalData } from '@/store'
 import TMangaCard from '@/themes/components/manga-card.vue'
 import THistoryItem from '@/themes/components/history-item.vue'
 import { openThemeContextMenu } from '@/themes/context-menu'
+import { useGoRead } from '@/themes/composables'
 
 const router = useRouter()
+const { goRead } = useGoRead({ withPageJump: true, syncGlobalNames: true })
 
 const statsData = ref({
 	mangaCount: 0,
@@ -130,12 +131,6 @@ function tagText(item: any): string {
 	const unread = unreadCount(item)
 	if (unread === 0 && Number.isFinite(mangaId)) return '完结'
 	return ''
-}
-
-function goRead(item: any) {
-	globalData.mangaName = item.mangaName || globalData.mangaName
-	globalData.chapterName = item.chapterName || globalData.chapterName
-	router.push({ path: '/t/reader/' + item.chapterId })
 }
 
 function goManga(item: any) {

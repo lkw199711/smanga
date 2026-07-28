@@ -38,7 +38,7 @@ import THistoryItem from '@/themes/components/history-item.vue'
 import { openThemeContextMenu } from '@/themes/context-menu'
 import { useListPage, useGoRead } from '@/themes/composables'
 
-const { goRead } = useGoRead()
+const { goRead } = useGoRead({ withPageJump: true, syncGlobalNames: true })
 const { page, list, count, loading, pageSizes, pageChange } = useListPage<any>({
 	kind: 'chapter',
 	loader: async ({ page, pageSize }) => {
