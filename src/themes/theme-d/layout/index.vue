@@ -362,7 +362,7 @@ function goSettings() {
 function userLogout() {
 	session.logout()
 	showUserDropdown.value = false
-	router.push('/login')
+	router.push('/t/login')
 }
 
 async function loadAvatar() {

@@ -274,7 +274,7 @@ function mobileLogout() {
 	session.logout()
 	showMobileUserDropdown.value = false
 	showSidebar.value = false
-	router.push('/login')
+	router.push('/t/login')
 }
 
 async function loadMobileAvatar() {
