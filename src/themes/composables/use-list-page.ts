@@ -8,7 +8,6 @@ import {
 	type Ref,
 } from 'vue'
 import { useRoute } from 'vue-router'
-import { listDebug } from '@/utils/list-debug'
 import { themeListKeys } from '@/themes/stores/list-state'
 import { type PageSizeKind } from './use-page-size'
 import { useThemeListPagination } from './use-list-state'
@@ -49,8 +48,6 @@ export interface UseListPageOptions<T> {
 	estimatedItemHeight?: MaybeRefOrGetter<number>
 }
 
-let listPageDebugSequence = 0
-
 /**
  * 新主题通用列表分页。
  *
@@ -60,7 +57,6 @@ let listPageDebugSequence = 0
 export function useListPage<T = any>(options: UseListPageOptions<T>) {
 	const { loader, kind = 'chapter', immediate = true, resetDeps = [] } = options
 	const route = useRoute()
-	const debugId = `${String(route.name || route.path || 'unknown')}#${++listPageDebugSequence}`
 
 	const kindRef = ref<PageSizeKind>(unref(kind as any))
 	const isKindRef = kind && typeof kind === 'object' && 'value' in (kind as any)
@@ -95,76 +91,28 @@ export function useListPage<T = any>(options: UseListPageOptions<T>) {
 	let hasRequested = false
 
 	async function load() {
-		listDebug('page.load.called', {
-			id: debugId,
-			page: page.value,
-			pageSize: pageSize.value,
-			measurementReady: autoSizing?.measurementReady.value ?? true,
-			currentLength: list.value.length,
-		})
-
 		if (autoSizing && !autoSizing.measurementReady.value) {
 			pendingLoad = true
 			loading.value = true
-			listDebug('page.load.waiting-for-measurement', { id: debugId })
 			return
 		}
 
 		pendingLoad = false
 		hasRequested = true
 		const sequence = ++loadSequence
-		const requestPage = page.value
-		const requestPageSize = pageSize.value
 		loading.value = true
 		list.value = []
-		listDebug('page.request.start', {
-			id: debugId,
-			sequence,
-			page: requestPage,
-			pageSize: requestPageSize,
-		})
-
 		try {
-			const result = await loader({ page: requestPage, pageSize: requestPageSize })
-			listDebug('page.request.result', {
-				id: debugId,
-				sequence,
-				currentSequence: loadSequence,
-				resultType: Array.isArray(result) ? 'array' : typeof result,
-				resultKeys: result && typeof result === 'object' ? Object.keys(result) : [],
-				listIsArray: Array.isArray(result?.list),
-				listLength: Array.isArray(result?.list) ? result.list.length : -1,
-				count: Number(result?.count || 0),
-			})
-			if (sequence !== loadSequence) {
-				listDebug('page.request.stale', { id: debugId, sequence, currentSequence: loadSequence })
-				return
-			}
+			const result = await loader({ page: page.value, pageSize: pageSize.value })
+			if (sequence !== loadSequence) return
 			list.value = result?.list || []
 			count.value = Number(result?.count || 0)
-			listDebug('page.state.committed', {
-				id: debugId,
-				listLength: list.value.length,
-				count: count.value,
-			})
-		} catch (error) {
+		} catch {
 			if (sequence !== loadSequence) return
 			list.value = []
 			count.value = 0
-			listDebug('page.request.error', {
-				id: debugId,
-				name: error instanceof Error ? error.name : typeof error,
-				message: error instanceof Error ? error.message : String(error),
-			})
 		} finally {
-			if (sequence === loadSequence) {
-				loading.value = false
-				listDebug('page.load.finished', {
-					id: debugId,
-					listLength: list.value.length,
-					count: count.value,
-				})
-			}
+			if (sequence === loadSequence) loading.value = false
 		}
 	}
 
@@ -185,12 +133,6 @@ export function useListPage<T = any>(options: UseListPageOptions<T>) {
 
 	onMounted(() => {
 		mounted = true
-		listDebug('page.mounted', {
-			id: debugId,
-			immediate,
-			containerConnected: Boolean(options.container?.value?.isConnected),
-			containerWidth: options.container?.value?.clientWidth || 0,
-		})
 		if (immediate) void load()
 	})
 
@@ -198,15 +140,6 @@ export function useListPage<T = any>(options: UseListPageOptions<T>) {
 		watch(
 			[pageSize, autoSizing.measurementReady],
 			([value, ready], [oldValue]) => {
-				listDebug('page.measurement-watch', {
-					id: debugId,
-					pageSize: value,
-					oldPageSize: oldValue,
-					ready,
-					mounted,
-					pendingLoad,
-					hasRequested,
-				})
 				if (!mounted || !ready) return
 				if (pendingLoad || (immediate && !hasRequested)) {
 					void load()
