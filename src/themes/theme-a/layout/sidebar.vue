@@ -96,7 +96,7 @@
 				</div>
 				<div class="sa-user-info">
 					<div class="sa-user-name">{{ userInfo.userName || 'User' }}</div>
-					<div class="sa-user-role">{{ Cookies.getRole() === 'admin' ? '管理员' : '用户' }}</div>
+					<div class="sa-user-role">{{ session.isAdmin ? '管理员' : '用户' }}</div>
 				</div>
 				<span class="sa-user-arrow" :class="{ open: showUserDropdown }">▾</span>
 			</div>
@@ -120,19 +120,20 @@ import { useRouter } from 'vue-router'
 import { userInfo } from '@/store'
 import mediaStatsApi from '@/api/media-stats'
 import imageApi from '@/api/image'
-import { Cookies } from '@/utils'
+import { useSessionStore } from '@/store/session'
 import { navMenu as navItems, adminNavMenu as adminNavItems } from '@/themes/constants/menu'
-import useBrowseStore from '@/store/browse'
+import { themeListKeys, useThemeListStateStore } from '@/themes/stores/list-state'
 
 const router = useRouter()
-const browse = useBrowseStore()
+const listState = useThemeListStateStore()
 
 const showUserDropdown = ref(false)
 const userWrapRef = ref<HTMLElement | null>(null)
 const avatarBlobUrl = ref('')
 const manageMode = ref(false)
 
-const isAdmin = computed(() => Cookies.getRole() === 'admin')
+const session = useSessionStore()
+const isAdmin = computed(() => session.isAdmin)
 
 async function loadAvatar() {
   if (!userInfo.avatarPath) {
@@ -155,8 +156,7 @@ function goSettings() {
 }
 
 function userLogout() {
-	document.cookie = 'smanga-userName=; path=/; max-age=0'
-	document.cookie = 'smanga-userId=; path=/; max-age=0'
+	session.logout()
 	showUserDropdown.value = false
 	router.push('/login')
 }
@@ -185,7 +185,7 @@ onBeforeUnmount(() => {
 })
 
 function goMedia(mediaId: number) {
-	browse.mangaListPage = 1
+	listState.remove(themeListKeys.manga(mediaId))
 	router.push(`/t/media/${mediaId}`)
 }
 </script>

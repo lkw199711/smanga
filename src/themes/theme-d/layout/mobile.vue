@@ -107,19 +107,21 @@
 import { computed, ref, onMounted, onBeforeUnmount, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { userInfo } from '@/store'
-import { Cookies } from '@/utils'
+import { useSessionStore } from '@/store/session'
+import { preferencesStore } from '@/store/preferences'
 import mediaStatsApi from '@/api/media-stats'
 import imageApi from '@/api/image'
 import ThemeContextMenu from '@/themes/components/theme-context-menu.vue'
 import androidSeat from '@/layout/components/android-seat.vue'
 import { navMenu, adminNavMenu, bottomNavMenu, getPageTitle } from '@/themes/constants/menu'
-import useBrowseStore from '@/store/browse'
+import { themeListKeys, useThemeListStateStore } from '@/themes/stores/list-state'
 import './dark-overrides.css'
 
 const showSidebar = ref(false)
 const router = useRouter()
 const route = useRoute()
-const browse = useBrowseStore()
+const listState = useThemeListStateStore()
+const session = useSessionStore()
 
 const themeList = [
 	{ key: 'blue', name: '蓝', primary: '#2563EB', back: '#EFF6FF', hover: '#DBEAFE' },
@@ -134,18 +136,13 @@ const themeList = [
 ] as const
 
 type ThemeColorKey = (typeof themeList)[number]['key']
-const STORAGE_KEY = 'smanga-theme-d-color'
-
-function loadThemeColor(): ThemeColorKey {
-	const saved = localStorage.getItem(STORAGE_KEY)
-	return (saved as ThemeColorKey) || 'blue'
-}
-
-const currentTheme = ref<ThemeColorKey>(loadThemeColor())
+const currentTheme = computed<ThemeColorKey>({
+	get: () => preferencesStore.themeDColor,
+	set: (value) => preferencesStore.setThemeDColor(value),
+})
 
 function setThemeColor(key: ThemeColorKey) {
 	currentTheme.value = key
-	localStorage.setItem(STORAGE_KEY, key)
 }
 
 const isDark = computed(() => currentTheme.value === 'dark')
@@ -222,7 +219,7 @@ const themeVars = computed(() => {
 })
 
 const manageMode = ref(false)
-const isAdmin = computed(() => Cookies.getRole() === 'admin')
+const isAdmin = computed(() => session.isAdmin)
 const currentMenu = computed(() => (manageMode.value ? adminNavMenu : navMenu))
 
 const mediaListData = ref<any[]>([])
@@ -254,7 +251,7 @@ function go(path: string) {
 }
 
 function goMedia(mediaId: number) {
-	browse.mangaListPage = 1
+	listState.remove(themeListKeys.manga(mediaId))
 	router.push(`/t/media/${mediaId}`)
 	showSidebar.value = false
 }
@@ -274,8 +271,7 @@ function goMobileSettings() {
 }
 
 function mobileLogout() {
-	document.cookie = 'smanga-userName=; path=/; max-age=0'
-	document.cookie = 'smanga-userId=; path=/; max-age=0'
+	session.logout()
 	showMobileUserDropdown.value = false
 	showSidebar.value = false
 	router.push('/login')

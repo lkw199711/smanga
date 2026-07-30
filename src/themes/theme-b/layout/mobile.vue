@@ -98,10 +98,10 @@ import androidSeat from '@/layout/components/android-seat.vue'
 import mediaStatsApi from '@/api/media-stats'
 import { userInfo } from '@/store'
 import imageApi from '@/api/image'
-import { Cookies } from '@/utils'
+import { useSessionStore } from '@/store/session'
 import { useColorTheme } from '@/themes/composables/use-color-theme'
 import { navMenu, adminNavMenu, bottomNavMenu, getPageTitle } from '@/themes/constants/menu'
-import useBrowseStore from '@/store/browse'
+import { themeListKeys, useThemeListStateStore } from '@/themes/stores/list-state'
 import './dark-overrides.css'
 
 const { isDarkMode, toggleDarkMode } = useColorTheme()
@@ -109,10 +109,11 @@ const { isDarkMode, toggleDarkMode } = useColorTheme()
 const showSidebar = ref(false)
 const router = useRouter()
 const route = useRoute()
-const browse = useBrowseStore()
+const listState = useThemeListStateStore()
 
 const manageMode = ref(false)
-const isAdmin = computed(() => Cookies.getRole() === 'admin')
+const session = useSessionStore()
+const isAdmin = computed(() => session.isAdmin)
 
 const currentMenu = computed(() => (manageMode.value ? adminNavMenu : navMenu))
 
@@ -141,7 +142,7 @@ function navigateTo(path: string) {
 }
 
 function navigateToMedia(mediaId: number) {
-	browse.mangaListPage = 1
+	listState.remove(themeListKeys.manga(mediaId))
 	router.push(`/t/media/${mediaId}`)
 	showSidebar.value = false
 }
@@ -161,8 +162,7 @@ function goMobileSettings() {
 }
 
 function mobileLogout() {
-	document.cookie = 'smanga-userName=; path=/; max-age=0'
-	document.cookie = 'smanga-userId=; path=/; max-age=0'
+	session.logout()
 	showMobileUserDropdown.value = false
 	showSidebar.value = false
 	router.push('/login')

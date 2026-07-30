@@ -62,7 +62,7 @@
 					</div>
 					<div class="sd-user-info">
 						<div class="sd-user-name">{{ userInfo.userName || 'User' }}</div>
-						<div class="sd-user-role">{{ Cookies.getRole() === 'admin' ? '管理员' : '用户' }}</div>
+						<div class="sd-user-role">{{ session.isAdmin ? '管理员' : '用户' }}</div>
 					</div>
 					<span class="sd-user-arrow" :class="{ open: showUserDropdown }">▾</span>
 				</div>
@@ -144,22 +144,23 @@ import { useI18n } from 'vue-i18n'
 import mediaStatsApi from '@/api/media-stats'
 import imageApi from '@/api/image'
 import { config, userInfo, userConfig, mangaSortOrder, chapterSortOrder } from '@/store'
-import { Cookies } from '@/utils'
+import { useSessionStore } from '@/store/session'
+import { preferencesStore } from '@/store/preferences'
 import languages from '@/store/language'
 import type { ThemeKey } from '@/themes/store'
 import { themeState, setTheme } from '@/themes/store'
 import ThemeContextMenu from '@/themes/components/theme-context-menu.vue'
-import useBrowseStore from '@/store/browse'
+import { themeListKeys, useThemeListStateStore } from '@/themes/stores/list-state'
 import './dark-overrides.css'
+import { useThemeUiStore } from '@/store/theme-ui'
 
-const refreshKey = ref(0)
-function refreshPage() { refreshKey.value += 1 }
-onMounted(() => window.addEventListener('smanga:theme-context-menu-changed', refreshPage))
-onBeforeUnmount(() => window.removeEventListener('smanga:theme-context-menu-changed', refreshPage))
+const themeUi = useThemeUiStore()
+const refreshKey = computed(() => themeUi.contentRevision)
 
 const router = useRouter()
 const route = useRoute()
-const browse = useBrowseStore()
+const listState = useThemeListStateStore()
+const session = useSessionStore()
 const { locale } = useI18n()
 
 const themeList = [
@@ -175,21 +176,10 @@ const themeList = [
 ] as const
 
 type ThemeColorKey = (typeof themeList)[number]['key']
-const STORAGE_KEY = 'smanga-theme-d-color'
-
-function loadThemeColor(): ThemeColorKey {
-	const saved = localStorage.getItem(STORAGE_KEY) as ThemeColorKey | null
-	if (saved && themeList.some((t) => t.key === saved)) return saved
-	return 'blue'
-}
-
-const currentTheme = ref<ThemeColorKey>(loadThemeColor())
-watch(
-	() => currentTheme.value,
-	(v) => {
-		localStorage.setItem(STORAGE_KEY, v)
-	}
-)
+const currentTheme = computed<ThemeColorKey>({
+	get: () => preferencesStore.themeDColor,
+	set: (value) => preferencesStore.setThemeDColor(value),
+})
 
 function setThemeColor(key: ThemeColorKey) {
 	currentTheme.value = key
@@ -348,7 +338,7 @@ onMounted(async () => {
 })
 
 function goMedia(mediaId: number) {
-	browse.mangaListPage = 1
+	listState.remove(themeListKeys.manga(mediaId))
 	router.push(`/t/media/${mediaId}`)
 }
 
@@ -358,7 +348,7 @@ const avatarBlobUrl = ref('')
 const userWrapRef = ref<HTMLElement | null>(null)
 const manageMode = ref(false)
 
-const isAdmin = computed(() => Cookies.getRole() === 'admin')
+const isAdmin = computed(() => session.isAdmin)
 
 function toggleUserDropdown() {
 	showUserDropdown.value = !showUserDropdown.value
@@ -370,8 +360,7 @@ function goSettings() {
 }
 
 function userLogout() {
-	document.cookie = 'smanga-userName=; path=/; max-age=0'
-	document.cookie = 'smanga-userId=; path=/; max-age=0'
+	session.logout()
 	showUserDropdown.value = false
 	router.push('/login')
 }
@@ -420,7 +409,7 @@ function toggleLanguage() {
 	const next = languages[(currentIndex + 1) % languages.length]
 	userConfig.language = next.value
 	locale.value = userConfig.language
-	localStorage.setItem('language', userConfig.language)
+	preferencesStore.setLanguage(userConfig.language)
 }
 
 function openCreateMedia() {

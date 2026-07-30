@@ -12,34 +12,19 @@
 </template>
 
 <script lang="ts" setup>
-import { onBeforeUnmount, onMounted, ref } from 'vue'
+import { computed } from 'vue'
 import TbSidebar from './sidebar.vue'
 import TbTopbar from './topbar.vue'
 import ThemeContextMenu from '@/themes/components/theme-context-menu.vue'
+import { useColorTheme } from '@/themes/composables/use-color-theme'
+import { useThemeUiStore } from '@/store/theme-ui'
 import './dark-overrides.css'
 
-const refreshKey = ref(0)
-function refreshPage() { refreshKey.value += 1 }
+const themeUi = useThemeUiStore()
+const refreshKey = computed(() => themeUi.contentRevision)
 
-const isDark = ref(false)
-function readCookieTheme(): string {
-	const m = document.cookie.match(/(?:^|;\s*)theme=([^;]+)/)
-	return m ? decodeURIComponent(m[1]) : ''
-}
-function syncDark() {
-	isDark.value = readCookieTheme() === 'dark'
-}
-function onColorThemeChanged() { syncDark() }
+const { isDarkMode: isDark } = useColorTheme()
 
-onMounted(() => {
-	syncDark()
-	window.addEventListener('smanga:theme-context-menu-changed', refreshPage)
-	window.addEventListener('smanga:color-theme-changed', onColorThemeChanged)
-})
-onBeforeUnmount(() => {
-	window.removeEventListener('smanga:theme-context-menu-changed', refreshPage)
-	window.removeEventListener('smanga:color-theme-changed', onColorThemeChanged)
-})
 </script>
 
 <style scoped>

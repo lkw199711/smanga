@@ -11,20 +11,27 @@ import { mangaPageSize, chapterPageSize, manageListPageSizes } from '@/store/pag
 import { ObjectFit } from '@/type/store';
 import { mangaType } from '@/type/manga';
 import { RouteLocationNormalizedLoaded } from 'vue-router';
+import { preferencesStore } from '@/store/preferences';
+import { localStorageCache } from '@/utils/persistence';
 
-function page_cahce() {
-	const pageJump = localStorage.getItem('pageJump');
-	if (pageJump && (Number(pageJump) > 1)) {
-		localStorage.removeItem('pageJump');
-		return Number(pageJump);
-	}
-
-	return 1;
-}
-
+/**
+ * 旧主题与旧阅读器的兼容 Store。
+ *
+ * 维护边界：
+ * - src/views/** 仍直接依赖这里的阅读器、列表分页和管理分页状态，暂不迁移。
+ * - 新主题 src/themes/** 的列表分页统一使用
+ *   src/themes/stores/list-state.ts，禁止再向本 Store 增加新主题列表状态。
+ * - 新主题当前复用 src/views/browse-view/** 作为阅读内容，因此只有
+ *   legacy-reader-bridge、legacy-reader 和 legacy-manga-info 可以访问这里的阅读器状态。
+ *
+ * 等旧阅读内容组件不再复用后，再将阅读器状态整体迁出；迁移前不要维护两套
+ * page/imagePathList/readerActionTick，以免出现双向同步和页码覆盖问题。
+ */
 const useBrowseStore = defineStore('browse', {
 	state: () => ({
 		pulling: false,
+		// 仅供旧主题 src/views/** 使用的列表位置缓存。
+		// 新主题按业务上下文使用 theme-list-state，避免多个列表共用同一页码。
 		mangaListPage: 1,
 		mangaListPageSizeCache: 0,
 		chapterListPage: 1,
@@ -38,8 +45,9 @@ const useBrowseStore = defineStore('browse', {
 		manga: <mangaType>{},
 		chapter: <chapterType>{},
 		pdfPath: '',
+		// 旧阅读器会话状态；新主题仅可通过 legacy reader 兼容层间接使用。
 		// 当前页码
-		page: page_cahce(),
+		page: 1,
 		// 当前图片路径 用于书签 与 下载图片
 		pageImage: '',
 		// 获取书签列表
@@ -211,9 +219,8 @@ const useBrowseStore = defineStore('browse', {
 			}
 		},
 		mangaListPageSize: (state) => {
-			const storageMangaPageSize = localStorage.getItem('mangaPageSize');
-			if (storageMangaPageSize && storageMangaPageSize !== '0') {
-				return Number(storageMangaPageSize);
+			if (preferencesStore.mangaPageSize) {
+				return preferencesStore.mangaPageSize;
 			}
 
 			// 获取页面尺寸类型
@@ -225,9 +232,8 @@ const useBrowseStore = defineStore('browse', {
 			}
 		},
 		mangaListPageSizes: (state) => {
-			const storageMangaPageSize = localStorage.getItem('mangaPageSize');
-			if (storageMangaPageSize && storageMangaPageSize !== '0') {
-				return [Number(storageMangaPageSize)];
+			if (preferencesStore.mangaPageSize) {
+				return [preferencesStore.mangaPageSize];
 			}
 
 			// 获取页面尺寸类型
@@ -235,9 +241,8 @@ const useBrowseStore = defineStore('browse', {
 			return mangaPageSize[screen];
 		},
 		chapterListPageSize: (state) => {
-			const storageChapterPageSize = localStorage.getItem('chapterPageSize');
-			if (storageChapterPageSize && storageChapterPageSize !== '0') {
-				return Number(storageChapterPageSize);
+			if (preferencesStore.chapterPageSize) {
+				return preferencesStore.chapterPageSize;
 			}
 
 			const screen: screenType = config.screenType;
@@ -248,9 +253,8 @@ const useBrowseStore = defineStore('browse', {
 			}
 		},
 		chapterListPageSizes: (state) => {
-			const storageChapterPageSize = localStorage.getItem('chapterPageSize');
-			if (storageChapterPageSize && storageChapterPageSize !== '0') {
-				return [Number(storageChapterPageSize)];
+			if (preferencesStore.chapterPageSize) {
+				return [preferencesStore.chapterPageSize];
 			}
 
 			const screen: screenType = config.screenType;
@@ -368,9 +372,9 @@ const useBrowseStore = defineStore('browse', {
 		set_view_width(browseType: string) {
 			const varName = `${browseType}ViewWidthValue`;
 			if (this.useAutoViewWidth) {
-				localStorage.setItem(varName, 'auto');
+				localStorageCache.set(varName, 'auto');
 			} else {
-				localStorage.setItem(varName, this.viewWidthValue.toString());
+				localStorageCache.set(varName, this.viewWidthValue.toString());
 			}
 
 			this.dialogViewWidth = false;
@@ -378,7 +382,7 @@ const useBrowseStore = defineStore('browse', {
 
 		load_view_width(browseType: string) {
 			const varName = `${browseType}ViewWidthValue`;
-			const viewWidthValue = localStorage.getItem(varName);
+			const viewWidthValue = localStorageCache.get(varName);
 
 			if (!viewWidthValue || viewWidthValue === 'auto') {
 				this.useAutoViewWidth = true;

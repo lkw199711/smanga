@@ -66,7 +66,8 @@ import { userConfig, mangaSortOrder, chapterSortOrder } from '@/store'
 import languages from '@/store/language'
 import themeList from '@/store/theme'
 import { set_theme } from '@/style/theme'
-import { Cookies } from '@/utils'
+import { useSessionStore } from '@/store/session'
+import { preferencesStore } from '@/store/preferences'
 import { useColorTheme } from '@/themes/composables/use-color-theme'
 
 const router = useRouter()
@@ -77,7 +78,8 @@ const showThemeSwitch = ref(false)
 const searchInputRef = ref<HTMLInputElement>()
 
 // 仅服务器管理员可见"新建媒体库"按钮
-const isAdmin = computed(() => Cookies.getRole() === 'admin')
+const session = useSessionStore()
+const isAdmin = computed(() => session.isAdmin)
 
 // ---- 皮肤列表 ----
 const skinList: { key: ThemeKey; name: string }[] = [
@@ -103,13 +105,6 @@ function mapToLegacyRoute(): string {
 }
 
 // ---- 颜色主题 ----
-function getCookie(name: string): string | undefined {
-	const value = `; ${document.cookie}`
-	const parts = value.split(`; ${name}=`)
-	if (parts.length === 2) return parts.pop()?.split(';').shift()
-	return undefined
-}
-
 // 颜色主题状态与切换方法：改由 composable 提供跨组件共享
 const { activeColorTheme, isDarkMode, toggleDarkMode, applyColorTheme: applyColorThemeImpl } = useColorTheme()
 
@@ -190,7 +185,7 @@ function toggleLanguage() {
 	const next = languages[(currentIndex + 1) % languages.length]
 	userConfig.language = next.value
 	locale.value = userConfig.language
-	localStorage.setItem('language', userConfig.language)
+	preferencesStore.setLanguage(userConfig.language)
 }
 
 function onKeydown(e: KeyboardEvent) {

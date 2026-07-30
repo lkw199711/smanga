@@ -1,5 +1,16 @@
-import { ref, onMounted, watch, unref, type Ref } from 'vue'
-import { usePageSize, type PageSizeKind } from './use-page-size'
+import {
+	computed,
+	onMounted,
+	ref,
+	unref,
+	watch,
+	type MaybeRefOrGetter,
+	type Ref,
+} from 'vue'
+import { useRoute } from 'vue-router'
+import { themeListKeys } from '@/themes/stores/list-state'
+import { type PageSizeKind } from './use-page-size'
+import { useThemeListPagination } from './use-list-state'
 
 export interface ListPageResult<T> {
 	list: T[]
@@ -12,46 +23,51 @@ export type ListPageLoader<T> = (params: {
 }) => Promise<ListPageResult<T>>
 
 export interface UseListPageOptions<T> {
-	/** 加载函数,返回 { list, count } */
+	/** 加载函数，返回 { list, count }。 */
 	loader: ListPageLoader<T>
 	/**
-	 * 分页大小类型,默认 chapter。
-	 * 可传 ref 以支持动态切换(如 collect 页面 tab 切换 manga/chapter)。
+	 * 分页大小类型，默认 chapter。
+	 * 可传 ref 支持动态切换，例如收藏页的漫画/章节 Tab。
 	 */
 	kind?: PageSizeKind | Ref<PageSizeKind>
-	/** 是否在 onMounted 时自动加载首页,默认 true */
+	/** 是否在 onMounted 时自动加载，默认 true。 */
 	immediate?: boolean
-	/**
-	 * 触发列表 reset(回到第一页并重新加载)的依赖来源。
-	 * 例如传 tab、orderBy 等 ref/getter 组成的数组。
-	 */
+	/** 这些依赖变化时回到第一页并重新加载。 */
 	resetDeps?: Array<Ref<any> | (() => any)>
+	/**
+	 * 新主题分页缓存键。未提供时使用当前路由名。
+	 * 带业务上下文的列表应显式传入，例如 manga:${mediaId}。
+	 */
+	cacheKey?: MaybeRefOrGetter<string>
 }
 
 /**
- * 通用列表分页组合式函数。
- * 统一处理 page / pageSize / list / count / loading 状态,及 page_change 逻辑。
+ * 新主题通用列表分页。
+ *
+ * 接口结果仍属于页面局部数据；page/pageSize 由 theme-list-state 管理，
+ * 因此离开列表再返回时可以恢复位置，同时不会污染旧主题的 browse store。
  */
 export function useListPage<T = any>(options: UseListPageOptions<T>) {
 	const { loader, kind = 'chapter', immediate = true, resetDeps = [] } = options
+	const route = useRoute()
 
 	const kindRef = ref<PageSizeKind>(unref(kind as any))
 	const isKindRef = kind && typeof kind === 'object' && 'value' in (kind as any)
 	if (isKindRef) {
-		watch(kind as Ref<PageSizeKind>, v => (kindRef.value = v))
+		watch(kind as Ref<PageSizeKind>, value => (kindRef.value = value))
 	}
 
-	const { pageSizes, defaultPageSize, refresh: refreshPageSize } = usePageSize(kindRef)
+	const inferredCacheKey = computed(() => themeListKeys.route(route.name || route.path))
+	const {
+		page,
+		pageSize,
+		pageSizes,
+		reset: resetPagination,
+		setPage,
+	} = useThemeListPagination(options.cacheKey || inferredCacheKey, kindRef)
 
-	// kind 变化时重建页大小选项
-	watch(kindRef, () => {
-		// 直接内联,避免 usePageSize 内部 kind 不可变
-		refreshPageSize()
-	})
-
-	const page = ref(1)
-	const pageSize = ref(defaultPageSize.value)
-	const list = ref<T[]>([]) as { value: T[] }
+	// 保留完整 Ref 类型，让 Vue 模板正确解包泛型数组。
+	const list = ref<T[]>([]) as Ref<T[]>
 	const count = ref(0)
 	const loading = ref(false)
 
@@ -59,9 +75,9 @@ export function useListPage<T = any>(options: UseListPageOptions<T>) {
 		loading.value = true
 		list.value = []
 		try {
-			const res = await loader({ page: page.value, pageSize: pageSize.value })
-			list.value = res?.list || []
-			count.value = Number(res?.count || 0)
+			const result = await loader({ page: page.value, pageSize: pageSize.value })
+			list.value = result?.list || []
+			count.value = Number(result?.count || 0)
 		} catch {
 			list.value = []
 			count.value = 0
@@ -72,14 +88,12 @@ export function useListPage<T = any>(options: UseListPageOptions<T>) {
 
 	async function pageChange(nextPage = 1, nextPageSize = pageSize.value) {
 		if (nextPage < 1) return
-		page.value = nextPage
-		pageSize.value = nextPageSize
+		setPage(nextPage, nextPageSize)
 		await load()
 	}
 
 	async function reset() {
-		page.value = 1
-		pageSize.value = defaultPageSize.value
+		resetPagination()
 		await load()
 	}
 
@@ -88,10 +102,7 @@ export function useListPage<T = any>(options: UseListPageOptions<T>) {
 	}
 
 	if (immediate) {
-		onMounted(() => {
-			pageSize.value = defaultPageSize.value
-			load()
-		})
+		onMounted(load)
 	}
 
 	return { page, pageSize, pageSizes, list, count, loading, load, pageChange, reset }

@@ -251,7 +251,7 @@
 
 <script lang="ts" setup>
 import {useRoute, useRouter} from 'vue-router';
-import {onBeforeUnmount, onMounted, ref, reactive, computed, watch} from 'vue';
+import {onMounted, ref, reactive, computed, watch} from 'vue';
 import mangaApi from '@/api/manga';
 import imageApi from '@/api/image';
 import {config, userConfig} from '@/store';
@@ -264,16 +264,23 @@ import lastesApi from '@/api/latest';
 import collectApi from '@/api/collect';
 import TagEditorDialog from '@/themes/components/tag-editor-dialog.vue';
 import share from '@/components/share.vue';
+// 该页面需要向复用的旧阅读器写入 chapter/page；列表分页不得再写 browse。
 import useBrowseStore from '@/store/browse';
+import { useNavigationStore } from '@/store/navigation';
 import chapter from '@/views/manga-info/components/chapter.vue';
 import chapterSimple from '@/views/manga-info/components/chapter-simple.vue';
 import mangaModify from '@/themes/components/manga-modify-dialog.vue';
 import mangaCoverEditDialog from '@/themes/components/manga-cover-edit-dialog.vue';
 import mangaMetaEditDialog from '@/themes/components/manga-meta-edit-dialog.vue';
 import ThemeContextMenu from '@/themes/components/theme-context-menu.vue';
-import { openThemeContextMenu, THEME_CHAPTER_READ_CHANGED_EVENT } from '@/themes/context-menu';
+import { openThemeContextMenu } from '@/themes/context-menu';
+import { useThemeUiStore } from '@/store/theme-ui';
+import { themeListKeys, useThemeListStateStore } from '@/themes/stores/list-state';
 import {Document, EditPen, Picture, PriceTag, Reading, Share, Star, StarFilled, Tickets} from '@element-plus/icons-vue';
 const browse: any = useBrowseStore();
+const navigation = useNavigationStore();
+const themeUi = useThemeUiStore();
+const listState = useThemeListStateStore();
 const router = useRouter();
 const route = useRoute();
 
@@ -351,16 +358,11 @@ const chapterListDesc = computed({
 
 onMounted(async () => {
   if (!mangaId.value) return;
-  window.addEventListener(THEME_CHAPTER_READ_CHANGED_EVENT, refresh_continue_reading);
   await render_meta();
   await get_first_chapter();
   await get_latest_reading();
   await render_chapter_list();
   get_collect_status();
-});
-
-onBeforeUnmount(() => {
-  window.removeEventListener(THEME_CHAPTER_READ_CHANGED_EVENT, refresh_continue_reading);
 });
 
 // 监听 mangaId 变化（切换漫画时重新加载）
@@ -381,6 +383,11 @@ watch(mangaId, async (newId) => {
 watch(
   () => userConfig.chapterOrder,
   () => render_chapter_list()
+);
+
+watch(
+  () => themeUi.chapterReadRevision,
+  refresh_continue_reading,
 );
 
 async function refresh_continue_reading() {
@@ -419,9 +426,10 @@ async function go_chapter() {
   if (!chapterInfo?.chapterId) return;
   if (chapterInfo.page && chapterInfo.page > 1) {
     browse.page = chapterInfo.page;
-    localStorage.setItem('pageJump', chapterInfo.page.toString());
+    navigation.queueReaderPage(chapterInfo.page);
   } else {
     browse.page = 1;
+    navigation.clearReaderPage();
   }
   router.push({
     path: `/t/reader/${chapterInfo.chapterId}`,
@@ -433,7 +441,7 @@ async function go_chapter() {
 }
 
 function go_chapter_list() {
-  browse.chapterListPage = 1;
+  listState.remove(themeListKeys.chapter(mangaInfo.mangaId));
   router.push(`/t/manga/${mangaInfo.mangaId}/chapters`);
 }
 
@@ -489,18 +497,20 @@ async function render_chapter_list() {
   chapterList.value = [];
   const id = mangaInfo.mangaId;
   if (!id) return;
-  const chapterListResponse = await chapterApi.get({mangaId: id, mediaId: mangaInfo.mediaId, order: browse.orderBy});
+  const chapterListResponse = await chapterApi.get({mangaId: id, mediaId: mangaInfo.mediaId, order: userConfig.chapterOrder});
   chapterList.value = chapterListResponse.list;
 }
 
 function go_browse(chapter: any) {
   if (chapter?.latest?.finish) {
     browse.page = 1;
+    navigation.clearReaderPage();
   } else if (chapter?.latest) {
     browse.page = chapter.latest.page;
-    localStorage.setItem('pageJump', chapter.latest.page);
+    navigation.queueReaderPage(chapter.latest.page);
   } else {
     browse.page = 1;
+    navigation.clearReaderPage();
   }
 
   browse.chapter = chapter;

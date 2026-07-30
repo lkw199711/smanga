@@ -1,3 +1,5 @@
+import { preferencesStore } from '@/store/preferences';
+
 export const themes = {
     // 中性主题
     light: {
@@ -258,7 +260,7 @@ export const themes = {
 // 应用主题样式
 const changeStyle = (obj: Record<string, string>) => {
     // 检查是否启用柔和背景色
-    const useSoftBackground = getCookie('useSoftBackground') === 'true';
+    const useSoftBackground = preferencesStore.softBackground;
     
     for (const key in obj) {
         if (key === 's-back') {
@@ -272,31 +274,15 @@ const changeStyle = (obj: Record<string, string>) => {
     }
 };
 
-// 获取cookie的辅助函数
-function getCookie(name: string): string | undefined {
-    const value = `; ${document.cookie}`;
-    const parts = value.split(`; ${name}=`);
-    if (parts.length === 2) return parts.pop()?.split(';').shift();
-    return undefined;
-}
-
-// 设置cookie的辅助函数
-function setCookie(name: string, value: string, days = 365) {
-    const expires = new Date();
-    expires.setTime(expires.getTime() + (days * 24 * 60 * 60 * 1000));
-    document.cookie = `${name}=${value};expires=${expires.toUTCString()};path=/`;
-}
-
 // 导出有效主题列表
 const validThemes = Object.keys(themes);
 
 // 切换柔和背景色的方法
 export const toggleSoftBackground = () => {
-    const current = getCookie('useSoftBackground') === 'true';
-    const newVal = !current;
-    setCookie('useSoftBackground', newVal.toString());
+    const newVal = !preferencesStore.softBackground;
+    preferencesStore.setSoftBackground(newVal);
     // 重新应用当前主题以更新背景色
-    const currentTheme = getCookie('theme') || 'light';
+    const currentTheme = preferencesStore.colorTheme || 'light';
     const themeConfig = themes[currentTheme as keyof typeof themes];
     changeStyle(themeConfig);
     return newVal;
@@ -306,7 +292,7 @@ export const toggleSoftBackground = () => {
 export const set_theme = (themeName: string) => {
     // 验证主题是否存在
     const themeToUse = validThemes.includes(themeName) ? themeName : 'light';
-    setCookie("theme", themeToUse); // 保存主题到cookie
+    preferencesStore.setColorTheme(themeToUse);
     const themeConfig = themes[themeToUse as keyof typeof themes];
     changeStyle(themeConfig); // 改变样式
     return themeToUse;
@@ -314,8 +300,8 @@ export const set_theme = (themeName: string) => {
 
 // 初始化主题
 export const initTheme = () => {
-    // 从本地存储获取主题，默认为亮色主题
-    const savedTheme = getCookie('theme') || 'light';
+    // 从 preferences store 获取主题，默认为亮色主题
+    const savedTheme = preferencesStore.colorTheme || 'light';
     // 设置主题
     return set_theme(savedTheme);
 };

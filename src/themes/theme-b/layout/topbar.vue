@@ -50,7 +50,7 @@
 					</div>
 					<div class="sb-user-info">
 						<span class="sb-user-name">{{ userInfo.userName || 'User' }}</span>
-						<span class="sb-user-role">{{ Cookies.getRole() === 'admin' ? '管理员' : '用户' }}</span>
+						<span class="sb-user-role">{{ session.isAdmin ? '管理员' : '用户' }}</span>
 					</div>
 					<span class="sb-user-arrow" :class="{ open: showUserDropdown }">▾</span>
 				</div>
@@ -69,7 +69,8 @@ import { useRoute, useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { userConfig, userInfo } from '@/store'
 import imageApi from '@/api/image'
-import { Cookies } from '@/utils'
+import { useSessionStore } from '@/store/session'
+import { preferencesStore } from '@/store/preferences'
 import type { ThemeKey } from '@/themes/store'
 import { themeState, setTheme } from '@/themes/store'
 import languages from '@/store/language'
@@ -88,6 +89,7 @@ const searchInputRef = ref<HTMLInputElement>()
 const showUserDropdown = ref(false)
 const avatarBlobUrl = ref('')
 const userWrapRef = ref<HTMLElement | null>(null)
+const session = useSessionStore()
 
 function toggleUserDropdown() {
 	showUserDropdown.value = !showUserDropdown.value
@@ -99,8 +101,7 @@ function goSettings() {
 }
 
 function userLogout() {
-	document.cookie = 'smanga-userName=; path=/; max-age=0'
-	document.cookie = 'smanga-userId=; path=/; max-age=0'
+	session.logout()
 	showUserDropdown.value = false
 	router.push('/login')
 }
@@ -139,13 +140,6 @@ function mapToLegacyRoute(): string {
 }
 
 // ---- 颜色主题 ----
-function getCookie(name: string): string | undefined {
-	const value = `; ${document.cookie}`
-	const parts = value.split(`; ${name}=`)
-	if (parts.length === 2) return parts.pop()?.split(';').shift()
-	return undefined
-}
-
 // 颜色主题状态与切换方法：改由 composable 提供跨组件共享
 const { activeColorTheme, isDarkMode, toggleDarkMode, applyColorTheme: applyColorThemeImpl } = useColorTheme()
 
@@ -217,7 +211,7 @@ function toggleLanguage() {
 	const next = languages[(currentIndex + 1) % languages.length]
 	userConfig.language = next.value
 	locale.value = userConfig.language
-	localStorage.setItem('language', userConfig.language)
+	preferencesStore.setLanguage(userConfig.language)
 }
 
 function onKeydown(e: KeyboardEvent) {

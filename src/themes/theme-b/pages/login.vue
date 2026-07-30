@@ -15,11 +15,26 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import loginApi from '@/api/login'
+import { useSessionStore } from '@/store/session'
 const router = useRouter()
+const session = useSessionStore()
 const username = ref('')
 const password = ref('')
 const error = ref('')
-async function doLogin(){ error.value=''; try{ const r=await loginApi.login({userName:username.value,passWord:password.value}); if(r)router.push('/t'); else error.value='登录失败' }catch(e){error.value='登录失败'} }
+async function doLogin(){
+  error.value=''
+  try {
+    const r = await loginApi.login({ userName: username.value, passWord: password.value })
+    if (r?.token && r?.serverKey) {
+      session.start(r)
+      await router.push('/t')
+    } else {
+      error.value = '登录失败'
+    }
+  } catch {
+    error.value = '登录失败'
+  }
+}
 </script>
 <style scoped>
 .tb-login{display:flex;align-items:center;justify-content:center;min-height:100vh;background:linear-gradient(160deg,#1a1040,#2d1b69)}

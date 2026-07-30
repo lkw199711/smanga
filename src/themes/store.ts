@@ -1,29 +1,22 @@
-import { reactive, watch } from 'vue'
-import { Cookies } from '@/utils'
+import { reactive } from 'vue'
+import { preferencesStore, type ShellTheme } from '@/store/preferences'
 
-export type ThemeKey = 'A' | 'B' | 'D' | 'Legacy'
+export type ThemeKey = ShellTheme
 
-const COOKIE_KEY = 'smanga-theme'
-
-function loadTheme(): ThemeKey {
-  const saved = Cookies.get(COOKIE_KEY)
-  if (saved === 'A' || saved === 'B' || saved === 'D' || saved === 'Legacy') return saved
-  return 'A'
-}
-
+/**
+ * 兼容现有主题组件的 state.current API，实际数据统一由 preferences store 管理。
+ */
 export const themeState = reactive({
-  current: loadTheme(),
+  get current(): ThemeKey {
+    return preferencesStore.shellTheme
+  },
+  set current(value: ThemeKey) {
+    preferencesStore.setShellTheme(value)
+  },
 })
 
-watch(
-  () => themeState.current,
-  (val) => {
-    Cookies.set(COOKIE_KEY, val)
-  }
-)
-
 export function setTheme(key: ThemeKey) {
-  themeState.current = key
+  preferencesStore.setShellTheme(key)
 }
 
 export function useThemeStore() {

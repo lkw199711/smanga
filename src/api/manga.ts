@@ -1,5 +1,6 @@
 import { ajax } from './index';
 import type { ResType } from '@/type/api';
+import type { mangaType } from '@/type/manga';
 import { onMangaOperation } from '@/utils/cache';
 
 const mangaApi = {
@@ -53,7 +54,7 @@ const mangaApi = {
 			data: { parentPath, page, pageSize, order },
 		});
 
-		const data: ResType = (await res).data;
+		const data: ResType<unknown, mangaType> = (await res).data;
 
 		return {
 			list: data.list,
@@ -71,7 +72,7 @@ const mangaApi = {
 			data: { mediaId },
 		});
 
-		const data: ResType = (await res).data;
+		const data: ResType<unknown, mangaType> = (await res).data;
 
 		return {
 			list: data.list,

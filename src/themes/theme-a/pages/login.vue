@@ -26,18 +26,21 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import loginApi from '@/api/login'
+import { useSessionStore } from '@/store/session'
 
 const router = useRouter()
 const username = ref('')
 const password = ref('')
 const error = ref('')
+const session = useSessionStore()
 
 async function doLogin() {
   error.value = ''
   try {
     const res = await loginApi.login({ userName: username.value, passWord: password.value })
-    if (res) {
-      router.push('/t')
+    if (res?.token && res?.serverKey) {
+      session.start(res)
+      await router.push('/t')
     } else {
       error.value = '用户名或密码错误'
     }

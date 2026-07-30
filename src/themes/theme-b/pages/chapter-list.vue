@@ -64,13 +64,12 @@ import TCover from '@/themes/components/media-cover.vue'
 import TChapterItem from '@/themes/components/chapter-item.vue'
 import MediaPager from '@/components/media-pager.vue'
 import { openThemeContextMenu } from '@/themes/context-menu'
-import useBrowseStore from '@/store/browse'
 import { userConfig } from '@/store'
-import { useGoRead, usePageSize } from '@/themes/composables'
+import { useGoRead, useThemeListPagination } from '@/themes/composables'
+import { themeListKeys } from '@/themes/stores/list-state'
 
 const router = useRouter()
 const route = useRoute()
-const browse = useBrowseStore()
 const { goRead: openReader } = useGoRead({ withPageJump: true, syncGlobalNames: true })
 
 const mangaInfo = ref<any>({})
@@ -78,17 +77,15 @@ const chapterList = ref<any[]>([])
 const isCollected = ref(false)
 const mangaId = ref<number | null>(null)
 const order = computed(() => userConfig.chapterOrder)
-const page = ref(browse.chapterListPage)
-const { pageSizes } = usePageSize('chapter')
-const pageSize = ref(browse.chapterListPageSize)
+const { page, pageSize, pageSizes, setPage } = useThemeListPagination(
+  computed(() => themeListKeys.chapter(mangaId.value)),
+  'chapter',
+)
 const total = ref(0)
 const loading = ref(false)
 
 function onPageChange(nextPage = 1, nextPageSize = pageSize.value) {
-  page.value = nextPage
-  pageSize.value = nextPageSize
-  browse.chapterListPage = nextPage
-  browse.chapterListPageSizeCache = nextPageSize
+  setPage(nextPage, nextPageSize)
   loadChapters()
 }
 
@@ -104,15 +101,13 @@ onMounted(async () => {
 watch(() => route.params.mangaId, async (newMangaId) => {
   if (newMangaId) {
     mangaId.value = Number(newMangaId)
-    page.value = browse.chapterListPage
-    pageSize.value = browse.chapterListPageSize
     await loadMangaInfo()
     await loadChapters()
     await checkCollectStatus()
   }
 })
 
-watch(order, () => onPageChange(1, browse.chapterListPageSize))
+watch(order, () => onPageChange(1, pageSize.value))
 
 async function loadMangaInfo() {
   if (!mangaId.value) return
@@ -136,8 +131,6 @@ async function loadChapters() {
     })
     chapterList.value = res?.list || []
     total.value = Number(res?.count || 0)
-    browse.chapterListPage = page.value
-    browse.chapterListPageSizeCache = pageSize.value
   } catch (e) {
     chapterList.value = []
     total.value = 0

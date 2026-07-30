@@ -286,7 +286,7 @@ function jumpToPage(page: number | number[]) {
 }
 
 // 关闭面板并延迟执行 (导航等操作)
-async function withClose(fn: () => void | Promise<void>) {
+async function withClose<T>(fn: () => T | Promise<T>) {
   close()
   await nextTick()
   await fn()
@@ -306,7 +306,7 @@ async function run(key: string) {
 
 async function changeMode(mode: string) {
   if (mode === currentMode.value) {
-  close()
+    close()
     return
   }
   await withClose(() =>

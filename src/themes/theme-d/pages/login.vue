@@ -18,16 +18,18 @@
 import { reactive } from 'vue'
 import { useRouter } from 'vue-router'
 import loginApi from '@/api/login'
+import { useSessionStore } from '@/store/session'
 
 const router = useRouter()
+const session = useSessionStore()
 const form = reactive({ username: '', password: '' })
 
 async function login() {
   try {
     const r = await loginApi.login({ userName: form.username, passWord: form.password })
-    if (r?.token) {
-      document.cookie = `token=${r.token}; path=/`
-      router.push('/t')
+    if (r?.token && r?.serverKey) {
+      session.start(r)
+      await router.push('/t')
     }
   } catch { alert('登录失败') }
 }

@@ -1,5 +1,10 @@
 import { globalData } from "@/store";
 import { GlobalData } from "@/store/type";
+import {
+    COOKIE_KEYS,
+    cookieStorage,
+    localStorageCache,
+} from '@/utils/persistence';
 
 /**
  * 回到顶部
@@ -17,7 +22,9 @@ export function global_set<T extends keyof GlobalData>
     (key: T, value: GlobalData[T] & any) {
 
     globalData[key] = value;
-    Cookies.set(key, value);
+    localStorageCache.set(String(key), String(value));
+    // 清理旧版本曾写入的同名缓存 cookie。
+    cookieStorage.remove(String(key));
 
     return value;
 }
@@ -34,7 +41,9 @@ export function global_set<T extends keyof GlobalData>
 export function global_set_json<T extends keyof GlobalData>
     (key: T, value: GlobalData[T]) {
     globalData[key] = value;
-    Cookies.set(key, JSON.stringify(value));
+    localStorageCache.setJson(String(key), value);
+    // userConfig、pageSizeConfig、bookmarkList 可能很大，不应占用 cookie。
+    cookieStorage.remove(String(key));
 }
 
 /**
@@ -42,7 +51,8 @@ export function global_set_json<T extends keyof GlobalData>
  * @param key
  */
 export function global_get(key: keyof typeof globalData) {
-    return globalData[key] ? globalData[key] : localStorage.getItem(key);
+    const value = globalData[key];
+    return value !== null && value !== undefined ? value : localStorageCache.get(String(key));
 }
 
 /**
@@ -58,11 +68,22 @@ export function global_get_array(key: keyof typeof globalData) {
         return arr;
     }
 
-    // cookie有值
-    const json = Cookies.get(key);
+    // 优先读取 localStorage；兼容并迁移旧 cookie。
+    let json = localStorageCache.get(String(key));
+    if (!json) {
+        json = Cookies.get(String(key));
+        if (json) {
+            localStorageCache.set(String(key), json);
+        }
+    }
 
     if (json) {
-        return JSON.parse(json);
+        try {
+            const parsed = JSON.parse(json);
+            return Array.isArray(parsed) ? parsed : [];
+        } catch {
+            localStorageCache.remove(String(key));
+        }
     }
 
     // 都没有值 返回默认值
@@ -85,27 +106,21 @@ export const Cookies = {
      * @param time 过期时间，单位为天
      */
     set: function (key: string, value: string, time = 365) {
-        // return localStorage.setItem(key, value);
-        const cookiesTime = new Date(Date.now() + time * 365 * 24 * 60 * 60 * 1000).toUTCString();
-        document.cookie = key + '=' + encodeURIComponent(value) + ';expires=' + cookiesTime + ';path=/';
-        return value;
+        return cookieStorage.set(key, value, time);
     },
     /**
      * 获取cookie
      * @param key
      */
     get: function (key: string) {
-        // return localStorage.getItem(key);
-        const arr = document.cookie.match(new RegExp("\\b" + key + "=([^;]+)(;|$)"));
-        return arr ? decodeURIComponent(arr[1]) : ''
+        return cookieStorage.get(key);
     },
     /**
      * 移除cookie
      * @param key
      */
     remove: function (key: string) {
-        Cookies.set(key, '', -1);
-        return key;
+        return cookieStorage.remove(key);
     },
 
     /**
@@ -114,7 +129,7 @@ export const Cookies = {
      * @param time
      */
     setToken: function (token: string, time = 365) {
-        const serverKey = Cookies.get('smanga-server-key');
+        const serverKey = Cookies.get(COOKIE_KEYS.serverKey);
         if (!serverKey) return false;
         return Cookies.set(serverKey + '-smanga-token', token, time);
     },
@@ -123,7 +138,7 @@ export const Cookies = {
      * 获取token
      */
     getToken: function () {
-        const serverKey = Cookies.get('smanga-server-key');
+        const serverKey = Cookies.get(COOKIE_KEYS.serverKey);
         if (!serverKey) return '';
         return Cookies.get(serverKey + '-smanga-token');
     },
@@ -132,7 +147,7 @@ export const Cookies = {
      * 移除token
      */
     removeToken: function () {
-        const serverKey = Cookies.get('smanga-server-key');
+        const serverKey = Cookies.get(COOKIE_KEYS.serverKey);
         if (!serverKey) return false;
         return Cookies.remove(serverKey + '-smanga-token');
     },
@@ -144,7 +159,7 @@ export const Cookies = {
     * @returns 
     */
     setRole: function (role: string, time = 365) {
-        const serverKey = Cookies.get('smanga-server-key');
+        const serverKey = Cookies.get(COOKIE_KEYS.serverKey);
         if (!serverKey) return false;
         return Cookies.set(serverKey + '-smanga-role', role, time);
     },
@@ -152,9 +167,17 @@ export const Cookies = {
      * 获取角色
      */
     getRole: function () {
-        const serverKey = Cookies.get('smanga-server-key');
+        const serverKey = Cookies.get(COOKIE_KEYS.serverKey);
         if (!serverKey) return '';
         return Cookies.get(serverKey + '-smanga-role');
+    },
+    /**
+     * 移除当前服务对应的角色。
+     */
+    removeRole: function () {
+        const serverKey = Cookies.get(COOKIE_KEYS.serverKey);
+        if (!serverKey) return false;
+        return Cookies.remove(serverKey + '-smanga-role');
     },
     /**
      * 设置带前缀的cookie
@@ -188,8 +211,7 @@ export const Cookies = {
 }
 
 export function get_cookie(key: string) {
-    const arr = document.cookie.match(new RegExp("\\b" + key + "=([^;]+)(;|$)"));
-    return arr ? decodeURIComponent(arr[1]) : '';
+    return cookieStorage.get(key);
 }
 
 

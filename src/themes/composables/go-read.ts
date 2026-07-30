@@ -1,6 +1,6 @@
 import { useRouter } from 'vue-router'
 import { globalData } from '@/store'
-import useBrowseStore from '@/store/browse'
+import { useNavigationStore } from '@/store/navigation'
 
 export interface GoReadItem {
 	chapterId?: number | string
@@ -30,7 +30,7 @@ export interface GoReadOptions {
  */
 export function useGoRead(defaults: GoReadOptions = {}) {
 	const router = useRouter()
-	const browse = useBrowseStore()
+	const navigation = useNavigationStore()
 
 	function goRead(item: GoReadItem | number | string, options?: GoReadOptions) {
 		const merged = { ...defaults, ...(options || {}) }
@@ -46,8 +46,7 @@ export function useGoRead(defaults: GoReadOptions = {}) {
 				: 1
 			// 与漫画详情页的继续阅读保持一致：先更新 Pinia 中阅读器直接消费的页码，
 			// pageJump 仅作为跨页面/新标签页场景的后备值。
-			browse.page = pageNum
-			localStorage.setItem('pageJump', String(pageNum))
+			navigation.queueReaderPage(pageNum)
 		}
 		if (merged.syncGlobalNames) {
 			globalData.mangaName = data.mangaName || globalData.mangaName

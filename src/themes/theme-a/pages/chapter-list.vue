@@ -45,11 +45,10 @@ import MediaPager from '@/components/media-pager.vue'
 import TChapterItem from '@/themes/components/chapter-item.vue'
 import { openThemeContextMenu } from '@/themes/context-menu'
 import { useListPage } from '@/themes/composables'
-import useBrowseStore from '@/store/browse'
+import { themeListKeys } from '@/themes/stores/list-state'
 
 const router = useRouter()
 const route = useRoute()
-const browse = useBrowseStore()
 
 const mangaId = computed(() => Number(route.params.mangaId) || 0)
 const order = computed({ get: () => userConfig.chapterOrder, set: (v) => { userConfig.chapterOrder = v } })
@@ -67,6 +66,7 @@ const {
 } = useListPage<any>({
   kind: 'chapter',
   immediate: false,
+  cacheKey: computed(() => themeListKeys.chapter(mangaId.value)),
   loader: async ({ page, pageSize }) => {
     if (!mangaId.value) return { list: [], count: 0 }
     const res = await chapterApi.get({ mangaId: mangaId.value, page, pageSize, order: order.value })
@@ -75,15 +75,11 @@ const {
 })
 
 async function pageChange(nextPage = 1, nextPageSize = pageSize.value) {
-  browse.chapterListPage = nextPage
-  browse.chapterListPageSizeCache = nextPageSize
   await changePage(nextPage, nextPageSize)
 }
 
 onMounted(async () => {
   if (!mangaId.value) return
-  page.value = browse.chapterListPage
-  pageSize.value = browse.chapterListPageSize
   await load()
   try {
     const info = await mangaApi.get_manga_info(mangaId.value)
@@ -91,7 +87,7 @@ onMounted(async () => {
   } catch { /* empty */ }
 })
 
-watch(order, () => pageChange(1, browse.chapterListPageSize))
+watch(order, () => pageChange(1, pageSize.value))
 
 function goRead(ch: any, idx: number) {
   globalData.chapterList = list.value

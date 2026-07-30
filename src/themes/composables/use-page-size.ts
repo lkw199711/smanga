@@ -1,6 +1,7 @@
 import { ref, watch, isRef, type Ref } from 'vue'
 import { config } from '@/store'
 import { chapterPageSize, mangaPageSize } from '@/store/page-size'
+import { preferencesStore } from '@/store/preferences'
 
 export type PageSizeKind = 'chapter' | 'manga'
 
@@ -17,6 +18,15 @@ export function usePageSize(kind: PageSizeKind | Ref<PageSizeKind> = 'chapter') 
 	}
 
 	function refresh() {
+		const preferredSize = readKind() === 'manga'
+			? preferencesStore.mangaPageSize
+			: preferencesStore.chapterPageSize
+		if (preferredSize > 0) {
+			pageSizes.value = [preferredSize]
+			defaultPageSize.value = preferredSize
+			return
+		}
+
 		const screen = config.screenType as keyof typeof chapterPageSize
 		const table = readKind() === 'manga' ? mangaPageSize : chapterPageSize
 		const sizes = table[screen] || []
@@ -26,6 +36,10 @@ export function usePageSize(kind: PageSizeKind | Ref<PageSizeKind> = 'chapter') 
 
 	refresh()
 	watch(() => config.screenType, refresh)
+	watch(
+		() => [preferencesStore.mangaPageSize, preferencesStore.chapterPageSize],
+		refresh,
+	)
 	if (isRef(kind)) watch(kind, refresh)
 
 	return { pageSizes, defaultPageSize, refresh }

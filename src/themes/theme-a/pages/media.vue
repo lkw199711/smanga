@@ -79,15 +79,16 @@ import { onMediaOperation } from '@/utils/cache'
 import queue from '@/store/quque'
 import { openThemeActionSheet, openThemeContextMenu } from '@/themes/context-menu'
 import MediaLibraryCreateDialog from '@/themes/components/media-library-create-dialog.vue'
-import { Cookies } from '@/utils'
-import useBrowseStore from '@/store/browse'
+import { useSessionStore } from '@/store/session'
+import { themeListKeys, useThemeListStateStore } from '@/themes/stores/list-state'
 
 const router = useRouter()
 const route = useRoute()
-const browse = useBrowseStore()
+const listState = useThemeListStateStore()
 
 // 仅服务器管理员可创建媒体库
-const isAdmin = computed(() => Cookies.getRole() === 'admin')
+const session = useSessionStore()
+const isAdmin = computed(() => session.isAdmin)
 
 // 媒体库相关
 const mediaList = ref<mediaType[]>([])
@@ -235,7 +236,7 @@ function pickMediaList(payload: any): mediaType[] {
 }
 
 function selectMedia(media: mediaType) {
-  browse.mangaListPage = 1
+  listState.remove(themeListKeys.manga(media.mediaId))
   selectedMediaId.value = media.mediaId
   selectedMediaName.value = media.mediaName
   router.push(`/t/media/${media.mediaId}`)
@@ -248,7 +249,7 @@ function backToMediaList() {
 }
 
 function goChapters(m: any) {
-  browse.chapterListPage = 1
+  listState.remove(themeListKeys.chapter(m.mangaId))
   router.push(`/t/manga/${m.mangaId}/chapters`)
 }
 

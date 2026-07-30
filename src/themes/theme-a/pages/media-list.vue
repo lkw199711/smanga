@@ -46,7 +46,7 @@ import { useRoute, useRouter } from 'vue-router'
 import mediaApi from '@/api/media'
 import imageApi from '@/api/image'
 import { openThemeActionSheet, openThemeContextMenu } from '@/themes/context-menu'
-import { Cookies } from '@/utils'
+import { useSessionStore } from '@/store/session'
 
 const router = useRouter()
 const route = useRoute()
@@ -57,7 +57,8 @@ const error = ref('')
 const form = ref({ mediaName: '', mediaPath: '' })
 
 // 仅服务器管理员可创建媒体库
-const isAdmin = computed(() => Cookies.getRole() === 'admin')
+const session = useSessionStore()
+const isAdmin = computed(() => session.isAdmin)
 
 // 媒体库封面缓存
 const mediaCoverCache = ref<{[key: string]: string}>({})

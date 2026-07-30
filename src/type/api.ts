@@ -354,5 +354,3 @@ export type listParamsType = {
   page?: number;
   pageSize?: number;
 };
-
-export { ResType, listParamsType };

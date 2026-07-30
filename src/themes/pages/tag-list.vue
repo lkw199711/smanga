@@ -124,7 +124,7 @@ import MangaCard from '@/themes/components/manga-card.vue'
 import SortSelector from '@/themes/components/sort-selector.vue'
 import { themeState } from '@/themes/store'
 import { openThemeActionSheet } from '@/themes/context-menu'
-import { Cookies } from '@/utils'
+import { useSessionStore } from '@/store/session'
 import { invalidateTagCache } from '@/themes/components/composables/use-tag-picker'
 import type { TagItem } from '@/themes/components/tag-filter-bar.vue'
 
@@ -142,7 +142,8 @@ const createDialogVisible = ref(false)
 const creating = ref(false)
 const tagNameInput = ref<HTMLInputElement | null>(null)
 const createForm = ref({ tagName: '', tagColor: '#6366f1', description: '' })
-const isAdmin = computed(() => Cookies.getRole() === 'admin')
+const session = useSessionStore()
+const isAdmin = computed(() => session.isAdmin)
 
 const cardVariant = computed(() => {
   // Map theme names to MangaCard variant

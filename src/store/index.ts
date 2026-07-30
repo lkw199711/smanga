@@ -1,6 +1,6 @@
 import { reactive } from 'vue';
 import { GlobalData } from '@/store/type';
-import { get_cookie } from '../utils/index';
+import { cookieStorage } from '@/utils/persistence';
 import { screenType } from '@/type/store';
 
 export const globalData: GlobalData = reactive({
@@ -26,12 +26,12 @@ export const globalData: GlobalData = reactive({
 	pageSizeConfig: null,
 });
 
-const editUser = get_cookie('editUser');
-const editMedia = get_cookie('editMedia');
-const cookieUserId = Number(get_cookie('userId')) || 0
-const cookieUserName = get_cookie('userName')
-const cookieHeader = get_cookie('header')
-const cookieAvatarPath = get_cookie('avatarPath')
+const editUser = cookieStorage.get('editUser');
+const editMedia = cookieStorage.get('editMedia');
+const cookieUserId = Number(cookieStorage.get('userId')) || 0
+const cookieUserName = cookieStorage.get('userName')
+const cookieHeader = cookieStorage.get('header')
+const cookieAvatarPath = cookieStorage.get('avatarPath')
 
 export const config = reactive({
 	sidebarCollapse: false,

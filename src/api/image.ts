@@ -3,6 +3,8 @@ import {url} from '@/api';
 import {Cookies} from '@/utils';
 import useImageStore from '@/store/image';
 import {ajax} from '@/api';
+import {userConfig} from '@/store';
+import pinia from '@/store/pinia';
 
 /**
  * 文件 图片请求
@@ -44,7 +46,7 @@ const img = Axios.create({
 
 // 使用import代替require
 import placeholder from '@/assets/s-blue-high.png';
-const imageCache: any = useImageStore();
+const imageCache = useImageStore(pinia);
 const imageApi = {
 	/**
 	 * @description: 获取图片文件 blob
@@ -63,7 +65,8 @@ const imageApi = {
 		if (!file) return false;
 
 		// 存在缓存直接加载缓存图片
-		if (imageCache[file]) return imageCache[file];
+		const cached = imageCache.get(file);
+		if (cached) return cached;
 
 		const [res, err] = await img({data: {file}})
 			.then((res) => [res, null])
@@ -72,7 +75,7 @@ const imageApi = {
 		if (res) {
 			// 存入缓存
 			if (saveCache) {
-				imageCache[file] = res.data;
+				imageCache.set(file, res.data, Number(userConfig.imageCacheLimit) || 0);
 			}
 			// 返回图片
 			return res.data;
@@ -93,7 +96,8 @@ const imageApi = {
 		if (!file) return false;
 
 		// 存在缓存直接加载缓存图片
-		if (imageCache[file]) return imageCache[file];
+		const cached = imageCache.get(file);
+		if (cached) return cached;
 
 		const [res, err] = await img({
 			url: `${origin}/file`,
@@ -106,7 +110,7 @@ const imageApi = {
 
 		if (res) {
 			// 存入缓存
-			imageCache[file] = res.data;
+			imageCache.set(file, res.data, Number(userConfig.imageCacheLimit) || 0);
 			// 返回图片
 			return res.data;
 		}

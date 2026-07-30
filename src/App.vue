@@ -15,12 +15,15 @@ import { global_set_json, Cookies } from '@/utils';
 import { config, pageSizeConfig, userConfig } from '@/store';
 import { useRoute, useRouter } from 'vue-router';
 import languages from '@/store/language';
-import { computed, onMounted, onBeforeMount } from 'vue';
+import { computed, onMounted, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { set_theme } from '@/style/theme';
 import userApi from './api/account';
 import notice from '@/components/notice.vue';
 import useBrowseStore from './store/browse';
+import { sessionStore } from '@/store/session';
+import { preferencesStore } from '@/store/preferences';
+import { STORAGE_KEYS, readLocalPreference, writeLocalPreference } from '@/utils/persistence';
 
 
 const route = useRoute();
@@ -41,11 +44,12 @@ const elLocale = computed(() => {
 // 此项必须在路由初始化前完成：Android 首屏可能是 /init 或 /login，
 // 不能随着这些页面的业务初始化一同被跳过。
 init_platform();
+sessionStore.hydrate();
 
 // 生命周期
 onMounted(async () => {
 	await system_init();
-	const alreadyAlertsVersionMsg = Cookies.get('alertsVersionMsg');
+	const alreadyAlertsVersionMsg = readLocalPreference(STORAGE_KEYS.versionNotice);
 	if (!alreadyAlertsVersionMsg) {
 		const laertText = [
 			'4.3.22版本带来了新的皮肤,可通过首页按钮进入,',
@@ -59,23 +63,38 @@ onMounted(async () => {
 			dangerouslyUseHTMLString: true,
 			confirmButtonText: '我已知晓'
 		 });
-		Cookies.set('alertsVersionMsg', 'true');
+		writeLocalPreference(STORAGE_KEYS.versionNotice, 'true');
 	}
 });
+
+// App 不会在登录页跳转后重新挂载；监听公共页 -> 功能页的切换以加载用户设置。
+watch(
+	() => route.path,
+	() => {
+		void system_init();
+	},
+);
 
 // 设置屏幕尺寸
 set_screen_type();
 window.addEventListener('resize', set_screen_type);
 
 async function system_init() {
-	if (['/', '/init', '/login', '/register'].includes(route.path)) return
+	if (['/', '/init', '/login', '/t/login', '/register'].includes(route.path)) return
+
+	const token = Cookies.getToken();
+	if (token && token === initializedToken) return;
 
 	// 获取用户设置
-	await get_setting();
+	const loaded = await get_setting();
+	if (!loaded) return;
+	initializedToken = token;
 
 	// 获取书签列表
 	browse.load_bookmark_list();
 }
+
+let initializedToken = '';
 
 function init_platform() {
 	config.android = Boolean((window as typeof window & { javaObj?: unknown }).javaObj);
@@ -127,11 +146,12 @@ async function get_setting() {
 	Object.assign(userConfig, configValue.userConfig);
 	Object.assign(pageSizeConfig, configValue.pageSizeConfig);
 
+	preferencesStore.refreshLegacyValues();
 	if (userConfig?.mangaPageSize != 0) {
-		browse.mangaListPageSizeCache = Number(localStorage.getItem('mangaPageSize')) || 0;
+		browse.mangaListPageSizeCache = preferencesStore.mangaPageSize;
 	}
 	if (userConfig?.chapterPageSize != 0) {
-		browse.chapterListPageSizeCache = Number(localStorage.getItem('chapterPageSize')) || 0;
+		browse.chapterListPageSizeCache = preferencesStore.chapterPageSize;
 	}
 
 	// 对于功能页面 优先从缓存中加载用户配置
@@ -139,6 +159,7 @@ async function get_setting() {
 	global_set_json('pageSizeConfig', pageSizeConfig);
 
 	// 设置语言
+	preferencesStore.setLanguage(userConfig.language);
 	locale.value = userConfig.language;
 
 	// 设置主题

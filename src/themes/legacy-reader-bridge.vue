@@ -33,10 +33,14 @@ import useBrowseStore from '@/store/browse'
 import ThemeReaderTopbar from './legacy-reader/topbar.vue'
 import ThemeReaderControlPanel from './legacy-reader/control-panel.vue'
 import androidSeat from '@/layout/components/android-seat.vue'
+import { useNavigationStore } from '@/store/navigation'
 
 const route = useRoute()
 const router = useRouter()
+// theme 阅读器暂时复用 src/views/browse-view/**。这些旧内容组件以 browse 为
+// 唯一状态源，所以桥接层只负责初始化兼容状态，不建立第二套 reader store。
 const browseStore = useBrowseStore()
+const navigationStore = useNavigationStore()
 const error = ref('')
 const ready = ref(false)
 
@@ -101,17 +105,14 @@ async function prepareReader() {
 
     // 旧阅读内容组件使用 1 起始的 browseStore.page。
     // 首页/历史/书签会在跳转前通过 pageJump 传入上次阅读页码。
-    const pendingPage = Number(localStorage.getItem('pageJump') || 0)
-    localStorage.removeItem('pageJump')
+    const pendingPage = navigationStore.consumeReaderPage()
 
     // 阅读器视图在 setup 阶段会立即监听 imagePathList。若保留上一章节的图片，
     // 监听器会先以默认 currentPage=1 回写 browseStore.page，覆盖继续阅读页码。
     browseStore.imagePathList = []
     browseStore.imageFileList = []
     browseStore.pageImage = ''
-    browseStore.page = Number.isFinite(pendingPage) && pendingPage >= 1
-      ? Math.floor(pendingPage)
-      : 1
+    browseStore.page = pendingPage
 
     ready.value = true
   } catch (cause) {

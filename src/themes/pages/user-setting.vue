@@ -409,9 +409,12 @@ import { useColorTheme } from '@/themes/composables/use-color-theme'
 import colorThemeList from '@/store/theme'
 import userApi from '@/api/account'
 import imageApi from '@/api/image'
-import { Cookies } from '@/utils'
+import { cookieStorage } from '@/utils/persistence'
+import { useSessionStore } from '@/store/session'
+import { preferencesStore } from '@/store/preferences'
 
 const router = useRouter()
+const session = useSessionStore()
 
 const { activeColorTheme, applyColorTheme } = useColorTheme()
 
@@ -453,8 +456,9 @@ watch(() => userInfo.avatarPath, loadAvatar, { immediate: true })
 
 onMounted(() => {
   // 初始化本地页面容量设置
-  mangaPageSize.value = Number(Cookies.get('mangaPageSize')) || 0
-  chapterPageSize.value = Number(Cookies.get('chapterPageSize')) || 0
+  preferencesStore.refreshLegacyValues()
+  mangaPageSize.value = preferencesStore.mangaPageSize
+  chapterPageSize.value = preferencesStore.chapterPageSize
 })
 
 // 头像上传方法
@@ -471,10 +475,10 @@ async function handleAvatarUpload(e: Event) {
   try {
     const res = await userApi.upload_avatar(file)
     if (res?.code === 200 && res?.data?.avatarPath) {
-      userInfo.header = res.data.header
-      userInfo.avatarPath = res.data.avatarPath
-      Cookies.set('header', res.data.header || '')
-      Cookies.set('avatarPath', res.data.avatarPath || '')
+      session.updateProfile({
+        header: res.data.header || '',
+        avatarPath: res.data.avatarPath || '',
+      })
       await loadAvatar()
     }
   } catch (err) {
@@ -507,6 +511,7 @@ function getSortLabel(sort: string): string {
 // 保存设置
 async function save() {
   try {
+    preferencesStore.setLanguage(userConfig.language)
     await userApi.update_user_config({ userConfig })
     showSaveHint('已保存', 'success')
   } catch (e) {
@@ -517,8 +522,7 @@ async function save() {
 
 // 保存页面容量设置
 async function savePageSize() {
-  Cookies.set('mangaPageSize', mangaPageSize.value.toString())
-  Cookies.set('chapterPageSize', chapterPageSize.value.toString())
+  preferencesStore.setPageSizes(mangaPageSize.value, chapterPageSize.value)
 }
 
 // 保存所有设置
@@ -549,7 +553,8 @@ function toggleFullscreen() {
 }
 
 function back_old_theme(){
-  Cookies.remove('useNewTheme')
+  setTheme('Legacy')
+  cookieStorage.remove('useNewTheme')
   router.push('/index')
 }
 </script>

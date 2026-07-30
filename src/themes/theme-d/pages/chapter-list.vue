@@ -70,31 +70,28 @@ import collectApi from '@/api/collect'
 import TCover from '@/themes/components/media-cover.vue'
 import TChapterItem from'@/themes/components/chapter-item.vue'
 import MediaPager from '@/components/media-pager.vue'
-import useBrowseStore from '@/store/browse'
 import { userConfig, globalData } from '@/store'
 import { openThemeContextMenu } from '@/themes/context-menu'
-import { usePageSize } from '@/themes/composables'
+import { useThemeListPagination } from '@/themes/composables'
+import { themeListKeys } from '@/themes/stores/list-state'
 
 const router = useRouter()
 const route = useRoute()
-const browse = useBrowseStore()
 
 const mangaInfo = ref<any>({})
 const chapterList = ref<any[]>([])
 const isCollected = ref(false)
 const mangaId = ref<number | null>(null)
 const order = computed({ get: () => userConfig.chapterOrder, set: (v) => { userConfig.chapterOrder = v } })
-const page = ref(browse.chapterListPage)
-const { pageSizes } = usePageSize('chapter')
-const pageSize = ref(browse.chapterListPageSize)
+const { page, pageSize, pageSizes, setPage } = useThemeListPagination(
+  computed(() => themeListKeys.chapter(mangaId.value)),
+  'chapter',
+)
 const total = ref(0)
 const loading = ref(false)
 
 function onPageChange(p = 1, size = pageSize.value) {
-  page.value = p
-  pageSize.value = size
-  browse.chapterListPage = p
-  browse.chapterListPageSizeCache = size
+  setPage(p, size)
   loadChapters()
 }
 
@@ -110,8 +107,6 @@ onMounted(async () => {
 watch(() => route.params.mangaId, async (newMangaId) => {
   if (newMangaId) {
     mangaId.value = Number(newMangaId)
-    page.value = browse.chapterListPage
-    pageSize.value = browse.chapterListPageSize
     await loadMangaInfo()
     await loadChapters()
     await checkCollectStatus()
@@ -145,8 +140,6 @@ async function loadChapters() {
     })
     chapterList.value = res?.list || []
     total.value = res?.count || 0
-    browse.chapterListPage = page.value
-    browse.chapterListPageSizeCache = pageSize.value
   } catch (e) {
     chapterList.value = []
     total.value = 0

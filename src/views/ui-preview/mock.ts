@@ -52,7 +52,7 @@ export const settingMenu: PreviewNavItem[] = [
 export const sidebarMenu = browseMenu;
 
 // 封面用纯色占位，避免外网资源
-const palette = [
+const palette: Array<[string, string]> = [
 	['#FFB5A7', '#FEC89A'],
 	['#A0C4FF', '#BDB2FF'],
 	['#B9FBC0', '#A0E8AF'],

@@ -1,16 +1,7 @@
-import { reactive } from 'vue'
+import { themeUiStore, type ThemeContextTarget } from '@/store/theme-ui'
 
-export type ThemeContextTarget = 'manga' | 'chapter' | 'media'
-export const THEME_CHAPTER_READ_CHANGED_EVENT = 'smanga:theme-chapter-read-changed'
-
-export const themeContextMenu = reactive({
-  visible: false,
-  presentation: 'menu' as 'menu' | 'sheet',
-  x: 0,
-  y: 0,
-  target: 'manga' as ThemeContextTarget,
-  item: null as any,
-})
+export type { ThemeContextTarget } from '@/store/theme-ui'
+export const themeContextMenu = themeUiStore.contextMenu
 
 export function openThemeContextMenu(event: MouseEvent, target: ThemeContextTarget, item: any) {
   event.preventDefault()
@@ -42,11 +33,9 @@ export function closeThemeContextMenu() {
 }
 
 export function notifyThemeContextMenuChanged(target: ThemeContextTarget) {
-  window.dispatchEvent(new CustomEvent('smanga:theme-context-menu-changed', { detail: { target } }))
+  themeUiStore.notifyContentChanged(target)
 }
 
 export function notifyThemeChapterReadChanged(chapterId: number) {
-  window.dispatchEvent(new CustomEvent(THEME_CHAPTER_READ_CHANGED_EVENT, {
-    detail: { chapterId },
-  }))
+  themeUiStore.notifyChapterReadChanged(chapterId)
 }

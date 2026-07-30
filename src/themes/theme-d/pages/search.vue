@@ -54,9 +54,11 @@ import TMangaCard from '@/themes/components/manga-card.vue'
 import TChapterItem from '@/themes/components/chapter-item.vue'
 import TTabsSwitcher from '@/themes/components/tabs-switcher.vue'
 import { openThemeContextMenu } from '@/themes/context-menu'
+import { useGoRead } from '@/themes/composables/go-read'
 
 const route = useRoute()
 const router = useRouter()
+const { goRead } = useGoRead({ withPageJump: true })
 const tab = ref<'manga' | 'chapter'>('manga')
 const keyword = ref((route.query.q as string) || '')
 const list = ref<any[]>([])
@@ -102,12 +104,7 @@ function go_manga(item: any) {
 }
 
 function go_read(item: any) {
-  if (!item?.chapterId) return
-  const p = Number(item?.latest?.page || 0)
-  if (p && p > 1) {
-    localStorage.setItem('pageJump', String(p))
-  }
-  router.push(`/t/reader/${item.chapterId}`)
+  return goRead(item)
 }
 
 watch(

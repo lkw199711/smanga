@@ -11,7 +11,7 @@ import './assets/colour/iconfont.css';
 import './assets/colour/iconfont.js';
 import 'default-passive-events';
 
-import {createPinia} from 'pinia';
+import pinia from '@/store/pinia';
 import {initTheme} from '@/style/theme';
 import {registerDirectives} from '@/utils/directives';
 // 初始化主题
@@ -19,7 +19,7 @@ initTheme();
 
 const appVue = createApp(App);
 
-appVue.use(router).use(i18n).use(createPinia());
+appVue.use(pinia).use(router).use(i18n);
 registerDirectives(appVue);
 
 appVue.mount('#app');

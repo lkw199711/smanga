@@ -43,7 +43,7 @@ import mediaApi from '@/api/media'
 import collectApi from '@/api/collect'
 import historyApi from '@/api/history'
 import latestApi from '@/api/latest'
-import { Cookies } from '@/utils'
+import { useSessionStore } from '@/store/session'
 import {
   closeThemeContextMenu,
   notifyThemeChapterReadChanged,
@@ -68,7 +68,8 @@ const editMediaDialog = ref(false)
 const editTagsDialog = ref(false)
 const shareDialog = ref(false)
 const tagsDialogKey = ref(0)
-const isAdmin = computed(() => Cookies.getRole() === 'admin')
+const session = useSessionStore()
+const isAdmin = computed(() => session.isAdmin)
 const item = computed(() => themeContextMenu.item || {})
 const title = computed(() => item.value.mangaName || item.value.chapterName || item.value.mediaName || '操作菜单')
 const positionStyle = ref<Record<string, string>>({ left: '0px', top: '0px' })

@@ -95,17 +95,20 @@ import { useRouter, useRoute } from 'vue-router'
 import mangaApi from '@/api/manga'
 import TMangaCard from '@/themes/components/manga-card.vue'
 import { openThemeContextMenu } from '@/themes/context-menu'
-import useBrowseStore from '@/store/browse'
+import { useThemeListPagination } from '@/themes/composables'
+import { themeListKeys } from '@/themes/stores/list-state'
 
 const router = useRouter()
 const route = useRoute()
-const browse = useBrowseStore()
+const mediaId = computed(() => Number(route.params.mediaId) || 0)
 
 const list = ref<any[]>([])
 const keyword = ref('')
 const order = ref('updateTimeDesc')
-const page = ref(browse.mangaListPage)
-const pageSize = computed(() => browse.mangaListPageSize)
+const { page, pageSize } = useThemeListPagination(
+  computed(() => themeListKeys.manga(mediaId.value)),
+  'manga',
+)
 const total = ref(0)
 const loading = ref(false)
 const mediaName = ref('')
@@ -140,22 +143,18 @@ function setOrder(v: string) {
 }
 
 watch(() => route.params.mediaId, () => {
-  page.value = browse.mangaListPage
   keyword.value = ''
   order.value = 'updateTimeDesc'
   loadData()
 }, { immediate: true })
 
 async function loadData() {
-  const mediaId = Number(route.params.mediaId) || 0
   loading.value = true
   try {
-    const res = await mangaApi.get(mediaId, page.value, pageSize.value, order.value, keyword.value)
+    const res = await mangaApi.get(mediaId.value, page.value, pageSize.value, order.value, keyword.value)
     list.value = res?.list || res?.data?.list || []
     total.value = res?.count || res?.data?.count || 0
     mediaName.value = res?.mediaName || res?.data?.mediaName || mediaName.value
-    browse.mangaListPage = page.value
-    browse.mangaListPageSizeCache = pageSize.value
   } catch (e) { /* empty */ }
   loading.value = false
 }

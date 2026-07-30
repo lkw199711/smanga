@@ -52,6 +52,7 @@ import { computed, onMounted, provide, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { globalData } from '@/store'
 import chapterApi from '@/api/chapter'
+import { useNavigationStore } from '@/store/navigation'
 import TaSingle from './single.vue'
 import TaDouble from './double.vue'
 import TaFlow from './flow.vue'
@@ -61,6 +62,7 @@ provide(READER_BODY_CLASS_KEY, 'ta-reader-body')
 
 const route = useRoute()
 const router = useRouter()
+const navigation = useNavigationStore()
 const showControls = ref(true)
 const showChapters = ref(false)
 const mode = ref<'single' | 'double' | 'flow'>('single')
@@ -90,10 +92,9 @@ const canNextPage = computed(() => pageDisplay.value < totalPages.value)
 async function loadChapter() {
   if (!chapterId.value) return
   globalData.chapterId = chapterId.value
-  const pageJump = Number(localStorage.getItem('pageJump') || 0)
-  if (pageJump && pageJump > 1) {
-    localStorage.removeItem('pageJump')
-    globalData.page = Math.max(pageJump - 1, 0)
+  const pageJump = navigation.consumeReaderPage()
+  if (pageJump > 1) {
+    globalData.page = pageJump - 1
   } else {
     globalData.page = 0
   }

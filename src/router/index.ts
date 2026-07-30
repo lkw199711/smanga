@@ -8,6 +8,8 @@ import LegacyReaderBridge from '@/themes/legacy-reader-bridge.vue';
 import LegacyMangaInfoBridge from '@/themes/legacy-manga-info-bridge.vue';
 import { themeState } from '@/themes/store';
 import { url } from '@/api/index';
+import { preferencesStore } from '@/store/preferences';
+import { sessionStore } from '@/store/session';
 
 import NProgress from 'nprogress';
 import 'nprogress/nprogress.css';
@@ -616,7 +618,7 @@ const router = createRouter({
 router.beforeEach(async (to) => {
 	start();
 
-	// Legacy 主题重定向：如果 cookie 是 Legacy 但访问 /t 路由，跳转到旧版对应页面
+	// Legacy 主题重定向：如果 preferences store 为 Legacy，访问 /t 时跳转到旧版页面。
 	if (themeState.current === 'Legacy' && to.path.startsWith('/t') && !to.path.startsWith('/tag-')) {
 		// 带参数路由映射
 		if (to.name === 't-manga-list') { close(); return `/manga-list?media=${to.params.mediaId || ''}` }
@@ -671,6 +673,8 @@ router.beforeEach(async (to) => {
 
 router.afterEach((to, from) => {
 	close();
+	preferencesStore.refreshLegacyValues();
+	sessionStore.hydrate();
 	const browseStore = useBrowseStore();
 	browseStore.route = to;
 });
