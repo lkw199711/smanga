@@ -26,39 +26,78 @@ const props = withDefaults(
 const rootEl = ref<HTMLElement | null>(null)
 const src = ref<string>('')
 let observer: IntersectionObserver | null = null
+let requestController: AbortController | null = null
+let loadSequence = 0
+
+function cancelLoad() {
+	loadSequence++
+	requestController?.abort()
+	requestController = null
+}
 
 async function load() {
+	cancelLoad()
 	if (!props.file) {
 		src.value = ''
 		return
 	}
-	src.value = await imageApi.get({ file: props.file })
-}
 
-onMounted(() => {
-	if (!rootEl.value) return
-	observer = new IntersectionObserver((entries) => {
-		for (const e of entries) {
-			if (!e.isIntersecting) continue
-			load()
+	const file = props.file
+	const sequence = loadSequence
+	const controller = new AbortController()
+	requestController = controller
+
+	try {
+		const nextSrc = await imageApi.get({
+			file,
+			priority: 100,
+			signal: controller.signal,
+		})
+		if (sequence === loadSequence && file === props.file) {
+			src.value = nextSrc
 			observer?.disconnect()
 			observer = null
-			break
+		}
+	} catch (error) {
+		if (!(error instanceof Error) || error.name !== 'AbortError') {
+			console.warn('封面加载失败', error)
+		}
+	} finally {
+		if (requestController === controller) requestController = null
+	}
+}
+
+function startObserving() {
+	if (!rootEl.value) return
+	observer?.disconnect()
+	observer = new IntersectionObserver((entries) => {
+		for (const e of entries) {
+			if (e.isIntersecting) {
+				if (!src.value && !requestController) void load()
+			} else if (!src.value) {
+				cancelLoad()
+			}
 		}
 	})
 	observer.observe(rootEl.value)
+}
+
+onMounted(() => {
+	startObserving()
 })
 
 onBeforeUnmount(() => {
 	observer?.disconnect()
 	observer = null
+	cancelLoad()
 })
 
 watch(
 	() => props.file,
 	() => {
+		cancelLoad()
 		src.value = ''
-		if (!observer) load()
+		startObserving()
 	}
 )
 

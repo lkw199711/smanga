@@ -75,7 +75,6 @@ import mangaApi from '@/api/manga'
 import imageApi from '@/api/image'
 import { mediaType } from '@/type/media'
 import { onMediaOperation } from '@/utils/cache'
-import queue from '@/store/quque'
 import { openThemeActionSheet, openThemeContextMenu } from '@/themes/context-menu'
 import MediaLibraryCreateDialog from '@/themes/components/media-library-create-dialog.vue'
 import { useSessionStore } from '@/store/session'
@@ -194,7 +193,7 @@ async function loadMangaData() {
     // 加载漫画封面
     mangaList.value.forEach(item => {
       if (item.mangaCover) {
-        queue.mangaQueue.add(() => loadMangaCover(item))
+        void loadMangaCover(item)
       }
     })
   } catch (e) { /* empty */ }
