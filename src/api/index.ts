@@ -1,6 +1,7 @@
 import Axios from 'axios';
 import {Cookies} from '@/utils';
 import router from '@/router';
+import {themeState} from '@/themes/store';
 import Response from '@/type/response';
 
 // 接口路径的设置
@@ -99,9 +100,9 @@ const ajax = Axios.create({
         router.push('/init');
       }
 
-      // 登录信息错误
+      // 登录信息错误：按当前皮肤分流到对应登录页。
       if (response.status === 'token error') {
-        router.push('/login');
+        router.push(themeState.current === 'Legacy' ? '/login' : '/t/login');
       }
 
       // 处理时间格式 —— 兼容:ISO字符串、Date对象、数字/字符串形式的毫秒或秒级时间戳

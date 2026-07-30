@@ -52,10 +52,8 @@ onMounted(async () => {
 	const alreadyAlertsVersionMsg = readLocalPreference(STORAGE_KEYS.versionNotice);
 	if (!alreadyAlertsVersionMsg) {
 		const laertText = [
-			'4.3.22版本带来了新的皮肤,可通过首页按钮进入,',
-			'设置界面与顶栏皮肤切换可回退到旧版本皮肤.',
-			'新版皮肤功能已经初步完成,适用于追求界面美观的用户.',
-			'待功能稳定后,会将新皮肤作为默认界面使用',
+			'新版皮肤现已作为默认界面使用.',
+			'如需回到旧版界面,可在设置页或顶栏皮肤切换中选择 Legacy 旧版皮肤.',
 			'新版本皮肤整体功能的完善还依赖于大家测试并提供依据.',
 			'感谢您的使用.',
 		].join('<br>');

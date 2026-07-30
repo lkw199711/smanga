@@ -47,8 +47,12 @@ const layoutLimit = computed(() => (key: string) => {
 });
 
 onMounted(() => {
-    const useNewTheme = Cookies.get('useNewTheme');
-    if (useNewTheme) router.push('/t');
+    // 默认使用新皮肤：非 Legacy 主题访问旧首页时跳回 /t（useNewTheme cookie 已废弃）。
+    Cookies.remove('useNewTheme');
+    if (themeState.current !== 'Legacy') {
+        router.push('/t');
+        return;
+    }
     if (!pieRef.value) return;
     window.addEventListener('resize', pieRef.value.resize());
 })
@@ -60,7 +64,6 @@ function user_logout() {
 }
 
 function new_theme() {
-    Cookies.set('useNewTheme', '1')
     setTheme('A')
     router.push('/t')
 }

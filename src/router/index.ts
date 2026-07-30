@@ -39,7 +39,8 @@ const routes: Array<RouteRecordRaw> = [
 	{
 		path: '/',
 		name: 'home',
-		redirect: '/start',
+		// 默认使用新皮肤：仅 Legacy 主题回落到旧版首页链路。
+		redirect: () => (themeState.current === 'Legacy' ? '/start' : '/t'),
 		children: [],
 		meta: { sidebar: false },
 		component: Layout,
@@ -662,12 +663,12 @@ router.beforeEach(async (to) => {
 			close()
 			return '/404'
 		}
+	}
 
-		// 未部署且不在 init 页 → 跳转
-		if (!deployChecked && to.path !== '/init') {
-			close()
-			return '/init'
-		}
+	// 未部署且不在 init 页 → 跳转；每次导航都拦截，防止未部署时软导航逃逸到其他页面。
+	if (deployChecked === false && to.path !== '/init') {
+		close()
+		return '/init'
 	}
 });
 
