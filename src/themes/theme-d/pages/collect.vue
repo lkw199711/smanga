@@ -9,14 +9,14 @@
         <list-skeleton />
       </template>
       <template v-else>
-        <div class="td-card-grid" v-if="tab === 'manga'">
+        <div ref="listRef" class="td-card-grid" v-if="tab === 'manga'">
           <div class="td-card" v-for="item in list" :key="item.collectId" @click="goManga(item)" @contextmenu="openThemeContextMenu($event, 'manga', item)">
             <t-cover class="td-card-cover" variant="D" :seed="Number(item?.mangaId || 0)" :file="item?.mangaCover || ''" fit="cover" />
             <div class="td-card-title">{{ item.mangaName }}</div>
           </div>
         </div>
 
-        <div class="td-chapter-list" v-else>
+        <div ref="listRef" class="td-chapter-list" v-else>
           <t-chapter-item
             v-for="item in list"
             :key="item.collectId"
@@ -31,7 +31,7 @@
       </template>
     </div>
 
-    <media-pager :page="page" :count="count" :page-size-config="pageSizes" @page-change="pageChange" />
+    <media-pager :page="page" :page-size="pageSize" :count="count" :page-size-config="pageSizes" @page-change="pageChange" />
 
     <p class="td-empty" v-if="!loading && !list.length">暂无收藏</p>
   </div>
@@ -52,11 +52,13 @@ import { useListPage, useGoRead } from '@/themes/composables'
 
 const router = useRouter()
 const tab = ref<'manga' | 'chapter'>('manga')
+const listRef = ref<HTMLElement | null>(null)
 const orderBy = computed(() => (tab.value === 'manga' ? userConfig.order : userConfig.chapterOrder))
 
 const { goRead } = useGoRead()
-const { page, list, count, loading, pageSizes, pageChange } = useListPage<any>({
+const { page, pageSize, list, count, loading, pageSizes, pageChange } = useListPage<any>({
   kind: computed(() => (tab.value === 'manga' ? 'manga' : 'chapter')),
+  container: listRef,
   resetDeps: [() => tab.value, () => orderBy.value],
   loader: async ({ page, pageSize }) => {
     const res = await collectApi.get(tab.value, page, pageSize, orderBy.value)

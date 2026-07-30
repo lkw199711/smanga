@@ -11,6 +11,7 @@ import { useRoute } from 'vue-router'
 import { themeListKeys } from '@/themes/stores/list-state'
 import { type PageSizeKind } from './use-page-size'
 import { useThemeListPagination } from './use-list-state'
+import { useAutoPageSize } from './use-auto-page-size'
 
 export interface ListPageResult<T> {
 	list: T[]
@@ -39,6 +40,10 @@ export interface UseListPageOptions<T> {
 	 * 带业务上下文的列表应显式传入，例如 manga:${mediaId}。
 	 */
 	cacheKey?: MaybeRefOrGetter<string>
+	/** Rendered grid/list whose real item and layout sizes drive automatic capacity. */
+	container?: Ref<HTMLElement | null>
+	/** Space kept below the list for its pager. */
+	bottomReserve?: MaybeRefOrGetter<number>
 }
 
 /**
@@ -58,31 +63,42 @@ export function useListPage<T = any>(options: UseListPageOptions<T>) {
 	}
 
 	const inferredCacheKey = computed(() => themeListKeys.route(route.name || route.path))
+	const autoPageSize = options.container
+		? useAutoPageSize(options.container, {
+			kind: kindRef,
+			bottomReserve: options.bottomReserve,
+		}).autoPageSize
+		: undefined
 	const {
 		page,
 		pageSize,
 		pageSizes,
 		reset: resetPagination,
 		setPage,
-	} = useThemeListPagination(options.cacheKey || inferredCacheKey, kindRef)
+	} = useThemeListPagination(options.cacheKey || inferredCacheKey, kindRef, autoPageSize)
 
 	// 保留完整 Ref 类型，让 Vue 模板正确解包泛型数组。
 	const list = ref<T[]>([]) as Ref<T[]>
 	const count = ref(0)
 	const loading = ref(false)
+	let loadSequence = 0
+	let mounted = false
 
 	async function load() {
+		const sequence = ++loadSequence
 		loading.value = true
 		list.value = []
 		try {
 			const result = await loader({ page: page.value, pageSize: pageSize.value })
+			if (sequence !== loadSequence) return
 			list.value = result?.list || []
 			count.value = Number(result?.count || 0)
 		} catch {
+			if (sequence !== loadSequence) return
 			list.value = []
 			count.value = 0
 		} finally {
-			loading.value = false
+			if (sequence === loadSequence) loading.value = false
 		}
 	}
 
@@ -101,9 +117,16 @@ export function useListPage<T = any>(options: UseListPageOptions<T>) {
 		watch(resetDeps as any, () => reset())
 	}
 
-	if (immediate) {
-		onMounted(load)
+	onMounted(() => {
+		mounted = true
+		if (immediate) void load()
+	})
+
+	if (autoPageSize) {
+		watch(autoPageSize, value => {
+			if (mounted && value > 0) void load()
+		})
 	}
 
-	return { page, pageSize, pageSizes, list, count, loading, load, pageChange, reset }
+	return { page, pageSize, pageSizes, autoPageSize, list, count, loading, load, pageChange, reset }
 }

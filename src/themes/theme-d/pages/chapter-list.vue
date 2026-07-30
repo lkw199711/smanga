@@ -37,7 +37,7 @@
 
       <div class="td-chapters">
         <div class="td-section-title">章节列表</div>
-        <div class="td-chapter-grid">
+        <div ref="listRef" class="td-chapter-grid">
           <t-chapter-item
             v-for="(ch, idx) in chapterList"
             :key="ch.chapterId"
@@ -72,7 +72,7 @@ import TChapterItem from'@/themes/components/chapter-item.vue'
 import MediaPager from '@/components/media-pager.vue'
 import { userConfig, globalData } from '@/store'
 import { openThemeContextMenu } from '@/themes/context-menu'
-import { useThemeListPagination } from '@/themes/composables'
+import { useAutoPageSize, useThemeListPagination } from '@/themes/composables'
 import { themeListKeys } from '@/themes/stores/list-state'
 
 const router = useRouter()
@@ -80,12 +80,15 @@ const route = useRoute()
 
 const mangaInfo = ref<any>({})
 const chapterList = ref<any[]>([])
+const listRef = ref<HTMLElement | null>(null)
 const isCollected = ref(false)
 const mangaId = ref<number | null>(null)
 const order = computed({ get: () => userConfig.chapterOrder, set: (v) => { userConfig.chapterOrder = v } })
+const { autoPageSize } = useAutoPageSize(listRef, { kind: 'chapter' })
 const { page, pageSize, pageSizes, setPage } = useThemeListPagination(
   computed(() => themeListKeys.chapter(mangaId.value)),
   'chapter',
+  autoPageSize,
 )
 const total = ref(0)
 const loading = ref(false)
@@ -116,6 +119,10 @@ watch(() => route.params.mangaId, async (newMangaId) => {
 // 监听全局排序变化
 watch(() => userConfig.chapterOrder, () => {
   if (mangaId.value) onPageChange(1)
+})
+
+watch(autoPageSize, value => {
+  if (value > 0) void loadChapters()
 })
 
 async function loadMangaInfo() {

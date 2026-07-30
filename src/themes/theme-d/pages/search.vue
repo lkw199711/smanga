@@ -17,11 +17,11 @@
         <list-skeleton />
       </template>
       <template v-else>
-        <div class="td-card-grid" v-if="tab === 'manga' && list.length">
+        <div ref="listRef" class="td-card-grid" v-if="tab === 'manga' && list.length">
           <t-manga-card v-for="item in list" :key="item.mangaId" :item="item" variant="D" @click="go_manga(item)" @contextmenu="openThemeContextMenu($event, 'manga', item)" />
         </div>
 
-        <div class="td-chapter-list" v-if="tab === 'chapter' && list.length">
+        <div ref="listRef" class="td-chapter-list" v-if="tab === 'chapter' && list.length">
           <t-chapter-item
             v-for="item in list"
             :key="item.chapterId"
@@ -35,7 +35,7 @@
       </template>
     </div>
 
-    <media-pager :page="page" :count="count" :page-size-config="pageSizes" @page-change="page_change" />
+    <media-pager :page="page" :page-size="activePageSize || defaultPageSize" :count="count" :page-size-config="pageSizes" @page-change="page_change" />
 
     <p class="td-empty" v-if="searched && !loading && !list.length">未找到结果</p>
   </div>
@@ -45,8 +45,7 @@
 import { computed, onMounted, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import searchApi from '@/api/search'
-import { config, userConfig } from '@/store'
-import { mangaPageSize, chapterPageSize } from '@/store/page-size'
+import { userConfig } from '@/store'
 import MediaPager from '@/components/media-pager.vue'
 import listSkeleton from '@/components/list-skeleton.vue'
 import TCover from '@/themes/components/media-cover.vue'
@@ -54,7 +53,7 @@ import TMangaCard from '@/themes/components/manga-card.vue'
 import TChapterItem from '@/themes/components/chapter-item.vue'
 import TTabsSwitcher from '@/themes/components/tabs-switcher.vue'
 import { openThemeContextMenu } from '@/themes/context-menu'
-import { useGoRead } from '@/themes/composables/go-read'
+import { useAutoPageSize, useGoRead, usePageSize } from '@/themes/composables'
 
 const route = useRoute()
 const router = useRouter()
@@ -66,22 +65,19 @@ const searched = ref(false)
 const page = ref(1)
 const count = ref(0)
 const loading = ref(false)
-const pageSizes = ref<number[]>([])
-const defaultPageSize = ref(10)
+const listRef = ref<HTMLElement | null>(null)
+const activePageSize = ref(0)
 
 const orderBy = computed(() => (tab.value === 'manga' ? userConfig.order : userConfig.chapterOrder))
-
-function setup_page_size() {
-  const screen = config.screenType
-  const sizes = tab.value === 'manga' ? mangaPageSize[screen] : chapterPageSize[screen]
-  pageSizes.value = sizes
-  defaultPageSize.value = sizes[0] || 10
-}
+const pageSizeKind = computed(() => tab.value === 'manga' ? 'manga' : 'chapter')
+const { autoPageSize } = useAutoPageSize(listRef, { kind: pageSizeKind })
+const { pageSizes, defaultPageSize } = usePageSize(pageSizeKind, autoPageSize)
 
 async function page_change(pageParams = 1, pageSize = defaultPageSize.value) {
   if (!keyword.value.trim()) return
   searched.value = true
   page.value = pageParams
+  activePageSize.value = pageSize
   loading.value = true
   list.value = []
   try {
@@ -123,7 +119,6 @@ watch(
 watch(
   () => tab.value,
   () => {
-    setup_page_size()
     if (keyword.value.trim()) page_change(1)
     else {
       list.value = []
@@ -133,6 +128,14 @@ watch(
   }
 )
 
+watch(pageSizes, sizes => {
+  if (sizes.length !== 1) return
+  const value = sizes[0]
+  if (!searched.value || value < 1 || value === activePageSize.value) return
+  const firstItemIndex = (page.value - 1) * Math.max(1, activePageSize.value)
+  void page_change(Math.floor(firstItemIndex / value) + 1, value)
+})
+
 watch(
   () => orderBy.value,
   () => {
@@ -141,7 +144,6 @@ watch(
 )
 
 onMounted(() => {
-  setup_page_size()
   if (keyword.value) page_change(1)
 })
 </script>

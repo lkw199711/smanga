@@ -31,7 +31,7 @@
 
       <div class="tb-chapters">
         <div class="tb-section-title">章节列表</div>
-        <div class="tb-chapter-grid">
+        <div ref="listRef" class="tb-chapter-grid">
           <t-chapter-item
             v-for="ch in chapterList"
             :key="ch.chapterId"
@@ -65,7 +65,7 @@ import TChapterItem from '@/themes/components/chapter-item.vue'
 import MediaPager from '@/components/media-pager.vue'
 import { openThemeContextMenu } from '@/themes/context-menu'
 import { userConfig } from '@/store'
-import { useGoRead, useThemeListPagination } from '@/themes/composables'
+import { useAutoPageSize, useGoRead, useThemeListPagination } from '@/themes/composables'
 import { themeListKeys } from '@/themes/stores/list-state'
 
 const router = useRouter()
@@ -74,12 +74,15 @@ const { goRead: openReader } = useGoRead({ withPageJump: true, syncGlobalNames: 
 
 const mangaInfo = ref<any>({})
 const chapterList = ref<any[]>([])
+const listRef = ref<HTMLElement | null>(null)
 const isCollected = ref(false)
 const mangaId = ref<number | null>(null)
 const order = computed(() => userConfig.chapterOrder)
+const { autoPageSize } = useAutoPageSize(listRef, { kind: 'chapter' })
 const { page, pageSize, pageSizes, setPage } = useThemeListPagination(
   computed(() => themeListKeys.chapter(mangaId.value)),
   'chapter',
+  autoPageSize,
 )
 const total = ref(0)
 const loading = ref(false)
@@ -108,6 +111,9 @@ watch(() => route.params.mangaId, async (newMangaId) => {
 })
 
 watch(order, () => onPageChange(1, pageSize.value))
+watch(autoPageSize, value => {
+  if (value > 0) void loadChapters()
+})
 
 async function loadMangaInfo() {
   if (!mangaId.value) return

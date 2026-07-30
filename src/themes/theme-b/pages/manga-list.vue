@@ -66,7 +66,7 @@
       </transition>
     </div>
 
-    <div class="tb-grid">
+    <div ref="gridRef" class="tb-grid">
       <t-manga-card
         v-for="m in list"
         :key="m.mangaId"
@@ -95,7 +95,7 @@ import { useRouter, useRoute } from 'vue-router'
 import mangaApi from '@/api/manga'
 import TMangaCard from '@/themes/components/manga-card.vue'
 import { openThemeContextMenu } from '@/themes/context-menu'
-import { useThemeListPagination } from '@/themes/composables'
+import { useAutoPageSize, useThemeListPagination } from '@/themes/composables'
 import { themeListKeys } from '@/themes/stores/list-state'
 
 const router = useRouter()
@@ -103,11 +103,14 @@ const route = useRoute()
 const mediaId = computed(() => Number(route.params.mediaId) || 0)
 
 const list = ref<any[]>([])
+const gridRef = ref<HTMLElement | null>(null)
 const keyword = ref('')
 const order = ref('updateTimeDesc')
+const { autoPageSize } = useAutoPageSize(gridRef, { kind: 'manga' })
 const { page, pageSize } = useThemeListPagination(
   computed(() => themeListKeys.manga(mediaId.value)),
   'manga',
+  autoPageSize,
 )
 const total = ref(0)
 const loading = ref(false)
@@ -147,6 +150,10 @@ watch(() => route.params.mediaId, () => {
   order.value = 'updateTimeDesc'
   loadData()
 }, { immediate: true })
+
+watch(pageSize, (value, oldValue) => {
+  if (value !== oldValue) loadData()
+})
 
 async function loadData() {
   loading.value = true

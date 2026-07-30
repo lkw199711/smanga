@@ -26,9 +26,10 @@ export interface ThemeListPagination {
 export function useThemeListPagination(
 	cacheKey: MaybeRefOrGetter<string>,
 	kind: PageSizeKind | Ref<PageSizeKind> = 'chapter',
+	autoPageSize?: Ref<number>,
 ): ThemeListPagination {
 	const store = useThemeListStateStore()
-	const { pageSizes, defaultPageSize } = usePageSize(kind)
+	const { pageSizes, defaultPageSize } = usePageSize(kind, autoPageSize)
 	const resolvedKey = computed(() => toValue(cacheKey) || 'route:unknown:default')
 
 	function readPosition() {
@@ -53,10 +54,14 @@ export function useThemeListPagination(
 		store.reset(resolvedKey.value, defaultPageSize.value)
 	}
 
-	// 用户设置了固定分页大小时，同步覆盖已存在的主题列表缓存。
-	watch(defaultPageSize, value => {
-		if (pageSizes.value.length === 1) {
-			store.set(resolvedKey.value, page.value, value)
+	// 自动测量或用户固定为单一容量时，同步已存在的列表缓存并保留首条记录锚点。
+	watch(pageSizes, sizes => {
+		if (sizes.length === 1) {
+			const value = sizes[0]
+			const position = readPosition()
+			const firstItemIndex = (position.page - 1) * position.pageSize
+			const anchoredPage = Math.floor(firstItemIndex / value) + 1
+			store.set(resolvedKey.value, anchoredPage, value)
 		}
 	})
 

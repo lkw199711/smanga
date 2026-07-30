@@ -14,7 +14,7 @@
         </select>
       </div>
     </div>
-    <div class="ta-chapters">
+    <div ref="listRef" class="ta-chapters">
       <t-chapter-item
         v-for="(ch, idx) in list"
         :key="ch.chapterId"
@@ -53,6 +53,7 @@ const route = useRoute()
 const mangaId = computed(() => Number(route.params.mangaId) || 0)
 const order = computed({ get: () => userConfig.chapterOrder, set: (v) => { userConfig.chapterOrder = v } })
 const mangaName = ref('')
+const listRef = ref<HTMLElement | null>(null)
 
 const {
   page,
@@ -66,6 +67,7 @@ const {
 } = useListPage<any>({
   kind: 'chapter',
   immediate: false,
+  container: listRef,
   cacheKey: computed(() => themeListKeys.chapter(mangaId.value)),
   loader: async ({ page, pageSize }) => {
     if (!mangaId.value) return { list: [], count: 0 }

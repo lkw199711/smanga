@@ -16,7 +16,7 @@
         <list-skeleton />
       </template>
       <template v-else>
-        <div class="ta-grid" v-if="tab === 'manga'">
+        <div ref="listRef" class="ta-grid" v-if="tab === 'manga'">
           <div
             v-for="item in list"
             :key="item.collectId"
@@ -29,7 +29,7 @@
           </div>
         </div>
 
-        <div class="ta-chapter-list" v-else>
+        <div ref="listRef" class="ta-chapter-list" v-else>
           <t-chapter-item
             v-for="item in list"
             :key="item.collectId"
@@ -42,7 +42,7 @@
       </template>
     </div>
 
-    <media-pager :page="page" :count="count" :page-size-config="pageSizes" @page-change="pageChange" />
+    <media-pager :page="page" :page-size="pageSize" :count="count" :page-size-config="pageSizes" @page-change="pageChange" />
 
     <div v-if="!loading && list.length === 0" class="ta-empty">暂无收藏</div>
   </div>
@@ -63,11 +63,13 @@ import { useListPage, useGoRead } from '@/themes/composables'
 
 const router = useRouter()
 const tab = ref<'manga' | 'chapter'>('manga')
+const listRef = ref<HTMLElement | null>(null)
 const orderBy = computed(() => (tab.value === 'manga' ? userConfig.order : userConfig.chapterOrder))
 
 const { goRead } = useGoRead()
-const { page, list, count, loading, pageSizes, pageChange } = useListPage<any>({
+const { page, pageSize, list, count, loading, pageSizes, pageChange } = useListPage<any>({
   kind: computed(() => (tab.value === 'manga' ? 'manga' : 'chapter')),
+  container: listRef,
   resetDeps: [() => tab.value, () => orderBy.value],
   loader: async ({ page, pageSize }) => {
     const res = await collectApi.get(tab.value, page, pageSize, orderBy.value)

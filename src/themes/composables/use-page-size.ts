@@ -6,10 +6,13 @@ import { preferencesStore } from '@/store/preferences'
 export type PageSizeKind = 'chapter' | 'manga'
 
 /**
- * 统一封装:根据当前屏幕类型返回可选分页大小列表 & 默认页大小。
- * 屏幕类型或 kind 变化时会自动刷新。
+ * 统一封装分页容量优先级：用户固定值 > 元素/布局自动测量值 > 屏幕分档回退值。
+ * 任一来源或 kind 变化时都会自动刷新。
  */
-export function usePageSize(kind: PageSizeKind | Ref<PageSizeKind> = 'chapter') {
+export function usePageSize(
+	kind: PageSizeKind | Ref<PageSizeKind> = 'chapter',
+	autoPageSize?: Ref<number>,
+) {
 	const pageSizes = ref<number[]>([])
 	const defaultPageSize = ref(10)
 
@@ -27,6 +30,13 @@ export function usePageSize(kind: PageSizeKind | Ref<PageSizeKind> = 'chapter') 
 			return
 		}
 
+		const measuredSize = Math.floor(Number(autoPageSize?.value || 0))
+		if (measuredSize > 0) {
+			pageSizes.value = [measuredSize]
+			defaultPageSize.value = measuredSize
+			return
+		}
+
 		const screen = config.screenType as keyof typeof chapterPageSize
 		const table = readKind() === 'manga' ? mangaPageSize : chapterPageSize
 		const sizes = table[screen] || []
@@ -41,6 +51,7 @@ export function usePageSize(kind: PageSizeKind | Ref<PageSizeKind> = 'chapter') 
 		refresh,
 	)
 	if (isRef(kind)) watch(kind, refresh)
+	if (autoPageSize) watch(autoPageSize, refresh)
 
 	return { pageSizes, defaultPageSize, refresh }
 }

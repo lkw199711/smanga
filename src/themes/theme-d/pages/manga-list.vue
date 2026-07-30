@@ -53,7 +53,7 @@
       </transition>
     </div>
 
-    <div class="td-card-grid">
+    <div ref="gridRef" class="td-card-grid">
       <t-manga-card
         v-for="m in list"
         :key="m.mangaId"
@@ -80,17 +80,20 @@ import mangaApi from '@/api/manga'
 import { userConfig } from '@/store'
 import TMangaCard from '@/themes/components/manga-card.vue'
 import { openThemeContextMenu } from '@/themes/context-menu'
-import { useThemeListPagination } from '@/themes/composables'
+import { useAutoPageSize, useThemeListPagination } from '@/themes/composables'
 import { themeListKeys } from '@/themes/stores/list-state'
 
 const route = useRoute()
 const router = useRouter()
 const mediaId = computed(() => Number(route.params.mediaId) || 0)
 const list = ref<any[]>([])
+const gridRef = ref<HTMLElement | null>(null)
 const mediaName = ref('')
+const { autoPageSize } = useAutoPageSize(gridRef, { kind: 'manga' })
 const { page, pageSize } = useThemeListPagination(
   computed(() => themeListKeys.manga(mediaId.value)),
   'manga',
+  autoPageSize,
 )
 const total = ref(0)
 const keyword = ref('')
@@ -143,6 +146,10 @@ watch(() => route.params.mediaId, () => {
   keyword.value = ''
   loadData()
 }, { immediate: true })
+
+watch(pageSize, (value, oldValue) => {
+  if (value !== oldValue) loadData()
+})
 </script>
 
 <style scoped>

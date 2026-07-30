@@ -12,7 +12,7 @@
 export default { name: 'media-pager' }
 </script>
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue';
+import { ref, computed, onMounted, watch } from 'vue';
 import { config } from '@/store';
 
 const pageSize = ref(10);
@@ -96,10 +96,21 @@ function page_change(page = 1) {
 }
 
 // 生命周期
-onMounted(() => {
-	pageSizes.value = props.pageSizeConfig;
-	pageSize.value = props.pageSize || pageSizes.value[0];
-})
+function syncPageSize() {
+	const configuredSizes = Array.isArray(props.pageSizeConfig)
+		? props.pageSizeConfig
+			.map((value: unknown) => Math.floor(Number(value)))
+			.filter((value: number) => value > 0)
+		: [];
+	pageSizes.value = configuredSizes.length ? configuredSizes : [10];
+	const preferredSize = Math.floor(Number(props.pageSize || pageSizes.value[0]));
+	pageSize.value = preferredSize > 0 ? preferredSize : pageSizes.value[0];
+}
+
+watch(() => props.pageSizeConfig, syncPageSize, { deep: true });
+watch(() => props.pageSize, syncPageSize);
+
+onMounted(syncPageSize)
 
 </script>
 

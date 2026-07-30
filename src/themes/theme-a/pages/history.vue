@@ -6,7 +6,7 @@
 				<list-skeleton />
 			</template>
 			<template v-else>
-				<div class="ta-history-list">
+				<div ref="listRef" class="ta-history-list">
 					<t-history-item
 						v-for="item in list"
 						:key="item.chapterId"
@@ -21,6 +21,7 @@
 
 		<media-pager
 			:page="page"
+			:page-size="pageSize"
 			:count="count"
 			:page-size-config="pageSizes"
 			@page-change="pageChange"
@@ -31,6 +32,7 @@
 </template>
 
 <script lang="ts" setup>
+import { ref } from 'vue'
 import historyApi from '@/api/history'
 import MediaPager from '@/components/media-pager.vue'
 import listSkeleton from '@/components/list-skeleton.vue'
@@ -39,8 +41,10 @@ import { openThemeContextMenu } from '@/themes/context-menu'
 import { useListPage, useGoRead } from '@/themes/composables'
 
 const { goRead } = useGoRead({ withPageJump: true, syncGlobalNames: true })
-const { page, list, count, loading, pageSizes, pageChange } = useListPage<any>({
+const listRef = ref<HTMLElement | null>(null)
+const { page, pageSize, list, count, loading, pageSizes, pageChange } = useListPage<any>({
 	kind: 'chapter',
+	container: listRef,
 	loader: async ({ page, pageSize }) => {
 		const res = await historyApi.get_history(page, pageSize)
 		return { list: res?.list || [], count: Number(res?.count || 0) }

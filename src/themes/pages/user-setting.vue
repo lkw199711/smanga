@@ -345,7 +345,7 @@
             class="setting-input-number"
             min="0"
           />
-          <span class="setting-note">(0使用默认值)</span>
+          <span class="setting-note">(0自动适应当前布局)</span>
         </div>
         <div class="setting-row">
           <span class="setting-label">章节页面容量</span>
@@ -356,7 +356,7 @@
             class="setting-input-number"
             min="0"
           />
-          <span class="setting-note">(0使用默认值)</span>
+          <span class="setting-note">(0自动适应当前布局)</span>
         </div>
       </div>
 
