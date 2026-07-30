@@ -72,6 +72,7 @@ const { autoPageSize, measurementReady } = useAutoPageSize(listRef, { kind: page
 const { pageSizes, defaultPageSize } = usePageSize(pageSizeKind, autoPageSize)
 let pendingSearch = false
 let searchSequence = 0
+let followsAutomaticPageSize = true
 
 async function page_change(pageParams = 1, pageSize = defaultPageSize.value) {
   if (!keyword.value.trim()) return
@@ -82,6 +83,7 @@ async function page_change(pageParams = 1, pageSize = defaultPageSize.value) {
     return
   }
   pendingSearch = false
+  followsAutomaticPageSize = pageSize === defaultPageSize.value
   const sequence = ++searchSequence
   page.value = pageParams
   activePageSize.value = pageSize
@@ -143,9 +145,8 @@ watch([pageSizes, measurementReady], ([sizes, ready]) => {
     void page_change(1, sizes[0] || defaultPageSize.value)
     return
   }
-  if (sizes.length !== 1) return
   const value = sizes[0]
-  if (!searched.value || value < 1 || value === activePageSize.value) return
+  if (!followsAutomaticPageSize || !searched.value || value < 1 || value === activePageSize.value) return
   const firstItemIndex = (page.value - 1) * Math.max(1, activePageSize.value)
   void page_change(Math.floor(firstItemIndex / value) + 1, value)
 }, { flush: 'post' })

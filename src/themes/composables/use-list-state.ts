@@ -54,15 +54,18 @@ export function useThemeListPagination(
 		store.reset(resolvedKey.value, defaultPageSize.value)
 	}
 
-	// 自动测量或用户固定为单一容量时，同步已存在的列表缓存并保留首条记录锚点。
-	watch(pageSizes, sizes => {
-		if (sizes.length === 1) {
-			const value = sizes[0]
-			const position = readPosition()
-			const firstItemIndex = (position.page - 1) * position.pageSize
-			const anchoredPage = Math.floor(firstItemIndex / value) + 1
-			store.set(resolvedKey.value, anchoredPage, value)
-		}
+	// 自动基准容量变化时同步仍跟随自动值的列表；手动选择的容量保持不变。
+	watch(pageSizes, (sizes, previousSizes) => {
+		if (!sizes.length) return
+		const position = readPosition()
+		const previousDefault = previousSizes?.[0] || 1
+		const followsAutomaticSize = position.pageSize <= 1 || position.pageSize === previousDefault
+		if (!followsAutomaticSize || position.pageSize === sizes[0]) return
+
+		const value = sizes[0]
+		const firstItemIndex = (position.page - 1) * position.pageSize
+		const anchoredPage = Math.floor(firstItemIndex / value) + 1
+		store.set(resolvedKey.value, anchoredPage, value)
 	})
 
 	return { page, pageSize, pageSizes, reset, setPage }

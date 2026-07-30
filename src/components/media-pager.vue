@@ -1,10 +1,29 @@
 <template>
-	<div class="media-pager">
-		<!--分页-->
-		<el-pagination class="pagination" v-model:current-page="pagerPage" v-model:page-size="pageSize"
-			:default-current-page="1" :page-sizes="pageSizes" :pager-count="pageCount" :small="pageSmall"
-			:disabled="disabled" :background="background" :layout="pageLayout" :total="props.count"
+	<div ref="pagerElement" class="media-pager">
+		<el-pagination v-if="!isCompact" class="pagination"
+			:current-page="currentPage" :page-size="pageSize"
+			:page-sizes="pageSizes" :pager-count="pagerCount"
+			:disabled="disabled" :background="background"
+			:layout="pagerLayout" :total="props.count"
 			@size-change="size_change" @current-change="page_change" />
+
+		<div v-else class="media-pager__compact" aria-label="分页">
+			<button
+				type="button"
+				class="media-pager__button"
+				:disabled="currentPage <= 1"
+				aria-label="上一页"
+				@click="page_change(currentPage - 1)"
+			>上一页</button>
+			<span class="media-pager__status">{{ currentPage }} / {{ totalPages }}</span>
+			<button
+				type="button"
+				class="media-pager__button"
+				:disabled="currentPage >= totalPages"
+				aria-label="下一页"
+				@click="page_change(currentPage + 1)"
+			>下一页</button>
+		</div>
 	</div>
 </template>
 
@@ -12,105 +31,94 @@
 export default { name: 'media-pager' }
 </script>
 <script setup lang="ts">
-import { ref, computed, onMounted, watch } from 'vue';
-import { config } from '@/store';
+import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue';
 
 const pageSize = ref(10);
 const disabled = ref(false);
 const background = ref(true);
 const pageSizes = ref([10, 20, 30, 40]);
+const pagerElement = ref<HTMLElement | null>(null)
+const containerWidth = ref(typeof window === 'undefined' ? 1024 : window.innerWidth)
+let resizeObserver: ResizeObserver | null = null
 
-// 传值
-const props = defineProps(['page', 'pageSize', 'count', 'pageSizeConfig']);
-const emit = defineEmits(['pageChange']);
+const props = defineProps<{
+	page: number
+	pageSize?: number
+	count: number
+	pageSizeConfig?: number[]
+}>()
+const emit = defineEmits<{
+	pageChange: [page: number, pageSize: number]
+}>()
+const normalizedCount = computed(() => Math.max(0, Math.floor(Number(props.count) || 0)))
+const totalPages = computed(() => Math.max(1, Math.ceil(normalizedCount.value / pageSize.value)))
+const currentPage = computed(() => Math.min(
+	totalPages.value,
+	Math.max(1, Math.floor(Number(props.page) || 1)),
+))
+const isCompact = computed(() => containerWidth.value < 680)
+const pagerCount = computed(() => containerWidth.value < 960 ? 5 : 7)
+const pagerLayout = computed(() => containerWidth.value < 960
+	? 'sizes, prev, pager, next, jumper'
+	: 'total, sizes, prev, pager, next, jumper')
+let changingSize = false
 
-let pagerPage = computed(() => {
-	return props.page;
-})
-
-const pageCount = computed(() => {
-	// 展示最大页码数量
-	const screenType = config.screenType;
-	switch (screenType) {
-		case '2k':
-			return 46;
-		case 'large':
-			return 17;
-		case 'middle':
-			return 11;
-		case 'small':
-			return 7;
-		case 'mini':
-			return 5;
-		default:
-			return 21;
-	}
-})
-
-let pageSmall = computed(() => {
-	const screenType = config.screenType;
-	switch (screenType) {
-		case 'large':
-			return false;
-		case 'middle':
-			return false;
-		case 'small':
-			return true;
-		case 'mini':
-			return true;
-		default:
-			return false;
-	}
-})
-
-let pageLayout = computed(() => {
-	const screenType = config.screenType;
-	switch (screenType) {
-		case 'large':
-			return 'total, sizes, prev, pager, next, jumper';
-		case 'middle':
-			return 'sizes, prev, pager, next, jumper';
-		case 'small':
-			return 'prev, pager, next, jumper';
-		case 'mini':
-			return 'prev, pager, next, jumper';
-		default:
-			return 'total, sizes, prev, pager, next, jumper';
-	}
-})
-
-/**
- * 页码尺寸变更
- * @param size
- */
 function size_change(size: number) {
+	if (!Number.isFinite(size) || size < 1) return
+	const oldSize = Math.max(1, Math.floor(Number(props.pageSize) || pageSize.value))
+	const firstItemIndex = (currentPage.value - 1) * oldSize
 	pageSize.value = size;
-	page_change();
-}
-/**
- * 页码变更
- * @param page
- */
-function page_change(page = 1) {
-	emit('pageChange', page, pageSize.value);
+	const nextPage = Math.min(
+		Math.max(1, Math.ceil(normalizedCount.value / size)),
+		Math.floor(firstItemIndex / size) + 1,
+	)
+	changingSize = true
+	emit('pageChange', nextPage, size)
+	queueMicrotask(() => (changingSize = false))
 }
 
-// 生命周期
+function page_change(page = 1) {
+	if (changingSize) return
+	const nextPage = Math.min(totalPages.value, Math.max(1, Math.floor(Number(page) || 1)))
+	emit('pageChange', nextPage, pageSize.value);
+}
+function updateContainerWidth() {
+	const width = pagerElement.value?.clientWidth
+	if (width && width > 0) containerWidth.value = width
+}
+
 function syncPageSize() {
 	const configuredSizes = Array.isArray(props.pageSizeConfig)
 		? props.pageSizeConfig
 			.map((value: unknown) => Math.floor(Number(value)))
 			.filter((value: number) => value > 0)
 		: [];
-	pageSizes.value = configuredSizes.length ? configuredSizes : [10];
-	const preferredSize = Math.floor(Number(props.pageSize || pageSizes.value[0]));
-	pageSize.value = preferredSize > 0 ? preferredSize : pageSizes.value[0];
+	const availableSizes = configuredSizes.length ? configuredSizes : [10]
+	const preferredSize = Math.floor(Number(props.pageSize || availableSizes[0]));
+	pageSize.value = preferredSize > 0 ? preferredSize : availableSizes[0];
+	pageSizes.value = [...new Set([
+		...availableSizes,
+		pageSize.value,
+	])].sort((left, right) => left - right)
 }
 
 watch(() => props.pageSizeConfig, syncPageSize, { deep: true });
 watch(() => props.pageSize, syncPageSize);
 
-onMounted(syncPageSize)
+onMounted(() => {
+	syncPageSize()
+	updateContainerWidth()
+	if (typeof ResizeObserver !== 'undefined' && pagerElement.value) {
+		resizeObserver = new ResizeObserver(updateContainerWidth)
+		resizeObserver.observe(pagerElement.value)
+	}
+	window.addEventListener('resize', updateContainerWidth)
+})
+
+onBeforeUnmount(() => {
+	resizeObserver?.disconnect()
+	window.removeEventListener('resize', updateContainerWidth)
+})
 
 </script>
 
@@ -121,21 +129,61 @@ onMounted(syncPageSize)
 	overflow-x: auto;
 }
 
-@media only screen and (min-width: 1200px) {
-	:deep(.el-pagination__jump) {
-		margin-left: 0.12rem;
-	}
+.pagination {
+	width: max-content;
+	min-width: 100%;
+	justify-content: center;
 }
 
-@media only screen and (max-width: 1199px) and (min-width: 768px) {
-	:deep(.el-pagination__jump) {
-		margin-left: 0.8rem;
-	}
+.media-pager__compact {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 1.2rem;
+	min-width: 0;
+	color: var(--el-text-color-regular, #606266);
+	font-size: 1.3rem;
+}
+
+.media-pager__status {
+	min-width: 6.8rem;
+	text-align: center;
+	font-variant-numeric: tabular-nums;
+}
+
+.media-pager__button {
+	box-sizing: border-box;
+	height: 3.6rem;
+	border: 1px solid var(--el-border-color, #dcdfe6);
+	border-radius: 0.6rem;
+	background: var(--el-fill-color-blank, #fff);
+	color: var(--el-text-color-regular, #606266);
+	font: inherit;
+}
+
+.media-pager__button {
+	cursor: pointer;
+	padding: 0 1.2rem;
+}
+
+.media-pager__button:hover:not(:disabled) {
+	border-color: var(--el-color-primary, #409eff);
+	color: var(--el-color-primary, #409eff);
+}
+
+.media-pager__button:disabled {
+	cursor: not-allowed;
+	opacity: 0.45;
+}
+
+.media-pager__button:focus-visible {
+	outline: 2px solid var(--el-color-primary-light-5, #a0cfff);
+	outline-offset: 1px;
 }
 
 @media only screen and (max-width: 767px) {
-	:deep(.el-pagination__jump) {
-		margin-left: 0.4rem;
+	.media-pager {
+		margin-top: 4rem;
 	}
 }
 </style>

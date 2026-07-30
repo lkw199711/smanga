@@ -138,7 +138,7 @@ export function useListPage<T = any>(options: UseListPageOptions<T>) {
 
 	if (autoSizing) {
 		watch(
-			[autoSizing.autoPageSize, autoSizing.measurementReady],
+			[pageSize, autoSizing.measurementReady],
 			([value, ready], [oldValue]) => {
 				if (!mounted || !ready) return
 				if (pendingLoad || (immediate && !hasRequested)) {

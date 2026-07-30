@@ -66,11 +66,14 @@
     </div>
     <list-skeleton v-if="loading" />
     <div class="td-empty" v-if="!list.length && !loading">暂无数据</div>
-    <div class="td-pagination" v-if="total > pageSize && !loading">
-      <button :disabled="page<=1" @click="page--;loadData()">上一页</button>
-      <span>{{ page }} / {{ Math.ceil(total/pageSize) }}</span>
-      <button :disabled="page>=Math.ceil(total/pageSize)" @click="page++;loadData()">下一页</button>
-    </div>
+    <media-pager
+      v-if="!loading"
+      :page="page"
+      :page-size="pageSize"
+      :count="total"
+      :page-size-config="pageSizes"
+      @page-change="pageChange"
+    />
   </div>
 </template>
 
@@ -81,6 +84,7 @@ import mangaApi from '@/api/manga'
 import { userConfig } from '@/store'
 import TMangaCard from '@/themes/components/manga-card.vue'
 import ListSkeleton from '@/components/list-skeleton.vue'
+import MediaPager from '@/components/media-pager.vue'
 import { openThemeContextMenu } from '@/themes/context-menu'
 import { useAutoPageSize, useThemeListPagination } from '@/themes/composables'
 import { themeListKeys } from '@/themes/stores/list-state'
@@ -92,7 +96,7 @@ const list = ref<any[]>([])
 const gridRef = ref<HTMLElement | null>(null)
 const mediaName = ref('')
 const { autoPageSize, measurementReady } = useAutoPageSize(gridRef, { kind: 'manga' })
-const { page, pageSize } = useThemeListPagination(
+const { page, pageSize, pageSizes, setPage } = useThemeListPagination(
   computed(() => themeListKeys.manga(mediaId.value)),
   'manga',
   autoPageSize,
@@ -150,6 +154,11 @@ function loadData() {
     loadScheduled = false
     void performLoad()
   })
+}
+
+function pageChange(nextPage = 1, nextPageSize = pageSize.value) {
+  setPage(nextPage, nextPageSize)
+  loadData()
 }
 
 async function performLoad() {
@@ -217,11 +226,6 @@ watch([pageSize, measurementReady], ([value, ready], [oldValue, oldReady]) => {
 .td-card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr)); gap: 1.6rem; }
 
 .td-empty { text-align: center; color: var(--fg2); padding: 4rem 0; font-size: 1.3rem; }
-
-.td-pagination { display: flex; align-items: center; justify-content: center; gap: 1.6rem; margin-top: 2.4rem; }
-.td-pagination button { padding: 0.6rem 1.6rem; border-radius: 0.6rem; border: 1px solid var(--border); background: var(--bg2); color: var(--fg); cursor: pointer; }
-.td-pagination button:disabled { opacity: 0.4; cursor: default; }
-.td-pagination button:hover:not(:disabled) { border-color: var(--accent); color: var(--accent); }
 
 /* 响应式适配 */
 @media (max-width: 76.8rem) {

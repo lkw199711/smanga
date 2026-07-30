@@ -78,12 +78,14 @@
     </div>
     <list-skeleton v-if="loading" />
     <div v-if="list.length === 0 && !loading" class="ta-empty">暂无漫画</div>
-    <!-- 分页 -->
-    <div v-if="totalPages > 1 && !loading" class="ta-pagination">
-      <button :disabled="page <= 1" @click="page--; loadData()">上一页</button>
-      <span>{{ page }} / {{ totalPages }}</span>
-      <button :disabled="page >= totalPages" @click="page++; loadData()">下一页</button>
-    </div>
+    <media-pager
+      v-if="!loading"
+      :page="page"
+      :page-size="pageSize"
+      :count="total"
+      :page-size-config="pageSizes"
+      @page-change="pageChange"
+    />
   </div>
 </template>
 
@@ -94,6 +96,7 @@ import mangaApi from '@/api/manga'
 import { userConfig } from '@/store'
 import TMangaCard from '@/themes/components/manga-card.vue'
 import ListSkeleton from '@/components/list-skeleton.vue'
+import MediaPager from '@/components/media-pager.vue'
 import { openThemeContextMenu } from '@/themes/context-menu'
 import { useAutoPageSize, useThemeListPagination } from '@/themes/composables'
 import { themeListKeys } from '@/themes/stores/list-state'
@@ -107,7 +110,7 @@ const gridRef = ref<HTMLElement | null>(null)
 const keyword = ref('')
 const order = computed({ get: () => userConfig.order, set: (v) => { userConfig.order = v } })
 const { autoPageSize, measurementReady } = useAutoPageSize(gridRef, { kind: 'manga' })
-const { page, pageSize } = useThemeListPagination(
+const { page, pageSize, pageSizes, setPage } = useThemeListPagination(
   computed(() => themeListKeys.manga(mediaId.value)),
   'manga',
   autoPageSize,
@@ -115,8 +118,6 @@ const { page, pageSize } = useThemeListPagination(
 const total = ref(0)
 const loading = ref(true)
 const mediaName = ref('')
-
-const totalPages = computed(() => Math.ceil(total.value / pageSize.value))
 
 // 排序选项 - 使用视觉化 chips 替代原生 select
 const sortOptions = [
@@ -168,6 +169,11 @@ function loadData() {
     loadScheduled = false
     void performLoad()
   })
+}
+
+function pageChange(nextPage = 1, nextPageSize = pageSize.value) {
+  setPage(nextPage, nextPageSize)
+  loadData()
 }
 
 async function performLoad() {
@@ -487,34 +493,6 @@ function goMangaInfo(m: any) {
   text-align: center;
   padding: 6rem;
   color: #9ca3af;
-}
-
-.ta-pagination {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 1.6rem;
-  margin-top: 3.2rem;
-  padding: 1.6rem;
-}
-
-.ta-pagination button {
-  padding: 0.6rem 1.4rem;
-  font-size: 1.3rem;
-  border: 1px solid #eaeaea;
-  border-radius: 0.6rem;
-  background: #fff;
-  cursor: pointer;
-}
-
-.ta-pagination button:disabled {
-  opacity: 0.4;
-  cursor: not-allowed;
-}
-
-.ta-pagination span {
-  font-size: 1.3rem;
-  color: #6b7280;
 }
 
 /* 响应式适配 */

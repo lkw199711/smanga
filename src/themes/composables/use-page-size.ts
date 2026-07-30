@@ -3,6 +3,14 @@ import { preferencesStore } from '@/store/preferences'
 
 export type PageSizeKind = 'chapter' | 'manga'
 
+function buildPageSizes(baseSize: number, kind: PageSizeKind) {
+	const maximum = Math.max(baseSize, kind === 'manga' ? 360 : 600)
+	return [...new Set(
+		[baseSize, baseSize * 2, baseSize * 3]
+			.map(value => Math.min(maximum, Math.max(1, Math.floor(value)))),
+	)].sort((left, right) => left - right)
+}
+
 /**
  * New-theme page-size priority: user preference > measured layout.
  * 任一来源或 kind 变化时都会自动刷新。
@@ -23,14 +31,14 @@ export function usePageSize(
 			? preferencesStore.mangaPageSize
 			: preferencesStore.chapterPageSize
 		if (preferredSize > 0) {
-			pageSizes.value = [preferredSize]
+			pageSizes.value = buildPageSizes(preferredSize, readKind())
 			defaultPageSize.value = preferredSize
 			return
 		}
 
 		const measuredSize = Math.floor(Number(autoPageSize?.value || 0))
 		if (measuredSize > 0) {
-			pageSizes.value = [measuredSize]
+			pageSizes.value = buildPageSizes(measuredSize, readKind())
 			defaultPageSize.value = measuredSize
 			return
 		}

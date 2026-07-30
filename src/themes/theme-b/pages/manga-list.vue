@@ -81,12 +81,14 @@
 
     <div v-if="list.length === 0 && !loading" class="tb-empty">暂无漫画</div>
 
-    <!-- 分页 -->
-    <div v-if="totalPages > 1 && !loading" class="tb-pagination">
-      <button :disabled="page <= 1" @click="page--; loadData()">◀</button>
-      <span>{{ page }} / {{ totalPages }}</span>
-      <button :disabled="page >= totalPages" @click="page++; loadData()">▶</button>
-    </div>
+    <media-pager
+      v-if="!loading"
+      :page="page"
+      :page-size="pageSize"
+      :count="total"
+      :page-size-config="pageSizes"
+      @page-change="pageChange"
+    />
   </div>
 </template>
 
@@ -96,6 +98,7 @@ import { useRouter, useRoute } from 'vue-router'
 import mangaApi from '@/api/manga'
 import TMangaCard from '@/themes/components/manga-card.vue'
 import ListSkeleton from '@/components/list-skeleton.vue'
+import MediaPager from '@/components/media-pager.vue'
 import { openThemeContextMenu } from '@/themes/context-menu'
 import { useAutoPageSize, useThemeListPagination } from '@/themes/composables'
 import { themeListKeys } from '@/themes/stores/list-state'
@@ -109,7 +112,7 @@ const gridRef = ref<HTMLElement | null>(null)
 const keyword = ref('')
 const order = ref('updateTimeDesc')
 const { autoPageSize, measurementReady } = useAutoPageSize(gridRef, { kind: 'manga' })
-const { page, pageSize } = useThemeListPagination(
+const { page, pageSize, pageSizes, setPage } = useThemeListPagination(
   computed(() => themeListKeys.manga(mediaId.value)),
   'manga',
   autoPageSize,
@@ -117,8 +120,6 @@ const { page, pageSize } = useThemeListPagination(
 const total = ref(0)
 const loading = ref(true)
 const mediaName = ref('')
-
-const totalPages = computed(() => Math.ceil(total.value / pageSize.value))
 
 // 排序选项 - 视觉化 chips
 const sortOptions = [
@@ -171,6 +172,11 @@ function loadData() {
     loadScheduled = false
     void performLoad()
   })
+}
+
+function pageChange(nextPage = 1, nextPageSize = pageSize.value) {
+  setPage(nextPage, nextPageSize)
+  loadData()
 }
 
 async function performLoad() {
@@ -441,41 +447,6 @@ function goMangaInfo(m: any) {
   text-align: center;
   padding: 6rem;
   color: #6b7280;
-}
-
-.tb-pagination {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 1.6rem;
-  margin-top: 3.2rem;
-  padding: 1.6rem;
-}
-
-.tb-pagination button {
-  padding: 0.8rem 1.6rem;
-  background: rgba(255, 255, 255, 0.8);
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  border-radius: 2rem;
-  color: #1f2937;
-  cursor: pointer;
-  transition: background 0.2s;
-  box-shadow: 0 0.2rem 0.8rem rgba(0, 0, 0, 0.05);
-}
-
-.tb-pagination button:hover:not(:disabled) {
-  background: rgba(255, 255, 255, 1);
-  box-shadow: 0 0.4rem 1.2rem rgba(0, 0, 0, 0.1);
-}
-
-.tb-pagination button:disabled {
-  opacity: 0.4;
-  cursor: not-allowed;
-}
-
-.tb-pagination span {
-  color: #6b7280;
-  font-size: 1.3rem;
 }
 
 /* 响应式适配 */
