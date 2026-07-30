@@ -1,8 +1,9 @@
 <template>
   <header class="reader-quick-bar" :class="{ 'is-mobile': isMobile }">
     <!-- 章节标题条 -->
-    <div class="chapter-name" :title="browse.currentChapter?.chapterName">
+    <div class="chapter-name" :title="chapterTitle">
       <span class="chapter-name-text">{{ browse.currentChapter?.chapterName || '' }}</span>
+      <span v-if="chapterProgress" class="chapter-progress">{{ chapterProgress }}</span>
     </div>
 
     <!-- 桌面端: 胶囊快捷按钮 (仅一个入口, 唤起 control-panel) -->
@@ -27,13 +28,23 @@
 </template>
 
 <script lang="ts" setup>
-import { onBeforeUnmount, onMounted, ref } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 import { config } from '@/store'
 import useBrowseStore from '@/store/browse'
 
 const browse = useBrowseStore()
 
 const isMobile = ref(false)
+const chapterProgress = computed(() => {
+  const total = browse.chapterList.length
+  const index = browse.currentChapterIndex
+  if (!total || index < 0) return ''
+  return `${index + 1} / ${total}`
+})
+const chapterTitle = computed(() => {
+  const name = browse.currentChapter?.chapterName || ''
+  return chapterProgress.value ? `${name} · ${chapterProgress.value}` : name
+})
 
 let mql: MediaQueryList | null = null
 function syncMobile(e: MediaQueryList | MediaQueryListEvent) {
@@ -71,6 +82,9 @@ function openPanel() {
 /* 章节标题条: 顶部窄条, 半透明 */
 .chapter-name {
   pointer-events: auto;
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
   height: 3.2rem;
   line-height: 3.2rem;
   padding: 0 12rem 0 1.6rem;
@@ -83,7 +97,21 @@ function openPanel() {
 }
 
 .chapter-name-text {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
   opacity: 0.95;
+}
+
+.chapter-progress {
+  flex-shrink: 0;
+  padding: 0 0.7rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.14);
+  font-size: 1.1rem;
+  font-variant-numeric: tabular-nums;
+  line-height: 2rem;
+  opacity: 0.9;
 }
 
 /* 桌面: 右上胶囊, 唤起 control-panel */
