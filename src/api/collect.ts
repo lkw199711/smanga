@@ -1,6 +1,28 @@
 import {ajax} from './index';
 
+type MangaCollectionListener = (mangaId: number, collected: boolean) => void;
+type ChapterCollectionListener = (chapterId: number, collected: boolean) => void;
+const mangaCollectionListeners = new Set<MangaCollectionListener>();
+const chapterCollectionListeners = new Set<ChapterCollectionListener>();
+
+function notifyMangaCollectionChanged(mangaId: number, collected: boolean) {
+	for (const listener of mangaCollectionListeners) {
+		listener(mangaId, collected);
+	}
+}
+
+function notifyChapterCollectionChanged(chapterId: number, collected: boolean) {
+	for (const listener of chapterCollectionListeners) {
+		listener(chapterId, collected);
+	}
+}
+
 const collectApi = {
+	async get_all() {
+		const http = await ajax.get('collect');
+		return http.data;
+	},
+
 	async get(mangaType: string, page: number, pageSize: number, order: string) {
 		const http = await ajax.get(`collect-${mangaType}`, {
 			params: {page, pageSize, order},
@@ -34,7 +56,13 @@ const collectApi = {
 	 */
 	async remove_collect(collectType: string, targetId: number) {
 		const res = ajax.post(`collect-${collectType}/${targetId}`, {});
-		return (await res).data;
+		const response = (await res).data;
+		if (collectType === 'manga') {
+			notifyMangaCollectionChanged(targetId, false);
+		} else if (collectType === 'chapter') {
+			notifyChapterCollectionChanged(targetId, false);
+		}
+		return response;
 	},
 	/**
 	 * @description: 新增收藏
@@ -47,6 +75,7 @@ const collectApi = {
 			data
 		);
 		const response = http.data;
+		notifyMangaCollectionChanged(Number(data.mangaId), true);
 		return response.data;
 	},
 
@@ -61,7 +90,18 @@ const collectApi = {
 			data
 		);
 		const response = http.data;
+		notifyChapterCollectionChanged(chapterId, true);
 		return response.data;
+	},
+
+	on_manga_collection_changed(listener: MangaCollectionListener) {
+		mangaCollectionListeners.add(listener);
+		return () => mangaCollectionListeners.delete(listener);
+	},
+
+	on_chapter_collection_changed(listener: ChapterCollectionListener) {
+		chapterCollectionListeners.add(listener);
+		return () => chapterCollectionListeners.delete(listener);
 	},
 };
 

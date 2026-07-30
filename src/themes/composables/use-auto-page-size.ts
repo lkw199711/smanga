@@ -9,6 +9,7 @@ import {
 	type Ref,
 } from 'vue'
 import { preferencesStore } from '@/store/preferences'
+import { listDebug } from '@/utils/list-debug'
 import type { PageSizeKind } from './use-page-size'
 
 export interface AutoPageSizeOptions {
@@ -25,6 +26,8 @@ const MOBILE_NAV_SELECTOR = [
 	'.sb-mobile-nav-bar',
 	'.sd-mobile-nav-bar',
 ].join(',')
+
+let autoPageSizeDebugSequence = 0
 
 function finitePixel(value: string) {
 	const number = Number.parseFloat(value)
@@ -137,6 +140,7 @@ export function useAutoPageSize(
 	container: Ref<HTMLElement | null>,
 	options: AutoPageSizeOptions = {},
 ) {
+	const debugId = `auto-size#${++autoPageSizeDebugSequence}`
 	const autoPageSize = ref(0)
 	const measurementReady = ref(false)
 	let resizeObserver: ResizeObserver | null = null
@@ -159,12 +163,19 @@ export function useAutoPageSize(
 		if (hasFixedPreference(kind)) {
 			autoPageSize.value = 0
 			measurementReady.value = true
+			listDebug('measure.fixed-preference', { id: debugId, kind })
 			return
 		}
 
 		const element = container.value
 		if (!element?.isConnected || element.clientWidth <= 0) {
 			measurementReady.value = false
+			listDebug('measure.blocked', {
+				id: debugId,
+				hasContainer: Boolean(element),
+				connected: Boolean(element?.isConnected),
+				clientWidth: element?.clientWidth || 0,
+			})
 			return
 		}
 
@@ -230,6 +241,19 @@ export function useAutoPageSize(
 
 		if (nextSize !== autoPageSize.value) autoPageSize.value = nextSize
 		measurementReady.value = true
+		listDebug('measure.ready', {
+			id: debugId,
+			kind,
+			elementClientWidth: element.clientWidth,
+			childCount: children.length,
+			renderedHeight,
+			renderedWidth,
+			largestItemHeight,
+			columns,
+			rows,
+			layoutHeight,
+			nextSize,
+		})
 	}
 
 	function scheduleMeasure(delay = 80) {
@@ -279,6 +303,10 @@ export function useAutoPageSize(
 	)
 
 	onMounted(() => {
+		listDebug('measure.mounted', {
+			id: debugId,
+			hasContainer: Boolean(container.value),
+		})
 		void nextTick(connectObservers)
 		window.addEventListener('resize', handleViewportResize)
 		window.visualViewport?.addEventListener('resize', handleViewportResize)

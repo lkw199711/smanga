@@ -3,7 +3,6 @@
 		<h2 class="td-page-title">书签</h2>
 
 		<div class="touch-dom">
-			<template>
 				<div ref="listRef" class="td-bookmark-list">
 					<t-bookmark-item
 						v-for="item in list"
@@ -14,7 +13,6 @@
 						@contextmenu="openThemeContextMenu($event, 'chapter', item)"
 					/>
 				</div>
-			</template>
 			<list-skeleton v-if="loading" />
 		</div>
 

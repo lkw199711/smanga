@@ -70,6 +70,7 @@ const shareDialog = ref(false)
 const tagsDialogKey = ref(0)
 const session = useSessionStore()
 const isAdmin = computed(() => session.isAdmin)
+const unreadCountBeforeRead = new WeakMap<object, number>()
 const item = computed(() => themeContextMenu.item || {})
 const title = computed(() => item.value.mangaName || item.value.chapterName || item.value.mediaName || '操作菜单')
 const positionStyle = ref<Record<string, string>>({ left: '0px', top: '0px' })
@@ -160,7 +161,13 @@ async function run(key: string) {
     if (themeContextMenu.target === 'media') await runMedia(key, data)
     if (route.name === 't-manga-info' && themeContextMenu.target === 'chapter' && key === 'read') {
       notifyThemeChapterReadChanged(Number(data.chapterId))
-    } else {
+    } else if (
+      !(
+        (themeContextMenu.target === 'manga' ||
+          themeContextMenu.target === 'chapter') &&
+        (key === 'collect' || key === 'read')
+      )
+    ) {
       notifyThemeContextMenuChanged(themeContextMenu.target)
     }
     closeThemeContextMenu()
@@ -172,11 +179,28 @@ async function run(key: string) {
 async function runManga(key: string, data: any) {
   const id = data.mangaId
   if (key === 'collect') {
-    if (collected.value) await collectApi.remove_collect('manga', id)
-    else await collectApi.add_collect({ ...data, collectType: 'manga', chapterId: -1, chapterName: null })
+    if (collected.value) {
+      await collectApi.remove_collect('manga', id)
+      data.isCollected = false
+    } else {
+      await collectApi.add_collect({ ...data, collectType: 'manga', chapterId: -1, chapterName: null })
+      data.isCollected = true
+    }
   } else if (key === 'read') {
-    if (Number(data.unWatched) === 0) await historyApi.unread_all_chapters(id)
-    else await historyApi.read_all_chapters(id)
+    const currentUnread = Math.max(0, Number(data.unWatched) || 0)
+    if (currentUnread === 0) {
+      await historyApi.unread_all_chapters(id)
+      data.unWatched = Math.max(
+        0,
+        Number(data.chapterCount) ||
+          unreadCountBeforeRead.get(data) ||
+          0
+      )
+    } else {
+      await historyApi.read_all_chapters(id)
+      unreadCountBeforeRead.set(data, currentUnread)
+      data.unWatched = 0
+    }
   } else if (key === 'scan') await mangaApi.scan(id)
   else if (key === 'meta') await mangaApi.reload_meta(id)
   else if (key === 'compress-all') await mangaApi.compress_all(id)
@@ -189,8 +213,13 @@ async function runChapter(key: string, data: any) {
   const id = Number(data.chapterId)
   if (!Number.isInteger(id) || id <= 0) throw new Error('无效的章节 ID')
   if (key === 'collect') {
-    if (collected.value) await collectApi.remove_collect('chapter', id)
-    else await collectApi.add_chapter_collect('chapter', id, data)
+    if (collected.value) {
+      await collectApi.remove_collect('chapter', id)
+      data.isCollected = false
+    } else {
+      await collectApi.add_chapter_collect('chapter', id, data)
+      data.isCollected = true
+    }
   } else if (key === 'read') {
     if (data.latest?.finish) {
       await Promise.all([historyApi.delete(id), latestApi.delete(id)])

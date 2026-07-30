@@ -15,6 +15,7 @@ type mangaType = {
 	describe: string;
 	star?: string;
 	chapterCount: number;
+	isCollected?: boolean;
 	parentPath?: string;
 	mangaCover: string;
 	mangaPath?: string;

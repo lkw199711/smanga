@@ -2,7 +2,6 @@
 	<div class="ta-bookmark">
 		<div class="ta-page-head"><h1>书签</h1></div>
 		<div class="touch-dom">
-			<template>
 				<div ref="listRef" class="ta-bookmark-list">
 					<t-bookmark-item
 						v-for="item in list"
@@ -13,7 +12,6 @@
 						@contextmenu="openThemeContextMenu($event, 'chapter', item)"
 					/>
 				</div>
-			</template>
 			<list-skeleton v-if="loading" />
 		</div>
 

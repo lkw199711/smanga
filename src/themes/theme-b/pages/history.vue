@@ -2,7 +2,6 @@
 	<div class="tb-page">
 		<div class="tb-page-head"><h1>历史记录</h1></div>
 		<div class="touch-dom">
-			<template>
 				<div ref="listRef" class="tb-history-list">
 					<t-history-item
 						v-for="item in list"
@@ -13,7 +12,6 @@
 						@contextmenu="openThemeContextMenu($event, 'chapter', item)"
 					/>
 				</div>
-			</template>
 			<list-skeleton v-if="loading" />
 		</div>
 

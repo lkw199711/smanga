@@ -15,6 +15,7 @@ type chapterType = {
 	picNum: number;
 	updateTime: string;
 	page?: number;
+	isCollected?: boolean;
 	latest: latestType;
 	chapter: any;
 	pageImage: string;

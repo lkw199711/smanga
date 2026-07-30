@@ -11,18 +11,25 @@
 			:variant="variant"
 			:seed="Number(item?.chapterId || item?.mangaId || 0)"
 			:file="coverFile"
-		/>
+		>
+			<div v-if="isCollected" class="t-chapter-item__collected" title="已收藏" aria-label="已收藏">★</div>
+		</t-cover>
 		<div class="t-chapter-item__info">
 			<div class="t-chapter-item__title">{{ displayTitle }}</div>
 			<div v-if="displaySub" class="t-chapter-item__sub">{{ displaySub }}</div>
+		</div>
+		<div v-if="isRead" class="t-chapter-item__read" title="已读">
+			<span aria-hidden="true">✓</span>
+			已读
 		</div>
 	</div>
 </template>
 
 <script lang="ts" setup>
-import { computed } from 'vue'
+import { computed, onMounted } from 'vue'
 import TCover from './media-cover.vue'
 import { openThemeActionSheet } from '@/themes/context-menu'
+import { useCollectionStatusStore } from '@/themes/stores/collection-status'
 
 const props = withDefaults(
 	defineProps<{
@@ -45,12 +52,36 @@ const emit = defineEmits<{
 	(e: 'contextmenu', event: MouseEvent): void
 }>()
 
+const collectionStatus = useCollectionStatusStore()
 const variant = computed(() => props.variant)
 
 /** 封面文件：优先 pageImage → chapterCover → chapterImage → mangaCover */
 const coverFile = computed(() => {
 	const i: any = props.item || {}
 	return i.pageImage || i.chapterCover || i.chapterImage || i.mangaCover || ''
+})
+
+const isCollected = computed(() => {
+	const item = props.item as any
+	if (
+		item?.isCollected === true ||
+		item?.collected === true ||
+		item?.isCollect === true
+	) {
+		return true
+	}
+	if (item?.collectId && item?.collectType === 'chapter') return true
+
+	const chapterId = Number(item?.chapterId)
+	return Number.isInteger(chapterId) && chapterId > 0
+		? collectionStatus.isChapterCollected(chapterId)
+		: false
+})
+
+const isRead = computed(() => Boolean((props.item as any)?.latest?.finish))
+
+onMounted(() => {
+	void collectionStatus.ensureLoaded()
 })
 
 /** 标题：优先 props.title → item.chapterName */
@@ -156,10 +187,22 @@ const displaySub = computed(() => {
 
 /* ===== 内部元素 ===== */
 .t-chapter-item__cover {
+	position: relative;
 	flex-shrink: 0;
 	width: 5.2rem;
 	height: 7rem;
 	border-radius: 1rem;
+}
+
+.t-chapter-item__collected {
+	position: absolute;
+	top: 0.5rem;
+	left: 0.5rem;
+	color: #facc15;
+	font-size: 1.9rem;
+	font-weight: 700;
+	line-height: 1;
+	text-shadow: 0 0.1rem 0.35rem rgba(0, 0, 0, 0.5);
 }
 
 .t-chapter-item__info {
@@ -194,5 +237,24 @@ const displaySub = computed(() => {
 	word-break: break-word;
 	overflow-wrap: anywhere;
 	opacity: 0.7;
+}
+
+.t-chapter-item__read {
+	flex: none;
+	display: inline-flex;
+	align-items: center;
+	gap: 0.35rem;
+	padding: 0.35rem 0.7rem;
+	border-radius: 99.9rem;
+	background: rgba(22, 163, 74, 0.12);
+	color: #16a34a;
+	font-size: 1.1rem;
+	font-weight: 700;
+	white-space: nowrap;
+}
+
+.t-chapter-item--D .t-chapter-item__read {
+	background: rgba(74, 222, 128, 0.14);
+	color: #4ade80;
 }
 </style>

@@ -12,7 +12,6 @@
     />
 
     <div class="touch-dom">
-      <template>
         <div ref="listRef" class="ta-grid" v-if="tab === 'manga'">
           <div
             v-for="item in list"
@@ -36,7 +35,6 @@
             @contextmenu="openThemeContextMenu($event, 'chapter', item)"
           />
         </div>
-      </template>
       <list-skeleton v-if="loading" />
     </div>
 
@@ -57,7 +55,7 @@ import TCover from '@/themes/components/media-cover.vue'
 import TChapterItem from '@/themes/components/chapter-item.vue'
 import TTabsSwitcher from '@/themes/components/tabs-switcher.vue'
 import { openThemeContextMenu } from '@/themes/context-menu'
-import { useListPage, useGoRead } from '@/themes/composables'
+import { useListPage, useGoRead, useCollectionListSync } from '@/themes/composables'
 
 const router = useRouter()
 const tab = ref<'manga' | 'chapter'>('manga')
@@ -74,6 +72,7 @@ const { page, pageSize, list, count, loading, pageSizes, pageChange } = useListP
     return { list: res?.list || [], count: Number(res?.count || 0) }
   },
 })
+useCollectionListSync(list, count, () => tab.value)
 
 function goManga(item: any) {
   if (!item?.mangaId) return

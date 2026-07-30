@@ -7,7 +7,8 @@
 			:file="coverFile"
 			fit="cover"
 		>
-			<div v-if="tagText" class="t-manga-card__tag" :class="{ 'has-color': tagColor }" :style="tagColor ? { background: tagColor } : {}">{{ tagText }}</div>
+			<div v-if="isCollected" class="t-manga-card__collected" title="已收藏" aria-label="已收藏">★</div>
+			<div v-if="tagText" class="t-manga-card__tag" :class="{ 'has-color': tagColor, 'has-collection': isCollected }" :style="tagColor ? { background: tagColor } : {}">{{ tagText }}</div>
 			<div v-if="unreadCount > 0" class="t-manga-card__unread">{{ unreadCount }}</div>
 		</t-cover>
 		<div class="t-manga-card__name">{{ name }}</div>
@@ -16,9 +17,10 @@
 </template>
 
 <script lang="ts" setup>
-import { computed } from 'vue'
+import { computed, onMounted } from 'vue'
 import TCover from './media-cover.vue'
 import { openThemeActionSheet } from '@/themes/context-menu'
+import { useCollectionStatusStore } from '@/themes/stores/collection-status'
 
 const props = withDefaults(
 	defineProps<{
@@ -41,6 +43,7 @@ const emit = defineEmits<{
 	(e: 'contextmenu', event: MouseEvent): void
 }>()
 
+const collectionStatus = useCollectionStatusStore()
 const variant = computed(() => props.variant)
 
 const name = computed(() => String(props.item?.mangaName || props.item?.title || '未知漫画'))
@@ -54,6 +57,29 @@ const unreadCount = computed(() => {
 	if (Number.isFinite(Number(props.unread)) && Number(props.unread) > 0) return Number(props.unread)
 	const n = Number((props.item as any)?.unWatched || (props.item as any)?.unread || 0)
 	return Number.isFinite(n) ? n : 0
+})
+
+const isCollected = computed(() => {
+	const item = props.item as any
+	if (
+		item?.isCollected === true ||
+		item?.collected === true ||
+		item?.isCollect === true
+	) {
+		return true
+	}
+	if (item?.collectId && (!item?.collectType || item.collectType === 'manga')) {
+		return true
+	}
+
+	const mangaId = Number(item?.mangaId)
+	return Number.isInteger(mangaId) && mangaId > 0
+		? collectionStatus.isMangaCollected(mangaId)
+		: false
+})
+
+onMounted(() => {
+	void collectionStatus.ensureLoaded()
 })
 
 const tagText = computed(() => {
@@ -150,6 +176,21 @@ const metaText = computed(() => {
 	background: rgba(0, 0, 0, 0.55);
 	color: #fff;
 	backdrop-filter: blur(0.6rem);
+}
+
+.t-manga-card__tag.has-collection {
+	top: 3.8rem;
+}
+
+.t-manga-card__collected {
+	position: absolute;
+	top: 0.8rem;
+	left: 0.8rem;
+	color: #facc15;
+	font-size: 2.4rem;
+	font-weight: 700;
+	line-height: 1;
+	text-shadow: 0 0.1rem 0.35rem rgba(0, 0, 0, 0.5);
 }
 
 .t-manga-card__unread {

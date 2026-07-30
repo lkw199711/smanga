@@ -5,7 +5,6 @@
     <t-tabs-switcher v-model="tab" variant="B" :tabs="[{label:'漫画',value:'manga',count},{label:'章节',value:'chapter',count}]" />
 
     <div class="touch-dom">
-      <template>
         <div ref="listRef" class="tb-grid" v-if="tab === 'manga'">
           <div v-for="item in list" :key="item.collectId" class="tb-card" @click="goManga(item)" @contextmenu="openThemeContextMenu($event, 'manga', item)">
             <t-cover class="tb-card-cover" variant="B" :seed="Number(item?.mangaId || 0)" :file="item?.mangaCover || ''" fit="cover" />
@@ -25,7 +24,6 @@
             @contextmenu="openThemeContextMenu($event, 'chapter', item)"
           />
         </div>
-      </template>
       <list-skeleton v-if="loading" />
     </div>
 
@@ -45,7 +43,7 @@ import TCover from '@/themes/components/media-cover.vue'
 import TChapterItem from '@/themes/components/chapter-item.vue'
 import TTabsSwitcher from '@/themes/components/tabs-switcher.vue'
 import { openThemeContextMenu } from '@/themes/context-menu'
-import { useListPage, useGoRead } from '@/themes/composables'
+import { useListPage, useGoRead, useCollectionListSync } from '@/themes/composables'
 
 const router = useRouter()
 const tab = ref<'manga' | 'chapter'>('manga')
@@ -62,6 +60,7 @@ const { page, pageSize, list, count, loading, pageSizes, pageChange } = useListP
     return { list: res?.list || [], count: Number(res?.count || 0) }
   },
 })
+useCollectionListSync(list, count, () => tab.value)
 
 function goManga(item: any) {
   if (!item?.mangaId) return
