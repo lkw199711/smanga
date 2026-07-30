@@ -292,6 +292,7 @@ const navItems = [
 	{ key: 'search', label: '搜索', icon: '🔍', path: '/t/search' },
 	{ key: 'tag', label: '标签', icon: '🏷️', path: '/t/tags' },
 	{ key: 'media', label: '媒体库', icon: '📁', path: '/t/media' },
+	{ key: 'manga-browser', label: '目录浏览', icon: '🗂️', path: '/t/manga-browser' },
 	{ key: 'setting', label: '设置', icon: '🔧', path: '/t/setting/user' },
 	{ key: 'wiki', label: '帮助文档', icon: '📖', path: '/t/wiki' },
 ]

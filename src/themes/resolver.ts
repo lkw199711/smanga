@@ -29,6 +29,7 @@ const readerLayouts: Record<ThemeKey, () => Promise<Component>> = {
 const sharedSettingsPages = {
   'user-setting': () => import('./pages/user-setting.vue'),
   'serve-setting': () => import('./pages/serve-setting.vue'),
+  'manga-browser': () => import('./pages/manga-browser.vue'),
 }
 
 // 后台管理 & 标签列表 页面所有主题共用 theme-a 版本。

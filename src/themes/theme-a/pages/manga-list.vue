@@ -66,14 +66,15 @@
       </transition>
     </div>
     <div class="ta-grid">
-      <div v-for="m in list" :key="m.mangaId" class="ta-manga-card" v-long-press="() => openThemeActionSheet('manga', m)" @click="goMangaInfo(m)" @contextmenu.prevent="openThemeContextMenu($event, 'manga', m)">
-        <div class="ta-manga-cover">
-          <img v-if="m.blob" :src="m.blob" alt="" />
-          <div v-else class="ta-cover-placeholder">📚</div>
-        </div>
-        <div class="ta-manga-name">{{ m.mangaName }}</div>
-        <div class="ta-manga-meta">{{ m.chapterCount || 0 }} 章节</div>
-      </div>
+      <t-manga-card
+        v-for="m in list"
+        :key="m.mangaId"
+        :item="m"
+        variant="A"
+        :meta="`${m.chapterCount || 0} 章节`"
+        @click="goMangaInfo(m)"
+        @contextmenu="openThemeContextMenu($event, 'manga', m)"
+      />
     </div>
     <div v-if="list.length === 0 && !loading" class="ta-empty">暂无漫画</div>
     <!-- 分页 -->
@@ -89,10 +90,9 @@
 import { ref, computed, watch } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import mangaApi from '@/api/manga'
-import imageApi from '@/api/image'
-import queue from '@/store/quque'
 import { userConfig } from '@/store'
-import { openThemeActionSheet, openThemeContextMenu } from '@/themes/context-menu'
+import TMangaCard from '@/themes/components/manga-card.vue'
+import { openThemeContextMenu } from '@/themes/context-menu'
 import useBrowseStore from '@/store/browse'
 
 const router = useRouter()
@@ -153,19 +153,12 @@ async function loadData() {
     mediaName.value = res?.mediaName || res?.data?.mediaName || mediaName.value
     browse.mangaListPage = page.value
     browse.mangaListPageSizeCache = pageSize.value
-    list.value.forEach(async (item) => {
-      queue.mangaQueue.add(() => get_poster(item))
-    })
   } catch (e) { /* empty */ }
   loading.value = false
 }
 
 function goMangaInfo(m: any) {
 	router.push(`/t/manga/${m.mangaId}`)
-}
-
-async function get_poster(item: any) {
-	item.blob = await imageApi.get({file: item.mangaCover});
 }
 </script>
 
@@ -461,64 +454,6 @@ async function get_poster(item: any) {
   gap: 1.8rem;
   row-gap: .8rem;
   min-width: 0;
-}
-
-.ta-manga-card {
-	position: relative;
-  cursor: pointer;
-  transition: transform 0.15s;
-  min-width: 0;
-}
-
-
-.ta-manga-card:hover {
-  transform: translateY(-0.2rem);
-}
-
-.ta-manga-cover {
-  aspect-ratio: 3 / 4;
-  border-radius: 1rem;
-  overflow: hidden;
-  margin-bottom: 0.8rem;
-  background: #f3f4f6;
-  box-shadow: 0 0.2rem 0.8rem rgba(0,0,0,0.06);
-}
-
-.ta-manga-cover img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.ta-cover-placeholder {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 3.2rem;
-  background: linear-gradient(135deg, #dbeafe, #bfdbfe);
-}
-
-.ta-manga-name {
-  font-size: 1.3rem;
-  font-weight: 500;
-  color: #111827;
-  line-height: 1.35;
-  max-height: calc(1.3rem * 1.35 * 2);
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  word-break: break-word;
-  overflow-wrap: anywhere;
-}
-
-.ta-manga-meta {
-  font-size: 1.1rem;
-  color: #9ca3af;
-  margin-top: 0.2rem;
 }
 
 .ta-empty {

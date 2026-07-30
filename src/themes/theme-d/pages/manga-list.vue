@@ -54,13 +54,15 @@
     </div>
 
     <div class="td-card-grid">
-      <div class="td-card" v-for="m in list" :key="m.mangaId" v-long-press="() => openThemeActionSheet('manga', m)" @click="router.push(`/t/manga/${m.mangaId}`)" @contextmenu="openThemeContextMenu($event, 'manga', m)">
-        <div class="td-card-cover"><img :src="m.poster || '/favicon.ico'" /></div>
-        <div class="td-card-body">
-          <div class="td-card-title">{{ m.mangaName }}</div>
-          <div class="td-card-sub">{{ m.chapterCount || 0 }} 章</div>
-        </div>
-      </div>
+      <t-manga-card
+        v-for="m in list"
+        :key="m.mangaId"
+        :item="m"
+        variant="D"
+        :meta="`${m.chapterCount || 0} 章节`"
+        @click="router.push(`/t/manga/${m.mangaId}`)"
+        @contextmenu="openThemeContextMenu($event, 'manga', m)"
+      />
     </div>
     <div class="td-empty" v-if="!list.length">暂无数据</div>
     <div class="td-pagination" v-if="total > pageSize">
@@ -75,10 +77,9 @@
 import { ref, computed, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import mangaApi from '@/api/manga'
-import imageApi from '@/api/image'
-import queue from '@/store/quque'
 import { userConfig } from '@/store'
-import { openThemeActionSheet, openThemeContextMenu } from '@/themes/context-menu'
+import TMangaCard from '@/themes/components/manga-card.vue'
+import { openThemeContextMenu } from '@/themes/context-menu'
 import useBrowseStore from '@/store/browse'
 
 const route = useRoute()
@@ -135,11 +136,6 @@ async function loadData() {
     mediaName.value = r?.mediaName || r?.data?.mediaName || ''
     browse.mangaListPage = page.value
     browse.mangaListPageSizeCache = pageSize.value
-    list.value.forEach((item: any) => {
-      queue.mangaQueue.add(async () => {
-        item.poster = await imageApi.get({ file: item.mangaCover })
-      })
-    })
   } catch {}
 }
 
@@ -187,15 +183,8 @@ watch(() => route.params.mediaId, () => {
 .td-sort-chip:hover { border-color: var(--accent); color: var(--accent); }
 .td-sort-chip.is-active { background: var(--accent); border-color: var(--accent); color: #fff; }
 
-/* 卡片区 */
+/* 卡片区（漫画元素与其它列表共用 t-manga-card） */
 .td-card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr)); gap: 1.6rem; }
-.td-card { position: relative; background: var(--bg2); border-radius: 1rem; overflow: hidden; cursor: pointer; border: 1px solid var(--border); transition: all .2s; }
-.td-card:hover { transform: translateY(-0.2rem); box-shadow: 0 0.4rem 1.2rem rgba(0,0,0,0.06); }
-.td-card-cover { aspect-ratio: 3/4; overflow: hidden; background: var(--bg); }
-.td-card-cover img { width: 100%; height: 100%; object-fit: cover; }
-.td-card-body { padding: 0.8rem 1rem; }
-.td-card-title { font-size: 1.3rem; font-weight: 500; color: var(--fg); line-height: 1.35; max-height: calc(1.3rem * 1.35 * 2); display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; text-overflow: ellipsis; word-break: break-word; overflow-wrap: anywhere; }
-.td-card-sub { font-size: 1.1rem; color: var(--fg2); margin-top: 0.2rem; }
 
 .td-empty { text-align: center; color: var(--fg2); padding: 4rem 0; font-size: 1.3rem; }
 
@@ -207,7 +196,6 @@ watch(() => route.params.mediaId, () => {
 /* 响应式适配 */
 @media (max-width: 76.8rem) {
   .td-card-grid { grid-template-columns: repeat(3, 1fr); gap: 1.2rem; }
-  .td-card-title { font-size: 1.2rem; }
   .td-page-title { font-size: 1.8rem; }
   .td-search-input { font-size: 1.5rem; }
 }

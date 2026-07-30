@@ -27,6 +27,7 @@ export const navMenu: MenuItem[] = [
 	{ path: '/t/search', icon: '🔍', label: '搜索', routeName: 't-search' },
 	{ path: '/t/tags', icon: '🏷️', label: '标签', routeName: 't-tag-list' },
 	{ path: '/t/media', icon: '📁', label: '媒体库', routeName: 't-media-list' },
+	{ path: '/t/manga-browser', icon: '🗂️', label: '目录浏览', routeName: 't-manga-browser' },
 	{ path: '/t/setting/user', icon: '🔧', label: '设置', routeName: 't-user-setting' },
 	{ path: '/t/wiki', icon: '📖', label: '帮助文档', routeName: 't-wiki' },
 ]

@@ -550,6 +550,7 @@ const routes: Array<RouteRecordRaw> = [
 		children: [
 			{ path: '', name: 't-home', component: ThemeBridge, props: { page: 'home' }, meta: { title: '首页' } },
 			{ path: 'media', name: 't-media-list', component: ThemeBridge, props: { page: 'media' }, meta: { title: '媒体库' } },
+			{ path: 'manga-browser', name: 't-manga-browser', component: ThemeBridge, props: { page: 'manga-browser' }, meta: { title: '目录浏览' } },
 			{ path: 'media/:mediaId', name: 't-manga-list', component: ThemeBridge, props: { page: 'manga-list' }, meta: { title: '漫画列表' } },
 			{ path: 'manga/:mangaId', name: 't-manga-info', component: LegacyMangaInfoBridge, meta: { title: '漫画详情' } },
 			{ path: 'manga/:mangaId/chapters', name: 't-chapter-list', component: ThemeBridge, props: { page: 'chapter-list' }, meta: { title: '章节列表' } },
@@ -623,6 +624,7 @@ router.beforeEach(async (to) => {
 		if (to.name === 't-chapter-list') { close(); return `/chapter-list?mangaId=${to.params.mangaId || ''}` }
 		const legacyMap: Record<string, string> = {
 			't-home': '/', 't-media-list': '/media-list', 't-history': '/history',
+			't-manga-browser': '/manga-browser',
 			't-bookmark': '/bookmark', 't-collect': '/collect', 't-search': '/search',
 			't-tag-list': '/tag-list', 't-wiki': '/wiki', 't-user-setting': '/user-setting',
 			't-serve-setting': '/serve-setting', 't-manage': '/manage', 't-login': '/login',

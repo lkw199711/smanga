@@ -93,8 +93,6 @@
 import { ref, computed, watch } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import mangaApi from '@/api/manga'
-import queue from '@/store/quque'
-import imageApi from '@/api/image'
 import TMangaCard from '@/themes/components/manga-card.vue'
 import { openThemeContextMenu } from '@/themes/context-menu'
 import useBrowseStore from '@/store/browse'
@@ -158,21 +156,12 @@ async function loadData() {
     mediaName.value = res?.mediaName || res?.data?.mediaName || mediaName.value
     browse.mangaListPage = page.value
     browse.mangaListPageSizeCache = pageSize.value
-
-    // 加载封面图片
-    list.value.forEach(async (item) => {
-      queue.mangaQueue.add(() => get_poster(item))
-    })
   } catch (e) { /* empty */ }
   loading.value = false
 }
 
 function goMangaInfo(m: any) {
   router.push(`/t/manga/${m.mangaId}`)
-}
-
-async function get_poster(item: any) {
-  item.blob = await imageApi.get({ file: item.mangaCover })
 }
 </script>
 
