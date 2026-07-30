@@ -21,7 +21,6 @@
     </div>
 
     <div class="touch-dom">
-      <template>
         <div ref="listRef" class="ta-grid" v-if="tab === 'manga'">
           <t-manga-card v-for="item in list" :key="item.mangaId" :item="item" variant="A" @click="go_manga(item)" @contextmenu="openThemeContextMenu($event, 'manga', item)" />
         </div>
@@ -37,7 +36,6 @@
             @contextmenu="openThemeContextMenu($event, 'chapter', item)"
           />
         </div>
-      </template>
       <list-skeleton v-if="loading" />
     </div>
 
