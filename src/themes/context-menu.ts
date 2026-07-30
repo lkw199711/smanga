@@ -1,6 +1,7 @@
 import { reactive } from 'vue'
 
 export type ThemeContextTarget = 'manga' | 'chapter' | 'media'
+export const THEME_CHAPTER_READ_CHANGED_EVENT = 'smanga:theme-chapter-read-changed'
 
 export const themeContextMenu = reactive({
   visible: false,
@@ -42,4 +43,10 @@ export function closeThemeContextMenu() {
 
 export function notifyThemeContextMenuChanged(target: ThemeContextTarget) {
   window.dispatchEvent(new CustomEvent('smanga:theme-context-menu-changed', { detail: { target } }))
+}
+
+export function notifyThemeChapterReadChanged(chapterId: number) {
+  window.dispatchEvent(new CustomEvent(THEME_CHAPTER_READ_CHANGED_EVENT, {
+    detail: { chapterId },
+  }))
 }

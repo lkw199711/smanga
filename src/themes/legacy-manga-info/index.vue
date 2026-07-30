@@ -251,7 +251,7 @@
 
 <script lang="ts" setup>
 import {useRoute, useRouter} from 'vue-router';
-import {onMounted, ref, reactive, computed, watch} from 'vue';
+import {onBeforeUnmount, onMounted, ref, reactive, computed, watch} from 'vue';
 import mangaApi from '@/api/manga';
 import imageApi from '@/api/image';
 import {config, userConfig} from '@/store';
@@ -271,7 +271,7 @@ import mangaModify from '@/themes/components/manga-modify-dialog.vue';
 import mangaCoverEditDialog from '@/themes/components/manga-cover-edit-dialog.vue';
 import mangaMetaEditDialog from '@/themes/components/manga-meta-edit-dialog.vue';
 import ThemeContextMenu from '@/themes/components/theme-context-menu.vue';
-import { openThemeContextMenu } from '@/themes/context-menu';
+import { openThemeContextMenu, THEME_CHAPTER_READ_CHANGED_EVENT } from '@/themes/context-menu';
 import {Document, EditPen, Picture, PriceTag, Reading, Share, Star, StarFilled, Tickets} from '@element-plus/icons-vue';
 const browse: any = useBrowseStore();
 const router = useRouter();
@@ -351,11 +351,16 @@ const chapterListDesc = computed({
 
 onMounted(async () => {
   if (!mangaId.value) return;
+  window.addEventListener(THEME_CHAPTER_READ_CHANGED_EVENT, refresh_continue_reading);
   await render_meta();
   await get_first_chapter();
   await get_latest_reading();
   await render_chapter_list();
   get_collect_status();
+});
+
+onBeforeUnmount(() => {
+  window.removeEventListener(THEME_CHAPTER_READ_CHANGED_EVENT, refresh_continue_reading);
 });
 
 // 监听 mangaId 变化（切换漫画时重新加载）
@@ -377,6 +382,12 @@ watch(
   () => userConfig.chapterOrder,
   () => render_chapter_list()
 );
+
+async function refresh_continue_reading() {
+  hasLatest.value = false;
+  await get_first_chapter();
+  await get_latest_reading();
+}
 
 async function get_first_chapter() {
   const id = mangaInfo.mangaId;

@@ -36,6 +36,7 @@
 
 <script setup lang="ts">
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import { useRoute } from 'vue-router'
 import mangaApi from '@/api/manga'
 import chapterApi from '@/api/chapter'
 import mediaApi from '@/api/media'
@@ -43,7 +44,12 @@ import collectApi from '@/api/collect'
 import historyApi from '@/api/history'
 import latestApi from '@/api/latest'
 import { Cookies } from '@/utils'
-import { closeThemeContextMenu, notifyThemeContextMenuChanged, themeContextMenu } from '@/themes/context-menu'
+import {
+  closeThemeContextMenu,
+  notifyThemeChapterReadChanged,
+  notifyThemeContextMenuChanged,
+  themeContextMenu,
+} from '@/themes/context-menu'
 import { themeState } from '@/themes/store'
 import MangaModify from '@/themes/components/manga-modify-dialog.vue'
 import ChapterModify from '@/themes/components/chapter-modify-dialog.vue'
@@ -53,6 +59,7 @@ import MangaShare from '@/components/share.vue'
 
 type Action = { key: string; label: string; icon: string; danger?: boolean }
 const menuEl = ref<HTMLElement>()
+const route = useRoute()
 const busy = ref(false)
 const collected = ref(false)
 const editMangaDialog = ref(false)
@@ -150,7 +157,11 @@ async function run(key: string) {
     if (themeContextMenu.target === 'manga') await runManga(key, data)
     if (themeContextMenu.target === 'chapter') await runChapter(key, data)
     if (themeContextMenu.target === 'media') await runMedia(key, data)
-    notifyThemeContextMenuChanged(themeContextMenu.target)
+    if (route.name === 't-manga-info' && themeContextMenu.target === 'chapter' && key === 'read') {
+      notifyThemeChapterReadChanged(Number(data.chapterId))
+    } else {
+      notifyThemeContextMenuChanged(themeContextMenu.target)
+    }
     closeThemeContextMenu()
   } catch (error) {
     ElMessage.error('操作失败，请稍后重试')
