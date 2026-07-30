@@ -77,11 +77,12 @@
         @contextmenu="openThemeContextMenu($event, 'manga', m)"
       />
     </div>
+    <list-skeleton v-if="loading" />
 
     <div v-if="list.length === 0 && !loading" class="tb-empty">暂无漫画</div>
 
     <!-- 分页 -->
-    <div v-if="totalPages > 1" class="tb-pagination">
+    <div v-if="totalPages > 1 && !loading" class="tb-pagination">
       <button :disabled="page <= 1" @click="page--; loadData()">◀</button>
       <span>{{ page }} / {{ totalPages }}</span>
       <button :disabled="page >= totalPages" @click="page++; loadData()">▶</button>
@@ -94,6 +95,7 @@ import { ref, computed, watch } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import mangaApi from '@/api/manga'
 import TMangaCard from '@/themes/components/manga-card.vue'
+import ListSkeleton from '@/components/list-skeleton.vue'
 import { openThemeContextMenu } from '@/themes/context-menu'
 import { useAutoPageSize, useThemeListPagination } from '@/themes/composables'
 import { themeListKeys } from '@/themes/stores/list-state'
@@ -106,14 +108,14 @@ const list = ref<any[]>([])
 const gridRef = ref<HTMLElement | null>(null)
 const keyword = ref('')
 const order = ref('updateTimeDesc')
-const { autoPageSize } = useAutoPageSize(gridRef, { kind: 'manga' })
+const { autoPageSize, measurementReady } = useAutoPageSize(gridRef, { kind: 'manga' })
 const { page, pageSize } = useThemeListPagination(
   computed(() => themeListKeys.manga(mediaId.value)),
   'manga',
   autoPageSize,
 )
 const total = ref(0)
-const loading = ref(false)
+const loading = ref(true)
 const mediaName = ref('')
 
 const totalPages = computed(() => Math.ceil(total.value / pageSize.value))
@@ -151,19 +153,38 @@ watch(() => route.params.mediaId, () => {
   loadData()
 }, { immediate: true })
 
-watch(pageSize, (value, oldValue) => {
-  if (value !== oldValue) loadData()
-})
+watch([pageSize, measurementReady], ([value, ready], [oldValue, oldReady]) => {
+  if (ready && (value !== oldValue || !oldReady)) loadData()
+}, { flush: 'post' })
 
-async function loadData() {
+let loadScheduled = false
+let loadSequence = 0
+
+function loadData() {
+  if (!measurementReady.value) {
+    loading.value = true
+    return
+  }
+  if (loadScheduled) return
+  loadScheduled = true
+  queueMicrotask(() => {
+    loadScheduled = false
+    void performLoad()
+  })
+}
+
+async function performLoad() {
+  const sequence = ++loadSequence
   loading.value = true
+  list.value = []
   try {
     const res = await mangaApi.get(mediaId.value, page.value, pageSize.value, order.value, keyword.value)
+    if (sequence !== loadSequence) return
     list.value = res?.list || res?.data?.list || []
     total.value = res?.count || res?.data?.count || 0
     mediaName.value = res?.mediaName || res?.data?.mediaName || mediaName.value
   } catch (e) { /* empty */ }
-  loading.value = false
+  if (sequence === loadSequence) loading.value = false
 }
 
 function goMangaInfo(m: any) {

@@ -21,10 +21,7 @@
     </div>
 
     <div class="touch-dom">
-      <template v-if="loading">
-        <list-skeleton />
-      </template>
-      <template v-else>
+      <template>
         <div ref="listRef" class="ta-grid" v-if="tab === 'manga'">
           <t-manga-card v-for="item in list" :key="item.mangaId" :item="item" variant="A" @click="go_manga(item)" @contextmenu="openThemeContextMenu($event, 'manga', item)" />
         </div>
@@ -41,9 +38,10 @@
           />
         </div>
       </template>
+      <list-skeleton v-if="loading" />
     </div>
 
-    <media-pager :page="page" :page-size="activePageSize || defaultPageSize" :count="count" :page-size-config="pageSizes" @page-change="page_change" />
+    <media-pager v-if="!loading" :page="page" :page-size="activePageSize || defaultPageSize" :count="count" :page-size-config="pageSizes" @page-change="page_change" />
 
     <div v-if="searched && !loading && list.length === 0" class="ta-empty">未找到结果</div>
   </div>
@@ -79,28 +77,39 @@ const activePageSize = ref(0)
 
 const orderBy = computed(() => (tab.value === 'manga' ? userConfig.order : userConfig.chapterOrder))
 const pageSizeKind = computed(() => tab.value === 'manga' ? 'manga' : 'chapter')
-const { autoPageSize } = useAutoPageSize(listRef, { kind: pageSizeKind })
+const { autoPageSize, measurementReady } = useAutoPageSize(listRef, { kind: pageSizeKind })
 const { pageSizes, defaultPageSize } = usePageSize(pageSizeKind, autoPageSize)
+let pendingSearch = false
+let searchSequence = 0
 
 async function page_change(pageParams = 1, pageSize = defaultPageSize.value) {
   const q = keyword.value.trim()
   if (!q) return
 
   searched.value = true
+  if (!measurementReady.value) {
+    pendingSearch = true
+    loading.value = true
+    return
+  }
+  pendingSearch = false
+  const sequence = ++searchSequence
   page.value = pageParams
   activePageSize.value = pageSize
   loading.value = true
   list.value = []
   try {
     const res = await searchApi.get(q, tab.value, pageParams, pageSize, orderBy.value)
+    if (sequence !== searchSequence) return
     list.value = res?.list || []
     count.value = Number(res?.count || 0)
     await router.replace({ name: route.name as any, query: { ...route.query, q } })
   } catch {
+    if (sequence !== searchSequence) return
     list.value = []
     count.value = 0
   } finally {
-    loading.value = false
+    if (sequence === searchSequence) loading.value = false
   }
 }
 
@@ -138,13 +147,18 @@ watch(
   }
 )
 
-watch(pageSizes, sizes => {
+watch([pageSizes, measurementReady], ([sizes, ready]) => {
+  if (!ready) return
+  if (pendingSearch) {
+    void page_change(1, sizes[0] || defaultPageSize.value)
+    return
+  }
   if (sizes.length !== 1) return
   const value = sizes[0]
   if (!searched.value || value < 1 || value === activePageSize.value) return
   const firstItemIndex = (page.value - 1) * Math.max(1, activePageSize.value)
   void page_change(Math.floor(firstItemIndex / value) + 1, value)
-})
+}, { flush: 'post' })
 
 watch(
   () => orderBy.value,

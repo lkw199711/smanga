@@ -3,10 +3,7 @@
 		<h2 class="td-page-title">阅读历史</h2>
 
 		<div class="touch-dom">
-			<template v-if="loading">
-				<list-skeleton />
-			</template>
-			<template v-else>
+			<template>
 				<div ref="listRef" class="td-history-list">
 					<t-history-item
 						v-for="item in list"
@@ -18,9 +15,11 @@
 					/>
 				</div>
 			</template>
+			<list-skeleton v-if="loading" />
 		</div>
 
 		<media-pager
+			v-if="!loading"
 			:page="page"
 			:page-size="pageSize"
 			:count="count"
@@ -46,6 +45,7 @@ const listRef = ref<HTMLElement | null>(null)
 const { page, pageSize, list, count, loading, pageSizes, pageChange } = useListPage<any>({
 	kind: 'chapter',
 	container: listRef,
+	estimatedItemHeight: 120,
 	loader: async ({ page, pageSize }) => {
 		const res = await historyApi.get_history(page, pageSize)
 		return { list: res?.list || [], count: Number(res?.count || 0) }

@@ -1,12 +1,10 @@
 import { ref, watch, isRef, type Ref } from 'vue'
-import { config } from '@/store'
-import { chapterPageSize, mangaPageSize } from '@/store/page-size'
 import { preferencesStore } from '@/store/preferences'
 
 export type PageSizeKind = 'chapter' | 'manga'
 
 /**
- * 统一封装分页容量优先级：用户固定值 > 元素/布局自动测量值 > 屏幕分档回退值。
+ * New-theme page-size priority: user preference > measured layout.
  * 任一来源或 kind 变化时都会自动刷新。
  */
 export function usePageSize(
@@ -37,15 +35,19 @@ export function usePageSize(
 			return
 		}
 
-		const screen = config.screenType as keyof typeof chapterPageSize
-		const table = readKind() === 'manga' ? mangaPageSize : chapterPageSize
-		const sizes = table[screen] || []
-		pageSizes.value = sizes
-		defaultPageSize.value = sizes[0] || 10
+		// Automatic theme pages wait for a real layout measurement. They must
+		// not issue a preliminary request using the old screen-width table.
+		if (autoPageSize) {
+			pageSizes.value = []
+			defaultPageSize.value = 1
+			return
+		}
+
+		pageSizes.value = [10]
+		defaultPageSize.value = 10
 	}
 
 	refresh()
-	watch(() => config.screenType, refresh)
 	watch(
 		() => [preferencesStore.mangaPageSize, preferencesStore.chapterPageSize],
 		refresh,

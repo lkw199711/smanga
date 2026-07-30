@@ -44,6 +44,8 @@ export interface UseListPageOptions<T> {
 	container?: Ref<HTMLElement | null>
 	/** Space kept below the list for its pager. */
 	bottomReserve?: MaybeRefOrGetter<number>
+	/** Row-height model used while the real list is still behind the skeleton. */
+	estimatedItemHeight?: MaybeRefOrGetter<number>
 }
 
 /**
@@ -63,12 +65,14 @@ export function useListPage<T = any>(options: UseListPageOptions<T>) {
 	}
 
 	const inferredCacheKey = computed(() => themeListKeys.route(route.name || route.path))
-	const autoPageSize = options.container
+	const autoSizing = options.container
 		? useAutoPageSize(options.container, {
 			kind: kindRef,
 			bottomReserve: options.bottomReserve,
-		}).autoPageSize
+			estimatedItemHeight: options.estimatedItemHeight,
+		})
 		: undefined
+	const autoPageSize = autoSizing?.autoPageSize
 	const {
 		page,
 		pageSize,
@@ -80,11 +84,21 @@ export function useListPage<T = any>(options: UseListPageOptions<T>) {
 	// 保留完整 Ref 类型，让 Vue 模板正确解包泛型数组。
 	const list = ref<T[]>([]) as Ref<T[]>
 	const count = ref(0)
-	const loading = ref(false)
+	const loading = ref(Boolean(options.container))
 	let loadSequence = 0
 	let mounted = false
+	let pendingLoad = false
+	let hasRequested = false
 
 	async function load() {
+		if (autoSizing && !autoSizing.measurementReady.value) {
+			pendingLoad = true
+			loading.value = true
+			return
+		}
+
+		pendingLoad = false
+		hasRequested = true
 		const sequence = ++loadSequence
 		loading.value = true
 		list.value = []
@@ -122,11 +136,44 @@ export function useListPage<T = any>(options: UseListPageOptions<T>) {
 		if (immediate) void load()
 	})
 
-	if (autoPageSize) {
-		watch(autoPageSize, value => {
-			if (mounted && value > 0) void load()
-		})
+	if (autoSizing) {
+		watch(
+			[autoSizing.autoPageSize, autoSizing.measurementReady],
+			([value, ready], [oldValue]) => {
+				if (!mounted || !ready) return
+				if (pendingLoad || (immediate && !hasRequested)) {
+					void load()
+					return
+				}
+				if (hasRequested && value > 0 && value !== oldValue) void load()
+			},
+			{ flush: 'post' },
+		)
 	}
 
-	return { page, pageSize, pageSizes, autoPageSize, list, count, loading, load, pageChange, reset }
+	watch(
+		kindRef,
+		() => {
+			if (autoSizing) {
+				pendingLoad = true
+				loading.value = true
+				autoSizing.recalculate()
+			}
+		},
+		{ flush: 'sync' },
+	)
+
+	return {
+		page,
+		pageSize,
+		pageSizes,
+		autoPageSize,
+		measurementReady: autoSizing?.measurementReady,
+		list,
+		count,
+		loading,
+		load,
+		pageChange,
+		reset,
+	}
 }

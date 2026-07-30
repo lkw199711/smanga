@@ -64,8 +64,9 @@
         @contextmenu="openThemeContextMenu($event, 'manga', m)"
       />
     </div>
-    <div class="td-empty" v-if="!list.length">暂无数据</div>
-    <div class="td-pagination" v-if="total > pageSize">
+    <list-skeleton v-if="loading" />
+    <div class="td-empty" v-if="!list.length && !loading">暂无数据</div>
+    <div class="td-pagination" v-if="total > pageSize && !loading">
       <button :disabled="page<=1" @click="page--;loadData()">上一页</button>
       <span>{{ page }} / {{ Math.ceil(total/pageSize) }}</span>
       <button :disabled="page>=Math.ceil(total/pageSize)" @click="page++;loadData()">下一页</button>
@@ -79,6 +80,7 @@ import { useRoute, useRouter } from 'vue-router'
 import mangaApi from '@/api/manga'
 import { userConfig } from '@/store'
 import TMangaCard from '@/themes/components/manga-card.vue'
+import ListSkeleton from '@/components/list-skeleton.vue'
 import { openThemeContextMenu } from '@/themes/context-menu'
 import { useAutoPageSize, useThemeListPagination } from '@/themes/composables'
 import { themeListKeys } from '@/themes/stores/list-state'
@@ -89,7 +91,7 @@ const mediaId = computed(() => Number(route.params.mediaId) || 0)
 const list = ref<any[]>([])
 const gridRef = ref<HTMLElement | null>(null)
 const mediaName = ref('')
-const { autoPageSize } = useAutoPageSize(gridRef, { kind: 'manga' })
+const { autoPageSize, measurementReady } = useAutoPageSize(gridRef, { kind: 'manga' })
 const { page, pageSize } = useThemeListPagination(
   computed(() => themeListKeys.manga(mediaId.value)),
   'manga',
@@ -97,6 +99,7 @@ const { page, pageSize } = useThemeListPagination(
 )
 const total = ref(0)
 const keyword = ref('')
+const loading = ref(true)
 
 // order 桥接全局 userConfig.order,以保留原来的联动
 const order = computed<string>({
@@ -133,13 +136,34 @@ function setOrder(v: string) {
   loadData()
 }
 
-async function loadData() {
+let loadScheduled = false
+let loadSequence = 0
+
+function loadData() {
+  if (!measurementReady.value) {
+    loading.value = true
+    return
+  }
+  if (loadScheduled) return
+  loadScheduled = true
+  queueMicrotask(() => {
+    loadScheduled = false
+    void performLoad()
+  })
+}
+
+async function performLoad() {
+  const sequence = ++loadSequence
+  loading.value = true
+  list.value = []
   try {
     const r = await mangaApi.get(mediaId.value, page.value, pageSize.value, order.value, keyword.value)
+    if (sequence !== loadSequence) return
     list.value = r?.list || r?.data?.list || []
     total.value = r?.count || r?.data?.total || 0
     mediaName.value = r?.mediaName || r?.data?.mediaName || ''
   } catch {}
+  if (sequence === loadSequence) loading.value = false
 }
 
 watch(() => route.params.mediaId, () => {
@@ -147,9 +171,9 @@ watch(() => route.params.mediaId, () => {
   loadData()
 }, { immediate: true })
 
-watch(pageSize, (value, oldValue) => {
-  if (value !== oldValue) loadData()
-})
+watch([pageSize, measurementReady], ([value, ready], [oldValue, oldReady]) => {
+  if (ready && (value !== oldValue || !oldReady)) loadData()
+}, { flush: 'post' })
 </script>
 
 <style scoped>

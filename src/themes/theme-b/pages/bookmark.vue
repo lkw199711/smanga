@@ -2,10 +2,7 @@
 	<div class="tb-page">
 		<div class="tb-page-head"><h1>书签</h1></div>
 		<div class="touch-dom">
-			<template v-if="loading">
-				<list-skeleton />
-			</template>
-			<template v-else>
+			<template>
 				<div ref="listRef" class="tb-bookmark-list">
 					<t-bookmark-item
 						v-for="item in list"
@@ -17,9 +14,11 @@
 					/>
 				</div>
 			</template>
+			<list-skeleton v-if="loading" />
 		</div>
 
 		<media-pager
+			v-if="!loading"
 			:page="page"
 			:page-size="pageSize"
 			:count="count"

@@ -15,6 +15,8 @@ export interface AutoPageSizeOptions {
 	kind?: MaybeRefOrGetter<PageSizeKind>
 	/** Space kept for the pager below the list, in CSS pixels. */
 	bottomReserve?: MaybeRefOrGetter<number>
+	/** Expected row height used before real list data exists. */
+	estimatedItemHeight?: MaybeRefOrGetter<number>
 	maxPageSize?: number
 }
 
@@ -65,6 +67,67 @@ function firstRowColumnCount(rects: DOMRect[]) {
 	return Math.max(1, rects.filter(rect => Math.abs(rect.top - firstTop) < 2).length)
 }
 
+function cssLengthToPixels(value: string, element: HTMLElement) {
+	const match = value.trim().match(/^([\d.]+)(px|rem|em)$/)
+	if (!match) return 0
+	const amount = Number(match[1])
+	if (!Number.isFinite(amount)) return 0
+	if (match[2] === 'px') return amount
+	if (match[2] === 'rem') {
+		return amount * finitePixel(getComputedStyle(document.documentElement).fontSize)
+	}
+	return amount * finitePixel(getComputedStyle(element).fontSize)
+}
+
+function countResolvedGridTracks(template: string) {
+	if (!template || template === 'none' || template.includes('repeat(')) return 0
+	let depth = 0
+	let count = 0
+	let inTrack = false
+	for (const char of template.trim()) {
+		if (char === '(') depth += 1
+		if (char === ')') depth = Math.max(0, depth - 1)
+		if (/\s/.test(char) && depth === 0) {
+			if (inTrack) count += 1
+			inTrack = false
+		} else {
+			inTrack = true
+		}
+	}
+	return count + (inTrack ? 1 : 0)
+}
+
+function gridColumnCount(
+	element: HTMLElement,
+	style: CSSStyleDeclaration,
+	columnGap: number,
+	rects: DOMRect[],
+) {
+	if (style.display !== 'grid') return 1
+
+	const template = style.gridTemplateColumns
+	const fixedRepeat = template.match(/repeat\(\s*(\d+)\s*,/)
+	if (fixedRepeat) return Math.max(1, Number(fixedRepeat[1]))
+
+	const autoRepeat = template.match(
+		/repeat\(\s*auto-(?:fill|fit)\s*,\s*minmax\(\s*([\d.]+(?:px|rem|em))/,
+	)
+	if (autoRepeat) {
+		const minimumWidth = cssLengthToPixels(autoRepeat[1], element)
+		if (minimumWidth > 0) {
+			return Math.max(
+				1,
+				Math.floor((element.clientWidth + columnGap) / (minimumWidth + columnGap)),
+			)
+		}
+	}
+
+	const resolvedTracks = countResolvedGridTracks(template)
+	if (resolvedTracks > 0) return resolvedTracks
+	if (rects.length) return firstRowColumnCount(rects)
+	return 1
+}
+
 /**
  * Calculates a page size from the rendered list rather than viewport
  * breakpoints. A value of 0 means that there is not enough rendered
@@ -75,6 +138,7 @@ export function useAutoPageSize(
 	options: AutoPageSizeOptions = {},
 ) {
 	const autoPageSize = ref(0)
+	const measurementReady = ref(false)
 	let resizeObserver: ResizeObserver | null = null
 	let mutationObserver: MutationObserver | null = null
 	let observedScrollPort: HTMLElement | null = null
@@ -94,18 +158,20 @@ export function useAutoPageSize(
 		const kind = currentKind(options.kind)
 		if (hasFixedPreference(kind)) {
 			autoPageSize.value = 0
+			measurementReady.value = true
 			return
 		}
 
 		const element = container.value
-		if (!element?.isConnected) return
+		if (!element?.isConnected || element.clientWidth <= 0) {
+			measurementReady.value = false
+			return
+		}
 
 		const children = Array.from(element.children).filter(
 			(child): child is HTMLElement =>
 				child instanceof HTMLElement && getComputedStyle(child).display !== 'none',
 		)
-		if (!children.length) return
-
 		const elementStyle = getComputedStyle(element)
 		const rects = children.map(child => child.getBoundingClientRect())
 		const rowGap = finitePixel(elementStyle.rowGap)
@@ -119,27 +185,33 @@ export function useAutoPageSize(
 			measuredWidth = elementWidth
 		}
 
-		const renderedHeight = Math.max(...rects.map(rect => rect.height), 1)
-		const renderedWidth = Math.max(1, Math.min(...rects.map(rect => rect.width)))
+		const columns = gridColumnCount(element, elementStyle, columnGap, rects)
+		const estimatedWidth = Math.max(
+			1,
+			(elementWidth - Math.max(0, columns - 1) * columnGap) / columns,
+		)
+		const renderedHeight = rects.length
+			? Math.max(...rects.map(rect => rect.height), 1)
+			: 0
+		const renderedWidth = rects.length
+			? Math.max(1, Math.min(...rects.map(rect => rect.width)))
+			: estimatedWidth
+		const configuredItemHeight = Number(toValue(options.estimatedItemHeight))
+		const fallbackItemHeight = Number.isFinite(configuredItemHeight) && configuredItemHeight > 0
+			? configuredItemHeight
+			: 96
 		const safeHeight = kind === 'manga'
-			? Math.max(renderedHeight, renderedWidth * 4 / 3 + 58)
-			: renderedHeight
+			? Math.max(renderedHeight, renderedWidth * 4 / 3 + 82)
+			: Math.max(renderedHeight, fallbackItemHeight)
 		largestItemHeight = Math.max(largestItemHeight, safeHeight)
 
-		let columns = 1
-		if (elementStyle.display === 'grid') {
-			const visibleColumns = firstRowColumnCount(rects)
-			const estimatedColumns = Math.max(
-				1,
-				Math.floor((elementWidth + columnGap) / (renderedWidth + columnGap)),
-			)
-			columns = Math.max(visibleColumns, estimatedColumns)
-		}
-
 		const scrollPort = findScrollPort(element)
-		const viewportHeight = scrollPort
-			? scrollPort.clientHeight
-			: (window.visualViewport?.height || window.innerHeight)
+		const viewportBottom = window.visualViewport?.height || window.innerHeight
+		const elementTop = element.getBoundingClientRect().top
+		const scrollPortRect = scrollPort?.getBoundingClientRect()
+		const layoutTop = Math.max(elementTop, scrollPortRect?.top || 0)
+		const layoutBottom = Math.min(viewportBottom, scrollPortRect?.bottom || viewportBottom)
+		const layoutHeight = Math.max(0, layoutBottom - layoutTop)
 		const rootFontSize = finitePixel(getComputedStyle(document.documentElement).fontSize) || 10
 		const configuredReserve = Number(toValue(options.bottomReserve))
 		const bottomReserve = Number.isFinite(configuredReserve) && configuredReserve >= 0
@@ -147,7 +219,7 @@ export function useAutoPageSize(
 			: rootFontSize * 10
 		const usableHeight = Math.max(
 			largestItemHeight,
-			viewportHeight - bottomReserve - visibleMobileNavHeight(),
+			layoutHeight - bottomReserve - visibleMobileNavHeight(),
 		)
 		const rows = Math.max(
 			1,
@@ -157,6 +229,7 @@ export function useAutoPageSize(
 		const nextSize = Math.min(maximum, Math.max(columns, columns * rows))
 
 		if (nextSize !== autoPageSize.value) autoPageSize.value = nextSize
+		measurementReady.value = true
 	}
 
 	function scheduleMeasure(delay = 80) {
@@ -196,9 +269,11 @@ export function useAutoPageSize(
 			preferencesStore.mangaPageSize,
 			preferencesStore.chapterPageSize,
 			Number(toValue(options.bottomReserve)),
+			Number(toValue(options.estimatedItemHeight)),
 		],
 		() => {
 			largestItemHeight = 0
+			measurementReady.value = false
 			scheduleMeasure(0)
 		},
 	)
@@ -217,5 +292,12 @@ export function useAutoPageSize(
 		window.visualViewport?.removeEventListener('resize', handleViewportResize)
 	})
 
-	return { autoPageSize, recalculate: () => scheduleMeasure(0) }
+	return {
+		autoPageSize,
+		measurementReady,
+		recalculate: () => {
+			measurementReady.value = false
+			scheduleMeasure(0)
+		},
+	}
 }

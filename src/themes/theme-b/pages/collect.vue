@@ -5,10 +5,7 @@
     <t-tabs-switcher v-model="tab" variant="B" :tabs="[{label:'漫画',value:'manga',count},{label:'章节',value:'chapter',count}]" />
 
     <div class="touch-dom">
-      <template v-if="loading">
-        <list-skeleton />
-      </template>
-      <template v-else>
+      <template>
         <div ref="listRef" class="tb-grid" v-if="tab === 'manga'">
           <div v-for="item in list" :key="item.collectId" class="tb-card" @click="goManga(item)" @contextmenu="openThemeContextMenu($event, 'manga', item)">
             <t-cover class="tb-card-cover" variant="B" :seed="Number(item?.mangaId || 0)" :file="item?.mangaCover || ''" fit="cover" />
@@ -29,9 +26,10 @@
           />
         </div>
       </template>
+      <list-skeleton v-if="loading" />
     </div>
 
-    <media-pager :page="page" :page-size="pageSize" :count="count" :page-size-config="pageSizes" @page-change="pageChange" />
+    <media-pager v-if="!loading" :page="page" :page-size="pageSize" :count="count" :page-size-config="pageSizes" @page-change="pageChange" />
 
     <div v-if="!loading && !list.length" class="tb-empty">暂无收藏</div>
   </div>

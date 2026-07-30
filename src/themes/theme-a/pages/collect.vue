@@ -12,10 +12,7 @@
     />
 
     <div class="touch-dom">
-      <template v-if="loading">
-        <list-skeleton />
-      </template>
-      <template v-else>
+      <template>
         <div ref="listRef" class="ta-grid" v-if="tab === 'manga'">
           <div
             v-for="item in list"
@@ -40,9 +37,10 @@
           />
         </div>
       </template>
+      <list-skeleton v-if="loading" />
     </div>
 
-    <media-pager :page="page" :page-size="pageSize" :count="count" :page-size-config="pageSizes" @page-change="pageChange" />
+    <media-pager v-if="!loading" :page="page" :page-size="pageSize" :count="count" :page-size-config="pageSizes" @page-change="pageChange" />
 
     <div v-if="!loading && list.length === 0" class="ta-empty">暂无收藏</div>
   </div>

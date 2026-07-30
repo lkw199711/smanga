@@ -24,8 +24,10 @@
         @contextmenu="openThemeContextMenu($event, 'chapter', ch)"
       />
     </div>
+    <list-skeleton v-if="loading" />
     <div v-if="!loading && list.length === 0" class="ta-empty">暂无章节</div>
     <media-pager
+      v-if="!loading"
       :page="page"
       :page-size="pageSize"
       :count="count"
@@ -42,6 +44,7 @@ import chapterApi from '@/api/chapter'
 import mangaApi from '@/api/manga'
 import { globalData, userConfig } from '@/store'
 import MediaPager from '@/components/media-pager.vue'
+import ListSkeleton from '@/components/list-skeleton.vue'
 import TChapterItem from '@/themes/components/chapter-item.vue'
 import { openThemeContextMenu } from '@/themes/context-menu'
 import { useListPage } from '@/themes/composables'

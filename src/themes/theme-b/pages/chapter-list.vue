@@ -41,8 +41,10 @@
             @contextmenu="openThemeContextMenu($event, 'chapter', ch)"
           />
         </div>
+        <list-skeleton v-if="loading" />
         <div v-if="chapterList.length === 0 && !loading" class="tb-empty">暂无章节</div>
         <media-pager
+          v-if="!loading"
           :page="page"
           :page-size="pageSize"
           :count="total"
@@ -63,6 +65,7 @@ import collectApi from '@/api/collect'
 import TCover from '@/themes/components/media-cover.vue'
 import TChapterItem from '@/themes/components/chapter-item.vue'
 import MediaPager from '@/components/media-pager.vue'
+import ListSkeleton from '@/components/list-skeleton.vue'
 import { openThemeContextMenu } from '@/themes/context-menu'
 import { userConfig } from '@/store'
 import { useAutoPageSize, useGoRead, useThemeListPagination } from '@/themes/composables'
@@ -77,15 +80,17 @@ const chapterList = ref<any[]>([])
 const listRef = ref<HTMLElement | null>(null)
 const isCollected = ref(false)
 const mangaId = ref<number | null>(null)
+const infoReady = ref(false)
 const order = computed(() => userConfig.chapterOrder)
-const { autoPageSize } = useAutoPageSize(listRef, { kind: 'chapter' })
+const { autoPageSize, measurementReady, recalculate } = useAutoPageSize(listRef, { kind: 'chapter' })
 const { page, pageSize, pageSizes, setPage } = useThemeListPagination(
   computed(() => themeListKeys.chapter(mangaId.value)),
   'chapter',
   autoPageSize,
 )
 const total = ref(0)
-const loading = ref(false)
+const loading = ref(true)
+let loadSequence = 0
 
 function onPageChange(nextPage = 1, nextPageSize = pageSize.value) {
   setPage(nextPage, nextPageSize)
@@ -96,6 +101,8 @@ onMounted(async () => {
   mangaId.value = Number(route.params.mangaId)
   if (mangaId.value) {
     await loadMangaInfo()
+    infoReady.value = true
+    recalculate()
     await loadChapters()
     await checkCollectStatus()
   }
@@ -103,17 +110,20 @@ onMounted(async () => {
 
 watch(() => route.params.mangaId, async (newMangaId) => {
   if (newMangaId) {
+    infoReady.value = false
     mangaId.value = Number(newMangaId)
     await loadMangaInfo()
+    infoReady.value = true
+    recalculate()
     await loadChapters()
     await checkCollectStatus()
   }
 })
 
 watch(order, () => onPageChange(1, pageSize.value))
-watch(autoPageSize, value => {
-  if (value > 0) void loadChapters()
-})
+watch([pageSize, measurementReady], ([value, ready], [oldValue, oldReady]) => {
+  if (infoReady.value && ready && (value !== oldValue || !oldReady)) void loadChapters()
+}, { flush: 'post' })
 
 async function loadMangaInfo() {
   if (!mangaId.value) return
@@ -127,7 +137,13 @@ async function loadMangaInfo() {
 
 async function loadChapters() {
   if (!mangaId.value) return
+  if (!infoReady.value || !measurementReady.value) {
+    loading.value = true
+    return
+  }
+  const sequence = ++loadSequence
   loading.value = true
+  chapterList.value = []
   try {
     const res = await chapterApi.get({
       mangaId: mangaId.value,
@@ -135,13 +151,15 @@ async function loadChapters() {
       pageSize: pageSize.value,
       order: order.value,
     })
+    if (sequence !== loadSequence) return
     chapterList.value = res?.list || []
     total.value = Number(res?.count || 0)
   } catch (e) {
+    if (sequence !== loadSequence) return
     chapterList.value = []
     total.value = 0
   }
-  loading.value = false
+  if (sequence === loadSequence) loading.value = false
 }
 
 async function checkCollectStatus() {
