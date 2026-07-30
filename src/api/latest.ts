@@ -57,6 +57,14 @@ const latestApi = {
 
 		return (await res).data.list;
 	},
+
+	/**
+	 * 获取首页继续阅读列表，返回应继续阅读的章节及页码。
+	 */
+	async get_progress(page = 1, pageSize = 6) {
+		const res = await ajax.get('latest/progress', { params: { page, pageSize } });
+		return res.data.list || [];
+	},
 };
 
 export default latestApi;

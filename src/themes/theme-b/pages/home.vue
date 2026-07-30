@@ -25,13 +25,13 @@
 				<a class="sb-link" @click="router.push('/t/history')">查看全部 →</a>
 			</div>
 			<div class="sb-continue">
-				<t-history-item
-					v-for="item in historyList"
-					:key="item.chapterId"
+				<t-continue-item
+					v-for="item in continueList"
+					:key="item.mangaId"
 					:item="item"
 					variant="B"
 					@click="goRead(item)"
-					@contextmenu="openThemeContextMenu($event, 'chapter', item)"
+					@contextmenu="openThemeContextMenu($event, 'manga', item)"
 				/>
 			</div>
 		</section>
@@ -65,11 +65,10 @@
 <script lang="ts" setup>
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import historyApi from '@/api/history'
 import latestApi from '@/api/latest'
 import chartsApi from '@/api/charts'
 import TMangaCard from '@/themes/components/manga-card.vue'
-import THistoryItem from '@/themes/components/history-item.vue'
+import TContinueItem from '@/themes/components/continue-item.vue'
 import { openThemeContextMenu } from '@/themes/context-menu'
 import { useGoRead } from '@/themes/composables'
 
@@ -84,15 +83,15 @@ const statsData = ref({
 	readToday: 0,
 	readThisWeek: 0
 })
-const historyList = ref<any[]>([])
+const continueList = ref<any[]>([])
 const latestList = ref<any[]>([])
 const hotMangaIdSet = ref<Set<number>>(new Set())
 
 onMounted(async () => {
 	try {
-		const [statsRes, historyRes, latestRes, rankingRes] = await Promise.allSettled([
+		const [statsRes, continueRes, latestRes, rankingRes] = await Promise.allSettled([
 			chartsApi.get_count(),
-			historyApi.get(1, 6),
+			latestApi.get_progress(1, 6),
 			latestApi.get(1, 12),
 			chartsApi.ranking(30),
 		])
@@ -102,7 +101,7 @@ onMounted(async () => {
 				...(statsRes.value || {})
 			}
 		}
-		if (historyRes.status === 'fulfilled') historyList.value = historyRes.value?.list || []
+		if (continueRes.status === 'fulfilled') continueList.value = continueRes.value
 		if (latestRes.status === 'fulfilled') {
 			latestList.value = Array.isArray(latestRes.value) ? latestRes.value : (latestRes.value?.list || [])
 		}

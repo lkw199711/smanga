@@ -37,13 +37,13 @@
 				<a class="sd-link" @click="router.push('/t/history')">查看全部 →</a>
 			</div>
 			<div class="sd-continue">
-				<t-history-item
+				<t-continue-item
 					v-for="item in continueReading"
-					:key="item.chapterId"
+					:key="item.mangaId"
 					:item="item"
 					variant="D"
 					@click="goRead(item)"
-					@contextmenu="openThemeContextMenu($event, 'chapter', item)"
+					@contextmenu="openThemeContextMenu($event, 'manga', item)"
 				/>
 			</div>
 		</section>
@@ -70,11 +70,10 @@
 <script lang="ts" setup>
 import { onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
-import historyApi from '@/api/history'
 import latestApi from '@/api/latest'
 import chartsApi from '@/api/charts'
 import imageApi from '@/api/image'
-import THistoryItem from '@/themes/components/history-item.vue'
+import TContinueItem from '@/themes/components/continue-item.vue'
 import { openThemeContextMenu } from '@/themes/context-menu'
 import { useGoRead } from '@/themes/composables'
 
@@ -123,16 +122,6 @@ function getGradient(id: number) {
 	return palette[id % palette.length]
 }
 
-function getProgress(item: any) {
-	const latest = item?.latest
-	if (!latest) return 0
-	if (latest.finish) return 100
-	const page = Number(latest.page || 0)
-	const count = Number(latest.count || 0)
-	if (!page || !count) return 0
-	return Math.min(100, Math.max(0, Math.round((page / count) * 100)))
-}
-
 onMounted(async () => {
 	try {
 		const r = await chartsApi.get_count()
@@ -146,8 +135,7 @@ onMounted(async () => {
 	} catch { }
 
 	try {
-		const r = await historyApi.get_history(1, 6)
-		continueReading.value = r?.list || []
+		continueReading.value = await latestApi.get_progress(1, 6)
 	} catch { }
 
 	try {
@@ -163,12 +151,13 @@ onMounted(async () => {
 		}))
 	} catch { }
 
-	console.log('continueReading', continueReading.value)
 	await warmCovers(recentAdded.value, { kind: 'manga' })
 })
 
-function goManga(item: MangaCard) {
-	router.push(`/t/manga/${item.id}`)
+function goManga(item: { mangaId?: number; id?: number }) {
+	const id = Number(item?.mangaId || item?.id)
+	if (!id) return
+	router.push(`/t/manga/${id}`)
 }
 
 async function warmCovers(list: any[], opt: { kind: 'manga' | 'chapter' }) {
