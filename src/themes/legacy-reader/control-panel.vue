@@ -92,6 +92,22 @@
             </button>
           </div>
 
+          <!-- 页码滑块 -->
+          <template v-if="browse.pageCount > 0">
+            <div class="lcp-section-label lcp-page-label">
+              <span>{{ $t('option.jumpPage') }}</span>
+              <span class="lcp-page-progress">{{ panelPage }} / {{ browse.pageCount }}</span>
+            </div>
+            <div class="lcp-page-slider">
+              <el-slider
+                v-model="panelPage"
+                :min="1"
+                :max="browse.pageCount"
+                @change="jumpToPage"
+              />
+            </div>
+          </template>
+
           <!-- 高级操作: 跳页 / 设图宽 / 双页方向 / 移除首张 -->
           <div class="lcp-section-label">{{ $t('option.option') }}</div>
           <div class="lcp-chip-row">
@@ -256,6 +272,17 @@ function scrollCurrentChapterIntoView() {
   if (idx < 0) return
   const el = container.querySelector<HTMLElement>(`[data-index="${idx}"]`)
   if (el) el.scrollIntoView({ block: 'center' })
+}
+
+// 页码滑块: 与 browse.page 单向同步, 拖动确认后触发视图跳页
+const panelPage = ref(browse.page || 1)
+watch(() => browse.page, (val) => {
+  panelPage.value = val || 1
+})
+function jumpToPage(page: number | number[]) {
+  const target = Array.isArray(page) ? page[0] : page
+  if (!target || target === browse.page) return
+  browse.trigger_jump_to_page(target)
 }
 
 // 关闭面板并延迟执行 (导航等操作)
@@ -479,6 +506,27 @@ function goChapter(chapterId: number) {
   display: flex;
   align-items: center;
   justify-content: space-between;
+}
+
+.lcp-page-progress {
+  font-variant-numeric: tabular-nums;
+  opacity: 0.9;
+}
+
+.lcp-page-slider {
+  padding: 0 0.6rem;
+
+  :deep(.el-slider__runway) {
+    background: rgba(255, 255, 255, 0.16);
+  }
+
+  :deep(.el-slider__bar) {
+    background: var(--theme-reader-topbar-accent, #60a5fa);
+  }
+
+  :deep(.el-slider__button) {
+    border-color: var(--theme-reader-topbar-accent, #60a5fa);
+  }
 }
 
 /* 快速开关行 */

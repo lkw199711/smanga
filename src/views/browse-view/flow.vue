@@ -68,7 +68,7 @@
     <template #footer>
       <div class="dialog-footer">
         <el-button @click="dialogJumpPage = false">{{ t('option.cancel') }}</el-button>
-        <el-button type="primary" @click="() => jump_page">
+        <el-button type="primary" @click="jump_page()">
           {{ t('option.confirm') }}
         </el-button>
       </div>
@@ -416,6 +416,9 @@ async function jump_page(pageNum?: number) {
     targetPage.value = pageNum;
   }
 
+  // 关闭跳页弹窗
+  dialogJumpPage.value = false;
+
   // return
   reload_page(true, targetPage.value);
 
@@ -451,6 +454,7 @@ onMounted(() => {
 // 订阅 control-panel 触发的阅读器操作
 watch(() => browseStore.readerActionTick.download, (v, ov) => { if (v > (ov || 0)) dwonload_image(); });
 watch(() => browseStore.readerActionTick.jumpPage, (v, ov) => { if (v > (ov || 0)) open_jump_dialog(); });
+watch(() => browseStore.readerActionTick.jumpToPage, (v, ov) => { if (v > (ov || 0) && browseStore.pendingJumpPage) jump_page(browseStore.pendingJumpPage); });
 watch(() => browseStore.readerActionTick.setImageWidth, (v, ov) => { if (v > (ov || 0)) browseStore.dialogViewWidth = true; });
 watch(() => browseStore.readerActionTick.beforeChapter, (v, ov) => { if (v > (ov || 0)) before_chapter(); });
 watch(() => browseStore.readerActionTick.nextChapter, (v, ov) => { if (v > (ov || 0)) next_chapter(); });

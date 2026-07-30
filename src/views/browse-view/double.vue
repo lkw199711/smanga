@@ -337,6 +337,7 @@ onMounted(async () => {
 
 // 订阅 control-panel 触发的阅读器操作
 watch(() => browseStore.readerActionTick.download, (v, ov) => { if (v > (ov || 0)) dwonload_image(); });
+watch(() => browseStore.readerActionTick.jumpToPage, (v, ov) => { if (v > (ov || 0) && browseStore.pendingJumpPage) page_change(browseStore.pendingJumpPage); });
 watch(() => browseStore.readerActionTick.setImageWidth, (v, ov) => { if (v > (ov || 0)) browseStore.dialogViewWidth = true; });
 watch(() => browseStore.readerActionTick.toggleDirection, (v, ov) => { if (v > (ov || 0)) { switch_direction(); browseStore.readerFlags.direction = directionDesc.value; } });
 watch(() => browseStore.readerActionTick.toggleRemoveFirst, (v, ov) => { if (v > (ov || 0)) { remove_poster(); browseStore.readerFlags.removeFirst = removeFirst.value; } });

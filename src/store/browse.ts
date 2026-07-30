@@ -69,6 +69,7 @@ const useBrowseStore = defineStore('browse', {
 		readerActionTick: {
 			download: 0,
 			jumpPage: 0,
+			jumpToPage: 0,
 			setImageWidth: 0,
 			toggleDirection: 0,
 			toggleRemoveFirst: 0,
@@ -83,6 +84,8 @@ const useBrowseStore = defineStore('browse', {
 		},
 		// 章节切换目标(配合 changeChapter tick 使用)
 		pendingChangeChapterId: 0,
+		// 跳页目标页码(配合 jumpToPage tick 使用)
+		pendingJumpPage: 0,
 	}),
 	getters: {
 		orderBy: (state) => {
@@ -400,6 +403,15 @@ const useBrowseStore = defineStore('browse', {
 		trigger_change_chapter(chapterId: number) {
 			this.pendingChangeChapterId = chapterId;
 			this.readerActionTick.changeChapter = (this.readerActionTick.changeChapter || 0) + 1;
+		},
+
+		/**
+		 * @description: 跳页触发器
+		 * control-panel 传入目标页码 → 视图执行本地跳页实现(jump_page/page_change)
+		 */
+		trigger_jump_to_page(page: number) {
+			this.pendingJumpPage = page;
+			this.readerActionTick.jumpToPage = (this.readerActionTick.jumpToPage || 0) + 1;
 		}
 	},
 });
