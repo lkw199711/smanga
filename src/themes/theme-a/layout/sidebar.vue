@@ -122,8 +122,10 @@ import mediaStatsApi from '@/api/media-stats'
 import imageApi from '@/api/image'
 import { Cookies } from '@/utils'
 import { navMenu as navItems, adminNavMenu as adminNavItems } from '@/themes/constants/menu'
+import useBrowseStore from '@/store/browse'
 
 const router = useRouter()
+const browse = useBrowseStore()
 
 const showUserDropdown = ref(false)
 const userWrapRef = ref<HTMLElement | null>(null)
@@ -183,6 +185,7 @@ onBeforeUnmount(() => {
 })
 
 function goMedia(mediaId: number) {
+	browse.mangaListPage = 1
 	router.push(`/t/media/${mediaId}`)
 }
 </script>

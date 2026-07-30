@@ -80,9 +80,11 @@ import queue from '@/store/quque'
 import { openThemeActionSheet, openThemeContextMenu } from '@/themes/context-menu'
 import MediaLibraryCreateDialog from '@/themes/components/media-library-create-dialog.vue'
 import { Cookies } from '@/utils'
+import useBrowseStore from '@/store/browse'
 
 const router = useRouter()
 const route = useRoute()
+const browse = useBrowseStore()
 
 // 仅服务器管理员可创建媒体库
 const isAdmin = computed(() => Cookies.getRole() === 'admin')
@@ -233,6 +235,7 @@ function pickMediaList(payload: any): mediaType[] {
 }
 
 function selectMedia(media: mediaType) {
+  browse.mangaListPage = 1
   selectedMediaId.value = media.mediaId
   selectedMediaName.value = media.mediaName
   router.push(`/t/media/${media.mediaId}`)
@@ -245,6 +248,7 @@ function backToMediaList() {
 }
 
 function goChapters(m: any) {
+  browse.chapterListPage = 1
   router.push(`/t/manga/${m.mangaId}/chapters`)
 }
 

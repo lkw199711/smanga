@@ -12,8 +12,9 @@
           </button>
 
           <!-- 标题 -->
-          <div class="lcp-title" :title="browse.currentChapter?.chapterName">
-            {{ browse.currentChapter?.chapterName || $t('sidebar.chapterList') }}
+          <div class="lcp-title" :title="panelTitle">
+            <span class="lcp-title-text">{{ browse.currentChapter?.chapterName || $t('sidebar.chapterList') }}</span>
+            <span v-if="chapterProgress" class="lcp-title-progress">{{ chapterProgress }}</span>
           </div>
 
           <!-- 快速开关行:书签 / 操作面板 / 全屏 / 下载 / 右侧菜单(旧) -->
@@ -221,6 +222,16 @@ onBeforeUnmount(() => {
 })
 
 // 计算属性
+const chapterProgress = computed(() => {
+  const total = browse.chapterList.length
+  const index = browse.currentChapterIndex
+  if (!total || index < 0) return ''
+  return `${index + 1} / ${total}`
+})
+const panelTitle = computed(() => {
+  const name = browse.currentChapter?.chapterName || ''
+  return chapterProgress.value ? `${name} · ${chapterProgress.value}` : name
+})
 const mediaId = computed(() => Number(route.query.mediaId) || 0)
 const mangaId = computed(() => Number(route.query.mangaId) || 0)
 const currentMode = computed(() => String(route.query.readerMode || 'flow'))
@@ -433,14 +444,31 @@ function goChapter(chapterId: number) {
 }
 
 .lcp-title {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.8rem;
   font-size: 1.4rem;
-  text-align: center;
   opacity: 0.85;
   margin-bottom: 1.4rem;
   padding: 0 0.6rem;
+}
+
+.lcp-title-text {
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
+}
+
+.lcp-title-progress {
+  flex-shrink: 0;
+  padding: 0 0.7rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.14);
+  font-size: 1.1rem;
+  font-variant-numeric: tabular-nums;
+  line-height: 2rem;
+  opacity: 0.9;
 }
 
 .lcp-section-label {

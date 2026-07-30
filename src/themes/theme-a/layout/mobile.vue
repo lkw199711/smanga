@@ -142,6 +142,7 @@ import imageApi from '@/api/image'
 import mediaStatsApi from '@/api/media-stats'
 import { Cookies } from '@/utils'
 import { useColorTheme } from '@/themes/composables/use-color-theme'
+import useBrowseStore from '@/store/browse'
 import {
 	navMenu as menu,
 	adminNavMenu as adminMenu,
@@ -159,6 +160,7 @@ const mobileAvatarBlobUrl = ref('')
 const sidebarMediaList = ref<any[]>([])
 const router = useRouter()
 const route = useRoute()
+const browse = useBrowseStore()
 const manageMode = ref(false)
 
 const isAdmin = computed(() => Cookies.getRole() === 'admin')
@@ -171,6 +173,7 @@ function navigateTo(path: string) {
 }
 
 function navigateToMedia(mediaId: number) {
+	browse.mangaListPage = 1
 	router.push(`/t/media/${mediaId}`)
 	showSidebar.value = false
 }

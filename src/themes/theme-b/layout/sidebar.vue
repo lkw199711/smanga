@@ -45,6 +45,7 @@ import { ref, computed, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import mediaStatsApi from '@/api/media-stats'
 import { Cookies } from '@/utils'
+import useBrowseStore from '@/store/browse'
 
 const manageMode = ref(false)
 const isAdmin = computed(() => Cookies.getRole() === 'admin')
@@ -87,6 +88,7 @@ const mediaList = ref([
 
 const router = useRouter()
 const route = useRoute()
+const browse = useBrowseStore()
 
 function normalizePath(p: string) {
 	if (p === '/t') return '/t'
@@ -105,6 +107,7 @@ function go(path: string) {
 }
 
 function goMedia(mediaId: number) {
+	browse.mangaListPage = 1
 	router.push(`/t/media/${mediaId}`)
 }
 

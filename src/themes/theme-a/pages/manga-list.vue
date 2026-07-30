@@ -93,20 +93,22 @@ import imageApi from '@/api/image'
 import queue from '@/store/quque'
 import { userConfig } from '@/store'
 import { openThemeActionSheet, openThemeContextMenu } from '@/themes/context-menu'
+import useBrowseStore from '@/store/browse'
 
 const router = useRouter()
 const route = useRoute()
+const browse = useBrowseStore()
 
 const list = ref<any[]>([])
 const keyword = ref('')
 const order = computed({ get: () => userConfig.order, set: (v) => { userConfig.order = v } })
-const page = ref(1)
-const pageSize = 32
+const page = ref(browse.mangaListPage)
+const pageSize = computed(() => browse.mangaListPageSize)
 const total = ref(0)
 const loading = ref(false)
 const mediaName = ref('')
 
-const totalPages = computed(() => Math.ceil(total.value / pageSize))
+const totalPages = computed(() => Math.ceil(total.value / pageSize.value))
 
 // 排序选项 - 使用视觉化 chips 替代原生 select
 const sortOptions = [
@@ -130,7 +132,7 @@ const hasActiveFilter = computed(() => {
 })
 
 watch(() => route.params.mediaId, () => {
-  page.value = 1
+  page.value = browse.mangaListPage
   keyword.value = ''
   loadData()
 }, { immediate: true })
@@ -145,10 +147,12 @@ async function loadData() {
   const mediaId = Number(route.params.mediaId) || 0
   loading.value = true
   try {
-    const res = await mangaApi.get(mediaId, page.value, pageSize, order.value, keyword.value)
+    const res = await mangaApi.get(mediaId, page.value, pageSize.value, order.value, keyword.value)
     list.value = res?.list || res?.data?.list || []
     total.value = res?.count || res?.data?.count || 0
     mediaName.value = res?.mediaName || res?.data?.mediaName || mediaName.value
+    browse.mangaListPage = page.value
+    browse.mangaListPageSizeCache = pageSize.value
     list.value.forEach(async (item) => {
       queue.mangaQueue.add(() => get_poster(item))
     })

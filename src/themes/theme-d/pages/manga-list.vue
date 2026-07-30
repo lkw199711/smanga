@@ -79,13 +79,15 @@ import imageApi from '@/api/image'
 import queue from '@/store/quque'
 import { userConfig } from '@/store'
 import { openThemeActionSheet, openThemeContextMenu } from '@/themes/context-menu'
+import useBrowseStore from '@/store/browse'
 
 const route = useRoute()
 const router = useRouter()
+const browse = useBrowseStore()
 const list = ref<any[]>([])
 const mediaName = ref('')
-const page = ref(1)
-const pageSize = 30
+const page = ref(browse.mangaListPage)
+const pageSize = computed(() => browse.mangaListPageSize)
 const total = ref(0)
 const keyword = ref('')
 
@@ -127,10 +129,12 @@ function setOrder(v: string) {
 async function loadData() {
   try {
     const mediaId = Number(route.params.mediaId) || 0
-    const r = await mangaApi.get(mediaId, page.value, pageSize, order.value, keyword.value)
+    const r = await mangaApi.get(mediaId, page.value, pageSize.value, order.value, keyword.value)
     list.value = r?.list || r?.data?.list || []
     total.value = r?.count || r?.data?.total || 0
     mediaName.value = r?.mediaName || r?.data?.mediaName || ''
+    browse.mangaListPage = page.value
+    browse.mangaListPageSizeCache = pageSize.value
     list.value.forEach((item: any) => {
       queue.mangaQueue.add(async () => {
         item.poster = await imageApi.get({ file: item.mangaCover })
@@ -140,7 +144,7 @@ async function loadData() {
 }
 
 watch(() => route.params.mediaId, () => {
-  page.value = 1
+  page.value = browse.mangaListPage
   keyword.value = ''
   loadData()
 }, { immediate: true })

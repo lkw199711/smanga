@@ -113,11 +113,13 @@ import imageApi from '@/api/image'
 import ThemeContextMenu from '@/themes/components/theme-context-menu.vue'
 import androidSeat from '@/layout/components/android-seat.vue'
 import { navMenu, adminNavMenu, bottomNavMenu, getPageTitle } from '@/themes/constants/menu'
+import useBrowseStore from '@/store/browse'
 import './dark-overrides.css'
 
 const showSidebar = ref(false)
 const router = useRouter()
 const route = useRoute()
+const browse = useBrowseStore()
 
 const themeList = [
 	{ key: 'blue', name: '蓝', primary: '#2563EB', back: '#EFF6FF', hover: '#DBEAFE' },
@@ -252,6 +254,7 @@ function go(path: string) {
 }
 
 function goMedia(mediaId: number) {
+	browse.mangaListPage = 1
 	router.push(`/t/media/${mediaId}`)
 	showSidebar.value = false
 }

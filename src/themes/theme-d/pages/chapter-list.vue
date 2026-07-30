@@ -49,7 +49,13 @@
         </div>
         <div v-if="chapterList.length === 0 && !loading" class="td-empty">暂无章节</div>
 
-        <media-pager :page="page" :count="total" :page-size-config="pageSizes" @page-change="onPageChange" />
+        <media-pager
+          :page="page"
+          :page-size="pageSize"
+          :count="total"
+          :page-size-config="pageSizes"
+          @page-change="onPageChange"
+        />
       </div>
     </div>
   </div>
@@ -78,15 +84,17 @@ const chapterList = ref<any[]>([])
 const isCollected = ref(false)
 const mangaId = ref<number | null>(null)
 const order = computed({ get: () => userConfig.chapterOrder, set: (v) => { userConfig.chapterOrder = v } })
-const page = ref(1)
-const { pageSizes, defaultPageSize } = usePageSize('chapter')
-const pageSize = ref(defaultPageSize.value)
+const page = ref(browse.chapterListPage)
+const { pageSizes } = usePageSize('chapter')
+const pageSize = ref(browse.chapterListPageSize)
 const total = ref(0)
 const loading = ref(false)
 
 function onPageChange(p = 1, size = pageSize.value) {
   page.value = p
   pageSize.value = size
+  browse.chapterListPage = p
+  browse.chapterListPageSizeCache = size
   loadChapters()
 }
 
@@ -102,6 +110,8 @@ onMounted(async () => {
 watch(() => route.params.mangaId, async (newMangaId) => {
   if (newMangaId) {
     mangaId.value = Number(newMangaId)
+    page.value = browse.chapterListPage
+    pageSize.value = browse.chapterListPageSize
     await loadMangaInfo()
     await loadChapters()
     await checkCollectStatus()
@@ -135,6 +145,8 @@ async function loadChapters() {
     })
     chapterList.value = res?.list || []
     total.value = res?.count || 0
+    browse.chapterListPage = page.value
+    browse.chapterListPageSizeCache = pageSize.value
   } catch (e) {
     chapterList.value = []
     total.value = 0

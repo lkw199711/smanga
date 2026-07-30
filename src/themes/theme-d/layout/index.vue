@@ -149,6 +149,7 @@ import languages from '@/store/language'
 import type { ThemeKey } from '@/themes/store'
 import { themeState, setTheme } from '@/themes/store'
 import ThemeContextMenu from '@/themes/components/theme-context-menu.vue'
+import useBrowseStore from '@/store/browse'
 import './dark-overrides.css'
 
 const refreshKey = ref(0)
@@ -158,6 +159,7 @@ onBeforeUnmount(() => window.removeEventListener('smanga:theme-context-menu-chan
 
 const router = useRouter()
 const route = useRoute()
+const browse = useBrowseStore()
 const { locale } = useI18n()
 
 const themeList = [
@@ -345,6 +347,7 @@ onMounted(async () => {
 })
 
 function goMedia(mediaId: number) {
+	browse.mangaListPage = 1
 	router.push(`/t/media/${mediaId}`)
 }
 

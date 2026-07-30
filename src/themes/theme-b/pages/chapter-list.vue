@@ -23,8 +23,8 @@
           <div class="tb-author" v-if="mangaInfo.mangaAuthor">作者：{{ mangaInfo.mangaAuthor }}</div>
           <div class="tb-desc" v-if="mangaInfo.mangaDesc">{{ mangaInfo.mangaDesc }}</div>
           <div class="tb-meta">
-            <span>{{ chapterList.length }} 章节</span>
-            <span>{{ mangaInfo.updateTime | formatDate }}</span>
+            <span>{{ total }} 章节</span>
+            <span>{{ formatDate(mangaInfo.updateTime) }}</span>
           </div>
         </div>
       </div>
@@ -41,29 +41,56 @@
             @contextmenu="openThemeContextMenu($event, 'chapter', ch)"
           />
         </div>
-        <div v-if="chapterList.length === 0" class="tb-empty">暂无章节</div>
+        <div v-if="chapterList.length === 0 && !loading" class="tb-empty">暂无章节</div>
+        <media-pager
+          :page="page"
+          :page-size="pageSize"
+          :count="total"
+          :page-size-config="pageSizes"
+          @page-change="onPageChange"
+        />
       </div>
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted, watch } from 'vue'
+import { computed, ref, onMounted, watch } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import mangaApi from '@/api/manga'
 import chapterApi from '@/api/chapter'
 import collectApi from '@/api/collect'
 import TCover from '@/themes/components/media-cover.vue'
 import TChapterItem from '@/themes/components/chapter-item.vue'
+import MediaPager from '@/components/media-pager.vue'
 import { openThemeContextMenu } from '@/themes/context-menu'
+import useBrowseStore from '@/store/browse'
+import { userConfig } from '@/store'
+import { useGoRead, usePageSize } from '@/themes/composables'
 
 const router = useRouter()
 const route = useRoute()
+const browse = useBrowseStore()
+const { goRead: openReader } = useGoRead({ withPageJump: true, syncGlobalNames: true })
 
 const mangaInfo = ref<any>({})
 const chapterList = ref<any[]>([])
 const isCollected = ref(false)
 const mangaId = ref<number | null>(null)
+const order = computed(() => userConfig.chapterOrder)
+const page = ref(browse.chapterListPage)
+const { pageSizes } = usePageSize('chapter')
+const pageSize = ref(browse.chapterListPageSize)
+const total = ref(0)
+const loading = ref(false)
+
+function onPageChange(nextPage = 1, nextPageSize = pageSize.value) {
+  page.value = nextPage
+  pageSize.value = nextPageSize
+  browse.chapterListPage = nextPage
+  browse.chapterListPageSizeCache = nextPageSize
+  loadChapters()
+}
 
 onMounted(async () => {
   mangaId.value = Number(route.params.mangaId)
@@ -77,17 +104,21 @@ onMounted(async () => {
 watch(() => route.params.mangaId, async (newMangaId) => {
   if (newMangaId) {
     mangaId.value = Number(newMangaId)
+    page.value = browse.chapterListPage
+    pageSize.value = browse.chapterListPageSize
     await loadMangaInfo()
     await loadChapters()
     await checkCollectStatus()
   }
 })
 
+watch(order, () => onPageChange(1, browse.chapterListPageSize))
+
 async function loadMangaInfo() {
   if (!mangaId.value) return
   try {
-    const res = await mangaApi.get_info(mangaId.value)
-    mangaInfo.value = res?.data || res || {}
+    const res = await mangaApi.get_manga_info(mangaId.value)
+    mangaInfo.value = res || {}
   } catch (e) {
     mangaInfo.value = {}
   }
@@ -95,19 +126,29 @@ async function loadMangaInfo() {
 
 async function loadChapters() {
   if (!mangaId.value) return
+  loading.value = true
   try {
-    const res = await chapterApi.get(mangaId.value, 1, 999)
-    chapterList.value = res?.list || res?.data?.list || []
+    const res = await chapterApi.get({
+      mangaId: mangaId.value,
+      page: page.value,
+      pageSize: pageSize.value,
+      order: order.value,
+    })
+    chapterList.value = res?.list || []
+    total.value = Number(res?.count || 0)
+    browse.chapterListPage = page.value
+    browse.chapterListPageSizeCache = pageSize.value
   } catch (e) {
     chapterList.value = []
+    total.value = 0
   }
+  loading.value = false
 }
 
 async function checkCollectStatus() {
   if (!mangaId.value) return
   try {
-    const res = await collectApi.is_collect(mangaId.value)
-    isCollected.value = res?.data || false
+    isCollected.value = await collectApi.is_collect('manga', mangaId.value)
   } catch (e) {
     isCollected.value = false
   }
@@ -115,17 +156,25 @@ async function checkCollectStatus() {
 
 async function toggleCollect() {
   if (!mangaId.value) return
-  const action = isCollected.value ? 'remove' : 'add'
   try {
-    if (action === 'add') {
-      await collectApi.add(mangaId.value)
+    if (isCollected.value) {
+      await collectApi.remove_collect('manga', mangaId.value)
     } else {
-      await collectApi.remove(mangaId.value)
+      await collectApi.add_collect({
+        collectType: 'manga',
+        mangaId: mangaId.value,
+        mediaId: mangaInfo.value.mediaId,
+      })
     }
     isCollected.value = !isCollected.value
   } catch (e) {
     // 处理收藏失败
   }
+}
+
+function formatDate(dateStr: string) {
+  if (!dateStr) return ''
+  return dateStr.split(' ')[0]
 }
 
 function goBack() {
@@ -134,7 +183,7 @@ function goBack() {
 
 function goRead(chapter: any) {
   if (!mangaId.value || !chapter.chapterId) return
-  router.push(`/t/read/${mangaId.value}/${chapter.chapterId}`)
+  openReader(chapter)
 }
 </script>
 

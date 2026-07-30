@@ -25,12 +25,18 @@
       />
     </div>
     <div v-if="!loading && list.length === 0" class="ta-empty">暂无章节</div>
-    <media-pager :page="page" :count="count" :page-size-config="pageSizes" @page-change="pageChange" />
+    <media-pager
+      :page="page"
+      :page-size="pageSize"
+      :count="count"
+      :page-size-config="pageSizes"
+      @page-change="pageChange"
+    />
   </div>
 </template>
 
 <script lang="ts" setup>
-import { computed, ref, onMounted } from 'vue'
+import { computed, ref, onMounted, watch } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import chapterApi from '@/api/chapter'
 import mangaApi from '@/api/manga'
@@ -39,17 +45,28 @@ import MediaPager from '@/components/media-pager.vue'
 import TChapterItem from '@/themes/components/chapter-item.vue'
 import { openThemeContextMenu } from '@/themes/context-menu'
 import { useListPage } from '@/themes/composables'
+import useBrowseStore from '@/store/browse'
 
 const router = useRouter()
 const route = useRoute()
+const browse = useBrowseStore()
 
 const mangaId = computed(() => Number(route.params.mangaId) || 0)
 const order = computed({ get: () => userConfig.chapterOrder, set: (v) => { userConfig.chapterOrder = v } })
 const mangaName = ref('')
 
-const { page, list, count, loading, pageSizes, pageChange } = useListPage<any>({
+const {
+  page,
+  pageSize,
+  list,
+  count,
+  loading,
+  pageSizes,
+  load,
+  pageChange: changePage,
+} = useListPage<any>({
   kind: 'chapter',
-  resetDeps: [() => order.value],
+  immediate: false,
   loader: async ({ page, pageSize }) => {
     if (!mangaId.value) return { list: [], count: 0 }
     const res = await chapterApi.get({ mangaId: mangaId.value, page, pageSize, order: order.value })
@@ -57,13 +74,24 @@ const { page, list, count, loading, pageSizes, pageChange } = useListPage<any>({
   },
 })
 
+async function pageChange(nextPage = 1, nextPageSize = pageSize.value) {
+  browse.chapterListPage = nextPage
+  browse.chapterListPageSizeCache = nextPageSize
+  await changePage(nextPage, nextPageSize)
+}
+
 onMounted(async () => {
   if (!mangaId.value) return
+  page.value = browse.chapterListPage
+  pageSize.value = browse.chapterListPageSize
+  await load()
   try {
     const info = await mangaApi.get_manga_info(mangaId.value)
     mangaName.value = info?.mangaName || ''
   } catch { /* empty */ }
 })
+
+watch(order, () => pageChange(1, browse.chapterListPageSize))
 
 function goRead(ch: any, idx: number) {
   globalData.chapterList = list.value

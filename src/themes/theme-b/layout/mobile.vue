@@ -101,6 +101,7 @@ import imageApi from '@/api/image'
 import { Cookies } from '@/utils'
 import { useColorTheme } from '@/themes/composables/use-color-theme'
 import { navMenu, adminNavMenu, bottomNavMenu, getPageTitle } from '@/themes/constants/menu'
+import useBrowseStore from '@/store/browse'
 import './dark-overrides.css'
 
 const { isDarkMode, toggleDarkMode } = useColorTheme()
@@ -108,6 +109,7 @@ const { isDarkMode, toggleDarkMode } = useColorTheme()
 const showSidebar = ref(false)
 const router = useRouter()
 const route = useRoute()
+const browse = useBrowseStore()
 
 const manageMode = ref(false)
 const isAdmin = computed(() => Cookies.getRole() === 'admin')
@@ -139,6 +141,7 @@ function navigateTo(path: string) {
 }
 
 function navigateToMedia(mediaId: number) {
+	browse.mangaListPage = 1
 	router.push(`/t/media/${mediaId}`)
 	showSidebar.value = false
 }

@@ -97,20 +97,22 @@ import queue from '@/store/quque'
 import imageApi from '@/api/image'
 import TMangaCard from '@/themes/components/manga-card.vue'
 import { openThemeContextMenu } from '@/themes/context-menu'
+import useBrowseStore from '@/store/browse'
 
 const router = useRouter()
 const route = useRoute()
+const browse = useBrowseStore()
 
 const list = ref<any[]>([])
 const keyword = ref('')
 const order = ref('updateTimeDesc')
-const page = ref(1)
-const pageSize = 32
+const page = ref(browse.mangaListPage)
+const pageSize = computed(() => browse.mangaListPageSize)
 const total = ref(0)
 const loading = ref(false)
 const mediaName = ref('')
 
-const totalPages = computed(() => Math.ceil(total.value / pageSize))
+const totalPages = computed(() => Math.ceil(total.value / pageSize.value))
 
 // 排序选项 - 视觉化 chips
 const sortOptions = [
@@ -135,11 +137,12 @@ function clearKeyword() {
 
 function setOrder(v: string) {
   order.value = v
+  page.value = 1
   loadData()
 }
 
 watch(() => route.params.mediaId, () => {
-  page.value = 1
+  page.value = browse.mangaListPage
   keyword.value = ''
   order.value = 'updateTimeDesc'
   loadData()
@@ -149,10 +152,12 @@ async function loadData() {
   const mediaId = Number(route.params.mediaId) || 0
   loading.value = true
   try {
-    const res = await mangaApi.get(mediaId, page.value, pageSize, order.value, keyword.value)
+    const res = await mangaApi.get(mediaId, page.value, pageSize.value, order.value, keyword.value)
     list.value = res?.list || res?.data?.list || []
     total.value = res?.count || res?.data?.count || 0
     mediaName.value = res?.mediaName || res?.data?.mediaName || mediaName.value
+    browse.mangaListPage = page.value
+    browse.mangaListPageSizeCache = pageSize.value
 
     // 加载封面图片
     list.value.forEach(async (item) => {
