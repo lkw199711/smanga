@@ -234,7 +234,7 @@ import languages from '@/store/language';
 import {pageSizeConfig} from '@/store';
 import {ref} from 'vue';
 import userApi from '@/api/account';
-import {Cookies} from '@/utils';
+import {sessionStore} from '@/store/session';
 import {useRouter} from 'vue-router';
 import {onMounted} from 'vue';
 import useBrowseStore from '@/store/browse';
@@ -294,8 +294,8 @@ async function submit() {
 }
 
 function user_logout() {
-  Cookies.remove('smanga-userName');
-  Cookies.remove('smanga-userId');
+  // 统一走 session store：清理 token/role、带前缀资料 cookie、serverKey 及旧版遗留 key。
+  sessionStore.logout();
   router.push('/login');
 }
 

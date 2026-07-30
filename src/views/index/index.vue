@@ -24,6 +24,7 @@ import { onMounted, ref, computed } from 'vue';
 import { config, userConfig } from '@/store';
 import { useRouter } from 'vue-router';
 import { Cookies } from '@/utils';
+import { sessionStore } from '@/store/session';
 import { themeState, setTheme } from '@/themes/store'
 const router = useRouter();
 const pieRef = ref();
@@ -53,8 +54,8 @@ onMounted(() => {
 })
 
 function user_logout() {
-    Cookies.remove('smanga-userName');
-    Cookies.remove('smanga-userId');
+    // 统一走 session store：清理 token/role、带前缀资料 cookie、serverKey 及旧版遗留 key。
+    sessionStore.logout()
     router.push('/login')
 }
 

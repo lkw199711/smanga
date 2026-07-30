@@ -6,7 +6,10 @@
  */
 
 export const COOKIE_KEYS = {
+	// serverKey 已迁移至 localStorage（见 getServerKey），此处仅保留旧 cookie 名用于迁移清理。
 	serverKey: 'smanga-server-key',
+	// 以下为基础键名，实际写入 cookie 时统一加 {serverKey}-smanga- 前缀（见 scopedCookieKey），
+	// 避免同域名下多个 smanga 实例互相覆盖用户凭证。
 	userId: 'userId',
 	userName: 'userName',
 	header: 'header',
@@ -17,6 +20,7 @@ export const COOKIE_KEYS = {
 
 export const STORAGE_KEYS = {
 	sessionProfile: 'smanga.session.profile',
+	serverKey: 'smanga.server-key',
 	shellTheme: 'smanga-theme',
 	colorTheme: 'theme',
 	softBackground: 'useSoftBackground',
@@ -121,6 +125,70 @@ function createWebStorage(kind: 'local' | 'session') {
 
 export const localStorageCache = createWebStorage('local')
 export const sessionStorageCache = createWebStorage('session')
+
+/**
+ * serverKey 指针存 localStorage：cookie 忽略端口在同域名下共享，
+ * localStorage 按 origin（含端口）隔离，可让每个前端各自记住自己的 serverKey。
+ * 兼容旧版：首次读取时把 cookie 中的 serverKey 单向迁移到 localStorage。
+ */
+export function getServerKey(): string {
+	const stored = localStorageCache.get(STORAGE_KEYS.serverKey)
+	if (stored) return stored
+	const legacy = cookieStorage.get(COOKIE_KEYS.serverKey)
+	if (legacy) {
+		localStorageCache.set(STORAGE_KEYS.serverKey, legacy)
+		cookieStorage.remove(COOKIE_KEYS.serverKey)
+	}
+	return legacy
+}
+
+export function setServerKey(value: string): string {
+	localStorageCache.set(STORAGE_KEYS.serverKey, value)
+	cookieStorage.remove(COOKIE_KEYS.serverKey)
+	return value
+}
+
+export function removeServerKey(): void {
+	localStorageCache.remove(STORAGE_KEYS.serverKey)
+	cookieStorage.remove(COOKIE_KEYS.serverKey)
+}
+
+/**
+ * 用户资料/权限 cookie 统一加 {serverKey}-smanga- 前缀，与 token/role 的命名约定保持一致，
+ * 避免同域名下多个 smanga 实例互相覆盖。
+ */
+export function scopedCookieKey(key: string, serverKey = getServerKey()): string {
+	return serverKey ? `${serverKey}-smanga-${key}` : key
+}
+
+/**
+ * 读取带前缀 cookie；兼容旧版无前缀 cookie，读到即迁移并清理旧 key。
+ */
+export function readScopedCookie(key: string, serverKey = getServerKey()): string {
+	const scopedKey = scopedCookieKey(key, serverKey)
+	const scoped = cookieStorage.get(scopedKey)
+	if (scoped) return scoped
+
+	if (scopedKey === key) return ''
+	const legacy = cookieStorage.get(key)
+	if (legacy) {
+		cookieStorage.set(scopedKey, legacy)
+		cookieStorage.remove(key)
+	}
+	return legacy
+}
+
+export function writeScopedCookie(key: string, value: string, serverKey = getServerKey()): string {
+	const scopedKey = scopedCookieKey(key, serverKey)
+	// 清理旧版无前缀 cookie，防止旧主题读到过期数据。
+	if (scopedKey !== key) cookieStorage.remove(key)
+	return cookieStorage.set(scopedKey, value)
+}
+
+export function removeScopedCookie(key: string, serverKey = getServerKey()): void {
+	cookieStorage.remove(scopedCookieKey(key, serverKey))
+	cookieStorage.remove(key)
+}
 
 /**
  * 将历史 preference cookie 单向迁移到 localStorage，并清理旧 cookie。

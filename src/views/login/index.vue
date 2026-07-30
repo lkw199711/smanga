@@ -82,8 +82,9 @@ export default {
 <script lang="ts" setup>
 import { ref, reactive, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
-import { Cookies, global_set_json } from '@/utils';
+import { global_set_json } from '@/utils';
 import { userInfo, userConfig, pageSizeConfig } from '@/store';
+import { sessionStore } from '@/store/session';
 import { set_theme } from '@/style/theme';
 import { useI18n } from 'vue-i18n';
 import loginApi from '@/api/login';
@@ -141,13 +142,8 @@ async function do_login() {
 	if (!loginResponse) return;
 	// 缓存用户信息
 	Object.assign(userInfo, loginResponse);
-	Cookies.set('userId', String(loginResponse.userId || ''))
-	Cookies.set('userName', loginResponse.userName || '')
-	Cookies.set('header', loginResponse.header || '')
-	Cookies.set('avatarPath', loginResponse.avatarPath || '')
-	Cookies.set('smanga-server-key', loginResponse.serverKey);
-	Cookies.setToken(loginResponse.token)
-	Cookies.setRole(loginResponse.userRole)
+	// 统一交由 session store 落盘：serverKey 存 localStorage，凭证 cookie 带 serverKey 前缀。
+	sessionStore.start(loginResponse);
 
 	await router.push('/');
 

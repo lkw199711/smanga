@@ -5,8 +5,13 @@ import { Cookies } from '@/utils'
 import {
 	COOKIE_KEYS,
 	STORAGE_KEYS,
-	cookieStorage,
+	getServerKey,
 	localStorageCache,
+	readScopedCookie,
+	removeScopedCookie,
+	removeServerKey,
+	setServerKey,
+	writeScopedCookie,
 } from '@/utils/persistence'
 
 export interface SessionProfile {
@@ -30,7 +35,7 @@ function profileStorageKey(serverKey: string) {
 	return serverKey ? `${STORAGE_KEYS.sessionProfile}.${serverKey}` : STORAGE_KEYS.sessionProfile
 }
 
-function readProfile(serverKey = cookieStorage.get(COOKIE_KEYS.serverKey)): SessionProfile {
+function readProfile(serverKey = getServerKey()): SessionProfile {
 	const scopedKey = profileStorageKey(serverKey)
 	let stored = localStorageCache.getJson<Partial<SessionProfile>>(scopedKey, {})
 
@@ -44,10 +49,10 @@ function readProfile(serverKey = cookieStorage.get(COOKIE_KEYS.serverKey)): Sess
 	}
 
 	return {
-		userId: Number(stored.userId ?? cookieStorage.get(COOKIE_KEYS.userId)) || 0,
-		userName: String(stored.userName ?? cookieStorage.get(COOKIE_KEYS.userName) ?? ''),
-		header: String(stored.header ?? cookieStorage.get(COOKIE_KEYS.header) ?? ''),
-		avatarPath: String(stored.avatarPath ?? cookieStorage.get(COOKIE_KEYS.avatarPath) ?? ''),
+		userId: Number(stored.userId ?? readScopedCookie(COOKIE_KEYS.userId, serverKey)) || 0,
+		userName: String(stored.userName ?? readScopedCookie(COOKIE_KEYS.userName, serverKey) ?? ''),
+		header: String(stored.header ?? readScopedCookie(COOKIE_KEYS.header, serverKey) ?? ''),
+		avatarPath: String(stored.avatarPath ?? readScopedCookie(COOKIE_KEYS.avatarPath, serverKey) ?? ''),
 	}
 }
 
@@ -60,7 +65,7 @@ const initialProfile = readProfile()
 export const useSessionStore = defineStore('session', {
 	state: () => ({
 		...initialProfile,
-		serverKey: Cookies.get(COOKIE_KEYS.serverKey),
+		serverKey: getServerKey(),
 		role: Cookies.getRole(),
 		tokenValue: Cookies.getToken(),
 	}),
@@ -85,7 +90,7 @@ export const useSessionStore = defineStore('session', {
 
 	actions: {
 		hydrate() {
-			const serverKey = Cookies.get(COOKIE_KEYS.serverKey)
+			const serverKey = getServerKey()
 			const profile = readProfile(serverKey)
 			this.$patch({
 				...profile,
@@ -98,7 +103,7 @@ export const useSessionStore = defineStore('session', {
 
 		start(payload: LoginSessionPayload) {
 			const serverKey = String(payload.serverKey || this.serverKey || '')
-			if (serverKey) Cookies.set(COOKIE_KEYS.serverKey, serverKey)
+			if (serverKey) setServerKey(serverKey)
 
 			const profile: SessionProfile = {
 				userId: Number(payload.userId) || 0,
@@ -108,10 +113,10 @@ export const useSessionStore = defineStore('session', {
 			}
 
 			// 兼容旧主题；新版主题只从 session store 读取这些资料。
-			Cookies.set(COOKIE_KEYS.userId, String(profile.userId || ''))
-			Cookies.set(COOKIE_KEYS.userName, profile.userName)
-			Cookies.set(COOKIE_KEYS.header, profile.header)
-			Cookies.set(COOKIE_KEYS.avatarPath, profile.avatarPath)
+			writeScopedCookie(COOKIE_KEYS.userId, String(profile.userId || ''), serverKey)
+			writeScopedCookie(COOKIE_KEYS.userName, profile.userName, serverKey)
+			writeScopedCookie(COOKIE_KEYS.header, profile.header, serverKey)
+			writeScopedCookie(COOKIE_KEYS.avatarPath, profile.avatarPath, serverKey)
 			if (payload.token) Cookies.setToken(payload.token)
 			if (payload.userRole) Cookies.setRole(payload.userRole)
 
@@ -130,10 +135,10 @@ export const useSessionStore = defineStore('session', {
 			this.$patch(profile)
 			localStorageCache.setJson(profileStorageKey(this.serverKey), profile)
 
-			if (patch.userId !== undefined) Cookies.set(COOKIE_KEYS.userId, String(profile.userId || ''))
-			if (patch.userName !== undefined) Cookies.set(COOKIE_KEYS.userName, profile.userName)
-			if (patch.header !== undefined) Cookies.set(COOKIE_KEYS.header, profile.header)
-			if (patch.avatarPath !== undefined) Cookies.set(COOKIE_KEYS.avatarPath, profile.avatarPath)
+			if (patch.userId !== undefined) writeScopedCookie(COOKIE_KEYS.userId, String(profile.userId || ''), this.serverKey)
+			if (patch.userName !== undefined) writeScopedCookie(COOKIE_KEYS.userName, profile.userName, this.serverKey)
+			if (patch.header !== undefined) writeScopedCookie(COOKIE_KEYS.header, profile.header, this.serverKey)
+			if (patch.avatarPath !== undefined) writeScopedCookie(COOKIE_KEYS.avatarPath, profile.avatarPath, this.serverKey)
 			syncLegacyUserInfo(profile)
 		},
 
@@ -148,13 +153,14 @@ export const useSessionStore = defineStore('session', {
 				COOKIE_KEYS.avatarPath,
 				COOKIE_KEYS.editUser,
 				COOKIE_KEYS.editMedia,
-				'smanga-userId',
-				'smanga-userName',
-				'token',
 			]) {
+				// 同时清理带前缀与旧版无前缀两种 cookie。
+				removeScopedCookie(key, this.serverKey)
+			}
+			for (const key of ['smanga-userId', 'smanga-userName', 'token']) {
 				Cookies.remove(key)
 			}
-			Cookies.remove(COOKIE_KEYS.serverKey)
+			removeServerKey()
 			localStorageCache.remove(profileStorageKey(this.serverKey))
 			localStorageCache.remove(STORAGE_KEYS.sessionProfile)
 

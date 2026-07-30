@@ -1,8 +1,8 @@
 import { globalData } from "@/store";
 import { GlobalData } from "@/store/type";
 import {
-    COOKIE_KEYS,
     cookieStorage,
+    getServerKey,
     localStorageCache,
 } from '@/utils/persistence';
 
@@ -129,7 +129,7 @@ export const Cookies = {
      * @param time
      */
     setToken: function (token: string, time = 365) {
-        const serverKey = Cookies.get(COOKIE_KEYS.serverKey);
+        const serverKey = getServerKey();
         if (!serverKey) return false;
         return Cookies.set(serverKey + '-smanga-token', token, time);
     },
@@ -138,7 +138,7 @@ export const Cookies = {
      * 获取token
      */
     getToken: function () {
-        const serverKey = Cookies.get(COOKIE_KEYS.serverKey);
+        const serverKey = getServerKey();
         if (!serverKey) return '';
         return Cookies.get(serverKey + '-smanga-token');
     },
@@ -147,7 +147,7 @@ export const Cookies = {
      * 移除token
      */
     removeToken: function () {
-        const serverKey = Cookies.get(COOKIE_KEYS.serverKey);
+        const serverKey = getServerKey();
         if (!serverKey) return false;
         return Cookies.remove(serverKey + '-smanga-token');
     },
@@ -159,7 +159,7 @@ export const Cookies = {
     * @returns 
     */
     setRole: function (role: string, time = 365) {
-        const serverKey = Cookies.get(COOKIE_KEYS.serverKey);
+        const serverKey = getServerKey();
         if (!serverKey) return false;
         return Cookies.set(serverKey + '-smanga-role', role, time);
     },
@@ -167,7 +167,7 @@ export const Cookies = {
      * 获取角色
      */
     getRole: function () {
-        const serverKey = Cookies.get(COOKIE_KEYS.serverKey);
+        const serverKey = getServerKey();
         if (!serverKey) return '';
         return Cookies.get(serverKey + '-smanga-role');
     },
@@ -175,7 +175,7 @@ export const Cookies = {
      * 移除当前服务对应的角色。
      */
     removeRole: function () {
-        const serverKey = Cookies.get(COOKIE_KEYS.serverKey);
+        const serverKey = getServerKey();
         if (!serverKey) return false;
         return Cookies.remove(serverKey + '-smanga-role');
     },
