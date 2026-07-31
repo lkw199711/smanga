@@ -6,24 +6,18 @@
       <span v-if="chapterProgress" class="chapter-progress">{{ chapterProgress }}</span>
     </div>
 
-    <!-- 桌面端: 胶囊快捷按钮 (仅一个入口, 唤起 control-panel) -->
-    <nav v-if="!isMobile" class="quick-capsule" aria-label="reader-quick-nav">
-      <button class="qc-btn is-primary" :title="$t('sidebar.rightMenu')" @click="openPanel">
+    <!-- 功能长条: 章节选择 + 功能菜单 (桌面 / 移动 通用) -->
+    <nav class="quick-bar" :class="{ 'is-mobile': isMobile }" aria-label="reader-quick-nav">
+      <button class="qb-seg qb-chapter" :title="$t('sidebar.chapterList')" @click="openChapterDrawer">
         <span class="qc-ico" aria-hidden="true">☰</span>
-        <span class="qc-label">{{ $t('sidebar.rightMenu') }}</span>
+        <span class="qb-label">{{ $t('sidebar.chapterList') }}</span>
+      </button>
+      <span class="qb-divider" aria-hidden="true"></span>
+      <button class="qb-seg qb-menu" :title="$t('sidebar.rightMenu')" @click="openPanel">
+        <span class="qc-ico" aria-hidden="true">⋯</span>
+        <span class="qb-label">{{ $t('sidebar.rightMenu') }}</span>
       </button>
     </nav>
-
-    <!-- 移动端: 悬浮圆形按钮 -->
-    <button
-      v-else
-      type="button"
-      class="mobile-fab"
-      :title="$t('sidebar.rightMenu')"
-      @click="openPanel"
-    >
-      <span class="qc-ico" aria-hidden="true">⋯</span>
-    </button>
   </header>
 </template>
 
@@ -61,6 +55,10 @@ onBeforeUnmount(() => {
 
 function openPanel() {
   ;(config as any).controlPanel = true
+}
+
+function openChapterDrawer() {
+  ;(config as any).chapterDrawer = true
 }
 </script>
 
@@ -114,26 +112,26 @@ function openPanel() {
   opacity: 0.9;
 }
 
-/* 桌面: 右上胶囊, 唤起 control-panel */
-.quick-capsule {
+/* 功能长条: 右上角横向长条, 左段选章节, 右段开功能菜单 */
+.quick-bar {
   pointer-events: auto;
   position: absolute;
   top: calc(env(safe-area-inset-top) + 0.8rem);
   right: 1.6rem;
   display: inline-flex;
-  align-items: center;
-  gap: 0.2rem;
-  padding: 0.4rem 0.6rem;
+  align-items: stretch;
+  height: 3.6rem;
   border-radius: 999px;
+  overflow: hidden;
   background: var(--theme-reader-topbar-bg, rgba(17, 24, 39, 0.72));
   backdrop-filter: blur(10px);
   box-shadow: 0 0.4rem 1.4rem rgba(0, 0, 0, 0.22);
-  opacity: 0.6;
+  opacity: 0.7;
   transition: opacity 0.18s ease;
 }
 
-.quick-capsule:hover,
-.quick-capsule:focus-within {
+.quick-bar:hover,
+.quick-bar:focus-within {
   opacity: 1;
 }
 
@@ -147,14 +145,13 @@ function openPanel() {
   pointer-events: none;
 }
 
-.qc-btn {
+.qb-seg {
   display: inline-flex;
   align-items: center;
-  gap: 0.4rem;
-  height: 3.2rem;
-  padding: 0 1rem;
+  gap: 0.5rem;
+  height: 100%;
+  padding: 0 1.6rem;
   border: 0;
-  border-radius: 999px;
   background: transparent;
   color: var(--theme-reader-topbar-text, #f8fafc);
   font-size: 1.3rem;
@@ -163,68 +160,39 @@ function openPanel() {
   transition: background 0.15s ease, color 0.15s ease;
 }
 
-.qc-btn:hover:not(:disabled) {
+.qb-seg:hover {
   background: rgba(255, 255, 255, 0.14);
 }
 
-.qc-btn.is-primary {
-  background: rgba(255, 255, 255, 0.1);
-}
-
-.qc-btn .iconfont,
-.qc-btn .qc-ico {
+.qb-seg .iconfont,
+.qb-seg .qc-ico {
   font-size: 1.6rem;
   line-height: 1;
   pointer-events: none;
 }
 
-/* 中等屏 折叠文字 */
-@media (max-width: 1080px) {
-  .qc-label {
-    display: none;
-  }
-
-  .qc-ico {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  font-family: 'Segoe UI Symbol', 'Apple Color Emoji', 'Noto Sans Symbols', system-ui, sans-serif;
-  font-style: normal;
-  line-height: 1;
+.qb-divider {
+  width: 1px;
+  align-self: center;
+  height: 55%;
+  background: rgba(255, 255, 255, 0.22);
   pointer-events: none;
 }
 
-.qc-btn {
-    padding: 0 0.9rem;
-  }
-}
-
-/* 移动端 */
+/* 移动端: 保留文字, 保证可点击面积, 给章节标题让位 */
 .reader-quick-bar.is-mobile .chapter-name {
-  padding-right: 5rem;
+  padding-right: 18rem;
 }
 
-.mobile-fab {
-  pointer-events: auto;
-  position: fixed;
+.quick-bar.is-mobile {
   top: calc(env(safe-area-inset-top) + 0.6rem);
   right: 1rem;
-  width: 3.6rem;
-  height: 3.6rem;
-  border-radius: 50%;
-  border: 0;
-  background: var(--theme-reader-topbar-bg, rgba(17, 24, 39, 0.78));
-  color: var(--theme-reader-topbar-text, #f8fafc);
-  box-shadow: 0 0.4rem 1.2rem rgba(0, 0, 0, 0.28);
-  backdrop-filter: blur(8px);
-  cursor: pointer;
+  height: 3.8rem;
   z-index: 21;
 }
 
-.mobile-fab .iconfont,
-.mobile-fab .qc-ico {
-  font-size: 1.8rem;
-  line-height: 1;
-  pointer-events: none;
+.quick-bar.is-mobile .qb-seg {
+  padding: 0 1.4rem;
+  font-size: 1.25rem;
 }
 </style>

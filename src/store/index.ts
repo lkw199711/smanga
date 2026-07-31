@@ -44,6 +44,8 @@ export const config = reactive({
 	chapterList: false,
 	// legacy-reader 统一控制面板开关 (章节列表 + 工具栏 一屏合并)
 	controlPanel: false,
+	// legacy-reader 主题级章节选择左侧抽屉开关 (顶栏长条唤起)
+	chapterDrawer: false,
 	android: false,
 	isMobile: false, // 移动端环境标识
 	viewType: 'block',
