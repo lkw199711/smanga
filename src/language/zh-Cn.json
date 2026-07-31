@@ -58,6 +58,7 @@
     "modify": "修改",
     "remove": "移除",
     "confirm": "确定",
+    "confirmTitle": "请确认",
     "cancel": "取消",
     "removeFirst": "添加首页",
     "recoveryFirst": "恢复首页",
@@ -483,6 +484,20 @@
     "shareExpires": "过期时间",
     "share": "分享",
     "reverseOrder": "倒序"
+  },
+  "themeShare": {
+    "title": "创建分享链接",
+    "domainNote": "请填写自己的域名或IP地址，分享链接将会在此基础上生成。",
+    "domainRequired": "请输入域名或IP地址",
+    "day1": "1天",
+    "week1": "1周",
+    "month1": "1月",
+    "year1": "1年",
+    "forever": "永久有效",
+    "created": "分享链接已创建",
+    "copied": "链接已复制",
+    "copyFailed": "复制失败，请手动复制",
+    "failed": "创建失败，请稍后重试"
   },
   "mangaShare": {
     "link": "分享链接",

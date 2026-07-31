@@ -117,12 +117,12 @@
 <script lang="ts" setup>
 import { ref, onMounted, computed, nextTick } from 'vue'
 import { useRouter } from 'vue-router'
-import { ElMessage } from 'element-plus'
 import tagApi from '@/api/tag'
 import TagFilterBar from '@/themes/components/tag-filter-bar.vue'
 import MangaCard from '@/themes/components/manga-card.vue'
 import SortSelector from '@/themes/components/sort-selector.vue'
 import { themeState } from '@/themes/store'
+import { useThemeToast } from '@/themes/composables/use-theme-toast'
 import { openThemeActionSheet } from '@/themes/context-menu'
 import { useSessionStore } from '@/store/session'
 import { invalidateTagCache } from '@/themes/components/composables/use-tag-picker'
@@ -144,6 +144,7 @@ const tagNameInput = ref<HTMLInputElement | null>(null)
 const createForm = ref({ tagName: '', tagColor: '#6366f1', description: '' })
 const session = useSessionStore()
 const isAdmin = computed(() => session.isAdmin)
+const toast = useThemeToast()
 
 const cardVariant = computed(() => {
   // Map theme names to MangaCard variant
@@ -193,9 +194,9 @@ async function createTag() {
     invalidateTagCache()
     createDialogVisible.value = false
     await loadTags()
-    ElMessage.success('标签新增成功')
+    toast.success('标签新增成功')
   } catch (error: any) {
-    ElMessage.error(error?.response?.data?.message || error?.message || '标签新增失败')
+    toast.error(error?.response?.data?.message || error?.message || '标签新增失败')
   } finally {
     creating.value = false
   }

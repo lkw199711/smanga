@@ -57,6 +57,7 @@
     "modify": "modify",
     "remove": "remove",
     "confirm": "Ok",
+    "confirmTitle": "Please Confirm",
     "cancel": "Cancel",
     "bookmark": "addBookmark",
     "removeFirst": "removeFirstPage",
@@ -479,6 +480,20 @@
     "shareExpires": "expires",
     "share": "share",
     "reverseOrder": "Reverse order"
+  },
+  "themeShare": {
+    "title": "Create Share Link",
+    "domainNote": "Fill in your domain or IP address; the share link will be generated based on it.",
+    "domainRequired": "Please enter a domain or IP address",
+    "day1": "1 day",
+    "week1": "1 week",
+    "month1": "1 month",
+    "year1": "1 year",
+    "forever": "Never expires",
+    "created": "Share link created",
+    "copied": "Link copied",
+    "copyFailed": "Copy failed, please copy manually",
+    "failed": "Creation failed, please try again later"
   },
   "mangaShare": {
     "link": "shareLink",

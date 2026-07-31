@@ -437,10 +437,9 @@
 	border-color: var(--sa-border) !important;
 }
 
-/* 通用对话框 tm-edit-dialog / tm-create-dialog / tag-editor-dialog / ta-dialog */
+/* 通用对话框 tm-edit-dialog / tm-create-dialog / ta-dialog */
 .sa-dark .tm-edit-dialog,
 .sa-dark .tm-create-dialog,
-.sa-dark .tag-editor-dialog,
 .sa-dark .ta-dialog,
 .sa-dark .ta-dialog-head,
 .sa-dark .ta-dialog-body,

@@ -140,10 +140,12 @@ import { ref, onMounted, nextTick } from 'vue'
 import TagChip from './tag-chip.vue'
 import tagApi, { tagItemType } from '@/api/tag'
 import i18n from '@/i18n'
-import { ElMessage, ElMessageBox } from 'element-plus'
+import { useThemeToast } from '@/themes/composables/use-theme-toast'
+import { themeConfirm } from '@/themes/composables/use-theme-confirm'
 import { useTagPicker, invalidateTagCache } from './composables/use-tag-picker'
 
 const { t } = i18n.global
+const toast = useThemeToast()
 
 const props = withDefaults(
   defineProps<{
@@ -209,10 +211,10 @@ async function save() {
   try {
     await tagApi.add_manga_tag(props.mangaId, assigned.value, metaWriteJson.value)
     emit('update:tags', [...assigned.value])
-    ElMessage.success(t('tagEditor.savedTip'))
+    toast.success(t('tagEditor.savedTip'))
     emit('close')
   } catch (e: any) {
-    ElMessage.error(e?.message || t('tagEditor.saveFailed'))
+    toast.error(e?.message || t('tagEditor.saveFailed'))
   } finally {
     saving.value = false
   }
@@ -224,10 +226,12 @@ async function tryClose() {
     return
   }
   try {
-    await ElMessageBox.confirm(t('tagEditor.discardConfirm'), t('tagEditor.discardTitle'), {
-      confirmButtonText: t('option.confirm'),
-      cancelButtonText: t('option.cancel'),
+    await themeConfirm({
+      title: t('tagEditor.discardTitle'),
+      message: t('tagEditor.discardConfirm'),
       type: 'warning',
+      confirmText: t('option.confirm'),
+      cancelText: t('option.cancel'),
     })
     emit('close')
   } catch {
@@ -241,7 +245,7 @@ async function createTag() {
   // Guard against duplicate name (case-insensitive)
   const dup = allTags.value.find((tItem) => tItem.tagName?.toLowerCase() === name.toLowerCase())
   if (dup) {
-    ElMessage.warning(t('tagEditor.dupWarn'))
+    toast.info(t('tagEditor.dupWarn'))
     insertNewTag(dup)
     cancelCreate()
     return
@@ -258,9 +262,9 @@ async function createTag() {
     ) || allTags.value.find((tItem) => tItem.tagName === name)
     if (created) insertNewTag(created)
     cancelCreate()
-    ElMessage.success(t('tagEditor.createdTip'))
+    toast.success(t('tagEditor.createdTip'))
   } catch (e: any) {
-    ElMessage.error(e?.message || t('tagEditor.createFailed'))
+    toast.error(e?.message || t('tagEditor.createFailed'))
   } finally {
     creating.value = false
   }

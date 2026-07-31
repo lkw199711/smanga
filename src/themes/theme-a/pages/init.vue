@@ -62,7 +62,10 @@
         </div>
         <div class="ta-form-group">
           <label>密码</label>
-          <el-input v-model="form.password" type="password" show-password placeholder="数据库密码" :disabled="submitting" />
+          <div class="ta-pass-wrap">
+            <input v-model="form.password" :type="showPwd.db ? 'text' : 'password'" placeholder="数据库密码" :disabled="submitting" autocomplete="new-password" />
+            <button type="button" class="ta-pass-toggle" :aria-label="showPwd.db ? '隐藏密码' : '显示密码'" @click="showPwd.db = !showPwd.db">{{ showPwd.db ? '🙈' : '👁' }}</button>
+          </div>
         </div>
         <div class="ta-form-group">
           <label>数据库名</label>
@@ -111,17 +114,23 @@
       </div>
       <div class="ta-form-group">
         <label>密码</label>
-        <el-input v-model="form.adminPass" type="password" show-password placeholder="请输入管理员密码" :disabled="submitting" />
+        <div class="ta-pass-wrap">
+          <input v-model="form.adminPass" :type="showPwd.admin ? 'text' : 'password'" placeholder="请输入管理员密码" :disabled="submitting" autocomplete="new-password" />
+          <button type="button" class="ta-pass-toggle" :aria-label="showPwd.admin ? '隐藏密码' : '显示密码'" @click="showPwd.admin = !showPwd.admin">{{ showPwd.admin ? '🙈' : '👁' }}</button>
+        </div>
       </div>
       <div class="ta-form-group">
         <label>确认密码</label>
-        <el-input
-          v-model="confirmPass"
-          type="password"
-          show-password
-          placeholder="请再次输入密码"
-          :disabled="submitting"
-        />
+        <div class="ta-pass-wrap">
+          <input
+            v-model="confirmPass"
+            :type="showPwd.confirm ? 'text' : 'password'"
+            placeholder="请再次输入密码"
+            :disabled="submitting"
+            autocomplete="new-password"
+          />
+          <button type="button" class="ta-pass-toggle" :aria-label="showPwd.confirm ? '隐藏密码' : '显示密码'" @click="showPwd.confirm = !showPwd.confirm">{{ showPwd.confirm ? '🙈' : '👁' }}</button>
+        </div>
       </div>
 
       <p v-if="error" class="ta-error">{{ error }}</p>
@@ -179,6 +188,8 @@ const form = reactive({
 })
 
 const confirmPass = ref('')
+// 密码明文切换 (替代 el-input show-password)
+const showPwd = reactive({ db: false, admin: false, confirm: false })
 const submitting = ref(false)
 const success = ref(false)
 const loading = ref(true)
@@ -613,24 +624,36 @@ function startCountdown() {
   border-color: #2563eb;
 }
 
-/* el-input 在密码框中的样式适配 */
-.ta-form-group :deep(.el-input__wrapper) {
-  border-radius: 0.8rem;
-  box-shadow: 0 0 0 1px #eaeaea;
-  transition: box-shadow 0.15s;
+/* 密码框明文切换 (替代 el-input show-password) */
+.ta-pass-wrap {
+  position: relative;
 }
 
-.ta-form-group :deep(.el-input__wrapper:hover) {
-  box-shadow: 0 0 0 1px #d1d5db;
+.ta-pass-wrap input {
+  padding-right: 4.4rem;
 }
 
-.ta-form-group :deep(.el-input.is-focus .el-input__wrapper) {
-  box-shadow: 0 0 0 1px #2563eb;
+.ta-pass-toggle {
+  position: absolute;
+  top: 50%;
+  right: 0.6rem;
+  transform: translateY(-50%);
+  width: 3.2rem;
+  height: 3.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: transparent;
+  border-radius: 0.6rem;
+  font-size: 1.5rem;
+  cursor: pointer;
+  opacity: 0.55;
+  transition: opacity 0.15s;
 }
 
-.ta-form-group :deep(.el-input.is-disabled .el-input__wrapper) {
-  background: #f9fafb;
-  box-shadow: 0 0 0 1px #e5e7eb;
+.ta-pass-toggle:hover {
+  opacity: 1;
 }
 
 .ta-btn-submit {

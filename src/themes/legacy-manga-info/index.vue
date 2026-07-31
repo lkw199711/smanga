@@ -2,12 +2,35 @@
   <div class="manga-info">
     <div :class="['top', {'top--cover-only': !banner.length}]" :style="[bannerModel === 'toomics' && {marginTop: 0}]">
       <template v-if="banner.length">
-        <el-carousel class="carousel" :interval="interval" :type="carouselType" v-if="bannerModel === 'toptoon'">
-          <el-carousel-item class="banner-box" v-for="item in banner" :key="item.metaId">
+        <!-- 自绘轮播 (替代 el-carousel): seat 占位图撑高, 活动页淡入, 支持定时轮播/触摸滑动/圆点切换 -->
+        <div
+          class="carousel tm-carousel"
+          v-if="bannerModel === 'toptoon'"
+          @mouseenter="pauseBannerTimer"
+          @mouseleave="startBannerTimer"
+          @touchstart.passive="onBannerTouchStart"
+          @touchend.passive="onBannerTouchEnd"
+        >
+          <img class="banner seat" :src="banner.length ? banner[0].blob : ''" alt="" aria-hidden="true" />
+          <div
+            class="banner-box tm-carousel-item"
+            v-for="(item, index) in banner"
+            :key="item.metaId"
+            :class="{ 'is-active': index === bannerIndex }"
+          >
             <img class="banner" :src="item.blob" alt="banner" />
-          </el-carousel-item>
-          <img class="banner seat" :src="banner.length ? banner[0].blob : ''" alt="banner" />
-        </el-carousel>
+          </div>
+          <div class="tm-carousel-dots" v-if="banner.length > 1">
+            <button
+              v-for="(item, index) in banner"
+              :key="item.metaId"
+              type="button"
+              :class="{ active: index === bannerIndex }"
+              :aria-label="`banner ${index + 1}`"
+              @click="goBanner(index)"
+            />
+          </div>
+        </div>
 
         <div class="banner-toomics" v-if="bannerModel === 'toomics'">
           <img class="banner-toomics-fore" :src="banner[0]?.blob" alt="banner" />
@@ -15,7 +38,10 @@
         </div>
       </template>
 
-      <el-image class="anim cover-img" :src="mangaCover" fit="contain" v-else></el-image>
+      <div class="anim cover-img cover-frame" :class="{ 'is-empty': !mangaCover || coverError }" v-else>
+        <img v-if="mangaCover && !coverError" :src="mangaCover" :alt="mangaInfo.mangaName" loading="lazy" @error="coverError = true" />
+        <span v-else class="cover-fallback-ico" aria-hidden="true">🖼</span>
+      </div>
     </div>
 
     <div class="middle">
@@ -34,7 +60,10 @@
 
       <div :class="['detail-overview', {'detail-overview--with-cover': !banner.length}]">
         <aside class="overview-cover" v-if="!banner.length" aria-label="漫画封面">
-          <el-image class="overview-cover-img" :src="mangaCover" fit="contain" :alt="mangaInfo.mangaName"></el-image>
+          <div class="overview-cover-img cover-frame" :class="{ 'is-empty': !mangaCover || coverError }">
+            <img v-if="mangaCover && !coverError" :src="mangaCover" :alt="mangaInfo.mangaName" loading="lazy" @error="coverError = true" />
+            <span v-else class="cover-fallback-ico" aria-hidden="true">🖼</span>
+          </div>
         </aside>
 
         <section class="meta-info" aria-labelledby="manga-info-title">
@@ -46,32 +75,30 @@
           </div>
 
           <div class="meta-tags" v-if="mangaInfo.tags?.length">
-            <el-tag v-for="item in mangaInfo.tags" :key="item.tagId" class="tag" size="small" :color="item.tagColor">
-              {{ item.tagName }}
-            </el-tag>
+            <tag-chip v-for="item in mangaInfo.tags" :key="item.tagId" class="tag" :name="item.tagName" :color="item.tagColor" show-dot />
           </div>
         </header>
 
         <p class="meta-description" v-if="mangaInfo.describe">{{ mangaInfo.describe }}</p>
 
-        <el-descriptions class="meta-summary" :column="summaryInfoColumn">
-          <el-descriptions-item label="发布时间">{{ mangaInfo.publishDate || '—' }}</el-descriptions-item>
-          <el-descriptions-item label="章节总数">{{ mangaInfo.chapterCount || 0 }}</el-descriptions-item>
-          <el-descriptions-item label="评分">{{ mangaInfo.star || '—' }}</el-descriptions-item>
-          <el-descriptions-item label="阅读方式">{{ mangaInfo.browseType || '—' }}</el-descriptions-item>
-        </el-descriptions>
+        <dl class="meta-summary" :style="{ '--meta-cols': summaryInfoColumn }">
+          <div class="meta-field"><dt>发布时间</dt><dd>{{ mangaInfo.publishDate || '—' }}</dd></div>
+          <div class="meta-field"><dt>章节总数</dt><dd>{{ mangaInfo.chapterCount || 0 }}</dd></div>
+          <div class="meta-field"><dt>评分</dt><dd>{{ mangaInfo.star || '—' }}</dd></div>
+          <div class="meta-field"><dt>阅读方式</dt><dd>{{ mangaInfo.browseType || '—' }}</dd></div>
+        </dl>
 
         <details class="technical-info">
           <summary>
             <span>文件与收录信息</span>
             <small>媒体库、路径及更新时间</small>
           </summary>
-          <el-descriptions class="technical-summary" :column="infoColum">
-            <el-descriptions-item label="所属媒体库">{{ mangaInfo.media?.mediaName || '—' }}</el-descriptions-item>
-            <el-descriptions-item label="漫画路径">{{ mangaInfo.mangaPath || '—' }}</el-descriptions-item>
-            <el-descriptions-item label="入库时间">{{ mangaInfo.createTime || '—' }}</el-descriptions-item>
-            <el-descriptions-item label="更新时间">{{ mangaInfo.updateTime || '—' }}</el-descriptions-item>
-          </el-descriptions>
+          <dl class="technical-summary" :style="{ '--meta-cols': infoColum }">
+            <div class="meta-field"><dt>所属媒体库</dt><dd>{{ mangaInfo.media?.mediaName || '—' }}</dd></div>
+            <div class="meta-field"><dt>漫画路径</dt><dd>{{ mangaInfo.mangaPath || '—' }}</dd></div>
+            <div class="meta-field"><dt>入库时间</dt><dd>{{ mangaInfo.createTime || '—' }}</dd></div>
+            <div class="meta-field"><dt>更新时间</dt><dd>{{ mangaInfo.updateTime || '—' }}</dd></div>
+          </dl>
         </details>
         </section>
 
@@ -86,8 +113,8 @@
           </div>
 
           <div class="action-primary">
-            <el-button class="action-button action-button--primary" @click="go_chapter">
-              <el-icon><Reading /></el-icon>
+            <button type="button" class="action-button action-button--primary" @click="go_chapter">
+              <span class="action-ico" aria-hidden="true">📖</span>
               <span class="action-button-copy">
                 <strong>{{ hasLatest ? '继续阅读' : '开始阅读' }}</strong>
                 <small v-if="hasLatest">
@@ -96,29 +123,27 @@
                 </small>
                 <small v-else>从第一章开始</small>
               </span>
-            </el-button>
+            </button>
 
-            <el-button class="action-button action-button--outline" @click="go_chapter_list">
-              <el-icon><Tickets /></el-icon>
+            <button type="button" class="action-button action-button--outline" @click="go_chapter_list">
+              <span class="action-ico" aria-hidden="true">☰</span>
               <span>章节列表</span>
-            </el-button>
+            </button>
           </div>
 
           <div class="action-quick">
-            <el-button
+            <button
+              type="button"
               :class="['action-button', 'action-button--quiet', {'is-selected': isCollect}]"
               @click="isCollect ? remove_collect() : collect_manga()">
-              <el-icon>
-                <StarFilled v-if="isCollect" />
-                <Star v-else />
-              </el-icon>
+              <span class="action-ico" aria-hidden="true">{{ isCollect ? '★' : '☆' }}</span>
               <span>{{ isCollect ? '取消收藏' : '收藏漫画' }}</span>
-            </el-button>
+            </button>
 
-            <el-button class="action-button action-button--quiet" @click="mangaShareDialog = true">
-              <el-icon><Share /></el-icon>
+            <button type="button" class="action-button action-button--quiet" @click="mangaShareDialog = true">
+              <span class="action-ico" aria-hidden="true">↗</span>
               <span>分享漫画</span>
-            </el-button>
+            </button>
           </div>
           </section>
 
@@ -132,22 +157,22 @@
           </div>
 
           <div class="action-tool-grid">
-            <el-button class="action-tool" @click="editMangaDialog = true">
-              <el-icon><EditPen /></el-icon>
+            <button type="button" class="action-tool" @click="editMangaDialog = true">
+              <span class="action-ico" aria-hidden="true">✎</span>
               <span>编辑漫画</span>
-            </el-button>
-            <el-button class="action-tool" @click="editTagsDialog = true">
-              <el-icon><PriceTag /></el-icon>
+            </button>
+            <button type="button" class="action-tool" @click="editTagsDialog = true">
+              <span class="action-ico" aria-hidden="true">🏷</span>
               <span>编辑标签</span>
-            </el-button>
-            <el-button class="action-tool" @click="open_covers_edit" v-if="hasManyCover">
-              <el-icon><Picture /></el-icon>
+            </button>
+            <button type="button" class="action-tool" @click="open_covers_edit" v-if="hasManyCover">
+              <span class="action-ico" aria-hidden="true">🖼</span>
               <span>编辑封面</span>
-            </el-button>
-            <el-button class="action-tool" @click="editMetasDialog = true">
-              <el-icon><Document /></el-icon>
+            </button>
+            <button type="button" class="action-tool" @click="editMetasDialog = true">
+              <span class="action-ico" aria-hidden="true">📄</span>
               <span>编辑元数据</span>
-            </el-button>
+            </button>
           </div>
           </section>
         </div>
@@ -183,7 +208,17 @@
 
             <label class="order-switch">
               <span>{{ chapterListDesc ? '倒序' : '正序' }}</span>
-              <el-switch v-model="chapterListDesc" :aria-label="$t('mangaInfo.reverseOrder')" />
+              <button
+                type="button"
+                class="order-toggle"
+                :class="{ 'is-on': chapterListDesc }"
+                role="switch"
+                :aria-checked="chapterListDesc"
+                :aria-label="$t('mangaInfo.reverseOrder')"
+                @click="chapterListDesc = !chapterListDesc"
+              >
+                <span class="order-toggle-dot" />
+              </button>
             </label>
           </div>
         </header>
@@ -240,9 +275,7 @@
 
 
 
-    <el-dialog :title="$t('mangaInfo.mangaShareDialogTitle')" v-model="mangaShareDialog">
-      <share :mangaInfo="mangaInfo" @close_dialog="mangaShareDialog = false" />
-    </el-dialog>
+    <theme-share-dialog v-model="mangaShareDialog" :manga-info="mangaInfo" />
 
     <!-- 主题右键菜单 -->
     <theme-context-menu />
@@ -251,7 +284,7 @@
 
 <script lang="ts" setup>
 import {useRoute, useRouter} from 'vue-router';
-import {onMounted, ref, reactive, computed, watch} from 'vue';
+import {onMounted, onBeforeUnmount, ref, reactive, computed, watch} from 'vue';
 import mangaApi from '@/api/manga';
 import imageApi from '@/api/image';
 import {config, userConfig} from '@/store';
@@ -263,7 +296,8 @@ import chapterApi from '@/api/chapter';
 import lastesApi from '@/api/latest';
 import collectApi from '@/api/collect';
 import TagEditorDialog from '@/themes/components/tag-editor-dialog.vue';
-import share from '@/components/share.vue';
+import ThemeShareDialog from '@/themes/components/theme-share-dialog.vue';
+import TagChip from '@/themes/components/tag-chip.vue';
 // 该页面需要向复用的旧阅读器写入 chapter/page；列表分页不得再写 browse。
 import useBrowseStore from '@/store/browse';
 import { useNavigationStore } from '@/store/navigation';
@@ -276,7 +310,6 @@ import ThemeContextMenu from '@/themes/components/theme-context-menu.vue';
 import { openThemeContextMenu } from '@/themes/context-menu';
 import { useThemeUiStore } from '@/store/theme-ui';
 import { themeListKeys, useThemeListStateStore } from '@/themes/stores/list-state';
-import {Document, EditPen, Picture, PriceTag, Reading, Share, Star, StarFilled, Tickets} from '@element-plus/icons-vue';
 const browse: any = useBrowseStore();
 const navigation = useNavigationStore();
 const themeUi = useThemeUiStore();
@@ -314,17 +347,55 @@ let bannerBg = ref<metaType>();
 let hasManyCover = ref(false);
 
 let sourceWebsite = ref('');
+let coverError = ref(false);
 
 const interval = ref(6 * 1000);
 
-const carouselType = computed(() => {
-  const screen = config.screenType;
-  if (['middle', 'large', '2k', '4k'].includes(screen)) {
-    return 'card';
-  } else {
-    return '';
+// ---- 自绘轮播 (替代 el-carousel) ----
+const bannerIndex = ref(0);
+let bannerTimer = 0;
+let bannerTouchX = 0;
+
+function startBannerTimer() {
+  pauseBannerTimer();
+  if (banner.value.length < 2) return;
+  bannerTimer = window.setInterval(() => {
+    bannerIndex.value = (bannerIndex.value + 1) % banner.value.length;
+  }, interval.value);
+}
+
+function pauseBannerTimer() {
+  if (bannerTimer) {
+    window.clearInterval(bannerTimer);
+    bannerTimer = 0;
   }
+}
+
+function goBanner(index: number) {
+  bannerIndex.value = index;
+  startBannerTimer();
+}
+
+function onBannerTouchStart(event: TouchEvent) {
+  bannerTouchX = event.touches[0]?.clientX ?? 0;
+  pauseBannerTimer();
+}
+
+function onBannerTouchEnd(event: TouchEvent) {
+  const deltaX = (event.changedTouches[0]?.clientX ?? 0) - bannerTouchX;
+  const count = banner.value.length;
+  if (count > 1 && Math.abs(deltaX) > 40) {
+    bannerIndex.value = (bannerIndex.value + (deltaX < 0 ? 1 : count - 1)) % count;
+  }
+  startBannerTimer();
+}
+
+watch(banner, () => {
+  bannerIndex.value = 0;
+  startBannerTimer();
 });
+
+onBeforeUnmount(pauseBannerTimer);
 
 const infoColum = computed(() => {
   const screen = config.screenType;
@@ -373,6 +444,7 @@ watch(mangaId, async (newId) => {
   banner.value = [];
   character.value = [];
   mangaCover.value = '';
+  coverError.value = false;
   await render_meta();
   await get_first_chapter();
   await get_latest_reading();
@@ -574,18 +646,6 @@ function update_tags(tagsParams: tagItemType[]) {
   color: @s-back-text;
 }
 
-:deep(.el-form-item__label) {
-  --el-text-color-regular: @s-back-text;
-}
-
-:deep(.el-carousel__container) {
-  height: auto !important;
-}
-
-:deep(.el-carousel__mask) {
-  background-color: transparent;
-}
-
 .meta-info,
 .action-panel {
   box-sizing: border-box;
@@ -636,7 +696,7 @@ function update_tags(tagsParams: tagItemType[]) {
     border-radius: 1rem;
     overflow: hidden;
     position: relative;
-    border: 0.8rem solid var(--el-border-color);
+    border: 0.8rem solid @s-border;
 
     img {
       width: 100%;
@@ -650,7 +710,7 @@ function update_tags(tagsParams: tagItemType[]) {
     }
 
     &.active {
-      border-color: var(--el-color-primary);
+      border-color: @s-primary;
       box-shadow: 0 0 1rem rgba(0, 0, 0, 0.8);
     }
   }
@@ -673,6 +733,55 @@ function update_tags(tagsParams: tagItemType[]) {
   height: auto;
 }
 
+/* 自绘轮播: seat 占位撑高, 各帧绝对定位淡入淡出 */
+.tm-carousel {
+  position: relative;
+  overflow: hidden;
+}
+
+.tm-carousel-item {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  pointer-events: none;
+
+  &.is-active {
+    opacity: 1;
+    pointer-events: auto;
+  }
+}
+
+.tm-carousel-dots {
+  position: absolute;
+  bottom: 1rem;
+  left: 50%;
+  z-index: 2;
+  display: flex;
+  gap: 0.6rem;
+  transform: translateX(-50%);
+
+  button {
+    width: 0.8rem;
+    height: 0.8rem;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.5);
+    box-shadow: 0 0 0.4rem rgba(0, 0, 0, 0.3);
+    cursor: pointer;
+    transition: background 0.2s ease, transform 0.2s ease;
+
+    &.active {
+      background: #fff;
+      transform: scale(1.25);
+    }
+  }
+}
+
 .banner {
   display: block;
   margin: 0 auto;
@@ -690,7 +799,7 @@ function update_tags(tagsParams: tagItemType[]) {
 }
 
 .character-title {
-  color: var(--el-text-color-primary);
+  color: @s-back-text;
   font-size: 1.6rem;
   font-weight: bold;
   margin-bottom: 1rem;
@@ -791,21 +900,30 @@ function update_tags(tagsParams: tagItemType[]) {
   margin-top: 2rem;
 }
 
-:deep(.meta-summary .el-descriptions__body),
-:deep(.technical-summary .el-descriptions__body) {
-  background-color: transparent;
+/* 自绘信息网格 (替代 el-descriptions): label 淡色 + value 常色, 列数由 --meta-cols 驱动 */
+.meta-summary,
+.technical-summary {
+  display: grid;
+  grid-template-columns: repeat(var(--meta-cols, 2), minmax(0, 1fr));
+  gap: 1rem 1.6rem;
+  margin-bottom: 0;
 }
 
-:deep(.meta-info .el-descriptions__table) {
-  width: 100%;
-  table-layout: fixed;
-}
-
-:deep(.meta-info .el-descriptions__cell),
-:deep(.meta-info .el-descriptions__content) {
+.meta-field {
   min-width: 0;
-  overflow-wrap: anywhere;
-  word-break: break-word;
+
+  dt {
+    color: @s-back-text-tertiary;
+    font-size: 1.2rem;
+  }
+
+  dd {
+    margin: 0.3rem 0 0;
+    color: @s-back-text;
+    font-size: 1.35rem;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
 }
 
 .technical-info {
@@ -923,9 +1041,17 @@ function update_tags(tagsParams: tagItemType[]) {
 
 .action-button,
 .action-tool {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   margin: 0 !important;
+  border: 1px solid transparent;
   border-radius: 1rem;
+  background: transparent;
+  color: inherit;
+  font: inherit;
   font-weight: 600;
+  cursor: pointer;
   transition:
     transform 160ms ease,
     border-color 160ms ease,
@@ -936,9 +1062,11 @@ function update_tags(tagsParams: tagItemType[]) {
     transform: translateY(-1px);
   }
 
-  :deep(.el-icon) {
+  .action-ico {
     flex: none;
+    margin-right: 0.6rem;
     font-size: 1.7rem;
+    line-height: 1;
   }
 }
 
@@ -1127,6 +1255,39 @@ function update_tags(tagsParams: tagItemType[]) {
   font-size: 1.2rem;
 }
 
+/* 自绘开关 (替代 el-switch) */
+.order-toggle {
+  position: relative;
+  width: 4.4rem;
+  height: 2.4rem;
+  border: 0;
+  border-radius: 999px;
+  background: color-mix(in srgb, @s-border 85%, transparent);
+  cursor: pointer;
+  transition: background 0.2s ease;
+  flex-shrink: 0;
+
+  &.is-on {
+    background: @s-primary;
+  }
+}
+
+.order-toggle-dot {
+  position: absolute;
+  top: 0.3rem;
+  left: 0.3rem;
+  width: 1.8rem;
+  height: 1.8rem;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 0.1rem 0.3rem rgba(0, 0, 0, 0.25);
+  transition: transform 0.2s ease;
+}
+
+.order-toggle.is-on .order-toggle-dot {
+  transform: translateX(2rem);
+}
+
 .chapter-list {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(42rem, 1fr));
@@ -1170,6 +1331,32 @@ function update_tags(tagsParams: tagItemType[]) {
   margin: 0 auto;
   min-width: 14rem;
   height: 40rem;
+}
+
+// 原生 img 封面容器 (替代 el-image)
+.cover-frame {
+  position: relative;
+  overflow: hidden;
+
+  img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  &.is-empty {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: color-mix(in srgb, @s-border 30%, transparent);
+  }
+}
+
+.cover-fallback-ico {
+  font-size: 4rem;
+  opacity: 0.35;
+  user-select: none;
 }
 
 @media only screen and (min-width: 120rem) {

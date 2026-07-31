@@ -58,6 +58,7 @@
     "modify": "修改",
     "remove": "移除",
     "confirm": "確定",
+    "confirmTitle": "請確認",
     "cancel": "取消",
     "removeFirst": "添加首頁",
     "recoveryFirst": "恢復首頁",
@@ -462,6 +463,20 @@
     "shareExpires": "過期時間",
     "share": "分享",
     "reverseOrder": "倒序"
+  },
+  "themeShare": {
+    "title": "創建分享鏈接",
+    "domainNote": "請填寫自己的域名或IP地址，分享鏈接將會在此基礎上生成。",
+    "domainRequired": "請輸入域名或IP地址",
+    "day1": "1天",
+    "week1": "1周",
+    "month1": "1月",
+    "year1": "1年",
+    "forever": "永久有效",
+    "created": "分享鏈接已創建",
+    "copied": "鏈接已複製",
+    "copyFailed": "複製失敗，請手動複製",
+    "failed": "創建失敗，請稍後重試"
   },
   "mangaShare": {
     "link": "分享鏈接",

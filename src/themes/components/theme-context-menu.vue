@@ -29,9 +29,7 @@
   <media-edit v-if="themeContextMenu.target === 'media'" v-model:editMediaDialog="editMediaDialog" edit-model="modify" :media-info="item" @reload="finishDialog" />
 
   <TagEditorDialog v-if="item.mangaId" v-model="editTagsDialog" :manga-id="item.mangaId" :tags="item.tags || []" @update:tags="updateTags" />
-  <el-dialog v-model="shareDialog" title="创建分享链接" width="min(92vw, 68rem)">
-    <manga-share :manga-info="themeContextMenu.target === 'manga' ? item : undefined" :media-info="themeContextMenu.target === 'media' ? item : undefined" @close_dialog="finishDialog" />
-  </el-dialog>
+  <theme-share-dialog v-model="shareDialog" :manga-info="themeContextMenu.target === 'manga' ? item : undefined" :media-info="themeContextMenu.target === 'media' ? item : undefined" @done="finishDialog" />
 </template>
 
 <script setup lang="ts">
@@ -55,11 +53,14 @@ import MangaModify from '@/themes/components/manga-modify-dialog.vue'
 import ChapterModify from '@/themes/components/chapter-modify-dialog.vue'
 import MediaEdit from '@/themes/components/media-edit-dialog.vue'
 import TagEditorDialog from '@/themes/components/tag-editor-dialog.vue'
-import MangaShare from '@/components/share.vue'
+import ThemeShareDialog from '@/themes/components/theme-share-dialog.vue'
+import { useThemeToast } from '@/themes/composables/use-theme-toast'
+import { themeConfirm } from '@/themes/composables/use-theme-confirm'
 
 type Action = { key: string; label: string; icon: string; danger?: boolean }
 const menuEl = ref<HTMLElement>()
 const route = useRoute()
+const toast = useThemeToast()
 const busy = ref(false)
 const collected = ref(false)
 const editMangaDialog = ref(false)
@@ -126,7 +127,7 @@ function placeMenu() {
 
 async function confirm(message: string) {
   try {
-    await ElMessageBox.confirm(message, '请确认', { type: 'warning', confirmButtonText: '确定', cancelButtonText: '取消' })
+    await themeConfirm({ message, type: 'warning' })
     return true
   } catch { return false }
 }
@@ -172,7 +173,7 @@ async function run(key: string) {
     }
     closeThemeContextMenu()
   } catch (error) {
-    ElMessage.error('操作失败，请稍后重试')
+    toast.error('操作失败，请稍后重试')
   } finally { busy.value = false }
 }
 
@@ -224,7 +225,7 @@ async function runChapter(key: string, data: any) {
     if (data.latest?.finish) {
       await Promise.all([historyApi.delete(id), latestApi.delete(id)])
       data.latest = null
-      ElMessage.success('已标记为未读')
+      toast.success('已标记为未读')
     } else {
       let mediaId = Number(data.mediaId)
       let mangaId = Number(data.mangaId)
@@ -249,7 +250,7 @@ async function runChapter(key: string, data: any) {
       }
       await latestApi.add({ chapterId: id, mangaId, finish: true, page: 0, count: 0 })
       data.latest = { ...(data.latest || {}), finish: 1, page: 0, count: 0 }
-      ElMessage.success('已标记为已读')
+      toast.success('已标记为已读')
     }
   } else if (key === 'compress-delete') await chapterApi.compress_delete(id)
   else if (key === 'remove') await chapterApi.delete_chapter(id)

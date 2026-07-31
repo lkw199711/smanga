@@ -1,0 +1,150 @@
+/* theme 弹层公共样式基因 (thd-*)
+ * 供 theme-confirm / theme-share-dialog 等自绘弹窗复用,
+ * 观感与 legacy-reader/reader-dialogs.vue 的 lrd-* 保持一致 (深色毛玻璃卡片)。
+ * 各组件在 <style scoped lang="less"> 内 @import 使用, 类名在各自模板中生效。
+ */
+
+.thd-mask {
+  position: fixed;
+  inset: 0;
+  z-index: 3050; /* 高于 tcm-sheet(3000), 低于 toast(3100) */
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.thd-card {
+  box-sizing: border-box;
+  width: min(40rem, 92vw);
+  padding: 2rem 2rem 1.6rem;
+  border-radius: 1.6rem;
+  background: var(--theme-reader-topbar-bg, rgba(17, 24, 39, 0.94));
+  color: var(--theme-reader-topbar-text, #f8fafc);
+  box-shadow: 0 0.6rem 2.4rem rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(14px);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.thd-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 1.4rem;
+}
+
+.thd-message {
+  margin: 0;
+  font-size: 1.35rem;
+  line-height: 1.7;
+  opacity: 0.9;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.thd-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.8rem;
+  margin-top: 1.8rem;
+}
+
+.thd-btn {
+  height: 3.4rem;
+  padding: 0 1.8rem;
+  border: 0;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--theme-reader-topbar-text, #f8fafc);
+  font-size: 1.3rem;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.thd-btn:hover {
+  background: rgba(255, 255, 255, 0.16);
+}
+
+.thd-btn.is-primary {
+  background: var(--theme-reader-topbar-accent, #60a5fa);
+  color: #0b1120;
+  font-weight: 600;
+}
+
+.thd-btn.is-primary:hover {
+  filter: brightness(1.1);
+}
+
+.thd-btn.is-danger {
+  background: rgba(220, 38, 38, 0.85);
+  color: #fff;
+  font-weight: 600;
+}
+
+.thd-btn.is-danger:hover {
+  filter: brightness(1.1);
+}
+
+/* 芯片单选 (替代 el-radio-button) */
+.thd-chip-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+.thd-chip {
+  height: 3rem;
+  padding: 0 1.4rem;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 999px;
+  background: transparent;
+  color: inherit;
+  font-size: 1.25rem;
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+
+.thd-chip:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.thd-chip.is-active {
+  border-color: var(--theme-reader-topbar-accent, #60a5fa);
+  background: var(--theme-reader-topbar-accent, #60a5fa);
+  color: #0b1120;
+  font-weight: 600;
+}
+
+/* 原生 input 套主题样式 */
+.thd-input {
+  box-sizing: border-box;
+  width: 100%;
+  height: 3.6rem;
+  padding: 0 1.2rem;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 0.9rem;
+  background: rgba(255, 255, 255, 0.06);
+  color: inherit;
+  font-size: 1.3rem;
+  outline: none;
+  transition: border-color 0.15s ease;
+}
+
+.thd-input:focus {
+  border-color: var(--theme-reader-topbar-accent, #60a5fa);
+}
+
+.thd-input::placeholder {
+  color: currentColor;
+  opacity: 0.4;
+}
+
+/* 过渡 */
+.thd-fade-enter-active,
+.thd-fade-leave-active {
+  transition: opacity 0.2s ease;
+}
+.thd-fade-enter-from,
+.thd-fade-leave-to {
+  opacity: 0;
+}
