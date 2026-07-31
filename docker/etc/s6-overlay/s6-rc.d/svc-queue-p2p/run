@@ -10,9 +10,14 @@ if [ "$QUEUE_WORKER_MODE" != "external" ]; then
     exit 0
 fi
 
-P2P_ENABLED=$(jq -r '.p2p.enable // false' /data/config/smanga.json 2>/dev/null || echo "false")
-if [ "$P2P_ENABLED" != "true" ]; then
-    echo "queue worker p2p disabled by config"
+# 是否启动独立 p2p worker 由 queue.workers.p2p.enabled 决定(而非顶层 p2p.enable),
+# 必须与后端 getEffectiveWorkerQueues 判断的开关保持一致:
+#  - 该值为 true  -> 独立 p2p worker 消费 p2p,background 会自动让出 p2p;
+#  - 该值为 false -> 不启动本进程,p2p 队列由 background 兜底消费。
+# 若两处开关不一致,会导致 p2p 队列被双消费者抢任务或无人消费(永久卡住)。
+P2P_WORKER_ENABLED=$(jq -r '.queue.workers.p2p.enabled // false' /data/config/smanga.json 2>/dev/null || echo "false")
+if [ "$P2P_WORKER_ENABLED" != "true" ]; then
+    echo "queue worker p2p skipped, queue.workers.p2p.enabled != true (p2p handled by background)"
     s6-svc -d /run/service/svc-queue-p2p 2>/dev/null || true
     exit 0
 fi
