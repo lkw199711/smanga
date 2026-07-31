@@ -46,6 +46,9 @@ export const config = reactive({
 	controlPanel: false,
 	// legacy-reader 主题级章节选择左侧抽屉开关 (顶栏长条唤起)
 	chapterDrawer: false,
+	// legacy-reader 主题风格弹窗开关 (跳页 / 图宽, control-panel 唤起)
+	readerJumpPageDialog: false,
+	readerViewWidthDialog: false,
 	android: false,
 	isMobile: false, // 移动端环境标识
 	viewType: 'block',

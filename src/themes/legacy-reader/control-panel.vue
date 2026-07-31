@@ -123,6 +123,50 @@
               {{ $t('option.setImageWidth') }}
             </button>
             <button
+              type="button"
+              class="lcp-chip"
+              :class="{ 'is-active': userConfig.showPageNumber }"
+              @click="toggleUserConfig('showPageNumber')"
+            >
+              {{ $t('option.showPageNumber') }}
+            </button>
+            <button
+              v-if="isPagedMode"
+              type="button"
+              class="lcp-chip"
+              :class="{ 'is-active': userConfig.pageTurningReverse }"
+              @click="toggleUserConfig('pageTurningReverse')"
+            >
+              {{ $t('option.pageTurningReverse') }}
+            </button>
+            <button
+              v-if="isPagedMode"
+              type="button"
+              class="lcp-chip"
+              :class="{ 'is-active': userConfig.userSlider }"
+              @click="toggleUserConfig('userSlider')"
+            >
+              {{ $t('option.userSlider') }}
+            </button>
+            <button
+              v-if="isPagedMode"
+              type="button"
+              class="lcp-chip"
+              :class="{ 'is-active': userConfig.enablePageAnimation }"
+              @click="toggleUserConfig('enablePageAnimation')"
+            >
+              {{ $t('option.pageAnimation') }}
+            </button>
+            <button
+              v-if="currentMode === 'flow'"
+              type="button"
+              class="lcp-chip"
+              :class="{ 'is-active': userConfig.loadAllFlowIamge }"
+              @click="toggleUserConfig('loadAllFlowIamge')"
+            >
+              {{ $t('option.loadAllFlowImage') }}
+            </button>
+            <button
               v-if="isDouble"
               type="button"
               class="lcp-chip"
@@ -185,9 +229,10 @@
 <script lang="ts" setup>
 import { computed, ref, watch, onMounted, onBeforeUnmount, nextTick } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { config } from '@/store'
+import { config, userConfig } from '@/store'
 import i18n from '@/i18n'
 import useBrowseStore from '@/store/browse'
+import userApi from '@/api/account'
 
 const route = useRoute()
 const router = useRouter()
@@ -252,6 +297,8 @@ const mediaId = computed(() => Number(route.query.mediaId) || 0)
 const mangaId = computed(() => Number(route.query.mangaId) || 0)
 const currentMode = computed(() => String(route.query.readerMode || 'flow'))
 const isDouble = computed(() => currentMode.value === 'double')
+// 翻页类模式 (按钮翻页/进度条/翻页动画等设置仅在这些模式生效)
+const isPagedMode = computed(() => ['single', 'double', 'half'].includes(currentMode.value))
 const canJumpPage = computed(() => currentMode.value === 'flow' || currentMode.value === 'pdf')
 const modes = computed(() => [
   { key: 'flow', label: t('browse.flow') },
@@ -326,6 +373,15 @@ function toggleOperation() {
   config.enableOperation = !config.enableOperation
 }
 
+// 阅读相关用户设置: 切换后静默持久化 (与用户设置页同一接口)
+type ReaderUserConfigKey = 'showPageNumber' | 'pageTurningReverse' | 'userSlider' | 'enablePageAnimation' | 'loadAllFlowIamge'
+function toggleUserConfig(key: ReaderUserConfigKey) {
+  ;(userConfig as any)[key] = !(userConfig as any)[key]
+  userApi.update_user_config({ userConfig }).catch((e) => {
+    console.error('保存用户设置失败:', e)
+  })
+}
+
 // 打开旧版右侧菜单 (保留兼容入口)
 function openLegacyRightSidebar() {
   close()
@@ -353,9 +409,13 @@ function triggerAction(action: 'download' | 'jumpPage' | 'setImageWidth' | 'togg
     withClose(() => browse.trigger_reader_action(action))
     return
   }
-  // 需要弹窗的操作 (跳页/设图宽) 关闭面板避免遮挡
-  if (action === 'jumpPage' || action === 'setImageWidth') {
-    withClose(() => browse.trigger_reader_action(action))
+  // 跳页/设图宽: 改用主题风格弹窗 (reader-dialogs.vue), 不再走旧皮肤 el-dialog
+  if (action === 'jumpPage') {
+    withClose(() => { ;(config as any).readerJumpPageDialog = true })
+    return
+  }
+  if (action === 'setImageWidth') {
+    withClose(() => { ;(config as any).readerViewWidthDialog = true })
     return
   }
   browse.trigger_reader_action(action)

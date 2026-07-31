@@ -9,6 +9,7 @@
       <theme-reader-topbar v-if="config.browseTop" />
       <theme-reader-control-panel />
       <theme-reader-chapter-drawer />
+      <theme-reader-dialogs />
       <section class="theme-legacy-reader-content" :class="readerMode">
         <component :is="readerComponent" :key="`${readerMode}-${route.params.chapterId}`" />
       </section>
@@ -34,6 +35,7 @@ import useBrowseStore from '@/store/browse'
 import ThemeReaderTopbar from './legacy-reader/topbar.vue'
 import ThemeReaderControlPanel from './legacy-reader/control-panel.vue'
 import ThemeReaderChapterDrawer from './legacy-reader/chapter-drawer.vue'
+import ThemeReaderDialogs from './legacy-reader/reader-dialogs.vue'
 import androidSeat from '@/layout/components/android-seat.vue'
 import { useNavigationStore } from '@/store/navigation'
 
