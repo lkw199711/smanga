@@ -10,6 +10,10 @@ interface PullRefreshOptions {
   maxDistance?: number;
   /** 下拉阻力系数，值越大越难下拉，默认0.5 */
   resistance?: number;
+  /** 自定义各阶段提示文案 返回空字符串则使用默认文案 */
+  getText?: (phase: 'pull' | 'release' | 'refreshing') => string;
+  /** 下拉进度回调 ratio 为相对阈值的比例(0~1) 供外部渲染自定义过渡效果 */
+  onProgress?: (ratio: number) => void;
 }
 
 // 创建下拉刷新指令
@@ -27,7 +31,14 @@ const pullRefresh: Directive = {
             ...binding.value,
           };
 
-    const {onRefresh, threshold = 60, maxDistance = 120, resistance = 0.5} = options;
+    const {onRefresh, threshold = 60, maxDistance = 120, resistance = 0.5, getText, onProgress} = options;
+
+    // 各阶段提示文案(支持外部自定义)
+    const phaseText = (phase: 'pull' | 'release' | 'refreshing') => {
+      const custom = getText?.(phase);
+      if (custom) return custom;
+      return {pull: '下拉刷新', release: '释放刷新', refreshing: '刷新中...'}[phase];
+    };
 
     // 状态变量
     let startY = 0;
@@ -157,13 +168,16 @@ const pullRefresh: Directive = {
         contentWrapper.style.transform = `translateY(${pullingDistance}px)`;
         spinner.style.transform = `translateY(${pullingDistance}px)`;
 
+        // 上报下拉进度(相对阈值比例)
+        onProgress?.(Math.min(pullingDistance / threshold, 1));
+
         // 根据距离更新状态
         if (pullingDistance > threshold) {
           spinner.classList.add('pulling');
-          spinner.querySelector('.spinner-text')!.textContent = '释放刷新';
+          spinner.querySelector('.spinner-text')!.textContent = phaseText('release');
         } else {
           spinner.classList.remove('pulling');
-          spinner.querySelector('.spinner-text')!.textContent = '下拉刷新';
+          spinner.querySelector('.spinner-text')!.textContent = phaseText('pull');
         }
       }
     };
@@ -189,7 +203,7 @@ const pullRefresh: Directive = {
       isRefreshing = true;
       spinner.classList.add('refreshing');
       spinner.classList.remove('pulling');
-      spinner.querySelector('.spinner-text')!.textContent = '刷新中...';
+      spinner.querySelector('.spinner-text')!.textContent = phaseText('refreshing');
 
       // 保持一定高度显示刷新状态
       contentWrapper.style.transform = `translateY(50px)`;
@@ -204,7 +218,7 @@ const pullRefresh: Directive = {
           resetPosition();
           isRefreshing = false;
           spinner.classList.remove('refreshing');
-          spinner.querySelector('.spinner-text')!.textContent = '下拉刷新';
+          spinner.querySelector('.spinner-text')!.textContent = phaseText('pull');
         }, 500);
       }
     };
@@ -214,6 +228,7 @@ const pullRefresh: Directive = {
       contentWrapper.style.transform = '';
       spinner.style.transform = '';
       pullingDistance = 0;
+      onProgress?.(0);
     };
 
     // 绑定事件监听器

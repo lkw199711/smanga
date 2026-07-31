@@ -357,7 +357,11 @@
     },
     "nextChapter": "下一章",
     "continueScrollNext": "继续滑动进入下一章",
-    "chapterEnd": "本章完"
+    "chapterEnd": "本章完",
+    "chapterStart": "章节开头",
+    "pullPrevChapter": "下拉返回上一章",
+    "releasePrevChapter": "释放返回上一章",
+    "continueScrollPrev": "继续滚动返回上一章"
   },
   "page": {
     "before": "上一章",

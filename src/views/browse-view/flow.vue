@@ -7,7 +7,7 @@
     <bookmark />
 
     <!-- 列表 -->
-    <div v-pullRefresh="before_page">
+    <div v-pullRefresh="{onRefresh: pull_refresh_action, getText: pull_refresh_text, onProgress: pull_refresh_progress}">
       <div v-if="config.android" @click="switch_menu" id="flowList" ref="flowList">
         <img
           :style="browseStore.flowViewStyle"
@@ -63,6 +63,28 @@
         <div class="ct-tip">{{ t('browse.continueScrollNext') }}</div>
       </template>
       <div class="ct-tip" v-else>{{ t('page.lastChapter') }}</div>
+    </div>
+
+    <!-- 顶部"上一章"过渡中间页(PC滚轮向上 / 下拉手势共用) -->
+    <div
+      class="chapter-transition-top"
+      v-if="showPrevTransition"
+      :style="{transform: 'translateY(' + (prevTransitionProgress * 100 - 100) + '%)'}">
+      <div class="ctt-inner">
+        <div class="ct-tip">{{ t('browse.continueScrollPrev') }}</div>
+        <div class="ct-next">
+          <div class="ct-next-label">{{ t('page.before') }}</div>
+          <div class="ct-next-name">{{ prevChapterName }}</div>
+        </div>
+        <div class="ct-progress-track">
+          <div class="ct-progress-bar prev" :style="{width: prevTransitionProgress * 100 + '%'}"></div>
+        </div>
+        <div class="ct-end">
+          <span class="ct-line"></span>
+          <span class="ct-end-text">{{ t('browse.chapterStart') }}</span>
+          <span class="ct-line"></span>
+        </div>
+      </div>
     </div>
 
     <div class="bottom" v-if="browseStore.pageCount > 0" v-show="config.browseTop">
@@ -165,10 +187,22 @@ const isLastChapter = computed(() => {
   return chapterList.length > 0 && browseStore.currentChapterIndex === chapterList.length - 1;
 });
 
+// 是否为第一章(没有上一章可返回)
+const isFirstChapter = computed(() => {
+  const chapterList = browseStore.chapterList;
+  return chapterList.length > 0 && browseStore.currentChapterIndex === 0;
+});
+
 // 下一章名称(章节过渡页展示)
 const nextChapterName = computed(() => {
   const next = browseStore.chapterList[browseStore.currentChapterIndex + 1];
   return next?.chapterName || '';
+});
+
+// 上一章名称(顶部过渡页展示)
+const prevChapterName = computed(() => {
+  const prev = browseStore.chapterList[browseStore.currentChapterIndex - 1];
+  return prev?.chapterName || '';
 });
 
 // ---- 滚动到底后继续滚动 自动进入下一章 ----
@@ -187,10 +221,40 @@ const canOverscroll = computed(
   () => finished.value && lastImageShown.value && !isLastChapter.value && !overscrollTriggered.value
 );
 
+// 顶部越界滚动(PC滚轮返回上一章)累计距离
+const topOverscrollDelta = ref(0);
+const topOverscrollProgress = computed(() => Math.min(topOverscrollDelta.value / OVERSCROLL_THRESHOLD, 1));
+// 是否允许顶部越界滚动返回上一章(前置页全部加载完的判断在事件处理中进行)
+const canOverscrollTop = computed(() => !isFirstChapter.value && !overscrollTriggered.value);
+
+// 下拉手势进度(0~1) 由 pullRefresh 指令上报 用于驱动顶部过渡中间页
+const pullProgress = ref(0);
+// 顶部过渡页统一进度: 取 PC滚轮 与 下拉手势 中较大者
+const prevTransitionProgress = computed(() => Math.max(topOverscrollProgress.value, pullProgress.value));
+// 是否展示顶部"上一章"过渡中间页: 非第一章 且 正在向上越界/下拉
+const showPrevTransition = computed(
+  () => !isFirstChapter.value && prevTransitionProgress.value > 0
+);
+
 // 是否真正到达页面底部(lastImageShown 只表示接近底部)
 function at_page_bottom() {
   const maxScrollY = document.documentElement.scrollHeight - window.innerHeight;
   return maxScrollY > 0 && window.scrollY >= maxScrollY - 2;
+}
+
+// 是否位于页面顶部
+function at_page_top() {
+  return window.scrollY <= 2;
+}
+
+// 滚轮停止一段时间后重置累计量 避免提示残留
+let overscrollResetTimer = 0;
+function schedule_overscroll_reset() {
+  window.clearTimeout(overscrollResetTimer);
+  overscrollResetTimer = window.setTimeout(() => {
+    overscrollDelta.value = 0;
+    topOverscrollDelta.value = 0;
+  }, 800);
 }
 
 function trigger_overscroll_next() {
@@ -200,13 +264,36 @@ function trigger_overscroll_next() {
   next_chapter();
 }
 
-// PC端: 到底后继续滚动滚轮 累计距离达到阈值即切章
+function trigger_overscroll_before() {
+  if (overscrollTriggered.value) return;
+  overscrollTriggered.value = true;
+  topOverscrollDelta.value = 0;
+  before_chapter();
+}
+
+// PC端: 底部继续滚动进入下一章 / 顶部继续滚动返回上一章
 function handle_overscroll_wheel(e: WheelEvent) {
+  // 向上滚动: 顶部返回上一章
+  if (e.deltaY < 0) {
+    overscrollDelta.value = 0;
+    if (!canOverscrollTop.value || beforeBookMark > 0 || !at_page_top()) {
+      topOverscrollDelta.value = 0;
+      return;
+    }
+    topOverscrollDelta.value += -e.deltaY;
+    schedule_overscroll_reset();
+    if (topOverscrollDelta.value >= OVERSCROLL_THRESHOLD) trigger_overscroll_before();
+    return;
+  }
+
+  // 向下滚动: 底部进入下一章
+  topOverscrollDelta.value = 0;
   if (!canOverscroll.value || !at_page_bottom() || e.deltaY <= 0) {
     overscrollDelta.value = 0;
     return;
   }
   overscrollDelta.value += e.deltaY;
+  schedule_overscroll_reset();
   if (overscrollDelta.value >= OVERSCROLL_THRESHOLD) trigger_overscroll_next();
 }
 
@@ -233,6 +320,32 @@ function handle_overscroll_touchend() {
     return;
   }
   overscrollDelta.value = 0;
+}
+
+// 下拉手势回调: 有未加载的前置页时加载上一页 否则返回上一章
+async function pull_refresh_action() {
+  if (beforeBookMark > 0) {
+    await before_page();
+    return;
+  }
+  await before_chapter();
+}
+
+// 下拉手势各阶段提示文案
+function pull_refresh_text(phase: 'pull' | 'release' | 'refreshing') {
+  // 有未加载的前置页 使用默认的下拉刷新文案
+  if (beforeBookMark > 0) return '';
+  if (isFirstChapter.value) return t('page.firstChapter');
+  return {
+    pull: t('browse.pullPrevChapter'),
+    release: t('browse.releasePrevChapter'),
+    refreshing: '',
+  }[phase];
+}
+
+// 下拉进度上报: 仅在"返回上一章"场景驱动顶部过渡页(前置页加载场景走默认下拉刷新UI)
+function pull_refresh_progress(ratio: number) {
+  pullProgress.value = beforeBookMark > 0 ? 0 : ratio;
 }
 
 // 当前真实页码 从零开始
@@ -354,6 +467,8 @@ async function reload_page(clearPage = true, pageParams = 1) {
   queue.flowQueue.clear();
   // 重置越界滚动切章状态
   overscrollDelta.value = 0;
+  topOverscrollDelta.value = 0;
+  pullProgress.value = 0;
   overscrollTriggered.value = false;
   // 加载路由参数
   browseStore.load_route_params(route);
@@ -651,6 +766,91 @@ watch(() => browseStore.readerActionTick.changeChapter, (v, ov) => { if (v > (ov
   .ct-tip {
     font-size: 1.3rem;
     opacity: 0.7;
+  }
+}
+
+// 顶部"上一章"过渡中间页(从顶部下拉的幕帘 随进度显现)
+.chapter-transition-top {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 999;
+  min-height: 40vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 2rem;
+  background: rgba(20, 20, 22, 0.92);
+  backdrop-filter: blur(0.4rem);
+  color: #909399;
+  user-select: none;
+  pointer-events: none;
+  will-change: transform;
+  transition: transform 0.15s ease-out;
+
+  .ctt-inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.6rem;
+  }
+
+  .ct-tip {
+    font-size: 1.3rem;
+    opacity: 0.7;
+  }
+
+  .ct-next {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.6rem;
+
+    .ct-next-label {
+      font-size: 1.2rem;
+      opacity: 0.6;
+    }
+
+    .ct-next-name {
+      font-size: 1.6rem;
+      font-weight: 600;
+      color: #b8bcc2;
+      text-align: center;
+    }
+  }
+
+  .ct-progress-track {
+    width: 18rem;
+    height: 0.4rem;
+    border-radius: 0.2rem;
+    background: rgba(144, 147, 153, 0.25);
+    overflow: hidden;
+  }
+
+  .ct-progress-bar.prev {
+    height: 100%;
+    border-radius: 0.2rem;
+    background: #e6a23c;
+    transition: width 0.1s linear;
+  }
+
+  .ct-end {
+    display: flex;
+    align-items: center;
+    gap: 1.2rem;
+
+    .ct-line {
+      width: 6rem;
+      height: 1px;
+      background: currentColor;
+      opacity: 0.4;
+    }
+
+    .ct-end-text {
+      font-size: 1.5rem;
+      letter-spacing: 0.4rem;
+    }
   }
 }
 </style>

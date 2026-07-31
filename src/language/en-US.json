@@ -357,7 +357,11 @@
     },
     "nextChapter": "Next Chapter",
     "continueScrollNext": "Keep scrolling for next chapter",
-    "chapterEnd": "End of Chapter"
+    "chapterEnd": "End of Chapter",
+    "chapterStart": "Start of Chapter",
+    "pullPrevChapter": "Pull down for previous chapter",
+    "releasePrevChapter": "Release for previous chapter",
+    "continueScrollPrev": "Keep scrolling for previous chapter"
   },
   "page": {
     "before": "beforeChapter",
