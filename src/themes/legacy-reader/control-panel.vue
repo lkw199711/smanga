@@ -99,11 +99,14 @@
               <span class="lcp-page-progress">{{ panelPage }} / {{ browse.pageCount }}</span>
             </div>
             <div class="lcp-page-slider">
-              <el-slider
-                v-model="panelPage"
+              <input
+                v-model.number="panelPage"
+                class="lcp-range"
+                type="range"
                 :min="1"
                 :max="browse.pageCount"
-                @change="jumpToPage"
+                :style="panelRangeFill"
+                @change="jumpToPage(panelPage)"
               />
             </div>
           </template>
@@ -331,6 +334,15 @@ function jumpToPage(page: number | number[]) {
   if (!target || target === browse.page) return
   browse.trigger_jump_to_page(target)
 }
+
+// 自绘滑块: 已滑过部分填充主题色
+const panelRangeFill = computed(() => {
+  const max = browse.pageCount
+  const pct = max > 1 ? ((panelPage.value - 1) / (max - 1)) * 100 : 0
+  return {
+    background: `linear-gradient(to right, var(--theme-reader-topbar-accent, #60a5fa) ${pct}%, rgba(255, 255, 255, 0.16) ${pct}%)`,
+  }
+})
 
 // 关闭面板并延迟执行 (导航等操作)
 async function withClose<T>(fn: () => T | Promise<T>) {
@@ -575,18 +587,45 @@ function goChapter(chapterId: number) {
 
 .lcp-page-slider {
   padding: 0 0.6rem;
+}
 
-  :deep(.el-slider__runway) {
-    background: rgba(255, 255, 255, 0.16);
-  }
+/* 自绘滑块 (替代 el-slider, 统一主题观感) */
+.lcp-range {
+  -webkit-appearance: none;
+  appearance: none;
+  display: block;
+  width: 100%;
+  height: 0.6rem;
+  margin: 0.8rem 0;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.16);
+  outline: none;
+  cursor: pointer;
+}
 
-  :deep(.el-slider__bar) {
-    background: var(--theme-reader-topbar-accent, #60a5fa);
-  }
+.lcp-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  border: 0.3rem solid var(--theme-reader-topbar-accent, #60a5fa);
+  background: #fff;
+  box-shadow: 0 0.2rem 0.6rem rgba(0, 0, 0, 0.3);
+  transition: transform 0.15s ease;
+}
 
-  :deep(.el-slider__button) {
-    border-color: var(--theme-reader-topbar-accent, #60a5fa);
-  }
+.lcp-range::-webkit-slider-thumb:hover {
+  transform: scale(1.15);
+}
+
+.lcp-range::-moz-range-thumb {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  border: 0.3rem solid var(--theme-reader-topbar-accent, #60a5fa);
+  background: #fff;
+  box-shadow: 0 0.2rem 0.6rem rgba(0, 0, 0, 0.3);
 }
 
 /* 快速开关行 */

@@ -219,5 +219,14 @@ function triggerAction(action: 'beforeChapter' | 'nextChapter') {
 }
 .theme-chapter-drawer {
   z-index: 3001 !important;
+
+  /* 去除 el-drawer 默认白底与内边距, 由 .tcd-panel 全权接管观感 */
+  background: transparent !important;
+  box-shadow: none;
+
+  .el-drawer__body {
+    padding: 0;
+    overflow: hidden;
+  }
 }
 </style>

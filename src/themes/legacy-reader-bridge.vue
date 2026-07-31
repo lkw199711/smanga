@@ -10,6 +10,7 @@
       <theme-reader-control-panel />
       <theme-reader-chapter-drawer />
       <theme-reader-dialogs />
+      <theme-reader-footer />
       <section class="theme-legacy-reader-content" :class="readerMode">
         <component :is="readerComponent" :key="`${readerMode}-${route.params.chapterId}`" />
       </section>
@@ -36,6 +37,7 @@ import ThemeReaderTopbar from './legacy-reader/topbar.vue'
 import ThemeReaderControlPanel from './legacy-reader/control-panel.vue'
 import ThemeReaderChapterDrawer from './legacy-reader/chapter-drawer.vue'
 import ThemeReaderDialogs from './legacy-reader/reader-dialogs.vue'
+import ThemeReaderFooter from './legacy-reader/reader-footer.vue'
 import androidSeat from '@/layout/components/android-seat.vue'
 import { useNavigationStore } from '@/store/navigation'
 
@@ -186,5 +188,16 @@ button {
   background: #fff;
   color: #334155;
   cursor: pointer;
+}
+</style>
+
+<!-- 主题阅读页使用自绘底部条 (reader-footer.vue), 隐藏旧皮肤视图内的 element 底部条/footer;
+     旧皮肤路由不含 .theme-legacy-reader 容器, 不受影响。
+     直接子级选择器: 避免误伤 operation-cover 内的 .bottom 点击区 -->
+<style>
+.theme-legacy-reader .browse-view > .bottom,
+.theme-legacy-reader .single-page > .footer,
+.theme-legacy-reader .double-page > .footer {
+  display: none !important;
 }
 </style>
