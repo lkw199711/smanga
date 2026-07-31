@@ -41,7 +41,7 @@
     <images-loader ref="imagesLoaderRef" @page_change="page_change" :key="browseStore.chapterId" />
 
     <!-- 阅读完成指示器 -->
-    <finish-indicator :visible="lastImageShown" @nextChapter="next_chapter" />
+    <finish-indicator :visible="lastImageShown" :disabled="isLastChapter" @nextChapter="next_chapter" />
 
     <div class="bottom" v-if="browseStore.pageCount > 0" v-show="config.browseTop">
       <el-slider class="bottom-slider" v-model="currentPage" :min="1" :max="browseStore.pageCount" @change="jump_page(currentPage)" />
@@ -135,6 +135,12 @@ let targetPage = ref(1);
 
 const showSmallJumpPage = computed(() => {
   return ['mini', 'small'].includes(config.screenType);
+});
+
+// 是否已是最后一章(没有下一章时禁用下一章按钮)
+const isLastChapter = computed(() => {
+  const chapterList = browseStore.chapterList;
+  return chapterList.length > 0 && browseStore.currentChapterIndex === chapterList.length - 1;
 });
 
 // 当前真实页码 从零开始

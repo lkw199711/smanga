@@ -1,6 +1,6 @@
 <template>
   <div class="finish-indicator" :class="{ show: visible }">
-    <button class="next-chapter-btn" @click="$emit('nextChapter')">
+    <button class="next-chapter-btn" :disabled="disabled" @click="$emit('nextChapter')">
       <div class="btn-content">
         <div class="next-icon">
           <svg viewBox="0 0 24 24" fill="currentColor">
@@ -15,9 +15,13 @@
 
 <script lang="ts" setup>
 // 定义组件属性
-defineProps<{
+withDefaults(defineProps<{
   visible: boolean;
-}>();
+  // 没有下一章时禁用按钮
+  disabled?: boolean;
+}>(), {
+  disabled: false,
+});
 
 // 定义组件事件
 defineEmits<{
@@ -63,6 +67,21 @@ defineEmits<{
     
     &:active {
       transform: translateY(-1px);
+    }
+
+    // 禁用态: 没有下一章
+    &:disabled {
+      background: linear-gradient(135deg, #b0b0b0, #9e9e9e);
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+      cursor: not-allowed;
+      animation: none;
+
+      &:hover,
+      &:active {
+        transform: none;
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+        background: linear-gradient(135deg, #b0b0b0, #9e9e9e);
+      }
     }
     
     .btn-content {
