@@ -355,7 +355,9 @@
     "title": {
       "setViewWidth": "设置视图宽度"
     },
-    "nextChapter": "下一章"
+    "nextChapter": "下一章",
+    "continueScrollNext": "继续滑动进入下一章",
+    "chapterEnd": "本章完"
   },
   "page": {
     "before": "上一章",

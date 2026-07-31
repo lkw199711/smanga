@@ -355,7 +355,9 @@
     "title": {
       "setViewWidth": "Set View Width"
     },
-    "nextChapter": "Next Chapter"
+    "nextChapter": "Next Chapter",
+    "continueScrollNext": "Keep scrolling for next chapter",
+    "chapterEnd": "End of Chapter"
   },
   "page": {
     "before": "beforeChapter",

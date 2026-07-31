@@ -43,6 +43,28 @@
     <!-- 阅读完成指示器 -->
     <finish-indicator :visible="lastImageShown" :disabled="isLastChapter" @nextChapter="next_chapter" />
 
+    <!-- 章节过渡中间页 -->
+    <div class="chapter-transition" v-if="finished && browseStore.imageFileList.length > 0">
+      <div class="ct-end">
+        <span class="ct-line"></span>
+        <span class="ct-end-text">{{ t('browse.chapterEnd') }}</span>
+        <span class="ct-line"></span>
+      </div>
+      <div class="ct-current">{{ browseStore.currentChapter?.chapterName }}</div>
+
+      <template v-if="!isLastChapter">
+        <div class="ct-next">
+          <div class="ct-next-label">{{ t('page.next') }}</div>
+          <div class="ct-next-name">{{ nextChapterName }}</div>
+        </div>
+        <div class="ct-progress-track">
+          <div class="ct-progress-bar" :style="{width: overscrollProgress * 100 + '%'}"></div>
+        </div>
+        <div class="ct-tip">{{ t('browse.continueScrollNext') }}</div>
+      </template>
+      <div class="ct-tip" v-else>{{ t('page.lastChapter') }}</div>
+    </div>
+
     <div class="bottom" v-if="browseStore.pageCount > 0" v-show="config.browseTop">
       <el-slider class="bottom-slider" v-model="currentPage" :min="1" :max="browseStore.pageCount" @change="jump_page(currentPage)" />
     </div>
@@ -142,6 +164,76 @@ const isLastChapter = computed(() => {
   const chapterList = browseStore.chapterList;
   return chapterList.length > 0 && browseStore.currentChapterIndex === chapterList.length - 1;
 });
+
+// 下一章名称(章节过渡页展示)
+const nextChapterName = computed(() => {
+  const next = browseStore.chapterList[browseStore.currentChapterIndex + 1];
+  return next?.chapterName || '';
+});
+
+// ---- 滚动到底后继续滚动 自动进入下一章 ----
+// 触发切章的累计滚动距离阈值(px)
+const OVERSCROLL_THRESHOLD = 260;
+// 到底后累计的越界滚动距离
+const overscrollDelta = ref(0);
+// 已触发切章 防止重复触发
+const overscrollTriggered = ref(false);
+// 触摸起点纵坐标
+let overscrollTouchY = 0;
+
+const overscrollProgress = computed(() => Math.min(overscrollDelta.value / OVERSCROLL_THRESHOLD, 1));
+// 是否允许越界滚动切章: 图片全部加载完 且 已滚动到底部区域 且 存在下一章
+const canOverscroll = computed(
+  () => finished.value && lastImageShown.value && !isLastChapter.value && !overscrollTriggered.value
+);
+
+// 是否真正到达页面底部(lastImageShown 只表示接近底部)
+function at_page_bottom() {
+  const maxScrollY = document.documentElement.scrollHeight - window.innerHeight;
+  return maxScrollY > 0 && window.scrollY >= maxScrollY - 2;
+}
+
+function trigger_overscroll_next() {
+  if (overscrollTriggered.value) return;
+  overscrollTriggered.value = true;
+  overscrollDelta.value = 0;
+  next_chapter();
+}
+
+// PC端: 到底后继续滚动滚轮 累计距离达到阈值即切章
+function handle_overscroll_wheel(e: WheelEvent) {
+  if (!canOverscroll.value || !at_page_bottom() || e.deltaY <= 0) {
+    overscrollDelta.value = 0;
+    return;
+  }
+  overscrollDelta.value += e.deltaY;
+  if (overscrollDelta.value >= OVERSCROLL_THRESHOLD) trigger_overscroll_next();
+}
+
+// 移动端: 到底后继续上滑 松手时达到阈值即切章
+function handle_overscroll_touchstart(e: TouchEvent) {
+  overscrollTouchY = e.touches[0]?.clientY ?? 0;
+  overscrollDelta.value = 0;
+}
+
+function handle_overscroll_touchmove(e: TouchEvent) {
+  const y = e.touches[0]?.clientY ?? 0;
+  // 未到底部时不累计 并以当前位置作为新的起点
+  if (!canOverscroll.value || !at_page_bottom()) {
+    overscrollTouchY = y;
+    overscrollDelta.value = 0;
+    return;
+  }
+  overscrollDelta.value = Math.max(overscrollTouchY - y, 0);
+}
+
+function handle_overscroll_touchend() {
+  if (canOverscroll.value && overscrollProgress.value >= 1) {
+    trigger_overscroll_next();
+    return;
+  }
+  overscrollDelta.value = 0;
+}
 
 // 当前真实页码 从零开始
 let page = 1;
@@ -260,6 +352,9 @@ async function load_image(index: number, unshift = false) {
 async function reload_page(clearPage = true, pageParams = 1) {
   // 清空队列
   queue.flowQueue.clear();
+  // 重置越界滚动切章状态
+  overscrollDelta.value = 0;
+  overscrollTriggered.value = false;
   // 加载路由参数
   browseStore.load_route_params(route);
   // 加载章节列表
@@ -455,6 +550,19 @@ onMounted(() => {
   // window.addEventListener('scroll', _.debounce(scroll_page, 50), { passive: true });
   // 节流
   window.addEventListener('scroll', _.throttle(scroll_page, 200), {passive: true});
+
+  // 到底后继续滚动切下一章
+  window.addEventListener('wheel', handle_overscroll_wheel, {passive: true});
+  window.addEventListener('touchstart', handle_overscroll_touchstart, {passive: true});
+  window.addEventListener('touchmove', handle_overscroll_touchmove, {passive: true});
+  window.addEventListener('touchend', handle_overscroll_touchend, {passive: true});
+});
+
+onUnmounted(() => {
+  window.removeEventListener('wheel', handle_overscroll_wheel);
+  window.removeEventListener('touchstart', handle_overscroll_touchstart);
+  window.removeEventListener('touchmove', handle_overscroll_touchmove);
+  window.removeEventListener('touchend', handle_overscroll_touchend);
 });
 
 // 订阅 control-panel 触发的阅读器操作
@@ -468,3 +576,81 @@ watch(() => browseStore.readerActionTick.changeChapter, (v, ov) => { if (v > (ov
 </script>
 
 <style src="./style/index.less" scoped lang="less"></style>
+
+<style scoped lang="less">
+// 章节过渡中间页
+.chapter-transition {
+  min-height: 52vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.6rem;
+  padding: 4rem 2rem 6rem;
+  color: #909399;
+  user-select: none;
+
+  .ct-end {
+    display: flex;
+    align-items: center;
+    gap: 1.2rem;
+
+    .ct-line {
+      width: 6rem;
+      height: 1px;
+      background: currentColor;
+      opacity: 0.4;
+    }
+
+    .ct-end-text {
+      font-size: 1.5rem;
+      letter-spacing: 0.4rem;
+    }
+  }
+
+  .ct-current {
+    font-size: 1.3rem;
+    opacity: 0.7;
+  }
+
+  .ct-next {
+    margin-top: 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.6rem;
+
+    .ct-next-label {
+      font-size: 1.2rem;
+      opacity: 0.6;
+    }
+
+    .ct-next-name {
+      font-size: 1.6rem;
+      font-weight: 600;
+      color: #b8bcc2;
+      text-align: center;
+    }
+  }
+
+  .ct-progress-track {
+    width: 18rem;
+    height: 0.4rem;
+    border-radius: 0.2rem;
+    background: rgba(144, 147, 153, 0.25);
+    overflow: hidden;
+  }
+
+  .ct-progress-bar {
+    height: 100%;
+    border-radius: 0.2rem;
+    background: #4caf50;
+    transition: width 0.1s linear;
+  }
+
+  .ct-tip {
+    font-size: 1.3rem;
+    opacity: 0.7;
+  }
+}
+</style>
