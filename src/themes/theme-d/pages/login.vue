@@ -19,7 +19,7 @@
 </template>
 
 <script lang="ts" setup>
-import { reactive, ref } from 'vue'
+import { onMounted, reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import loginApi from '@/api/login'
 import { useSessionStore } from '@/store/session'
@@ -60,6 +60,21 @@ async function login() {
     loading.value = false
   }
 }
+
+// Android APK 注入凭据自动登录
+// APK 通过 window.javaObj 挂载 { hasCredentials, username, password, ... }
+onMounted(() => {
+  try {
+    const jo = (window as any).javaObj
+    if (jo && typeof jo === 'object' && jo.hasCredentials && jo.username && jo.password) {
+      form.username = String(jo.username)
+      form.password = String(jo.password)
+      setTimeout(() => { login() }, 0)
+    }
+  } catch (e) {
+    // 忽略注入对象读取异常，回落到手动登录
+  }
+})
 </script>
 
 <style scoped>

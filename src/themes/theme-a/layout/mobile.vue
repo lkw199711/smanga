@@ -42,7 +42,7 @@
 			<aside class="sa-mobile-sidebar" @click.stop>
 				<android-seat />
 				<div class="sa-sidebar-header">
-					<div class="sa-logo">
+					<div class="sa-logo" @click="navigateTo('/t')">
 						<div class="sa-logo-mark">S</div>
 						<div class="sa-logo-text">smanga</div>
 					</div>
@@ -482,6 +482,7 @@ onBeforeUnmount(() => {
 	display: flex;
 	align-items: center;
 	gap: 1rem;
+	cursor: pointer;
 }
 
 .sa-logo-mark {

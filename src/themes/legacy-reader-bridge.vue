@@ -6,7 +6,9 @@
   >
     <android-seat />
     <template v-if="ready">
-      <theme-reader-topbar v-if="config.browseTop" />
+      <transition name="reader-topbar-slide">
+        <theme-reader-topbar v-if="config.browseTop" />
+      </transition>
       <theme-reader-control-panel />
       <theme-reader-chapter-drawer />
       <theme-reader-dialogs />

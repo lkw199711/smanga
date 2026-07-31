@@ -1,6 +1,6 @@
 <template>
 	<aside class="sa-sidebar">
-		<div class="sa-logo">
+		<div class="sa-logo" @click="router.push('/t')">
 			<div class="sa-logo-mark">S</div>
 			<div class="sa-logo-text">smanga</div>
 		</div>
@@ -207,6 +207,7 @@ function goMedia(mediaId: number) {
 	align-items: center;
 	gap: 1rem;
 	padding: 0.4rem 0.8rem 2rem;
+	cursor: pointer;
 }
 
 .sa-manage-toggle {

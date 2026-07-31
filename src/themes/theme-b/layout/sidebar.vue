@@ -1,6 +1,6 @@
 <template>
 	<aside class="sb-sidebar">
-		<div class="sb-logo">
+		<div class="sb-logo" @click="router.push('/t')">
 			<span class="sb-logo-emoji">🌸</span>
 			<span class="sb-logo-text">smanga</span>
 		</div>
@@ -152,6 +152,7 @@ onMounted(async () => {
 	align-items: center;
 	gap: 1rem;
 	padding: 0.4rem 0.8rem 1.6rem;
+	cursor: pointer;
 }
 
 .sb-logo-emoji {

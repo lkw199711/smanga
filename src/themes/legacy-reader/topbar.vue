@@ -179,6 +179,32 @@ function openChapterDrawer() {
   pointer-events: none;
 }
 
+/* 桌面端: 放大章节标题与右侧功能条, 提升可读性与点击面积 */
+.reader-quick-bar:not(.is-mobile) .chapter-name {
+  height: 4.2rem;
+  line-height: 4.2rem;
+  font-size: 1.7rem;
+}
+
+.reader-quick-bar:not(.is-mobile) .chapter-progress {
+  font-size: 1.4rem;
+  line-height: 2.4rem;
+}
+
+.reader-quick-bar:not(.is-mobile) .quick-bar {
+  height: 4.6rem;
+}
+
+.reader-quick-bar:not(.is-mobile) .qb-seg {
+  padding: 0 2rem;
+  font-size: 1.6rem;
+}
+
+.reader-quick-bar:not(.is-mobile) .qb-seg .iconfont,
+.reader-quick-bar:not(.is-mobile) .qb-seg .qc-ico {
+  font-size: 2rem;
+}
+
 /* 移动端: 保留文字, 保证可点击面积, 给章节标题让位 */
 .reader-quick-bar.is-mobile .chapter-name {
   padding-right: 18rem;
@@ -195,4 +221,10 @@ function openChapterDrawer() {
   padding: 0 1.4rem;
   font-size: 1.25rem;
 }
+
+/* 过渡: 与底栏 (lrf-slide) 对称, 顶栏从上方滑入/滑出 */
+.reader-topbar-slide-enter-active,
+.reader-topbar-slide-leave-active { transition: transform 0.25s ease, opacity 0.25s ease; }
+.reader-topbar-slide-enter-from,
+.reader-topbar-slide-leave-to { transform: translateY(-100%); opacity: 0; }
 </style>

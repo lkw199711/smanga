@@ -36,7 +36,7 @@
 			<aside class="sb-mobile-sidebar" @click.stop>
 				<android-seat />
 				<div class="sb-sidebar-header">
-					<div class="sb-logo">
+					<div class="sb-logo" @click="navigateTo('/t')">
 						<span class="sb-logo-emoji">🌸</span>
 						<span class="sb-logo-text">smanga</span>
 					</div>
@@ -417,6 +417,7 @@ function onSidebarClick(e: MouseEvent) {
 	display: flex;
 	align-items: center;
 	gap: 0.8rem;
+	cursor: pointer;
 }
 
 .sb-logo-emoji {
