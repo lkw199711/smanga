@@ -214,6 +214,13 @@ function triggerChapter(action: 'beforeChapter' | 'nextChapter') {
   cursor: not-allowed;
 }
 
+/* 手机模式仅保留阅读进度控件，章节切换入口放在章节菜单中。 */
+@media (max-width: 767px) {
+  .lrf-btn {
+    display: none;
+  }
+}
+
 /* 过渡 */
 .lrf-slide-enter-active,
 .lrf-slide-leave-active { transition: transform 0.25s ease, opacity 0.25s ease; }
