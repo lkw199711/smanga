@@ -75,6 +75,7 @@
 
 <script lang="ts" setup>
 import { ref, watch, onMounted } from 'vue'
+import { showThemeAlert, showThemeConfirm } from '@/themes/components/theme-alert'
 import syncApi from '@/api/sync'
 import ResponsiveTable from '@/themes/components/responsive-table.vue'
 import type { RtColumn } from '@/themes/components/responsive-table.vue'
@@ -109,19 +110,19 @@ watch(page, () => load())
 function openAdd() { addForm.value = { link: '', receivedPath: '', auto: false }; analysisResult.value = null; addShow.value = true }
 
 async function analysisLink() {
-  if (!addForm.value.link.trim()) return alert('请输入分享链接')
+  if (!addForm.value.link.trim()) return showThemeAlert('请输入分享链接')
   try {
     const res = await syncApi.analysis(addForm.value.link)
     analysisResult.value = res.data
     if (!addForm.value.receivedPath && res.data.share) {
       addForm.value.receivedPath = res.data.share.receivedPath || ''
     }
-  } catch (e: any) { alert(e?.message || '解析失败') }
+  } catch (e: any) { showThemeAlert(e?.message || '解析失败') }
 }
 
 async function doCreate() {
-  if (!addForm.value.receivedPath) return alert('请选择接收路径')
-  if (!analysisResult.value?.share?.shareId) return alert('请先解析链接')
+  if (!addForm.value.receivedPath) return showThemeAlert('请选择接收路径')
+  if (!analysisResult.value?.share?.shareId) return showThemeAlert('请先解析链接')
   try {
     const share = analysisResult.value.share
     await syncApi.create({
@@ -136,7 +137,7 @@ async function doCreate() {
       token: '',
     })
     addShow.value = false; reload()
-  } catch (e: any) { alert(e?.message || '添加失败') }
+  } catch (e: any) { showThemeAlert(e?.message || '添加失败') }
 }
 
 async function showDetail(row: any) {
@@ -148,16 +149,16 @@ async function showDetail(row: any) {
 }
 
 async function doExecute(row: any) {
-  try { await syncApi.execute(row.syncId); alert('同步任务已提交') } catch (e: any) { alert(e?.message || '执行失败') }
+  try { await syncApi.execute(row.syncId); showThemeAlert('同步任务已提交') } catch (e: any) { showThemeAlert(e?.message || '执行失败') }
 }
 
 async function doDelete(row: any) {
-  if (!confirm(`确定删除此同步记录吗？`)) return
-  try { await syncApi.delete(row.syncId); reload() } catch (e: any) { alert(e?.message || '删除失败') }
+  if (!(await showThemeConfirm(`确定删除此同步记录吗？`))) return
+  try { await syncApi.delete(row.syncId); reload() } catch (e: any) { showThemeAlert(e?.message || '删除失败') }
 }
 async function batchDelete() {
-  if (!confirm(`确定删除选中的 ${selected.value.length} 条同步记录吗？`)) return
-  try { await syncApi.batch_delete(selected.value); reload() } catch (e: any) { alert(e?.message || '删除失败') }
+  if (!(await showThemeConfirm(`确定删除选中的 ${selected.value.length} 条同步记录吗？`))) return
+  try { await syncApi.batch_delete(selected.value); reload() } catch (e: any) { showThemeAlert(e?.message || '删除失败') }
 }
 onMounted(() => load())
 </script>

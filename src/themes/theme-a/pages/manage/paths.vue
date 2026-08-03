@@ -42,6 +42,7 @@
 
 <script lang="ts" setup>
 import { ref, onMounted } from 'vue'
+import { showThemeAlert, showThemeConfirm } from '@/themes/components/theme-alert'
 import pathApi from '@/api/path'
 import PathEditDialog from '@/themes/components/path-edit-dialog.vue'
 import ResponsiveTable from '@/themes/components/responsive-table.vue'
@@ -76,18 +77,18 @@ function openEdit(row: any) {
 }
 
 async function scanPath(row: any) {
-  if (!confirm('确定要增量扫描该路径吗？')) return
-  try { await pathApi.scan_path(row.pathId); alert('扫描任务已提交'); load() } catch (e: any) { alert(e?.message || '失败') }
+  if (!(await showThemeConfirm('确定要增量扫描该路径吗？'))) return
+  try { await pathApi.scan_path(row.pathId); showThemeAlert('扫描任务已提交'); load() } catch (e: any) { showThemeAlert(e?.message || '失败') }
 }
 
 async function rescanPath(row: any) {
-  if (!confirm('确定要重新扫描该路径吗？这将重新索引所有漫画。')) return
-  try { await pathApi.rescan_path(row.pathId); alert('重扫任务已提交'); load() } catch (e: any) { alert(e?.message || '失败') }
+  if (!(await showThemeConfirm('确定要重新扫描该路径吗？这将重新索引所有漫画。'))) return
+  try { await pathApi.rescan_path(row.pathId); showThemeAlert('重扫任务已提交'); load() } catch (e: any) { showThemeAlert(e?.message || '失败') }
 }
 
 async function doDelete(row: any) {
-  if (!confirm(`确定删除路径「${row.pathContent}」吗？`)) return
-  try { await pathApi.delete_path(row.pathId); load() } catch (e: any) { alert(e?.message || '删除失败') }
+  if (!(await showThemeConfirm(`确定删除路径「${row.pathContent}」吗？`))) return
+  try { await pathApi.delete_path(row.pathId); load() } catch (e: any) { showThemeAlert(e?.message || '删除失败') }
 }
 </script>
 

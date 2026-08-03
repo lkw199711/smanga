@@ -52,6 +52,7 @@
 
 <script lang="ts" setup>
 import { ref, watch, onMounted } from 'vue'
+import { showThemeAlert, showThemeConfirm } from '@/themes/components/theme-alert'
 import tagApi from '@/api/tag'
 import ResponsiveTable from '@/themes/components/responsive-table.vue'
 import type { RtColumn } from '@/themes/components/responsive-table.vue'
@@ -85,7 +86,7 @@ function openAdd() { editingTag.value = null; form.value = { tagName: '', tagCol
 function openEdit(row: any) { editingTag.value = row; form.value = { tagName: row.tagName, tagColor: row.tagColor || '#6366f1', description: row.description || '' }; dialogShow.value = true }
 
 async function doSave() {
-  if (!form.value.tagName) return alert('标签名不能为空')
+  if (!form.value.tagName) return showThemeAlert('标签名不能为空')
   try {
     if (editingTag.value) {
       await tagApi.update({ tagId: editingTag.value.tagId, ...form.value })
@@ -93,16 +94,16 @@ async function doSave() {
       await tagApi.add(form.value.tagName, form.value.tagColor, form.value.description)
     }
     dialogShow.value = false; reload()
-  } catch (e: any) { alert(e?.message || '操作失败') }
+  } catch (e: any) { showThemeAlert(e?.message || '操作失败') }
 }
 async function doDelete(row: any) {
   const countMsg = row.mangaCount ? `（关联 ${row.mangaCount} 部漫画）` : ''
-  if (!confirm(`确定删除标签「${row.tagName}」${countMsg}吗？`)) return
-  try { await tagApi.delete(row.tagId); reload() } catch (e: any) { alert(e?.message || '删除失败') }
+  if (!(await showThemeConfirm(`确定删除标签「${row.tagName}」${countMsg}吗？`))) return
+  try { await tagApi.delete(row.tagId); reload() } catch (e: any) { showThemeAlert(e?.message || '删除失败') }
 }
 async function batchDelete() {
-  if (!confirm(`确定删除选中的 ${selected.value.length} 个标签吗？`)) return
-  try { await tagApi.batch_delete(selected.value); reload() } catch (e: any) { alert(e?.message || '删除失败') }
+  if (!(await showThemeConfirm(`确定删除选中的 ${selected.value.length} 个标签吗？`))) return
+  try { await tagApi.batch_delete(selected.value); reload() } catch (e: any) { showThemeAlert(e?.message || '删除失败') }
 }
 onMounted(() => load())
 </script>

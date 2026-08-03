@@ -54,6 +54,7 @@
 
 <script lang="ts" setup>
 import { ref, watch, onMounted } from 'vue'
+import { showThemeAlert, showThemeConfirm } from '@/themes/components/theme-alert'
 import jobsApi from '@/api/jobs'
 import ResponsiveTable from '@/themes/components/responsive-table.vue'
 import type { RtColumn } from '@/themes/components/responsive-table.vue'
@@ -97,16 +98,16 @@ function showDetail(row: any) {
   detailShow.value = true
 }
 async function copyDetail() {
-  try { await navigator.clipboard.writeText(detailJson.value); alert('已复制到剪贴板') } catch { alert('复制失败') }
+  try { await navigator.clipboard.writeText(detailJson.value); showThemeAlert('已复制到剪贴板') } catch { showThemeAlert('复制失败') }
 }
 
 async function doDelete(row: any) {
-  if (!confirm('确定删除此任务吗？')) return
-  try { await jobsApi.delete(row.id); reload() } catch (e: any) { alert(e?.message || '删除失败') }
+  if (!(await showThemeConfirm('确定删除此任务吗？'))) return
+  try { await jobsApi.delete(row.id); reload() } catch (e: any) { showThemeAlert(e?.message || '删除失败') }
 }
 async function batchDelete() {
-  if (!confirm(`确定删除选中的 ${selected.value.length} 个任务吗？`)) return
-  try { await jobsApi.batch_delete(selected.value.map(Number)); reload() } catch (e: any) { alert(e?.message || '删除失败') }
+  if (!(await showThemeConfirm(`确定删除选中的 ${selected.value.length} 个任务吗？`))) return
+  try { await jobsApi.batch_delete(selected.value.map(Number)); reload() } catch (e: any) { showThemeAlert(e?.message || '删除失败') }
 }
 onMounted(() => load())
 </script>

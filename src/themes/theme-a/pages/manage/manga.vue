@@ -39,6 +39,7 @@
 
 <script lang="ts" setup>
 import { ref, watch, onMounted } from 'vue'
+import { showThemeAlert, showThemeConfirm } from '@/themes/components/theme-alert'
 import mangaApi from '@/api/manga'
 import MangaModifyDialog from '@/themes/components/manga-modify-dialog.vue'
 import ResponsiveTable from '@/themes/components/responsive-table.vue'
@@ -80,13 +81,13 @@ function openEdit(row: any) {
 }
 
 async function doDelete(row: any) {
-  if (!confirm(`确定删除漫画「${row.mangaName}」吗？`)) return
-  try { await mangaApi.delete_manga(row.mangaId); reload() } catch (e: any) { alert(e?.message || '删除失败') }
+  if (!(await showThemeConfirm(`确定删除漫画「${row.mangaName}」吗？`))) return
+  try { await mangaApi.delete_manga(row.mangaId); reload() } catch (e: any) { showThemeAlert(e?.message || '删除失败') }
 }
 
 async function batchDelete() {
-  if (!confirm(`确定删除选中的 ${selected.value.length} 部漫画吗？`)) return
-  try { await mangaApi.batch_delete_manga(selected.value); reload() } catch (e: any) { alert(e?.message || '删除失败') }
+  if (!(await showThemeConfirm(`确定删除选中的 ${selected.value.length} 部漫画吗？`))) return
+  try { await mangaApi.batch_delete_manga(selected.value); reload() } catch (e: any) { showThemeAlert(e?.message || '删除失败') }
 }
 
 onMounted(() => load())

@@ -378,6 +378,7 @@
 
 <script lang="ts" setup>
 import { ref, watch } from 'vue'
+import { showThemeAlert, showThemeConfirm } from '@/themes/components/theme-alert'
 import {
   p2pGroupApi,
   p2pPeerApi,
@@ -511,16 +512,16 @@ async function loadGroups() {
   try { const res = await p2pGroupApi.list(); groupList.value = res.list || [] } catch { groupList.value = [] }
 }
 async function createGroup() {
-  if (!groupForm.value.groupName) return alert('群组名称不能为空')
-  try { await p2pGroupApi.create({ groupName: groupForm.value.groupName, describe: groupForm.value.description }); showGroupAdd.value = false; loadGroups() } catch (e: any) { alert(e?.message || '创建失败') }
+  if (!groupForm.value.groupName) return showThemeAlert('群组名称不能为空')
+  try { await p2pGroupApi.create({ groupName: groupForm.value.groupName, describe: groupForm.value.description }); showGroupAdd.value = false; loadGroups() } catch (e: any) { showThemeAlert(e?.message || '创建失败') }
 }
 async function joinGroup() {
-  if (!groupForm.value.groupNo) return alert('群组号不能为空')
-  try { await p2pGroupApi.join({ groupNo: groupForm.value.groupNo }); showGroupJoin.value = false; loadGroups() } catch (e: any) { alert(e?.message || '加入失败') }
+  if (!groupForm.value.groupNo) return showThemeAlert('群组号不能为空')
+  try { await p2pGroupApi.join({ groupNo: groupForm.value.groupNo }); showGroupJoin.value = false; loadGroups() } catch (e: any) { showThemeAlert(e?.message || '加入失败') }
 }
 async function leaveGroup(row: any) {
-  if (!confirm(`确定退出群组「${row.groupName || row.groupNo}」吗？`)) return
-  try { await p2pGroupApi.leave(row.groupNo); loadGroups() } catch (e: any) { alert(e?.message || '退出失败') }
+  if (!(await showThemeConfirm(`确定退出群组「${row.groupName || row.groupNo}」吗？`))) return
+  try { await p2pGroupApi.leave(row.groupNo); loadGroups() } catch (e: any) { showThemeAlert(e?.message || '退出失败') }
 }
 
 // Shares
@@ -582,19 +583,19 @@ function onShareTypeChange() {
   mangaList.value = []
 }
 async function createShare() {
-  if (!shareForm.value.groupNo) return alert('请选择共享群组')
+  if (!shareForm.value.groupNo) return showThemeAlert('请选择共享群组')
   if (shareForm.value.shareType === 'media' && !shareForm.value.mediaId) {
-    return alert('请选择媒体库')
+    return showThemeAlert('请选择媒体库')
   }
   if (shareForm.value.shareType === 'manga' && !shareForm.value.mangaId) {
-    return alert('请选择漫画')
+    return showThemeAlert('请选择漫画')
   }
   try {
     await p2pShareApi.create(shareForm.value)
     showShareAdd.value = false
     await loadShares(1)
   } catch (e: any) {
-    alert(e?.response?.data?.message || e?.message || '新增共享失败')
+    showThemeAlert(e?.response?.data?.message || e?.message || '新增共享失败')
   }
 }
 async function toggleShare(row: P2PLocalShareType, enable: boolean) {
@@ -605,7 +606,7 @@ async function toggleShare(row: P2PLocalShareType, enable: boolean) {
     await p2pShareApi.update(row.p2pLocalShareId, { enable: row.enable })
   } catch (e: any) {
     row.enable = previous
-    alert(e?.response?.data?.message || e?.message || '更新共享失败')
+    showThemeAlert(e?.response?.data?.message || e?.message || '更新共享失败')
   }
 }
 async function announceShares() {
@@ -613,17 +614,17 @@ async function announceShares() {
   try {
     await p2pShareApi.announce(shareFilterGroupNo.value)
   } catch (e: any) {
-    alert(e?.response?.data?.message || e?.message || '广播失败')
+    showThemeAlert(e?.response?.data?.message || e?.message || '广播失败')
   }
 }
 async function deleteShare(row: P2PLocalShareType) {
   if (!row.p2pLocalShareId) return
-  if (!confirm('确定删除此共享配置吗？')) return
+  if (!(await showThemeConfirm('确定删除此共享配置吗？'))) return
   try {
     await p2pShareApi.destroy(row.p2pLocalShareId)
     await loadShares(sharePage.value)
   } catch (e: any) {
-    alert(e?.response?.data?.message || e?.message || '删除失败')
+    showThemeAlert(e?.response?.data?.message || e?.message || '删除失败')
   }
 }
 
@@ -717,19 +718,19 @@ function openPullDialog(row: P2PShareIndexType) {
   showPullDialog.value = true
 }
 async function submitPull() {
-  if (!pullForm.value.receivedPath) return alert('请选择或输入接收路径')
+  if (!pullForm.value.receivedPath) return showThemeAlert('请选择或输入接收路径')
   if (pullForm.value.transferType === 'media' && !pullForm.value.remoteMediaId) {
-    return alert('资源缺少 remoteMediaId')
+    return showThemeAlert('资源缺少 remoteMediaId')
   }
   if (pullForm.value.transferType === 'manga' && !pullForm.value.remoteMangaId) {
-    return alert('资源缺少 remoteMangaId')
+    return showThemeAlert('资源缺少 remoteMangaId')
   }
-  if (!pullForm.value.remoteName) return alert('资源名称不能为空')
+  if (!pullForm.value.remoteName) return showThemeAlert('资源名称不能为空')
   try {
     await p2pTransferApi.pull(pullForm.value)
     showPullDialog.value = false
   } catch (e: any) {
-    alert(e?.response?.data?.message || e?.message || '拉取失败')
+    showThemeAlert(e?.response?.data?.message || e?.message || '拉取失败')
   }
 }
 
@@ -739,16 +740,16 @@ async function loadTransfers() {
 }
 async function cancelTransfer(row: any) {
   if (!row.p2pTransferId) return
-  try { await p2pTransferApi.cancel(row.p2pTransferId); loadTransfers() } catch (e: any) { alert(e?.message || '取消失败') }
+  try { await p2pTransferApi.cancel(row.p2pTransferId); loadTransfers() } catch (e: any) { showThemeAlert(e?.message || '取消失败') }
 }
 async function deleteTransfer(row: any) {
   if (!row.p2pTransferId) return
-  if (!confirm('确定删除此传输记录吗？')) return
-  try { await p2pTransferApi.destroy(row.p2pTransferId); loadTransfers() } catch (e: any) { alert(e?.message || '删除失败') }
+  if (!(await showThemeConfirm('确定删除此传输记录吗？'))) return
+  try { await p2pTransferApi.destroy(row.p2pTransferId); loadTransfers() } catch (e: any) { showThemeAlert(e?.message || '删除失败') }
 }
 async function clearTransfers() {
-  if (!confirm('确定清理所有已完成的传输记录吗？')) return
-  try { await p2pTransferApi.clear(); loadTransfers() } catch (e: any) { alert(e?.message || '清理失败') }
+  if (!(await showThemeConfirm('确定清理所有已完成的传输记录吗？'))) return
+  try { await p2pTransferApi.clear(); loadTransfers() } catch (e: any) { showThemeAlert(e?.message || '清理失败') }
 }
 
 // Tracker
@@ -782,18 +783,18 @@ async function loadTrackerManagement() {
   }
 }
 async function dismissTrackerGroup(row: any) {
-  if (!confirm(`确定解散群组「${row.groupNo}」吗？`)) return
-  try { await trackerAdminGroupApi.dismiss(row.groupNo); loadTrackerGroups() } catch (e: any) { alert(e?.message || '解散失败') }
+  if (!(await showThemeConfirm(`确定解散群组「${row.groupNo}」吗？`))) return
+  try { await trackerAdminGroupApi.dismiss(row.groupNo); loadTrackerGroups() } catch (e: any) { showThemeAlert(e?.message || '解散失败') }
 }
 async function toggleBanNode(row: any) {
   try {
     await trackerAdminNodeApi.ban(row.nodeId, { banned: row.banned ? 0 : 1 })
     loadTrackerNodes()
-  } catch (e: any) { alert(e?.message || '操作失败') }
+  } catch (e: any) { showThemeAlert(e?.message || '操作失败') }
 }
 async function destroyNode(row: any) {
-  if (!confirm(`确定注销节点「${row.nodeName || row.nodeId}」吗？`)) return
-  try { await trackerAdminNodeApi.destroy(row.nodeId); loadTrackerNodes() } catch (e: any) { alert(e?.message || '注销失败') }
+  if (!(await showThemeConfirm(`确定注销节点「${row.nodeName || row.nodeId}」吗？`))) return
+  try { await trackerAdminNodeApi.destroy(row.nodeId); loadTrackerNodes() } catch (e: any) { showThemeAlert(e?.message || '注销失败') }
 }
 
 watch(activeTab, (tab) => {

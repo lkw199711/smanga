@@ -213,6 +213,7 @@
 
 <script lang="ts" setup>
 import { reactive, onMounted } from 'vue'
+import { showThemeAlert } from '@/themes/components/theme-alert'
 import serveSettingApi from '@/api/serve-setting'
 
 const form = reactive({
@@ -241,25 +242,25 @@ async function loadSettings() {
 }
 
 async function saveSetting(title: string, key: string, value: any) {
-  try { await serveSettingApi.set(title, key, value); alert('保存成功') } catch (e: any) { alert(e?.message || '保存失败') }
+  try { await serveSettingApi.set(title, key, value); showThemeAlert('保存成功') } catch (e: any) { showThemeAlert(e?.message || '保存失败') }
 }
 async function saveSSL() {
-  try { await serveSettingApi.set_ssl(form.ssl.pem, form.ssl.key); alert('SSL证书已保存') } catch (e: any) { alert(e?.message || '保存失败') }
+  try { await serveSettingApi.set_ssl(form.ssl.pem, form.ssl.key); showThemeAlert('SSL证书已保存') } catch (e: any) { showThemeAlert(e?.message || '保存失败') }
 }
 async function resetSSL() {
-  try { await serveSettingApi.reset_ssl(); form.ssl.pem = ''; form.ssl.key = ''; alert('SSL证书已重置') } catch (e: any) { alert(e?.message || '重置失败') }
+  try { await serveSettingApi.reset_ssl(); form.ssl.pem = ''; form.ssl.key = ''; showThemeAlert('SSL证书已重置') } catch (e: any) { showThemeAlert(e?.message || '重置失败') }
 }
 async function registerNode() {
   try {
     const res: any = await serveSettingApi.register_node_now()
-    alert(res?.code === 200 ? '节点注册成功' : (res?.message || '注册失败'))
-  } catch (e: any) { alert(e?.message || '注册失败') }
+    showThemeAlert(res?.code === 200 ? '节点注册成功' : (res?.message || '注册失败'))
+  } catch (e: any) { showThemeAlert(e?.message || '注册失败') }
 }
 async function triggerSync() {
   try {
     const res: any = await serveSettingApi.trigger_tracker_sync()
-    alert(res?.code === 200 ? '同步完成' : (res?.message || '同步失败'))
-  } catch (e: any) { alert(e?.message || '同步失败') }
+    showThemeAlert(res?.code === 200 ? '同步完成' : (res?.message || '同步失败'))
+  } catch (e: any) { showThemeAlert(e?.message || '同步失败') }
 }
 
 onMounted(() => loadSettings())

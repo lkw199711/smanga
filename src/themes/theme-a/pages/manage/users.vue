@@ -89,6 +89,7 @@
 
 <script lang="ts" setup>
 import { ref, watch, onMounted } from 'vue'
+import { showThemeAlert, showThemeConfirm } from '@/themes/components/theme-alert'
 import userApi from '@/api/account'
 import mediaApi from '@/api/media'
 import ResponsiveTable from '@/themes/components/responsive-table.vue'
@@ -168,11 +169,11 @@ function openEdit(row: any) {
 
 async function doSave() {
   if (!/^[a-zA-Z]\w{1,19}$/.test(form.value.userName)) {
-    alert('用户名格式不正确：2-20位，字母开头')
+    showThemeAlert('用户名格式不正确：2-20位，字母开头')
     return
   }
   if (!editingUser.value && !form.value.passWord) {
-    alert('密码不能为空')
+    showThemeAlert('密码不能为空')
     return
   }
   saving.value = true
@@ -186,25 +187,25 @@ async function doSave() {
     dialogShow.value = false
     reload()
   } catch (e: any) {
-    alert(e?.message || '操作失败')
+    showThemeAlert(e?.message || '操作失败')
   } finally {
     saving.value = false
   }
 }
 
 async function doDelete(row: any) {
-  if (!confirm(`确定删除用户「${row.userName}」吗？`)) return
+  if (!(await showThemeConfirm(`确定删除用户「${row.userName}」吗？`))) return
   try {
     await userApi.delete_account(row.userId)
     reload()
   } catch (e: any) {
-    alert(e?.message || '删除失败')
+    showThemeAlert(e?.message || '删除失败')
   }
 }
 
 async function batchDelete() {
   if (selected.value.length === 0) return
-  if (!confirm(`确定删除选中的 ${selected.value.length} 个用户吗？`)) return
+  if (!(await showThemeConfirm(`确定删除选中的 ${selected.value.length} 个用户吗？`))) return
   for (const id of selected.value) {
     try { await userApi.delete_account(id) } catch { /* skip */ }
   }

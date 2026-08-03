@@ -28,6 +28,7 @@
 
 <script lang="ts" setup>
 import { ref, watch, onMounted } from 'vue'
+import { showThemeAlert, showThemeConfirm } from '@/themes/components/theme-alert'
 import bookmarkApi from '@/api/bookmark'
 import ResponsiveTable from '@/themes/components/responsive-table.vue'
 import type { RtColumn } from '@/themes/components/responsive-table.vue'
@@ -55,12 +56,12 @@ function reload() { page.value = 1; selected.value = []; load() }
 watch(page, () => load())
 
 async function doDelete(row: any) {
-  if (!confirm(`确定删除此书签吗？`)) return
-  try { await bookmarkApi.delete(row.bookmarkId); reload() } catch (e: any) { alert(e?.message || '删除失败') }
+  if (!(await showThemeConfirm(`确定删除此书签吗？`))) return
+  try { await bookmarkApi.delete(row.bookmarkId); reload() } catch (e: any) { showThemeAlert(e?.message || '删除失败') }
 }
 async function batchDelete() {
-  if (!confirm(`确定删除选中的 ${selected.value.length} 个书签吗？`)) return
-  try { await bookmarkApi.batch_delete(selected.value); reload() } catch (e: any) { alert(e?.message || '删除失败') }
+  if (!(await showThemeConfirm(`确定删除选中的 ${selected.value.length} 个书签吗？`))) return
+  try { await bookmarkApi.batch_delete(selected.value); reload() } catch (e: any) { showThemeAlert(e?.message || '删除失败') }
 }
 
 onMounted(() => load())

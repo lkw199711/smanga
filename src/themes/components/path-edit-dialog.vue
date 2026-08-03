@@ -83,6 +83,7 @@
 
 <script setup lang="ts">
 import { ref, reactive, computed, watch, onMounted } from 'vue'
+import { showThemeAlert } from '@/themes/components/theme-alert'
 import pathApi from '@/api/path'
 import scanRunApi from '@/api/scan-run'
 import { fallbackScanCatalog } from '@/constants/scan'
@@ -187,10 +188,10 @@ const previewResult = ref<ScanPreviewResult | null>(null)
 
 function validateConfig(): boolean {
   if (form.scanTemplateConfig) {
-    try { JSON.parse(form.scanTemplateConfig) } catch { alert('模板规则 JSON 格式无效'); return false }
+    try { JSON.parse(form.scanTemplateConfig) } catch { showThemeAlert('模板规则 JSON 格式无效'); return false }
   }
   if (form.metadataProfileConfig) {
-    try { JSON.parse(form.metadataProfileConfig) } catch { alert('元数据配置 JSON 格式无效'); return false }
+    try { JSON.parse(form.metadataProfileConfig) } catch { showThemeAlert('元数据配置 JSON 格式无效'); return false }
   }
   return true
 }
@@ -223,7 +224,7 @@ async function doSave() {
   saving.value = true
   try {
     if (isAdd.value) {
-      if (!form.pathContent) { alert('路径不能为空'); return }
+      if (!form.pathContent) { showThemeAlert('路径不能为空'); return }
       if (!validateConfig()) return
       await pathApi.add_path(props.mediaId, { ...form })
     } else {
@@ -239,7 +240,7 @@ async function doSave() {
     }
     emit('update:modelValue', false)
     emit('saved')
-  } catch (e: any) { alert(e?.message || '保存失败') }
+  } catch (e: any) { showThemeAlert(e?.message || '保存失败') }
   finally { saving.value = false }
 }
 

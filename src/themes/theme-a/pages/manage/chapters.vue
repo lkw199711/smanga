@@ -42,6 +42,7 @@
 
 <script lang="ts" setup>
 import { ref, watch, onMounted } from 'vue'
+import { showThemeAlert, showThemeConfirm } from '@/themes/components/theme-alert'
 import chapterApi from '@/api/chapter'
 import ChapterModifyDialog from '@/themes/components/chapter-modify-dialog.vue'
 import SortSelector from '@/themes/components/sort-selector.vue'
@@ -88,18 +89,18 @@ function openEdit(row: any) {
 }
 
 async function doDelete(row: any) {
-  if (!confirm(`确定删除章节「${row.chapterName}」吗？`)) return
-  try { await chapterApi.delete_chapter(row.chapterId); reload() } catch (e: any) { alert(e?.message || '删除失败') }
+  if (!(await showThemeConfirm(`确定删除章节「${row.chapterName}」吗？`))) return
+  try { await chapterApi.delete_chapter(row.chapterId); reload() } catch (e: any) { showThemeAlert(e?.message || '删除失败') }
 }
 
 async function deleteCompress(row: any) {
-  if (!confirm(`确定删除章节「${row.chapterName}」的压缩缓存吗？`)) return
-  try { await chapterApi.compress_delete(row.chapterId); alert('压缩缓存已删除') } catch (e: any) { alert(e?.message || '操作失败') }
+  if (!(await showThemeConfirm(`确定删除章节「${row.chapterName}」的压缩缓存吗？`))) return
+  try { await chapterApi.compress_delete(row.chapterId); showThemeAlert('压缩缓存已删除') } catch (e: any) { showThemeAlert(e?.message || '操作失败') }
 }
 
 async function batchDelete() {
-  if (!confirm(`确定删除选中的 ${selected.value.length} 个章节吗？`)) return
-  try { await chapterApi.batch_delete_chapter(selected.value); reload() } catch (e: any) { alert(e?.message || '删除失败') }
+  if (!(await showThemeConfirm(`确定删除选中的 ${selected.value.length} 个章节吗？`))) return
+  try { await chapterApi.batch_delete_chapter(selected.value); reload() } catch (e: any) { showThemeAlert(e?.message || '删除失败') }
 }
 
 onMounted(() => load())

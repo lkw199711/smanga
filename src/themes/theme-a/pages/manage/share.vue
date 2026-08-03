@@ -51,6 +51,7 @@
 
 <script lang="ts" setup>
 import { ref, watch, onMounted } from 'vue'
+import { showThemeAlert, showThemeConfirm } from '@/themes/components/theme-alert'
 import shareApi from '@/api/share'
 import syncApi from '@/api/sync'
 import ResponsiveTable from '@/themes/components/responsive-table.vue'
@@ -90,12 +91,12 @@ async function showDetail(row: any) {
 }
 
 async function doDelete(row: any) {
-  if (!confirm(`确定删除此分享记录吗？`)) return
-  try { await shareApi.delete(row.shareId); reload() } catch (e: any) { alert(e?.message || '删除失败') }
+  if (!(await showThemeConfirm(`确定删除此分享记录吗？`))) return
+  try { await shareApi.delete(row.shareId); reload() } catch (e: any) { showThemeAlert(e?.message || '删除失败') }
 }
 async function batchDelete() {
-  if (!confirm(`确定删除选中的 ${selected.value.length} 条分享记录吗？`)) return
-  try { await shareApi.batch_delete(selected.value); reload() } catch (e: any) { alert(e?.message || '删除失败') }
+  if (!(await showThemeConfirm(`确定删除选中的 ${selected.value.length} 条分享记录吗？`))) return
+  try { await shareApi.batch_delete(selected.value); reload() } catch (e: any) { showThemeAlert(e?.message || '删除失败') }
 }
 onMounted(() => load())
 </script>

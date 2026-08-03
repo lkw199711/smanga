@@ -67,6 +67,7 @@
 
 <script lang="ts" setup>
 import { ref, watch, onMounted } from 'vue'
+import { showThemeAlert, showThemeConfirm } from '@/themes/components/theme-alert'
 import mediaApi from '@/api/media'
 import pathApi from '@/api/path'
 import MediaEditDialog from '@/themes/components/media-edit-dialog.vue'
@@ -116,13 +117,13 @@ function openEdit(row: any) {
 }
 
 async function doDelete(row: any) {
-  if (!confirm(`确定删除媒体库「${row.mediaName}」吗？`)) return
-  try { await mediaApi.delete_media(row.mediaId); reload() } catch (e: any) { alert(e?.message || '删除失败') }
+  if (!(await showThemeConfirm(`确定删除媒体库「${row.mediaName}」吗？`))) return
+  try { await mediaApi.delete_media(row.mediaId); reload() } catch (e: any) { showThemeAlert(e?.message || '删除失败') }
 }
 
 async function batchDelete() {
-  if (!confirm(`确定删除选中的 ${selected.value.length} 个媒体库吗？`)) return
-  try { await mediaApi.batch_delete_media(selected.value); reload() } catch (e: any) { alert(e?.message || '删除失败') }
+  if (!(await showThemeConfirm(`确定删除选中的 ${selected.value.length} 个媒体库吗？`))) return
+  try { await mediaApi.batch_delete_media(selected.value); reload() } catch (e: any) { showThemeAlert(e?.message || '删除失败') }
 }
 
 async function openPaths(row: any) {
@@ -150,18 +151,18 @@ async function onPathSaved() {
 }
 
 async function scanPath(p: any) {
-  if (!confirm('确定要增量扫描该路径吗？')) return
-  try { await pathApi.scan_path(p.pathId); alert('扫描任务已提交'); await loadPaths(p.mediaId) } catch (e: any) { alert(e?.message || '扫描失败') }
+  if (!(await showThemeConfirm('确定要增量扫描该路径吗？'))) return
+  try { await pathApi.scan_path(p.pathId); showThemeAlert('扫描任务已提交'); await loadPaths(p.mediaId) } catch (e: any) { showThemeAlert(e?.message || '扫描失败') }
 }
 
 async function rescanPath(p: any) {
-  if (!confirm('确定要重新扫描该路径吗？这将重新索引所有漫画。')) return
-  try { await pathApi.rescan_path(p.pathId); alert('重扫任务已提交'); await loadPaths(p.mediaId) } catch (e: any) { alert(e?.message || '重扫失败') }
+  if (!(await showThemeConfirm('确定要重新扫描该路径吗？这将重新索引所有漫画。'))) return
+  try { await pathApi.rescan_path(p.pathId); showThemeAlert('重扫任务已提交'); await loadPaths(p.mediaId) } catch (e: any) { showThemeAlert(e?.message || '重扫失败') }
 }
 
 async function deletePath(p: any) {
-  if (!confirm('确定删除此路径吗？')) return
-  try { await pathApi.delete_path(p.pathId); await loadPaths(p.mediaId) } catch (e: any) { alert(e?.message || '删除失败') }
+  if (!(await showThemeConfirm('确定删除此路径吗？'))) return
+  try { await pathApi.delete_path(p.pathId); await loadPaths(p.mediaId) } catch (e: any) { showThemeAlert(e?.message || '删除失败') }
 }
 
 onMounted(() => load())

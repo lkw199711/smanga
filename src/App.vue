@@ -6,6 +6,7 @@
 			<el-config-provider :locale="elLocale">
 				<router-view />
 			</el-config-provider>
+			<ThemeAlertDialog />
 		</div>
 	</div>
 </template>
@@ -24,6 +25,7 @@ import useBrowseStore from './store/browse';
 import { sessionStore } from '@/store/session';
 import { preferencesStore } from '@/store/preferences';
 import { STORAGE_KEYS, readLocalPreference, writeLocalPreference } from '@/utils/persistence';
+import ThemeAlertDialog from '@/themes/components/theme-alert-dialog.vue';
 
 
 const route = useRoute();

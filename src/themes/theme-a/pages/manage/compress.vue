@@ -35,6 +35,7 @@
 
 <script lang="ts" setup>
 import { ref, watch, onMounted } from 'vue'
+import { showThemeAlert, showThemeConfirm } from '@/themes/components/theme-alert'
 import compressApi from '@/api/compress'
 import ResponsiveTable from '@/themes/components/responsive-table.vue'
 import type { RtColumn } from '@/themes/components/responsive-table.vue'
@@ -63,16 +64,16 @@ function reload() { page.value = 1; selected.value = []; load() }
 watch(page, () => load())
 
 async function doDelete(row: any) {
-  if (!confirm(`确定删除此解压记录吗？`)) return
-  try { await compressApi.delete_compress(row.compressId); reload() } catch (e: any) { alert(e?.message || '删除失败') }
+  if (!(await showThemeConfirm(`确定删除此解压记录吗？`))) return
+  try { await compressApi.delete_compress(row.compressId); reload() } catch (e: any) { showThemeAlert(e?.message || '删除失败') }
 }
 async function batchDelete() {
-  if (!confirm(`确定删除选中的 ${selected.value.length} 条记录吗？`)) return
-  try { await compressApi.batch_delete_compress(selected.value); reload() } catch (e: any) { alert(e?.message || '删除失败') }
+  if (!(await showThemeConfirm(`确定删除选中的 ${selected.value.length} 条记录吗？`))) return
+  try { await compressApi.batch_delete_compress(selected.value); reload() } catch (e: any) { showThemeAlert(e?.message || '删除失败') }
 }
 async function clearAll() {
-  if (!confirm('确定清空所有解压记录吗？此操作不可撤销。')) return
-  try { await compressApi.clear(); reload() } catch (e: any) { alert(e?.message || '清空失败') }
+  if (!(await showThemeConfirm('确定清空所有解压记录吗？此操作不可撤销。'))) return
+  try { await compressApi.clear(); reload() } catch (e: any) { showThemeAlert(e?.message || '清空失败') }
 }
 onMounted(() => load())
 </script>
