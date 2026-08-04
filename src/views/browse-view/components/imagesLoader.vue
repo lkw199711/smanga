@@ -43,7 +43,8 @@ const compressStateTipText = {
 
 onMounted(async() => {
   browseStore.imageLoaded = false;
-  const chapterId = Number(route.query.chapterId);
+  // /t/reader/:chapterId 以路径参数为准；query 仅用于兼容旧阅读器入口。
+  const chapterId = Number(route.query.chapterId || route.params.chapterId);
   const chapterPath = route.query.chapterPath as string;
   if (browseStore.browseType === 'pdf') {
     browseStore.pdfPath = await imageApi.get({ file: chapterPath });

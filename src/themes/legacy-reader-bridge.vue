@@ -105,7 +105,10 @@ async function prepareReader() {
       chapterId: String(chapterId),
       readerMode: browseType,
     }
-    if (route.query.mediaId !== query.mediaId || route.query.mangaId !== query.mangaId || route.query.readerMode !== query.readerMode) {
+    if (route.query.mediaId !== query.mediaId
+      || route.query.mangaId !== query.mangaId
+      || route.query.chapterId !== query.chapterId
+      || route.query.readerMode !== query.readerMode) {
       await router.replace({ name: 't-reader', params: { chapterId }, query })
     }
 

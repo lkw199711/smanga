@@ -340,7 +340,11 @@ const useBrowseStore = defineStore('browse', {
 			this.browseType = route.name === 't-reader' ? String(route.query.readerMode || 'flow') : route.name;
 			this.mediaId = Number(route.query.mediaId);
 			this.mangaId = Number(route.query.mangaId);
-			this.chapterId = Number(route.query.chapterId);
+			// 主题阅读器的章节 ID 本来就在路径参数中。query 只用于兼容旧阅读器，
+			// 路由归一化尚未完成时必须回退到 params，避免 latest 请求把 NaN 序列化成 null。
+			const queryChapterId = Number(route.query.chapterId);
+			const pathChapterId = Number(route.params?.chapterId);
+			this.chapterId = queryChapterId > 0 ? queryChapterId : pathChapterId;
 		},
 
 		/**
@@ -358,14 +362,24 @@ const useBrowseStore = defineStore('browse', {
 		 * @description: 保存最近阅读
 		 */
 		async save_latest(lastImageShown: boolean = false) {
+			const mangaId = Number(this.mangaId);
+			const chapterId = Number(this.chapterId);
+			const page = Number(this.page);
+			const count = Number(this.pageCount);
+
 			// 刚开始观看不保留记录
-			if (this.page < 2) return;
+			if (page < 2) return;
+			// 切换章节或阅读模式时可能正处于路由更新的中间态，不发送无法通过后端校验的数据。
+			if (!Number.isFinite(mangaId) || mangaId <= 0
+				|| !Number.isFinite(chapterId) || chapterId <= 0
+				|| !Number.isFinite(page) || page < 0
+				|| !Number.isFinite(count) || count < 0) return;
 			await latestApi.add({
-				mangaId: this.mangaId,
-				chapterId: this.chapterId,
-				page: this.page,
-				count: this.pageCount,
-				finish: lastImageShown || this.page >= this.pageCount - 1
+				mangaId,
+				chapterId,
+				page,
+				count,
+				finish: lastImageShown || page >= count - 1
 			});
 		},
 
