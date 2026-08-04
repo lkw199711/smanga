@@ -4,7 +4,6 @@
     @contextmenu.prevent="openControlPanel"
     v-long-press="openControlPanel"
   >
-    <android-seat />
     <template v-if="ready">
       <theme-reader-topbar :class="{ 'is-controls-hidden': !config.browseTop }" />
       <theme-reader-control-panel />
@@ -38,7 +37,6 @@ import ThemeReaderControlPanel from './legacy-reader/control-panel.vue'
 import ThemeReaderChapterDrawer from './legacy-reader/chapter-drawer.vue'
 import ThemeReaderDialogs from './legacy-reader/reader-dialogs.vue'
 import ThemeReaderFooter from './legacy-reader/reader-footer.vue'
-import androidSeat from '@/layout/components/android-seat.vue'
 import { useNavigationStore } from '@/store/navigation'
 
 const route = useRoute()
@@ -141,7 +139,7 @@ watch(() => route.params.chapterId, prepareReader)
   --theme-reader-topbar-text: #f8fafc;
   --theme-reader-topbar-accent: #60a5fa;
   min-height: 100vh;
-  padding-top: env(safe-area-inset-top);
+  min-height: 100dvh;
   background: #111;
 }
 
@@ -166,16 +164,20 @@ watch(() => route.params.chapterId, prepareReader)
 
 .theme-legacy-reader-content {
   min-height: 100vh;
+  min-height: 100dvh;
 }
 
 .theme-legacy-reader-content.single,
 .theme-legacy-reader-content.double,
 .theme-legacy-reader-content.half {
   height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
 }
 
 .legacy-reader-bridge {
   min-height: 100vh;
+  min-height: 100dvh;
   display: grid;
   place-content: center;
   gap: 1.2rem;
