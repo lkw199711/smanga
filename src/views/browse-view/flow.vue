@@ -17,8 +17,7 @@
           :src="image"
           :key="browseStore.imageFileList[index]"
           :alt="t('browse.imgLoadError')"
-          draggable="false"
-          @click="load_image(index)" />
+          draggable="false" />
       </div>
       <div v-else @mousedown="handleMouseDown" @mouseup="handleMouseUp" id="flowList" ref="flowList">
         <img
@@ -29,8 +28,7 @@
           :src="image"
           :key="browseStore.imageFileList[index]"
           :alt="t('browse.imgLoadError')"
-          draggable="false"
-          @click="load_image(index)" />
+          draggable="false" />
       </div>
     </div>
 

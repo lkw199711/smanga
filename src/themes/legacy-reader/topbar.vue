@@ -8,12 +8,12 @@
 
     <!-- 功能长条: 章节选择 + 功能菜单 (桌面 / 移动 通用) -->
     <nav class="quick-bar" :class="{ 'is-mobile': isMobile }" aria-label="reader-quick-nav">
-      <button class="qb-seg qb-chapter" :title="$t('sidebar.chapterList')" @click="openChapterDrawer">
+      <button class="qb-seg qb-chapter" :title="$t('sidebar.chapterList')" :aria-label="$t('sidebar.chapterList')" @click="openChapterDrawer">
         <span class="qc-ico" aria-hidden="true">☰</span>
         <span class="qb-label">{{ $t('sidebar.chapterList') }}</span>
       </button>
       <span class="qb-divider" aria-hidden="true"></span>
-      <button class="qb-seg qb-menu" :title="$t('sidebar.rightMenu')" @click="openPanel">
+      <button class="qb-seg qb-menu" :title="$t('sidebar.rightMenu')" :aria-label="$t('sidebar.rightMenu')" @click="openPanel">
         <span class="qc-ico" aria-hidden="true">⋯</span>
         <span class="qb-label">{{ $t('sidebar.rightMenu') }}</span>
       </button>
@@ -205,9 +205,9 @@ function openChapterDrawer() {
   font-size: 2rem;
 }
 
-/* 移动端: 保留文字, 保证可点击面积, 给章节标题让位 */
+/* 移动端: 使用纯图标按钮，保留触控面积并给章节标题让位。 */
 .reader-quick-bar.is-mobile .chapter-name {
-  padding-right: 18rem;
+  padding-right: 10.8rem;
 }
 
 .quick-bar.is-mobile {
@@ -218,8 +218,14 @@ function openChapterDrawer() {
 }
 
 .quick-bar.is-mobile .qb-seg {
-  padding: 0 1.4rem;
+  justify-content: center;
+  width: 4.4rem;
+  padding: 0;
   font-size: 1.25rem;
+}
+
+.quick-bar.is-mobile .qb-label {
+  display: none;
 }
 
 /* 过渡: 与底栏 (lrf-slide) 对称, 顶栏从上方滑入/滑出 */
