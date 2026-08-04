@@ -87,6 +87,7 @@ import { useRoute, useRouter } from 'vue-router';
 import imageApi from '@/api/image';
 import useBrowse from '@/store/browse';
 import sBlue from '@/assets/s-blue-high.png';
+import { preloadReaderImage } from './utils/reader-image';
 const { t } = i18n.global;
 
 const route = useRoute();
@@ -102,6 +103,8 @@ const browseStore = useBrowse();
 const pager = ref();
 const pageKey = ref(1); // 用于触发过渡动画
 const direction = ref('forward'); // 翻页方向: forward(前进), backward(后退)
+const loading = ref(false);
+let pageRequestId = 0;
 
 // 计算属性：根据动画类型和方向返回正确的动画名称
 const animationType = computed(() => {
@@ -150,36 +153,38 @@ async function page_change(pageParams: number) {
   page.value = pageParams;
   const index = (pageParams - 1) * 2;
   const pageImage = browseStore.imagePathList[index];
+  const requestId = ++pageRequestId;
+  loading.value = true;
 
-  // 只有启用动画才需要更新pageKey来触发过渡
-  if (userConfig.enablePageAnimation) {
-    pageKey.value++;
+  try {
+    const [nextSrc1, nextSrc2] = await Promise.all([
+      imageApi.get({file: browseStore.imagePathList[index]}),
+      index + 1 < browseStore.imagePathList.length
+        ? imageApi.get({file: browseStore.imagePathList[index + 1]})
+        : Promise.resolve(''),
+    ]);
+    await Promise.all([preloadReaderImage(nextSrc1), preloadReaderImage(nextSrc2)]);
+    if (requestId !== pageRequestId) return;
+
+    // 两张图都解码完成后再原子切换，避免左右页依次闪现。
+    if (userConfig.enablePageAnimation) pageKey.value++;
+    imgSrc1.value = nextSrc1;
+    imgSrc2.value = nextSrc2;
+
+    browseStore.imageLoaded = true;
+    browseStore.page = pageParams;
+    browseStore.pageImage = pageImage;
+    browseStore.save_latest();
+  } finally {
+    if (requestId === pageRequestId) loading.value = false;
   }
-
-  // 置空图片 使其不显示上一页
-  imgSrc1.value = sBlue;
-  imgSrc2.value = sBlue;
-
-  // 加载第一张图片
-  imgSrc1.value = await imageApi.get({file: browseStore.imagePathList[index]});
-
-  // 加载第二张图片
-  imgSrc2.value = index + 1 < browseStore.imagePathList.length
-    ? await imageApi.get({file: browseStore.imagePathList[index + 1]})
-    : '';
-
-  browseStore.imageLoaded = true;
-  
-  // 缓存书签信息
-  browseStore.page = pageParams;
-  browseStore.pageImage = pageImage;
-  browseStore.save_latest();
 }
 
 /**
  * 上一页
  */
 function beforePage() {
+  if (loading.value) return;
   if (page.value > 1) {
     page_change(page.value - 1);
   } else {
@@ -191,6 +196,7 @@ function beforePage() {
  * 下一页
  */
 function nextPage() {
+  if (loading.value) return;
   if (page.value < browseStore.pageCount) {
     page_change(page.value + 1);
   } else {

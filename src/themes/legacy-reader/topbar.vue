@@ -75,6 +75,14 @@ function openChapterDrawer() {
   -webkit-user-select: none;
   -webkit-touch-callout: none;
   -webkit-tap-highlight-color: transparent;
+  transition: transform 0.25s ease, opacity 0.25s ease;
+  will-change: transform, opacity;
+}
+
+.reader-quick-bar.is-controls-hidden {
+  transform: translate3d(0, -100%, 0);
+  opacity: 0;
+  pointer-events: none;
 }
 
 /* 章节标题条: 顶部窄条, 半透明 */
@@ -228,9 +236,4 @@ function openChapterDrawer() {
   display: none;
 }
 
-/* 过渡: 与底栏 (lrf-slide) 对称, 顶栏从上方滑入/滑出 */
-.reader-topbar-slide-enter-active,
-.reader-topbar-slide-leave-active { transition: transform 0.25s ease, opacity 0.25s ease; }
-.reader-topbar-slide-enter-from,
-.reader-topbar-slide-leave-to { transform: translateY(-100%); opacity: 0; }
 </style>

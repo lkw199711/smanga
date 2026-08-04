@@ -98,6 +98,7 @@ import {useRoute, useRouter} from 'vue-router';
 import imageApi from '@/api/image';
 import useBrowseStore from '@/store/browse';
 import sBlue from '@/assets/s-blue-high.png';
+import {preloadReaderImage} from './utils/reader-image';
 const {t} = i18n.global;
 
 const route = useRoute();
@@ -110,6 +111,7 @@ const pager = ref();
 const browseStore = useBrowseStore();
 const direction = ref('forward'); // 翻页方向: forward(前进), backward(后退)
 const loading = ref(false);
+let pageRequestId = 0;
 
 // 计算属性：根据动画类型和方向返回正确的动画名称
 const animationType = computed(() => {
@@ -156,28 +158,31 @@ async function page_change(pageParams: number) {
 
   page.value = pageParams;
   const pageImage = browseStore.imagePathList[pageParams - 1];
-
-  // 只有启用动画才需要更新pageKey来触发过渡
-  if (userConfig.enablePageAnimation) {
-    pageKey.value++;
-  }
-
+  const requestId = ++pageRequestId;
   loading.value = true;
-  imgSrc.value = sBlue;
-  imgSrc.value = await imageApi.get({file: pageImage});
-  loading.value = false;
+  try {
+    const nextSrc = await imageApi.get({file: pageImage});
+    await preloadReaderImage(nextSrc);
+    if (requestId !== pageRequestId) return;
 
-  browseStore.imageLoaded = true;
+    // 新图解码完成后再触发过渡，避免先显示占位图。
+    if (userConfig.enablePageAnimation) pageKey.value++;
+    imgSrc.value = nextSrc;
 
-  browseStore.page = pageParams;
-  browseStore.pageImage = pageImage;
-  browseStore.save_latest();
+    browseStore.imageLoaded = true;
+    browseStore.page = pageParams;
+    browseStore.pageImage = pageImage;
+    browseStore.save_latest();
+  } finally {
+    if (requestId === pageRequestId) loading.value = false;
+  }
 }
 
 /**
  * 上一页
  */
 function beforePage() {
+  if (loading.value) return;
   if (page.value > 1) {
     page_change(page.value - 1);
   } else {
@@ -189,6 +194,7 @@ function beforePage() {
  * 下一页
  */
 function nextPage() {
+  if (loading.value) return;
   if (page.value < browseStore.pageCount) {
     page_change(page.value + 1);
   } else {

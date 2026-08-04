@@ -1,6 +1,10 @@
 <template>
-  <transition name="lrf-slide">
-    <footer v-if="visible && browse.pageCount > 0" class="lrf-bar">
+  <footer
+    v-if="browse.pageCount > 0"
+    class="lrf-bar"
+    :class="{ 'is-controls-hidden': !visible }"
+    :aria-hidden="!visible"
+  >
       <button type="button" class="lrf-btn lrf-btn-warn" @click="triggerChapter('beforeChapter')">
         {{ $t('page.before') }}
       </button>
@@ -29,8 +33,7 @@
       <button type="button" class="lrf-btn lrf-btn-ok" @click="triggerChapter('nextChapter')">
         {{ $t('page.next') }}
       </button>
-    </footer>
-  </transition>
+  </footer>
 </template>
 
 <script lang="ts" setup>
@@ -103,6 +106,14 @@ function triggerChapter(action: 'beforeChapter' | 'nextChapter') {
   user-select: none;
   -webkit-user-select: none;
   -webkit-tap-highlight-color: transparent;
+  transition: transform 0.25s ease, opacity 0.25s ease;
+  will-change: transform, opacity;
+}
+
+.lrf-bar.is-controls-hidden {
+  transform: translate3d(0, 100%, 0);
+  opacity: 0;
+  pointer-events: none;
 }
 
 /* 章节按钮 */
@@ -221,9 +232,4 @@ function triggerChapter(action: 'beforeChapter' | 'nextChapter') {
   }
 }
 
-/* 过渡 */
-.lrf-slide-enter-active,
-.lrf-slide-leave-active { transition: transform 0.25s ease, opacity 0.25s ease; }
-.lrf-slide-enter-from,
-.lrf-slide-leave-to { transform: translateY(100%); opacity: 0; }
 </style>

@@ -24,7 +24,7 @@
     </div>
 
     <!-- 隐藏的canvas容器 -->
-    <canvas id="canvas-cut" width="1920" height="1080" v-show="false"></canvas>
+    <canvas ref="canvasCut" id="canvas-cut" width="1920" height="1080" v-show="false"></canvas>
 
     <!-- 解压缩指示器 -->
     <images-loader @page_change="page_change" :key="browseStore.chapterId" />
@@ -98,6 +98,7 @@ import {useRoute, useRouter} from 'vue-router';
 import imageApi from '@/api/image';
 import useBrowse from '@/store/browse';
 import sBlue from '@/assets/s-blue-high.png';
+import {loadReaderImage, preloadReaderImage} from './utils/reader-image';
 const {t} = i18n.global;
 
 const route = useRoute();
@@ -108,6 +109,9 @@ const pageKey = ref(1); // 用于触发过渡动画
 const browseStore = useBrowse();
 const pager = ref();
 const direction = ref('forward'); // 翻页方向: forward(前进), backward(后退)
+const canvasCut = ref<HTMLCanvasElement | null>(null);
+const loading = ref(false);
+let pageRequestId = 0;
 
 // 计算属性：根据动画类型和方向返回正确的动画名称
 const animationType = computed(() => {
@@ -148,72 +152,57 @@ async function page_change(pageParams: number) {
     direction.value = 'backward';
   }
 
-  // 清空之前图片内容
-  browseStore.imageFileList = [];
-
   page.value = pageParams;
   const even = pageParams % 2 === 0;
-
   const pageImage = browseStore.imagePathList[Math.ceil(pageParams / 2) - 1];
+  const requestId = ++pageRequestId;
+  loading.value = true;
 
-  // 只有启用动画才需要更新pageKey来触发过渡
-  if (userConfig.enablePageAnimation) {
-    pageKey.value++;
-  }
-  imgSrc.value = sBlue;
+  try {
+    let nextSrc = browseStore.imageFileList[pageParams - 1] || '';
+    if (nextSrc) {
+      await preloadReaderImage(nextSrc);
+    } else {
+      const sourceSrc = await imageApi.get({file: pageImage});
+      const img = await loadReaderImage(sourceSrc);
+      if (requestId !== pageRequestId) return;
 
-  // 有缓存则加载缓存的图片
-  if (browseStore.imageFileList[pageParams - 1]) {
-    imgSrc.value = browseStore.imageFileList[pageParams - 1];
-  } else {
-    const img = new Image();
-    img.src = await imageApi.get({file: pageImage});
+      const canvas = canvasCut.value;
+      const context = canvas?.getContext('2d');
+      if (!canvas || !context) return;
 
-    const canvas: HTMLCanvasElement | null = document.querySelector('canvas');
-
-    if (!canvas) {
-      return false;
-    }
-
-    const context = canvas.getContext('2d');
-
-    if (!context) {
-      return false;
-    }
-
-    // 处理toDataURL遇跨域资源导致的报错
-    img.crossOrigin = 'Anonymous';
-
-    img.onload = function () {
       const h = img.naturalHeight;
       const w = img.naturalWidth;
-
+      const halfWidth = Math.floor(w / 2);
       canvas.height = h;
-      canvas.width = w / 2;
+      canvas.width = halfWidth;
+      context.clearRect(0, 0, halfWidth, h);
 
-      if (!even) {
-        context.drawImage(img, w / 2, 0, w, h, 0, 0, w, h);
-      } else {
-        context.drawImage(img, 0, 0, w, h, 0, 0, w, h);
-      }
+      const sourceX = even ? 0 : w - halfWidth;
+      context.drawImage(img, sourceX, 0, halfWidth, h, 0, 0, halfWidth, h);
+      nextSrc = canvas.toDataURL('image/png');
+      browseStore.imageFileList[pageParams - 1] = nextSrc;
+      await preloadReaderImage(nextSrc);
+    }
 
-      const imgbase64 = canvas.toDataURL('image/png');
-      imgSrc.value = imgbase64;
-      browseStore.imageFileList[pageParams - 1] = imgbase64;
-    };
+    if (requestId !== pageRequestId) return;
+    if (userConfig.enablePageAnimation) pageKey.value++;
+    imgSrc.value = nextSrc;
+
+    browseStore.imageLoaded = true;
+    browseStore.page = pageParams;
+    browseStore.pageImage = pageImage;
+    browseStore.save_latest();
+  } finally {
+    if (requestId === pageRequestId) loading.value = false;
   }
-
-  browseStore.imageLoaded = true;
-
-  browseStore.page = pageParams;
-  browseStore.pageImage = pageImage;
-  browseStore.save_latest();
 }
 
 /**
  * 上一页
  */
 function beforePage() {
+  if (loading.value) return;
   if (page.value > 1) {
     page_change(page.value - 1);
   } else {
@@ -225,6 +214,7 @@ function beforePage() {
  * 下一页
  */
 function nextPage() {
+  if (loading.value) return;
   if (page.value < browseStore.pageCount) {
     page_change(page.value + 1);
   } else {
