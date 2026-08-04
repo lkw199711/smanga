@@ -211,7 +211,7 @@ async function reload_page() {
   // 加载路由参数
   browseStore.load_route_params(route);
   // 加载章节列表
-  browseStore.load_chapter_list();
+  await browseStore.load_chapter_list();
 
   // 清空之前图片内容
   browseStore.imageFileList = [];
@@ -322,6 +322,9 @@ function switch_direction() {
 onMounted(async () => {
   // 设置浏览模式
   config.browseType = 'double';
+
+  // 双页模式也需要初始化路由参数和章节列表，顶栏通过 currentChapter 展示章节名。
+  await reload_page();
 
   if (removeFirst.value) remove_poster();
   if (!directionDesc.value) switch_direction();
