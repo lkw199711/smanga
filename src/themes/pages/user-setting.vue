@@ -177,17 +177,6 @@
           </label>
         </div>
         <div class="setting-row">
-          <span class="setting-label">滑动翻页</span>
-          <label class="setting-switch">
-            <input 
-              type="checkbox" 
-              v-model="userConfig.enableTouchPageChange" 
-              @change="save"
-            />
-            <span class="setting-switch-slider"></span>
-          </label>
-        </div>
-        <div class="setting-row">
           <span class="setting-label">使用阅读进度条</span>
           <label class="setting-switch">
             <input 
@@ -264,40 +253,6 @@
             <span class="setting-switch-slider"></span>
           </label>
         </div>
-        <div class="setting-row">
-          <span class="setting-label">启用翻页动画</span>
-          <label class="setting-switch">
-            <input 
-              type="checkbox" 
-              v-model="userConfig.enablePageAnimation" 
-              @change="save"
-            />
-            <span class="setting-switch-slider"></span>
-          </label>
-        </div>
-        <div class="setting-row" v-if="userConfig.enablePageAnimation">
-          <span class="setting-label">翻页动画类型</span>
-          <select v-model="userConfig.pageAnimationType" @change="save" class="setting-select">
-            <option value="fade">淡入淡出</option>
-            <option value="slide">左右滑动</option>
-            <option value="page">实体书翻页</option>
-          </select>
-        </div>
-        <div class="setting-row" v-if="userConfig.enablePageAnimation">
-          <span class="setting-label">动画速度</span>
-          <div class="setting-slider-container">
-            <input 
-              type="range" 
-              v-model="userConfig.pageAnimationSpeed" 
-              min="100" 
-              max="1000" 
-              step="50"
-              @change="save"
-              class="setting-slider"
-            />
-            <span class="setting-slider-value">{{ userConfig.pageAnimationSpeed }}ms</span>
-          </div>
-        </div>
       </div>
 
       <!-- 性能设置 -->
@@ -363,34 +318,6 @@
       <!-- 高级设置 -->
       <div class="setting-card">
         <h3>高级设置</h3>
-        <div class="setting-row">
-          <span class="setting-label">顶栏切换范围</span>
-          <div class="setting-slider-container">
-            <input 
-              type="range" 
-              v-model="userConfig.browseOperationTop" 
-              min="10" 
-              max="50" 
-              @change="save"
-              class="setting-slider"
-            />
-            <span class="setting-slider-value">{{ userConfig.browseOperationTop }}%</span>
-          </div>
-        </div>
-        <div class="setting-row">
-          <span class="setting-label">页码切换范围</span>
-          <div class="setting-slider-container">
-            <input 
-              type="range" 
-              v-model="userConfig.browseOperationBottom" 
-              min="10" 
-              max="50" 
-              @change="save"
-              class="setting-slider"
-            />
-            <span class="setting-slider-value">{{ userConfig.browseOperationBottom }}%</span>
-          </div>
-        </div>
         <div class="setting-row">
           <span class="setting-label">全屏模式</span>
           <button class="setting-btn-secondary" @click="toggleFullscreen">切换全屏</button>

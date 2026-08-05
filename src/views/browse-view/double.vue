@@ -7,28 +7,31 @@
     <right-sidebar :direction="directionDesc" @direction="switch_direction" @dwonload="dwonload_image"
       :removeFirst="removeFirst" @remove_first="remove_poster" @set_image_width="browseStore.dialogViewWidth = true" />
 
-    <div class="scroll" :class="{'is-auto-fit': browseStore.useAutoViewWidth}">
+    <div
+      class="scroll"
+      :class="{'is-auto-fit': browseStore.useAutoViewWidth}"
+      @click="handleReaderClick"
+      @pointerdown="handleReaderPointerDown"
+      @pointermove="handleReaderPointerMove"
+      @pointerup="handleReaderPointerUp"
+      @pointercancel="handleReaderPointerCancel"
+    >
       <!-- 图片容器 -->
-      <transition :name="animationType" :duration="animationSpeed" mode="out-in" :css="userConfig.enablePageAnimation">
-        <div class="double-page-img-box" :style="{ maxHeight: browseStore.useAutoViewWidth ? '100%' : 'none' }"
-          :key="pageKey">
-          <bookmark />
-          <template v-if="directionDesc">
-            <img :style="browseStore.doubleViewStyle" class="double-page-img" :src="imgSrc2" :alt="t('browse.imgLoadError')"
-              v-if="imgSrc2" />
-            <img :style="browseStore.doubleViewStyle" class="double-page-img" :src="imgSrc1"
-              :alt="t('browse.imgLoadError')" />
-          </template>
-          <template v-else>
-            <img :style="browseStore.doubleViewStyle" class="double-page-img" :src="imgSrc1"
-              :alt="t('browse.imgLoadError')" />
-            <img :style="browseStore.doubleViewStyle" class="double-page-img" :src="imgSrc2" :alt="t('browse.imgLoadError')"
-              v-if="imgSrc2" />
-          </template>
-        </div>
-      </transition>
-      <operation-cover @before="beforePage" @next="nextPage" @switch-menu="switch_menu"
-        @switch-footer="switch_footer" />
+      <div class="double-page-img-box" :style="{ maxHeight: browseStore.useAutoViewWidth ? '100%' : 'none' }">
+        <bookmark />
+        <template v-if="directionDesc">
+          <img :style="browseStore.doubleViewStyle" class="double-page-img" :src="imgSrc2" :alt="t('browse.imgLoadError')"
+            v-if="imgSrc2" />
+          <img :style="browseStore.doubleViewStyle" class="double-page-img" :src="imgSrc1"
+            :alt="t('browse.imgLoadError')" />
+        </template>
+        <template v-else>
+          <img :style="browseStore.doubleViewStyle" class="double-page-img" :src="imgSrc1"
+            :alt="t('browse.imgLoadError')" />
+          <img :style="browseStore.doubleViewStyle" class="double-page-img" :src="imgSrc2" :alt="t('browse.imgLoadError')"
+            v-if="imgSrc2" />
+        </template>
+      </div>
     </div>
 
     <!-- 解压缩指示器 -->
@@ -72,9 +75,8 @@
 </template>
 
 <script setup lang='ts'>
-import { ref, onMounted, onBeforeUnmount, computed, watch } from 'vue';
+import { ref, onMounted, watch } from 'vue';
 import { config, userConfig } from '@/store';
-import operationCover from './components/operation-cover.vue';
 import chapterListMenu from './components/chapter-list-menu.vue';
 import bookmark from './components/bookmark.vue';
 import browsePager from '@/components/browse-pager.vue';
@@ -88,6 +90,7 @@ import imageApi from '@/api/image';
 import useBrowse from '@/store/browse';
 import sBlue from '@/assets/s-blue-high.png';
 import { preloadReaderImage } from './utils/reader-image';
+import { usePagedReaderNavigation } from './composables/use-paged-reader-navigation';
 const { t } = i18n.global;
 
 const route = useRoute();
@@ -101,55 +104,29 @@ const removeFirst = ref(false);
 const directionDesc = ref(true);
 const browseStore = useBrowse();
 const pager = ref();
-const pageKey = ref(1); // 用于触发过渡动画
-const direction = ref('forward'); // 翻页方向: forward(前进), backward(后退)
 const loading = ref(false);
 let pageRequestId = 0;
 
-// 计算属性：根据动画类型和方向返回正确的动画名称
-const animationType = computed(() => {
-  if (!userConfig.enablePageAnimation) return '';
-
-  // 淡入淡出动画不需要方向
-  if (userConfig.pageAnimationType === 'fade') {
-    return 'fade';
-  }
-
-  // 滑动动画需要根据方向返回不同的动画名称
-  if (userConfig.pageAnimationType === 'slide') {
-    return direction.value === 'forward' ? 'slide-left' : 'slide-right';
-  }
-
-  // 实体书翻页动画需要根据方向返回不同的动画名称
-  if (userConfig.pageAnimationType === 'page') {
-    return direction.value === 'forward' ? 'page-forward' : 'page-backward';
-  }
-
-  return '';
+const {
+  handleReaderClick,
+  handleReaderPointerDown,
+  handleReaderPointerMove,
+  handleReaderPointerUp,
+  handleReaderPointerCancel,
+} = usePagedReaderNavigation({
+  previous: beforePage,
+  next: nextPage,
+  canPrevious: () => !loading.value && page.value > 1,
+  canNext: () => !loading.value && page.value < browseStore.pageCount,
+  toggleControls: toggle_controls,
+  isReversed: () => userConfig.pageTurningReverse,
 });
-
-// 计算属性：返回动画速度
-const animationSpeed = computed(() => {
-  return userConfig.pageAnimationSpeed || 300;
-});
-
-// 更新动画速度CSS变量
-function updateAnimationSpeed() {
-  document.documentElement.style.setProperty('--animation-speed', `${userConfig.pageAnimationSpeed}ms`);
-}
 
 /**
  * 页码变更
  * @param page
  */
 async function page_change(pageParams: number) {
-
-  // 记录翻页方向
-  if (pageParams > page.value) {
-    direction.value = 'forward';
-  } else {
-    direction.value = 'backward';
-  }
   page.value = pageParams;
   const index = (pageParams - 1) * 2;
   const pageImage = browseStore.imagePathList[index];
@@ -167,7 +144,6 @@ async function page_change(pageParams: number) {
     if (requestId !== pageRequestId) return;
 
     // 两张图都解码完成后再原子切换，避免左右页依次闪现。
-    if (userConfig.enablePageAnimation) pageKey.value++;
     imgSrc1.value = nextSrc1;
     imgSrc2.value = nextSrc2;
 
@@ -184,11 +160,12 @@ async function page_change(pageParams: number) {
  * 上一页
  */
 function beforePage() {
-  if (loading.value) return;
+  if (loading.value) return false;
   if (page.value > 1) {
-    page_change(page.value - 1);
+    return page_change(page.value - 1);
   } else {
     ElMessage.warning(t('page.firstPage'));
+    return false;
   }
 }
 
@@ -196,11 +173,12 @@ function beforePage() {
  * 下一页
  */
 function nextPage() {
-  if (loading.value) return;
+  if (loading.value) return false;
   if (page.value < browseStore.pageCount) {
-    page_change(page.value + 1);
+    return page_change(page.value + 1);
   } else {
     ElMessage.warning(t('page.lastPage'));
+    return false;
   }
 }
 
@@ -272,13 +250,11 @@ async function change_chapter(chapterId: number) {
   reload_page();
 }
 
-// 阅读状态控制
-function switch_menu() {
-  config.browseTop = !config.browseTop;
-}
-
-function switch_footer() {
-  config.browseFooter = !config.browseFooter;
+// 顶栏与底栏作为一组显示/隐藏，避免出现只有一侧控件可见的中间状态。
+function toggle_controls() {
+  const visible = !(config.browseTop || config.browseFooter);
+  config.browseTop = visible;
+  config.browseFooter = visible;
 }
 
 /**
@@ -330,17 +306,6 @@ onMounted(async () => {
   if (!directionDesc.value) switch_direction();
 
   browseStore.load_view_width('double');
-
-  // 初始设置动画速度
-  updateAnimationSpeed();
-
-  // 监听动画速度变化
-  watch(
-    () => userConfig.pageAnimationSpeed,
-    () => {
-      updateAnimationSpeed();
-    }
-  );
 
 })
 

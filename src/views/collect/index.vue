@@ -143,7 +143,7 @@ watch(
 onMounted(async () => {
   page_change(browse.mangaListPage, browse.mangaListPageSize);
 
-  userConfig.enableTouchPageChange && touch_page_change();
+  touch_page_change();
 });
 
 function touch_page_change() {

@@ -169,7 +169,7 @@ function touch_page_change() {
 
 onMounted(() => {
   page_change();
-  userConfig.enableTouchPageChange && touch_page_change();
+  touch_page_change();
 })
 </script>
 

@@ -17,7 +17,7 @@
             <span v-if="chapterProgress" class="lcp-title-progress">{{ chapterProgress }}</span>
           </div>
 
-          <!-- 快速开关行:书签 / 操作面板 / 全屏 / 下载 / 右侧菜单(旧) -->
+          <!-- 快速开关行:书签 / 全屏 / 下载 / 右侧菜单(旧) -->
           <div class="lcp-quick-row">
             <button
               type="button"
@@ -27,15 +27,6 @@
             >
               <span class="lcp-ico" aria-hidden="true">★</span>
               <span>{{ bookmarkTitle }}</span>
-            </button>
-            <button
-              type="button"
-              class="lcp-quick"
-              :class="{ 'is-active': config.enableOperation }"
-              @click="toggleOperation"
-            >
-              <span class="lcp-ico" aria-hidden="true">≡</span>
-              <span>{{ $t('option.option') }}</span>
             </button>
             <button
               type="button"
@@ -150,15 +141,6 @@
               @click="toggleUserConfig('userSlider')"
             >
               {{ $t('option.userSlider') }}
-            </button>
-            <button
-              v-if="isPagedMode"
-              type="button"
-              class="lcp-chip"
-              :class="{ 'is-active': userConfig.enablePageAnimation }"
-              @click="toggleUserConfig('enablePageAnimation')"
-            >
-              {{ $t('option.pageAnimation') }}
             </button>
             <button
               v-if="currentMode === 'flow'"
@@ -381,12 +363,8 @@ async function toggleBookmark() {
   await browse.toggle_bookmark()
 }
 
-function toggleOperation() {
-  config.enableOperation = !config.enableOperation
-}
-
 // 阅读相关用户设置: 切换后静默持久化 (与用户设置页同一接口)
-type ReaderUserConfigKey = 'showPageNumber' | 'pageTurningReverse' | 'userSlider' | 'enablePageAnimation' | 'loadAllFlowIamge'
+type ReaderUserConfigKey = 'showPageNumber' | 'pageTurningReverse' | 'userSlider' | 'loadAllFlowIamge'
 function toggleUserConfig(key: ReaderUserConfigKey) {
   ;(userConfig as any)[key] = !(userConfig as any)[key]
   userApi.update_user_config({ userConfig }).catch((e) => {
@@ -631,7 +609,7 @@ function goChapter(chapterId: number) {
 /* 快速开关行 */
 .lcp-quick-row {
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: 0.6rem;
 }
 

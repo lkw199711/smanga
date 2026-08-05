@@ -4,10 +4,13 @@
 	height: 100%;
 	user-select: none;
 	.scroll {
+		--reader-drag-x: 0px;
 		position: relative;
 		flex: 1;
 		min-height: 0;
 		overflow-y: auto;
+		touch-action: pan-y;
+		-webkit-tap-highlight-color: transparent;
 
 		&.is-auto-fit {
 			display: flex;
@@ -21,6 +24,14 @@
 		display: flex;
 		justify-content: center;
 		overflow-y: hidden;
+		translate: var(--reader-drag-x) 0;
+		transition: translate 180ms cubic-bezier(0.22, 1, 0.36, 1);
+		will-change: translate;
+	}
+
+	.scroll.is-reader-dragging &-img-box,
+	.scroll.is-reader-resetting &-img-box {
+		transition: none;
 	}
 
 	&-img {
@@ -33,5 +44,11 @@
 		color: @s-background;
 		text-wrap: wrap;
 		text-align: center;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.single-page-img-box {
+		transition: none;
 	}
 }

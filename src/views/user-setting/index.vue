@@ -56,9 +56,6 @@
             </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="开启滑动翻页" class="setting-item">
-          <el-switch v-model="userConfig.enableTouchPageChange" />
-        </el-form-item>
 		<el-form-item label="封面加载并发" class="setting-item">
           <el-input v-model="userConfig.loadCoverConcurrency" type="number" style="width: 120px" />
         </el-form-item>
@@ -86,11 +83,11 @@
             <span class="card-title">阅读设置</span>
           </div>
         </template>
-        <el-form-item label="翻页按钮反向" class="setting-item">
+        <el-form-item label="翻页方向反转" class="setting-item">
           <el-switch v-model="userConfig.pageTurningReverse" @change="switch_change" />
         </el-form-item>
         <div class="form-note mt-4 text-gray-500 text-sm mb-4">
-          有朋友反馈，单手操作手机的时候，最方便触碰到屏幕的左侧，因此希望可以通过点击左侧翻下一页。那么，您可以通过此选项修改左右翻页按钮使其调换位置。
+          开启后会同时反转左右滑动和键盘方向键的翻页方向。
         </div>
 
         <el-form-item label="显示页码" class="setting-item">
@@ -112,17 +109,6 @@
           <el-input v-model="userConfig.flowLoadStep" type="number" style="width: 120px" />
         </el-form-item>
 
-        <el-form-item label="顶栏切换范围" class="setting-item">
-          <el-input v-model="userConfig.browseOperationTop" type="number" style="width: 120px" />
-          <span class="ml-2">%</span>
-        </el-form-item>
-        <el-form-item label="页码切换范围" class="setting-item">
-          <el-input v-model="userConfig.browseOperationBottom" type="number" style="width: 120px" />
-          <span class="ml-2">%</span>
-        </el-form-item>
-        <div class="form-note mt-4 text-gray-500 text-sm mb-4">
-          有朋友反馈，阅读界面操作面板默认的30%-40%-30%尺寸与他的习惯不符，因此开放设置选项用以调整“顶部操作栏”与“页码器”的切换范围。
-        </div>
 
         <el-form-item label="跳转时打开新页签" class="setting-item">
           <el-switch v-model="userConfig.openNewTab" @change="switch_change" />
@@ -176,28 +162,6 @@
         </el-form-item>
         <div class="form-note mt-4 text-gray-500 text-sm mb-4">开启此选项后，继续阅读按钮将只显示章节序号，不再显示章节名称。</div>
 
-        <el-form-item label="启用翻页动画" class="setting-item">
-          <el-switch v-model="userConfig.enablePageAnimation" @change="switch_change" />
-        </el-form-item>
-        <div class="form-note mt-4 text-gray-500 text-sm mb-4">
-          开启此选项后，阅读翻页时会显示动画效果，提升阅读体验。
-          <br />
-          在性能较差的设备上，可能会影响阅读流畅度。
-          <br />
-        </div>
-
-        <el-form-item label="翻页动画类型" class="setting-item">
-          <el-select v-model="userConfig.pageAnimationType" class="setting-select" size="default" :disabled="!userConfig.enablePageAnimation">
-            <el-option label="淡入淡出" value="fade" />
-            <el-option label="左右滑动" value="slide" />
-            <el-option label="实体书翻页" value="page" />
-          </el-select>
-        </el-form-item>
-
-        <el-form-item label="动画速度" class="setting-item">
-          <el-slider v-model="userConfig.pageAnimationSpeed" :min="100" :max="1000" :step="50" :disabled="!userConfig.enablePageAnimation" />
-          <span class="ml-2">{{ userConfig.pageAnimationSpeed }}ms</span>
-        </el-form-item>
       </el-card>
 
       <!-- 缓存设置 -->

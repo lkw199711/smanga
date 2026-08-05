@@ -198,7 +198,7 @@ button {
 
 <!-- 主题阅读页使用自绘底部条 (reader-footer.vue), 隐藏旧皮肤视图内的 element 底部条/footer;
      旧皮肤路由不含 .theme-legacy-reader 容器, 不受影响。
-     直接子级选择器: 避免误伤 operation-cover 内的 .bottom 点击区 -->
+     直接子级选择器避免误伤阅读内容内部可能存在的同名元素。 -->
 <style>
 .theme-legacy-reader .browse-view > .bottom,
 .theme-legacy-reader .single-page > .footer,

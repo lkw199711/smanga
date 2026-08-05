@@ -52,7 +52,6 @@ export const config = reactive({
 	android: false,
 	isMobile: false, // 移动端环境标识
 	viewType: 'block',
-	enableOperation: true,
 });
 
 export const power = reactive({
@@ -80,15 +79,10 @@ export const userConfig = reactive({
 	// 默认排序规则
 	order: 'chapterUpdateDesc',
 	chapterOrder: 'number',
-	// 翻页按钮调转
+	// 翻页方向调转（触摸滑动与键盘导航）
 	pageTurningReverse: false,
-	// 阅读操作面板 顶部与底部尺寸
-	browseOperationTop: 30,
-	browseOperationBottom: 30,
 	// 显示页码
 	showPageNumber: true,
-	// 开启滑动翻页
-	enableTouchPageChange: true,
 	mangaPageSize: 0,
 	chapterPageSize: 0,
 	openNewTab: false, // 打开新标签页
@@ -99,10 +93,6 @@ export const userConfig = reactive({
 	simpleChapterView: false, // 章节列表简洁模式
 	userSlider: true, // 章节阅读进度条
 	showSidebarMediaList: true, // 显示侧边栏媒体库列表
-	// 翻页动画
-	enablePageAnimation: true, // 启用翻页动画
-	pageAnimationType: 'fade', // 翻页动画类型: fade(淡入淡出), slide(滑动), page(实体书翻页)
-	pageAnimationSpeed: 300, // 翻页动画速度(毫秒)
 	continueReadButtonShowChapterNumberOnly: false, // 继续阅读按钮仅展示章节序号而非章节全名
 	flowLoadStep: 3, // 流览模式下,每次加载图片数量
 	loadCoverConcurrency: 3, // 加载封面并发数量

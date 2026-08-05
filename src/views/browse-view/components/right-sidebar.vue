@@ -20,7 +20,6 @@
 				<el-menu-item index="bookmark">{{ bookmarkTitle }}</el-menu-item>
 				<el-menu-item v-if="idDouble" index="direction">{{ $t('option.direction') }} ({{ directionTitle }})</el-menu-item>
 				<el-menu-item index="dwonload">{{ $t('option.dwonload') }}</el-menu-item>
-				<el-menu-item index="operation">{{ operationText }}</el-menu-item>
 				<el-menu-item index="jump">{{ $t('rightSidebar.jumpPageText') }}</el-menu-item>
 				<el-menu-item index="setImageWidth">{{ $t('rightSidebar.setImageWidth') }}</el-menu-item>
 				<el-menu-item index="requestFullscreen">{{ $t('rightSidebar.requestFullscreen') }}</el-menu-item>
@@ -80,10 +79,6 @@ const idDouble = computed(() => {
 	return browse.browseType === 'double';
 });
 
-const operationText = computed(() => {
-	return config.enableOperation ? '关闭操作面板' : '开启操作面板';
-})
-
 watch(
 	() => config.rightSidebar,
 	(val) => {
@@ -112,9 +107,6 @@ function menu_select(key: string) {
 			break;
 		case 'dwonload':
 			emit('dwonload');
-			break;
-		case 'operation':
-			config.enableOperation = !config.enableOperation;
 			break;
 		case 'jump':
 			emit('jumpPageNumber');

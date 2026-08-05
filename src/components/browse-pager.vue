@@ -2,7 +2,7 @@
   <div class="browse-pager">
     <!--分页-->
     <el-pagination :class="['pagination', { android: config.android }]" v-model:current-page="pagerPage"
-      v-model:page-size="pageSize" :default-current-page="1" :page-sizes="pageSizes" :pager-count="pageCount"
+      v-model:page-size="pageSize" :default-current-page="1" :page-sizes="pageSizes" :pager-count="pagerCount"
       :small="pageSmall" :disabled="disabled" :background="background" :layout="pageLayout" :total="props.count"
       @size-change="size_change" @current-change="page_change" />
   </div>
@@ -16,7 +16,7 @@ import { ref, reactive, computed, watch } from 'vue'
 import { config } from "@/store";
 import { ElMessage } from "element-plus";
 import i18n from '@/i18n';
-import { onMounted, onUnmounted } from 'vue';
+import { onMounted } from 'vue';
 const { t } = i18n.global;
 
 const pageSize = ref(1);
@@ -38,12 +38,12 @@ watch(
   }
 )
 
-const pageCount = computed(() => {
+const pagerCount = computed(() => {
   // 展示最大页码数量
   const screenType = config.screenType;
   switch (screenType) {
     case '2k':
-      return 46;
+      return 21;
     case 'large':
       return 17;
     case 'middle':
@@ -51,7 +51,7 @@ const pageCount = computed(() => {
     case 'tablet':
       return 5;
     case 'small':
-      return 6;
+      return 5;
     case 'mini':
       return 5;
     default:
@@ -175,11 +175,6 @@ onMounted(() => {
     pageSize.value = props.setPageSize;
   }
 
-  window.addEventListener('keydown', direction_key);
-})
-
-onUnmounted(() => {
-  window.removeEventListener('keydown', direction_key);
 })
 
 </script>

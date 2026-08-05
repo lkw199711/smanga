@@ -161,7 +161,7 @@ watch(
   }
 );
 onMounted(() => {
-  userConfig.enableTouchPageChange && touch_page_change();
+  touch_page_change();
   // 加载store中的搜索关键词
   if (searchStore.searchText) {
     page_change();

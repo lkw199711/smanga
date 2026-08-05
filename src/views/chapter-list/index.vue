@@ -101,7 +101,7 @@ watch(
 
 onMounted(() => {
   load();
-  userConfig.enableTouchPageChange && touch_page_change();
+  touch_page_change();
 });
 
 function touch_page_change() {
