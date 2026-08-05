@@ -7,7 +7,7 @@
     <right-sidebar @dwonload="dwonload_image" @set_image_width="browseStore.dialogViewWidth = true" />
 
     <!--图片容器-->
-    <div class="scroll" :style="{display: browseStore.useAutoViewWidth ? 'flex' : 'block'}">
+    <div class="scroll" :class="{'is-auto-fit': browseStore.useAutoViewWidth}">
       <div class="single-page-img-box" :style="{maxHeight: browseStore.useAutoViewWidth ? '100%' : 'none'}">
         <bookmark />
         <transition :name="animationType" :duration="animationSpeed" mode="out-in" :css="userConfig.enablePageAnimation">

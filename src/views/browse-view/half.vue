@@ -6,7 +6,7 @@
     <!--功能菜单-->
     <right-sidebar @dwonload="dwonload_image" @set_image_width="browseStore.dialogViewWidth = true" />
 
-    <div class="scroll" :style="{display: browseStore.useAutoViewWidth ? 'flex' : 'block'}">
+    <div class="scroll" :class="{'is-auto-fit': browseStore.useAutoViewWidth}">
       <!--图片容器-->
       <div class="single-page-img-box" :style="{maxHeight: browseStore.useAutoViewWidth ? '100%' : 'none'}">
         <bookmark />

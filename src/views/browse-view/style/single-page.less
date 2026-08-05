@@ -5,7 +5,15 @@
 	user-select: none;
 	.scroll {
 		position: relative;
+		flex: 1;
+		min-height: 0;
 		overflow-y: auto;
+
+		&.is-auto-fit {
+			display: flex;
+			align-items: center;
+			align-items: safe center;
+		}
 	}
 
 	&-img-box {

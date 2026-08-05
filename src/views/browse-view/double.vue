@@ -7,7 +7,7 @@
     <right-sidebar :direction="directionDesc" @direction="switch_direction" @dwonload="dwonload_image"
       :removeFirst="removeFirst" @remove_first="remove_poster" @set_image_width="browseStore.dialogViewWidth = true" />
 
-    <div class="scroll" :style="{ display: browseStore.useAutoViewWidth ? 'flex' : 'block' }">
+    <div class="scroll" :class="{'is-auto-fit': browseStore.useAutoViewWidth}">
       <!-- 图片容器 -->
       <transition :name="animationType" :duration="animationSpeed" mode="out-in" :css="userConfig.enablePageAnimation">
         <div class="double-page-img-box" :style="{ maxHeight: browseStore.useAutoViewWidth ? '100%' : 'none' }"
