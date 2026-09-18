@@ -92,6 +92,9 @@ async function prepareReader() {
     } catch (cause) {
       console.warn('读取漫画阅读模式失败，使用条漫模式:', cause)
     }
+    // 双页的初始左右顺序来自漫画记录。新漫画在扫描入库时会继承媒体库配置；
+    // 旧数据或接口暂时不可用时按数据库默认值 1（从右到左）处理。
+    browseStore.readerFlags.direction = Number(manga?.direction ?? 1) === 1
     const browseType = chapter.chapterType === 'pdf'
       ? 'pdfView'
       : readerRoutes.has(requestedMode) ? requestedMode : readerRoutes.has(manga?.browseType) ? manga.browseType : 'flow'

@@ -101,8 +101,10 @@ const imgSrc2 = ref(sBlue);
 
 const page = ref(1);
 const removeFirst = ref(false);
-const directionDesc = ref(true);
 const browseStore = useBrowse();
+// 新皮肤的 legacy-reader-bridge 会在挂载阅读内容前，用漫画表 direction 初始化该值。
+// 旧皮肤保持原有的从右到左默认值。
+const directionDesc = ref(route.name === 't-reader' ? browseStore.readerFlags.direction : true);
 const pager = ref();
 const loading = ref(false);
 let pageRequestId = 0;
@@ -303,7 +305,6 @@ onMounted(async () => {
   await reload_page();
 
   if (removeFirst.value) remove_poster();
-  if (!directionDesc.value) switch_direction();
 
   browseStore.load_view_width('double');
 

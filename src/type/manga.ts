@@ -9,6 +9,8 @@ type mangaType = {
 	title?: string;
 	author: string;
 	browseType?: string;
+	direction?: number;
+	removeFirst?: number;
 	publishDate: string;
 	createTime: string;
 	updateTime: string;
@@ -31,6 +33,8 @@ const mangaInit: mangaType = {
 	title: '',
 	author: '',
 	browseType: '',
+	direction: 1,
+	removeFirst: 0,
 	publishDate: '',
 	createTime: '',
 	updateTime: '',

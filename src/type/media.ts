@@ -9,6 +9,9 @@ type mediaType = {
 	updateTime: string;
 	describe: string;
 	directoryFormat: number;
+	browseType?: string;
+	direction?: number;
+	removeFirst?: number;
 	sourceWebsite?: string;
 	isCloudMedia: number;
 	mediaPath?: string;
@@ -26,6 +29,9 @@ const mediaInit: mediaType = {
 	updateTime: '',
 	describe: '',
 	directoryFormat: 0,
+	browseType: 'flow',
+	direction: 1,
+	removeFirst: 0,
 	sourceWebsite: '',
 	isCloudMedia: 0,
 };
