@@ -89,7 +89,7 @@ const chapterApi = {
    * @param deleteFile
    */
   async delete_chapter(chapterId: any, deleteFile = false) {
-    const res = ajax.delete(`chapter/${chapterId}`, {params: {deleteFile}});
+    const res = ajax.delete(`chapter/${chapterId}`, {data: {deleteFile}});
 
     return (await res).data;
   },

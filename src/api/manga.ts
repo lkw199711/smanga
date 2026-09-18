@@ -165,8 +165,8 @@ const mangaApi = {
 	 * @param {number[]} mangaIds
 	 * @return {*}
 	 */
-	async batch_delete_manga(mangaIds: number[]) {
-		const res = ajax.delete(`manga/${mangaIds.join(',')}/batch`, { data: { mangaIds } });
+	async batch_delete_manga(mangaIds: number[], deleteFile = false) {
+		const res = ajax.delete(`manga/${mangaIds.join(',')}/batch`, { data: { mangaIds, deleteFile } });
 
 		const resData = (await res).data;
 		
