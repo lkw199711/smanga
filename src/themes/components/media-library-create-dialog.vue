@@ -64,8 +64,18 @@
           </div>
           <div class="tm-create-grid">
             <label class="tm-field tm-field-wide">
+              <span>存储根</span>
+              <select v-model="pathForm.storageRootId">
+                <option :value="undefined">不使用（保存绝对路径）</option>
+                <option v-for="root in storageRoots" :key="root.storageRootId" :value="root.storageRootId">
+                  {{ root.rootName }} · {{ root.rootPath }}
+                </option>
+              </select>
+              <small v-if="pathForm.storageRootId">目录路径填写存储根内的相对路径；根目录本身填写“.”。</small>
+            </label>
+            <label class="tm-field tm-field-wide">
               <span>目录路径 <b>*</b></span>
-              <input v-model="pathForm.pathContent" required placeholder="例如：D:\\Manga" />
+              <input v-model="pathForm.pathContent" required :placeholder="pathForm.storageRootId ? '例如：漫画/少年漫画，根目录填写 .' : '例如：D:\\Manga'" />
             </label>
             <label class="tm-check-field">
               <input v-model="pathForm.autoScan" type="checkbox" :true-value="1" :false-value="0" />
@@ -129,8 +139,10 @@ import { computed, reactive, ref, watch } from 'vue'
 import mediaApi from '@/api/media'
 import pathApi from '@/api/path'
 import scanRunApi from '@/api/scan-run'
+import storageRootApi from '@/api/storage-root'
 import { fallbackScanCatalog } from '@/constants/scan'
 import type { ScanPreviewInput, ScanPreviewResult, ScanTemplateCatalog, ScanTemplateKey } from '@/type/scan'
+import type { StorageRoot } from '@/type/storage-root'
 import ScanPreviewDialog from '@/views/media-manage/components/ScanPreviewDialog.vue'
 import ScanRunDialog from '@/views/media-manage/components/ScanRunDialog.vue'
 
@@ -180,6 +192,7 @@ const pathForm = reactive<ScanPreviewInput>({
 })
 
 const scanCatalog = ref<ScanTemplateCatalog>({ ...fallbackScanCatalog })
+const storageRoots = ref<StorageRoot[]>([])
 const error = ref('')
 const submitting = ref(false)
 const createdMediaId = ref<number | null>(null)
@@ -195,8 +208,17 @@ const metadataProfileDescription = computed(
 )
 
 watch(visible, (open) => {
-  if (open) void loadScanCatalog()
+  if (open) void Promise.all([loadScanCatalog(), loadStorageRoots()])
 })
+
+async function loadStorageRoots() {
+  try {
+    const result = await storageRootApi.list(1, 200)
+    storageRoots.value = result.list.filter(root => root.enabled === 1)
+  } catch {
+    storageRoots.value = []
+  }
+}
 
 async function loadScanCatalog() {
   try {
@@ -316,7 +338,7 @@ function resetForm() {
     removeFirst: 0, sourceWebsite: '', isCloudMedia: 0,
   })
   Object.assign(pathForm, {
-    pathContent: '', autoScan: 0, include: '', exclude: '', scanTemplateKey: 'auto',
+    pathContent: '', storageRootId: undefined, autoScan: 0, include: '', exclude: '', scanTemplateKey: 'auto',
     scanTemplateConfig: '', metadataProfileKey: 'auto', metadataProfileConfig: '',
   })
   error.value = ''

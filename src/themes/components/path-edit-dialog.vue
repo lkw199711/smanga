@@ -6,11 +6,22 @@
         <button class="ta-dialog-close smanga-back-close" @click="close">×</button>
       </div>
       <div class="ta-dialog-body">
+        <label class="ta-field">
+          <span>存储根</span>
+          <select v-if="isAdd" v-model="form.storageRootId" class="ta-select">
+            <option :value="undefined">不使用（保存绝对路径）</option>
+            <option v-for="root in storageRoots" :key="root.storageRootId" :value="root.storageRootId">
+              {{ root.rootName }} · {{ root.rootPath }}
+            </option>
+          </select>
+          <input v-else disabled :value="boundStorageRootLabel" />
+          <small v-if="isAdd && form.storageRootId">下方仅填写存储根内的相对目录；根目录本身填写“.”。</small>
+        </label>
         <!-- 路径输入 (仅添加模式) -->
         <label v-if="isAdd" class="ta-field">
           <span>路径</span>
           <div class="pe-path-add-row">
-            <input v-model="form.pathContent" placeholder="/path/to/manga" class="pe-flex-input" />
+            <input v-model="form.pathContent" :placeholder="form.storageRootId ? '例如：漫画/少年漫画，根目录填写 .' : '/path/to/manga'" class="pe-flex-input" />
             <button class="ta-btn-ghost" :disabled="previewLoading" @click="doPreview">🔍 试扫描</button>
           </div>
         </label>
@@ -85,10 +96,12 @@
 import { ref, reactive, computed, watch, onMounted } from 'vue'
 import { showThemeAlert } from '@/themes/components/theme-alert'
 import pathApi from '@/api/path'
+import storageRootApi from '@/api/storage-root'
 import scanRunApi from '@/api/scan-run'
 import { fallbackScanCatalog } from '@/constants/scan'
 import ScanPreviewDialog from '@/views/media-manage/components/ScanPreviewDialog.vue'
 import type { ScanPreviewResult, ScanTemplateKey, ScanTemplateCatalog } from '@/type/scan'
+import type { StorageRoot } from '@/type/storage-root'
 
 const props = defineProps<{
   modelValue: boolean
@@ -116,6 +129,7 @@ const isAdd = computed(() => props.mode === 'add')
 const saving = ref(false)
 const form = reactive<any>({
   pathContent: '',
+  storageRootId: undefined,
   autoScan: 0,
   include: '',
   exclude: '',
@@ -129,6 +143,7 @@ const form = reactive<any>({
 function resetForm() {
   Object.assign(form, {
     pathContent: '',
+    storageRootId: undefined,
     autoScan: 0,
     include: '',
     exclude: '',
@@ -147,6 +162,7 @@ watch(() => props.modelValue, (v) => {
       pathId: props.pathInfo.pathId,
       mediaId: props.pathInfo.mediaId,
       pathContent: props.pathInfo.pathContent,
+      storageRootId: props.pathInfo.storageRootId ?? undefined,
       autoScan: props.pathInfo.autoScan ?? 0,
       include: props.pathInfo.include || '',
       exclude: props.pathInfo.exclude || '',
@@ -164,6 +180,11 @@ watch(() => props.modelValue, (v) => {
 const scanCatalog = ref<ScanTemplateCatalog>({ ...fallbackScanCatalog })
 const templates = computed(() => scanCatalog.value.templates)
 const metadataProfiles = computed(() => scanCatalog.value.metadataProfiles)
+const storageRoots = ref<StorageRoot[]>([])
+const boundStorageRootLabel = computed(() => {
+  const root = props.pathInfo?.storageRoot
+  return root ? `${root.rootName} · ${root.rootPath}` : '未绑定（绝对路径）'
+})
 
 const defaultCustomConfig = JSON.stringify({
   version: 1,
@@ -178,7 +199,12 @@ function ensureCustomConfig() {
 }
 
 onMounted(async () => {
-  try { scanCatalog.value = await scanRunApi.catalog() } catch { /* fallback */ }
+  await Promise.all([
+    scanRunApi.catalog().then(value => { scanCatalog.value = value }).catch(() => undefined),
+    storageRootApi.list(1, 200).then(value => {
+      storageRoots.value = value.list.filter(root => root.enabled === 1)
+    }).catch(() => undefined),
+  ])
 })
 
 // ---- 试扫描 ----
@@ -202,7 +228,8 @@ async function doPreview() {
   try {
     previewResult.value = await pathApi.preview_path({
       pathContent: form.pathContent,
-      mediaId: isAdd.value ? (props.mediaId || 0) : form.mediaId,
+      storageRootId: form.storageRootId,
+      mediaId: isAdd.value ? props.mediaId : form.mediaId,
       scanTemplateKey: form.scanTemplateKey as ScanTemplateKey,
       scanTemplateConfig: form.scanTemplateConfig,
       metadataProfileKey: form.metadataProfileKey,

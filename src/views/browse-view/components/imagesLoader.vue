@@ -45,10 +45,17 @@ onMounted(async() => {
   browseStore.imageLoaded = false;
   // /t/reader/:chapterId 以路径参数为准；query 仅用于兼容旧阅读器入口。
   const chapterId = Number(route.query.chapterId || route.params.chapterId);
-  const chapterPath = route.query.chapterPath as string;
   if (browseStore.browseType === 'pdf') {
-    browseStore.pdfPath = await imageApi.get({ file: chapterPath });
-    finish_loader();
+    try {
+      const result = await chapterApi.get_images(chapterId, 0);
+      const pdfPath = result.list?.[0];
+      if (!pdfPath) throw new Error('PDF 文件不存在');
+      browseStore.pdfPath = await imageApi.get({ file: pdfPath });
+      finish_loader();
+    } catch {
+      compressState.value = 'failed';
+      ElMessage.error('PDF 加载失败');
+    }
   } else {
     chapter_images_load(chapterId);
     intervalId.value = setInterval(() => {

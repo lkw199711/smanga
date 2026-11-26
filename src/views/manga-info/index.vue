@@ -526,8 +526,8 @@ function choose_cover(metaFile: string) {
       mangaId: mangaInfo.mangaId,
       mangaCover: metaFile,
     })
-    .then(() => {
-      mangaInfo.mangaCover = metaFile;
+    .then(result => {
+      mangaInfo.mangaCover = result?.data?.mangaCover ?? metaFile;
       editCover.value = false;
     })
     .catch((err: any) => {

@@ -40,6 +40,7 @@ export interface ScanTemplateCatalog {
 
 export interface ScanPreviewInput {
   pathContent: string;
+  storageRootId?: number;
   mediaId?: number;
   mediaType?: number;
   directoryFormat?: number;

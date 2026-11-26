@@ -51,8 +51,19 @@
           <el-input disabled v-model="mediaInfo.mediaName" :placeholder="$t('mediaManage.place.name')" />
         </el-form-item>
 
+        <el-form-item label="存储根">
+          <el-select v-model="pathForm.storageRootId" clearable class="w-full" placeholder="不使用（保存绝对路径）" @clear="pathForm.storageRootId = undefined">
+            <el-option
+              v-for="root in storageRoots"
+              :key="root.storageRootId"
+              :label="`${root.rootName} · ${root.rootPath}`"
+              :value="root.storageRootId" />
+          </el-select>
+          <div v-if="pathForm.storageRootId" class="config-description">路径填写存储根内的相对目录；根目录本身填写“.”。</div>
+        </el-form-item>
+
         <el-form-item :label="$t('path.form.add')">
-          <el-input v-model="pathForm.pathContent" :placeholder="$t('path.place.add')">
+          <el-input v-model="pathForm.pathContent" :placeholder="pathForm.storageRootId ? '例如：漫画/少年漫画，根目录填写 .' : $t('path.place.add')">
             <template #append>
               <el-button :icon="View" :loading="previewLoading" @click="preview_new_path">试扫描</el-button>
               <el-button :icon="Plus" @click="add_path_cache">{{ $t('option.add') }}</el-button>
@@ -93,7 +104,7 @@
 
         <el-form-item :label="$t('path.form.path')">
           <div v-for="i in pathArr" :key="i.pathId" class="path-item">
-            {{ i.pathContent }}
+            {{ i.storageRoot ? `${i.storageRoot.rootName} · ${i.pathContent}` : i.pathContent }}
             <el-tag v-if="is_path_dirty(i)" size="small" type="warning">配置未保存</el-tag>
             <div class="path-config-box">
               <el-select v-model="i.scanTemplateKey" size="small" placeholder="扫描模板" @change="ensure_saved_path_custom_config(i)">
@@ -169,11 +180,13 @@ import {ref, reactive, onMounted, computed} from 'vue';
 import mediaApi from '@/api/media';
 import pathApi from '@/api/path';
 import scanRunApi from '@/api/scan-run';
+import storageRootApi from '@/api/storage-root';
 import tablePager from '@/components/table-pager.vue';
 import i18n from '@/i18n';
 import useBrowseStore from '@/store/browse';
 import type {pathType} from '@/type/path';
 import type {ScanPreviewInput, ScanPreviewResult, ScanTemplateKey} from '@/type/scan';
+import type {StorageRoot} from '@/type/storage-root';
 import {fallbackScanCatalog} from '@/constants/scan';
 import {mediaType, mediaInit} from '@/type/media';
 import mediaEdit from './components/mediaEdit.vue';
@@ -232,6 +245,7 @@ const pathForm = reactive<ScanPreviewInput>({
   metadataProfileConfig: '',
 });
 const scanCatalog = ref({...fallbackScanCatalog});
+const storageRoots = ref<StorageRoot[]>([]);
 const scanTemplateOptions = computed(() => scanCatalog.value.templates);
 const savedScanTemplateOptions = computed(() => [scanCatalog.value.legacyTemplate, ...scanCatalog.value.templates]);
 const metadataProfileOptions = computed(() => scanCatalog.value.metadataProfiles);
@@ -258,7 +272,17 @@ onMounted(() => {
   // 初始化表格数据
   load_table();
   load_scan_catalog();
+  load_storage_roots();
 });
+
+async function load_storage_roots() {
+  try {
+    const result = await storageRootApi.list(1, 200);
+    storageRoots.value = result.list.filter(root => root.enabled === 1);
+  } catch {
+    storageRoots.value = [];
+  }
+}
 
 /**
  * 打开路径编辑弹框
@@ -298,6 +322,7 @@ function normalize_path_config(pathInfo: pathType) {
 function reset_path_form() {
   Object.assign(pathForm, {
     pathContent: '',
+    storageRootId: undefined,
     autoScan: 0,
     include: '',
     exclude: '',
@@ -513,6 +538,7 @@ async function preview_saved_path(pathInfo: any) {
   try {
     previewResult.value = await pathApi.preview_path({
       pathContent: pathInfo.pathContent,
+      storageRootId: pathInfo.storageRootId || undefined,
       mediaId: pathInfo.mediaId,
       mediaType: mediaInfo.mediaType,
       directoryFormat: mediaInfo.directoryFormat,

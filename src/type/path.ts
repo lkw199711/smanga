@@ -1,8 +1,12 @@
 import type {MetadataProfileKey, ScanTemplateKey} from './scan';
+import type {StorageRoot} from './storage-root';
 
 type pathType = {
     pathId: number;
     mediaId: number;
+    storageRootId?: number | null;
+    storageRoot?: StorageRoot | null;
+    resolvedPath?: string | null;
     pathName: string;
     pathType: number;
     pathLink: string;

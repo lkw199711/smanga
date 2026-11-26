@@ -81,12 +81,12 @@ async function choose(item: CoverMeta) {
   submitting.value = true
   error.value = ''
   try {
-    await mangaApi.update_manga({
+    const result = await mangaApi.update_manga({
       mangaId: props.mangaId,
       mangaCover: item.metaFile,
     })
     props.covers.forEach((c) => (c.active = c.metaFile === item.metaFile))
-    emit('update:cover', item.metaFile)
+    emit('update:cover', result?.data?.mangaCover ?? item.metaFile)
     emit('reload')
     close()
   } catch (e: any) {
