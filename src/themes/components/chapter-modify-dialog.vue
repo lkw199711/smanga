@@ -21,7 +21,7 @@
           </label>
           <label class="tm-field">
             <span>章节号</span>
-            <input v-model.number="form.chapterNumber" placeholder="章节号" />
+            <input v-model="form.chapterNumber" placeholder="章节号" />
           </label>
           <label class="tm-field tm-field-wide">
             <span>封面路径</span>

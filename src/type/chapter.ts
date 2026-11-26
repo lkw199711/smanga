@@ -4,7 +4,7 @@ type chapterType = {
 	chapterCover: string;
 	chapterId: number;
 	chapterName: string;
-	chapterNumber: number;
+	chapterNumber: string;
 	chapterPath: string;
 	chapterType: string;
 	createTime: string;
@@ -26,7 +26,7 @@ const chapterInit: chapterType = {
 	chapterCover: '',
 	chapterId: 0,
 	chapterName: '',
-	chapterNumber: 0,
+	chapterNumber: '',
 	chapterPath: '',
 	chapterType: '',
 	createTime: '',
