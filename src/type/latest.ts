@@ -1,6 +1,7 @@
 type latestType = {
 	latestId: number;
 	page: string;
+	count?: number | null;
 	chapterId: string;
 	mangaId: number;
 	createTime: string;

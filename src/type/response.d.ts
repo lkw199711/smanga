@@ -11,6 +11,7 @@ export type ApiResponse<TData = unknown, TError = unknown> = {
   data?: TData;
   error?: TError;
   status?: string;
+  availability?: import('./availability').ResourceAvailability;
 };
 
 export type ApiListResponse<TItem = unknown, TError = unknown> = {

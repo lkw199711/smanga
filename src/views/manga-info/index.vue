@@ -16,7 +16,10 @@
         </div>
       </template>
 
-      <el-image class="anim cover-img" :src="mangaCover" fit="contain" v-else></el-image>
+      <el-image class="anim cover-img" :src="mangaCover" fit="contain" v-else-if="mangaCover">
+        <template #error><span>暂无封面</span></template>
+      </el-image>
+      <div v-else class="cover-img">暂无封面</div>
     </div>
 
     <div class="middle">
@@ -33,6 +36,7 @@
         </div>
       </div>
 
+      <storage-availability-notice :availability="mangaInfo.availability" :checking="checkingStorage" retry @retry="recheckStorage" />
       <el-descriptions class="meta-info" title="漫画信息" :column="infoColum">
         <el-descriptions-item label="漫画名称">{{ mangaInfo.mangaName }}</el-descriptions-item>
         <el-descriptions-item label="作者">{{ mangaInfo.author }}</el-descriptions-item>
@@ -88,6 +92,7 @@
           v-for="(i, k) in chapterList"
           :key="k"
           :chapterInfo="i"
+          :load-cover="canLoadImages"
           :sourceWebsite="sourceWebsite"
           @click="go_browse(i)"
           @contextmenu.prevent="context_menu(i, k)" />
@@ -156,7 +161,8 @@
 import {useRoute, useRouter} from 'vue-router';
 import {onMounted, ref, reactive, computed, watch} from 'vue';
 import mangaApi from '@/api/manga';
-import imageApi from '@/api/image';
+import StorageAvailabilityNotice from '@/components/storage-availability-notice.vue';
+import {useMangaImages} from './use-manga-images';
 import {config, userConfig} from '@/store';
 import {tagItemType} from '@/type/tag';
 import {metaType, metaInit} from '@/type/meta';
@@ -202,6 +208,8 @@ let banner = ref<metaType[]>([]);
 let covers = ref<metaType[]>([]);
 let character = ref<metaType[]>([]);
 let mangaCover = ref<string>('');
+const checkingStorage = ref(false);
+const {canLoadImages, beginImageLoad, stopImageLoad, applyAvailability, loadImage} = useMangaImages();
 let isCollect = ref(false);
 let editTagsDialog = ref(false);
 let editCover = ref(false);
@@ -364,43 +372,66 @@ function go_chapter_list() {
  * @description: 渲染元数据信息
  * @return {*}
  */
+async function recheckStorage() {
+  if (checkingStorage.value) return;
+  checkingStorage.value = true;
+  try {
+    await render_meta();
+    await render_chapter_list();
+  } catch {
+    ElMessage.error('检测失败，请稍后重试。');
+  } finally {
+    checkingStorage.value = false;
+  }
+}
+
 async function render_meta() {
   const mangaId = Number(route.query.mangaId);
-  Object.assign(mangaInfo, await mangaApi.get_manga_info(mangaId));
+  const signal = beginImageLoad();
+  const info = await mangaApi.get_manga_info(mangaId);
+  if (signal.aborted || Number(route.query.mangaId) !== mangaId) return;
+  Object.assign(mangaInfo, info, {availability: info.availability});
+  applyAvailability(info.availability);
+  if (!canLoadImages.value) editCover.value = false;
   if (mangaInfo?.media?.sourceWebsite) {
     sourceWebsite.value = mangaInfo?.media?.sourceWebsite;
   }
 
   // 漫画封面
-  mangaCover.value = await imageApi.get({file: mangaInfo.mangaCover});
+  mangaCover.value = '';
+  void loadImage(mangaInfo.mangaCover, signal).then(cover => {
+    if (signal.aborted) return;
+    mangaCover.value = cover;
+  });
 
-  if (!mangaInfo.metas) return;
+  const metas = mangaInfo.metas ?? [];
 
-  const title = mangaInfo.metas.find((item: metaType) => item.metaName === 'title')?.metaContent;
+  const title = metas.find((item: metaType) => item.metaName === 'title')?.metaContent;
   if (title) mangaInfo.title = title;
 
-  const author = mangaInfo.metas.find((item: metaType) => item.metaName === 'author')?.metaContent;
+  const author = metas.find((item: metaType) => item.metaName === 'author')?.metaContent;
   if (author) mangaInfo.author = author;
 
-  const publishDate = mangaInfo.metas.find((item: metaType) => item.metaName === 'publishDate')?.metaContent;
+  const publishDate = metas.find((item: metaType) => item.metaName === 'publishDate')?.metaContent;
   if (publishDate) mangaInfo.publishDate = publishDate;
 
-  const describe = mangaInfo.metas.find((item: metaType) => item.metaName === 'describe')?.metaContent;
+  const describe = metas.find((item: metaType) => item.metaName === 'describe')?.metaContent;
   if (describe) mangaInfo.describe = describe;
 
-  const star = mangaInfo.metas.find((item: metaType) => item.metaName === 'star')?.metaContent;
+  const star = metas.find((item: metaType) => item.metaName === 'star')?.metaContent;
   if (star) mangaInfo.star = star;
+  const imageMetas = canLoadImages.value ? metas.filter(item => item.metaFile) : [];
 
   // 封面
-  covers.value = mangaInfo.metas.filter((item: metaType) => item.metaName === 'cover');
+  covers.value = imageMetas.filter(item => item.metaName === 'cover');
   hasManyCover.value = covers.value.length > 0;
 
   // 广告图
-  banner.value = mangaInfo.metas.filter((item: metaType) => /banner/.test(item.metaName));
+  banner.value = imageMetas.filter(item => /banner/.test(item.metaName));
   bannerBg.value = banner.value.find((item: metaType) => /bannerBackground/.test(item.metaFile));
   if (bannerBg.value) bannerModel.value = 'toomics';
   banner.value.forEach(async (item: metaType) => {
-    item.blob = await imageApi.get({file: item.metaFile});
+    item.blob = await loadImage(item.metaFile, signal);
   });
 
   // 将图片进行排序
@@ -409,19 +440,29 @@ async function render_meta() {
   });
 
   // 角色信息
-  character.value = mangaInfo.metas.filter((item: metaType) => item.metaName === 'character');
+  character.value = imageMetas.filter(item => item.metaName === 'character');
   character.value.forEach(async (item: metaType) => {
-    const blob = await imageApi.get({file: item.metaFile});
-    item.blob = blob;
+    item.blob = await loadImage(item.metaFile, signal);
   });
 }
 
 async function render_chapter_list() {
-  chapterList.value = [];
   const mangaId = mangaInfo.mangaId;
   if (!mangaId) return;
 
   const chapterListResponse = await chapterApi.get({mangaId, mediaId: mangaInfo.mediaId, order: browse.orderBy});
+  if (Number(route.query.mangaId) !== mangaId) return;
+  const availability = chapterListResponse.availability;
+  if (availability && availability.status !== 'available') {
+    mangaInfo.availability = availability;
+    stopImageLoad();
+    mangaCover.value = '';
+    banner.value = [];
+    character.value = [];
+    covers.value = [];
+    hasManyCover.value = false;
+    editCover.value = false;
+  }
   chapterList.value = chapterListResponse.list;
 }
 
@@ -503,11 +544,11 @@ async function remove_collect() {
 }
 
 function open_covers_edit() {
+  if (!canLoadImages.value) return;
   editCover.value = true;
   covers.value.forEach(async (item: metaType) => {
     item.active = item.metaFile === mangaInfo.mangaCover;
-    const blob = await imageApi.get({file: item.metaFile});
-    item.blob = blob;
+    item.blob = await loadImage(item.metaFile);
   });
 }
 

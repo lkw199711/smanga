@@ -12,7 +12,10 @@
         </div>
       </div>
     </header>
-    <div class="tb-reader-body" @click="showControls=!showControls"><component :is="readerComp" /></div>
+    <div class="tb-reader-body" @click="showControls=!showControls">
+      <storage-availability-notice v-if="readerError" :message="readerError" retry retry-label="重试" @retry="loadChapter(true)" />
+      <component v-else :is="readerComp" />
+    </div>
     <footer class="tb-reader-bottom" v-show="showControls">
       <button :disabled="!canPrevPage" @click="prevPage">上一页</button>
       <div class="tb-progress"><div class="tb-progress-bar" :style="{width: pct+'%'}"></div></div>
@@ -47,6 +50,7 @@ import { computed, provide, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { globalData } from '@/store'
 import chapterApi from '@/api/chapter'
+import StorageAvailabilityNotice from '@/components/storage-availability-notice.vue'
 import { useNavigationStore } from '@/store/navigation'
 import TbSingle from './single.vue'
 import TbDouble from './double.vue'
@@ -82,22 +86,30 @@ const canNextPage = computed(() => pageDisplay.value < totalPages.value)
 const canPrevChapter = computed(() => globalData.chapterIndex > 0 && chapters.value.length > 0)
 const canNextChapter = computed(() => chapters.value.length > 0 && globalData.chapterIndex < chapters.value.length - 1)
 
-async function loadChapter() {
-  if (!chapterId.value) return
-  globalData.chapterId = chapterId.value
-  const pageJump = navigation.consumeReaderPage()
-  if (pageJump > 1) {
-    globalData.page = pageJump - 1
-  } else {
-    globalData.page = 0
+const readerError = ref('')
+let readerLoad = 0
+
+async function loadChapter(retry = false) {
+  const id = chapterId.value
+  if (!id) return
+  const currentLoad = ++readerLoad
+  readerError.value = ''
+  globalData.chapterId = id
+  if (!retry) {
+    const pageJump = navigation.consumeReaderPage()
+    globalData.page = pageJump > 1 ? pageJump - 1 : 0
   }
   try {
-    const r = await chapterApi.get_images(chapterId.value, 0)
+    const r = await chapterApi.get_images(id, 0)
+    if (currentLoad !== readerLoad) return
     globalData.imgPathList = r?.list || []
+    if (r.state === 'failed') readerError.value = r.message || '章节加载失败，请重试。'
   } catch {
+    if (currentLoad !== readerLoad) return
     globalData.imgPathList = []
+    readerError.value = '章节加载失败，请重试。'
   }
-  if (!globalData.chapterName) globalData.chapterName = `Chapter ${chapterId.value}`
+  if (!globalData.chapterName) globalData.chapterName = `Chapter ${id}`
 }
 
 watch(

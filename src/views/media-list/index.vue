@@ -9,6 +9,7 @@
 
       <!--媒体库名称-->
       <p class="media-name">{{ item.mediaName }}</p>
+      <storage-availability-notice :availability="item.availability" compact />
     </div>
   </div>
 
@@ -23,6 +24,7 @@ export default {name: 'media-list'};
 <script setup lang="ts">
 import {ref, onMounted, onUnmounted, reactive} from 'vue';
 import mediaApi from '@/api/media';
+import StorageAvailabilityNotice from '@/components/storage-availability-notice.vue'
 import {config, userConfig} from '@/store';
 import {useRoute, useRouter} from 'vue-router';
 import {mediaType, mediaInit} from '@/type/media';

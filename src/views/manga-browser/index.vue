@@ -36,6 +36,7 @@
             :alt="item.mediaName" />
           <el-image v-else :src="placeholder" class="media-cover" fit="fill" />
           <p class="media-name">{{ item.mediaName }}</p>
+          <storage-availability-notice :availability="item.availability" compact />
         </div>
         <div class="empty-tip" v-if="!mediaList.length">{{ $t('mangaBrowser.noMedia') }}</div>
       </div>
@@ -95,6 +96,7 @@ export default { name: 'manga-browser' };
 import { computed, onMounted, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import mediaApi from '@/api/media';
+import StorageAvailabilityNotice from '@/components/storage-availability-notice.vue'
 import mangaApi from '@/api/manga';
 import pathApi from '@/api/path';
 import imageApi from '@/api/image';

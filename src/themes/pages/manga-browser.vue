@@ -45,6 +45,7 @@
 					</t-cover>
 					<span class="t-folder-browser__media-info">
 						<strong>{{ media.mediaName }}</strong>
+						<storage-availability-notice :availability="media.availability" compact />
 						<small>{{ Number(media.mangaCount || 0) }} 部漫画</small>
 					</span>
 					<span class="t-folder-browser__chevron" aria-hidden="true">›</span>
@@ -105,6 +106,7 @@
 import { computed, onMounted, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import mediaApi from '@/api/media'
+import StorageAvailabilityNotice from '@/components/storage-availability-notice.vue'
 import mangaApi from '@/api/manga'
 import pathApi from '@/api/path'
 import type { mediaType } from '@/type/media'

@@ -1,3 +1,5 @@
+import type { MediaAvailability } from './availability';
+
 type mediaType = {
 	mediaId: number;
 	mediaName: string;
@@ -16,6 +18,7 @@ type mediaType = {
 	isCloudMedia: number;
 	mediaPath?: string;
 	mangaCount?: number;
+	availability?: MediaAvailability;
 };
 
 const mediaInit: mediaType = {

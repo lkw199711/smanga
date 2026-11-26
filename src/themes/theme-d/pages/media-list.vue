@@ -14,6 +14,7 @@
         </div>
         <div class="td-media-body">
           <div class="td-media-name">{{ m.mediaName }}</div>
+          <storage-availability-notice :availability="m.availability" compact />
           <div class="td-media-meta">{{ m.mangaCount || 0 }} 部漫画</div>
           <div class="td-media-path">{{ m.mediaPath }}</div>
         </div>
@@ -44,6 +45,7 @@
 import { computed, onMounted, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import mediaApi from '@/api/media'
+import StorageAvailabilityNotice from '@/components/storage-availability-notice.vue'
 import imageApi from '@/api/image'
 import { openThemeActionSheet, openThemeContextMenu } from '@/themes/context-menu'
 import { useSessionStore } from '@/store/session'

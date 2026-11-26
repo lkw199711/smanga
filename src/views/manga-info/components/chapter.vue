@@ -28,14 +28,17 @@ export default {name: 'manga-chapter-item'};
 </script>
 <script lang="ts" setup>
 import imageApi from '@/api/image';
-import queue from '@/store/quque';
-import {chapterType} from '@/type/chapter';
+import type {chapterType} from '@/type/chapter';
 import {getFileNameWithoutExtension} from '@/utils';
-import {ref, onMounted, onBeforeUnmount, computed} from 'vue';
+import {ref, onMounted, onBeforeUnmount, computed, watch} from 'vue';
 import placeholder from '@/assets/s-blue.png';
 
-type chapterItemType = chapterType & {blob: string; chapterCover: string; pageImage: string};
-const props = defineProps(['chapterInfo', 'bookmark', 'sourceWebsite']);
+const props = withDefaults(defineProps<{
+  chapterInfo: chapterType;
+  bookmark?: boolean;
+  sourceWebsite?: string;
+  loadCover?: boolean;
+}>(), {loadCover: true});
 const fit = 'cover';
 const chapterCoverFit = computed(() => (props.sourceWebsite === 'toptoon' ? 'contain' : fit));
 let blobLink = ref('');
@@ -46,7 +49,7 @@ const chapterCoverSrc = computed(() => {
 });
 const chapterCoverImg = ref(null);
 const chapterImageBox = ref(null);
-const chapterName = ref(props.chapterInfo.chapterName);
+const chapterName = computed(() => props.chapterInfo.chapterName);
 
 const percentage = computed(() => {
   const latest = props.chapterInfo?.latest;
@@ -59,7 +62,7 @@ const percentage = computed(() => {
   }
 
   if (latest?.page && latest?.count) {
-    return (latest.page / latest.count) * 100;
+    return (Number(latest.page) / latest.count) * 100;
   }
 
   return false;
@@ -70,12 +73,15 @@ const isRead = computed(() => {
   return latest?.finish;
 });
 
+const visible = ref(false);
+const coverPath = computed(() =>
+  props.loadCover ? props.chapterInfo.chapterCover || props.chapterInfo.pageImage || '' : ''
+);
 const observe = new IntersectionObserver(entries => {
-  entries.forEach(entry => {
-    if (entry.isIntersecting) {
-      queue.mangaQueue.add(() => get_poster(props.chapterInfo));
-    }
-  });
+  if (entries.some(entry => entry.isIntersecting)) {
+    visible.value = true;
+    observe.disconnect();
+  }
 });
 
 onMounted(() => {
@@ -86,16 +92,26 @@ onBeforeUnmount(() => {
   observe.disconnect();
 });
 
-async function get_poster(item: chapterItemType) {
-  const coverPath = item.chapterCover || item.pageImage;
-  // const coverBaseName = getFileNameWithoutExtension(coverPath);
-  // const coverExt = coverPath.split('.').pop() || 'jpg';
-  blobLink.value = await imageApi.get({file: coverPath});
-  if (props.sourceWebsite === 'toptoon') {
-    const chapterBaseName = getFileNameWithoutExtension(coverPath);
-    blobLink1.value = await imageApi.get({file: chapterBaseName + '-1.jpg'});
+watch([visible, coverPath, () => props.sourceWebsite], async ([inView, file, site], _, onCleanup) => {
+  blobLink.value = '';
+  blobLink1.value = '';
+  if (!inView || !file) return;
+
+  const controller = new AbortController();
+  const {signal} = controller;
+  onCleanup(() => controller.abort());
+  try {
+    const cover = await imageApi.get({file, signal});
+    if (signal.aborted) return;
+    blobLink.value = cover || '';
+    if (site === 'toptoon' && file === props.chapterInfo.chapterCover) {
+      const extra = await imageApi.get({file: getFileNameWithoutExtension(file) + '-1.jpg', signal});
+      if (!signal.aborted) blobLink1.value = extra || '';
+    }
+  } catch (error) {
+    if (!signal.aborted) console.warn('章节封面加载失败', error);
   }
-}
+});
 </script>
 
 <style scoped lang="less">

@@ -71,6 +71,7 @@ declare module 'vue' {
     RouterView: typeof import('vue-router')['RouterView']
     Seat: typeof import('./components/seat.vue')['default']
     Share: typeof import('./components/share.vue')['default']
+    StorageAvailabilityNotice: typeof import('./components/storage-availability-notice.vue')['default']
     StorageRootManager: typeof import('./components/storage-root-manager.vue')['default']
     TablePager: typeof import('./components/table-pager.vue')['default']
   }

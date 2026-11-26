@@ -1,6 +1,7 @@
 import { mediaInit, mediaType } from "./media";
 import { metaType } from "./meta";
 import { tagItemType } from "./tag";
+import type { ResourceAvailability } from './availability';
 
 type mangaType = {
 	mediaId: number;
@@ -24,6 +25,7 @@ type mangaType = {
 	metas?: metaType[];
 	tags?: tagItemType[];
 	media?: mediaType;
+	availability?: ResourceAvailability;
 };
 
 const mangaInit: mangaType = {

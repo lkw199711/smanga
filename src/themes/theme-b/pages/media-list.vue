@@ -11,6 +11,7 @@
         </div>
         <div class="tb-media-body">
           <div class="tb-media-name">{{ m.mediaName }}</div>
+          <storage-availability-notice :availability="m.availability" compact />
           <div class="tb-media-count">{{ m.mangaCount || 0 }} 部漫画</div>
         </div>
       </div>
@@ -22,6 +23,7 @@
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import mediaApi from '@/api/media'
+import StorageAvailabilityNotice from '@/components/storage-availability-notice.vue'
 import imageApi from '@/api/image'
 import { openThemeActionSheet, openThemeContextMenu } from '@/themes/context-menu'
 const router = useRouter()

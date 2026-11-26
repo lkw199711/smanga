@@ -2,8 +2,15 @@
   <!-- 解压缩状态指示器 -->
   <div v-if="!browseStore.imageLoaded" class="compression-overlay">
     <div class="compression-content">
-      <div class="spinner"></div>
-      <div class="text-content">
+      <storage-availability-notice
+        v-if="errorMessage"
+        :message="errorMessage"
+        retry
+        retry-label="重试"
+        @retry="chapter_images_load()"
+      />
+      <div v-else class="spinner"></div>
+      <div v-if="!errorMessage" class="text-content">
         <div class="main-text">{{ compressStateTipText[compressState] }}</div>
         <div class="sub-text">{{ `${waitTime}/${maxWaitTime} 秒` }}</div>
       </div>
@@ -12,17 +19,20 @@
 </template>
 
 <script lang="ts" setup>
-import {ref, onMounted} from 'vue';
+import {ref, onMounted, onBeforeUnmount} from 'vue';
 import chapterApi from '@/api/chapter';
 import useBrowseStore from '@/store/browse';
 import {useRoute} from 'vue-router';
 import imageApi from '@/api/image';
+import StorageAvailabilityNotice from '@/components/storage-availability-notice.vue';
 
 const route = useRoute();
 const browseStore = useBrowseStore();
-const reTry = ref(0);
-const compressState = ref('loadingImages');
-const intervalId = ref<number | null>(null);
+const compressState = ref<'loadingImages' | 'compressing' | 'compressed' | 'failed'>('loadingImages');
+const errorMessage = ref('');
+let intervalId: ReturnType<typeof setInterval> | undefined;
+let retryId: ReturnType<typeof setTimeout> | undefined;
+let loadId = 0;
 const waitTime = ref(0);
 const maxWaitTime = 30;
 defineProps({
@@ -41,74 +51,81 @@ const compressStateTipText = {
   failed: '加载失败',
 };
 
-onMounted(async() => {
-  browseStore.imageLoaded = false;
-  // /t/reader/:chapterId 以路径参数为准；query 仅用于兼容旧阅读器入口。
-  const chapterId = Number(route.query.chapterId || route.params.chapterId);
-  if (browseStore.browseType === 'pdf') {
-    try {
-      const result = await chapterApi.get_images(chapterId, 0);
-      const pdfPath = result.list?.[0];
-      if (!pdfPath) throw new Error('PDF 文件不存在');
-      browseStore.pdfPath = await imageApi.get({ file: pdfPath });
-      finish_loader();
-    } catch {
-      compressState.value = 'failed';
-      ElMessage.error('PDF 加载失败');
-    }
-  } else {
-    chapter_images_load(chapterId);
-    intervalId.value = setInterval(() => {
-      waitTime.value++
-      if(waitTime.value >= maxWaitTime) {
-        fail_loader();
-      }
-    }, 1000);
-  }
+onMounted(() => chapter_images_load());
+onBeforeUnmount(() => {
+  loadId++;
+  stopTimers();
 });
 
-async function chapter_images_load(chapterId: number) {
-  const res = await chapterApi.get_images(chapterId, reTry.value);
-  compressState.value = res.state;
-  switch (res.state) {
-    case 'compressing':
-      reTry.value++;
-      if(res.list && res.list.length > browseStore.imagePathList.length) {
-        browseStore.imagePathList = res.list;
-        emit('page_change', browseStore.page || 1);
+function stopTimers() {
+  clearInterval(intervalId);
+  clearTimeout(retryId);
+}
+
+async function chapter_images_load(
+  chapterId = Number(route.query.chapterId || route.params.chapterId)
+) {
+  const current = ++loadId;
+  stopTimers();
+  browseStore.imageLoaded = false;
+  errorMessage.value = '';
+  compressState.value = 'loadingImages';
+  waitTime.value = 0;
+  intervalId = setInterval(() => {
+    if (++waitTime.value >= maxWaitTime) fail_loader('加载超时，请重试。');
+  }, 1000);
+
+  const poll = async (attempt: number) => {
+    try {
+      const result = await chapterApi.get_images(chapterId, attempt);
+      if (current !== loadId) return;
+      if (result.state === 'failed') {
+        fail_loader(result.message || '章节加载失败，请重试。');
+        return;
       }
-      setTimeout(() => chapter_images_load(chapterId), 2000);
-      break;
-    case 'compressed':
-      // 压缩完成 加载图片并隐藏指示器
-      browseStore.imagePathList = res.list;
-      browseStore.imageLoaded = true;
-      emit('page_change', browseStore.page || 1);
-      clearInterval(intervalId.value);
-      break;
-    case 'failed':
-      clearInterval(intervalId.value);
-      // 压缩失败 提示用户并隐藏指示器
-      break;
-    default:
-      break;
-  }
-  // 为应对阻塞,重新加载章节列表
-  if(!browseStore.chapterList.length){
-    await browseStore.load_chapter_list();
-  }
+      if (result.state === 'compressing') {
+        compressState.value = 'compressing';
+        if (result.list?.length > browseStore.imagePathList.length) {
+          browseStore.imagePathList = result.list;
+          emit('page_change', browseStore.page || 1);
+        }
+        retryId = setTimeout(() => void poll(attempt + 1), 2000);
+        return;
+      }
+      if (result.state !== 'compressed' || !result.list?.length) {
+        fail_loader('章节没有可读取的页面。');
+        return;
+      }
+      if (browseStore.browseType === 'pdf') {
+        const pdf = await imageApi.get({ file: result.list[0] });
+        if (current !== loadId) return;
+        browseStore.pdfPath = pdf;
+      } else {
+        browseStore.imagePathList = result.list;
+      }
+      finish_loader();
+      if (browseStore.browseType !== 'pdf') emit('page_change', browseStore.page || 1);
+      if (!browseStore.chapterList.length) {
+        void browseStore.load_chapter_list().catch(() => {});
+      }
+    } catch {
+      if (current === loadId) fail_loader('章节加载失败，请重试。');
+    }
+  };
+  await poll(0);
 }
 
 function finish_loader() {
   browseStore.imageLoaded = true;
   compressState.value = 'compressed';
-  clearInterval(intervalId.value);
+  stopTimers();
 }
 
-function fail_loader() {
+function fail_loader(message: string) {
+  loadId++;
   compressState.value = 'failed';
-  ElMessage.error('加载超时');
-  clearInterval(intervalId.value);
+  errorMessage.value = message;
+  stopTimers();
 }
 
 // 暴露方法 刷新页码

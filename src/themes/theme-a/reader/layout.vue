@@ -13,7 +13,8 @@
       </div>
     </header>
     <div class="ta-reader-body" @click="showControls = !showControls">
-      <component :is="readerComp" />
+      <storage-availability-notice v-if="readerError" :message="readerError" retry retry-label="重试" @retry="loadChapter(true)" />
+      <component v-else :is="readerComp" />
     </div>
     <footer class="ta-reader-bottom" v-show="showControls">
       <button class="ta-reader-btn" :disabled="!canPrevPage" @click="prevPage">上一页</button>
@@ -52,6 +53,7 @@ import { computed, onMounted, provide, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { globalData } from '@/store'
 import chapterApi from '@/api/chapter'
+import StorageAvailabilityNotice from '@/components/storage-availability-notice.vue'
 import { useNavigationStore } from '@/store/navigation'
 import TaSingle from './single.vue'
 import TaDouble from './double.vue'
@@ -89,22 +91,30 @@ const progressPct = computed(() => {
 const canPrevPage = computed(() => pageDisplay.value > 1)
 const canNextPage = computed(() => pageDisplay.value < totalPages.value)
 
-async function loadChapter() {
-  if (!chapterId.value) return
-  globalData.chapterId = chapterId.value
-  const pageJump = navigation.consumeReaderPage()
-  if (pageJump > 1) {
-    globalData.page = pageJump - 1
-  } else {
-    globalData.page = 0
+const readerError = ref('')
+let readerLoad = 0
+
+async function loadChapter(retry = false) {
+  const id = chapterId.value
+  if (!id) return
+  const currentLoad = ++readerLoad
+  readerError.value = ''
+  globalData.chapterId = id
+  if (!retry) {
+    const pageJump = navigation.consumeReaderPage()
+    globalData.page = pageJump > 1 ? pageJump - 1 : 0
   }
   try {
-    const r = await chapterApi.get_images(chapterId.value, 0)
+    const r = await chapterApi.get_images(id, 0)
+    if (currentLoad !== readerLoad) return
     globalData.imgPathList = r?.list || []
+    if (r.state === 'failed') readerError.value = r.message || '章节加载失败，请重试。'
   } catch {
+    if (currentLoad !== readerLoad) return
     globalData.imgPathList = []
+    readerError.value = '章节加载失败，请重试。'
   }
-  if (!globalData.chapterName) globalData.chapterName = `Chapter ${chapterId.value}`
+  if (!globalData.chapterName) globalData.chapterName = `Chapter ${id}`
 }
 
 watch(

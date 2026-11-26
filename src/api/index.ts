@@ -64,7 +64,7 @@ const ajax = Axios.create({
 
       if (typeof response === 'string') response = JSON.parse(response);
 
-      if (response.message) {
+      if (response.message && !(response.status === 'failed' && response.availability)) {
         let type: string;
         const code = Number(response.code);
         if (code >= 200 && code < 300) type = 'success';

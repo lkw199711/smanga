@@ -1,10 +1,13 @@
 import {userConfig} from '@/store';
 import {ajax} from './index';
 import type {ResType} from '@/type/api';
+import type { ResourceAvailability } from '@/type/availability';
+import { isAxiosError } from 'axios';
 
 interface chapterGetRes extends ResType {
   list: [];
   count: number;
+  availability?: ResourceAvailability;
 }
 
 type chapterGetParamsType = {
@@ -34,6 +37,7 @@ const chapterApi = {
     return {
       list: resData.list || [],
       count: resData.count || 0,
+      availability: resData.availability,
     };
   },
 
@@ -64,12 +68,22 @@ const chapterApi = {
       timeout: 30 * 1000,
     });
 
-    const data = (await res).data;
+    let data;
+    try {
+      data = (await res).data;
+    } catch (error) {
+      const failed = isAxiosError<{ availability?: ResourceAvailability }>(error)
+        ? error.response?.data
+        : undefined;
+      if (!failed?.availability) throw error;
+      return { list: [], count: 0, state: 'failed', message: failed.availability.message };
+    }
 
     return {
       list: data.data,
       count: data.count,
       state: data.status,
+      message: data.message,
     };
   },
 

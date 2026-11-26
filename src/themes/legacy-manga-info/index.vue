@@ -79,6 +79,7 @@
           </div>
         </header>
 
+        <storage-availability-notice :availability="mangaInfo.availability" :checking="checkingStorage" retry @retry="recheckStorage" />
         <p class="meta-description" v-if="mangaInfo.describe">{{ mangaInfo.describe }}</p>
 
         <dl class="meta-summary" :style="{ '--meta-cols': summaryInfoColumn }">
@@ -237,6 +238,7 @@
             v-for="(i, k) in chapterList"
             :key="k"
             :chapterInfo="i"
+            :load-cover="canLoadImages"
             :sourceWebsite="sourceWebsite"
             @click="go_browse(i)"
             @contextmenu.prevent="context_menu($event, i)" />
@@ -286,7 +288,8 @@
 import {useRoute, useRouter} from 'vue-router';
 import {onMounted, onBeforeUnmount, ref, reactive, computed, watch} from 'vue';
 import mangaApi from '@/api/manga';
-import imageApi from '@/api/image';
+import StorageAvailabilityNotice from '@/components/storage-availability-notice.vue';
+import {useMangaImages} from '@/views/manga-info/use-manga-images';
 import {config, userConfig} from '@/store';
 import {tagItemType} from '@/type/tag';
 import {metaType} from '@/type/meta';
@@ -337,6 +340,8 @@ let banner = ref<metaType[]>([]);
 let covers = ref<metaType[]>([]);
 let character = ref<metaType[]>([]);
 let mangaCover = ref<string>('');
+const checkingStorage = ref(false);
+const {canLoadImages, beginImageLoad, stopImageLoad, applyAvailability, loadImage} = useMangaImages();
 let isCollect = ref(false);
 let editTagsDialog = ref(false);
 let editCover = ref(false);
@@ -517,59 +522,93 @@ function go_chapter_list() {
   router.push(`/t/manga/${mangaInfo.mangaId}/chapters`);
 }
 
+async function recheckStorage() {
+  if (checkingStorage.value) return;
+  checkingStorage.value = true;
+  try {
+    await render_meta();
+    await render_chapter_list();
+  } catch {
+    ElMessage.error('检测失败，请稍后重试。');
+  } finally {
+    checkingStorage.value = false;
+  }
+}
+
 async function render_meta() {
   const id = mangaId.value;
   if (!id) return;
-  Object.assign(mangaInfo, await mangaApi.get_manga_info(id));
+  const signal = beginImageLoad();
+  const info = await mangaApi.get_manga_info(id);
+  if (signal.aborted || mangaId.value !== id) return;
+  Object.assign(mangaInfo, info, {availability: info.availability});
+  applyAvailability(info.availability);
+  if (!canLoadImages.value) editCover.value = false;
   if (mangaInfo?.media?.sourceWebsite) {
     sourceWebsite.value = mangaInfo?.media?.sourceWebsite;
   }
 
-  mangaCover.value = await imageApi.get({file: mangaInfo.mangaCover});
+  mangaCover.value = '';
+  void loadImage(mangaInfo.mangaCover, signal).then(cover => {
+    if (signal.aborted) return;
+    coverError.value = false;
+    mangaCover.value = cover;
+  });
 
-  if (!mangaInfo.metas) return;
+  const metas = mangaInfo.metas ?? [];
 
-  const title = mangaInfo.metas.find((item: metaType) => item.metaName === 'title')?.metaContent;
+  const title = metas.find((item: metaType) => item.metaName === 'title')?.metaContent;
   if (title) mangaInfo.title = title;
 
-  const author = mangaInfo.metas.find((item: metaType) => item.metaName === 'author')?.metaContent;
+  const author = metas.find((item: metaType) => item.metaName === 'author')?.metaContent;
   if (author) mangaInfo.author = author;
 
-  const publishDate = mangaInfo.metas.find((item: metaType) => item.metaName === 'publishDate')?.metaContent;
+  const publishDate = metas.find((item: metaType) => item.metaName === 'publishDate')?.metaContent;
   if (publishDate) mangaInfo.publishDate = publishDate;
 
-  const describe = mangaInfo.metas.find((item: metaType) => item.metaName === 'describe')?.metaContent;
+  const describe = metas.find((item: metaType) => item.metaName === 'describe')?.metaContent;
   if (describe) mangaInfo.describe = describe;
 
-  const star = mangaInfo.metas.find((item: metaType) => item.metaName === 'star')?.metaContent;
+  const star = metas.find((item: metaType) => item.metaName === 'star')?.metaContent;
   if (star) mangaInfo.star = star;
+  const imageMetas = canLoadImages.value ? metas.filter(item => item.metaFile) : [];
 
-  covers.value = mangaInfo.metas.filter((item: metaType) => item.metaName === 'cover');
+  covers.value = imageMetas.filter(item => item.metaName === 'cover');
   hasManyCover.value = covers.value.length > 0;
 
-  banner.value = mangaInfo.metas.filter((item: metaType) => /banner/.test(item.metaName));
+  banner.value = imageMetas.filter(item => /banner/.test(item.metaName));
   bannerBg.value = banner.value.find((item: metaType) => /bannerBackground/.test(item.metaFile));
   if (bannerBg.value) bannerModel.value = 'toomics';
   banner.value.forEach(async (item: metaType) => {
-    item.blob = await imageApi.get({file: item.metaFile});
+    item.blob = await loadImage(item.metaFile, signal);
   });
 
   banner.value.sort((a: any, b: any) => {
     return a.metaFile - b.metaFile;
   });
 
-  character.value = mangaInfo.metas.filter((item: metaType) => item.metaName === 'character');
+  character.value = imageMetas.filter(item => item.metaName === 'character');
   character.value.forEach(async (item: metaType) => {
-    const blob = await imageApi.get({file: item.metaFile});
-    item.blob = blob;
+    item.blob = await loadImage(item.metaFile, signal);
   });
 }
 
 async function render_chapter_list() {
-  chapterList.value = [];
   const id = mangaInfo.mangaId;
   if (!id) return;
   const chapterListResponse = await chapterApi.get({mangaId: id, mediaId: mangaInfo.mediaId, order: userConfig.chapterOrder});
+  if (mangaId.value !== id) return;
+  const availability = chapterListResponse.availability;
+  if (availability && availability.status !== 'available') {
+    mangaInfo.availability = availability;
+    stopImageLoad();
+    mangaCover.value = '';
+    banner.value = [];
+    character.value = [];
+    covers.value = [];
+    hasManyCover.value = false;
+    editCover.value = false;
+  }
   chapterList.value = chapterListResponse.list;
 }
 
@@ -628,11 +667,11 @@ async function remove_collect() {
 }
 
 function open_covers_edit() {
+  if (!canLoadImages.value) return;
   editCover.value = true;
   covers.value.forEach(async (item: metaType) => {
     item.active = item.metaFile === mangaInfo.mangaCover;
-    const blob = await imageApi.get({file: item.metaFile});
-    item.blob = blob;
+    item.blob = await loadImage(item.metaFile);
   });
 }
 
