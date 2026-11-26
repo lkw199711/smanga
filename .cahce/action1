@@ -1,0 +1,539 @@
+Run docker/build-push-action@v5
+(node:3385) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+GitHub Actions runtime token ACs
+Docker info
+Proxy configuration
+Buildx version
+Builder info
+/usr/bin/docker buildx build --file Dockerfile --iidfile /home/runner/work/_temp/docker-actions-toolkit-RRShgs/build-iidfile-c41666b62d.txt --label org.opencontainers.image.created=2026-11-26T12:25:29.144Z --label org.opencontainers.image.description=A simple manga browser 一款docker直装的漫画浏览器 --label org.opencontainers.image.licenses=GPL-2.0 --label org.opencontainers.image.revision=6022e2184fb69157ec9e2b658c8865274adfdcbb --label org.opencontainers.image.source=https://github.com/***/smanga --label org.opencontainers.image.title=smanga --label org.opencontainers.image.url=https://github.com/***/smanga --label org.opencontainers.image.version=4.3.34 --platform linux/amd64,linux/arm64/v8 --attest type=provenance,mode=max,builder-id=https://github.com/***/smanga/actions/runs/45819486335 --tag ***/smanga-nodejs:4.3.34 --tag ***/smanga-nodejs:latest --tag registry.cn-hangzhou.aliyuncs.com/***/smanga-nodejs:4.3.34 --tag registry.cn-hangzhou.aliyuncs.com/***/smanga-nodejs:latest --metadata-file /home/runner/work/_temp/docker-actions-toolkit-RRShgs/build-metadata-01ba645eb5.json --push .
+#0 building with "builder-a9283c47-5587-48aa-8d8b-25390fc8d3a1" instance using docker-container driver
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 1.49kB done
+#1 DONE 0.0s
+
+#2 [linux/amd64 internal] load metadata for docker.io/library/node:22-alpine3.22
+#2 ...
+
+#3 [auth] library/node:pull token for registry-1.docker.io
+#3 DONE 0.0s
+
+#4 [linux/arm64 internal] load metadata for docker.io/library/node:22-alpine3.22
+#4 DONE 0.7s
+
+#2 [linux/amd64 internal] load metadata for docker.io/library/node:22-alpine3.22
+#2 DONE 0.7s
+
+#5 [internal] load .dockerignore
+#5 transferring context: 2B done
+#5 DONE 0.0s
+
+#6 [linux/amd64 base 1/1] FROM docker.io/library/node:22-alpine3.22@sha256:cd7807368cf24826297cbad5dca1a44972ccfd770647db52a8c7589eb4599ac8
+#6 resolve docker.io/library/node:22-alpine3.22@sha256:cd7807368cf24826297cbad5dca1a44972ccfd770647db52a8c7589eb4599ac8 done
+#6 sha256:4da632991d6da949743645b393685cb47bed04d5caaf0cea0fb97e5b077e20a6 446B / 446B 0.1s done
+#6 ...
+
+#7 [internal] load build context
+#7 transferring context: 25.35MB 0.1s done
+#7 DONE 0.1s
+
+#6 [linux/amd64 base 1/1] FROM docker.io/library/node:22-alpine3.22@sha256:cd7807368cf24826297cbad5dca1a44972ccfd770647db52a8c7589eb4599ac8
+#6 sha256:e51226b0e46a2940e87f5d78ccb18bb17d9a4c615063f852e878cf03a6edcda9 1.26MB / 1.26MB 0.1s done
+#6 sha256:236adc083fba2c4feb13d501394643292ebbdb07630d801723d66ad30af513f7 0B / 52.29MB 0.2s
+#6 sha256:84f5eff04246b56d48d1ed6cbd82d6bc7e53f7e790db6a467f92571c69f3289e 0B / 3.81MB 0.2s
+#6 sha256:236adc083fba2c4feb13d501394643292ebbdb07630d801723d66ad30af513f7 13.63MB / 52.29MB 0.3s
+#6 sha256:84f5eff04246b56d48d1ed6cbd82d6bc7e53f7e790db6a467f92571c69f3289e 3.81MB / 3.81MB 0.2s done
+#6 extracting sha256:84f5eff04246b56d48d1ed6cbd82d6bc7e53f7e790db6a467f92571c69f3289e 0.1s done
+#6 sha256:236adc083fba2c4feb13d501394643292ebbdb07630d801723d66ad30af513f7 51.38MB / 52.29MB 0.5s
+#6 sha256:236adc083fba2c4feb13d501394643292ebbdb07630d801723d66ad30af513f7 52.29MB / 52.29MB 0.9s done
+#6 extracting sha256:236adc083fba2c4feb13d501394643292ebbdb07630d801723d66ad30af513f7
+#6 ...
+
+#8 [linux/arm64 base 1/1] FROM docker.io/library/node:22-alpine3.22@sha256:cd7807368cf24826297cbad5dca1a44972ccfd770647db52a8c7589eb4599ac8
+#8 resolve docker.io/library/node:22-alpine3.22@sha256:cd7807368cf24826297cbad5dca1a44972ccfd770647db52a8c7589eb4599ac8 done
+#8 sha256:43f4c85ce2597e513cc315fa4b7bcf4b0b5a0128c06fb92440a4ae93c6b4d68e 445B / 445B 0.1s done
+#8 sha256:26b9464b4b5e74278f61ee1de78b8b25b5e9d25954973ac6d41141ba991a2f2d 1.26MB / 1.26MB 0.1s done
+#8 sha256:58e777220c395c319866c5d73ea32a5ea574bbd12f4eb289b392f584d0cd953e 4.14MB / 4.14MB 0.2s done
+#8 sha256:07be7c34a6d649a1eda697939181a835925daf76b8f0ded37599c8273c6a75ad 51.71MB / 51.71MB 0.7s done
+#8 extracting sha256:58e777220c395c319866c5d73ea32a5ea574bbd12f4eb289b392f584d0cd953e 0.5s done
+#8 extracting sha256:07be7c34a6d649a1eda697939181a835925daf76b8f0ded37599c8273c6a75ad 0.9s done
+#8 DONE 1.8s
+
+#8 [linux/arm64 base 1/1] FROM docker.io/library/node:22-alpine3.22@sha256:cd7807368cf24826297cbad5dca1a44972ccfd770647db52a8c7589eb4599ac8
+#8 extracting sha256:26b9464b4b5e74278f61ee1de78b8b25b5e9d25954973ac6d41141ba991a2f2d 0.0s done
+#8 extracting sha256:43f4c85ce2597e513cc315fa4b7bcf4b0b5a0128c06fb92440a4ae93c6b4d68e done
+#8 DONE 1.8s
+
+#6 [linux/amd64 base 1/1] FROM docker.io/library/node:22-alpine3.22@sha256:cd7807368cf24826297cbad5dca1a44972ccfd770647db52a8c7589eb4599ac8
+#6 extracting sha256:236adc083fba2c4feb13d501394643292ebbdb07630d801723d66ad30af513f7 0.9s done
+#6 extracting sha256:e51226b0e46a2940e87f5d78ccb18bb17d9a4c615063f852e878cf03a6edcda9 0.0s done
+#6 extracting sha256:4da632991d6da949743645b393685cb47bed04d5caaf0cea0fb97e5b077e20a6 done
+#6 DONE 1.8s
+
+#9 [linux/amd64 prepare 1/3] RUN apk add git python3
+#9 0.041 fetch https://dl-cdn.alpinelinux.org/alpine/v3.22/main/x86_64/APKINDEX.tar.gz
+#9 0.250 fetch https://dl-cdn.alpinelinux.org/alpine/v3.22/community/x86_64/APKINDEX.tar.gz
+#9 0.480 (1/26) Installing brotli-libs (1.1.1-r0)
+#9 0.494 (2/26) Installing c-ares (1.34.9-r0)
+#9 0.505 (3/26) Installing libunistring (1.3-r0)
+#9 0.522 (4/26) Installing libidn2 (2.3.7-r0)
+#9 0.532 (5/26) Installing nghttp2-libs (1.69.0-r0)
+#9 0.542 (6/26) Installing libpsl (0.21.5-r3)
+#9 0.551 (7/26) Installing zstd-libs (1.6.0-r1)
+#9 0.565 (8/26) Installing libcurl (8.14.1-r4)
+#9 0.578 (9/26) Installing libexpat (2.11.0-r0)
+#9 0.588 (10/26) Installing pcre2 (10.46-r1)
+#9 0.601 (11/26) Installing git (2.49.1-r0)
+#9 0.658 (12/26) Installing git-init-template (2.49.1-r0)
+#9 0.668 (13/26) Installing libbz2 (1.0.8-r6)
+#9 0.677 (14/26) Installing libffi (3.8.1-r0)
+#9 0.686 (15/26) Installing gdbm (1.24-r0)
+#9 0.696 (16/26) Installing xz-libs (5.8.4-r0)
+#9 0.706 (17/26) Installing mpdecimal (4.0.1-r0)
+#9 0.717 (18/26) Installing ncurses-terminfo-base (6.5_p20250503-r0)
+#9 0.728 (19/26) Installing libncursesw (6.5_p20250503-r0)
+#9 0.739 (20/26) Installing libpanelw (6.5_p20250503-r0)
+#9 0.748 (21/26) Installing readline (8.2.13-r1)
+#9 0.759 (22/26) Installing sqlite-libs (3.49.2-r1)
+#9 0.778 (23/26) Installing python3 (3.12.16-r0)
+#9 0.915 (24/26) Installing python3-pycache-pyc0 (3.12.16-r0)
+#9 1.008 (25/26) Installing pyc (3.12.16-r0)
+#9 1.008 (26/26) Installing python3-pyc (3.12.16-r0)
+#9 1.008 Executing busybox-1.37.0-r20.trigger
+#9 1.015 OK: 58 MiB in 44 packages
+#9 DONE 3.6s
+
+#10 [linux/arm64 prepare 1/3] RUN apk add git python3
+#10 0.089 fetch https://dl-cdn.alpinelinux.org/alpine/v3.22/main/aarch64/APKINDEX.tar.gz
+#10 0.647 fetch https://dl-cdn.alpinelinux.org/alpine/v3.22/community/aarch64/APKINDEX.tar.gz
+#10 1.653 (1/26) Installing brotli-libs (1.1.1-r0)
+#10 1.702 (2/26) Installing c-ares (1.34.9-r0)
+#10 1.730 (3/26) Installing libunistring (1.3-r0)
+#10 1.775 (4/26) Installing libidn2 (2.3.7-r0)
+#10 1.795 (5/26) Installing nghttp2-libs (1.69.0-r0)
+#10 1.813 (6/26) Installing libpsl (0.21.5-r3)
+#10 1.831 (7/26) Installing zstd-libs (1.6.0-r1)
+#10 1.859 (8/26) Installing libcurl (8.14.1-r4)
+#10 1.887 (9/26) Installing libexpat (2.11.0-r0)
+#10 1.906 (10/26) Installing pcre2 (10.46-r1)
+#10 1.934 (11/26) Installing git (2.49.1-r0)
+#10 2.094 (12/26) Installing git-init-template (2.49.1-r0)
+#10 2.111 (13/26) Installing libbz2 (1.0.8-r6)
+#10 2.128 (14/26) Installing libffi (3.8.1-r0)
+#10 2.144 (15/26) Installing gdbm (1.24-r0)
+#10 2.161 (16/26) Installing xz-libs (5.8.4-r0)
+#10 2.181 (17/26) Installing mpdecimal (4.0.1-r0)
+#10 2.200 (18/26) Installing ncurses-terminfo-base (6.5_p20250503-r0)
+#10 2.221 (19/26) Installing libncursesw (6.5_p20250503-r0)
+#10 2.242 (20/26) Installing libpanelw (6.5_p20250503-r0)
+#10 2.258 (21/26) Installing readline (8.2.13-r1)
+#10 2.279 (22/26) Installing sqlite-libs (3.49.2-r1)
+#10 2.429 (23/26) Installing python3 (3.12.16-r0)
+#10 2.831 (24/26) Installing python3-pycache-pyc0 (3.12.16-r0)
+#10 3.073 (25/26) Installing pyc (3.12.16-r0)
+#10 3.073 (26/26) Installing python3-pyc (3.12.16-r0)
+#10 3.075 Executing busybox-1.37.0-r20.trigger
+#10 3.114 OK: 62 MiB in 44 packages
+#10 DONE 3.6s
+
+#11 [linux/arm64 prepare 2/3] RUN git clone https://github.com/***/smanga-adonis.git /smanga-adonis
+#11 0.093 Cloning into '/smanga-adonis'...
+#11 ...
+
+#12 [linux/amd64 prepare 2/3] RUN git clone https://github.com/***/smanga-adonis.git /smanga-adonis
+#12 0.076 Cloning into '/smanga-adonis'...
+#12 DONE 1.6s
+
+#13 [linux/amd64 prepare 3/3] RUN rm -rf         /smanga-adonis/.git
+#13 DONE 0.1s
+
+#14 [linux/amd64 builder 1/3] WORKDIR /smanga-adonis
+#14 DONE 0.0s
+
+#15 [linux/amd64 builder 2/3] RUN npm install
+#15 ...
+
+#11 [linux/arm64 prepare 2/3] RUN git clone https://github.com/***/smanga-adonis.git /smanga-adonis
+#11 DONE 3.4s
+
+#16 [linux/arm64 prepare 3/3] RUN rm -rf         /smanga-adonis/.git
+#16 DONE 0.1s
+
+#15 [linux/amd64 builder 2/3] RUN npm install
+#15 ...
+
+#17 [linux/arm64 builder 1/3] WORKDIR /smanga-adonis
+#17 DONE 0.0s
+
+#18 [linux/arm64 builder 2/3] RUN npm install
+#18 21.54 npm warn deprecated rimraf@3.0.2: Rimraf versions prior to v4 are no longer supported
+#18 ...
+
+#15 [linux/amd64 builder 2/3] RUN npm install
+#15 23.57 npm warn deprecated superagent@8.1.2: Please upgrade to v9.0.0+ as we have fixed a public vulnerability with formidable dependency. Note that v9.0.0+ requires Node.js v14.18.0+. See https://github.com/ladjs/superagent/pull/1800 for insight. This project is supported and maintained by the team at Forward Email @ https://forwardemail.net
+#15 23.80 npm warn deprecated rimraf@3.0.2: Rimraf versions prior to v4 are no longer supported
+#15 ...
+
+#18 [linux/arm64 builder 2/3] RUN npm install
+#18 28.35 npm warn deprecated inflight@1.0.6: This module is not supported, and leaks memory. Do not use it. Check out lru-cache if you want a good and tested way to coalesce async requests by a key value, which is much more comprehensive and powerful.
+#18 28.85 npm warn deprecated superagent@8.1.2: Please upgrade to v9.0.0+ as we have fixed a public vulnerability with formidable dependency. Note that v9.0.0+ requires Node.js v14.18.0+. See https://github.com/ladjs/superagent/pull/1800 for insight. This project is supported and maintained by the team at Forward Email @ https://forwardemail.net
+#18 29.05 npm warn deprecated glob@7.2.3: Glob versions prior to v9 are no longer supported
+#18 40.14 npm warn deprecated @humanwhocodes/object-schema@2.0.3: Use @eslint/object-schema instead
+#18 40.39 npm warn deprecated @humanwhocodes/config-array@0.11.14: Use @eslint/config-array instead
+#18 ...
+
+#15 [linux/amd64 builder 2/3] RUN npm install
+#15 49.63 npm warn deprecated inflight@1.0.6: This module is not supported, and leaks memory. Do not use it. Check out lru-cache if you want a good and tested way to coalesce async requests by a key value, which is much more comprehensive and powerful.
+#15 50.28 npm warn deprecated glob@7.2.3: Glob versions prior to v9 are no longer supported
+#15 58.22 npm warn deprecated @humanwhocodes/object-schema@2.0.3: Use @eslint/object-schema instead
+#15 58.68 npm warn deprecated @humanwhocodes/config-array@0.11.14: Use @eslint/config-array instead
+#15 67.44 
+#15 67.44 added 835 packages, and audited 836 packages in 1m
+#15 67.44 
+#15 67.44 218 packages are looking for funding
+#15 67.44   run `npm fund` for details
+#15 67.58 
+#15 67.58 49 vulnerabilities (4 low, 15 moderate, 28 high, 2 critical)
+#15 67.58 
+#15 67.58 To address issues that do not require attention, run:
+#15 67.58   npm audit fix
+#15 67.58 
+#15 67.58 To address all issues (including breaking changes), run:
+#15 67.58   npm audit fix --force
+#15 67.58 
+#15 67.58 Run `npm audit` for details.
+#15 67.58 npm notice
+#15 67.58 npm notice New major version of npm available! 10.9.8 -> 12.2.3
+#15 67.58 npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.3
+#15 67.58 npm notice To update run: npm install -g npm@12.2.3
+#15 67.58 npm notice
+#15 DONE 71.7s
+
+#18 [linux/arm64 builder 2/3] RUN npm install
+#18 ...
+
+#19 [linux/amd64 builder 3/3] RUN npm run build
+#19 0.307 
+#19 0.307 > smanga-adonis@3.8.8 prebuild
+#19 0.307 > npm run prisma:generate
+#19 0.307 
+#19 0.403 
+#19 0.403 > smanga-adonis@3.8.8 prisma:generate
+#19 0.403 > prisma generate --schema=./prisma/sqlite/schema.prisma
+#19 0.403 
+#19 1.030 Prisma schema loaded from prisma/sqlite/schema.prisma
+#19 1.710 
+#19 1.710 ✔ Generated Prisma Client (v6.11.1) to ./node_modules/@prisma/client in 199ms
+#19 1.710 
+#19 1.710 Start by importing your Prisma Client (See: https://pris.ly/d/importing-client)
+#19 1.710 
+#19 1.710 Tip: Want to turn off tips and other hints? https://pris.ly/tip-4-nohints
+#19 1.710 
+#19 1.740 
+#19 1.740 > smanga-adonis@3.8.8 build
+#19 1.740 > node ace build --ignore-ts-errors
+#19 1.740 
+#19 2.020 (node:67) [DEP0180] DeprecationWarning: fs.Stats constructor is deprecated.
+#19 2.020 (Use `node --trace-deprecation ...` to show where the warning was created)
+#19 2.637 [ info ] cleaning up output directory (build)
+#19 2.638 [ info ] compiling typescript source (tsc)
+#19 8.251 [ info ] rewrited ace file (build/ace.js)
+#19 8.253 [ info ] copying meta files to the output directory
+#19 8.255 [ success ] build completed
+#19 8.255 
+#19 8.259 ╭────────────────────────────────────────────────────────────────────────╮
+#19 8.259 │    Run the following commands to start the server in production        │
+#19 8.259 │────────────────────────────────────────────────────────────────────────│
+#19 8.259 │                                                                        │
+#19 8.259 │    ❯ cd build                                                          │
+#19 8.259 │    ❯ npm ci --omit="dev"                                               │
+#19 8.259 │    ❯ node bin/server.js                                                │
+#19 8.259 │                                                                        │
+#19 8.259 ╰────────────────────────────────────────────────────────────────────────╯
+#19 DONE 8.4s
+
+#18 [linux/arm64 builder 2/3] RUN npm install
+#18 ...
+
+#20 [linux/amd64 stage-3 1/9] COPY --from=builder /smanga-adonis/build /app/adonis
+#20 DONE 0.1s
+
+#21 [linux/amd64 stage-3 2/9] COPY --from=builder /smanga-adonis/prisma /app/adonis/prisma
+#21 DONE 0.0s
+
+#18 [linux/arm64 builder 2/3] RUN npm install
+#18 ...
+
+#22 [linux/amd64 stage-3 3/9] COPY --from=builder /smanga-adonis/data-example/config/smanga.json /app/adonis/smanga.json
+#22 DONE 0.0s
+
+#23 [linux/amd64 stage-3 4/9] COPY --from=builder /smanga-adonis/data-example/file /app/adonis/file
+#23 DONE 0.1s
+
+#24 [linux/amd64 stage-3 5/9] COPY ./dist/docker /app/smanga-website
+#24 DONE 0.2s
+
+#18 [linux/arm64 builder 2/3] RUN npm install
+#18 ...
+
+#25 [linux/amd64 stage-3 6/9] RUN apk add --no-cache         bash         shadow         tzdata         jq         s6-overlay
+#25 0.046 fetch https://dl-cdn.alpinelinux.org/alpine/v3.22/main/x86_64/APKINDEX.tar.gz
+#25 0.186 fetch https://dl-cdn.alpinelinux.org/alpine/v3.22/community/x86_64/APKINDEX.tar.gz
+#25 0.399 (1/30) Installing ncurses-terminfo-base (6.5_p20250503-r0)
+#25 0.417 (2/30) Installing libncursesw (6.5_p20250503-r0)
+#25 0.440 (3/30) Installing readline (8.2.13-r1)
+#25 0.456 (4/30) Installing bash (5.2.37-r0)
+#25 0.479 Executing bash-5.2.37-r0.post-install
+#25 0.483 (5/30) Installing oniguruma (6.9.10-r0)
+#25 0.501 (6/30) Installing jq (1.8.2-r0)
+#25 0.519 (7/30) Installing skalibs-libs (2.14.4.0-r0)
+#25 0.535 (8/30) Installing execline-libs (2.9.7.0-r0)
+#25 0.550 (9/30) Installing execline (2.9.7.0-r0)
+#25 0.569 Executing execline-2.9.7.0-r0.post-install
+#25 0.573 (10/30) Installing s6-ipcserver (2.13.2.0-r0)
+#25 0.588 (11/30) Installing s6-libs (2.13.2.0-r0)
+#25 0.604 (12/30) Installing s6 (2.13.2.0-r0)
+#25 0.620 Executing s6-2.13.2.0-r0.pre-install
+#25 0.635 (13/30) Installing s6-rc-libs (0.5.6.0-r0)
+#25 0.650 (14/30) Installing s6-rc (0.5.6.0-r0)
+#25 0.668 (15/30) Installing s6-linux-init (1.1.3.0-r0)
+#25 0.685 (16/30) Installing s6-portable-utils (2.3.1.0-r0)
+#25 0.703 (17/30) Installing s6-linux-utils (2.6.3.0-r0)
+#25 0.719 (18/30) Installing s6-dns-libs (2.4.1.0-r0)
+#25 0.735 (19/30) Installing s6-dns (2.4.1.0-r0)
+#25 0.753 (20/30) Installing bearssl-libs (0.6_git20241009-r0)
+#25 0.770 (21/30) Installing s6-networking-libs (2.7.1.0-r0)
+#25 0.786 (22/30) Installing s6-networking (2.7.1.0-r0)
+#25 0.806 (23/30) Installing s6-overlay-helpers (0.1.2.0-r0)
+#25 0.822 (24/30) Installing s6-overlay (3.2.0.3-r0)
+#25 0.841 (25/30) Installing libmd (1.1.0-r0)
+#25 0.857 (26/30) Installing libbsd (0.12.2-r0)
+#25 0.872 (27/30) Installing utmps-libs (0.1.3.1-r0)
+#25 0.888 (28/30) Installing linux-pam (1.7.0-r4)
+#25 0.911 (29/30) Installing shadow (4.17.3-r0)
+#25 0.934 (30/30) Installing tzdata (2026f-r0)
+#25 0.987 Executing busybox-1.37.0-r20.trigger
+#25 0.995 OK: 19 MiB in 48 packages
+#25 DONE 1.1s
+
+#18 [linux/arm64 builder 2/3] RUN npm install
+#18 ...
+
+#26 [linux/amd64 stage-3 7/9] RUN cd /app/adonis &&     npm ci --omit=dev &&     mkdir cache
+#26 13.18 
+#26 13.18 added 375 packages, and audited 376 packages in 13s
+#26 13.18 
+#26 13.18 91 packages are looking for funding
+#26 13.18   run `npm fund` for details
+#26 13.20 
+#26 13.20 25 vulnerabilities (2 low, 9 moderate, 12 high, 2 critical)
+#26 13.20 
+#26 13.20 To address issues that do not require attention, run:
+#26 13.20   npm audit fix
+#26 13.20 
+#26 13.20 To address all issues (including breaking changes), run:
+#26 13.20   npm audit fix --force
+#26 13.20 
+#26 13.20 Run `npm audit` for details.
+#26 13.20 npm notice
+#26 13.20 npm notice New major version of npm available! 10.9.8 -> 12.2.3
+#26 13.20 npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.3
+#26 13.20 npm notice To update run: npm install -g npm@12.2.3
+#26 13.20 npm notice
+#26 DONE 14.6s
+
+#18 [linux/arm64 builder 2/3] RUN npm install
+#18 ...
+
+#27 [linux/amd64 stage-3 8/9] RUN addgroup -S smanga -g 918 &&     adduser -S smanga -G smanga -h /app -u 918 -s /bin/bash
+#27 DONE 0.1s
+
+#28 [linux/amd64 stage-3 9/9] COPY --chmod=755 ./docker /
+#28 DONE 0.0s
+
+#18 [linux/arm64 builder 2/3] RUN npm install
+#18 361.1 
+#18 361.1 added 835 packages, and audited 836 packages in 6m
+#18 361.1 
+#18 361.1 218 packages are looking for funding
+#18 361.1   run `npm fund` for details
+#18 362.3 
+#18 362.3 49 vulnerabilities (4 low, 15 moderate, 28 high, 2 critical)
+#18 362.3 
+#18 362.3 To address issues that do not require attention, run:
+#18 362.3   npm audit fix
+#18 362.3 
+#18 362.3 To address all issues (including breaking changes), run:
+#18 362.3   npm audit fix --force
+#18 362.3 
+#18 362.3 Run `npm audit` for details.
+#18 362.3 npm notice
+#18 362.3 npm notice New major version of npm available! 10.9.8 -> 12.2.3
+#18 362.3 npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.3
+#18 362.3 npm notice To update run: npm install -g npm@12.2.3
+#18 362.3 npm notice
+#18 DONE 362.6s
+
+#29 [linux/arm64 builder 3/3] RUN npm run build
+#29 1.763 
+#29 1.763 > smanga-adonis@3.8.8 prebuild
+#29 1.763 > npm run prisma:generate
+#29 1.763 
+#29 3.369 
+#29 3.369 > smanga-adonis@3.8.8 prisma:generate
+#29 3.369 > prisma generate --schema=./prisma/sqlite/schema.prisma
+#29 3.369 
+#29 8.972 Prisma schema loaded from prisma/sqlite/schema.prisma
+#29 14.38 
+#29 14.38 ✔ Generated Prisma Client (v6.11.1) to ./node_modules/@prisma/client in 2.00s
+#29 14.38 
+#29 14.38 Start by importing your Prisma Client (See: https://pris.ly/d/importing-client)
+#29 14.38 
+#29 14.38 Tip: Need your database queries to be 1000x faster? Accelerate offers you that and more: https://pris.ly/tip-2-accelerate
+#29 14.38 
+#29 14.51 
+#29 14.51 > smanga-adonis@3.8.8 build
+#29 14.51 > node ace build --ignore-ts-errors
+#29 14.51 
+#29 17.46 (node:107) [DEP0180] DeprecationWarning: fs.Stats constructor is deprecated.
+#29 17.46 (Use `node --trace-deprecation ...` to show where the warning was created)
+#29 22.25 [ info ] cleaning up output directory (build)
+#29 22.34 [ info ] compiling typescript source (tsc)
+#29 83.36 [ info ] rewrited ace file (build/ace.js)
+#29 83.41 [ info ] copying meta files to the output directory
+#29 83.45 [ success ] build completed
+#29 83.45 
+#29 83.50 ╭────────────────────────────────────────────────────────────────────────╮
+#29 83.50 │    Run the following commands to start the server in production        │
+#29 83.50 │────────────────────────────────────────────────────────────────────────│
+#29 83.50 │                                                                        │
+#29 83.50 │    ❯ cd build                                                          │
+#29 83.50 │    ❯ npm ci --omit="dev"                                               │
+#29 83.50 │    ❯ node bin/server.js                                                │
+#29 83.50 │                                                                        │
+#29 83.50 ╰────────────────────────────────────────────────────────────────────────╯
+#29 DONE 83.7s
+
+#30 [linux/arm64 stage-3 1/9] COPY --from=builder /smanga-adonis/build /app/adonis
+#30 DONE 0.1s
+
+#31 [linux/arm64 stage-3 2/9] COPY --from=builder /smanga-adonis/prisma /app/adonis/prisma
+#31 DONE 0.0s
+
+#32 [linux/arm64 stage-3 3/9] COPY --from=builder /smanga-adonis/data-example/config/smanga.json /app/adonis/smanga.json
+#32 DONE 0.0s
+
+#33 [linux/arm64 stage-3 4/9] COPY --from=builder /smanga-adonis/data-example/file /app/adonis/file
+#33 DONE 0.1s
+
+#34 [linux/arm64 stage-3 5/9] COPY ./dist/docker /app/smanga-website
+#34 DONE 0.2s
+
+#35 [linux/arm64 stage-3 6/9] RUN apk add --no-cache         bash         shadow         tzdata         jq         s6-overlay
+#35 0.095 fetch https://dl-cdn.alpinelinux.org/alpine/v3.22/main/aarch64/APKINDEX.tar.gz
+#35 0.612 fetch https://dl-cdn.alpinelinux.org/alpine/v3.22/community/aarch64/APKINDEX.tar.gz
+#35 1.627 (1/30) Installing ncurses-terminfo-base (6.5_p20250503-r0)
+#35 1.651 (2/30) Installing libncursesw (6.5_p20250503-r0)
+#35 1.696 (3/30) Installing readline (8.2.13-r1)
+#35 1.730 (4/30) Installing bash (5.2.37-r0)
+#35 1.792 Executing bash-5.2.37-r0.post-install
+#35 1.831 (5/30) Installing oniguruma (6.9.10-r0)
+#35 1.866 (6/30) Installing jq (1.8.2-r0)
+#35 1.895 (7/30) Installing skalibs-libs (2.14.4.0-r0)
+#35 1.920 (8/30) Installing execline-libs (2.9.7.0-r0)
+#35 1.938 (9/30) Installing execline (2.9.7.0-r0)
+#35 1.963 Executing execline-2.9.7.0-r0.post-install
+#35 2.004 (10/30) Installing s6-ipcserver (2.13.2.0-r0)
+#35 2.023 (11/30) Installing s6-libs (2.13.2.0-r0)
+#35 2.042 (12/30) Installing s6 (2.13.2.0-r0)
+#35 2.066 Executing s6-2.13.2.0-r0.pre-install
+#35 2.172 (13/30) Installing s6-rc-libs (0.5.6.0-r0)
+#35 2.190 (14/30) Installing s6-rc (0.5.6.0-r0)
+#35 2.214 (15/30) Installing s6-linux-init (1.1.3.0-r0)
+#35 2.238 (16/30) Installing s6-portable-utils (2.3.1.0-r0)
+#35 2.261 (17/30) Installing s6-linux-utils (2.6.3.0-r0)
+#35 2.281 (18/30) Installing s6-dns-libs (2.4.1.0-r0)
+#35 2.301 (19/30) Installing s6-dns (2.4.1.0-r0)
+#35 2.329 (20/30) Installing bearssl-libs (0.6_git20241009-r0)
+#35 2.358 (21/30) Installing s6-networking-libs (2.7.1.0-r0)
+#35 2.379 (22/30) Installing s6-networking (2.7.1.0-r0)
+#35 2.408 (23/30) Installing s6-overlay-helpers (0.1.2.0-r0)
+#35 2.426 (24/30) Installing s6-overlay (3.2.0.3-r0)
+#35 2.449 (25/30) Installing libmd (1.1.0-r0)
+#35 2.468 (26/30) Installing libbsd (0.12.2-r0)
+#35 2.487 (27/30) Installing utmps-libs (0.1.3.1-r0)
+#35 2.503 (28/30) Installing linux-pam (1.7.0-r4)
+#35 2.555 (29/30) Installing shadow (4.17.3-r0)
+#35 2.609 (30/30) Installing tzdata (2026f-r0)
+#35 2.697 Executing busybox-1.37.0-r20.trigger
+#35 2.736 OK: 30 MiB in 48 packages
+#35 DONE 3.0s
+
+#36 [linux/arm64 stage-3 7/9] RUN cd /app/adonis &&     npm ci --omit=dev &&     mkdir cache
+#36 55.06 
+#36 55.06 added 375 packages, and audited 376 packages in 54s
+#36 55.09 
+#36 55.10 91 packages are looking for funding
+#36 55.10   run `npm fund` for details
+#36 55.48 
+#36 55.48 25 vulnerabilities (2 low, 9 moderate, 12 high, 2 critical)
+#36 55.48 
+#36 55.48 To address issues that do not require attention, run:
+#36 55.48   npm audit fix
+#36 55.48 
+#36 55.48 To address all issues (including breaking changes), run:
+#36 55.48   npm audit fix --force
+#36 55.48 
+#36 55.48 Run `npm audit` for details.
+#36 55.52 npm notice
+#36 55.52 npm notice New major version of npm available! 10.9.8 -> 12.2.3
+#36 55.52 npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.3
+#36 55.52 npm notice To update run: npm install -g npm@12.2.3
+#36 55.52 npm notice
+#36 DONE 55.9s
+
+#37 [linux/arm64 stage-3 8/9] RUN addgroup -S smanga -g 918 &&     adduser -S smanga -G smanga -h /app -u 918 -s /bin/bash
+#37 DONE 0.2s
+
+#38 [linux/arm64 stage-3 9/9] COPY --chmod=755 ./docker /
+#38 DONE 0.0s
+
+#39 exporting to image
+#39 exporting layers
+#39 exporting layers 8.2s done
+#39 exporting manifest sha256:70fc6adf6ee0ea918a90932be30d1bd4b10077f656a9f819d753ecd7bb547aed done
+#39 exporting config sha256:222f5889be7706fbd44e8d5ed214a542111d4dc6d20dcaa2f3cc44d0fc203070 done
+#39 exporting attestation manifest sha256:68044ffab31c338352116dc885cf2d996657c364e3147a58c99d4a9829b61acb done
+#39 exporting manifest sha256:0f9b6973b740743bf078d50bd8c914c461f45d08e25e0e6bdba4ae36ebdbb619 done
+#39 exporting config sha256:b13290649959607ca55eb1abca278df19697365123e3d26d76b4bf739b91fc02 done
+#39 exporting attestation manifest sha256:b97ee053e32c424764ae6d773b5bf82e7feafa11258cb8a0ad5cd661916ecf19 done
+#39 exporting manifest list sha256:ab482f54474e864202a0475d09e5172864c028043ebe8382db95c63c93ef4415 done
+#39 pushing layers
+#39 ...
+
+#40 [auth] ***/smanga-nodejs:pull,push token for registry-1.docker.io
+#40 DONE 0.0s
+
+#39 exporting to image
+#39 pushing layers 8.5s done
+#39 pushing manifest for docker.io/***/smanga-nodejs:4.3.34@sha256:ab482f54474e864202a0475d09e5172864c028043ebe8382db95c63c93ef4415
+#39 pushing manifest for docker.io/***/smanga-nodejs:4.3.34@sha256:ab482f54474e864202a0475d09e5172864c028043ebe8382db95c63c93ef4415 3.3s done
+#39 pushing layers 0.3s done
+#39 pushing manifest for docker.io/***/smanga-nodejs:latest@sha256:ab482f54474e864202a0475d09e5172864c028043ebe8382db95c63c93ef4415
+#39 pushing manifest for docker.io/***/smanga-nodejs:latest@sha256:ab482f54474e864202a0475d09e5172864c028043ebe8382db95c63c93ef4415 2.0s done
+#39 ...
+
+#41 [auth] ***/smanga-nodejs:pull,push token for registry.cn-hangzhou.aliyuncs.com
+#41 DONE 0.0s
+
+#39 exporting to image
+#39 pushing layers 18.6s done
+#39 pushing manifest for registry.cn-hangzhou.aliyuncs.com/***/smanga-nodejs:4.3.34@sha256:ab482f54474e864202a0475d09e5172864c028043ebe8382db95c63c93ef4415
+#39 pushing manifest for registry.cn-hangzhou.aliyuncs.com/***/smanga-nodejs:4.3.34@sha256:ab482f54474e864202a0475d09e5172864c028043ebe8382db95c63c93ef4415 0.5s done
+#39 ERROR: failed to push registry.cn-hangzhou.aliyuncs.com/***/smanga-nodejs:4.3.34: denied: unknown manifest class for application/vnd.oci.empty.v1+json
+------
+ > exporting to image:
+------
+ERROR: failed to build: failed to solve: failed to push registry.cn-hangzhou.aliyuncs.com/***/smanga-nodejs:4.3.34: denied: unknown manifest class for application/vnd.oci.empty.v1+json
+Error: buildx failed with: ERROR: failed to build: failed to solve: failed to push registry.cn-hangzhou.aliyuncs.com/***/smanga-nodejs:4.3.34: denied: unknown manifest class for application/vnd.oci.empty.v1+json
