@@ -70,6 +70,7 @@ const adminNavItems = [
 	{ key: 'manage-manga', label: '漫画管理', icon: '📚', path: '/t/manage/manga' },
 	{ key: 'manage-chapters', label: '章节管理', icon: '📑', path: '/t/manage/chapters' },
 	{ key: 'manage-paths', label: '路径管理', icon: '📂', path: '/t/manage/paths' },
+	{ key: 'manage-storage-roots', label: '存储根管理', icon: '🗄️', path: '/t/manage/storage-roots' },
 	{ key: 'manage-bookmarks', label: '书签管理', icon: '🔖', path: '/t/manage/bookmarks' },
 	{ key: 'manage-tags', label: '标签管理', icon: '🏷️', path: '/t/manage/tags' },
 	{ key: 'manage-compress', label: '解压管理', icon: '🗜️', path: '/t/manage/compress' },

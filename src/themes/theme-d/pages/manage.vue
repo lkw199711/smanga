@@ -24,6 +24,7 @@ const tabs = [
   { key: 'manga', label: '漫画管理', desc: '批量操作漫画元数据', path: '/manga-setting' },
   { key: 'chapter', label: '章节管理', desc: '管理章节与压缩缓存', path: '/chapter-setting' },
   { key: 'path', label: '路径管理', desc: '管理扫描路径与索引', path: '/path-setting' },
+  { key: 'storage-root', label: '存储根管理', desc: '管理本地磁盘、NAS 与网盘挂载位置', path: '/storage-root-setting' },
   { key: 'bookmark', label: '书签管理', desc: '批量删除与整理书签', path: '/bookmark-setting' },
   { key: 'tag', label: '标签管理', desc: '维护标签与关联关系', path: '/tag-setting' },
   { key: 'compress', label: '解压管理', desc: '解压/压缩相关任务', path: '/compress-setting' },

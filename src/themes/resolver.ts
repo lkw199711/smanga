@@ -40,6 +40,7 @@ const sharedManagePages = {
   'manage-manga': () => import('./theme-a/pages/manage/manga.vue'),
   'manage-chapters': () => import('./theme-a/pages/manage/chapters.vue'),
   'manage-paths': () => import('./theme-a/pages/manage/paths.vue'),
+  'manage-storage-roots': () => import('./theme-a/pages/manage/storage-roots.vue'),
   'manage-bookmarks': () => import('./theme-a/pages/manage/bookmarks.vue'),
   'manage-tags': () => import('./theme-a/pages/manage/tags.vue'),
   'manage-compress': () => import('./theme-a/pages/manage/compress.vue'),

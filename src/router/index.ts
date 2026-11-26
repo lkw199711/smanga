@@ -245,6 +245,18 @@ const routes: Array<RouteRecordRaw> = [
 				},
 				component: () => import('../views/path-manage/index.vue'),
 			},
+			// 存储根管理
+			{
+				path: '/storage-root-setting',
+				name: 'storage-root-setting',
+				meta: {
+					sidebar: true,
+					title: 'storageRootManage',
+					icon: 'folder',
+					view: 'setting',
+				},
+				component: () => import('../views/storage-root-manage/index.vue'),
+			},
 			// 章节管理
 			{
 				path: '/chapter-setting',
@@ -571,6 +583,7 @@ const routes: Array<RouteRecordRaw> = [
 				{ path: 'manage/manga', name: 't-manage-manga', component: ThemeBridge, props: { page: 'manage-manga' }, meta: { title: '漫画管理' } },
 				{ path: 'manage/chapters', name: 't-manage-chapters', component: ThemeBridge, props: { page: 'manage-chapters' }, meta: { title: '章节管理' } },
 				{ path: 'manage/paths', name: 't-manage-paths', component: ThemeBridge, props: { page: 'manage-paths' }, meta: { title: '路径管理' } },
+				{ path: 'manage/storage-roots', name: 't-manage-storage-roots', component: ThemeBridge, props: { page: 'manage-storage-roots' }, meta: { title: '存储根管理' } },
 				{ path: 'manage/bookmarks', name: 't-manage-bookmarks', component: ThemeBridge, props: { page: 'manage-bookmarks' }, meta: { title: '书签管理' } },
 				{ path: 'manage/tags', name: 't-manage-tags', component: ThemeBridge, props: { page: 'manage-tags' }, meta: { title: '标签管理' } },
 				{ path: 'manage/compress', name: 't-manage-compress', component: ThemeBridge, props: { page: 'manage-compress' }, meta: { title: '解压管理' } },
@@ -634,6 +647,7 @@ router.beforeEach(async (to) => {
 			't-manage-users': '/account', 't-manage-media': '/media-setting',
 			't-manage-manga': '/manga-setting', 't-manage-chapters': '/chapter-setting',
 			't-manage-paths': '/path-setting', 't-manage-bookmarks': '/bookmark-setting',
+			't-manage-storage-roots': '/storage-root-setting',
 			't-manage-tags': '/tag-setting', 't-manage-compress': '/compress-setting',
 			't-manage-jobs': '/jobs-setting', 't-manage-sync': '/manga-sync',
 			't-manage-share': '/manga-share', 't-manage-p2p': '/p2p-group',

@@ -39,6 +39,7 @@ export const adminNavMenu: MenuItem[] = [
 	{ path: '/t/manage/manga', icon: '📚', label: '漫画管理', routeName: 't-manage-manga' },
 	{ path: '/t/manage/chapters', icon: '📑', label: '章节管理', routeName: 't-manage-chapters' },
 	{ path: '/t/manage/paths', icon: '📂', label: '路径管理', routeName: 't-manage-paths' },
+	{ path: '/t/manage/storage-roots', icon: '🗄️', label: '存储根管理', routeName: 't-manage-storage-roots' },
 	{ path: '/t/manage/bookmarks', icon: '🔖', label: '书签管理', routeName: 't-manage-bookmarks' },
 	{ path: '/t/manage/tags', icon: '🏷️', label: '标签管理', routeName: 't-manage-tags' },
 	{ path: '/t/manage/compress', icon: '🗜️', label: '解压管理', routeName: 't-manage-compress' },

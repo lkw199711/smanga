@@ -8,6 +8,7 @@
         <button class="tb-btn" @click="go('/manga-setting')">漫画管理</button>
         <button class="tb-btn" @click="go('/chapter-setting')">章节管理</button>
         <button class="tb-btn" @click="go('/path-setting')">路径管理</button>
+        <button class="tb-btn" @click="go('/storage-root-setting')">存储根管理</button>
         <button class="tb-btn" @click="go('/bookmark-setting')">书签管理</button>
         <button class="tb-btn" @click="go('/tag-setting')">标签管理</button>
         <button class="tb-btn" @click="go('/compress-setting')">解压管理</button>
