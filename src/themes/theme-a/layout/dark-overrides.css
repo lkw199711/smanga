@@ -157,7 +157,6 @@
 /* ---- 卡片/内容区通用 ---- */
 .sa-dark .sa-card,
 .sa-dark .sa-panel,
-.sa-dark .sa-section,
 .sa-dark .sa-manga-card,
 .sa-dark .sa-list-item,
 .sa-dark .sa-row,
@@ -274,8 +273,7 @@
  * 共享组件覆盖(src/themes/components/*)
  * ========================================================================== */
 
-/* 漫画卡 t-manga-card / 章节 t-chapter-item / 历史 t-history-item / 书签 t-bookmark-item */
-.sa-dark .t-manga-card,
+/* 章节 / 历史 / 书签卡片。漫画封面卡本身保持透明，与亮色主题一致。 */
 .sa-dark .t-chapter-item,
 .sa-dark .t-history-item,
 .sa-dark .t-bookmark-item {
@@ -283,7 +281,6 @@
 	border-color: var(--sa-border) !important;
 	color: var(--sa-text);
 }
-.sa-dark .t-manga-card:hover,
 .sa-dark .t-chapter-item:hover,
 .sa-dark .t-history-item:hover,
 .sa-dark .t-bookmark-item:hover {
@@ -490,6 +487,23 @@
 }
 .sa-dark .sa-link {
 	color: var(--sa-primary) !important;
+}
+.sa-dark .t-continue-item--A {
+	background: var(--sa-card) !important;
+	border-color: var(--sa-border) !important;
+}
+.sa-dark .t-continue-item--A:hover {
+	border-color: var(--sa-primary) !important;
+	box-shadow: 0 0.4rem 1.2rem rgba(0, 0, 0, 0.24) !important;
+}
+.sa-dark .t-continue-item--A .t-continue-item__title {
+	color: var(--sa-text) !important;
+}
+.sa-dark .t-continue-item--A .t-continue-item__meta {
+	color: var(--sa-text-3) !important;
+}
+.sa-dark .t-continue-item--A .t-continue-item__progress {
+	background: var(--sa-bg-hover) !important;
 }
 /* 首页老网格样式(sa-grid-cover 用 background-color 兜底) */
 .sa-dark .sa-grid-cover {

@@ -158,7 +158,6 @@
 }
 .tb-dark .sb-card,
 .tb-dark .sb-panel,
-.tb-dark .sb-section,
 .tb-dark .sb-manga-card,
 .tb-dark .sb-list-item,
 .tb-dark .sb-row,
@@ -179,6 +178,23 @@
 .tb-dark .sb-tile:hover {
 	background: var(--sb-bg-elev) !important;
 	border-color: var(--sb-accent-2) !important;
+}
+.tb-dark .t-continue-item--B {
+	background: var(--sb-card) !important;
+	border-color: var(--sb-border) !important;
+}
+.tb-dark .t-continue-item--B:hover {
+	border-color: var(--sb-accent-2) !important;
+	box-shadow: 0 0.4rem 1.2rem rgba(0, 0, 0, 0.24) !important;
+}
+.tb-dark .t-continue-item--B .t-continue-item__title {
+	color: var(--sb-text) !important;
+}
+.tb-dark .t-continue-item--B .t-continue-item__meta {
+	color: var(--sb-text-3) !important;
+}
+.tb-dark .t-continue-item--B .t-continue-item__progress {
+	background: var(--sb-bg-hover) !important;
 }
 
 /* ---- 文本层级 ---- */
@@ -310,8 +326,7 @@
  * 共享组件覆盖(src/themes/components/*)
  * ========================================================================== */
 
-/* 漫画卡 / 章节 / 历史 / 书签 */
-.tb-dark .t-manga-card,
+/* 章节 / 历史 / 书签卡片。漫画封面卡本身保持透明，与亮色主题一致。 */
 .tb-dark .t-chapter-item,
 .tb-dark .t-history-item,
 .tb-dark .t-bookmark-item {
@@ -319,7 +334,6 @@
 	border-color: var(--sb-border) !important;
 	color: var(--sb-text);
 }
-.tb-dark .t-manga-card:hover,
 .tb-dark .t-chapter-item:hover,
 .tb-dark .t-history-item:hover,
 .tb-dark .t-bookmark-item:hover {

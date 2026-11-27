@@ -8,6 +8,7 @@ const MAX_DRAG_RATIO = 0.42
 const OVER_DRAG_RESISTANCE = 0.2
 const DRAG_SETTLE_DURATION = 180
 const FOLLOW_UP_CLICK_TIMEOUT = 400
+const TAP_SIDE_RATIO = 1 / 3
 
 interface PagedReaderNavigationOptions {
 	previous: () => false | void | Promise<void>
@@ -19,11 +20,12 @@ interface PagedReaderNavigationOptions {
 }
 
 /**
- * Paged-reader navigation without hidden tap zones.
+ * Paged-reader navigation with side tap zones.
  *
- * A tap anywhere toggles the reader chrome. Touch/pen horizontal swipes turn
- * pages, while vertical movement remains available to the scroll container for
- * manually enlarged images. Keyboard navigation is available on desktop.
+ * Taps on the left/right thirds turn pages; the middle toggles the reader
+ * chrome. Touch/pen horizontal swipes turn pages, while vertical movement
+ * remains available to manually enlarged images. Keyboard navigation works
+ * on desktop.
  */
 export function usePagedReaderNavigation(options: PagedReaderNavigationOptions) {
 	let pointerId: number | null = null
@@ -232,7 +234,19 @@ export function usePagedReaderNavigation(options: PagedReaderNavigationOptions) 
 			event.stopPropagation()
 			return
 		}
-		options.toggleControls()
+		if (gestureTransitioning || event.button !== 0 || isEditableTarget(event.target)) return
+		const surface = event.currentTarget
+		if (!(surface instanceof HTMLElement)) return
+		const bounds = surface.getBoundingClientRect()
+		if (!bounds.width) return
+		const tapRatio = (event.clientX - bounds.left) / bounds.width
+		if (tapRatio < TAP_SIDE_RATIO) {
+			turnLeft()
+		} else if (tapRatio > 1 - TAP_SIDE_RATIO) {
+			turnRight()
+		} else {
+			options.toggleControls()
+		}
 	}
 
 	function isEditableTarget(target: EventTarget | null) {
