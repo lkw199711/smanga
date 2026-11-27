@@ -23,7 +23,7 @@
     <div class="td-content">
       <div class="td-manga-info">
         <div class="td-cover">
-          <t-cover variant="D" :seed="Number(mangaId)" :file="mangaInfo.mangaCover || ''" />
+          <t-cover variant="D" :seed="Number(mangaId)" :file="mangaInfo.mangaCover || ''" cover-kind="manga" :cover-id="Number(mangaId)" :cover-version="mangaInfo.updateTime" />
         </div>
         <div class="td-info">
           <div class="td-author" v-if="mangaInfo.author">作者：{{ mangaInfo.author }}</div>

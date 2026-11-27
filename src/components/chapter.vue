@@ -93,7 +93,9 @@ onMounted(() => {
 });
 
 async function get_poster(item: chapterItemType) {
-  blobLink.value = await imageApi.get({file: item.pageImage || item.chapterCover});
+  blobLink.value = item.pageImage
+    ? await imageApi.get({file: item.pageImage})
+    : await imageApi.getCover({kind: 'chapter', id: item.chapterId, file: item.chapterCover, version: item.updateTime});
 }
 </script>
 

@@ -11,6 +11,9 @@
 			:variant="variant"
 			:seed="Number(item?.chapterId || item?.mangaId || 0)"
 			:file="coverFile"
+			:cover-kind="coverKind"
+			:cover-id="coverKind ? Number((coverKind === 'chapter' ? item?.chapterId : item?.mangaId) || 0) : undefined"
+			:cover-version="coverKind === 'chapter' ? item?.updateTime : undefined"
 		>
 			<div v-if="isCollected" class="t-chapter-item__collected" title="已收藏" aria-label="已收藏">★</div>
 		</t-cover>
@@ -59,6 +62,11 @@ const variant = computed(() => props.variant)
 const coverFile = computed(() => {
 	const i: any = props.item || {}
 	return i.pageImage || i.chapterCover || i.chapterImage || i.mangaCover || ''
+})
+const coverKind = computed(() => {
+	const i = props.item || {}
+	if (i.pageImage || (!i.chapterCover && i.chapterImage)) return undefined
+	return !i.chapterCover && i.mangaCover ? 'manga' : 'chapter'
 })
 
 const isCollected = computed(() => {

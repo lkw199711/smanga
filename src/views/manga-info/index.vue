@@ -1,18 +1,18 @@
 <template>
   <div class="manga-info">
     <div class="top" :style="[bannerModel === 'toomics' && {marginTop: 0}]">
-      <template v-if="banner.length">
+      <template v-if="visibleBanners.length">
         <el-carousel class="carousel" :interval="interval" :type="carouselType" v-if="bannerModel === 'toptoon'">
-          <el-carousel-item class="banner-box" v-for="item in banner" :key="item.metaId">
+          <el-carousel-item class="banner-box" v-for="item in visibleBanners" :key="item.metaId">
             <img class="banner" :src="item.blob" alt="banner" />
           </el-carousel-item>
           <!-- 使用一张图片撑开容器的高度 -->
-          <img class="banner seat" :src="banner.length ? banner[0].blob : ''" alt="banner" />
+          <img class="banner seat" :src="visibleBanners[0].blob" alt="banner" />
         </el-carousel>
 
         <div class="banner-toomics" v-if="bannerModel === 'toomics'">
-          <img class="banner-toomics-fore" :src="banner[0]?.blob" alt="banner" />
-          <img class="banner-toomics-back" :src="bannerBg?.blob" alt="bannerBg" />
+          <img class="banner-toomics-fore" v-if="bannerForeground" :src="bannerForeground.blob" alt="banner" />
+          <img class="banner-toomics-back" v-if="bannerBg?.blob" :src="bannerBg.blob" alt="bannerBg" />
         </div>
       </template>
 
@@ -26,8 +26,8 @@
       <div class="character" @wheel="character_wheel" v-if="character.length">
         <p class="character-title">角色</p>
         <div class="character-scroll" @wheel="character_wheel" :options="{suppressScrollX: false, suppressScrollY: true}">
-          <div v-for="item in character" class="character-item" :key="item.characterId">
-            <img :src="item.blob" :alt="item.metaContent" />
+          <div v-for="item in character" class="character-item" :key="item.metaId || item.characterId">
+            <img v-if="item.blob" :src="item.blob" :alt="item.metaContent" />
             <div class="right">
               <p class="name">{{ item.metaContent }}</p>
               <p class="description">{{ item.description }}</p>
@@ -162,7 +162,7 @@ import {useRoute, useRouter} from 'vue-router';
 import {onMounted, ref, reactive, computed, watch} from 'vue';
 import mangaApi from '@/api/manga';
 import StorageAvailabilityNotice from '@/components/storage-availability-notice.vue';
-import {useMangaImages} from './use-manga-images';
+import {isBannerBackground, useMangaImages} from './use-manga-images';
 import {config, userConfig} from '@/store';
 import {tagItemType} from '@/type/tag';
 import {metaType, metaInit} from '@/type/meta';
@@ -209,7 +209,7 @@ let covers = ref<metaType[]>([]);
 let character = ref<metaType[]>([]);
 let mangaCover = ref<string>('');
 const checkingStorage = ref(false);
-const {canLoadImages, beginImageLoad, stopImageLoad, applyAvailability, loadImage} = useMangaImages();
+const {canLoadImages, beginImageLoad, applyAvailability, loadMetaImage, loadCover} = useMangaImages();
 let isCollect = ref(false);
 let editTagsDialog = ref(false);
 let editCover = ref(false);
@@ -217,6 +217,8 @@ let editMetasDialog = ref(false);
 let mangaShareDialog = ref(false);
 let bannerModel = ref<string>('toptoon');
 let bannerBg = ref<metaType>();
+const visibleBanners = computed(() => banner.value.filter(item => item.blob));
+const bannerForeground = computed(() => visibleBanners.value.find(item => item !== bannerBg.value));
 let hasManyCover = ref(false);
 let metaWriteJson = ref(true);
 
@@ -399,7 +401,7 @@ async function render_meta() {
 
   // 漫画封面
   mangaCover.value = '';
-  void loadImage(mangaInfo.mangaCover, signal).then(cover => {
+  void loadCover(mangaId, mangaInfo.mangaCover, mangaInfo.updateTime, signal).then(cover => {
     if (signal.aborted) return;
     mangaCover.value = cover;
   });
@@ -420,18 +422,18 @@ async function render_meta() {
 
   const star = metas.find((item: metaType) => item.metaName === 'star')?.metaContent;
   if (star) mangaInfo.star = star;
-  const imageMetas = canLoadImages.value ? metas.filter(item => item.metaFile) : [];
+  const imageMetas = metas.filter(item => item.hasImageFile ?? Boolean(item.metaFile));
 
   // 封面
-  covers.value = imageMetas.filter(item => item.metaName === 'cover');
+  covers.value = imageMetas.filter(item => item.metaName === 'cover' && item.metaFile);
   hasManyCover.value = covers.value.length > 0;
 
   // 广告图
   banner.value = imageMetas.filter(item => /banner/.test(item.metaName));
-  bannerBg.value = banner.value.find((item: metaType) => /bannerBackground/.test(item.metaFile));
-  if (bannerBg.value) bannerModel.value = 'toomics';
+  bannerBg.value = banner.value.find(isBannerBackground);
+  bannerModel.value = bannerBg.value ? 'toomics' : 'toptoon';
   banner.value.forEach(async (item: metaType) => {
-    item.blob = await loadImage(item.metaFile, signal);
+    item.blob = await loadMetaImage(item, signal);
   });
 
   // 将图片进行排序
@@ -442,7 +444,7 @@ async function render_meta() {
   // 角色信息
   character.value = imageMetas.filter(item => item.metaName === 'character');
   character.value.forEach(async (item: metaType) => {
-    item.blob = await loadImage(item.metaFile, signal);
+    item.blob = await loadMetaImage(item, signal);
   });
 }
 
@@ -455,12 +457,7 @@ async function render_chapter_list() {
   const availability = chapterListResponse.availability;
   if (availability && availability.status !== 'available') {
     mangaInfo.availability = availability;
-    stopImageLoad();
-    mangaCover.value = '';
-    banner.value = [];
-    character.value = [];
-    covers.value = [];
-    hasManyCover.value = false;
+    applyAvailability(availability);
     editCover.value = false;
   }
   chapterList.value = chapterListResponse.list;
@@ -548,7 +545,7 @@ function open_covers_edit() {
   editCover.value = true;
   covers.value.forEach(async (item: metaType) => {
     item.active = item.metaFile === mangaInfo.mangaCover;
-    item.blob = await loadImage(item.metaFile);
+    item.blob = await loadMetaImage(item);
   });
 }
 

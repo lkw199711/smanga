@@ -32,7 +32,8 @@ const img = Axios.create({
 		},
 	],
 	transformResponse: [
-		function (data) {
+		function (data, _headers, status) {
+			if (status && status >= 400) return data;
 			data = data || {};
 			return URL.createObjectURL(data);
 		},
@@ -47,6 +48,14 @@ interface ImageGetOptions {
 	again?: boolean;
 	priority?: number;
 	signal?: AbortSignal;
+}
+
+interface CoverGetOptions extends Omit<ImageGetOptions, 'file'> {
+	kind: 'manga' | 'chapter' | 'meta';
+	id?: number | string;
+	file?: string;
+	version?: string;
+	cacheOnly?: boolean;
 }
 
 interface PendingImageRequest {
@@ -128,11 +137,13 @@ function consumeImageRequest(
 
 function getOrCreateImageRequest({
 	file,
+	key = file,
+	coverUrl,
 	saveCache = true,
 	again = true,
 	priority = 0,
-}: Omit<ImageGetOptions, 'signal'>) {
-	const existing = pendingImages.get(file);
+}: Omit<ImageGetOptions, 'signal'> & {key?: string; coverUrl?: string}) {
+	const existing = pendingImages.get(key);
 	if (existing) {
 		existing.saveCache ||= saveCache;
 		existing.maxAttempts = Math.max(existing.maxAttempts, again ? 2 : 1);
@@ -144,19 +155,21 @@ function getOrCreateImageRequest({
 	let entry!: PendingImageRequest;
 	const handle = imageScheduler.schedule(
 		async (signal) => {
-			const cached = imageCache.get(file);
+			const cached = imageCache.get(key);
 			if (cached) return cached;
 
 			for (let attempt = 0; attempt < entry.maxAttempts; attempt++) {
 				if (signal.aborted) throw createAbortError();
 
 				try {
-					const response = await img({data: {file}, signal});
+					const response = coverUrl
+						? await img({url: coverUrl, signal})
+						: await img({data: {file}, signal});
 					if (signal.aborted) throw createAbortError();
 
 					if (entry.saveCache) {
 						imageCache.set(
-							file,
+							key,
 							response.data,
 							Number(userConfig.imageCacheLimit) || 0
 						);
@@ -166,6 +179,7 @@ function getOrCreateImageRequest({
 					if (signal.aborted || Axios.isCancel(error) || isAbortError(error)) {
 						throw createAbortError();
 					}
+					if (coverUrl && Axios.isAxiosError(error) && [400, 401, 403, 404].includes(error.response?.status ?? 0)) break;
 
 					if (attempt + 1 < entry.maxAttempts) {
 						await waitForRetry(signal);
@@ -173,23 +187,23 @@ function getOrCreateImageRequest({
 				}
 			}
 
-			return placeholder;
+			return coverUrl ? '' : placeholder;
 		},
 		{priority}
 	);
 
 	entry = {
-		file,
+		file: key,
 		saveCache,
 		maxAttempts: again ? 2 : 1,
 		priority: Number(priority) || 0,
 		consumers: new Set(),
 		handle,
 	};
-	pendingImages.set(file, entry);
+	pendingImages.set(key, entry);
 
 	const cleanup = () => {
-		if (pendingImages.get(file) === entry) pendingImages.delete(file);
+		if (pendingImages.get(key) === entry) pendingImages.delete(key);
 	};
 	handle.promise.then(cleanup, cleanup);
 
@@ -215,6 +229,22 @@ const imageApi = {
 			saveCache,
 			again,
 			priority,
+		});
+		return consumeImageRequest(entry, signal);
+	},
+
+	async getCover({kind, id, file = '', version, cacheOnly = false, signal, ...options}: CoverGetOptions): Promise<string> {
+		const coverId = Number(id);
+		if (!Number.isSafeInteger(coverId) || coverId <= 0) return this.get({file, signal, ...options});
+		if (signal?.aborted) throw createAbortError();
+		const key = JSON.stringify(['cover', kind, coverId, file, version, cacheOnly]);
+		const cached = imageCache.get(key);
+		if (cached) return cached;
+		const entry = getOrCreateImageRequest({
+			file,
+			key,
+			coverUrl: `cover/${kind}/${coverId}${cacheOnly ? '?cacheOnly=1' : ''}`,
+			...options,
 		});
 		return consumeImageRequest(entry, signal);
 	},

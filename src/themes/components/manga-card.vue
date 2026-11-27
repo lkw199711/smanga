@@ -5,6 +5,9 @@
 			:variant="variant"
 			:seed="Number(item?.mangaId || 0)"
 			:file="coverFile"
+			cover-kind="manga"
+			:cover-id="Number(item?.mangaId || 0)"
+			:cover-version="item?.updateTime"
 			fit="cover"
 		>
 			<div v-if="isCollected" class="t-manga-card__collected" title="已收藏" aria-label="已收藏">★</div>

@@ -1,7 +1,7 @@
 <template>
   <div class="manga-info">
-    <div :class="['top', {'top--cover-only': !banner.length}]" :style="[bannerModel === 'toomics' && {marginTop: 0}]">
-      <template v-if="banner.length">
+    <div :class="['top', {'top--cover-only': !visibleBanners.length}]" :style="[bannerModel === 'toomics' && {marginTop: 0}]">
+      <template v-if="visibleBanners.length">
         <!-- 自绘轮播 (替代 el-carousel): seat 占位图撑高, 活动页淡入, 支持定时轮播/触摸滑动/圆点切换 -->
         <div
           class="carousel tm-carousel"
@@ -11,18 +11,18 @@
           @touchstart.passive="onBannerTouchStart"
           @touchend.passive="onBannerTouchEnd"
         >
-          <img class="banner seat" :src="banner.length ? banner[0].blob : ''" alt="" aria-hidden="true" />
+          <img class="banner seat" :src="visibleBanners[0].blob" alt="" aria-hidden="true" />
           <div
             class="banner-box tm-carousel-item"
-            v-for="(item, index) in banner"
+            v-for="(item, index) in visibleBanners"
             :key="item.metaId"
             :class="{ 'is-active': index === bannerIndex }"
           >
             <img class="banner" :src="item.blob" alt="banner" />
           </div>
-          <div class="tm-carousel-dots" v-if="banner.length > 1">
+          <div class="tm-carousel-dots" v-if="visibleBanners.length > 1">
             <button
-              v-for="(item, index) in banner"
+              v-for="(item, index) in visibleBanners"
               :key="item.metaId"
               type="button"
               :class="{ active: index === bannerIndex }"
@@ -33,8 +33,8 @@
         </div>
 
         <div class="banner-toomics" v-if="bannerModel === 'toomics'">
-          <img class="banner-toomics-fore" :src="banner[0]?.blob" alt="banner" />
-          <img class="banner-toomics-back" :src="bannerBg?.blob" alt="bannerBg" />
+          <img class="banner-toomics-fore" v-if="bannerForeground" :src="bannerForeground.blob" alt="banner" />
+          <img class="banner-toomics-back" v-if="bannerBg?.blob" :src="bannerBg.blob" alt="bannerBg" />
         </div>
       </template>
 
@@ -48,8 +48,8 @@
       <div class="character" @wheel="character_wheel" v-if="character.length">
         <p class="character-title">角色</p>
         <div class="character-scroll" @wheel="character_wheel" :options="{suppressScrollX: false, suppressScrollY: true}">
-          <div v-for="item in character" class="character-item" :key="item.characterId">
-            <img :src="item.blob" :alt="item.metaContent" />
+          <div v-for="item in character" class="character-item" :key="item.metaId || item.characterId">
+            <img v-if="item.blob" :src="item.blob" :alt="item.metaContent" />
             <div class="right">
               <p class="name">{{ item.metaContent }}</p>
               <p class="description">{{ item.description }}</p>
@@ -58,8 +58,8 @@
         </div>
       </div>
 
-      <div :class="['detail-overview', {'detail-overview--with-cover': !banner.length}]">
-        <aside class="overview-cover" v-if="!banner.length" aria-label="漫画封面">
+      <div :class="['detail-overview', {'detail-overview--with-cover': !visibleBanners.length}]">
+        <aside class="overview-cover" v-if="!visibleBanners.length" aria-label="漫画封面">
           <div class="overview-cover-img cover-frame" :class="{ 'is-empty': !mangaCover || coverError }">
             <img v-if="mangaCover && !coverError" :src="mangaCover" :alt="mangaInfo.mangaName" loading="lazy" @error="coverError = true" />
             <span v-else class="cover-fallback-ico" aria-hidden="true">🖼</span>
@@ -289,7 +289,7 @@ import {useRoute, useRouter} from 'vue-router';
 import {onMounted, onBeforeUnmount, ref, reactive, computed, watch} from 'vue';
 import mangaApi from '@/api/manga';
 import StorageAvailabilityNotice from '@/components/storage-availability-notice.vue';
-import {useMangaImages} from '@/views/manga-info/use-manga-images';
+import {isBannerBackground, useMangaImages} from '@/views/manga-info/use-manga-images';
 import {config, userConfig} from '@/store';
 import {tagItemType} from '@/type/tag';
 import {metaType} from '@/type/meta';
@@ -341,7 +341,7 @@ let covers = ref<metaType[]>([]);
 let character = ref<metaType[]>([]);
 let mangaCover = ref<string>('');
 const checkingStorage = ref(false);
-const {canLoadImages, beginImageLoad, stopImageLoad, applyAvailability, loadImage} = useMangaImages();
+const {canLoadImages, beginImageLoad, applyAvailability, loadMetaImage, loadCover} = useMangaImages();
 let isCollect = ref(false);
 let editTagsDialog = ref(false);
 let editCover = ref(false);
@@ -349,6 +349,8 @@ let editMetasDialog = ref(false);
 let mangaShareDialog = ref(false);
 let bannerModel = ref<string>('toptoon');
 let bannerBg = ref<metaType>();
+const visibleBanners = computed(() => banner.value.filter(item => item.blob));
+const bannerForeground = computed(() => visibleBanners.value.find(item => item !== bannerBg.value));
 let hasManyCover = ref(false);
 
 let sourceWebsite = ref('');
@@ -363,9 +365,9 @@ let bannerTouchX = 0;
 
 function startBannerTimer() {
   pauseBannerTimer();
-  if (banner.value.length < 2) return;
+  if (visibleBanners.value.length < 2) return;
   bannerTimer = window.setInterval(() => {
-    bannerIndex.value = (bannerIndex.value + 1) % banner.value.length;
+    bannerIndex.value = (bannerIndex.value + 1) % visibleBanners.value.length;
   }, interval.value);
 }
 
@@ -388,14 +390,14 @@ function onBannerTouchStart(event: TouchEvent) {
 
 function onBannerTouchEnd(event: TouchEvent) {
   const deltaX = (event.changedTouches[0]?.clientX ?? 0) - bannerTouchX;
-  const count = banner.value.length;
+  const count = visibleBanners.value.length;
   if (count > 1 && Math.abs(deltaX) > 40) {
     bannerIndex.value = (bannerIndex.value + (deltaX < 0 ? 1 : count - 1)) % count;
   }
   startBannerTimer();
 }
 
-watch(banner, () => {
+watch(visibleBanners, () => {
   bannerIndex.value = 0;
   startBannerTimer();
 });
@@ -549,7 +551,7 @@ async function render_meta() {
   }
 
   mangaCover.value = '';
-  void loadImage(mangaInfo.mangaCover, signal).then(cover => {
+  void loadCover(id, mangaInfo.mangaCover, mangaInfo.updateTime, signal).then(cover => {
     if (signal.aborted) return;
     coverError.value = false;
     mangaCover.value = cover;
@@ -571,16 +573,16 @@ async function render_meta() {
 
   const star = metas.find((item: metaType) => item.metaName === 'star')?.metaContent;
   if (star) mangaInfo.star = star;
-  const imageMetas = canLoadImages.value ? metas.filter(item => item.metaFile) : [];
+  const imageMetas = metas.filter(item => item.hasImageFile ?? Boolean(item.metaFile));
 
-  covers.value = imageMetas.filter(item => item.metaName === 'cover');
+  covers.value = imageMetas.filter(item => item.metaName === 'cover' && item.metaFile);
   hasManyCover.value = covers.value.length > 0;
 
   banner.value = imageMetas.filter(item => /banner/.test(item.metaName));
-  bannerBg.value = banner.value.find((item: metaType) => /bannerBackground/.test(item.metaFile));
-  if (bannerBg.value) bannerModel.value = 'toomics';
+  bannerBg.value = banner.value.find(isBannerBackground);
+  bannerModel.value = bannerBg.value ? 'toomics' : 'toptoon';
   banner.value.forEach(async (item: metaType) => {
-    item.blob = await loadImage(item.metaFile, signal);
+    item.blob = await loadMetaImage(item, signal);
   });
 
   banner.value.sort((a: any, b: any) => {
@@ -589,7 +591,7 @@ async function render_meta() {
 
   character.value = imageMetas.filter(item => item.metaName === 'character');
   character.value.forEach(async (item: metaType) => {
-    item.blob = await loadImage(item.metaFile, signal);
+    item.blob = await loadMetaImage(item, signal);
   });
 }
 
@@ -601,12 +603,7 @@ async function render_chapter_list() {
   const availability = chapterListResponse.availability;
   if (availability && availability.status !== 'available') {
     mangaInfo.availability = availability;
-    stopImageLoad();
-    mangaCover.value = '';
-    banner.value = [];
-    character.value = [];
-    covers.value = [];
-    hasManyCover.value = false;
+    applyAvailability(availability);
     editCover.value = false;
   }
   chapterList.value = chapterListResponse.list;
@@ -671,7 +668,7 @@ function open_covers_edit() {
   editCover.value = true;
   covers.value.forEach(async (item: metaType) => {
     item.active = item.metaFile === mangaInfo.mangaCover;
-    item.blob = await loadImage(item.metaFile);
+    item.blob = await loadMetaImage(item);
   });
 }
 

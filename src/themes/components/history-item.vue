@@ -10,6 +10,8 @@
 			:variant="variant"
 			:seed="Number(item?.chapterId || item?.mangaId || 0)"
 			:file="coverFile"
+			:cover-kind="coverKind"
+			:cover-id="coverKind ? Number((coverKind === 'chapter' ? item?.chapterId : item?.mangaId) || 0) : undefined"
 			fit="cover"
 		>
 			<div v-if="isRead" class="t-history-item__read">✓</div>
@@ -59,6 +61,10 @@ const subTitle = computed(() => String(props.item?.chapterName || '未知章节'
 
 const coverFile = computed(() => {
 	return props.item?.pageImage || props.item?.chapterCover || props.item?.mangaCover || ''
+})
+const coverKind = computed(() => {
+	const i = props.item || {}
+	return i.pageImage ? undefined : !i.chapterCover && i.mangaCover ? 'manga' : 'chapter'
 })
 
 const latest = computed(() => props.item?.latest || null)

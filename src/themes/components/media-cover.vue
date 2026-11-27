@@ -11,6 +11,9 @@ import imageApi from '@/api/image'
 const props = withDefaults(
 	defineProps<{
 		file?: string
+		coverKind?: 'manga' | 'chapter'
+		coverId?: number
+		coverVersion?: string
 		seed?: number
 		variant?: 'A' | 'B' | 'D'
 		fit?: 'contain' | 'cover'
@@ -37,7 +40,7 @@ function cancelLoad() {
 
 async function load() {
 	cancelLoad()
-	if (!props.file) {
+	if (!props.file && !props.coverId) {
 		src.value = ''
 		return
 	}
@@ -48,11 +51,14 @@ async function load() {
 	requestController = controller
 
 	try {
-		const nextSrc = await imageApi.get({
+		const options = {
 			file,
 			priority: 100,
 			signal: controller.signal,
-		})
+		}
+		const nextSrc = props.coverKind
+			? await imageApi.getCover({ ...options, kind: props.coverKind, id: props.coverId, version: props.coverVersion })
+			: await imageApi.get(options)
 		if (sequence === loadSequence && file === props.file) {
 			src.value = nextSrc
 			observer?.disconnect()
@@ -93,7 +99,7 @@ onBeforeUnmount(() => {
 })
 
 watch(
-	() => props.file,
+	[() => props.file, () => props.coverKind, () => props.coverId, () => props.coverVersion],
 	() => {
 		cancelLoad()
 		src.value = ''

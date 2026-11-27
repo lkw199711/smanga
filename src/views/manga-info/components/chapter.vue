@@ -92,19 +92,21 @@ onBeforeUnmount(() => {
   observe.disconnect();
 });
 
-watch([visible, coverPath, () => props.sourceWebsite], async ([inView, file, site], _, onCleanup) => {
+watch([visible, coverPath, () => props.sourceWebsite, () => props.chapterInfo.chapterId, () => props.chapterInfo.updateTime], async ([inView, file, site, id, version], _, onCleanup) => {
   blobLink.value = '';
   blobLink1.value = '';
-  if (!inView || !file) return;
+  if (!inView || (!file && !id)) return;
 
   const controller = new AbortController();
   const {signal} = controller;
   onCleanup(() => controller.abort());
   try {
-    const cover = await imageApi.get({file, signal});
+    const cover = file && file === props.chapterInfo.pageImage && !props.chapterInfo.chapterCover
+      ? await imageApi.get({file, signal})
+      : await imageApi.getCover({kind: 'chapter', id, file, version, signal});
     if (signal.aborted) return;
     blobLink.value = cover || '';
-    if (site === 'toptoon' && file === props.chapterInfo.chapterCover) {
+    if (file && site === 'toptoon' && file === props.chapterInfo.chapterCover) {
       const extra = await imageApi.get({file: getFileNameWithoutExtension(file) + '-1.jpg', signal});
       if (!signal.aborted) blobLink1.value = extra || '';
     }

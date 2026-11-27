@@ -79,6 +79,7 @@ import { useGoRead } from '@/themes/composables'
 
 type MangaCard = {
 	id: number
+	mangaCover?: string
 	chapterId?: number
 	mangaId?: number
 	name: string
@@ -151,7 +152,7 @@ onMounted(async () => {
 		}))
 	} catch { }
 
-	await warmCovers(recentAdded.value, { kind: 'manga' })
+	await warmCovers(recentAdded.value)
 })
 
 function goManga(item: { mangaId?: number; id?: number }) {
@@ -160,20 +161,12 @@ function goManga(item: { mangaId?: number; id?: number }) {
 	router.push(`/t/manga/${id}`)
 }
 
-async function warmCovers(list: any[], opt: { kind: 'manga' | 'chapter' }) {
-	const files = Array.from(
-		new Set(
-			list
-				.map((it) => (opt.kind === 'manga' ? it?.mangaCover : it?.chapterCover || it?.pageImage))
-				.filter(Boolean)
-		)
-	) as string[]
-
+async function warmCovers(list: MangaCard[]) {
 	await Promise.allSettled(
-		files.map(async (file) => {
-			if (coverCache.value[file]) return
-			const src = await imageApi.get({ file })
-			coverCache.value[file] = src
+		list.map(async (item) => {
+			if (!item.mangaCover || coverCache.value[item.mangaId]) return
+			const src = await imageApi.getCover({ kind: 'manga', id: item.mangaId, file: item.mangaCover })
+			coverCache.value[item.mangaId] = src
 		})
 	)
 }
@@ -182,8 +175,7 @@ function coverStyle(
 	item: any,
 	opt: { kind: 'manga' | 'chapter'; fallbackSeed: number }
 ): Record<string, string> {
-	const file = opt.kind === 'manga' ? item?.mangaCover : item?.chapterCover || item?.pageImage
-	const src = file ? coverCache.value[file] : ''
+	const src = coverCache.value[item?.mangaId]
 	if (src) {
 		return { backgroundImage: `url("${src}")` }
 	}

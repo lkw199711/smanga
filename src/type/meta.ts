@@ -16,6 +16,8 @@ type characterItem = {
 type metaType = {
 	metaId: string;
 	metaFile: string;
+	hasImageFile?: boolean;
+	updateTime?: string;
 	metaName: string;
 	metaContent: string;
 	description: string;

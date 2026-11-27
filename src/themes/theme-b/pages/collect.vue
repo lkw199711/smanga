@@ -7,7 +7,7 @@
     <div class="touch-dom">
         <div ref="listRef" class="tb-grid" v-if="tab === 'manga'">
           <div v-for="item in list" :key="item.collectId" class="tb-card" @click="goManga(item)" @contextmenu="openThemeContextMenu($event, 'manga', item)">
-            <t-cover class="tb-card-cover" variant="B" :seed="Number(item?.mangaId || 0)" :file="item?.mangaCover || ''" fit="cover" />
+            <t-cover class="tb-card-cover" variant="B" :seed="Number(item?.mangaId || 0)" :file="item?.mangaCover || ''" cover-kind="manga" :cover-id="Number(item?.mangaId || 0)" :cover-version="item?.updateTime" fit="cover" />
             <div class="tb-card-name">{{ item.mangaName }}</div>
           </div>
         </div>

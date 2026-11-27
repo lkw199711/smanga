@@ -17,7 +17,7 @@
     <div class="tb-content">
       <div class="tb-manga-info">
         <div class="tb-cover">
-          <t-cover variant="B" :seed="Number(mangaId)" :file="mangaInfo.mangaCover || ''" />
+          <t-cover variant="B" :seed="Number(mangaId)" :file="mangaInfo.mangaCover || ''" cover-kind="manga" :cover-id="Number(mangaId)" :cover-version="mangaInfo.updateTime" />
         </div>
         <div class="tb-info">
           <div class="tb-author" v-if="mangaInfo.mangaAuthor">作者：{{ mangaInfo.mangaAuthor }}</div>

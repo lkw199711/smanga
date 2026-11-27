@@ -214,7 +214,7 @@ async function loadMangaCover(item: any) {
   if (!item.mangaCover) return
   
   try {
-    const blobUrl = await imageApi.get({ file: item.mangaCover })
+    const blobUrl = await imageApi.getCover({ kind: 'manga', id: item.mangaId, file: item.mangaCover, version: item.updateTime })
     if (blobUrl) {
       mangaCoverCache.value[item.mangaId] = blobUrl
     }

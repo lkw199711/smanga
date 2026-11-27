@@ -10,6 +10,8 @@
 			:variant="variant"
 			:seed="mangaId"
 			:file="coverFile"
+			cover-kind="manga"
+			:cover-id="mangaId"
 			fit="cover"
 		>
 			<div v-if="unreadCount > 0" class="t-continue-item__unread">{{ unreadCount }}</div>

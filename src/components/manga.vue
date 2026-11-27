@@ -78,7 +78,7 @@ onBeforeUnmount(() => {
 });
 
 async function get_poster(item: mangaItemType) {
-	blobLink.value = await imageApi.get({file: item.mangaCover});
+	blobLink.value = await imageApi.getCover({kind: 'manga', id: item.mangaId, file: item.mangaCover, version: item.updateTime});
 }
 
 async function go_chapter() {

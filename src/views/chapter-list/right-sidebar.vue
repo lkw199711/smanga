@@ -93,7 +93,7 @@ watch(
     isCollect.value = await collectApi.is_collect('chapter', chapterId);
     const chapterCover = props.chapterInfo?.chapterCover;
     if (chapterCover) {
-      blob.value = await imageApi.get({file: chapterCover});
+      blob.value = await imageApi.getCover({kind: 'chapter', id: props.chapterInfo?.chapterId, file: chapterCover, version: props.chapterInfo?.updateTime});
     } else {
       blob.value = placeholder;
     }

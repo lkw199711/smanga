@@ -20,7 +20,7 @@
             @click="goManga(item)"
             @contextmenu="openThemeContextMenu($event, 'manga', item)"
           >
-            <t-cover class="ta-grid-cover" variant="A" :seed="Number(item?.mangaId || 0)" :file="item?.mangaCover || ''" fit="cover" />
+            <t-cover class="ta-grid-cover" variant="A" :seed="Number(item?.mangaId || 0)" :file="item?.mangaCover || ''" cover-kind="manga" :cover-id="Number(item?.mangaId || 0)" :cover-version="item?.updateTime" fit="cover" />
             <div class="ta-grid-name">{{ item.mangaName }}</div>
           </div>
         </div>
