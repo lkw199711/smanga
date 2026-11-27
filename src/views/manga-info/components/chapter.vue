@@ -129,7 +129,7 @@ watch([visible, coverPath, () => props.sourceWebsite, () => props.chapterInfo.ch
   max-width: 100%;
   height: 9rem;
   padding: 0.8rem 1.2rem 0.8rem 0.8rem;
-  border: 1px solid color-mix(in srgb, @s-border 82%, transparent);
+  border: 1px solid @s-border;
   border-radius: 1.2rem;
   background: var(--s-back-soft-original, #f9f9f9);
   color: @s-back-text;
@@ -141,7 +141,7 @@ watch([visible, coverPath, () => props.sourceWebsite, () => props.chapterInfo.ch
 
   &:hover {
     transform: translateY(-1px);
-    border-color: color-mix(in srgb, @s-primary 38%, transparent);
+    border-color: @s-primary;
     background: color-mix(in srgb, @s-primary 5%, var(--s-back-soft-original, #f9f9f9));
     box-shadow: 0 0.5rem 1.6rem fade(#000000, 7%);
   }

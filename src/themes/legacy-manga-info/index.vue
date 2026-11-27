@@ -898,7 +898,7 @@ const batch = useBatchSelection()
 .meta-info {
   margin-top: 2rem;
   padding: 2rem;
-  border: 1px solid color-mix(in srgb, @s-border 78%, transparent);
+  border: 1px solid @s-border;
   border-radius: 1.6rem;
   background: var(--s-back-soft-original, #f9f9f9);
   color: @s-back-text;
@@ -976,7 +976,7 @@ const batch = useBatchSelection()
 
 .technical-info {
   margin-top: 1.2rem;
-  border-top: 1px solid color-mix(in srgb, @s-border 72%, transparent);
+  border-top: 1px solid @s-border;
 
   summary {
     display: flex;
@@ -1023,7 +1023,7 @@ const batch = useBatchSelection()
   margin-top: 1rem;
   margin-bottom: 2rem;
   overflow: hidden;
-  border: 1px solid color-mix(in srgb, @s-border 78%, transparent);
+  border: 1px solid @s-border;
   border-radius: 1.6rem;
   background: color-mix(in srgb, @s-border 78%, transparent);
   box-shadow: 0 0.8rem 2.8rem fade(#000000, 7%);
@@ -1138,7 +1138,7 @@ const batch = useBatchSelection()
   }
 
   &--outline {
-    border-color: color-mix(in srgb, @s-primary 42%, transparent);
+    border-color: @s-primary;
     background: transparent;
     color: @s-primary;
 
@@ -1153,14 +1153,14 @@ const batch = useBatchSelection()
   &--quiet {
     min-height: 4rem;
     padding: 0 1.2rem;
-    border-color: color-mix(in srgb, @s-border 88%, transparent);
+    border-color: @s-border;
     background: transparent;
     color: @s-back-text-secondary;
 
     &:hover,
     &:focus,
     &.is-selected {
-      border-color: color-mix(in srgb, @s-primary 35%, transparent);
+      border-color: @s-primary;
       background: color-mix(in srgb, @s-primary 9%, transparent);
       color: @s-primary;
     }
@@ -1202,13 +1202,13 @@ const batch = useBatchSelection()
   justify-content: flex-start;
   min-height: 4.5rem;
   padding: 0 1.2rem;
-  border-color: color-mix(in srgb, @s-border 88%, transparent);
+  border-color: @s-border;
   background: transparent;
   color: @s-back-text-secondary;
 
   &:hover,
   &:focus {
-    border-color: color-mix(in srgb, @s-primary 35%, transparent);
+    border-color: @s-primary;
     background: color-mix(in srgb, @s-primary 8%, transparent);
     color: @s-primary;
   }
@@ -1235,7 +1235,7 @@ const batch = useBatchSelection()
   width: 100%;
   max-width: 112rem;
   padding: 1.6rem 2rem;
-  border: 1px solid color-mix(in srgb, @s-border 78%, transparent);
+  border: 1px solid @s-border;
   border-radius: 1.4rem;
   background: var(--s-back-soft-original, #f9f9f9);
 }
@@ -1267,7 +1267,7 @@ const batch = useBatchSelection()
 .view-switch {
   display: flex;
   padding: 0.3rem;
-  border: 1px solid color-mix(in srgb, @s-border 80%, transparent);
+  border: 1px solid @s-border;
   border-radius: 0.9rem;
   background: color-mix(in srgb, @s-border 18%, transparent);
 
@@ -1361,7 +1361,7 @@ const batch = useBatchSelection()
   display: none;
   box-sizing: border-box;
   padding: 1rem;
-  border: 1px solid color-mix(in srgb, @s-border 78%, transparent);
+  border: 1px solid @s-border;
   border-radius: 1.6rem;
   background: var(--s-back-soft-original, #f9f9f9);
   box-shadow: 0 0.8rem 2.8rem fade(#000000, 6%);

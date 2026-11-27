@@ -25,7 +25,7 @@ const chapterName = ref(props.chapterInfo.chapterName);
 	cursor: pointer;
 	width: 100%;
 	padding: 1rem 1.4rem;
-	border: 1px solid color-mix(in srgb, @s-border 82%, transparent);
+	border: 1px solid @s-border;
 	border-radius: 1rem;
 	background: var(--s-back-soft-original, #f9f9f9);
 	color: @s-back-text;
@@ -38,7 +38,7 @@ const chapterName = ref(props.chapterInfo.chapterName);
 
 	&:hover {
 		transform: translateY(-1px);
-		border-color: color-mix(in srgb, @s-primary 38%, transparent);
+		border-color: @s-primary;
 		background: color-mix(in srgb, @s-primary 5%, var(--s-back-soft-original, #f9f9f9));
 		box-shadow: 0 .4rem 1.2rem fade(#000000, 6%);
 	}
