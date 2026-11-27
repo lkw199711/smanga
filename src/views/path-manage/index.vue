@@ -3,7 +3,8 @@
     <!--操作按钮区域-->
     <div class="btn-box">
       <el-button type="primary" :icon="Refresh" @click="reload_table">{{ $t('option.refresh') }}</el-button>
-      <el-button type="danger" :icon="Delete" :disabled="selectedRows.length === 0" @click="batch_delete_path">{{ $t('option.delete') }}</el-button>
+      <el-button @click="toggle_archived">{{ archived ? $t('libraryCleanup.showActive') : $t('libraryCleanup.showArchived') }}</el-button>
+      <el-button v-if="!archived" type="danger" :icon="Delete" :disabled="selectedRows.length === 0" @click="batch_delete_path">{{ $t('option.delete') }}</el-button>
     </div>
     <!--表格-->
     <el-table :data="tableData" stripe border @selection-change="handleSelectionChange">
@@ -20,10 +21,16 @@
 
       <el-table-column :label="$t('account.option')">
         <template v-slot="scope">
-          <el-button size="small" type="primary" :icon="Edit" @click="edit_path(scope.$index, scope.row)">{{ $t('path.button.edit') }}</el-button>
-          <el-button size="small" type="success" :icon="RefreshRight" @click="scan_path(scope.$index, scope.row)">{{ $t('path.button.update') }}</el-button>
-          <el-button size="small" type="warning" :icon="Refresh" @click="rescan_path(scope.$index, scope.row)">{{ $t('path.button.re') }}</el-button>
-          <el-button size="small" type="danger" :icon="Delete" @click="delete_path(scope.$index, scope.row)">{{ $t('option.delete') }}</el-button>
+          <template v-if="archived">
+            <el-button size="small" type="success" @click="restore_record(scope.row.pathId)">{{ $t('libraryCleanup.restore') }}</el-button>
+            <el-button size="small" type="danger" @click="purge_record(scope.row)">{{ $t('libraryCleanup.purge') }}</el-button>
+          </template>
+          <template v-else>
+            <el-button size="small" type="primary" :icon="Edit" @click="edit_path(scope.$index, scope.row)">{{ $t('path.button.edit') }}</el-button>
+            <el-button size="small" type="success" :icon="RefreshRight" @click="scan_path(scope.$index, scope.row)">{{ $t('path.button.update') }}</el-button>
+            <el-button size="small" type="warning" :icon="Refresh" @click="rescan_path(scope.$index, scope.row)">{{ $t('path.button.re') }}</el-button>
+            <el-button size="small" type="danger" :icon="Delete" @click="delete_path(scope.$index, scope.row)">{{ $t('libraryCleanup.detachPath') }}</el-button>
+          </template>
         </template>
       </el-table-column>
     </el-table>
@@ -85,6 +92,7 @@ export default {name: 'path-manage'};
 import {Delete, Edit, Refresh, RefreshRight} from '@element-plus/icons-vue';
 import {ref, reactive, onMounted} from 'vue';
 import pathApi from '@/api/path';
+import { confirmLibraryPurge } from '@/utils/library-cleanup';
 import tablePager from '@/components/table-pager.vue';
 import i18n from '@/i18n';
 import useBrowseStore from '@/store/browse';
@@ -96,6 +104,7 @@ const {t} = i18n.global;
 const editPathDialogVisible = ref(false);
 const count = ref(0);
 const tableData = ref([]);
+const archived = ref(false);
 const selectedRows = ref([]);
 const pathForm = reactive({
   pathId: 0,
@@ -108,11 +117,28 @@ const pathForm = reactive({
 onMounted(() => {
   load_table();
 });
+function toggle_archived() {
+  archived.value = !archived.value;
+  load_table();
+}
+
+async function restore_record(id: number) {
+  await pathApi.restore(id);
+  await load_table();
+}
+
+async function purge_record(row: { pathId: number }) {
+  const deleteFile = await confirmLibraryPurge(true);
+  if (deleteFile === null) return;
+  await pathApi.delete_path(row.pathId, deleteFile, true);
+  await load_table();
+}
+
 /**
  * 加载表格数据
  */
 async function load_table(page = 1, pageSize = browse.manageListPageSize) {
-  const res = await pathApi.get_path(0, page, pageSize);
+  const res = await pathApi.get_path(0, page, pageSize, archived.value);
   count.value = Number(res.count);
   tableData.value = res.list;
 

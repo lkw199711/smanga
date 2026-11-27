@@ -4,7 +4,8 @@
       <h1>任务管理</h1>
       <div class="ta-page-actions">
         <button class="ta-btn-ghost" @click="reload">🔄 刷新</button>
-        <button class="ta-btn-danger" :disabled="selected.length === 0" @click="batchDelete">🗑 批量删除</button>
+        <button class="ta-btn-ghost" @click="toggleFailed">{{ failedOnly ? '查看队列' : '查看失败的清理' }}</button>
+        <button v-if="!failedOnly" class="ta-btn-danger" :disabled="selected.length === 0" @click="batchDelete">🗑 批量删除</button>
       </div>
     </div>
 
@@ -15,7 +16,7 @@
       :total="total"
       v-model:page="page"
       :page-size="pageSize"
-      selectable
+      :selectable="!failedOnly"
       v-model:selected="selected"
       empty-text="暂无任务"
     >
@@ -23,9 +24,9 @@
         {{ value || '-' }}
       </template>
       <template #cell-_status="{ item }">
-        <span v-if="item.failedReason" class="ta-badge ta-badge-danger">失败</span>
+        <span v-if="item.status === 'failed'" class="ta-badge ta-badge-danger">失败</span>
         <span v-else-if="item.finishedOn" class="ta-badge ta-badge-success">已完成</span>
-        <span v-else-if="item.processedOn" class="ta-badge ta-badge-active">处理中</span>
+        <span v-else-if="item.status === 'running'" class="ta-badge ta-badge-active">处理中</span>
         <span v-else class="ta-badge ta-badge-wait">等待中</span>
       </template>
       <template #cell-timestamp="{ value }">
@@ -33,7 +34,8 @@
       </template>
       <template #actions="{ item }">
         <button class="ta-btn-sm" @click="showDetail(item)">📋 详情</button>
-        <button class="ta-btn-sm ta-btn-sm-danger" @click="doDelete(item)">🗑 删除</button>
+        <button v-if="failedOnly" class="ta-btn-sm" @click="retryJob(item.id)">重试</button>
+        <button v-else-if="item.canRemove" class="ta-btn-sm ta-btn-sm-danger" @click="doDelete(item)">🗑 删除</button>
       </template>
     </ResponsiveTable>
 
@@ -68,6 +70,7 @@ const columns: RtColumn[] = [
 ]
 
 const allTasks = ref<any[]>([])
+const failedOnly = ref(false)
 const list = ref<any[]>([])
 const total = ref(0)
 const page = ref(1)
@@ -85,13 +88,27 @@ watch(page, () => loadPage())
 
 async function load() {
   try {
-    const res = await jobsApi.get()
+    const res = failedOnly.value ? await jobsApi.failed() : await jobsApi.get()
     allTasks.value = res.list || []
     total.value = res.count || allTasks.value.length
     loadPage()
   } catch { allTasks.value = []; list.value = [] }
 }
 function reload() { page.value = 1; selected.value = []; load() }
+
+function toggleFailed() {
+  failedOnly.value = !failedOnly.value
+  reload()
+}
+
+async function retryJob(id: number | string) {
+  try {
+    await jobsApi.retry(id)
+    reload()
+  } catch {
+    // API errors are displayed by the response interceptor.
+  }
+}
 
 function showDetail(row: any) {
   detailJson.value = JSON.stringify(row, null, 2)

@@ -8,8 +8,8 @@ const mediaApi = {
 	 * @param {number} pageSize
 	 * @return {*}
 	 */
-	async get(page: number = 1, pageSize: number = 999) {
-		const res = ajax.get('media', {params: {page, pageSize}});
+	async get(page: number = 1, pageSize: number = 999, archived?: boolean) {
+		const res = ajax.get('media', {params: {page, pageSize, archived}});
 
 		const resData = (await res).data;
 
@@ -51,8 +51,8 @@ const mediaApi = {
 	 * @param {any} mediaId
 	 * @return {*}
 	 */
-	async delete_media(mediaId: any, deleteFile = false) {
-		const res = ajax.delete(`media/${mediaId}`, {data: {deleteFile}});
+	async delete_media(mediaId: any, deleteFile = false, purge = false) {
+		const res = ajax.delete(`media/${mediaId}`, {data: {deleteFile, purge}});
 
 		const resData = (await res).data;
 		
@@ -60,6 +60,12 @@ const mediaApi = {
 		onMediaOperation();
 		
 		return resData;
+	},
+
+	async restore(mediaId: number) {
+		const response = await ajax.post(`media/${mediaId}/restore`);
+		onMediaOperation();
+		return response.data;
 	},
 
 	async create_cover(mediaId: number) {

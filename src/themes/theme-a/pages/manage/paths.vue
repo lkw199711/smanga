@@ -8,6 +8,7 @@
           <button class="ta-btn-ghost" @click="search">🔍</button>
         </div>
         <button class="ta-btn-ghost" @click="reload">🔄 刷新</button>
+        <button class="ta-btn-ghost" @click="toggleArchived">{{ archived ? '查看在用' : '查看已停用' }}</button>
       </div>
     </div>
 
@@ -24,10 +25,16 @@
         <span class="ta-path-cell">{{ value }}</span>
       </template>
       <template #actions="{ item }">
-        <button class="ta-btn-sm" @click="openEdit(item)">✏️ 编辑</button>
-        <button class="ta-btn-sm" @click="scanPath(item)">🔍 扫描</button>
-        <button class="ta-btn-sm" @click="rescanPath(item)">🔄 重扫</button>
-        <button class="ta-btn-sm ta-btn-sm-danger" @click="doDelete(item)">🗑 删除</button>
+        <template v-if="archived">
+          <button class="ta-btn-sm" @click="restoreRecord(item)">恢复</button>
+          <button class="ta-btn-sm ta-btn-sm-danger" @click="purgeRecord(item)">永久清理</button>
+        </template>
+        <template v-else>
+          <button class="ta-btn-sm" @click="openEdit(item)">✏️ 编辑</button>
+          <button class="ta-btn-sm" @click="scanPath(item)">🔍 扫描</button>
+          <button class="ta-btn-sm" @click="rescanPath(item)">🔄 重扫</button>
+          <button class="ta-btn-sm ta-btn-sm-danger" @click="doDelete(item)">移除</button>
+        </template>
       </template>
     </ResponsiveTable>
 
@@ -45,6 +52,7 @@ import { ref, onMounted } from 'vue'
 import { showThemeAlert, showThemeConfirm } from '@/themes/components/theme-alert'
 import pathApi from '@/api/path'
 import PathEditDialog from '@/themes/components/path-edit-dialog.vue'
+import { confirmLibraryPurge } from '@/utils/library-cleanup'
 import ResponsiveTable from '@/themes/components/responsive-table.vue'
 import type { RtColumn } from '@/themes/components/responsive-table.vue'
 
@@ -57,13 +65,14 @@ const columns: RtColumn[] = [
 ]
 
 const list = ref<any[]>([])
+const archived = ref(false)
 const searchMediaId = ref('')
 const editDialog = ref(false)
 const editingPath = ref<any>(null)
 
 async function load() {
   const mid = Number(searchMediaId.value) || 0
-  try { const res = await pathApi.get_path(mid, 1, 1000); list.value = res.list || [] } catch { list.value = [] }
+  try { const res = await pathApi.get_path(mid, 1, 1000, archived.value); list.value = res.list || [] } catch { list.value = [] }
 }
 
 function search() { load() }
@@ -86,8 +95,33 @@ async function rescanPath(row: any) {
   try { await pathApi.rescan_path(row.pathId); showThemeAlert('重扫任务已提交'); load() } catch (e: any) { showThemeAlert(e?.message || '失败') }
 }
 
+function toggleArchived() {
+  archived.value = !archived.value
+  reload()
+}
+
+async function restoreRecord(row: { pathId: number }) {
+  try {
+    await pathApi.restore(row.pathId)
+    await load()
+  } catch {
+    // API errors are displayed by the response interceptor.
+  }
+}
+
+async function purgeRecord(row: { pathId: number }) {
+  const deleteFile = await confirmLibraryPurge(true)
+  if (deleteFile === null) return
+  try {
+    await pathApi.delete_path(row.pathId, deleteFile, true)
+    await load()
+  } catch {
+    // API errors are displayed by the response interceptor.
+  }
+}
+
 async function doDelete(row: any) {
-  if (!(await showThemeConfirm(`确定删除路径「${row.pathContent}」吗？`))) return
+  if (!(await showThemeConfirm(`确定移除路径「${row.pathContent}」吗？`))) return
   try { await pathApi.delete_path(row.pathId); load() } catch (e: any) { showThemeAlert(e?.message || '删除失败') }
 }
 </script>

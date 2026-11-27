@@ -2,7 +2,9 @@
   <div class="manga-setting-box manage-container">
     <div class="btn-box">
       <el-button type="primary" :icon="Refresh" @click="reload_table">{{ $t('option.refresh') }}</el-button>
+      <el-button @click="toggle_failed">{{ failedOnly ? t('libraryCleanup.showQueue') : t('libraryCleanup.showFailed') }}</el-button>
       <el-button
+        v-if="!failedOnly"
         type="danger"
         :icon="Delete"
         :disabled="selectedRows.length === 0"
@@ -13,7 +15,7 @@
     </div>
     <!--表格-->
     <el-table :data="tableData" stripe border @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="55" align="center"></el-table-column>
+      <el-table-column type="selection" width="55" align="center" :selectable="can_remove"></el-table-column>
       <el-table-column type="index" :label="t('account.serial')" width="54"></el-table-column>
 
       <el-table-column prop="id" :label="t('jobsManage.id')" width="100"></el-table-column>
@@ -22,9 +24,9 @@
 
       <el-table-column prop="status" :label="t('jobsManage.status')" width="100">
         <template v-slot="scope">
-          <span v-if="scope.row.failedReason">{{ t('jobsManage.failed') }}</span>
+          <span v-if="scope.row.status === 'failed'">{{ t('jobsManage.failed') }}</span>
           <span v-else-if="scope.row.finishedOn">{{ t('jobsManage.completed') }}</span>
-          <span v-else-if="scope.row.processedOn">{{ t('jobsManage.active') }}</span>
+          <span v-else-if="scope.row.status === 'running'">{{ t('jobsManage.active') }}</span>
           <span v-else>{{ t('jobsManage.waiting') }}</span>
         </template>
       </el-table-column>
@@ -38,7 +40,8 @@
       <el-table-column :label="t('account.option')">
         <template v-slot="scope">
           <el-button size="small" type="primary" :icon="Edit" @click="edit_manga(scope.$index, scope.row)">{{ t('option.check') }}</el-button>
-          <el-button size="small" type="danger" :icon="Delete" @click="delete_manga(scope.$index, scope.row)">{{ t('option.delete') }}</el-button>
+          <el-button v-if="failedOnly" size="small" @click="retry_job(scope.row.id)">{{ t('libraryCleanup.retry') }}</el-button>
+          <el-button v-else-if="can_remove(scope.row)" size="small" type="danger" :icon="Delete" @click="delete_manga(scope.$index, scope.row)">{{ t('option.delete') }}</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -87,12 +90,28 @@ let editMangaDialog = ref(false);
 let payload = ref('');
 let loading = ref(false);
 let selectedRows = ref<any[]>([]);
+const failedOnly = ref(false);
 
 onMounted(() => {
   browse.manageListPage = 1;
   browse.manageListPageSizeCache = 10;
   reload_table();
 });
+
+function can_remove(row: { canRemove?: boolean }) {
+  return !failedOnly.value && row.canRemove === true;
+}
+
+function toggle_failed() {
+  failedOnly.value = !failedOnly.value;
+  browse.manageListPage = 1;
+  return reload_table();
+}
+
+async function retry_job(id: number | string) {
+  await jobsApi.retry(id);
+  await reload_table();
+}
 
 /***
  * 关闭弹窗
@@ -152,7 +171,7 @@ async function batch_delete_job() {
 async function reload_table() {
   loading.value = true;
   try {
-    const tasksResponse = await jobsApi.get();
+    const tasksResponse = failedOnly.value ? await jobsApi.failed() : await jobsApi.get();
     tasks = tasksResponse.list;
     count.value = tasksResponse.count;
     selectedRows.value = [];

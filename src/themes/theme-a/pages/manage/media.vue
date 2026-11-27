@@ -4,8 +4,9 @@
       <h1>媒体库管理</h1>
       <div class="ta-page-actions">
         <button class="ta-btn-ghost" @click="reload">🔄 刷新</button>
-        <button class="ta-btn-primary" @click="openAdd">+ 添加媒体库</button>
-        <button class="ta-btn-danger" :disabled="selected.length === 0" @click="batchDelete">🗑 批量删除</button>
+        <button class="ta-btn-ghost" @click="toggleArchived">{{ archived ? '查看在用' : '查看已停用' }}</button>
+        <button v-if="!archived" class="ta-btn-primary" @click="openAdd">+ 添加媒体库</button>
+        <button v-if="!archived" class="ta-btn-danger" :disabled="selected.length === 0" @click="batchDelete">批量停用</button>
       </div>
     </div>
 
@@ -16,14 +17,20 @@
       :total="total"
       v-model:page="page"
       :page-size="pageSize"
-      selectable
+      :selectable="!archived"
       v-model:selected="selected"
       empty-text="暂无媒体库"
     >
       <template #actions="{ item }">
-        <button class="ta-btn-sm" @click="openEdit(item)">✏️ 编辑</button>
-        <button class="ta-btn-sm" @click="openPaths(item)">📂 路径</button>
-        <button class="ta-btn-sm ta-btn-sm-danger" @click="doDelete(item)">🗑 删除</button>
+        <template v-if="archived">
+          <button class="ta-btn-sm" @click="restoreRecord(item)">恢复</button>
+          <button class="ta-btn-sm ta-btn-sm-danger" @click="purgeRecord(item)">永久清理</button>
+        </template>
+        <template v-else>
+          <button class="ta-btn-sm" @click="openEdit(item)">✏️ 编辑</button>
+          <button class="ta-btn-sm" @click="openPaths(item)">📂 路径</button>
+          <button class="ta-btn-sm ta-btn-sm-danger" @click="doDelete(item)">停用</button>
+        </template>
       </template>
     </ResponsiveTable>
 
@@ -73,6 +80,7 @@ import pathApi from '@/api/path'
 import MediaEditDialog from '@/themes/components/media-edit-dialog.vue'
 import MediaLibraryCreateDialog from '@/themes/components/media-library-create-dialog.vue'
 import PathEditDialog from '@/themes/components/path-edit-dialog.vue'
+import { confirmLibraryPurge } from '@/utils/library-cleanup'
 import ResponsiveTable from '@/themes/components/responsive-table.vue'
 import type { RtColumn } from '@/themes/components/responsive-table.vue'
 
@@ -83,6 +91,7 @@ const columns: RtColumn[] = [
 ]
 
 const list = ref<any[]>([])
+const archived = ref(false)
 const total = ref(0)
 const page = ref(1)
 const pageSize = ref(20)
@@ -99,7 +108,7 @@ const editingPath = ref<any>(null)
 
 async function load() {
   try {
-    const res = await mediaApi.get(page.value, pageSize.value)
+    const res = await mediaApi.get(page.value, pageSize.value, archived.value)
     total.value = Number(res.count) || 0
     list.value = res.list || []
   } catch { list.value = [] }
@@ -116,13 +125,38 @@ function openEdit(row: any) {
   editDialog.value = true
 }
 
+function toggleArchived() {
+  archived.value = !archived.value
+  reload()
+}
+
+async function restoreRecord(row: { mediaId: number }) {
+  try {
+    await mediaApi.restore(row.mediaId)
+    await load()
+  } catch {
+    // API errors are displayed by the response interceptor.
+  }
+}
+
+async function purgeRecord(row: { mediaId: number, isCloudMedia?: number }) {
+  const deleteFile = await confirmLibraryPurge(Number(row.isCloudMedia) !== 1)
+  if (deleteFile === null) return
+  try {
+    await mediaApi.delete_media(row.mediaId, deleteFile, true)
+    await load()
+  } catch {
+    // API errors are displayed by the response interceptor.
+  }
+}
+
 async function doDelete(row: any) {
-  if (!(await showThemeConfirm(`确定删除媒体库「${row.mediaName}」吗？`))) return
+  if (!(await showThemeConfirm(`确定停用媒体库「${row.mediaName}」吗？`))) return
   try { await mediaApi.delete_media(row.mediaId); reload() } catch (e: any) { showThemeAlert(e?.message || '删除失败') }
 }
 
 async function batchDelete() {
-  if (!(await showThemeConfirm(`确定删除选中的 ${selected.value.length} 个媒体库吗？`))) return
+  if (!(await showThemeConfirm(`确定停用选中的 ${selected.value.length} 个媒体库吗？漫画和阅读记录将保留。`))) return
   try { await mediaApi.batch_delete_media(selected.value); reload() } catch (e: any) { showThemeAlert(e?.message || '删除失败') }
 }
 

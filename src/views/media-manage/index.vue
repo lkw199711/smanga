@@ -2,8 +2,9 @@
   <div class="media-manage-index manage-container">
     <div class="btn-box">
       <el-button type="primary" :icon="Refresh" @click="reload_table">{{ $t('option.refresh') }}</el-button>
-      <el-button class="add-btn" type="success" :icon="Plus" @click="add_media">{{ $t('option.add') }}</el-button>
-      <el-button type="danger" :icon="Delete" :disabled="multipleSelection.length === 0" @click="batch_delete_media">{{ $t('option.delete') }}</el-button>
+      <el-button @click="toggle_archived">{{ archived ? $t('libraryCleanup.showActive') : $t('libraryCleanup.showArchived') }}</el-button>
+      <el-button v-if="!archived" class="add-btn" type="success" :icon="Plus" @click="add_media">{{ $t('option.add') }}</el-button>
+      <el-button v-if="!archived" type="danger" :icon="Delete" :disabled="multipleSelection.length === 0" @click="batch_delete_media">{{ $t('option.delete') }}</el-button>
     </div>
 
     <!--表格-->
@@ -18,12 +19,18 @@
 
       <el-table-column :label="$t('account.option')">
         <template v-slot="scope">
-          <el-button size="small" type="success" :icon="Edit" @click="edit_media(scope.$index, scope.row)">{{ $t('option.modify') }}</el-button>
-          <el-button size="small" type="primary" :icon="FolderOpened" @click="path_dialog_open(scope.$index, scope.row)">
-            {{ $t('mediaManage.path') }}
-          </el-button>
-          <el-button size="small" type="info" @click="open_scan_history(scope.row)">扫描记录</el-button>
-          <el-button size="small" type="danger" :icon="Delete" @click="do_delete_media(scope.$index, scope.row)">{{ $t('option.delete') }}</el-button>
+          <template v-if="archived">
+            <el-button size="small" type="success" @click="restore_record(scope.row.mediaId)">{{ $t('libraryCleanup.restore') }}</el-button>
+            <el-button size="small" type="danger" @click="purge_record(scope.row)">{{ $t('libraryCleanup.purge') }}</el-button>
+          </template>
+          <template v-else>
+            <el-button size="small" type="success" :icon="Edit" @click="edit_media(scope.$index, scope.row)">{{ $t('option.modify') }}</el-button>
+            <el-button size="small" type="primary" :icon="FolderOpened" @click="path_dialog_open(scope.$index, scope.row)">
+              {{ $t('mediaManage.path') }}
+            </el-button>
+            <el-button size="small" type="info" @click="open_scan_history(scope.row)">扫描记录</el-button>
+            <el-button size="small" type="danger" :icon="Delete" @click="do_delete_media(scope.$index, scope.row)">{{ $t('libraryCleanup.disableMedia') }}</el-button>
+          </template>
         </template>
       </el-table-column>
     </el-table>
@@ -181,6 +188,7 @@ import mediaApi from '@/api/media';
 import pathApi from '@/api/path';
 import scanRunApi from '@/api/scan-run';
 import storageRootApi from '@/api/storage-root';
+import { confirmLibraryPurge } from '@/utils/library-cleanup';
 import tablePager from '@/components/table-pager.vue';
 import i18n from '@/i18n';
 import useBrowseStore from '@/store/browse';
@@ -198,6 +206,7 @@ const browse = useBrowseStore();
 
 const count = ref(0);
 const tableData = ref([]);
+const archived = ref(false);
 const addMediaDialog = ref(false);
 const addPathDialog = ref(false);
 const editMediaDialog = ref(false);
@@ -388,11 +397,28 @@ async function load_scan_catalog() {
   }
 }
 
+function toggle_archived() {
+  archived.value = !archived.value;
+  load_table();
+}
+
+async function restore_record(id: number) {
+  await mediaApi.restore(id);
+  await load_table();
+}
+
+async function purge_record(row: { mediaId: number, isCloudMedia?: number }) {
+  const deleteFile = await confirmLibraryPurge(Number(row.isCloudMedia) !== 1);
+  if (deleteFile === null) return;
+  await mediaApi.delete_media(row.mediaId, deleteFile, true);
+  await load_table();
+}
+
 /**
  * 加载表格数据
  */
 async function load_table(page = 1, pageSize = browse.manageListPageSize) {
-  const res = await mediaApi.get(page, pageSize);
+  const res = await mediaApi.get(page, pageSize, archived.value);
   count.value = Number(res.count);
   tableData.value = res.list;
 

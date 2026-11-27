@@ -20,6 +20,14 @@ const jobsApi = {
 		return (await res).data;
 	},
 
+	async failed() {
+		return (await ajax.get('task/failed')).data;
+	},
+
+	async retry(jobId: number | string) {
+		return (await ajax.post(`task/failed/${jobId}/retry`)).data;
+	},
+
 	async get() {
 		const res = ajax.get('task');
 

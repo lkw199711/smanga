@@ -1,4 +1,5 @@
 import { ajax } from './index';
+import { onMediaOperation } from '@/utils/cache';
 import type {ScanPreviewInput, ScanPreviewResult, ScanTriggerResult} from '@/type/scan';
 
 const pathApi = {
@@ -8,10 +9,10 @@ const pathApi = {
 	 * @param page
 	 * @param pageSize
 	 */
-	async get_path(mediaId: number, page: number, pageSize: number) {
+	async get_path(mediaId: number, page: number, pageSize: number, archived?: boolean) {
 		const res = ajax({
 			url: 'path',
-			params: { mediaId, page, pageSize },
+			params: { mediaId, page, pageSize, archived },
 		});
 
 		return (await res).data;
@@ -62,10 +63,16 @@ const pathApi = {
 	 * 删除路径
 	 * @param pathId
 	 */
-	async delete_path(pathId: any) {
-		const res = ajax.delete(`path/${pathId}`);
+	async delete_path(pathId: any, deleteFile = false, purge = false) {
+		const response = await ajax.delete(`path/${pathId}`, { data: { deleteFile, purge } });
+		onMediaOperation();
+		return response.data;
+	},
 
-		return (await res).data;
+	async restore(pathId: number) {
+		const response = await ajax.post(`path/${pathId}/restore`);
+		onMediaOperation();
+		return response.data;
 	},
 
 	/**
@@ -73,9 +80,9 @@ const pathApi = {
 	 * @param pathIds 路径ID数组
 	 */
 	async batch_delete_path(pathIds: number[]) {
-		const res = ajax.delete(`path/${pathIds.join(',')}/batch`, { data: { pathIds } });
-
-		return (await res).data;
+		const response = await ajax.delete(`path/${pathIds.join(',')}/batch`, { data: { pathIds } });
+		onMediaOperation();
+		return response.data;
 	},
 
 	/**
