@@ -1,6 +1,7 @@
 <template>
   <div class="history-list">
     <!-- 列表 -->
+    <BatchToolbar :batch="batch" kind="bookmark" :rows="list" :disabled="loading" :refresh="refreshBatch" />
     <div class="touch-dom">
       <!-- 加载骨架屏 -->
       <template v-if="loading">
@@ -8,7 +9,7 @@
       </template>
       <template v-else>
         <div :class="['chapter-list-box', { 'block': config.viewType === 'list' }]">
-          <chapter v-for="chapterItem in list" :key="chapterItem.chapterId" :viewType="config.viewType" :chapterInfo="chapterItem"
+          <chapter v-for="chapterItem in list" v-batch-item="batch.item('bookmark', chapterItem)" :key="chapterItem.bookmarkId" :viewType="config.viewType" :chapterInfo="chapterItem"
             :bookmark="true" @click="go_browse(chapterItem)" @contextmenu.prevent="context_menu(chapterItem)" />
         </div>
       </template>
@@ -24,6 +25,8 @@
 </template>
 
 <script setup lang="ts">
+import BatchToolbar from '@/themes/components/batch-toolbar.vue'
+import { refreshBatchPage, useBatchSelection } from '@/themes/composables/use-batch-selection'
 import { ref, onMounted } from 'vue';
 import chapter from '@/components/chapter.vue';
 import { config, userConfig } from '@/store';
@@ -172,6 +175,16 @@ onMounted(() => {
   page_change(browse.chapterListPage, browse.chapterListPageSize);
   touch_page_change();
 })
+
+const batch = useBatchSelection()
+
+function refreshBatch() {
+  return refreshBatchPage(
+    (p) => page_change(p, browse.chapterListPageSize),
+    page.value,
+    () => Math.ceil(count.value / browse.chapterListPageSize),
+  )
+}
 </script>
 
 <style src='@/style/chapter-list.less' scoped lang='less'></style>

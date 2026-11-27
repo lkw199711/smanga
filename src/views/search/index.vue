@@ -40,6 +40,14 @@
       </el-button>
     </div>
 
+    <BatchToolbar
+      :batch="batch"
+      :kind="searchStore.searchType === 'chapter' ? 'chapter' : 'manga'"
+      :rows="list"
+      :scope="batchKeyword"
+      :disabled="loading"
+      :refresh="refreshBatch"
+    />
     <div class="middle">
       <!-- 加载骨架屏 -->
       <template v-if="loading">
@@ -49,7 +57,7 @@
         <div class="manga-list" v-if="searchStore.searchType === 'manga'">
           <div class="touch-dom">
             <div :class="['manga-list-box', {block: config.viewType === 'list'}]">
-              <manga v-for="item in list" :key="item.mangaId" :viewType="config.viewType" :mangaInfo="item" @contextmenu.prevent="context_menu(item)" />
+              <manga v-for="item in list" v-batch-item="batch.item('manga', item)" :key="item.mangaId" :viewType="config.viewType" :mangaInfo="item" @contextmenu.prevent="context_menu(item)" />
             </div>
           </div>
 
@@ -61,7 +69,7 @@
           <!-- 章节列表 -->
           <div :class="['chapter-list-box', {block: config.viewType === 'list'}]">
             <chapter
-              v-for="item in list"
+              v-for="item in list" v-batch-item="batch.item('chapter', item)"
               :key="item.chapterId"
               :view-type="config.viewType"
               :chapterInfo="item"
@@ -102,6 +110,8 @@ export default {name: 'search'};
 </script>
 
 <script lang="ts" setup name="search">
+import BatchToolbar from '@/themes/components/batch-toolbar.vue'
+import { refreshBatchPage, useBatchSelection } from '@/themes/composables/use-batch-selection'
 import {watch, onMounted, ref, onActivated} from 'vue';
 import {Search} from '@element-plus/icons-vue';
 import store, {config, userConfig} from '@/store';
@@ -124,6 +134,8 @@ const browse = useBrowseStore();
 const searchStore = useSearchStore();
 
 let loading = ref(false);
+const batchKeyword = ref('');
+const batchPageSize = ref(10);
 
 let pageSizes: number[] = [];
 let defaultPageSize = 10;
@@ -172,6 +184,7 @@ onMounted(() => {
  * 清空方法
  */
 function clear() {
+  batchKeyword.value = '';
   list.value = [];
 }
 
@@ -227,6 +240,8 @@ function touch_page_change() {
  * @param pageSize
  */
 async function page_change(pageParams = 1, pageSize: number = defaultPageSize) {
+  batchKeyword.value = searchStore.searchText;
+  batchPageSize.value = pageSize;
   // 获取页码
   page.value = pageParams;
   // 加载骨架屏
@@ -275,6 +290,16 @@ async function go_browse(chapter: any) {
       chapterPath: chapter.chapterPath,
     },
   });
+}
+
+const batch = useBatchSelection()
+
+function refreshBatch() {
+  return refreshBatchPage(
+    (p) => page_change(p, batchPageSize.value),
+    page.value,
+    () => Math.ceil(count.value / batchPageSize.value),
+  )
 }
 </script>
 

@@ -1,8 +1,9 @@
 <template>
   <div class="tb-page">
     <h1>媒体库</h1>
+    <BatchToolbar :batch="batch" kind="media" :rows="list" :refresh="loadData" />
     <div class="tb-grid">
-      <div v-for="m in list" :key="m.mediaId" class="tb-media-card" v-long-press="() => openThemeActionSheet('media', m)" @click="goMedia(m)" @contextmenu="openThemeContextMenu($event, 'media', m)">
+      <div v-for="m in list" v-batch-item="batch.item('media', m)" :key="m.mediaId" class="tb-media-card" v-long-press="() => openThemeActionSheet('media', m)" @click="goMedia(m)" @contextmenu="openThemeContextMenu($event, 'media', m)">
         <div class="tb-media-cover">
           <img v-if="getMediaCover(m)" :src="getMediaCover(m)" alt="" />
           <div v-else class="tb-media-placeholder">
@@ -20,6 +21,8 @@
 </template>
 
 <script lang="ts" setup>
+import BatchToolbar from '@/themes/components/batch-toolbar.vue'
+import { useBatchSelection } from '@/themes/composables/use-batch-selection'
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import mediaApi from '@/api/media'
@@ -32,14 +35,16 @@ const list = ref<any[]>([])
 // 媒体库封面缓存
 const mediaCoverCache = ref<{[key: string]: string}>({})
 
-onMounted(async () => {
+onMounted(loadData)
+
+async function loadData() {
   try {
     list.value = pickMediaList(await mediaApi.get())
     list.value.forEach(item => {
       if (item.mediaCover) loadMediaCover(item)
     })
   } catch(e) {}
-})
+}
 
 async function loadMediaCover(item: any) {
   if (!item.mediaCover) return
@@ -62,6 +67,8 @@ function pickMediaList(payload: any): any[] {
   return []
 }
 function goMedia(m: any) { router.push(`/t/media/${m.mediaId}`) }
+
+const batch = useBatchSelection()
 </script>
 
 <style scoped>

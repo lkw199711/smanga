@@ -27,15 +27,17 @@ export function useTagPicker(initialAssigned: tagItemType[]) {
   async function loadAllTags(force = false) {
     if (!force && cachedAllTags.value) {
       allTags.value = cachedAllTags.value
-      return
+      return true
     }
     loading.value = true
     try {
       const list = (await tagApi.get_nopage()) as tagItemType[]
       cachedAllTags.value = list || []
       allTags.value = cachedAllTags.value
+      return true
     } catch {
       allTags.value = []
+      return false
     } finally {
       loading.value = false
     }

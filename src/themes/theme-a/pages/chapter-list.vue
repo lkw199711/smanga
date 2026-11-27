@@ -14,9 +14,18 @@
         </select>
       </div>
     </div>
+    <BatchToolbar
+      :batch="batch"
+      kind="chapter"
+      :rows="list"
+      :scope="mangaId ?? 0"
+      :disabled="loading"
+      :owner-manga-id="mangaId ?? 0"
+      :refresh="refreshBatch"
+    />
     <div ref="listRef" class="ta-chapters">
       <t-chapter-item
-        v-for="(ch, idx) in list"
+        v-for="(ch, idx) in list" v-batch-item="batch.item('chapter', ch)"
         :key="ch.chapterId"
         :item="ch"
         variant="A"
@@ -38,6 +47,8 @@
 </template>
 
 <script lang="ts" setup>
+import BatchToolbar from '@/themes/components/batch-toolbar.vue'
+import { refreshBatchPage, useBatchSelection } from '@/themes/composables/use-batch-selection'
 import { computed, ref, onMounted, watch } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import chapterApi from '@/api/chapter'
@@ -100,6 +111,12 @@ function goRead(ch: any, idx: number) {
   globalData.chapterName = ch.chapterName || ''
   globalData.mangaName = mangaName.value || globalData.mangaName
   router.push(`/t/reader/${ch.chapterId}`)
+}
+
+const batch = useBatchSelection()
+
+function refreshBatch() {
+  return refreshBatchPage(pageChange, page.value, () => Math.ceil(count.value / pageSize.value))
 }
 </script>
 

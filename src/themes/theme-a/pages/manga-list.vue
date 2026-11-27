@@ -65,9 +65,17 @@
         </div>
       </transition>
     </div>
+    <BatchToolbar
+      :batch="batch"
+      kind="manga"
+      :rows="list"
+      :scope="JSON.stringify([mediaId, batchKeyword])"
+      :disabled="loading"
+      :refresh="refreshBatch"
+    />
     <div ref="gridRef" class="ta-grid">
       <t-manga-card
-        v-for="m in list"
+        v-for="m in list" v-batch-item="batch.item('manga', m)"
         :key="m.mangaId"
         :item="m"
         variant="A"
@@ -90,6 +98,8 @@
 </template>
 
 <script lang="ts" setup>
+import BatchToolbar from '@/themes/components/batch-toolbar.vue'
+import { refreshBatchPage, useBatchSelection } from '@/themes/composables/use-batch-selection'
 import { ref, computed, watch } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import mangaApi from '@/api/manga'
@@ -108,6 +118,7 @@ const mediaId = computed(() => Number(route.params.mediaId) || 0)
 const list = ref<any[]>([])
 const gridRef = ref<HTMLElement | null>(null)
 const keyword = ref('')
+const batchKeyword = ref('')
 const order = computed({ get: () => userConfig.order, set: (v) => { userConfig.order = v } })
 const { autoPageSize, measurementReady } = useAutoPageSize(gridRef, { kind: 'manga' })
 const { page, pageSize, pageSizes, setPage } = useThemeListPagination(
@@ -177,6 +188,7 @@ function pageChange(nextPage = 1, nextPageSize = pageSize.value) {
 }
 
 async function performLoad() {
+  batchKeyword.value = keyword.value.trim()
   const sequence = ++loadSequence
   loading.value = true
   list.value = []
@@ -192,6 +204,17 @@ async function performLoad() {
 
 function goMangaInfo(m: any) {
 	router.push(`/t/manga/${m.mangaId}`)
+}
+
+const batch = useBatchSelection()
+
+function refreshBatch() {
+  return refreshBatchPage(loadBatchPage, page.value, () => Math.ceil(total.value / pageSize.value))
+}
+
+function loadBatchPage(nextPage: number) {
+  setPage(nextPage, pageSize.value)
+  return performLoad()
 }
 </script>
 

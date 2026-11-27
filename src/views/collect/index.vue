@@ -4,6 +4,14 @@
       <tabs v-model="collectStore.collectType" :items="items" @change="tabs_change"></tabs>
     </div>
 
+    <BatchToolbar
+      :batch="batch"
+      kind="collect"
+      :rows="list"
+      :scope="collectStore.collectType"
+      :disabled="loading"
+      :refresh="refreshBatch"
+    />
     <div class="middle">
       <div class="touch-dom">
         <!-- 加载骨架屏 -->
@@ -13,7 +21,7 @@
         <template v-else>
           <div class="manga-list" v-if="collectStore.collectType === 'manga'">
             <div :class="['manga-list-box', {block: config.viewType === 'list'}]">
-              <manga v-for="item in list" :key="item.mangaId" :viewType="config.viewType" :mangaInfo="item" @contextmenu.prevent="context_menu(item)" />
+              <manga v-for="item in list" v-batch-item="batch.item('collect', item)" :key="item.mangaId" :viewType="config.viewType" :mangaInfo="item" @contextmenu.prevent="context_menu(item)" />
             </div>
             <!--分页组件-->
             <media-pager
@@ -29,7 +37,7 @@
             <!--章节列表-->
             <div :class="['chapter-list-box', {block: config.viewType === 'list'}]">
               <chapter
-                v-for="item in list"
+                v-for="item in list" v-batch-item="batch.item('collect', item)"
                 :key="item.chapterId"
                 :view-type="config.viewType"
                 :chapterInfo="item"
@@ -76,6 +84,8 @@ export default {name: 'collect'};
 </script>
 
 <script lang="ts" setup>
+import BatchToolbar from '@/themes/components/batch-toolbar.vue'
+import { refreshBatchPage, useBatchSelection } from '@/themes/composables/use-batch-selection'
 import {computed, watch, onMounted, ref, onActivated} from 'vue';
 import {useRoute} from 'vue-router';
 import store, {config, userConfig} from '@/store';
@@ -257,6 +267,16 @@ async function go_browse(item: any) {
       chapterId: item.chapterId,
     },
   });
+}
+
+const batch = useBatchSelection()
+
+function refreshBatch() {
+  return refreshBatchPage(
+    (p) => page_change(p, (collectStore.collectType === 'manga' ? browse.mangaListPageSize : browse.chapterListPageSize)),
+    page.value,
+    () => Math.ceil(count.value / ((collectStore.collectType === 'manga' ? browse.mangaListPageSize : browse.chapterListPageSize))),
+  )
 }
 </script>
 

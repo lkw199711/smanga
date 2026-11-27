@@ -1,6 +1,7 @@
 <template>
   <div class="history-list">
     <!-- 列表 -->
+    <BatchToolbar :batch="batch" kind="history" :rows="list" :disabled="loading" :refresh="refreshBatch" />
     <div class="touch-dom">
       <!-- 加载骨架屏 -->
       <template v-if="loading">
@@ -8,7 +9,7 @@
       </template>
       <template v-else>
         <div :class="['chapter-list-box', { 'block': config.viewType === 'list' }]">
-          <chapter v-for="item in list" :key="item.chapterId" :viewType="config.viewType" :chapterInfo="item" @click="go_browse(item)"
+          <chapter v-for="item in list" v-batch-item="batch.item('history', item)" :key="item.chapterId" :viewType="config.viewType" :chapterInfo="item" @click="go_browse(item)"
             @contextmenu.prevent="context_menu(item)" />
         </div>
       </template>
@@ -23,6 +24,8 @@
 </template>
 
 <script setup lang="ts">
+import BatchToolbar from '@/themes/components/batch-toolbar.vue'
+import { refreshBatchPage, useBatchSelection } from '@/themes/composables/use-batch-selection'
 import { ref, onMounted } from 'vue';
 import chapter from '@/components/chapter.vue';
 import store, { config, userConfig } from '@/store';
@@ -58,6 +61,7 @@ const page = ref(1);
 const list = ref([]);
 const count = ref(0);
 let loading = ref(false);
+const batchPageSize = ref(defaultPageSize);
 const chapterInfo = ref<chapterType>();
 
 /**
@@ -93,6 +97,7 @@ async function page_change(pageParams = 1, pageSize = defaultPageSize) {
   if (pageParams !== 1 && pageParams > Math.ceil(count.value / pageSize)) return;
   if (pageParams < 1) return;
 
+  batchPageSize.value = pageSize;
   // 获取页码
   page.value = pageParams;
   // 加载骨架屏
@@ -171,6 +176,16 @@ onMounted(() => {
   page_change();
   touch_page_change();
 })
+
+const batch = useBatchSelection()
+
+function refreshBatch() {
+  return refreshBatchPage(
+    (p) => page_change(p, batchPageSize.value),
+    page.value,
+    () => Math.ceil(count.value / batchPageSize.value),
+  )
+}
 </script>
 
 <style src='@/style/chapter-list.less' scoped lang='less'></style>

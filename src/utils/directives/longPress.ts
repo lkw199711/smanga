@@ -24,12 +24,14 @@ const longPress: Directive<HTMLElement, LongPressHandler> = {
 
     const onStart = (event: PointerEvent) => {
       if (event.pointerType !== 'touch' || !event.isPrimary) return
+      if (el.closest('[data-batch-selected]')) return
       startX = event.clientX
       startY = event.clientY
       triggered = false
       clear()
       timer = window.setTimeout(() => {
         timer = undefined
+        if (el.closest('[data-batch-selected]')) return
         triggered = true
         binding.value?.(event)
       }, HOLD_DELAY)

@@ -26,9 +26,10 @@
 				<h1>{{ $t('mangaBrowser.allMedia') }}</h1>
 				<span v-if="mediaList.length">{{ mediaList.length }}</span>
 			</div>
+			<BatchToolbar :batch="mediaBatch" kind="media" :rows="mediaList" :refresh="reload" />
 			<div v-if="mediaList.length" class="t-folder-browser__media-grid">
 				<button
-					v-for="media in mediaList"
+					v-for="media in mediaList" v-batch-item="mediaBatch.item('media', media)"
 					:key="media.mediaId"
 					type="button"
 					class="t-folder-browser__media"
@@ -82,9 +83,17 @@
 					<h1>{{ $t('mangaBrowser.mangas') }}</h1>
 					<span>{{ currentMangas.length }}</span>
 				</div>
+				<BatchToolbar
+				  :batch="batch"
+				  kind="manga"
+				  :rows="currentMangas"
+				  :scope="JSON.stringify([mediaId, currentPath])"
+				  :disabled="loading"
+				  :refresh="reload"
+				/>
 				<div class="t-folder-browser__manga-grid">
 					<t-manga-card
-						v-for="manga in currentMangas"
+						v-for="manga in currentMangas" v-batch-item="batch.item('manga', manga)"
 						:key="manga.mangaId"
 						:item="manga"
 						:variant="themeVariant"
@@ -103,6 +112,8 @@
 </template>
 
 <script lang="ts" setup>
+import BatchToolbar from '@/themes/components/batch-toolbar.vue'
+import { useBatchSelection } from '@/themes/composables/use-batch-selection'
 import { computed, onMounted, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import mediaApi from '@/api/media'
@@ -328,6 +339,9 @@ function goManga(manga: mangaType) {
 watch(() => mediaId.value, reload)
 
 onMounted(reload)
+
+const batch = useBatchSelection()
+const mediaBatch = useBatchSelection()
 </script>
 
 <style scoped>

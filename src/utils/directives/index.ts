@@ -1,11 +1,13 @@
 import { App } from 'vue';
 import pullRefresh from './pullRefresh';
 import longPress from './longPress';
+import batchItem from './batchItem';
 
 // 指令集合
 const directives = {
   pullRefresh,
   longPress,
+  batchItem,
 };
 
 // 批量注册指令

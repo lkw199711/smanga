@@ -4,8 +4,9 @@
       <h1>媒体库</h1>
       <button v-if="isAdmin" class="td-btn-primary" @click="showAdd = true">+ 新建媒体库</button>
     </div>
+    <BatchToolbar :batch="batch" kind="media" :rows="list" :refresh="loadData" />
     <div class="td-grid">
-      <div v-for="m in list" :key="m.mediaId" class="td-media-card" v-long-press="() => openThemeActionSheet('media', m)" @click="goMedia(m)" @contextmenu="openThemeContextMenu($event, 'media', m)">
+      <div v-for="m in list" v-batch-item="batch.item('media', m)" :key="m.mediaId" class="td-media-card" v-long-press="() => openThemeActionSheet('media', m)" @click="goMedia(m)" @contextmenu="openThemeContextMenu($event, 'media', m)">
         <div class="td-media-cover">
           <img v-if="getMediaCover(m)" :src="getMediaCover(m)" alt="" />
           <div v-else class="td-media-placeholder">
@@ -42,6 +43,8 @@
 </template>
 
 <script lang="ts" setup>
+import BatchToolbar from '@/themes/components/batch-toolbar.vue'
+import { useBatchSelection } from '@/themes/composables/use-batch-selection'
 import { computed, onMounted, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import mediaApi from '@/api/media'
@@ -152,6 +155,8 @@ async function submitAdd() {
     submitting.value = false
   }
 }
+
+const batch = useBatchSelection()
 </script>
 
 <style scoped>

@@ -224,10 +224,18 @@
           </div>
         </header>
 
+        <BatchToolbar
+          :batch="batch"
+          kind="chapter"
+          :rows="chapterList"
+          :scope="mangaId"
+          :owner-manga-id="Number(mangaInfo.mangaId) || 0"
+          :refresh="async () => { await render_meta(); await render_chapter_list() }"
+        />
         <div class="chapter-list chapter-list--simple" v-if="userConfig.simpleChapterView">
           <chapterSimple
-            v-for="(i, k) in chapterList"
-            :key="k"
+            v-for="(i, k) in chapterList" v-batch-item="batch.item('chapter', i)"
+            :key="i.chapterId"
             :chapterInfo="i"
             :sourceWebsite="sourceWebsite"
             @click="go_browse(i)"
@@ -235,8 +243,8 @@
         </div>
         <div class="chapter-list" v-else>
           <chapter
-            v-for="(i, k) in chapterList"
-            :key="k"
+            v-for="(i, k) in chapterList" v-batch-item="batch.item('chapter', i)"
+            :key="i.chapterId"
             :chapterInfo="i"
             :load-cover="canLoadImages"
             :sourceWebsite="sourceWebsite"
@@ -285,6 +293,8 @@
 </template>
 
 <script lang="ts" setup>
+import BatchToolbar from '@/themes/components/batch-toolbar.vue'
+import { useBatchSelection } from '@/themes/composables/use-batch-selection'
 import {useRoute, useRouter} from 'vue-router';
 import {onMounted, onBeforeUnmount, ref, reactive, computed, watch} from 'vue';
 import mangaApi from '@/api/manga';
@@ -675,6 +685,8 @@ function open_covers_edit() {
 function update_tags(tagsParams: tagItemType[]) {
   mangaInfo.tags = tagsParams;
 }
+
+const batch = useBatchSelection()
 </script>
 
 <style lang="less" scoped>

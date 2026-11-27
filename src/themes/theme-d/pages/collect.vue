@@ -4,9 +4,10 @@
 
     <t-tabs-switcher v-model="tab" variant="D" :tabs="[{label:'漫画',value:'manga',count},{label:'章节',value:'chapter',count}]" />
 
+    <BatchToolbar :batch="batch" kind="collect" :rows="list" :scope="tab" :disabled="loading" :refresh="refreshBatch" />
     <div class="touch-dom">
         <div ref="listRef" class="td-card-grid" v-if="tab === 'manga'">
-          <div class="td-card" v-for="item in list" :key="item.collectId" @click="goManga(item)" @contextmenu="openThemeContextMenu($event, 'manga', item)">
+          <div class="td-card" v-for="item in list" v-batch-item="batch.item('collect', item)" :key="item.collectId" @click="goManga(item)" @contextmenu="openThemeContextMenu($event, 'manga', item)">
             <t-cover class="td-card-cover" variant="D" :seed="Number(item?.mangaId || 0)" :file="item?.mangaCover || ''" cover-kind="manga" :cover-id="Number(item?.mangaId || 0)" :cover-version="item?.updateTime" fit="cover" />
             <div class="td-card-title">{{ item.mangaName }}</div>
           </div>
@@ -14,7 +15,7 @@
 
         <div ref="listRef" class="td-chapter-list" v-else>
           <t-chapter-item
-            v-for="item in list"
+            v-for="item in list" v-batch-item="batch.item('collect', item)"
             :key="item.collectId"
             :item="item"
             variant="D"
@@ -34,6 +35,8 @@
 </template>
 
 <script lang="ts" setup>
+import BatchToolbar from '@/themes/components/batch-toolbar.vue'
+import { refreshBatchPage, useBatchSelection } from '@/themes/composables/use-batch-selection'
 import { computed, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import collectApi from '@/api/collect'
@@ -66,6 +69,12 @@ useCollectionListSync(list, count, () => tab.value)
 function goManga(item: any) {
   if (!item?.mangaId) return
   router.push(`/t/manga/${item.mangaId}`)
+}
+
+const batch = useBatchSelection()
+
+function refreshBatch() {
+  return refreshBatchPage(pageChange, page.value, () => Math.ceil(count.value / pageSize.value))
 }
 </script>
 

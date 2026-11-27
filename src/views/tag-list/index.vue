@@ -17,9 +17,10 @@
         </div>
     </div>
 
+    <BatchToolbar :batch="batch" kind="manga" :rows="mangaList" :scope="tagIds" :refresh="refreshBatch" />
     <div class="manga-list">
         <div :class="['manga-list-box', { block: config.viewType === 'list' }]">
-            <manga v-for="mangaItem in mangaList" :key="mangaItem.mangaId" :viewType="config.viewType"
+            <manga v-for="mangaItem in mangaList" v-batch-item="batch.item('manga', mangaItem)" :key="mangaItem.mangaId" :viewType="config.viewType"
                 :mangaInfo="mangaItem" @contextmenu.prevent="context_menu(mangaItem)" />
         </div>
     </div>
@@ -33,6 +34,8 @@
 </template>
 
 <script lang="ts" setup>
+import BatchToolbar from '@/themes/components/batch-toolbar.vue'
+import { refreshBatchPage, useBatchSelection } from '@/themes/composables/use-batch-selection'
 import { onMounted, ref, computed, watch } from 'vue';
 import { config, userConfig } from '@/store';
 import tagApi, { tagItemType } from '@/api/tag';
@@ -130,6 +133,16 @@ async function page_change(
     
     browse.mangaListPage = page.value;
     browse.mangaListPageSizeCache = pageSize;
+}
+
+const batch = useBatchSelection()
+
+function refreshBatch() {
+  return refreshBatchPage(
+    (p) => page_change(p, browse.mangaListPageSize),
+    page.value,
+    () => Math.ceil(count.value / browse.mangaListPageSize),
+  )
 }
 </script>
 

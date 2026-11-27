@@ -1,6 +1,7 @@
 <template>
+  <BatchToolbar :batch="batch" kind="media" :rows="mediaList" :refresh="load_media" />
   <div class="media">
-    <div class="media-item" v-for="item in mediaList" :key="item.mediaId" @click="go_manga_list(item)" @contextmenu.prevent="context_menu(item)">
+    <div class="media-item" v-for="item in mediaList" v-batch-item="batch.item('media', item)" :key="item.mediaId" @click="go_manga_list(item)" @contextmenu.prevent="context_menu(item)">
       <!--封面图片-->
       <el-image v-if="item.mediaCoverLink" class="anim chapter-cover-img" :src="item.mediaCoverLink" fit="contain" :alt="item.mediaName" />
 
@@ -22,6 +23,8 @@ export default {name: 'media-list'};
 </script>
 
 <script setup lang="ts">
+import BatchToolbar from '@/themes/components/batch-toolbar.vue'
+import { useBatchSelection } from '@/themes/composables/use-batch-selection'
 import {ref, onMounted, onUnmounted, reactive} from 'vue';
 import mediaApi from '@/api/media';
 import StorageAvailabilityNotice from '@/components/storage-availability-notice.vue'
@@ -106,6 +109,8 @@ onMounted(async () => {
 
 const stopMediaOperationListener = onMediaOperation(load_media);
 onUnmounted(stopMediaOperationListener);
+
+const batch = useBatchSelection()
 </script>
 
 <style scoped lang="less">

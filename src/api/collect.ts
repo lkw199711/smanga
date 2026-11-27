@@ -1,4 +1,5 @@
 import {ajax} from './index';
+import type { BatchRow } from '@/themes/composables/use-batch-selection';
 
 type MangaCollectionListener = (mangaId: number, collected: boolean) => void;
 type ChapterCollectionListener = (chapterId: number, collected: boolean) => void;
@@ -63,6 +64,15 @@ const collectApi = {
 			notifyChapterCollectionChanged(targetId, false);
 		}
 		return response;
+	},
+
+	async batch_remove(entries: [number, BatchRow][]) {
+		const { data } = await ajax.post('collect/batch-delete', { collectIds: entries.map(([id]) => id) });
+		for (const [, row] of entries) {
+			if (row.chapterId) notifyChapterCollectionChanged(Number(row.chapterId), false);
+			else if (row.mangaId) notifyMangaCollectionChanged(Number(row.mangaId), false);
+		}
+		return data.data?.count || 0;
 	},
 	/**
 	 * @description: 新增收藏

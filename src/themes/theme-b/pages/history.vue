@@ -1,10 +1,11 @@
 <template>
 	<div class="tb-page">
 		<div class="tb-page-head"><h1>历史记录</h1></div>
+		<BatchToolbar :batch="batch" kind="history" :rows="list" :disabled="loading" :refresh="refreshBatch" />
 		<div class="touch-dom">
 				<div ref="listRef" class="tb-history-list">
 					<t-history-item
-						v-for="item in list"
+						v-for="item in list" v-batch-item="batch.item('history', item)"
 						:key="item.chapterId"
 						:item="item"
 						variant="B"
@@ -28,6 +29,8 @@
 	</div>
 </template>
 <script lang="ts" setup>
+import BatchToolbar from '@/themes/components/batch-toolbar.vue'
+import { refreshBatchPage, useBatchSelection } from '@/themes/composables/use-batch-selection'
 import { ref } from 'vue'
 import historyApi from '@/api/history'
 import MediaPager from '@/components/media-pager.vue'
@@ -47,6 +50,12 @@ const { page, pageSize, list, count, loading, pageSizes, pageChange } = useListP
 		return { list: res?.list || [], count: Number(res?.count || 0) }
 	},
 })
+
+const batch = useBatchSelection()
+
+function refreshBatch() {
+  return refreshBatchPage(pageChange, page.value, () => Math.ceil(count.value / pageSize.value))
+}
 </script>
 <style scoped>
 .tb-page{max-width:98rem;margin:0 auto}

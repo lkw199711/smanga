@@ -69,6 +69,7 @@ const props = withDefaults(defineProps<{
   page: number
   pageSize: number
   selectable?: boolean
+  preserveSelection?: boolean
   selected?: (number | string)[]
   emptyText?: string
 }>(), {
@@ -87,8 +88,8 @@ const selectedSet = computed({
   set: (val) => emit('update:selected', val),
 })
 
-const allChecked = computed(() =>
-  props.items.length > 0 && selectedSet.value.length === props.items.length
+const allChecked = computed(() => props.items.length > 0 &&
+  props.items.every((item) => selectedSet.value.includes(getRowKey(item)))
 )
 
 const totalCols = computed(() => {
@@ -104,7 +105,11 @@ function getRowKey(item: any): string | number {
 
 function toggleAll(e: Event) {
   const checked = (e.target as HTMLInputElement).checked
-  emit('update:selected', checked ? props.items.map((r) => getRowKey(r)) : [])
+  const pageKeys = new Set(props.items.map(getRowKey))
+  const outsidePage = props.preserveSelection
+    ? selectedSet.value.filter((key) => !pageKeys.has(key))
+    : []
+  emit('update:selected', checked ? [...outsidePage, ...pageKeys] : outsidePage)
 }
 
 function getBadgeClass(_item: any, col: RtColumn): string {

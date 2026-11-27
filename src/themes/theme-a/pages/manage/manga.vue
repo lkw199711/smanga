@@ -8,6 +8,7 @@
           <button class="ta-btn-ghost" @click="search">🔍</button>
         </div>
         <button class="ta-btn-ghost" @click="reload">🔄 刷新</button>
+        <button class="ta-btn-ghost" :disabled="!selected.length" @click="batchTagOpen = true">批量修改标签</button>
         <button class="ta-btn-danger" :disabled="selected.length === 0" @click="batchDelete">🗑 批量删除</button>
       </div>
     </div>
@@ -20,6 +21,7 @@
       v-model:page="page"
       :page-size="pageSize"
       selectable
+      preserve-selection
       v-model:selected="selected"
       empty-text="暂无漫画"
     >
@@ -28,6 +30,8 @@
         <button class="ta-btn-sm ta-btn-sm-danger" @click="doDelete(item)">🗑 删除</button>
       </template>
     </ResponsiveTable>
+
+    <BatchTagDialog v-model="batchTagOpen" target="manga" :ids="selected" @applied="onBatchTagsApplied" />
 
     <MangaModifyDialog
       v-model:editMangaDialog="editDialog"
@@ -42,6 +46,7 @@ import { ref, watch, onMounted } from 'vue'
 import { showThemeAlert, showThemeConfirm } from '@/themes/components/theme-alert'
 import mangaApi from '@/api/manga'
 import MangaModifyDialog from '@/themes/components/manga-modify-dialog.vue'
+import BatchTagDialog from '@/themes/components/batch-tag-dialog.vue'
 import ResponsiveTable from '@/themes/components/responsive-table.vue'
 import type { RtColumn } from '@/themes/components/responsive-table.vue'
 
@@ -61,6 +66,7 @@ const pageSize = ref(20)
 const selected = ref<number[]>([])
 const keyword = ref('')
 const editDialog = ref(false)
+const batchTagOpen = ref(false)
 const editingManga = ref<any>(null)
 
 async function load() {
@@ -70,10 +76,15 @@ async function load() {
   } catch { list.value = [] }
 }
 
-function search() { page.value = 1; load() }
+function search() { selected.value = []; page.value = 1; load() }
 function reload() { keyword.value = ''; page.value = 1; selected.value = []; load() }
 
 watch(page, () => load())
+
+async function onBatchTagsApplied() {
+  selected.value = []
+  await load()
+}
 
 function openEdit(row: any) {
   editingManga.value = { ...row }

@@ -1,6 +1,15 @@
 <template>
   <div class="chapter-list">
     <!-- 章节列表 -->
+    <BatchToolbar
+      :batch="batch"
+      kind="chapter"
+      :rows="list"
+      :scope="JSON.stringify([route.query.mangaId, route.query.mediaId])"
+      :disabled="loading"
+      :owner-manga-id="Number(route.query.mangaId) || 0"
+      :refresh="refreshBatch"
+    />
     <div class="touch-dom">
       <!-- 加载骨架屏 -->
       <template v-if="loading">
@@ -9,8 +18,8 @@
       <template v-else>
         <div :class="['chapter-list-box', {block: config.viewType === 'list'}]">
           <chapter
-            v-for="(i, k) in list"
-            :key="k"
+            v-for="(i, k) in list" v-batch-item="batch.item('chapter', i)"
+            :key="i.chapterId"
             :view-type="config.viewType"
             :chapterInfo="i"
             @click="go_browse(i)"
@@ -37,6 +46,8 @@
 export default {name: 'chapter-list'};
 </script>
 <script lang="ts" setup>
+import BatchToolbar from '@/themes/components/batch-toolbar.vue'
+import { refreshBatchPage, useBatchSelection } from '@/themes/composables/use-batch-selection'
 import {watch, onMounted, ref} from 'vue';
 import {useRoute, useRouter} from 'vue-router';
 import chapterApi from '@/api/chapter';
@@ -222,6 +233,16 @@ async function page_change(pageParams = 1, pageSize: number = browse.chapterList
 function load() {
   list.value = [];
   page_change(browse.chapterListPage, browse.chapterListPageSize);
+}
+
+const batch = useBatchSelection()
+
+function refreshBatch() {
+  return refreshBatchPage(
+    (p) => page_change(p, browse.chapterListPageSize),
+    page.value,
+    () => Math.ceil(count.value / browse.chapterListPageSize),
+  )
 }
 </script>
 

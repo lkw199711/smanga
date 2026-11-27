@@ -31,9 +31,18 @@
 
       <div class="tb-chapters">
         <div class="tb-section-title">章节列表</div>
+        <BatchToolbar
+          :batch="batch"
+          kind="chapter"
+          :rows="chapterList"
+          :scope="mangaId ?? 0"
+          :disabled="loading || !infoReady"
+          :owner-manga-id="mangaId ?? 0"
+          :refresh="refreshBatch"
+        />
         <div ref="listRef" class="tb-chapter-grid">
           <t-chapter-item
-            v-for="ch in chapterList"
+            v-for="ch in chapterList" v-batch-item="batch.item('chapter', ch)"
             :key="ch.chapterId"
             :item="ch"
             variant="B"
@@ -57,6 +66,8 @@
 </template>
 
 <script lang="ts" setup>
+import BatchToolbar from '@/themes/components/batch-toolbar.vue'
+import { refreshBatchPage, useBatchSelection } from '@/themes/composables/use-batch-selection'
 import { computed, ref, onMounted, watch } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import mangaApi from '@/api/manga'
@@ -201,6 +212,17 @@ function goBack() {
 function goRead(chapter: any) {
   if (!mangaId.value || !chapter.chapterId) return
   openReader(chapter)
+}
+
+const batch = useBatchSelection()
+
+function refreshBatch() {
+  return refreshBatchPage(loadBatchPage, page.value, () => Math.ceil(total.value / pageSize.value))
+}
+
+function loadBatchPage(nextPage: number) {
+  setPage(nextPage, pageSize.value)
+  return loadChapters()
 }
 </script>
 

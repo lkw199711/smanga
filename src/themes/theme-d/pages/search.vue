@@ -12,14 +12,15 @@
       <button class="td-btn" @click="page_change(1)">搜索</button>
     </div>
 
+    <BatchToolbar :batch="batch" :kind="tab" :rows="list" :scope="batchKeyword" :disabled="loading" :refresh="refreshBatch" />
     <div class="touch-dom">
         <div ref="listRef" class="td-card-grid" v-if="tab === 'manga'">
-          <t-manga-card v-for="item in list" :key="item.mangaId" :item="item" variant="D" @click="go_manga(item)" @contextmenu="openThemeContextMenu($event, 'manga', item)" />
+          <t-manga-card v-for="item in list" v-batch-item="batch.item(tab, item)" :key="item.mangaId" :item="item" variant="D" @click="go_manga(item)" @contextmenu="openThemeContextMenu($event, 'manga', item)" />
         </div>
 
         <div ref="listRef" class="td-chapter-list" v-if="tab === 'chapter'">
           <t-chapter-item
-            v-for="item in list"
+            v-for="item in list" v-batch-item="batch.item(tab, item)"
             :key="item.chapterId"
             :item="item"
             variant="D"
@@ -38,6 +39,8 @@
 </template>
 
 <script lang="ts" setup>
+import BatchToolbar from '@/themes/components/batch-toolbar.vue'
+import { refreshBatchPage, useBatchSelection } from '@/themes/composables/use-batch-selection'
 import { computed, onMounted, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import searchApi from '@/api/search'
@@ -56,6 +59,7 @@ const router = useRouter()
 const { goRead } = useGoRead({ withPageJump: true })
 const tab = ref<'manga' | 'chapter'>('manga')
 const keyword = ref((route.query.q as string) || '')
+const batchKeyword = ref('')
 const list = ref<any[]>([])
 const searched = ref(false)
 const page = ref(1)
@@ -89,6 +93,7 @@ async function page_change(pageParams = 1, pageSize = defaultPageSize.value) {
   list.value = []
   try {
     const q = keyword.value.trim()
+  batchKeyword.value = q
     const res = await searchApi.get(q, tab.value, pageParams, pageSize, orderBy.value)
     if (sequence !== searchSequence) return
     list.value = res?.list || []
@@ -118,6 +123,7 @@ watch(
     keyword.value = (v as string) || ''
     if (keyword.value) page_change(1)
     else {
+      batchKeyword.value = ''
       list.value = []
       count.value = 0
       searched.value = false
@@ -159,6 +165,16 @@ watch(
 onMounted(() => {
   if (keyword.value) page_change(1)
 })
+
+const batch = useBatchSelection()
+
+function refreshBatch() {
+  return refreshBatchPage(
+    (p) => page_change(p, activePageSize.value || defaultPageSize.value),
+    page.value,
+    () => Math.ceil(count.value / (activePageSize.value || defaultPageSize.value)),
+  )
+}
 </script>
 
 <style scoped>

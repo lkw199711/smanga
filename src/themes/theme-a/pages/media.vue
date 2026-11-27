@@ -6,8 +6,9 @@
         <h1>媒体库</h1>
         <button v-if="isAdmin" class="ta-btn-primary" @click="showAdd = true">+ 新建媒体库</button>
       </div>
+      <BatchToolbar :batch="mediaBatch" kind="media" :rows="mediaList" :refresh="loadMediaData" />
       <div class="ta-grid">
-        <div v-for="m in mediaList" :key="m.mediaId" class="ta-media-card" v-long-press="() => openThemeActionSheet('media', m)" @click="selectMedia(m)" @contextmenu="openThemeContextMenu($event, 'media', m)">
+        <div v-for="m in mediaList" v-batch-item="mediaBatch.item('media', m)" :key="m.mediaId" class="ta-media-card" v-long-press="() => openThemeActionSheet('media', m)" @click="selectMedia(m)" @contextmenu="openThemeContextMenu($event, 'media', m)">
           <div class="ta-media-cover">
             <img v-if="getMediaCover(m)" :src="getMediaCover(m)" alt="" />
             <div v-else class="ta-media-placeholder">
@@ -44,8 +45,16 @@
           </select>
         </div>
       </div>
+      <BatchToolbar
+        :batch="batch"
+        kind="manga"
+        :rows="mangaList"
+        :scope="JSON.stringify([selectedMediaId, batchKeyword])"
+        :disabled="loading"
+        :refresh="refreshBatch"
+      />
       <div class="ta-grid">
-        <div v-for="m in mangaList" :key="m.mangaId" class="ta-manga-card" @click="goChapters(m)" ref="mangaImageBox">
+        <div v-for="m in mangaList" v-batch-item="batch.item('manga', m)" :key="m.mangaId" class="ta-manga-card" @click="goChapters(m)" ref="mangaImageBox">
           <div class="ta-manga-cover">
             <img v-if="m.mangaCover" :src="getMangaCover(m)" alt="" />
             <div v-else class="ta-cover-placeholder">📚</div>
@@ -69,6 +78,8 @@
 </template>
 
 <script lang="ts" setup>
+import BatchToolbar from '@/themes/components/batch-toolbar.vue'
+import { refreshBatchPage, useBatchSelection } from '@/themes/composables/use-batch-selection'
 import { ref, onMounted, onUnmounted, computed, watch } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import mediaApi from '@/api/media'
@@ -98,6 +109,7 @@ const showAdd = ref(false)
 // 漫画相关
 const mangaList = ref<any[]>([])
 const keyword = ref('')
+const batchKeyword = ref('')
 const order = computed({ get: () => userConfig.order, set: (v) => { userConfig.order = v } })
 const page = ref(1)
 const pageSize = 32
@@ -192,6 +204,7 @@ function getMediaCover(media: any) {
 }
 
 async function loadMangaData() {
+  batchKeyword.value = keyword.value.trim()
   if (!selectedMediaId.value) return
   
   loading.value = true
@@ -259,6 +272,18 @@ const stopMediaOperationListener = onMediaOperation(async () => {
   await loadMediaData()
 })
 onUnmounted(stopMediaOperationListener)
+
+const batch = useBatchSelection()
+
+function refreshBatch() {
+  return refreshBatchPage(loadBatchPage, page.value, () => Math.ceil(total.value / pageSize))
+}
+
+function loadBatchPage(nextPage: number) {
+  page.value = nextPage
+  return loadMangaData()
+}
+const mediaBatch = useBatchSelection()
 </script>
 
 <style scoped>

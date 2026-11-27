@@ -15,12 +15,13 @@
     </div>
     <div class="btn-box">
       <el-button type="primary" :icon="Refresh" @click="reload_table">{{ $t('option.refresh') }}</el-button>
+      <el-button :disabled="!selectedIds.length" @click="batchTagOpen = true">批量修改标签</el-button>
       <el-button type="danger" :icon="Delete" :disabled="multipleSelection.length === 0" @click="batch_delete_manga">{{ $t('option.delete') }}</el-button>
     </div>
 
     <!--表格-->
-    <el-table :data="tableData" stripe border @selection-change="handle_selection_change">
-      <el-table-column type="selection" width="54"></el-table-column>
+    <el-table ref="mangaTable" :data="tableData" row-key="mangaId" stripe border @selection-change="handle_selection_change">
+      <el-table-column type="selection" width="54" reserve-selection></el-table-column>
       <el-table-column type="index" :label="$t('account.serial')" width="54"></el-table-column>
       <el-table-column prop="mediaId" :label="$t('mediaManage.id')" width="80"></el-table-column>
       <el-table-column prop="mangaId" :label="$t('mangaManage.id')" width="86"></el-table-column>
@@ -34,6 +35,8 @@
         </template>
       </el-table-column>
     </el-table>
+
+    <BatchTagDialog v-model="batchTagOpen" target="manga" :ids="selectedIds" @applied="reload_table" />
 
     <!--修改漫画弹窗-->
     <manga-modify v-model:editMangaDialog="editMangaDialog" @reload="reload_table" :mangaInfo="mangaInfo" />
@@ -50,6 +53,7 @@ export default {name: 'manga-manage'};
 import {onMounted, reactive, ref, computed} from 'vue';
 import {Delete, Edit, Refresh} from '@element-plus/icons-vue';
 import mangaApi from '@/api/manga';
+import BatchTagDialog from '@/themes/components/batch-tag-dialog.vue';
 import tablePager from '@/components/table-pager.vue';
 import i18n from '@/i18n';
 import {Search} from '@element-plus/icons-vue';
@@ -64,6 +68,10 @@ const tableData = ref([]);
 const editMangaDialog = ref(false);
 const keyWord = ref('');
 const multipleSelection = ref<mangaType[]>([]);
+const mangaTable = ref<{ clearSelection: () => void }>();
+const batchTagOpen = ref(false);
+const selectedIds = computed(() => multipleSelection.value.map((item) => Number(item.mangaId)));
+let appliedKeyword = '';
 const mangaInfo = reactive<mangaType>(mangaInit);
 
 const formInit = {
@@ -84,6 +92,10 @@ onMounted(() => {
 });
 
 async function load_table(page = 1, pageSize = browse.manageListPageSize) {
+  if (appliedKeyword !== keyWord.value) {
+    appliedKeyword = keyWord.value;
+    mangaTable.value?.clearSelection();
+  }
   const res = await mangaApi.get(0, page, pageSize, 'id', keyWord.value);
   count.value = res.count;
   tableData.value = res.list;
@@ -93,6 +105,7 @@ async function load_table(page = 1, pageSize = browse.manageListPageSize) {
 }
 
 function reload_table() {
+  mangaTable.value?.clearSelection();
   tableData.value = [];
   load_table(browse.manageListPage, browse.manageListPageSize);
 }
@@ -133,8 +146,7 @@ async function batch_delete_manga() {
 
   ElMessageBox.confirm(t('mangaManage.confirm.text'), t('mangaManage.confirm.title'), {type: 'warning'})
     .then(async () => {
-      const ids = multipleSelection.value.map(item => item.mangaId);
-      await mangaApi.batch_delete_manga(ids as number[]);
+      await mangaApi.batch_delete_manga(selectedIds.value);
       reload_table();
     })
     .catch(() => {});

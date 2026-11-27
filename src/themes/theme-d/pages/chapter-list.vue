@@ -37,9 +37,18 @@
 
       <div class="td-chapters">
         <div class="td-section-title">章节列表</div>
+        <BatchToolbar
+          :batch="batch"
+          kind="chapter"
+          :rows="chapterList"
+          :scope="mangaId ?? 0"
+          :disabled="loading || !infoReady"
+          :owner-manga-id="mangaId ?? 0"
+          :refresh="refreshBatch"
+        />
         <div ref="listRef" class="td-chapter-grid">
           <t-chapter-item
-            v-for="(ch, idx) in chapterList"
+            v-for="(ch, idx) in chapterList" v-batch-item="batch.item('chapter', ch)"
             :key="ch.chapterId"
             :item="ch"
             variant="D"
@@ -64,6 +73,8 @@
 </template>
 
 <script lang="ts" setup>
+import BatchToolbar from '@/themes/components/batch-toolbar.vue'
+import { refreshBatchPage, useBatchSelection } from '@/themes/composables/use-batch-selection'
 import { ref, onMounted, watch, computed } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import mangaApi from '@/api/manga'
@@ -213,6 +224,17 @@ function goRead(ch: any, idx: number) {
   globalData.mangaName = mangaInfo.value.mangaName || globalData.mangaName
   
   router.push(`/t/reader/${ch.chapterId}`)
+}
+
+const batch = useBatchSelection()
+
+function refreshBatch() {
+  return refreshBatchPage(loadBatchPage, page.value, () => Math.ceil(total.value / pageSize.value))
+}
+
+function loadBatchPage(nextPage: number) {
+  setPage(nextPage, pageSize.value)
+  return loadChapters()
 }
 </script>
 

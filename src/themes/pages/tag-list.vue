@@ -29,9 +29,17 @@
         <SortSelector v-model="orderBy" model="manga" @update:model-value="onSortChange" />
       </div>
 
+      <BatchToolbar
+        :batch="batch"
+        kind="manga"
+        :rows="mangaList"
+        :scope="selectedTagIds.join(',')"
+        :disabled="loading"
+        :refresh="refreshBatch"
+      />
       <div class="tm-tag-list-grid" v-if="mangaList.length">
         <MangaCard
-          v-for="item in mangaList"
+          v-for="item in mangaList" v-batch-item="batch.item('manga', item)"
           :key="item.mangaId"
           :item="item"
           :variant="cardVariant"
@@ -115,6 +123,8 @@
 </template>
 
 <script lang="ts" setup>
+import BatchToolbar from '@/themes/components/batch-toolbar.vue'
+import { refreshBatchPage, useBatchSelection } from '@/themes/composables/use-batch-selection'
 import { ref, onMounted, computed, nextTick } from 'vue'
 import { useRouter } from 'vue-router'
 import tagApi from '@/api/tag'
@@ -247,6 +257,17 @@ function goManga(item: any) {
 
 function onContextmenu(item: any, event: MouseEvent) {
   openThemeActionSheet('manga', item)
+}
+
+const batch = useBatchSelection()
+
+function refreshBatch() {
+  return refreshBatchPage(loadBatchPage, page.value, () => Math.ceil(total.value / pageSize))
+}
+
+function loadBatchPage(nextPage: number) {
+  page.value = nextPage
+  return loadManga()
 }
 </script>
 

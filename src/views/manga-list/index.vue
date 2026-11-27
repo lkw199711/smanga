@@ -1,6 +1,14 @@
 <template>
 	<div class="manga-list">
 		<!-- 漫画列表 -->
+		<BatchToolbar
+		  :batch="batch"
+		  kind="manga"
+		  :rows="list"
+		  :scope="JSON.stringify([route.query.mediaId, route.query.parentPath, route.query.byParentPath])"
+		  :disabled="loading"
+		  :refresh="refreshBatch"
+		/>
 		<div class="touch-dom">
 			<!-- 加载骨架屏 -->
 			<template v-if="loading">
@@ -9,7 +17,7 @@
 
 			<template v-else>
 				<div :class="['manga-list-box', { block: config.viewType === 'list' }]">
-					<manga v-for="item in list" :key="item.mangaId" :viewType="config.viewType" :mangaInfo="item"
+					<manga v-for="item in list" v-batch-item="batch.item('manga', item)" :key="item.mangaId" :viewType="config.viewType" :mangaInfo="item"
 						@contextmenu.prevent="context_menu(item)" />
 				</div>
 			</template>
@@ -29,6 +37,8 @@ export default { name: 'manga-list' };
 </script>
 
 <script lang="ts" setup>
+import BatchToolbar from '@/themes/components/batch-toolbar.vue'
+import { refreshBatchPage, useBatchSelection } from '@/themes/composables/use-batch-selection'
 import {
 	computed,
 	watch,
@@ -179,6 +189,16 @@ function reload() {
 function context_menu(mangaInfoProps: mangaType) {
 	mangaInfo.value = mangaInfoProps;
 	rightSidebarVisible.value = true;
+}
+
+const batch = useBatchSelection()
+
+function refreshBatch() {
+  return refreshBatchPage(
+    (p) => page_change(p, browse.mangaListPageSize),
+    page.value,
+    () => Math.ceil(count.value / browse.mangaListPageSize),
+  )
 }
 </script>
 

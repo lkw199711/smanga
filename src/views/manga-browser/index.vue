@@ -22,24 +22,27 @@
 
     <template v-else>
       <!-- 第一层：媒体库选择 -->
-      <div v-if="!mediaId" class="media-grid">
-        <div
-          v-for="item in mediaList"
-          :key="item.mediaId"
-          class="media-item"
-          @click="enter_media(item)">
-          <el-image
-            v-if="item.mediaCoverLink"
-            class="media-cover"
-            :src="item.mediaCoverLink"
-            fit="contain"
-            :alt="item.mediaName" />
-          <el-image v-else :src="placeholder" class="media-cover" fit="fill" />
-          <p class="media-name">{{ item.mediaName }}</p>
-          <storage-availability-notice :availability="item.availability" compact />
+      <template v-if="!mediaId">
+        <BatchToolbar :batch="mediaBatch" kind="media" :rows="mediaList" :refresh="load_media" />
+        <div class="media-grid">
+          <div
+            v-for="item in mediaList" v-batch-item="mediaBatch.item('media', item)"
+            :key="item.mediaId"
+            class="media-item"
+            @click="enter_media(item)">
+            <el-image
+              v-if="item.mediaCoverLink"
+              class="media-cover"
+              :src="item.mediaCoverLink"
+              fit="contain"
+              :alt="item.mediaName" />
+            <el-image v-else :src="placeholder" class="media-cover" fit="fill" />
+            <p class="media-name">{{ item.mediaName }}</p>
+            <storage-availability-notice :availability="item.availability" compact />
+          </div>
+          <div class="empty-tip" v-if="!mediaList.length">{{ $t('mangaBrowser.noMedia') }}</div>
         </div>
-        <div class="empty-tip" v-if="!mediaList.length">{{ $t('mangaBrowser.noMedia') }}</div>
-      </div>
+      </template>
 
       <!-- 媒体库内：目录浏览 + 漫画列表 -->
       <div v-else class="dir-layout">
@@ -70,9 +73,17 @@
             <span>{{ $t('mangaBrowser.mangas') }}</span>
             <span class="count">({{ currentMangas.length }})</span>
           </div>
+          <BatchToolbar
+            :batch="batch"
+            kind="manga"
+            :rows="currentMangas"
+            :scope="JSON.stringify([mediaId, currentPath])"
+            :disabled="loading"
+            :refresh="load_mangas"
+          />
           <div class="manga-grid">
             <manga
-              v-for="item in currentMangas"
+              v-for="item in currentMangas" v-batch-item="batch.item('manga', item)"
               :key="item.mangaId"
               :viewType="config.viewType"
               :mangaInfo="item" />
@@ -93,6 +104,8 @@ export default { name: 'manga-browser' };
 </script>
 
 <script setup lang="ts">
+import BatchToolbar from '@/themes/components/batch-toolbar.vue'
+import { useBatchSelection } from '@/themes/composables/use-batch-selection'
 import { computed, onMounted, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import mediaApi from '@/api/media';
@@ -365,6 +378,9 @@ onMounted(async () => {
   await load_media();
   if (mediaId.value) await load_mangas();
 });
+
+const batch = useBatchSelection()
+const mediaBatch = useBatchSelection()
 </script>
 
 <style scoped lang="less">
