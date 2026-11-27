@@ -1,9 +1,12 @@
 <template>
   <header class="reader-quick-bar" :class="{ 'is-mobile': isMobile }">
-    <!-- 章节标题条 -->
-    <div class="chapter-name" :title="chapterTitle">
-      <span class="chapter-name-text">{{ browse.currentChapter?.chapterName || '' }}</span>
-      <span v-if="chapterProgress" class="chapter-progress">{{ chapterProgress }}</span>
+    <!-- 漫画与章节标题条 -->
+    <div class="chapter-name" :title="fullTitle">
+      <span v-if="mangaName" class="manga-name-text">{{ mangaName }}</span>
+      <div class="chapter-line">
+        <span class="chapter-name-text">{{ browse.currentChapter?.chapterName || '' }}</span>
+        <span v-if="chapterProgress" class="chapter-progress">{{ chapterProgress }}</span>
+      </div>
     </div>
 
     <!-- 功能长条: 章节选择 + 功能菜单 (桌面 / 移动 通用) -->
@@ -27,6 +30,7 @@ import { config } from '@/store'
 import useBrowseStore from '@/store/browse'
 
 const browse = useBrowseStore()
+const props = defineProps<{ mangaName: string }>()
 
 const isMobile = ref(false)
 const chapterProgress = computed(() => {
@@ -39,6 +43,7 @@ const chapterTitle = computed(() => {
   const name = browse.currentChapter?.chapterName || ''
   return chapterProgress.value ? `${name} · ${chapterProgress.value}` : name
 })
+const fullTitle = computed(() => [props.mangaName, chapterTitle.value].filter(Boolean).join(' · '))
 
 let mql: MediaQueryList | null = null
 function syncMobile(e: MediaQueryList | MediaQueryListEvent) {
@@ -66,10 +71,10 @@ function openChapterDrawer() {
 .reader-quick-bar {
   position: fixed;
   z-index: 20;
-  top: 0;
+  top: var(--reader-top-inset, 0px);
   left: 0;
   right: 0;
-  padding-top: env(safe-area-inset-top);
+  padding-top: var(--reader-topbar-padding, env(safe-area-inset-top, 0px));
   pointer-events: none;
   user-select: none;
   -webkit-user-select: none;
@@ -85,27 +90,45 @@ function openChapterDrawer() {
   pointer-events: none;
 }
 
-/* 章节标题条: 顶部窄条, 半透明 */
+/* 漫画与章节标题条: 顶部双行, 半透明 */
 .chapter-name {
   pointer-events: auto;
   display: flex;
-  align-items: center;
-  gap: 0.8rem;
-  height: 3.2rem;
-  line-height: 3.2rem;
-  padding: 0 12rem 0 1.6rem;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.2rem;
+  height: 5.6rem;
+  padding: 0 29rem 0 1.6rem;
   color: var(--theme-reader-topbar-text, #f8fafc);
   background: linear-gradient(180deg, rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0));
-  font-size: 1.3rem;
+  font-size: 1.2rem;
+  overflow: hidden;
+}
+
+.manga-name-text {
+  display: block;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
+  font-size: 1.5rem;
+  font-weight: 600;
+  line-height: 2rem;
+}
+
+.chapter-line {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  min-width: 0;
+  white-space: nowrap;
+  line-height: 2rem;
 }
 
 .chapter-name-text {
   min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
+  white-space: nowrap;
   opacity: 0.95;
 }
 
@@ -124,7 +147,7 @@ function openChapterDrawer() {
 .quick-bar {
   pointer-events: auto;
   position: absolute;
-  top: calc(env(safe-area-inset-top) + 0.8rem);
+  top: calc(var(--reader-topbar-padding, env(safe-area-inset-top, 0px)) + 1rem);
   right: 1.6rem;
   display: inline-flex;
   align-items: stretch;
@@ -189,9 +212,17 @@ function openChapterDrawer() {
 
 /* 桌面端: 放大章节标题与右侧功能条, 提升可读性与点击面积 */
 .reader-quick-bar:not(.is-mobile) .chapter-name {
-  height: 4.2rem;
-  line-height: 4.2rem;
-  font-size: 1.7rem;
+  height: 6.4rem;
+  font-size: 1.5rem;
+}
+
+.reader-quick-bar:not(.is-mobile) .manga-name-text {
+  font-size: 1.9rem;
+  line-height: 2.4rem;
+}
+
+.reader-quick-bar:not(.is-mobile) .chapter-line {
+  line-height: 2.4rem;
 }
 
 .reader-quick-bar:not(.is-mobile) .chapter-progress {
@@ -200,6 +231,7 @@ function openChapterDrawer() {
 }
 
 .reader-quick-bar:not(.is-mobile) .quick-bar {
+  top: calc(var(--reader-topbar-padding, env(safe-area-inset-top, 0px)) + 0.9rem);
   height: 4.6rem;
 }
 
@@ -219,7 +251,7 @@ function openChapterDrawer() {
 }
 
 .quick-bar.is-mobile {
-  top: calc(env(safe-area-inset-top) + 0.6rem);
+  top: calc(var(--reader-topbar-padding, env(safe-area-inset-top, 0px)) + 0.9rem);
   right: 1rem;
   height: 3.8rem;
   z-index: 21;

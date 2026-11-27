@@ -1,5 +1,5 @@
 <template>
-  <div class="tb-layout" :class="{ 'tb-dark': isDark }">
+  <div class="tb-layout" :class="{ 'tb-dark': isDark, 'android-top-seat': config.androidTopSeat }">
     <tb-sidebar />
     <div class="tb-layout-right">
       <tb-topbar />
@@ -18,6 +18,7 @@ import TbTopbar from './topbar.vue'
 import ThemeContextMenu from '@/themes/components/theme-context-menu.vue'
 import { useColorTheme } from '@/themes/composables/use-color-theme'
 import { useThemeUiStore } from '@/store/theme-ui'
+import { config } from '@/store'
 import './dark-overrides.css'
 
 const themeUi = useThemeUiStore()
@@ -50,6 +51,12 @@ const { isDarkMode: isDark } = useColorTheme()
 	--tcm-hover: #374151;
 	background: linear-gradient(135deg, #0f172a 0%, #111827 50%, #1e293b 100%);
 	color: #e5e7eb;
+}
+
+.tb-layout.android-top-seat {
+	box-sizing: border-box;
+	padding-top: max(3.2rem, env(safe-area-inset-top, 0px));
+	background-clip: content-box;
 }
 
 .tb-layout-right {

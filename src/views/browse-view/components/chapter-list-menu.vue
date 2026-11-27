@@ -10,7 +10,7 @@
       modal-class="chapter-list-drawer-modal"
       class="chapter-list-drawer"
     >
-      <div class="top-seat" v-if="config.android"></div>
+      <div class="top-seat" v-if="config.androidTopSeat"></div>
       <el-menu class="chapter-list" active-text-color="#ee0a24" :default-active="String(browse.currentChapterIndex)"
         @select="change_chapter">
         <el-menu-item v-for="(chapter, index) in browse.chapterList" :index="String(index)" :key="chapter.chapterId">{{ chapter.chapterName }}

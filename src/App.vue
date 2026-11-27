@@ -16,7 +16,7 @@ import { global_set_json, Cookies } from '@/utils';
 import { config, pageSizeConfig, userConfig } from '@/store';
 import { useRoute, useRouter } from 'vue-router';
 import languages from '@/store/language';
-import { computed, onMounted, watch } from 'vue';
+import { computed, onBeforeUnmount, onMounted, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { set_theme } from '@/style/theme';
 import userApi from './api/account';
@@ -45,7 +45,9 @@ const elLocale = computed(() => {
 
 // 此项必须在路由初始化前完成：Android 首屏可能是 /init 或 /login，
 // 不能随着这些页面的业务初始化一同被跳过。
+window.addEventListener('smanga-platform-ready', init_platform);
 init_platform();
+onBeforeUnmount(() => window.removeEventListener('smanga-platform-ready', init_platform));
 sessionStore.hydrate();
 
 // 生命周期
@@ -97,7 +99,13 @@ async function system_init() {
 let initializedToken = '';
 
 function init_platform() {
-	config.android = Boolean((window as typeof window & { javaObj?: unknown }).javaObj);
+	// APK 的 WebView 在页面脚本加载前已设置 User-Agent；javaObj 可能稍后才注入。
+	const bridge = (window as typeof window & { javaObj?: { edgeToEdge?: boolean } }).javaObj;
+	const userAgent = navigator.userAgent;
+	config.android = Boolean(bridge) || userAgent.includes('SmangaAPK');
+	// 原生层关闭延伸模式时已经使用 statusBarsPadding，网页不再重复占位。
+	config.androidTopSeat = config.android && bridge?.edgeToEdge !== false
+		&& !userAgent.includes('SmangaAPKNativeTopInset');
 }
 
 /**

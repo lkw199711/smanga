@@ -363,11 +363,6 @@ onBeforeUnmount(() => {
 	background: #f3f4f6;
 }
 
-/* 安卓占位符与顶栏背景一致 */
-:deep(.android-seat) {
-	background: rgba(255, 255, 255, 0.95);
-}
-
 .sa-menu-toggle {
 	width: 4rem;
 	height: 4rem;
@@ -403,12 +398,6 @@ onBeforeUnmount(() => {
 	flex-direction: column;
 	overflow: hidden;
 	animation: slideIn 0.3s ease;
-}
-
-/* 安卓占位符 - 侧边栏内与顶栏同色 */
-.sa-mobile-sidebar :deep(.android-seat) {
-	flex-shrink: 0;
-	background: #fff;
 }
 
 /* 导航滚动区 */

@@ -3,7 +3,7 @@
     <el-menu router :default-active="menuActive" :class="['sidebar', 'sidebar-pc', { close: config.sidebarCollapse }]"
       @select="handle_select" :collapse="config.sidebarCollapse" :collapse-transition="true">
       <!-- 顶部占位符 -->
-      <div class="top-seat" v-if="config.android"></div>
+      <div class="top-seat" v-if="config.androidTopSeat"></div>
       <el-menu-item index="/" class="no-padding">
         <div :class="['logo', 'posted', { 'collapse': !config.sidebarCollapse }]">
           <img v-show="config.sidebarCollapse" src="@/assets/logo2.png" alt="logo">
@@ -78,7 +78,7 @@
   <div class="sidebar-phone">
     <el-drawer v-model="config.sidebarCollapse" size="auto" direction="ltr" :with-header="false">
       <!-- 顶部占位符 -->
-      <div class="top-seat" v-if="config.android"></div>
+      <div class="top-seat" v-if="config.androidTopSeat"></div>
       <el-menu router class="sidebar sidebar-phone" :default-active="menuActive" @select="handle_select">
         <!--<logo/>-->
         <el-menu-item index="/" class="no-padding">

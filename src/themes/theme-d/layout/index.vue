@@ -1,5 +1,5 @@
 <template>
-	<div :class="['style-d', { 'sd-dark': isDark }]" :style="themeVars">
+	<div :class="['style-d', { 'sd-dark': isDark, 'android-top-seat': config.androidTopSeat }]" :style="themeVars">
 		<aside class="sd-sidebar">
 			<div class="sd-logo" @click="router.push('/t')">
 				<div class="sd-logo-mark">s</div>
@@ -570,6 +570,12 @@ onBeforeUnmount(() => {
 	color: var(--sd-text);
 	font-size: 1.4rem;
 	font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+}
+
+.style-d.android-top-seat {
+	box-sizing: border-box;
+	padding-top: max(3.2rem, env(safe-area-inset-top, 0px));
+	background-clip: content-box;
 }
 
 .sd-sidebar {

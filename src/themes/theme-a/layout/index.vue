@@ -1,5 +1,5 @@
 <template>
-	<div class="style-a" :class="{ 'sa-dark': isDark }">
+	<div class="style-a" :class="{ 'sa-dark': isDark, 'android-top-seat': config.androidTopSeat }">
 		<ta-sidebar />
 		<div class="sa-body">
 			<ta-topbar />
@@ -18,6 +18,7 @@ import TaTopbar from './topbar.vue'
 import ThemeContextMenu from '@/themes/components/theme-context-menu.vue'
 import { useColorTheme } from '@/themes/composables/use-color-theme'
 import { useThemeUiStore } from '@/store/theme-ui'
+import { config } from '@/store'
 import './dark-overrides.css'
 
 const themeUi = useThemeUiStore()
@@ -49,6 +50,12 @@ const { isDarkMode: isDark } = useColorTheme()
 	--tcm-hover: #374151;
 	background: #0f172a;
 	color: #e5e7eb;
+}
+
+.style-a.android-top-seat {
+	box-sizing: border-box;
+	padding-top: max(3.2rem, env(safe-area-inset-top, 0px));
+	background-clip: content-box;
 }
 
 .sa-body {

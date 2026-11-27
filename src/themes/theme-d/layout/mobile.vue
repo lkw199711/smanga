@@ -322,11 +322,6 @@ function onSidebarClick(e: MouseEvent) {
 	border-bottom: 1px solid var(--sd-border, #dbeafe);
 }
 
-/* 安卓占位符与顶栏背景一致 */
-:deep(.android-seat) {
-	background: rgba(255, 255, 255, 0.9);
-}
-
 .sd-menu-toggle {
 	width: 4rem;
 	height: 4rem;
@@ -455,10 +450,8 @@ function onSidebarClick(e: MouseEvent) {
 	flex-shrink: 0;
 }
 
-/* 安卓占位符 - 侧边栏内与侧栏同色 */
+/* 侧栏占位与侧栏宽度对齐 */
 .sd-mobile-sidebar :deep(.android-seat) {
-	flex-shrink: 0;
-	background: var(--sd-card, #fff);
 	margin: -1.2rem -1.2rem 0;
 }
 

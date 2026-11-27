@@ -50,6 +50,7 @@ export const config = reactive({
 	readerJumpPageDialog: false,
 	readerViewWidthDialog: false,
 	android: false,
+	androidTopSeat: false,
 	isMobile: false, // 移动端环境标识
 	viewType: 'block',
 });

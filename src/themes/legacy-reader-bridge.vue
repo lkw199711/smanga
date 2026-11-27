@@ -1,12 +1,12 @@
 <template>
   <main
-    :class="['theme-legacy-reader', `theme-legacy-reader-${themeState.current.toLowerCase()}`]"
+    :class="['theme-legacy-reader', `theme-legacy-reader-${themeState.current.toLowerCase()}`, { 'has-android-top-seat': config.androidTopSeat }]"
     @contextmenu.prevent="openControlPanel"
     v-long-press="openControlPanel"
   >
     <template v-if="ready">
-      <theme-reader-topbar :class="{ 'is-controls-hidden': !config.browseTop }" />
-      <theme-reader-control-panel />
+      <theme-reader-topbar :manga-name="mangaName" :class="{ 'is-controls-hidden': !config.browseTop }" />
+      <theme-reader-control-panel :manga-name="mangaName" />
       <theme-reader-chapter-drawer />
       <theme-reader-dialogs />
       <theme-reader-footer />
@@ -47,6 +47,7 @@ const browseStore = useBrowseStore()
 const navigationStore = useNavigationStore()
 const error = ref('')
 const ready = ref(false)
+const mangaName = ref('')
 
 function openControlPanel() {
   config.controlPanel = true
@@ -68,6 +69,7 @@ const readerComponent = computed(() => {
 async function prepareReader() {
   ready.value = false
   error.value = ''
+  mangaName.value = ''
   const chapterId = Number(route.params.chapterId)
   if (!chapterId) {
     error.value = '无效的章节地址'
@@ -92,6 +94,7 @@ async function prepareReader() {
     } catch (cause) {
       console.warn('读取漫画阅读模式失败，使用条漫模式:', cause)
     }
+    mangaName.value = manga?.mangaName || ''
     // 双页的初始左右顺序来自漫画记录。新漫画在扫描入库时会继承媒体库配置；
     // 旧数据或接口暂时不可用时按数据库默认值 1（从右到左）处理。
     browseStore.readerFlags.direction = Number(manga?.direction ?? 1) === 1
@@ -137,6 +140,8 @@ watch(() => route.params.chapterId, prepareReader)
 
 <style scoped>
 .theme-legacy-reader {
+  --reader-top-inset: 0px;
+  --reader-topbar-padding: env(safe-area-inset-top, 0px);
   --theme-reader-topbar-bg: #111827;
   --theme-reader-chapter-bg: #1f2937;
   --theme-reader-topbar-text: #f8fafc;
@@ -144,6 +149,24 @@ watch(() => route.params.chapterId, prepareReader)
   min-height: 100vh;
   min-height: 100dvh;
   background: #111;
+}
+
+.theme-legacy-reader.has-android-top-seat {
+  --reader-top-inset: max(3.2rem, env(safe-area-inset-top, 0px));
+  --reader-topbar-padding: 0px;
+  box-sizing: border-box;
+  padding-top: var(--reader-top-inset);
+  background-clip: content-box;
+}
+
+.theme-legacy-reader.has-android-top-seat::before {
+  content: '';
+  position: fixed;
+  z-index: 21;
+  inset: 0 0 auto;
+  height: var(--reader-top-inset);
+  background: transparent;
+  pointer-events: none;
 }
 
 .theme-legacy-reader-a {
@@ -166,21 +189,21 @@ watch(() => route.params.chapterId, prepareReader)
 }
 
 .theme-legacy-reader-content {
-  min-height: 100vh;
-  min-height: 100dvh;
+  min-height: calc(100vh - var(--reader-top-inset));
+  min-height: calc(100dvh - var(--reader-top-inset));
 }
 
 .theme-legacy-reader-content.single,
 .theme-legacy-reader-content.double,
 .theme-legacy-reader-content.half {
-  height: 100vh;
-  height: 100dvh;
+  height: calc(100vh - var(--reader-top-inset));
+  height: calc(100dvh - var(--reader-top-inset));
   overflow: hidden;
 }
 
 .legacy-reader-bridge {
-  min-height: 100vh;
-  min-height: 100dvh;
+  min-height: calc(100vh - var(--reader-top-inset));
+  min-height: calc(100dvh - var(--reader-top-inset));
   display: grid;
   place-content: center;
   gap: 1.2rem;

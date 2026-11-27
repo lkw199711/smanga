@@ -13,8 +13,12 @@
 
           <!-- 标题 -->
           <div class="lcp-title" :title="panelTitle">
-            <span class="lcp-title-text">{{ browse.currentChapter?.chapterName || $t('sidebar.chapterList') }}</span>
-            <span v-if="chapterProgress" class="lcp-title-progress">{{ chapterProgress }}</span>
+            <span v-if="mangaName" class="lcp-manga-name">{{ mangaName }}</span>
+            <span v-if="mangaName" class="lcp-title-divider" aria-hidden="true">·</span>
+            <div class="lcp-chapter-line">
+              <span class="lcp-title-text">{{ browse.currentChapter?.chapterName || $t('sidebar.chapterList') }}</span>
+              <span v-if="chapterProgress" class="lcp-title-progress">{{ chapterProgress }}</span>
+            </div>
           </div>
 
           <!-- 快速开关行:书签 / 全屏 / 下载 / 右侧菜单(旧) -->
@@ -223,6 +227,7 @@ const route = useRoute()
 const router = useRouter()
 const browse = useBrowseStore()
 const { t } = i18n.global
+const props = defineProps<{ mangaName: string }>()
 
 // 面板可见状态: 与 config.controlPanel 双向同步
 const visible = ref(!!(config as any).controlPanel)
@@ -276,7 +281,8 @@ const chapterProgress = computed(() => {
 })
 const panelTitle = computed(() => {
   const name = browse.currentChapter?.chapterName || ''
-  return chapterProgress.value ? `${name} · ${chapterProgress.value}` : name
+  const chapter = chapterProgress.value ? `${name} · ${chapterProgress.value}` : name
+  return [props.mangaName, chapter].filter(Boolean).join(' · ')
 })
 const mediaId = computed(() => Number(route.query.mediaId) || 0)
 const mangaId = computed(() => Number(route.query.mangaId) || 0)
@@ -526,12 +532,38 @@ function goChapter(chapterId: number) {
   justify-content: center;
   gap: 0.8rem;
   font-size: 1.4rem;
-  opacity: 0.85;
   margin-bottom: 1.4rem;
-  padding: 0 0.6rem;
+  padding: 0 3.6rem;
+}
+
+.lcp-manga-name {
+  max-width: 55%;
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-size: 1.8rem;
+  font-weight: 600;
+  line-height: 2.4rem;
+}
+
+.lcp-title-divider {
+  flex-shrink: 0;
+  opacity: 0.55;
+}
+
+.lcp-chapter-line {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.8rem;
+  min-width: 0;
+  overflow: hidden;
+  opacity: 0.85;
 }
 
 .lcp-title-text {
+  min-width: 0;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;

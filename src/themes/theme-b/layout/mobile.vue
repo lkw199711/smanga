@@ -213,11 +213,6 @@ function onSidebarClick(e: MouseEvent) {
 	border-bottom: 1px solid rgba(255, 111, 163, 0.2);
 }
 
-/* 安卓占位符与顶栏背景一致 */
-:deep(.android-seat) {
-	background: rgba(255, 255, 255, 0.9);
-}
-
 .sb-menu-toggle {
 	width: 4rem;
 	height: 4rem;
@@ -390,10 +385,8 @@ function onSidebarClick(e: MouseEvent) {
 	flex-shrink: 0;
 }
 
-/* 安卓占位符 - 侧边栏内与侧栏同色 */
+/* 侧栏占位与侧栏宽度对齐 */
 .sb-mobile-sidebar :deep(.android-seat) {
-	flex-shrink: 0;
-	background: rgba(255, 255, 255, 0.96);
 	margin: -1.2rem -1.2rem 0;
 }
 
