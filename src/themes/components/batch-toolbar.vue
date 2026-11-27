@@ -1,14 +1,19 @@
 <template>
-  <div v-if="allowed && (batch.active.value || rows.length)" class="batch-toolbar" :class="{ 'is-touch': config.isMobile }">
+  <div v-if="allowed && (batch.active.value || rows.length)" ref="toolbarRef" class="batch-toolbar" :class="{ 'is-touch': config.isMobile }">
     <div v-if="batch.active.value" class="batch-toolbar-selection">
       <span class="batch-toolbar-count" aria-live="polite">已选 {{ count }} 项</span>
       <button type="button" :disabled="batch.locked.value || !pageIds.length" @click="batch.selectPage(kind, rows)">
         {{ allPage ? '取消全选当前页' : '全选当前页' }}
       </button>
       <button type="button" :disabled="batch.locked.value || !count" @click="batch.selected.clear()">清空</button>
+      <button type="button" class="batch-toolbar-marquee" :disabled="batch.locked.value || disabled || !rows.length" :aria-pressed="marquee.armed.value"
+        :title="marquee.armed.value ? '退出框选，恢复滑动' : '在页面中拖出矩形，切换范围内项目的选中状态'" @click="marquee.toggle()">
+        {{ marquee.armed.value ? '退出框选' : '框选' }}
+      </button>
+      <span v-if="marquee.armed.value" class="batch-toolbar-hint">拖动切换范围内的选中状态</span>
     </div>
     <div v-if="batch.active.value" class="batch-toolbar-inline">
-      <button v-if="isLibraryItem" type="button" :disabled="actionsDisabled" @click="openTags">批量修改标签</button>
+      <button v-if="canEditTags" type="button" :disabled="actionsDisabled" @click="openTags">批量修改标签</button>
       <button type="button" class="batch-toolbar-danger" :disabled="actionsDisabled" @click="openDelete">{{ deleteLabel }}</button>
     </div>
     <button type="button" :disabled="batch.locked.value || (!batch.active.value && disabled)" @click="toggleMode">{{ batch.active.value ? '退出多选' : '多选' }}</button>
@@ -17,12 +22,15 @@
   <Teleport to="body">
     <div v-if="allowed && batch.active.value" class="batch-toolbar-fixed" :class="{ 'is-touch': config.isMobile, 'is-dark': isDarkMode }">
       <span class="batch-toolbar-count">已选 {{ count }} 项</span>
-      <button v-if="isLibraryItem" type="button" :disabled="actionsDisabled" @click="openTags">修改标签</button>
+      <button type="button" class="batch-toolbar-marquee" :disabled="batch.locked.value || disabled || !rows.length" :aria-pressed="marquee.armed.value"
+        :title="marquee.armed.value ? '退出框选，恢复滑动' : '在页面中拖出矩形，切换范围内项目的选中状态'"
+        @click="marquee.toggle()">{{ marquee.armed.value ? '退出框选' : '框选' }}</button>
+      <button v-if="canEditTags" type="button" :disabled="actionsDisabled" @click="openTags">修改标签</button>
       <button type="button" class="batch-toolbar-danger" :disabled="actionsDisabled" @click="openDelete">{{ isLibraryItem ? '删除' : deleteLabel }}</button>
     </div>
   </Teleport>
 
-  <BatchTagDialog v-if="tagTarget" v-model="tagOpen" :target="tagTarget" :ids="ids" :manga-count="mangaCount" @applied="onTagsApplied" />
+  <BatchTagDialog v-if="canEditTags" v-model="tagOpen" target="manga" :ids="ids" @applied="onTagsApplied" />
   <el-dialog v-model="deleteOpen" :title="deleteLabel" width="min(48rem, 92vw)" append-to-body
     :close-on-click-modal="false" :close-on-press-escape="!submitting" :show-close="!submitting">
     <p v-if="isLibraryItem">
@@ -51,6 +59,7 @@ import { deleteBatch } from '@/api/batch'
 import { config } from '@/store'
 import { useSessionStore } from '@/store/session'
 import { batchError, batchRowId, refreshBatchList, type BatchKind, type BatchRow, type BatchSelection } from '@/themes/composables/use-batch-selection'
+import { useBatchMarquee } from '@/themes/composables/use-batch-marquee'
 import { useColorTheme } from '@/themes/composables/use-color-theme'
 import BatchTagDialog from './batch-tag-dialog.vue'
 
@@ -65,6 +74,14 @@ const props = defineProps<{
 }>()
 const { isDarkMode } = useColorTheme()
 const session = useSessionStore()
+const toolbarRef = ref<HTMLElement | null>(null)
+const marquee = useBatchMarquee({
+  batch: props.batch,
+  kind: () => props.kind,
+  rows: () => props.rows,
+  disabled: () => !!props.disabled,
+  toolbar: () => toolbarRef.value,
+})
 const labels = {
   manga: ['批量删除', '部漫画', '删除'],
   chapter: ['批量删除', '个章节', '删除'],
@@ -74,17 +91,13 @@ const labels = {
   media: ['批量停用', '个媒体库', '停用'],
 } as const
 const isLibraryItem = computed(() => props.kind === 'manga' || props.kind === 'chapter')
-const tagTarget = computed(() => props.kind === 'manga' || props.kind === 'chapter' ? props.kind : null)
+const canEditTags = computed(() => props.kind === 'manga')
 const allowed = computed(() => !(isLibraryItem.value || props.kind === 'media') || session.isAdmin)
 const count = computed(() => props.batch.selected.size)
 const ids = computed(() => [...props.batch.selected.keys()])
 const pageIds = computed(() => props.disabled ? [] : props.rows.map((row) => batchRowId(props.kind, row)).filter(Boolean))
 const allPage = computed(() => pageIds.value.length > 0 && pageIds.value.every((id) => props.batch.selected.has(id)))
 const actionsDisabled = computed(() => !count.value || props.batch.locked.value)
-const mangaCount = computed(() => {
-  const owners = [...props.batch.selected.values()].map((row) => Number(row.mangaId || props.ownerMangaId))
-  return owners.every((id) => id > 0) ? new Set(owners).size : 0
-})
 const deleteLabel = computed(() => labels[props.kind][0])
 const targetLabel = computed(() => labels[props.kind][1])
 const deleteVerb = computed(() => labels[props.kind][2])
@@ -97,6 +110,7 @@ let scopeVersion = 0
 
 function reset() {
   scopeVersion++
+  marquee.cancel()
   props.batch.exit()
   tagOpen.value = false
   deleteOpen.value = false
@@ -214,10 +228,17 @@ async function submitDelete() {
   cursor: pointer;
 }
 .batch-toolbar button:disabled, .batch-toolbar-fixed button:disabled { opacity: 0.5; cursor: default; }
+.batch-toolbar button.batch-toolbar-marquee[aria-pressed='true'],
+.batch-toolbar-fixed button.batch-toolbar-marquee[aria-pressed='true'] {
+  border-color: var(--el-color-primary, #2563eb);
+  background: var(--el-color-primary-light-9, #eff6ff);
+  color: var(--el-color-primary, #2563eb);
+}
 .batch-toolbar button.batch-toolbar-danger, .batch-toolbar-fixed button.batch-toolbar-danger {
   color: var(--el-color-danger, #b91c1c);
 }
 .batch-toolbar-count { font-weight: 600; white-space: nowrap; }
+.batch-toolbar-hint { color: var(--el-text-color-secondary, #64748b); font-size: 0.85em; }
 .batch-delete-options { display: grid; gap: 0.8rem; margin-top: 1rem; }
 .batch-toolbar.is-touch .batch-toolbar-inline, .batch-toolbar.is-touch .batch-toolbar-count { display: none; }
 .batch-toolbar-fixed.is-touch { display: flex; }
@@ -237,4 +258,18 @@ async function submitDelete() {
 }
 .batch-toolbar-fixed .batch-toolbar-count { margin-inline-end: auto; }
 .batch-toolbar-fixed.is-dark { color-scheme: dark; }
+body.batch-marquee-active { touch-action: none; user-select: none; cursor: crosshair; }
+body.batch-marquee-active [data-batch-owner] { cursor: crosshair; }
+body.batch-marquee-active [data-batch-owner][data-batch-selected='false'] {
+  outline: 1px dashed var(--el-color-primary, #2563eb);
+  outline-offset: -2px;
+}
+.batch-marquee-rect {
+  position: fixed;
+  z-index: 149;
+  pointer-events: none;
+  box-sizing: border-box;
+  border: 1px solid var(--el-color-primary, #2563eb);
+  background: color-mix(in srgb, var(--el-color-primary, #2563eb) 18%, transparent);
+}
 </style>

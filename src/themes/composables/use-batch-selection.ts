@@ -24,7 +24,10 @@ const idKeys = {
   media: 'mediaId',
 } as const
 
+let nextBatchOwner = 0
+
 export function useBatchSelection() {
+  const owner = `batch-${++nextBatchOwner}`
   const active = ref(false)
   const locked = ref(false)
   const selected = shallowReactive(new Map<number, BatchRow>())
@@ -48,6 +51,8 @@ export function useBatchSelection() {
     const id = active.value ? batchRowId(kind, row) : 0
     return {
       active: id > 0,
+      id,
+      owner,
       selected: id > 0 && selected.has(id),
       label: row.chapterName || row.mangaName || row.mediaName,
       toggle() {
@@ -58,7 +63,7 @@ export function useBatchSelection() {
     }
   }
 
-  return { active, locked, selected, exit, selectPage, item }
+  return { owner, active, locked, selected, exit, selectPage, item }
 }
 
 export function batchRowId(kind: BatchKind, row: BatchRow) {

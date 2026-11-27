@@ -67,6 +67,8 @@ function render(el: HTMLElement, value: BatchItemBinding) {
     state.restore = () => {
       indicator.remove()
       el.removeAttribute('data-batch-selected')
+      el.removeAttribute('data-batch-owner')
+      el.removeAttribute('data-batch-id')
       attrs.forEach((attr, index) => {
         const previous = original[index]
         if (previous === null) el.removeAttribute(attr)
@@ -75,6 +77,8 @@ function render(el: HTMLElement, value: BatchItemBinding) {
     }
   }
   el.dataset.batchSelected = String(value.selected)
+  el.dataset.batchOwner = value.owner
+  el.dataset.batchId = String(value.id)
   el.setAttribute('role', 'checkbox')
   el.setAttribute('tabindex', '0')
   el.setAttribute('aria-checked', String(value.selected))
