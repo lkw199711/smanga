@@ -344,6 +344,35 @@ const routes: Array<RouteRecordRaw> = [
 		],
 	},
 
+	// 系统工具
+	{
+		path: '/system-tools',
+		redirect: '/directory-migration',
+		meta: {
+			submenu: true,
+			sidebar: true,
+			onlyAdmin: true,
+			title: 'systemTools',
+			icon: 'setting',
+			view: 'setting',
+		},
+		component: Layout,
+		children: [
+			{
+				path: '/directory-migration',
+				name: 'directory-migration',
+				meta: {
+					sidebar: true,
+					onlyAdmin: true,
+					title: 'directoryMigration',
+					icon: 'sync',
+					view: 'setting',
+				},
+				component: () => import('../views/directory-migration/index.vue'),
+			},
+		],
+	},
+
 	// P2P 共享
 	{
 		path: '/p2p',
@@ -588,6 +617,7 @@ const routes: Array<RouteRecordRaw> = [
 				{ path: 'manage/tags', name: 't-manage-tags', component: ThemeBridge, props: { page: 'manage-tags' }, meta: { title: '标签管理' } },
 				{ path: 'manage/compress', name: 't-manage-compress', component: ThemeBridge, props: { page: 'manage-compress' }, meta: { title: '解压管理' } },
 				{ path: 'manage/jobs', name: 't-manage-jobs', component: ThemeBridge, props: { page: 'manage-jobs' }, meta: { title: '任务管理' } },
+				{ path: 'manage/system-tools', name: 't-manage-system-tools', component: ThemeBridge, props: { page: 'manage-system-tools' }, meta: { title: '系统工具' } },
 				{ path: 'manage/sync', name: 't-manage-sync', component: ThemeBridge, props: { page: 'manage-sync' }, meta: { title: '漫画同步' } },
 				{ path: 'manage/share', name: 't-manage-share', component: ThemeBridge, props: { page: 'manage-share' }, meta: { title: '漫画分享' } },
 				{ path: 'manage/p2p', name: 't-manage-p2p', component: ThemeBridge, props: { page: 'manage-p2p' }, meta: { title: 'P2P管理' } },
@@ -650,6 +680,7 @@ router.beforeEach(async (to) => {
 			't-manage-storage-roots': '/storage-root-setting',
 			't-manage-tags': '/tag-setting', 't-manage-compress': '/compress-setting',
 			't-manage-jobs': '/jobs-setting', 't-manage-sync': '/manga-sync',
+			't-manage-system-tools': '/directory-migration',
 			't-manage-share': '/manga-share', 't-manage-p2p': '/p2p-group',
 			't-manage-server': '/serve-setting',
 		}

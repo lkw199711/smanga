@@ -75,6 +75,7 @@ const adminNavItems = [
 	{ key: 'manage-tags', label: '标签管理', icon: '🏷️', path: '/t/manage/tags' },
 	{ key: 'manage-compress', label: '解压管理', icon: '🗜️', path: '/t/manage/compress' },
 	{ key: 'manage-jobs', label: '任务管理', icon: '📋', path: '/t/manage/jobs' },
+	{ key: 'manage-system-tools', label: '系统工具', icon: '🧰', path: '/t/manage/system-tools' },
 	{ key: 'manage-sync', label: '漫画同步', icon: '🔄', path: '/t/manage/sync' },
 	{ key: 'manage-share', label: '漫画分享', icon: '📤', path: '/t/manage/share' },
 	{ key: 'manage-p2p', label: 'P2P管理', icon: '🌐', path: '/t/manage/p2p' },

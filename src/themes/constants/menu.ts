@@ -44,6 +44,7 @@ export const adminNavMenu: MenuItem[] = [
 	{ path: '/t/manage/tags', icon: '🏷️', label: '标签管理', routeName: 't-manage-tags' },
 	{ path: '/t/manage/compress', icon: '🗜️', label: '解压管理', routeName: 't-manage-compress' },
 	{ path: '/t/manage/jobs', icon: '📋', label: '任务管理', routeName: 't-manage-jobs' },
+	{ path: '/t/manage/system-tools', icon: '🧰', label: '系统工具', routeName: 't-manage-system-tools' },
 	{ path: '/t/manage/sync', icon: '🔄', label: '漫画同步', routeName: 't-manage-sync' },
 	{ path: '/t/manage/share', icon: '📤', label: '漫画分享', routeName: 't-manage-share' },
 	{ path: '/t/manage/p2p', icon: '🌐', label: 'P2P管理', routeName: 't-manage-p2p' },

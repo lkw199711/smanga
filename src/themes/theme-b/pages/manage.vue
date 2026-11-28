@@ -13,6 +13,7 @@
         <button class="tb-btn" @click="go('/tag-setting')">标签管理</button>
         <button class="tb-btn" @click="go('/compress-setting')">解压管理</button>
         <button class="tb-btn" @click="go('/jobs-setting')">任务管理</button>
+        <button class="tb-btn" @click="go('/t/manage/system-tools')">系统工具</button>
       </div>
     </div>
   </div>

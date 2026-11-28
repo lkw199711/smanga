@@ -45,6 +45,7 @@ const sharedManagePages = {
   'manage-tags': () => import('./theme-a/pages/manage/tags.vue'),
   'manage-compress': () => import('./theme-a/pages/manage/compress.vue'),
   'manage-jobs': () => import('./theme-a/pages/manage/jobs.vue'),
+  'manage-system-tools': () => import('./theme-a/pages/manage/system-tools.vue'),
   'manage-sync': () => import('./theme-a/pages/manage/sync.vue'),
   'manage-share': () => import('./theme-a/pages/manage/share.vue'),
   'manage-p2p': () => import('./theme-a/pages/manage/p2p.vue'),

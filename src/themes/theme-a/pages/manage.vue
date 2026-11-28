@@ -29,6 +29,7 @@ const tabs = [
   { key: 'tag', label: '标签管理', desc: '维护标签与关联关系', path: '/tag-setting' },
   { key: 'compress', label: '解压管理', desc: '解压/压缩相关任务', path: '/compress-setting' },
   { key: 'jobs', label: '任务管理', desc: '查看后台任务队列', path: '/jobs-setting' },
+  { key: 'system-tools', label: '系统工具', desc: '目录迁移与服务器维护工具', path: '/t/manage/system-tools' },
   { key: 'manga-sync', label: '漫画同步', desc: '同步漫画数据与元信息', path: '/manga-sync' },
   { key: 'manga-share', label: '漫画分享', desc: '管理漫画分享与导出', path: '/manga-share' },
   { key: 'p2p', label: 'P2P管理', desc: '管理P2P共享与节点', path: '/p2p-group' },

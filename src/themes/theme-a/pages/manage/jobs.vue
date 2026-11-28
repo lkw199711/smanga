@@ -4,7 +4,7 @@
       <h1>任务管理</h1>
       <div class="ta-page-actions">
         <button class="ta-btn-ghost" @click="reload">🔄 刷新</button>
-        <button class="ta-btn-ghost" @click="toggleFailed">{{ failedOnly ? '查看队列' : '查看失败的清理' }}</button>
+        <button class="ta-btn-ghost" @click="toggleFailed">{{ failedOnly ? '查看队列' : '查看失败任务' }}</button>
         <button v-if="!failedOnly" class="ta-btn-danger" :disabled="selected.length === 0" @click="batchDelete">🗑 批量删除</button>
       </div>
     </div>

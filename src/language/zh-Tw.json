@@ -24,6 +24,8 @@
     "tagManage": "標簽管理",
     "compressManage": "轉換管理",
     "jobsManage": "任務管理",
+    "systemTools": "系統工具",
+    "directoryMigration": "漫畫遷移",
     "wiki": "使用說明",
     "tagList": "標簽展示",
     "rightMenu": "功能菜单",
@@ -321,7 +323,7 @@
     "purge": "永久清理",
     "purgeConfirm": "永久清理將刪除記錄及相關書籤、收藏和閱讀歷史。",
     "deleteSources": "同時刪除來源檔案",
-    "showFailed": "查看失敗的清理",
+    "showFailed": "查看失敗任務",
     "showQueue": "查看佇列",
     "retry": "重試"
   },

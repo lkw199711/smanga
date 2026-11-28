@@ -23,6 +23,8 @@
     "bookmarkManage": "bookmarkManage",
     "tagManage": "tagManage",
     "jobsManage": "jobsManage",
+    "systemTools": "System Tools",
+    "directoryMigration": "Manga Migration",
     "compressManage": "compressManage",
     "wiki": "wiki",
     "tagList": "tagList",
@@ -328,7 +330,7 @@
     "purge": "Permanently purge",
     "purgeConfirm": "This permanently removes records, bookmarks, favorites, and reading history.",
     "deleteSources": "Also delete source files",
-    "showFailed": "Show failed cleanup",
+    "showFailed": "Show failed jobs",
     "showQueue": "Show queue",
     "retry": "Retry"
   },
