@@ -3,9 +3,12 @@
     <div class="ta-page-head">
       <h1>任务管理</h1>
       <div class="ta-page-actions">
-        <button class="ta-btn-ghost" @click="reload">🔄 刷新</button>
-        <button class="ta-btn-ghost" @click="toggleFailed">{{ failedOnly ? '查看队列' : '查看失败任务' }}</button>
-        <button v-if="!failedOnly" class="ta-btn-danger" :disabled="selected.length === 0" @click="batchDelete">🗑 批量删除</button>
+        <button class="ta-btn-ghost" :disabled="clearing" @click="reload">🔄 刷新</button>
+        <button class="ta-btn-ghost" :disabled="clearing" @click="toggleFailed">{{ failedOnly ? '查看队列' : '查看失败任务' }}</button>
+        <button v-if="!failedOnly" class="ta-btn-danger" :disabled="clearing || selected.length === 0" @click="batchDelete">🗑 批量删除</button>
+        <button v-if="!failedOnly" class="ta-btn-danger" :disabled="clearing || !hasRemovableJobs" @click="clearJobs">
+          {{ t('jobsManage.clear') }}
+        </button>
       </div>
     </div>
 
@@ -55,7 +58,8 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, watch, onMounted } from 'vue'
+import { computed, ref, watch, onMounted } from 'vue'
+import i18n from '@/i18n'
 import { showThemeAlert, showThemeConfirm } from '@/themes/components/theme-alert'
 import jobsApi from '@/api/jobs'
 import ResponsiveTable from '@/themes/components/responsive-table.vue'
@@ -71,6 +75,9 @@ const columns: RtColumn[] = [
 
 const allTasks = ref<any[]>([])
 const failedOnly = ref(false)
+const clearing = ref(false)
+const hasRemovableJobs = computed(() => allTasks.value.some((job) => job.canRemove === true))
+const { t } = i18n.global
 const list = ref<any[]>([])
 const total = ref(0)
 const page = ref(1)
@@ -94,7 +101,7 @@ async function load() {
     loadPage()
   } catch { allTasks.value = []; list.value = [] }
 }
-function reload() { page.value = 1; selected.value = []; load() }
+function reload() { page.value = 1; selected.value = []; return load() }
 
 function toggleFailed() {
   failedOnly.value = !failedOnly.value
@@ -125,6 +132,20 @@ async function doDelete(row: any) {
 async function batchDelete() {
   if (!(await showThemeConfirm(`确定删除选中的 ${selected.value.length} 个任务吗？`))) return
   try { await jobsApi.batch_delete(selected.value.map(Number)); reload() } catch (e: any) { showThemeAlert(e?.message || '删除失败') }
+}
+
+async function clearJobs() {
+  if (clearing.value || failedOnly.value || !hasRemovableJobs.value) return
+  clearing.value = true
+  try {
+    if (!(await showThemeConfirm(t('jobsManage.clearConfirm')))) return
+    await jobsApi.clear()
+    await reload()
+  } catch {
+    showThemeAlert(t('jobsManage.clearError'))
+  } finally {
+    clearing.value = false
+  }
 }
 onMounted(() => load())
 </script>

@@ -1,16 +1,25 @@
 <template>
   <div class="manga-setting-box manage-container">
-    <div class="btn-box">
-      <el-button type="primary" :icon="Refresh" @click="reload_table">{{ $t('option.refresh') }}</el-button>
-      <el-button @click="toggle_failed">{{ failedOnly ? t('libraryCleanup.showQueue') : t('libraryCleanup.showFailed') }}</el-button>
+    <div class="btn-box jobs-toolbar">
+      <el-button type="primary" :icon="Refresh" :disabled="clearing" @click="reload_table">{{ $t('option.refresh') }}</el-button>
+      <el-button :disabled="clearing" @click="toggle_failed">{{ failedOnly ? t('libraryCleanup.showQueue') : t('libraryCleanup.showFailed') }}</el-button>
       <el-button
         v-if="!failedOnly"
         type="danger"
         :icon="Delete"
-        :disabled="selectedRows.length === 0"
+        :disabled="clearing || selectedRows.length === 0"
         @click="batch_delete_job"
       >
         {{ $t('option.delete') }}
+      </el-button>
+      <el-button
+        v-if="!failedOnly"
+        type="danger"
+        :disabled="loading || !hasRemovableJobs"
+        :loading="clearing"
+        @click="clear_jobs"
+      >
+        {{ t('jobsManage.clear') }}
       </el-button>
     </div>
     <!--表格-->
@@ -47,7 +56,7 @@
     </el-table>
 
     <!--分页-->
-    <table-pager ref="pager" :page-size="browse.manageListPageSize" @pageChange="load_table" :count="count" />
+    <table-pager ref="pager" :page="browse.manageListPage" :page-size="browse.manageListPageSize" @pageChange="load_table" :count="count" />
 
     <el-dialog :title="t('jobsManage.details')" v-model="editMangaDialog" :before-close="dialog_close">
       <pre id="payload"><code>{{ payload }}</code></pre>
@@ -72,7 +81,7 @@ export default {
 </script>
 <script setup lang="ts">
 import {Delete, Edit, Refresh} from '@element-plus/icons-vue';
-import {onMounted, ref} from 'vue';
+import {computed, onMounted, ref} from 'vue';
 import jobsApi from '@/api/jobs';
 import tablePager from '@/components/table-pager.vue';
 import i18n from '@/i18n';
@@ -83,7 +92,7 @@ const browse = useBrowseStore();
 const {t} = i18n.global;
 
 const pager = ref();
-let tasks: any = [];
+const tasks = ref<any[]>([]);
 let count = ref(0);
 let tableData = ref([]);
 let editMangaDialog = ref(false);
@@ -91,6 +100,8 @@ let payload = ref('');
 let loading = ref(false);
 let selectedRows = ref<any[]>([]);
 const failedOnly = ref(false);
+const clearing = ref(false);
+const hasRemovableJobs = computed(() => tasks.value.some(can_remove));
 
 onMounted(() => {
   browse.manageListPage = 1;
@@ -126,7 +137,7 @@ function dialog_close() {
 async function load_table(page = 1, pageSize = 10) {
   loading.value = true;
   try {
-    tableData.value = tasks.slice((page - 1) * pageSize, page * pageSize);
+    tableData.value = tasks.value.slice((page - 1) * pageSize, page * pageSize);
 
     browse.manageListPage = page;
     browse.manageListPageSizeCache = pageSize;
@@ -165,6 +176,29 @@ async function batch_delete_job() {
     })
     .catch(() => {});
 }
+
+async function clear_jobs() {
+  if (clearing.value || loading.value || !hasRemovableJobs.value) return;
+  clearing.value = true;
+  try {
+    try {
+      await ElMessageBox.confirm(t('jobsManage.clearConfirm'), t('jobsManage.clear'), {
+        confirmButtonText: t('option.confirm'),
+        cancelButtonText: t('option.cancel'),
+        type: 'warning',
+      });
+    } catch {
+      return;
+    }
+    await jobsApi.clear();
+    browse.manageListPage = 1;
+    await reload_table();
+  } catch {
+    ElMessage.error(t('jobsManage.clearError'));
+  } finally {
+    clearing.value = false;
+  }
+}
 /**
  * 重载数据 页码不变
  */
@@ -172,7 +206,7 @@ async function reload_table() {
   loading.value = true;
   try {
     const tasksResponse = failedOnly.value ? await jobsApi.failed() : await jobsApi.get();
-    tasks = tasksResponse.list;
+    tasks.value = tasksResponse.list;
     count.value = tasksResponse.count;
     selectedRows.value = [];
     load_table(browse.manageListPage, browse.manageListPageSize);
@@ -231,3 +265,7 @@ async function delete_manga(index: number, row: any) {
 </script>
 
 <style scoped lang="less" src="@/style/manage.less"></style>
+<style scoped>
+.jobs-toolbar { flex-wrap: wrap; gap: .8rem; }
+.jobs-toolbar :deep(.el-button + .el-button) { margin-left: 0; }
+</style>

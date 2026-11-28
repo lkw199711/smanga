@@ -53,7 +53,7 @@
             </option>
           </select>
         </div>
-        <small>目标目录必须已存在并可读写。文件复制完整后，才会以正式文件名出现。</small>
+        <small>目标目录必须已存在并可读写。文件会以正式文件名直接写入目标目录。</small>
         <div v-if="targetResult" role="status" :class="['dmt-target-status', { 'dmt-error': !targetResult.ok }]">
           {{ targetResult.message }}
         </div>

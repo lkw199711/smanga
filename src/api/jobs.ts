@@ -20,6 +20,10 @@ const jobsApi = {
 		return (await res).data;
 	},
 
+	async clear() {
+		return (await ajax.delete('task')).data;
+	},
+
 	async failed() {
 		return (await ajax.get('task/failed')).data;
 	},
